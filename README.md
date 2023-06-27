@@ -23,6 +23,6 @@ Rejoignez dès maintenant notre communauté d'établissements scolaires satisfai
 
 ## Triade sur GitHub
 
-Pour faciliter l'accès du code source aux développeurs, Triade met à votre disposition un repository GitHub actualisé à chaque version, les anciennes versions seront archivés dans des branches dédiées du repository (la branche master acueillant la dernière version de Triade)
+Pour faciliter l'accès du code source aux développeurs, Triade met à votre disposition un repository GitHub actualisé à chaque version, les anciennes versions seront archivées dans des branches dédiées du repository (la branche master accueillant la dernière version de Triade)
 
-Pour installer Triade pour votre établissement scolaire, **nous vous conseillons vivement de passer par notre site officiel** : [https://triade-educ.org/accueil/telecharger.php](https://triade-educ.org/accueil/telecharger.php)
+Pour installer Triade pour votre établissement scolaire, **nous vous recommandons fortement de passer par notre site officiel** : [https://triade-educ.org/accueil/telecharger.php](https://triade-educ.org/accueil/telecharger.php)
