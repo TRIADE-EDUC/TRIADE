@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!-- 
+$Id: params.xml,v 1.4 2018-07-25 06:19:18 dgoron Exp $ -->
+
+<params>
+    <!-- Nom de l'import -->
+    <importname>RIS -&gt; PMBXML</importname>
+    <!-- Nombre de notices traitées par passe -->
+    <nperpass>200</nperpass>
+    <!-- Type de l'entrée -->
+    <input type="custom" script="ris2pmbxml_input.class.php"/>
+    <!-- type de la sortie -->
+    <output importable="no" type="xml" suffix="xml">
+		<rootelement>pmbmarc</rootelement>
+	</output>
+
+    <step type="custom">
+        <!-- Conversion RIS en pmbxml -->
+        <script>ris2pmbxml.class.php</script>
+		<callback>convert_data</callback>
+    </step>
+</params>

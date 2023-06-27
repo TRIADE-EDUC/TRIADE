@@ -1,0 +1,203 @@
+@charset "utf-8";
+/* +--------------------------------------------------------------------------+
+// 2017 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// +-------------------------------------------------+
+// $Id: set-fichier-color.css,v 1.6 2018-04-17 15:21:19 wlair Exp $ */
+/*------------------------------------------------------------------------------------------*/
+/* ========================================================================
+   fichier
+   base :#ce8a3f
+   hover :#e89336
+   active/focus :#b36b1c   
+ ==========================================================================  */
+
+.uk-navbar-nav li#navbar-fichier a:after,
+.fichier .hmenu.uk-tab>*:hover>a {
+  border-bottom-color: #ce8a3f;
+}
+
+li#navbar-fichier.current,
+.fichier input[type="checkbox"]:checked,
+.fichier input[type="checkbox"]:indeterminate,
+.fichier input[type="radio"]:checked,
+.fichier input[type="checkbox"]:checked:focus,
+.fichier input[type="checkbox"]:indeterminate:focus,
+.fichier input[type="radio"]:checked:focus,
+.fichier div#extra2 span.uk-icon,
+.fichier div#extra2 .notification.ui-active {
+  background-color: #ce8a3f;
+}
+
+.fichier input:focus,
+.fichier select:focus,
+.fichier textarea:focus,
+.fichier input[type="checkbox"]:focus,
+.fichier input[type="radio"]:focus,
+.fichier.claro.pure .dijitButtonHover .dijitButtonNode,
+.fichier.claro.pure .dijitDropDownButtonHover .dijitButtonNode,
+.fichier.claro.pure .dijitComboButton .dijitButtonNodeHover,
+.fichier.claro.pure .dijitComboButton .dijitDownArrowButtonHover,
+.fichier.claro.pure .dijitToggleButtonHover .dijitButtonNode,
+.fichier.claro.pure .dijitTextBoxHover,
+.fichier #contenu .uk-button-default:focus,
+.fichier #contenu .uk-button-default:hover,
+.fichier .hmenu.uk-tab>.uk-active>a,
+.fichier iframe {
+  border-color: #ce8a3f;
+}
+
+.uk-navbar-nav li#navbar-fichier a:hover,
+.fichier h1.section-title i,
+.fichier h1.section-sub-title,
+.fichier .uk-link,
+.fichier a,
+.fichier .uk-link:hover,
+.fichier a:hover,
+.fichier h3:not(.section-sub-title),
+.fichier .article-title i,
+.fichier #menu .uk-nav>li>a i,
+.fichier #menu .uk-nav>li.uk-active>a,
+.fichier #menu .uk-nav>li>a i,
+.fichier #menu .uk-nav>li.uk-active>a,
+.fichier #menu .uk-nav>li>a:hover,
+.fichier .h2-like i,
+.fichier #extra span.uk-icon:hover,
+.fichier #extra i:hover,
+.fichier #navbar .dashboard:hover,
+.pure .fichier .uk-tab > * > a:hover,
+.pure .fichier .uk-tab > * > a:focus,
+.fichier .categ_browser a,
+.fichier .categ_browser a:hover,
+.fichier .categ_browser a:focus,
+.fichier .categ_browser a:active,
+.fichier .hmenu.uk-tab>.uk-active>a {
+  color: #ce8a3f;
+}
+
+.fichier #contenu input.wyr-input[type='file']:focus {
+  outline-color: #ce8a3f;
+}
+
+.fichier .stat-child .uk-table th {
+  color: #ce8a3f;
+  font-weight: 500;
+}
+
+.fichier #menu ul.uk-nav {
+  border-top: solid 2px #ce8a3f;
+}
+
+.fichier #menu>h3 .uk-icon {
+  background: #ce8a3f;
+}
+
+.fichier.claro.pure .dijitMenu .dijitMenuItemHover td,
+.fichier.claro.pure .dijitMenu .dijitMenuItemSelected td,
+.fichier.claro.pure .dijitMenuItemHover,
+.fichier.claro.pure .dijitComboBoxMenu .dijitMenuItemHover,
+.fichier.claro.pure .dijitMenuItemSelected,
+.fichier.claro.pure .dojoDndItemOver {
+  background-color: #ce8a3f;
+  border-color: #ce8a3f;
+  background-image: none;
+}
+
+.fichier form .form-contenu,
+.fichier .row.bkg-grey {
+  border-color: #ce8a3f;
+}
+
+.fichier input.wyr-input[type='submit'],
+.fichier .uk-button,
+.fichier .search_cancel>input,
+.fichier.claro.pure .dijitButton .dijitButtonNode,
+.fichier.claro.pure .dijitDropDownButton .dijitButtonNode,
+.fichier.claro.pure .dijitComboButton .dijitButtonNode,
+.fichier.claro.pure .dijitToggleButton .dijitButtonNode {
+  background-color: #ce8a3f;
+}
+
+.fichier input.wyr-input[type='submit']:hover,
+.fichier .uk-button:hover,
+.fichier .search_cancel>input:hover,
+.fichier.claro.pure .dijitButton .dijitButtonNode:hover,
+.fichier.claro.pure .dijitDropDownButton .dijitButtonNode:hover,
+.fichier.claro.pure .dijitComboButton .dijitButtonNode:hover,
+.fichier.claro.pure .dijitToggleButton .dijitButtonNode:hover {
+  background-color: #e89336;
+}
+
+.fichier input.wyr-input[type='submit']:focus,
+.fichier input.wyr-input[type='submit']:active,
+.fichier .uk-button:focus,
+.fichier .uk-button:active,
+.fichier .search_cancel>input:focus,
+.fichier .search_cancel>input:active,
+.fichier.claro.pure .dijitButton .dijitButtonNode:focus,
+.fichier.claro.pure .dijitDropDownButton .dijitButtonNode:focus,
+.fichier.claro.pure .dijitComboButton .dijitButtonNode:focus,
+.fichier.claro.pure .dijitToggleButton .dijitButtonNode:focus,
+.fichier.claro.pure .dijitButton .dijitButtonNode:active,
+.fichier.claro.pure .dijitDropDownButton .dijitButtonNode:active,
+.fichier.claro.pure .dijitComboButton .dijitButtonNode:active,
+.fichier.claro.pure .dijitToggleButton .dijitButtonNode:active {
+  background-color: #b36b1c;
+}
+
+.fichier .uk-label,
+.fichier .uk-label:hover {
+  background: #ce8a3f;
+  color: #fff;
+}
+
+.fichier .search-result-item.notice-child[style*='block'],
+.fichier .child[style*='block'],
+.fichier div[startopen="Yes"] {
+  border-color: #ce8a3f;
+}
+
+.fichier select:focus {
+  outline-color: #ce8a3f;
+}
+
+/* ========================================================================
+inside menu //  button
+===========================================================================  */
+
+.pure.fichier .hmenu .wui-button.uk-active {
+    background: #ce8a3f;
+    border-color: #ce8a3f;
+}
+.pure.fichier .hmenu .wui-button.uk-active:hover  a,
+.pure.fichier .hmenu .wui-button:hover a,
+.pure.fichier .hmenu .wui-button.uk-active:hover ,
+.pure.fichier .hmenu .wui-button:hover,
+.pure.fichier .hmenu .wui-button.uk-active:active ,
+.pure.fichier .hmenu .wui-button:active
+.pure.fichier .hmenu .wui-button.uk-active:focus ,
+.pure.fichier .hmenu .wui-button:focus,
+.fichier #empr-name,
+.pure.fichier .hmenu .wui-button {
+    border-color: #ce8a3f;    
+}
+ 
+.fichier input[type='submit'],
+.fichier input[type='button'],
+.fichier .bouton{
+	background-color: #ce8a3f;
+}
+.fichier input[type='submit']:hover,
+.fichier input[type='button']:hover,
+.fichier .bouton:hover{
+	background-color: #e89336;
+}
+
+.fichier input[type='submit']:focus,
+.fichier input[type='button']:focus,
+.fichier .bouton:focus,  
+.fichier input[type='submit']:active,
+.fichier input[type='button']:active,
+.fichier .bouton:active{
+	background-color: #b36b1c;
+
+}

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- messages localisés en français pour les différentes méthodes
+****************************************************************************************
+© 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: en_UK.xml,v 1.5 2018-09-20 13:14:23 dgoron Exp $ -->
+
+<!DOCTYPE XMLlist SYSTEM "../../../includes/XMLlist.dtd" >
+<XMLlist>
+<!-- 
+pmbesSync
+ -->
+  <entry code="Sync_functions_description">Functions related to the repositories</entry>
+<!-- 
+listEntrepotSources
+ --> 
+  <entry code="listEntrepotSources_description">List of the source connectors which are repositories</entry>
+  <entry code="listEntrepotSources_output_description"></entry>
+  <entry code="listEntrepotSources_result">List of the repositories</entry>
+<!-- 
+doSync
+ -->  
+  <entry code="doSync_description">Beginning of the synchronization</entry>
+  <entry code="doSync_input_description">The optional inputs are necessary for the PMB scheduler</entry>
+  <entry code="doSync_id_connector">Identifier of the source connector</entry> 
+  <entry code="doSync_id_source">Identifier of the repository source</entry>
+  <entry code="doSync_auto_import">Boolean to ask for the automatic import</entry>
+  <entry code="doSync_id_tache">Identifier of the task (Optional)</entry>
+  <entry code="doSync_callback_listen">Callback function when taking the order (Optional)</entry>
+  <entry code="doSync_callback_command">Callback function when processing the order (Optional)</entry>
+  <entry code="doSync_output_description"></entry>
+  <entry code="doSync_result">Returns the report of the synchronisation</entry> 
+  <entry code="doSync_auto_delete">Suppression automatique des notices supprimées du serveur</entry>
+  <entry code="doSync_not_in_notices_externes">Ne pas inscrire les notices importées dans la table notices_externes</entry>
+  <entry code="doSync_date_start">Date de début (Facultatif)</entry>
+  <entry code="doSync_date_end">Date de fin (Facultatif)</entry>  
+  <!-- 
+emptySource
+ -->  
+  <entry code="emptySource_description">Vide l'entrepôt</entry>
+  <entry code="emptySource_input_description"></entry>
+  <entry code="emptySource_id_connector">Identifiant du connecteur de la source</entry>
+  <entry code="emptySource_id_source">Identifiant de la source de l'entrepôt</entry>
+  <entry code="emptySource_output_description"></entry>
+  <entry code="emptySource_result"></entry>
+</XMLlist>

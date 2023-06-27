@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le module Article
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_authoritieslist.xml,v 1.2 2016-05-12 16:31:43 apetithomme Exp $ -->
+
+<XMLlist>
+	<entry code='cms_module_common_condition_authentificated'>Authentified people</entry>
+	<entry code='cms_module_common_condition_page'>Page</entry>
+	<entry code='cms_module_common_view_authoritieslist'>Template Django</entry>
+	<entry code='cms_module_common_view_authoritieslist_from_template_folder'>Sélection d'un répertoire de templates d'autorités</entry>
+</XMLlist>

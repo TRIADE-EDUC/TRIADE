@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le connecteur OAI
+****************************************************************************************
+© 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: en_UK.xml,v 1.1 2015-06-15 12:55:34 pmbs Exp $ -->
+
+<XMLlist>
+	<entry code="databnf_no_informations">No information available.</entry>
+	<entry code="databnf_enrichment_source">(source &lt;img  height='15px' src='http://data.bnf.fr/data/a9782ddcfea7752a2c5224f971cd991d/logo-data.gif'/&gt;)</entry>
+	<entry code="databnf_width">Width</entry>
+	<entry code="databnf_height">Height</entry>
+	<entry code="databnf_label">data.bnf.fr</entry>
+	<entry code="databnf_oeuvre_label">The work with data.bnf.fr</entry>
+	<entry code="databnf_bio_label">Biography with data.bnf.fr</entry>
+	<entry code="databnf_sparql_endpoint_url">URL of the SPARQL access point</entry>
+</XMLlist>

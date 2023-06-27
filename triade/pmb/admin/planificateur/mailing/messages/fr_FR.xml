@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- messages localisés en français pour le mailing
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: fr_FR.xml,v 1.3 2019-03-14 10:36:01 tsamson Exp $ -->
+
+<XMLlist>
+	<entry code="planificateur_mailing_template">Template de mail</entry>
+	<entry code="planificateur_mailing_caddie_empr">Panier d'emprunteurs destinataires</entry>
+	<entry code="mailing_unknown">Template de mail ou panier d'emprunteurs inconnu</entry>
+	<entry code="planificateur_mailing_email_cc">Destinataire supplémentaire en copie cachée</entry>
+	<entry code="planificateur_mailing_empr_search_perso">Recherche prédéfinie d'emprunteurs destinataires</entry>
+	<entry code="planificateur_mailing_empr_choice">Sélectionnez vos emprunteurs</entry>
+</XMLlist>

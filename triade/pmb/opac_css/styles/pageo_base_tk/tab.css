@@ -1,0 +1,12 @@
+/* +--------------------------------------------------------------------------+
+// 2013 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// +-------------------------------------------------+
+// $Id: tab.css,v 1.2 2018-01-08 13:33:34 wlair Exp $ */
+/*------------------------------------------------------------------------------------------*/
+@charset "utf-8";/**/
+.uk-tab>li.uk-active>a {
+	border-color: #ddd;
+	border-bottom-color: transparent;
+	background: #f8f4f5;
+	color: #444;
+}

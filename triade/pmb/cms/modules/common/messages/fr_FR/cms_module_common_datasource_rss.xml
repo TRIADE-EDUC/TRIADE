@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le module Article
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_common_datasource_rss.xml,v 1.6 2016-10-04 11:19:02 dgoron Exp $ -->
+
+<XMLlist>
+	<entry code="cms_module_common_datasource_rss_limit">Nombres d'éléments maximum à renvoyer</entry>
+	<entry code="cms_module_common_datasource_rss_title_desc">Titre</entry>
+	<entry code="cms_module_common_datasource_rss_subtitle_desc">Sous-titre</entry>
+	<entry code="cms_module_common_datasource_rss_description_desc">Description du flux</entry>
+	<entry code="cms_module_common_datasource_rss_generator_desc">Nom du générateur du flux</entry>
+	<entry code="cms_module_common_datasource_rss_link_desc">Lien vers le site</entry>
+	<entry code="cms_module_common_datasource_rss_items_desc">Tableau des éléments</entry>
+	<entry code="cms_module_common_datasource_rss_item_title_desc">Titre de l'élément</entry>
+	<entry code="cms_module_common_datasource_rss_item_description_desc">Description de l'élément</entry>
+	<entry code="cms_module_common_datasource_rss_item_link_desc">Lien vers l'élément sur le site</entry>
+	<entry code="cms_module_common_datasource_rss_item_guid_desc">Identifiant unique sur le site</entry>
+	<entry code="cms_module_common_datasource_rss_item_date_desc">Date de l'élément</entry>
+	<entry code="cms_module_common_datasource_rss_item_creator_desc">Créateur de l'élément</entry>
+	<entry code="cms_module_common_datasource_rss_item_subject_desc">Sujets (sous forme de tableau) de l'élément</entry>
+	<entry code="cms_module_common_datasource_rss_item_format_desc">Format de l'élément</entry>
+	<entry code="cms_module_common_datasource_rss_item_language_desc">Langue de l'élément</entry>
+	<entry code="cms_module_common_selector_rss">Définition manuelle</entry>
+	<entry code="cms_module_common_selector_type_article">Sélection depuis le champ d'un type de contenu d'un article</entry>
+	<entry code="cms_module_common_selector_type_section">Sélection depuis le champ d'un type de contenu d'une rubrique</entry>
+	<entry code="cms_module_common_selector_type_article_generic">Sélecteur par la valeur d'un champ générique d'article</entry>
+	<entry code="cms_module_common_selector_type_section_generic">Sélecteur par la valeur d'un champ générique de rubrique</entry>
+	<entry code="cms_module_common_datasource_rss_timeout">Time-out (En secondes)</entry>
+</XMLlist>

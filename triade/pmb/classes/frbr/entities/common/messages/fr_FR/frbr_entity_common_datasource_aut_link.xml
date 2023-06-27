@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour la classe racine d'un module
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: frbr_entity_common_datasource_aut_link.xml,v 1.4 2019-01-18 14:36:27 dbellamy Exp $ -->
+
+<XMLlist>
+	<entry code="frbr_entity_common_datasource_aut_link_authors">Auteurs liés</entry>
+	<entry code="frbr_entity_common_datasource_aut_link_categories">Catégories liées</entry>
+	<entry code="frbr_entity_common_datasource_aut_link_concepts">Concepts liés</entry>
+	<entry code="frbr_entity_common_datasource_aut_link_publishers">Editeurs liés</entry>
+	<entry code="frbr_entity_common_datasource_aut_link_collections">Collections liées</entry>
+	<entry code="frbr_entity_common_datasource_aut_link_subcollections">Sous-collections liées</entry>
+	<entry code="frbr_entity_common_datasource_aut_link_series">Titres de série liés</entry>
+	<entry code="frbr_entity_common_datasource_aut_link_works">Oeuvres liées</entry>
+	<entry code="frbr_entity_common_datasource_aut_link_indexint">Indexations décimales liées</entry>
+	<entry code="frbr_entity_common_datasource_aut_link_type">Type de lien</entry>
+	<entry code="frbr_entity_common_datasource_aut_link_all_links">Tous</entry>	
+	<entry code="frbr_entity_common_datasource_aut_link_authpersos">Autorités personnalisées liées</entry>
+</XMLlist>

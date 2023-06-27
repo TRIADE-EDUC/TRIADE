@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd">
+
+<!-- 
+****************************************************************************************
+© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: display_modes_exemple.xml,v 1.6 2018-08-24 08:44:59 plmrozowski Exp $ -->
+
+<modes>
+	<!--
+	mode #Les modes d'affichage
+		@id : l'identifiant du mode
+		@icon : l'icone affiché 
+		@name : le nom du mode
+		@default (yes|no) : détermine le mode par défaut
+		function #La fonction php à utiliser pour l'affichage du mode
+			@src : le nom de la fonction php
+		doctype #Les types de documents pour lesquels ce mode est actif
+			@auto (yes|no) : par défaut pour les types de documents cités
+		template #Le template d'affichage à utiliser
+			@type (record|django) : Le type de template
+			@name : le nom du template
+			@directory : le dossier de template à utiliser (uniquement pour template django)
+			@template_id : L'identifiant en base de données du template (uniquement pour template record)
+			code #Le code du template (uniquement pour template record)
+				@localisation : L'identifiant de la localisation
+				@niveau_biblio : Le niveau bibliographique
+				@typdoc : Le type de document
+		layout #Le type d'affichage du résultat de recherche
+			@type (table|list) Affichage en table ou en liste
+			@colums : le nombre de collonnes (affichage en liste uniquement)			
+			@nav (yes|no) : affichage de la navigation, yes par defaut
+	nomode #Le mode par défaut (si pas de mode avec default=yes
+		@icon : l'icone affiché 
+		@name : le nom du mode
+	 -->
+ 	<mode id="1" icon="planches.png" name="Photothèque" default="no">
+		<function src="photo_tableau"/>
+		<doctypes auto="yes">a,g,l</doctypes>
+	</mode>
+	<mode id="2" icon="tpl.png" default="no" name="TPLNOTICE2">
+		<function src="aff_notice_fonction_template"/>
+		<template type="record" name="test">
+			<code localisation="0" niveau_biblio="0" typdoc="0">
+				<![CDATA[
+					<a href="#permalink();">
+					   <div id="img_notice">#if(#img();,#img();,<img src="./styles/sdn59/images/no_image.jpg" alt="" />);</div>
+					<div class="preResume">
+					<h4>#title();</h4>
+					<p class="TypAutAnn">[#typdoc();] #not_empty(#authors();,#ellipse(#authors,40, [...]);); #year_publication();</p>
+					<p class="resumeNotice">#ellipse(#resume();,300, [...]);</p>
+					</div>
+					</a> 
+				]]>
+			</code>
+		</template>
+		<layout type="list"/>
+	</mode>
+	<mode id="3" icon="tpl.png" default="no" name="DJANGO">
+		<function src="aff_notice_fonction_django"/>
+		<template type="django" directory="common"/>
+	</mode>
+	<!-- <mode id="4" icon="tpl.png" default="no" name="DJANGO_tab">
+		<function src="aff_notice_fonction_django"/>
+		<template type="django" directory="test"/>
+		<layout type="table" colums="2"/>
+	</mode> -->
+<!-- 	<mode id="4" icon="tpl.png" default="no" name="TPLNOTICE">
+		<function src="aff_notice_fonction_template"/>
+		<template type="record" template_id="15"/>
+		<doctypes auto="no">a,g,l</doctypes>
+		<layout type="table" colums="4"/>
+	</mode> -->
+
+	<nomode icon="record_mode_default.png" name="Par défaut"/>
+</modes>

@@ -1,0 +1,5 @@
+<h2>Z 39.50</h2>
+<div>
+    <p>Configuration du client Z39 50 pour l'import de notices.</p>
+    <b>Serveurs</b> liste les serveurs Z39.50 et permet d'en ajouter ou enlever.
+</div>

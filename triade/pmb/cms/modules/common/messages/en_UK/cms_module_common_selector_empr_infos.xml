@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le module Article
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_common_selector_empr_infos.xml,v 1.1 2015-06-15 12:55:33 pmbs Exp $ -->
+
+<XMLlist>	
+	<entry code="cms_module_common_selector_empr_infos_val_choice">Field to retrieve</entry>
+	<entry code="cms_module_common_selector_empr_infos_statut">Borrower's status</entry>
+	<entry code="cms_module_common_selector_empr_infos_categ">Borrower's category</entry>
+	<entry code="cms_module_common_selector_empr_infos_codestat">Borrower's statistical code</entry>
+	<entry code="cms_module_common_selector_empr_infos_values_choice">Values to retrieve</entry>
+	<entry code="cms_module_common_selector_empr_infos_val">Choose a field</entry>
+	<entry code="cms_module_common_selector_empr_infos_values">Choose the values</entry>
+	<entry code=""></entry>
+	<entry code=""></entry>
+</XMLlist>

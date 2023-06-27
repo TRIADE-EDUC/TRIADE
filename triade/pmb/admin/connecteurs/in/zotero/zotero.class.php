@@ -1,0 +1,902 @@
+<?php
+// +-------------------------------------------------+
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// +-------------------------------------------------+
+// $Id: zotero.class.php,v 1.13 2019-06-13 15:26:51 btafforeau Exp $
+
+if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
+
+global $class_path,$base_path, $include_path;
+require_once($class_path."/connecteurs.class.php");
+require_once($class_path."/xml_dom.class.php");
+
+class zotero extends connector {
+
+	//Variables internes pour la progression de la récupération des notices
+	public $n_recu = 0;				//Nombre de notices reçues
+	public $n_total = 0;			//Nombre total de notices
+	
+	public function __construct($connector_path="") {
+		parent::__construct($connector_path);
+	}
+
+	public function get_id() {
+		return 'zotero';
+	}
+
+	//Est-ce un entrepot ?
+	public function is_repository() {
+		return 1;
+	}
+
+	public function source_get_property_form($source_id) {
+		global $charset;
+		 
+		$params=$this->get_source_params($source_id);
+		if ($params['PARAMETERS']) {
+			//Affichage du formulaire avec $params['PARAMETERS']
+			$vars=unserialize($params['PARAMETERS']);
+			foreach ($vars as $key=>$val) {
+				global ${$key};
+				${$key}=$val;
+			}
+		}
+		$form="
+		<div class='row'>&nbsp;</div>
+		<h3>".$this->msg['zotero_auth']."</h3>
+		<div class='row'>&nbsp;</div>
+		<div class='row'>
+		<div class='colonne3'>
+		<label for='zotero_userid'>".$this->msg['zotero_userid']."</label>
+		</div>
+		<div class='colonne_suite'>
+		<input type='text' name='zotero_userid' id='zotero_userid' class='saisie-60em' value='".htmlentities($zotero_userid,ENT_QUOTES,$charset)."'/>
+		</div>
+		</div>
+		<div class='row'>
+		<div class='colonne3'>
+		<label for='zotero_client_key'>".$this->msg['zotero_client_key']."</label>
+		</div>
+		<div class='colonne_suite'>
+		<input type='text' name='zotero_client_key' id='zotero_client_key' class='saisie-60em' value='".htmlentities($zotero_client_key,ENT_QUOTES,$charset)."'/>
+		</div>
+		</div>
+		<div class='row'>&nbsp;</div>
+		";
+		if (!($zotero_userid && $zotero_client_key) ) {
+				
+			$form.="<div class='row'>
+			<h3 style='text-align:center'>".$this->msg['zotero_record_to_see_more']."</h3>
+			</div>";
+			$form.="<div class='row'>&nbsp;</div>";
+				
+		} else {
+				
+			//Récupération des collections
+			$zot = new zotero_protocol($vars,$charset);
+			$collections = $zot->get_collections();
+			if ($zot->error) {
+				$form.="<div class='row'>
+				<h3 style='text-align:center'>".$this->msg['zotero_error']."</h3>
+				</div>";
+				$form.="<div class='row'>&nbsp;</div>";
+			} else {
+					
+				$form.="<div class='row'>
+				<div class='colonne3'>
+					<label>".$this->msg['zotero_collections_restrict']."</label>
+				</div>
+				<div class='colonne_suite'>";
+				if (count($collections)) {
+					$selected = array();
+					if (is_array($vars['zotero_collections'])) $selected = $vars['zotero_collections'];
+					$form.= $this->get_html_select($selected, $collections,array('id'=>'zotero_collections', 'name'=>'zotero_collections[]','class'=>'saisie-20em','size'=>'4','multiple'=>'multiple'));
+				} else {
+					$form.= $this->msg['zotero_no_collection'];
+				}
+				$form.= "	</div>
+				</div>";
+				$form.="<div class='row'>&nbsp;</div>";
+			}			
+			
+			//Récupération des collections des groupes
+			$form.="<div class='row'>
+				<div class='colonne3'>
+					<label>".$this->msg['zotero_sync_groups']."</label>
+				</div>
+				<div class='colonne_suite'>
+					<input type='checkbox' name='maj_groups' id='maj_groups' value='1' ".($vars['maj_groups']?"checked='checked'":"")." />
+				</div>
+				</div>";
+			
+			$groups = $zot->get_groups();
+			if ($zot->error) {
+				$form.="<div class='row'>
+				<h3 style='text-align:center'>".$this->msg['zotero_error']."</h3>
+				</div>";
+				$form.="<div class='row'>&nbsp;</div>";
+			} else {
+				$groups_collections = array();
+				if (count($groups)) {
+					$groups_collections = $zot->get_groups_collections($groups);
+					if ($zot->error) {
+						$form.="<div class='row'>
+						<h3 style='text-align:center'>".$this->msg['zotero_error']."</h3>
+						</div>";
+						$form.="<div class='row'>&nbsp;</div>";
+					} else {
+						$form.="<div class='row'>
+						<div class='colonne3'>
+							<label>".$this->msg['zotero_groups_collections_restrict']."</label>
+						</div>
+						<div class='colonne_suite'>";
+						if (count($groups_collections)) {
+							$selected = array();
+							if (is_array($vars['zotero_groups_collections'])) $selected = $vars['zotero_groups_collections'];
+							$form.= $this->get_html_select($selected, $groups_collections,array('id'=>'zotero_groups_collections', 'name'=>'zotero_groups_collections[]','class'=>'saisie-20em','size'=>'4','multiple'=>'multiple'));
+						} else {
+							$form.= $this->msg['zotero_no_group_collection'];
+						}
+						$form.= "	</div>
+						</div>";
+						$form.="<div class='row'>&nbsp;</div>";
+					}
+				}
+			}
+		}
+		$form.="<div class='row'>".$this->msg['zotero_xslt_subst']."</div>
+			<div class='row'>&nbsp;</div>";
+
+		return $form;
+	}
+
+	public function get_html_select($selected=array(), $collections=array(), $sel_attr=array()) {
+		global $charset;
+
+		$sel='';
+		$size=count($collections);
+		if ($size) {
+			$sel="<select ";
+			if (count($sel_attr)) {
+				foreach($sel_attr as $attr=>$val) {
+					$sel.="$attr='".$val."' ";
+				}
+			}
+			$sel.=">";
+			foreach($collections as $id=>$val){
+				$sel.="<option value='".$id."'";
+				if(in_array($id,$selected)) $sel.=" selected='selected'";
+				$sel.=" >";
+				$sel.=htmlentities($val,ENT_QUOTES,$charset);
+				$sel.="</option>";
+			}
+			$sel.='</select>';
+		}
+		return $sel;
+	}
+
+	public function make_serialized_source_properties($source_id) {
+		global $zotero_userid,$zotero_client_key,$zotero_collections,$maj_groups,$zotero_groups_collections,$zotero_del_deleted;
+		$t['zotero_userid']=stripslashes($zotero_userid);
+		$t['zotero_client_key']=stripslashes($zotero_client_key);
+		 
+		if (is_array($zotero_collections) && count($zotero_collections)) {
+			foreach($zotero_collections as $k=>$v) {
+				$zotero_collections[$k]=stripslashes($v);
+			}
+		} else {
+			$zotero_collections=array();
+		}
+		$t['zotero_collections']=$zotero_collections;
+		if (is_array($zotero_groups_collections) && count($zotero_groups_collections)) {
+			foreach($zotero_groups_collections as $k=>$v) {
+				$zotero_groups_collections[$k]=stripslashes($v);
+			}
+		} else {
+			$zotero_groups_collections=array();
+		}
+		$t['maj_groups']=$maj_groups;
+		$t['zotero_groups_collections']=$zotero_groups_collections;
+		$t['zotero_del_deleted']=$zotero_del_deleted;
+		$this->sources[$source_id]['PARAMETERS']=serialize($t);
+	}
+
+	//Récupération  des propriétés globales par défaut du connecteur (timeout, retry, repository, parameters)
+	public function fetch_default_global_values() {
+		parent::fetch_default_global_values();
+		$this->repository=1;
+	}
+
+	
+	public function progress() {
+		$callback_progress=$this->callback_progress;
+
+		if ($this->n_total) {
+			$percent =($this->n_recu / $this->n_total);
+			$nlu = $this->n_recu;
+			$ntotal = $this->n_total;
+		} else {
+			$percent=0;
+			$nlu = $this->n_recu;
+			$ntotal = "inconnu";
+		}
+		call_user_func($callback_progress,$percent,$nlu,$ntotal);
+	}
+
+	
+	public function rec_record($record=array()) {
+		global $dbh, $charset, $base_path;
+		
+		$xml = new DOMDocument('1.0', 'utf-8');
+		//$xml->formatOutput = true;
+		$xml_rec = $xml->createElement('record');
+		$xml->appendChild($xml_rec);
+		$xml_rec->setAttribute('key', $record['zapi:key']);
+		$xml_rec->setAttribute('version', $record['zapi:version']);
+		
+		if( is_array($record['content']) && count($record['content']) ) {
+			foreach($record['content'] as $k=>$v) {
+				$v = self::recurse_htmlspecialchars($v);
+				$this->recurse_record($xml, $xml_rec, $k, $v);
+	 		}
+		}
+		
+		if( is_array($record['attachments']) && count($record['attachments']) ) {
+			
+			$xml_atts = $xml->createElement('attachments');
+			$xml_rec->appendChild($xml_atts);
+			foreach($record['attachments'] as $k=>$attachment) {
+				$xml_att = $xml->createElement('attachment');
+				$xml_atts->appendChild($xml_att);
+				foreach($attachment['content'] as $k1=>$v1) {
+					$xml_att->setAttribute('zapi:key', $attachment['zapi:key']);
+					$xml_att->setAttribute('zapi:version', $record['zapi:version']);
+					if($record['url']) {
+						$new_elt =  $xml->createElement('url', $record['url'] );
+						$xml_att->appendChild($new_elt);
+					}
+					$v1 = self::recurse_htmlspecialchars($v1);
+					$this->recurse_record($xml, $xml_att, $k1, $v1);
+				}
+ 			}
+ 			
+		}	
+
+		$in = $xml->saveXML();
+		$xsl_filename = $base_path.'/admin/connecteurs/in/zotero/xslt/zotero_atom_json.xsl';
+		$xsl_filename_subst = $base_path.'/admin/connecteurs/in/zotero/xslt/zotero_atom_json_subst.xsl';
+		if (file_exists($xsl_filename_subst)) {
+			$xsl_filename = $xsl_filename_subst;
+		}
+		
+		$proc = new XSLTProcessor();
+		$xslDoc = new DOMDocument();
+		$xslDoc->load($xsl_filename);
+		$proc->registerPHPFunctions();
+		$proc->importStylesheet($xslDoc);
+		$out = $proc->transformToXml($xml);
+		
+		$ref = 0;
+		if ($out) {
+				
+			//On a un enregistrement unimarc, on l'enregistre
+			$rec_uni_dom=new xml_dom($out,"utf-8");
+			
+			if (!$rec_uni_dom->error) {
+				
+				//Initialisation
+				$ref="";
+				$ufield="";
+				$usubfield="";
+				$field_order=0;
+				$subfield_order=0;
+				$value="";
+				$date_import=date('Y-m-d H:i:s');
+			
+				$fs=$rec_uni_dom->get_nodes("unimarc/notice/f");
+				//Recherche du 001
+				for ($i=0; $i<count($fs); $i++) {
+					if ($fs[$i]["ATTRIBS"]["c"]=="001") {
+						$ref=$rec_uni_dom->get_datas($fs[$i]);
+						break;
+					}
+				}
+				//Mise à jour
+				if ($ref) {
+					//Suppression anciennes notices
+					$this->delete_from_entrepot($this->source_id, $ref);
+					$this->delete_from_external_count($this->source_id, $ref);
+
+					//Insertion de l'entête
+					$n_header["rs"]=$rec_uni_dom->get_value("unimarc/notice/rs");
+					$n_header["ru"]=$rec_uni_dom->get_value("unimarc/notice/ru");
+					$n_header["el"]=$rec_uni_dom->get_value("unimarc/notice/el");
+					$n_header["bl"]=$rec_uni_dom->get_value("unimarc/notice/bl");
+					$n_header["hl"]=$rec_uni_dom->get_value("unimarc/notice/hl");
+					$n_header["dt"]=$rec_uni_dom->get_value("unimarc/notice/dt");
+		
+					//Récupération d'un ID
+					$recid = $this->insert_into_external_count($this->source_id, $ref);
+					
+					foreach($n_header as $hc=>$code) {
+						$this->insert_header_into_entrepot($this->source_id, $ref, $date_import, $hc, $code, $recid, $search_id);
+					}
+		
+					for ($i=0; $i<count($fs); $i++) {
+						$ufield=$fs[$i]["ATTRIBS"]["c"];
+						$field_order=$i;
+						$ss=$rec_uni_dom->get_nodes("s",$fs[$i]);
+						if (is_array($ss)) {
+							for ($j=0; $j<count($ss); $j++) {
+								$usubfield=$ss[$j]["ATTRIBS"]["c"];
+								$value=$rec_uni_dom->get_datas($ss[$j]);
+								if($charset != "utf-8"){
+									$value=pmb_utf8_decode($value);
+								}
+								$subfield_order=$j;
+								$this->insert_content_into_entrepot($this->source_id, $ref, $date_import, $ufield, $usubfield, $field_order, $subfield_order, $value, $recid);
+							}
+						} else {
+							$value=$rec_uni_dom->get_datas($fs[$i]);
+							if($charset != "utf-8"){
+								$value=pmb_utf8_decode($value);
+							}
+							$this->insert_content_into_entrepot($this->source_id, $ref, $date_import, $ufield, $usubfield, $field_order, $subfield_order, $value, $recid);
+						}
+					}
+					$this->rec_isbd_record($this->source_id, $ref, $recid);
+				}
+			}
+		}
+		return $ref;		
+	}
+	
+	public static function recurse_htmlspecialchars($value) {
+		global $charset;
+		
+		if (is_array($value)) {
+			foreach ($value as $k=>$v) {
+				$value[$k] = self::recurse_htmlspecialchars($v);
+			}
+		} else {
+			$value = htmlspecialchars($value, ENT_NOQUOTES, $charset);
+		}
+		
+		return $value;
+	}
+
+	public function recurse_record($xml, $xml_elt, $key, $value) {
+
+		if(is_array($value)) {
+			if(count($value)) {
+				foreach ($value as $k=>$v) {
+					
+					if (!is_numeric($key)) {
+						$new_elt = $xml->createElement($key);
+						$xml_elt->appendChild($new_elt);
+	 					$this->recurse_record($xml, $new_elt, $k, $v);
+					} else {
+						$this->recurse_record($xml, $xml_elt, $k, $v);
+					}
+					
+				} 		
+			}
+			
+		} else {
+			
+			if(!is_numeric($key) && $value!='') {
+				$new_elt = $xml->createElement($key, $value);
+				$xml_elt->appendChild($new_elt);
+			}
+		}
+	}
+
+	public function form_pour_maj_entrepot($source_id,$sync_form="sync_form") {
+
+		global $charset;
+		global $form_from;
+		global $form_until;
+		global $form_radio;
+
+		$source_id = (int) $source_id;
+		$params=$this->get_source_params($source_id);
+		$vars=unserialize($params['PARAMETERS']);
+
+		$form = "<blockquote>";
+		$form .= "</blockquote>";
+		return $form;
+	}
+
+	public function maj_entrepot($source_id,$callback_progress='',$recover=false,$recover_env='') {
+		global $dbh, $charset;
+		global $form_from, $form_until, $form_radio;
+
+		$this->callback_progress = $callback_progress;
+		$params = $this->unserialize_source_params($source_id);
+		$p = $params['PARAMETERS'];
+		$this->source_id = $source_id;
+		$this->n_recu = 0;
+		$this->n_total = 0;
+
+		//Connexion
+		$zot = new zotero_protocol($p,$charset);
+
+		//Récupération des clés d'items
+		$tab_items_keys = array();
+		if (count($p['zotero_collections'])) {
+				
+			foreach($p['zotero_collections'] as $k=>$collection_key) {
+				$tik = array();
+				$tik = $zot->get_items_keys($collection_key,0);
+				if (count($tik)) {
+					$tab_items_keys = array_merge($tab_items_keys, $tik);
+				}
+			}
+				
+		} else {
+			$tab_items_keys = $zot->get_items_keys('',0);
+		}
+		
+		//On double pour les groupes...
+		if ($p['maj_groups']) {
+			$groups = $zot->get_groups();
+			if (count($groups)) {
+				foreach ($groups as $gr_id=>$gr_title) {
+					$group_collections = $zot->get_group_collections($gr_id);
+					$group_collections = array_intersect($group_collections,$p['zotero_groups_collections']);
+					if (count($group_collections)) {
+						foreach($group_collections as $k=>$group_collection_key) {
+							$tik = array();
+							$tik = $zot->get_items_keys($group_collection_key,$gr_id);
+							if (count($tik)) {
+								$tab_items_keys = array_merge($tab_items_keys, $tik);
+							}
+						}
+					} else {
+						$tik = array();
+						$tik = $zot->get_items_keys('',$gr_id);
+						if (count($tik)) {
+							$tab_items_keys = array_merge($tab_items_keys, $tik);
+						}
+					}
+				}
+			}
+		}
+
+		//Nb items au total
+		$this->n_total = count($tab_items_keys);
+
+		//Récupération des items
+		$tab_sync_items = array();
+		foreach($tab_items_keys as $item_key=>$item_url) {
+			$item = $zot->get_item($item_key,$item_url);
+			$si = $this->rec_record($item);
+			if ($si) {
+				$this->n_recu++;
+				$this->progress();
+				$tab_sync_items[]=$si;
+			}
+		}
+
+		//Suppression des items non synchronisés
+		$str_sync_items = '';
+		if(count($tab_sync_items)) {
+			$str_sync_items = implode('","',$tab_sync_items);
+		}
+		if($str_sync_items) {
+			$q = "delete from entrepot_source_".$this->source_id." where ref not in (\"".$str_sync_items."\")";
+			pmb_mysql_query($q,$dbh);
+		} else {
+			$q = "delete from entrepot_source_".$this->source_id;
+			pmb_mysql_query($q,$dbh);
+		}
+		$q = "delete from external_count where source_id=".$this->source_id." and rid not in (select distinct recid from entrepot_source_".$this->source_id." )";
+		pmb_mysql_query($q,$dbh);
+		
+		return $this->n_recu;
+	}
+	
+}
+
+
+require_once("$class_path/curl.class.php");
+
+
+class zotero_protocol {
+
+	public $zotero_api_version = '2';
+	public $zotero_api_url = "https://api.zotero.org";
+	public $zotero_userid = '';
+	public $zotero_client_key = '';
+
+	public $channel = false;
+	public $url = '';
+	public $params = '';
+	public $response = '';
+	public $error = false;
+	public $error_msg = '';
+
+	public $result = false;
+	public $charset = 'utf-8';
+	public $zotero_parser = null;
+
+
+	public function __construct($params=array(),$charset='utf-8') {
+
+		$this->zotero_userid = $params['zotero_userid'];
+		$this->zotero_client_key = $params['zotero_client_key'];
+		$this->charset = $charset;
+		$this->channel = new Curl();
+		$this->channel->headers['Zotero-API-Version']=2;
+		$this->zotero_parser = new zotero_parser();
+	}
+
+
+	public function send_request($other_params=array()) {
+
+		$this->error = false;
+		$this->params = array();
+		$this->params['key'] = $this->zotero_client_key;
+		$this->params['version'] = $this->zotero_api_version;
+			
+		if (is_array($other_params) && count($other_params)) {
+			foreach($other_params as $k=>$v) {
+				$this->params[$k]=$v;
+			}
+		}
+
+		$rcurl = $this->channel->get($this->url,$this->params);
+		if ($rcurl->headers['Status-Code']!='200') {
+			$this->error = true;
+			$this->error_msg = $rcurl->headers['Status'];
+		} else {
+			$this->response = $rcurl->body;
+		}
+	}
+	
+	
+	public function get_groups() {
+		$zp = $this->zotero_parser;
+		$zp->reset('groups');
+		$this->result = array();
+		$this->url = $this->zotero_api_url."/users/".$this->zotero_userid."/groups?";
+		$this->send_request();
+		if (!$this->error) {
+			try {
+				$zpr = $zp->parse($this->response);
+				if (count($zpr)) {
+					foreach($zpr as $k=>$v) {
+						$title = $v['title'];
+						$id = $v['zapi:groupID'];
+						if ($this->charset != 'utf-8') {
+							$title = utf8_decode($title);
+						}
+						$this->result[$id] = $title;
+					}
+					natsort($this->result);
+				}
+			} catch (Exception $e) {
+			}
+		}
+		return $this->result;
+	}
+
+
+	public function get_collections() {
+
+		$zp = $this->zotero_parser;
+		$zp->reset('collections');
+		$this->result = array();
+		$this->url = $this->zotero_api_url."/users/".$this->zotero_userid."/collections?";
+
+		$this->send_request();
+		if (!$this->error) {
+			try {
+				$zpr = $zp->parse($this->response);
+				if (count($zpr)) {
+					foreach($zpr as $k=>$v) {
+						$title = $v['title'];
+						$id = $v['zapi:key'];
+						if ($this->charset != 'utf-8') {
+							$title = utf8_decode($title);
+						}
+						$this->result[$id] = $title;
+					}
+					natsort($this->result);
+				}
+			} catch (Exception $e) {
+			}
+		}
+		return $this->result;
+	}
+	
+	public function get_group_collections($group_id = '') {
+	
+		$zp = $this->zotero_parser;
+		$this->result = array();
+		if ($group_id) {
+			$zp->reset('groups_collections');
+			$this->url = $this->zotero_api_url."/groups/".$group_id."/collections?";
+			$this->send_request();
+			if (!$this->error) {
+				try {
+					$zpr = $zp->parse($this->response);
+					if (count($zpr)) {
+						foreach($zpr as $k=>$v) {
+							$id = $v['zapi:key'];
+							$this->result[] = $id;
+						}
+					}
+				} catch (Exception $e) {
+				}
+			}
+		}
+		return $this->result;
+	}
+	
+	public function get_groups_collections($groups = array()) {
+	
+		$zp = $this->zotero_parser;
+		$this->result = array();
+		if (count($groups)) {
+			foreach ($groups as $gr_id=>$gr_title) {
+				$zp->reset('groups_collections');
+				$this->url = $this->zotero_api_url."/groups/".$gr_id."/collections?";
+				$this->send_request();
+				if (!$this->error) {
+					try {
+						$zpr = $zp->parse($this->response);
+						if (count($zpr)) {
+							foreach($zpr as $k=>$v) {
+								$title = $v['title'];
+								$id = $v['zapi:key'];
+								if ($this->charset != 'utf-8') {
+									$title = utf8_decode($title);
+								}
+								$this->result[$id] = $gr_title." : ".$title;
+							}
+							natsort($this->result);
+						}
+					} catch (Exception $e) {
+					}
+				}
+			}
+		}
+		return $this->result;
+	}
+
+
+	public function get_items_keys($collection_key='', $group_id=0) {
+
+		$this->result = array();
+		if (!$group_id) {
+			$this->url = $this->zotero_api_url."/users/".$this->zotero_userid.(($collection_key)?"/collections/".$collection_key:'')."/items?format=keys&itemType=-attachment%20||%20note";
+		} else {
+			$this->url = $this->zotero_api_url."/groups/".$group_id.(($collection_key)?"/collections/".$collection_key:'')."/items?format=keys&itemType=-attachment%20||%20note";
+		}
+		$this->send_request();
+		if (!$this->error) {
+			$tmp_array = array_filter(explode(chr(0x0A),$this->response));
+			if (count($tmp_array)) {
+				foreach ($tmp_array as $key) {
+					if (!$group_id) {
+						$this->result[$key] = $this->zotero_api_url."/users/".$this->zotero_userid."/items/".$key;
+					} else {
+						$this->result[$key] = $this->zotero_api_url."/groups/".$group_id."/items/".$key;
+					} 
+				}
+			}
+		}
+		return $this->result;
+	}
+
+	
+	public function get_childrens_keys($item_key='', $item_url='') {
+
+		$this->result = array();
+		if ($item_key) {
+			$this->url = $item_url."/children?format=keys";
+			$this->send_request();
+			if (!$this->error) {
+				$tmp_array = array_filter(explode(chr(0x0A),$this->response));
+				if (count($tmp_array)) {
+					foreach ($tmp_array as $key) {
+						$this->result[$key] = str_replace($item_key,$key,$item_url);
+					}
+				}
+			}
+		}
+		return $this->result;
+	}
+
+
+	public function get_children($item_key='', $item_url='') {
+
+		$zp = $this->zotero_parser;
+		$zp->reset('item');
+		$this->result = array();
+		if ($item_key) {
+			$this->url = $item_url."?content=json";
+			$this->send_request();
+			if (!$this->error) {
+				try {
+					$zpr = $zp->parse($this->response);
+					if($zpr[0]['content']['itemType']=='attachment' && $zpr[0]['content']['linkMode']=='imported_file') {
+						$zpr[0]['content']['url']=$item_url."/file?key=".$this->zotero_client_key;
+					}
+					$this->result = $zpr[0];
+				} catch(Exception $e) {}
+			}
+		}
+		return $this->result;
+	}
+
+
+	public function get_item($item_key='', $item_url='') {
+	
+		$zp = $this->zotero_parser;
+		$zp->reset('item');
+		$this->result = array();
+		if ($item_key) {
+			$this->url = $item_url."?content=json";
+			$this->send_request();
+			if (!$this->error) {
+				try {
+					$zpr = $zp->parse($this->response);
+					if ($zpr[0]['zapi:numChildren']) {
+						$childrens = $this->get_childrens_keys($item_key,$item_url);
+						foreach($childrens as $key=>$url) {
+							$zpr[0]['attachments'][]=$this->get_children($key, $url);
+						}
+					}
+					$this->result = $zpr[0];
+						
+				} catch(Exception $e) {
+				}
+			}
+		}
+		return $this->result;
+	}
+
+}
+
+
+class zotero_parser {
+
+	public $parser;
+	public $t=array();
+	public $t_i=0;
+	public $to_parse='item';
+	public $prev_tag='';
+	public $path_tag=array();
+	public $text='';
+	public $charset = 'utf-8';
+
+
+	public function __construct ($to_parse='item', $charset='utf-8') {
+
+		$this->charset = $charset;
+		$this->to_parse = $to_parse;
+	}
+
+
+	public function reset($to_parse='item', $charset='utf-8') {
+
+		$this->t = array();
+		$this->t_i= 0;
+		$this->to_parse = $to_parse;
+		$this->prev_tag = '';
+		$this->path_tag = array();
+		$this->text = '';
+		$this->charset = $charset;
+	}
+
+
+	public function parse ($xml) {
+
+		$this->parser=xml_parser_create($this->charset);
+		xml_set_object ($this->parser, $this);
+		xml_parser_set_option ($this->parser, XML_OPTION_CASE_FOLDING, FALSE);
+		xml_parser_set_option ($this->parser, XML_OPTION_SKIP_WHITE, TRUE);
+		xml_set_element_handler ($this->parser, 'tag_start', 'tag_end');
+		xml_set_character_data_handler ($this->parser, 'texte');
+
+		if ( !xml_parse ($this->parser, $xml, TRUE)) {
+			die (sprintf ("erreur XML %s à la ligne: %d", xml_error_string (xml_get_error_code ($this->parser)), xml_get_current_line_number ($this->parser)));
+		}
+		xml_parser_free ($this->parser);
+		return ($this->t);
+	}
+
+
+	public function tag_start ($parser, $tag, $att) {
+		$this->prev_tag=end($this->path_tag);
+		$this->path_tag[]=$tag;
+		$this->text='';
+	}
+
+
+	public function tag_end ($parser, $tag) {
+		if ( !count ($this->path_tag)) return;
+		$this->text=trim($this->text);
+
+		switch ($this->to_parse) {
+				
+			case 'collections' :
+			case 'groups_collections' :
+				switch ($tag) {
+					case 'entry' :
+						$this->t_i++;
+						break;
+					case 'title' :
+						if ($this->prev_tag=='entry' && $this->text!=='') {
+							$this->t[$this->t_i][$tag] = $this->text;
+						}
+						break;
+					case 'zapi:key' :
+						if ($this->prev_tag=='entry' && $this->text!=='') {
+							$this->t[$this->t_i][$tag] = $this->text;
+						}
+						break;
+					default :
+						break;
+
+				}
+				break;
+				
+			case 'groups' :
+				switch ($tag) {
+					case 'entry' :
+						$this->t_i++;
+						break;
+					case 'title' :
+						if ($this->prev_tag=='entry' && $this->text!=='') {
+							$this->t[$this->t_i][$tag] = $this->text;
+						}
+						break;
+					case 'zapi:groupID' :
+						if ($this->prev_tag=='entry' && $this->text!=='') {
+							$this->t[$this->t_i][$tag] = $this->text;
+						}
+						break;
+					default :
+						break;
+
+				}
+				break;
+
+			case 'item' :
+				switch ($tag) {
+					case 'zapi:key' :
+					case 'zapi:version' :
+					case 'zapi:numChildren' :
+						if ($this->text!=='') {
+							$this->t[$this->t_i][$tag] = $this->text;
+						}
+						break;
+					case 'content' :
+						if ($this->text!=='') {
+							$this->t[$this->t_i][$tag] = json_decode($this->text, true);
+						}
+						break;
+					default :
+						break;
+
+				}
+				break;
+		}
+
+		array_pop ($this->path_tag);
+	}
+
+
+	public function texte ($parser, $data) {
+
+		if ( !count ($this->path_tag))
+			return;
+		$this->text.=$data;
+	}
+
+}
+
+?>

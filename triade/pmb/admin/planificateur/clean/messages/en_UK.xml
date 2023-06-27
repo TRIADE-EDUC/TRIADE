@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- messages localisés en français pour le nettoyage de la base PMB
+****************************************************************************************
+© 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: en_UK.xml,v 1.1 2015-06-15 12:55:34 pmbs Exp $ -->
+
+<XMLlist>
+	<entry code="planificateur_clean">Cleaning of the PMB base</entry>
+	<entry code="clean_acquisition">The acquisition module is disabled</entry>
+	<entry code="clean_indexation_docnum">The indexation of digital documents is disabled</entry>
+</XMLlist>

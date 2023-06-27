@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour la classe racine d'un module
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_common_module.xml,v 1.5 2019-02-22 11:53:29 dgoron Exp $ -->
+
+<XMLlist>
+	<entry code="cms_module_datasource_choice">Choose a data source</entry>
+	<entry code="cms_module_common_module_save">Save</entry>
+	<entry code="cms_module_common_module_cancel">Cancel</entry>
+	<entry code="cms_module_common_module_name">Name of the frame</entry>
+	<entry code="cms_module_common_module_new_cadre">Creation of a new frame</entry>
+	<entry code="cms_module_common_module_alter_cadre">Frame modification - %s</entry>
+	<entry code="cms_module_common_module_view_choice">Choose a view</entry>
+	<entry code="cms_module_common_module_saved">Save accomplished</entry>
+	<entry code="cms_module_common_module_save_error">Save failed</entry>
+	<entry code="cms_module_common_module_conditions_selector">Display conditions</entry>
+	<entry code="cms_module_common_module_conditions_selector_choice">Choose a display condition</entry>
+	<entry code="cms_module_common_condition_authentificated">Authenticated people</entry>
+	<entry code="cms_module_common_condition_page">Page</entry>
+	<entry code="cms_module_common_module_delete">Delete</entry>
+	<entry code="cms_module_common_module_confirm_delete">Are you sure you want to delete this frame ?</entry>
+	<entry code="cms_module_common_module_deleted">Deleted</entry>
+	<entry code="cms_module_common_module_delete_error">Deletion failed</entry>
+	<entry code="cms_module_common_condition_lvl">Type of OPAC page</entry>
+	<entry code="cms_manage_module">Configuration</entry>
+
+	<entry code="cms_manage_module_general">General</entry>
+	<entry code="cms_manage_module_views">Views</entry>
+	<entry code="cms_manage_module_datasources">Data sources</entry>
+	<entry code="cms_manage_module_conditions">Conditions</entry>
+	<entry code="cms_module_common_module_fixed">Fixed frame ?</entry>
+	<entry code="cms_module_view_choice">Choose a view</entry>
+	<entry code="cms_module_common_module_memo_url">Keep the construction URL ?</entry>
+	<entry code="cms_module_common_module_name_empty">Please type in the name of the frame.</entry>
+	<entry code="cms_module_common_module_filter_label">Use a filter</entry>
+	<entry code="cms_module_common_module_filter_choice">Choose a filter</entry>
+	<entry code="cms_module_common_filter_articles_by_cp">By the value of a field of a content type</entry>
+	<entry code="cms_module_common_filter_articles_by_type">By the content type</entry>
+	<entry code="cms_module_common_filter_articles_by_publication_state">By the publication state</entry>
+	<entry code="cms_module_common_filter_sections_by_cp">By the value of a field of a content type</entry>
+	<entry code="cms_module_common_filter_sections_by_type">By the content type</entry>
+	<entry code="cms_module_common_filter_sections_by_publication_state">By the publication state</entry>
+	<entry code="cms_module_common_condition_global_var">Presence of a global variable</entry>
+	<entry code="cms_module_common_condition_global_var_value">Value of a global variable</entry>
+	<entry code="cms_module_common_condition_view">OPAC views</entry>
+
+	<entry code="cms_module_commom_module_cadre_save_error">Error when saving the frame "%s"</entry>
+	<entry code="cms_module_commom_module_datasource_save_error">Error when saving the data source "%s"</entry>
+	<entry code="cms_module_commom_module_condition_save_error">Error when saving the conditions</entry>
+	<entry code="cms_module_commom_module_view_save_error">Error when saving the view "%s"</entry>
+	
+	<entry code="cms_module_common_module_modcache">Caching mode</entry>
+	<entry code="cms_module_common_module_no_cache">No caching</entry>
+	<entry code="cms_module_common_module_cache_get_post">Depending on the GET and the POST</entry>
+	<entry code="cms_module_common_module_cache_get_post_view">Depending on the GET,POST and the OPAC views</entry>
+	<entry code="cms_module_common_module_cache_view">Depending on the OPAC views</entry>
+	<entry code="cms_module_common_module_cache_all">Invariable</entry>
+	<entry code="cms_module_common_module_css_class">CSS class</entry>
+	<entry code="cms_module_common_condition_lang">Langues de l'OPAC</entry>
+	<entry code="cms_module_common_condition_readers_categories">Catégories de lecteurs</entry>
+	<entry code="cms_module_common_condition_readers_statuses">Statuts de lecteurs</entry>
+</XMLlist>

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+
+<!-- Profils de gestion droits d'acces Emprunteurs - Notices
+****************************************************************************************
+© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: domain.xml,v 1.5 2017-09-06 15:33:47 tsamson Exp $ -->
+
+<domain>
+	<!--  empr -->
+	<user lib="msg:379" properties="1,2" >
+		<ref type="table" name="empr" key="id_empr" />
+		<property_link with="1">
+			<r_query type="field" value="empr_categ" />					<!--  champ emprunteur categorie de lecteur  -->
+		</property_link>
+		<property_link with="2">
+			<r_query type="field" value="empr_location" />				<!--  champ emprunteur localisation  -->
+		</property_link>
+		<property_link with="5">
+			<r_query type="session" value="opac_view" />				<!--  variable session vue OPAC  -->
+		</property_link>
+		<property_link with="6">
+			<r_query type="field" value="empr_codestat" />				<!--  champ emprunteur code statistique de lecteur  -->
+		</property_link>
+	</user>
+
+	<!--  docnums -->
+	<resource lib="msg:130" properties="3">
+		<ref type="table" name="explnum" key="explnum_id" />
+		<property_link with="3" >
+			<c_query type="var" value="f_explnum_statut" />			<!--  variable docnum statut postée lors de la création du document -->
+			<i_query type="field" value="explnum_docnum_statut" />	<!--  variable docnum statut stockée dans la table explnum -->
+		</property_link>
+	</resource>
+
+	<properties>
+		<property id="1" lib="msg:lecteurs_categories">
+			<ref type="table" name="empr_categ" key="id_categ_empr" value="libelle" />
+		</property>
+		<property id="2" lib="msg:21">
+			<ref type="table" name="docs_location" key="idlocation" value="location_libelle" />
+		</property>	
+		<property id="3" lib="msg:docnum_statut_docnum">
+			<ref type="table" name="explnum_statut" key="id_explnum_statut" value="gestion_libelle" />
+		</property>
+		<property id="5" lib="msg:opac_view">
+			<ref type="table" name="opac_views" key="opac_view_id" value="opac_view_name" />
+		</property>
+		<property id="6" lib="msg:24">
+			<ref type="table" name="empr_codestat" key="idcode" value="libelle" />
+		</property>
+	</properties>
+
+	<controls>
+		<control id='1' global="yes" lib='msg:dom_mod_rights' />
+		<control id='2' global="yes" lib='dom_mod_pro' />
+		<control id='3' lib='view_docnum_opac' />
+		<control id='4' lib='download_docnum_opac' />	
+		<control id='5' lib='show_docnum_opac' />
+		<control id='10' global="yes" lib='dom_override_rights' />
+	</controls>
+</domain>

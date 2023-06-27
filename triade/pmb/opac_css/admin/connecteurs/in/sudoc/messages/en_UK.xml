@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le connecteur OAI
+****************************************************************************************
+© 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: en_UK.xml,v 1.2 2015-06-26 12:35:02 pmbs Exp $ -->
+
+<XMLlist>
+	<entry code="sudoc">Sudoc</entry>
+	<entry code="sudoc_no_infos">No informations available.</entry>
+	<entry code="sudoc_enrichment_source">(enrichment from the Sudoc)</entry>
+	<entry code="sudoc_enrichment_publish_date">published on the </entry>
+	<entry code="sudoc_enrichment_see_more">see more on the Sudoc's website</entry>
+</XMLlist>

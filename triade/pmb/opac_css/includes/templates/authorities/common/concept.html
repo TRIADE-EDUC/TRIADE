@@ -1,0 +1,28 @@
+{% extends 'gabarit.html' %}
+
+{% block header %}
+	{{ authority.broaders_list }}
+{% endblock %}
+
+{% block aut_see %}
+	<div class="conceptlevel2">
+		{{ block.super }}
+	</div>
+{% endblock %}
+	
+{% block title %}
+	<h3>{{ authority.isbd }}</h3>
+{% endblock %} 
+
+{% block details %}
+	{{ authority.narrowers_list }} 
+	{{ authority.details_list }}
+	{{ authority.authoritieslist }}
+{% endblock %}
+{% block map %}
+	{% if authority.map.map %}
+		<div class="map_notice">
+			{{ authority.map.map }}
+		</div>
+	{% endif %}
+{% endblock %}

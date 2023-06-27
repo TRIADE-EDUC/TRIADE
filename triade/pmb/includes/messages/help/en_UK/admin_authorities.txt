@@ -1,0 +1,7 @@
+<h2>Administration of the authorities</h2>
+
+<p>The section <b>administration of the authorities</b> allows to set the parameters of the application for the records.
+<ul>
+<li><b>origins</b> allows to set the origins of the authorities, in order to classify them when importing</li>
+</ul></p>
+ 

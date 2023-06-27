@@ -1,0 +1,108 @@
+@charset "utf-8";
+/*Couleur A
+------------------------------------------------------------------*/
+
+/*
+Couleur de fond A
+*/
+div.lienP,
+div[class='onglet_basketNotCourte'],
+div[class='avisNCourte'],
+div[class='tagsNCourte'],
+div[class='listeLectureNCourte'] a,
+div[class='suggestNCourte'],
+div[class='onglet_basketNot'] a.img_basketNot,
+div[class='tagsN'],
+div[class='suggestN'],
+div[class='docnumNCourte docnumNCourtePermalink'],
+div[class='docnumNCourte'],
+div[class='listeLectureN'] a,
+div[class='avisN'],
+span.imgComment,
+span.imgStatutPartN,
+span.imgDocNum,
+div[class='onglet_basketNotCourte'] a span:nth-child(1) img,
+div[class='avisNCourte']  span:nth-child(1) img,
+a[class='img_basketNot']  span:nth-child(1) img,
+span.img_permalink,
+span.imgTag,
+span.imgSuggest,
+.listeLectureN a span:first-child,
+span.ExtnotCom.imgListeLecture,
+th,
+input.bouton, input.boutonrechercher,
+#cms_module_section_18 ul li a:hover,
+#menuDeroulant .sousMenu li a:hover,
+.cms_menu_deep1 li a:hover,
+#intro {
+	background:
+	/**/
+	#4180b5
+	/**/
+	!important;
+} 
+
+
+/*
+Couleur des bordure A
+*/
+#menuDeroulant li a:hover, 
+.cms_menu_deep0 li a:hover,
+#bandeau,
+#navigator a:hover ,
+input.bouton, 
+input.boutonrechercher,
+.notice-child,
+#help-container,
+.categmouseover,
+.listedescription,
+#container,
+.bx-prev,
+.bx-next,
+#titre-popup   {
+	border-color:
+	/**/
+	#4180b5
+	/**/
+	!important;
+}
+
+/*
+Couleur de texte A
+*/
+#etagere-titre h1 a,
+a,
+#titre-popup  {
+	color:
+	/**/
+	#4180b5
+	/**/
+}
+
+/*Couleur B
+------------------------------------------------------------------*/
+
+/*
+Couleur de texte B
+*/
+h3,
+#cms_module_section_18 h1,
+#print_options b,
+#help-container h2,
+.header_title,
+body.cart_info_body,
+ul.search_tabs li#current,
+ul.empr_tabs li#current a,
+ul.list_tabs li#current a,
+#search_onglet ul.search_tabs li.current a,
+ #onglets_list ul.list_tabs li.current a,
+ ul.onglets_isbd_public li.isbd_public_active a  {
+	color:
+	/**/
+	#56881C
+	/**/!important;
+}
+
+.tundra #container .dijitCalendarDayLabelTemplate{
+	color:#fff;
+}

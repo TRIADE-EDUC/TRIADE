@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le module htmlcode
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_htmlcode.xml,v 1.2 2015-10-28 10:41:08 apetithomme Exp $ -->
+
+<XMLlist>
+	<entry code='cms_module_htmlcode_view_htmlcode'>Edition de code HTML</entry>
+	<entry code='cms_module_htmlcode_view_htmlcode_bycurl'>Récupération de code HTML par CURL</entry>
+	<entry code='cms_module_common_view_django'>Edition de template Django</entry>
+</XMLlist>

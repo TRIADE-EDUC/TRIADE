@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le module Article
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_common_datasource_portfolio.xml,v 1.2 2014-11-18 17:17:09 arenou Exp $ -->
+
+<XMLlist>
+	<entry code="cms_module_common_datasource_portfolio_documents">Tableau des documents</entry>
+	<entry code="cms_module_common_datasource_portfolio_nb_documents">Nombre de documents</entry>
+	<entry code="cms_module_common_datasource_portfolio_type_object">Type de l'objet associé</entry>
+	<entry code="cms_module_common_datasource_portfolio_num_object">Identifiant de l'objet associé</entry>
+	<entry code="cms_module_common_datasource_list_sort_by_document_create_date">Date de création</entry>
+	<entry code="cms_module_common_datasource_list_sort_by_document_filesize">Taille du fichier</entry>
+	<entry code="cms_module_common_datasource_list_sort_by_document_title">Nom du document</entry>
+	<entry code="cms_module_common_datasource_list_sort_by_document_filename">Nom du fichier</entry>
+	<entry code="cms_module_common_datasource_list_sort_by_document_mimetype">Mimetype</entry>
+</XMLlist>

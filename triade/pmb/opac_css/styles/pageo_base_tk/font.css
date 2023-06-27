@@ -1,0 +1,52 @@
+@font-face {
+    font-family: 'league_gothiccondensed';
+    src: url('./fonts/leaguegothic-condenseditalic.eot');
+    src: url('./fonts/leaguegothic-condenseditalic.eot?#iefix') format('embedded-opentype'),
+         url('./fonts/leaguegothic-condenseditalic.woff2') format('woff2'),
+         url('./fonts/leaguegothic-condenseditalic.woff') format('woff'),
+         url('./fonts/leaguegothic-condenseditalic.ttf') format('truetype');
+    font-weight: 400;
+    font-style: italic;
+
+}
+
+
+@font-face {
+    font-family: 'league_gothiccondensed';
+    src: url('./fonts/leaguegothic-condensedregular.eot');
+    src: url('./fonts/leaguegothic-condensedregular.eot?#iefix') format('embedded-opentype'),
+         url('./fonts/leaguegothic-condensedregular.woff2') format('woff2'),
+         url('./fonts/leaguegothic-condensedregular.woff') format('woff'),
+         url('./fonts/leaguegothic-condensedregular.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+
+}
+
+
+@font-face {
+    font-family: 'league_gothic';
+    src: url('./fonts/leaguegothic-italic.eot');
+    src: url('./fonts/leaguegothic-italic.eot?#iefix') format('embedded-opentype'),
+         url('./fonts/leaguegothic-italic.woff2') format('woff2'),
+         url('./fonts/leaguegothic-italic.woff') format('woff'),
+         url('./fonts/leaguegothic-italic.ttf') format('truetype');
+    font-weight: 400;
+    font-style: italic;
+
+}
+
+@font-face {
+    font-family: 'league_gothic';
+    src: url('./fonts/leaguegothic-regular.eot');
+    src: url('./fonts/leaguegothic-regular.eot?#iefix') format('embedded-opentype'),
+         url('./fonts/leaguegothic-regular.woff2') format('woff2'),
+         url('./fonts/leaguegothic-regular.woff') format('woff'),
+         url('./fonts/leaguegothic-regular.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+
+}
+
+@import url('https://fonts.googleapis.com/css?family=Maven+Pro');
+@import url('https://fonts.googleapis.com/css?family=Oswald');

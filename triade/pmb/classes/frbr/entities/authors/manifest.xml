@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+
+<!-- Declaration d'un module
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: manifest.xml,v 1.7 2018-06-29 13:02:47 tsamson Exp $ -->
+
+<manifest>
+	<name lang="fr_FR">Auteurs</name>
+	<name lang="en_UK">Authors</name>
+	<author>
+		<name>Dimitri Goron</name>
+		<organisation>PMB Services</organisation>
+	</author>
+	<created_date>2017-03-24</created_date>
+	<version>1.0</version>
+	<default_language>fr_FR</default_language>
+	<path_indexation directory="authorities">authors</path_indexation>
+	<use>
+		<datasources>
+			<datasource>frbr_entity_authors_datasource_records</datasource>
+			<datasource>frbr_entity_authors_datasource_concepts</datasource>
+			<datasource>frbr_entity_authors_datasource_works</datasource>
+			<datasource>frbr_entity_common_datasource_custom_fields</datasource>
+			<datasource>frbr_entity_common_datasource_aut_link</datasource>
+			<datasource>frbr_entity_common_datasource_composed_concepts</datasource>
+			<datasource>frbr_entity_authors_datasource_used_in_custom_fields</datasource>
+		</datasources>		
+		<views>
+			<view>frbr_entity_authors_view_authorslist</view>
+		</views>
+	</use>
+</manifest>

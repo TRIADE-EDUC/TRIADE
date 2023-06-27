@@ -1,0 +1,17 @@
+<!-- $Id: contribution_area_scenario.tpl.html,v 1.4 2017-05-05 15:04:44 ngantier Exp $ -->
+
+<span class='breadcrumb'>		
+	>>&nbsp;<span class="breadcrumb_home"><a href='./empr.php?tab=contribution_area&lvl=contribution_area_new'>{{ msg.empr_menu_contribution_area_new }}</a></span>&nbsp;
+	>&nbsp;<span class='elem'><a href='./index.php?lvl=contribution_area&sub=area&id={{ scenario.area.id }}'>{{ scenario.area.title}}</a></span>&nbsp;
+</span>
+<div class="contributionDivContainer">
+	<h3>{{ scenario.name }}</h3>
+	<h4>{{ scenario.question }}</h4>
+	<div class="row">
+		{% for form in scenario.forms %}
+			<div class='row'>
+				<a href='./index.php?lvl=contribution_area&sub={{form.entityType}}&area_id={{form.area_id}}&scenario={{scenario.id}}&form_id={{ form.formId }}&form_uri={{ form.id }}&id=0'>{{ form.name }}</a>
+			</div>		
+		{% endfor %}
+	</div>
+</div>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- Catalogue des classes de fonctions
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: catalog.xml,v 1.3 2015-07-24 14:23:02 mbertin Exp $ -->
+
+<catalog>
+	<item name="notice_tpl" description="Fonctions de template de notice" id="1"/>
+	<item name="consolidation" description="Fonctions de consolidation pour les statistiques Opac" id="2"/>
+	<item name="interpreter" description="Fonctions de bulletinage" id="3"/>
+	<item name="inhtml" description="Fonctions de parse html" id="4"/>
+</catalog>

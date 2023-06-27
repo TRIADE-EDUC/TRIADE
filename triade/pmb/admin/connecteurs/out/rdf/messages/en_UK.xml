@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../../../../../includes/XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français
+****************************************************************************************
+© 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: en_UK.xml,v 1.1 2015-06-15 12:55:33 pmbs Exp $ -->
+
+<XMLlist>
+	<entry code="rdf_no_configuration_required">Nothing to configure</entry>
+    <entry code="rdf_service_endpoint">Address of the sparql store</entry>
+    <entry code="rdf_service_endpoint_unrecorded">Register the source to have it</entry>
+</XMLlist>

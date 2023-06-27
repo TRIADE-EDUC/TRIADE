@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+
+<!-- Declaration d'un connecteur
+****************************************************************************************
+© 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: manifest.xml,v 1.1 2011-08-02 12:35:58 arenou Exp $ -->
+
+<manifest>
+	<name>OpenURL</name>
+	<comment>Serveur OpenURL</comment>
+	<author>Arnaud RENOU</author>
+	<org>PMB Services</org>
+	<date>2011-07-25</date>
+	<url>http://www.sigb.net</url>
+	<api_requirements/>
+</manifest>

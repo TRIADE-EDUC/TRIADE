@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+
+<!-- Declaration d'un module
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: manifest.xml,v 1.5 2019-01-09 15:55:35 apetithomme Exp $ -->
+
+<manifest>
+	<name lang="fr_FR">Notices</name>
+	<author>
+		<name>Dimitri Goron</name>
+		<organisation>PMB Services</organisation>
+	</author>
+	<created_date>2017-05-04</created_date>
+	<version>1.0</version>
+	<default_language>fr_FR</default_language>
+	<path_indexation directory="">notices</path_indexation>
+	<use>
+		<datasources>
+			<datasource>frbr_entity_records_datasource_authors</datasource>
+			<datasource>frbr_entity_records_datasource_publishers</datasource>
+			<datasource>frbr_entity_records_datasource_collections</datasource>
+			<datasource>frbr_entity_records_datasource_subcollections</datasource>
+			<datasource>frbr_entity_records_datasource_categories</datasource>
+			<datasource>frbr_entity_records_datasource_indexint</datasource>
+			<datasource>frbr_entity_records_datasource_concepts</datasource>
+			<datasource>frbr_entity_records_datasource_works</datasource>
+            <datasource>frbr_entity_records_datasource_parent_works</datasource>
+			<datasource>frbr_entity_records_datasource_linked_records</datasource>
+			<datasource>frbr_entity_common_datasource_custom_fields</datasource>
+			<datasource>frbr_entity_common_datasource_composed_concepts</datasource>
+		</datasources>
+		<views>
+			<view>frbr_entity_records_view_recordslist</view>
+		</views>
+	</use>
+</manifest>

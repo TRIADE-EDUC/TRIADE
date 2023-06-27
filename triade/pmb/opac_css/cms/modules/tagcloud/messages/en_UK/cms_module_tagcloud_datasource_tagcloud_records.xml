@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le module Article
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_tagcloud_datasource_tagcloud_records.xml,v 1.1 2015-06-16 10:24:56 pmbs Exp $ -->
+
+<XMLlist>
+	<entry code='cms_module_tagcloud_datasource_tagcloud_no_parameters'>No parameter found for this source.</entry>
+	<entry code='cms_module_tagcloud_datasource_admin_facette'>Clouds</entry>
+	<entry code='cms_module_tagcloud_datasource_admin_rmc'>Multi-standards</entry>
+	<entry code='cms_module_tagcloud_selector_tagcloud'>Records list</entry>
+	<entry code='cms_module_tagcloud_datasource_admin_facette_add'>Add a search</entry>
+	<entry code='cms_module_tagcloud_datasource_admin_rmc_add'>Add a search</entry>
+	<entry code='cms_module_tagcloud_datasource_admin_facette_name'>Cloud name</entry>
+	<entry code='cms_module_tagcloud_datasource_admin_facette_list'>Main standard</entry>
+	<entry code='cms_module_tagcloud_datasource_admin_facette_add'>Add</entry>
+	<entry code='cms_module_tagcloud_datasource_admin_critere'>Standards</entry>
+	<entry code='cms_module_tagcloud_datasource_admin_ss_critere'>Sub-standard(s)</entry>
+	<entry code='cms_module_tagcloud_datasource_admin_search_field'>Search on fields</entry>
+	<entry code='cms_module_tagcloud_datasource_admin_search_word'>Search on words</entry>
+	<entry code='cms_module_tagcloud_datasource_admin_rmc_name'>Search name</entry>
+	<entry code='cms_module_tagcloud_datasource_admin_rmc_addlabel'>Add a search standard on</entry>
+	<entry code='cms_module_tagcloud_datasource_admin_rmc_add'>Add</entry>
+	<entry code='cms_module_tagcloud_datasource_admin_rmc_save'>Save</entry>
+	<entry code='cms_module_tagcloud_datasource_admin_rmc_delete'>Delete</entry>
+	<entry code='cms_module_tagcloud_datasource_admin_facette_delete'>Delete</entry>
+	<entry code='cms_module_tagcloud_datasource_admin_rmc_delete_popup'>Are you sure you want to delete this search ?</entry>
+	<entry code='cms_module_tagcloud_datasource_admin_facette_delete_popup'>Are you sure you want to delete this cloud ?</entry>
+</XMLlist>

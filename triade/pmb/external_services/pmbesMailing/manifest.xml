@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- Fichier manifest de description des méthodes disponibles
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: manifest.xml,v 1.3 2019-03-14 10:36:01 tsamson Exp $ -->
+<manifest>
+	<name>pmbesMailing</name>
+	<description>msg:Mailing_functions_description</description>
+	<requirements>
+		<requirement group="pmbesTypes"/>
+	</requirements>
+	<types>
+		<type name="sendMailing" imported="true" imported_from="pmbesTypes"/>
+	</types>
+	<methods>
+		<method name="sendMailingCaddie" rights="" version="1.0" comment="msg:sendMailingCaddie_description" language_independant="true">
+			<pmb_requirements>
+				<pmb_requirement start_path="class" file="mailing_empr.class.php"/>
+				<pmb_requirement start_path="class" file="mailtpl.class.php"/>
+			</pmb_requirements>
+			<inputs>
+				<description>msg:sendMailingCaddie_input_description</description>
+				<param name="id_caddie_empr" type="scalar" dataType="integer" description="msg:sendMailingCaddie_id_caddie_empr"/>
+				<param name="id_tpl" type="scalar" dataType="integer" description="msg:sendMailingCaddie_id_tpl"/>
+				<param name="email_cc" type="scalar" dataType="string" description="msg:sendMailingCaddie_email_cc"/>
+			</inputs>
+			<outputs>
+				<description>msg:sendMailingCaddie_output_description</description>
+				<result name="result" type="scalar" dataType="sendMailing" description="msg:sendMailingCaddie_result"/>
+			</outputs>
+		</method>
+		<method name="sendMailingSearchPerso" rights="" version="1.0" comment="msg:sendMailingSearchPerso_description" language_independant="true">
+			<pmb_requirements>
+				<pmb_requirement start_path="class" file="mailing_empr.class.php"/>
+				<pmb_requirement start_path="class" file="mailtpl.class.php"/>
+			</pmb_requirements>
+			<inputs>
+				<description>msg:sendMailingSearchPerso_input_description</description>
+				<param name="id_search_perso" type="scalar" dataType="integer" description="msg:sendMailingSearchPerso_id_empr_search_perso"/>
+				<param name="id_tpl" type="scalar" dataType="integer" description="msg:sendMailingSearchPerso_id_tpl"/>
+				<param name="email_cc" type="scalar" dataType="string" description="msg:sendMailingSearchPerso_email_cc"/>
+			</inputs>
+			<outputs>
+				<description>msg:sendMailingSearchPerso_output_description</description>
+				<result name="result" type="scalar" dataType="sendMailing" description="msg:sendMailingSearchPerso_result"/>
+			</outputs>
+		</method>
+	</methods>
+</manifest>
+

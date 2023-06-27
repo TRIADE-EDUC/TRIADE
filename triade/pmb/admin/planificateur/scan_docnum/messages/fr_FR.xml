@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- messages localisés en français pour la maintenance mySQL
+****************************************************************************************
+© 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: fr_FR.xml,v 1.2 2015-03-17 10:39:28 abacarisse Exp $ -->
+
+<XMLlist>
+	<entry code="planificateur_scan_docnum_upload_folder">Répertoire à analyser</entry>
+	<entry code="planificateur_scan_docnum_upload_repertoire">Répertoire de documents numériques cible</entry>
+	<entry code="planificateur_scan_docnum_doc_a_traiter">Documents a traiter</entry>
+	<entry code="planificateur_scan_docnum_doc_traites">Documents traités avec succès</entry>
+	<entry code="planificateur_scan_docnum_doc_non_traites">Documents en erreur</entry>
+	<entry code="planificateur_scan_docnum_no_upload_repertoire">Pas de répertoire disponible</entry>
+	<entry code="planificateur_scan_docnum_bad_params">Vérifiez les paramètres de la tâche</entry>
+	<entry code="planificateur_scan_docnum_no_docnum">Aucun document numérique à traiter</entry>
+	
+</XMLlist>

@@ -1,0 +1,167 @@
+/* +--------------------------------------------------------------------------+
+// 2013 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// +-------------------------------------------------+
+// $Id: zonepageo_a.css,v 1.2 2016-01-19 11:08:38 mramage Exp $ */
+/*------------------------------------------------------------------------------------------*/
+
+#container {
+    margin: 0 auto;
+    max-width: 1040px;
+    position: relative;
+}
+
+#intro {
+	margin: 0 0 40px 0;
+}
+
+#main {
+    width: auto;
+    float: none;
+    box-sizing: border-box;
+    padding: 0px 0px;
+    margin: 0px 0 40px 0;
+}
+
+#bandeau {
+    padding: 0px 0px 0px 0px;
+    margin: 0px;
+    box-sizing: border-box;
+    float: right;
+    position: relative;
+    overflow: hidden;
+    width: 24%;
+    margin: 0 0 40px 3%;
+}
+
+#bandeau_2 {
+
+}
+
+#footer {
+    clear: both;
+}
+
+.cmsNoStyles {
+    height: 0px!important;
+    padding: 0px!important;
+    margin: 0px!important;
+    overflow: hidden!important;
+}
+
+#main,
+#bandeau,
+#bandeau2 {
+    margin-bottom: 30px;
+}
+/*------------------------------------------------------------------------------------------*/
+/*-------------------------------------------------1260-------------------------------------*/
+/*------------------------------------------------------------------------------------------*/
+
+@media screen and (max-width: 1260px) {
+    #container {
+        max-width: 1024px;
+    }
+
+    #main {
+        overflow: hidden;
+        width: 70%;
+        margin: 0px 0px 0px 20px;
+    }
+
+    #bandeau {
+        float: right;
+        margin-right: 20px;
+    }
+
+    #bandeau_2 {
+        margin: 0px;
+        float: left;
+        width: 71%;
+        margin-left: 20px;
+        margin-bottom: 25px;
+    }
+}
+/*------------------------------------------------------------------------------------------*/
+/*-------------------------------------------------980-------------------------------------*/
+/*------------------------------------------------------------------------------------------*/
+
+@media screen and (max-width: 980px) {
+    #container {
+        width: 100%!important;
+        position: static;
+    }
+
+    #main {
+        float: none;
+        width: auto;
+        margin: 0 auto;
+        padding: 0px 20px;
+    }
+
+    #bandeau {
+        float: none;
+        max-width: none;
+        width: 100%;
+        overflow: visible;
+        position: static;
+        margin: 20px 0px 20px;
+        padding: 0px 20px;
+    }
+
+    #bandeau:after {
+        clear: both;
+        display: block;
+        content: "";
+    }
+    #bandeau_2 {
+        margin: 0px;
+        float: none;
+        width: auto;
+        margin-left: 20px;
+        margin-bottom: 25px;
+    }    
+}
+/*------------------------------------------------------------------------------------------*/
+/*-------------------------------------------------768-------------------------------------*/
+/*------------------------------------------------------------------------------------------*/
+
+@media screen and (max-width: 767px) and (min-width: 600px) {
+    #container {
+        height: auto;
+        overflow-x: hidden;
+    }
+
+    #bandeau {
+        display: block;
+    }
+}
+/*------------------------------------------------------------------------------------------*/
+/*-------------------------------------------------600-------------------------------------*/
+/*------------------------------------------------------------------------------------------*/
+
+@media screen and (max-width: 599px) {
+    #container {
+        /*max-width: 420px;*/
+        height: auto;
+        overflow-x: hidden;
+    }
+
+    #bandeau {
+        display: block;
+    }
+}
+/*------------------------------------------------------------------------------------------*/
+/*-------------------------------------------------400 -------------------------------------*/
+/*------------------------------------------------------------------------------------------*/
+
+@media screen and (max-width: 400px) {
+    #container {
+        max-width: 400px;
+        min-width: 320px;
+        height: auto;
+    }
+
+    #bandeau {
+        display: block;
+    }
+}

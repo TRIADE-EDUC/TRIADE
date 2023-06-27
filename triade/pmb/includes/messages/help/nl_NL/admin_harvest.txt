@@ -1,0 +1,2 @@
+<h2>Administration du r&eacute;colteur de notices</h2>
+<p>Cette page permet de g&eacute;rer les imports de notices issue de connecteurs diff&eacute;rents.</p>

@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- messages localisés en français pour la classe de fonctions search_functions
+****************************************************************************************
+© 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: fr_FR.xml,v 1.1 2011-07-29 12:32:13 dgoron Exp $ -->
+
+<!DOCTYPE XMLlist SYSTEM "../../../includes/XMLlist.dtd" >
+<XMLlist>
+<!-- 
+pmbesLoans
+-->
+  <entry code="Loans_functions_description">Fonctions relatives aux prêts</entry>
+<!-- 
+filterLoansReaders
+-->
+  <entry code="filterLoansReaders_description">Liste des prêts</entry>
+  <entry code="filterLoansReaders_input_description"></entry>
+  <entry code="filterLoansReaders_filter_name">Nom du filtre</entry>  
+  <entry code="filterLoansReaders_filter_source">Source du filtre</entry>
+  <entry code="filterLoansReaders_display"></entry>
+  <entry code="filterLoansReaders_filter"></entry>
+  <entry code="filterLoansReaders_sort"></entry>
+  <entry code="filterLoansReaders_parameters"></entry>
+  <entry code="listLoansReaders_output_description"></entry> 
+  <entry code="listLoansReaders_result">Retourne la liste des prêts</entry>
+<!-- 
+relanceLoansReaders
+-->
+  <entry code="relanceLoansReaders_description">Relance des retards de prêts</entry>
+  <entry code="relanceLoansReaders_input_description"></entry>
+  <entry code="relanceLoansReaders_t_empr">Tableau d'identifiants d'emprunteurs</entry>  
+  <entry code="relanceLoansReaders_output_description"></entry> 
+  <entry code="relanceLoansReaders_result"></entry>
+<!-- 
+exportCSV
+-->
+  <entry code="exportCSV_description">Export CSV des relances</entry>
+  <entry code="exportCSV_input_description"></entry>
+  <entry code="exportCSV_t_empr">Tableau d'identifiants d'emprunteurs</entry>  
+  <entry code="exportCSV_output_description"></entry> 
+  <entry code="exportCSV_result"></entry>
+<!-- 
+listLoansReaders
+-->
+  <entry code="listLoansReaders_description">Liste des prêts</entry>
+  <entry code="listLoansReaders_input_description">Filtres sur les lecteurs</entry>
+  <entry code="listLoansReaders_loan_type">
+  		le type des prêts que l'on souhaite récupérer:
+		0 (LIST_LOAN_ALL): tous les prêts
+		1 (LIST_LOAN_CURRENT): tous les prêts en cours
+		2 (LIST_LOAN_LATE): tous les prêts en retard
+  </entry>
+  <entry code="listLoansReaders_f_loc">Filtre sur les localisations</entry>
+  <entry code="listLoansReaders_f_categ">Filtre sur les catégories</entry>
+  <entry code="listLoansReaders_f_group">Filtre sur les groupes</entry>
+  <entry code="listLoansReaders_f_codestat">Filtre sur les codes statistiques</entry>
+  <entry code="listLoansReaders_sort_by">Filtre de tri</entry>
+  <entry code="listLoansReaders_limite_mysql"></entry>
+  <entry code="listLoansReaders_limite_page"></entry>
+  <entry code="listLoansReaders_output_description"></entry> 
+  <entry code="listLoansReaders_result">Retourne la liste des prêts</entry>
+<!-- 
+listLoansReaders
+
+  <entry code="listLoansReaders_description">Liste des prêts</entry>
+  <entry code="listLoansReaders_input_description"></entry>
+  <entry code="listLoansReaders_loan_type">
+  		le type des prêts que l'on souhaite récupérer:
+		0 (LIST_LOAN_ALL): tous les prêts
+		1 (LIST_LOAN_CURRENT): tous les prêts en cours
+		2 (LIST_LOAN_LATE): tous les prêts en retard
+  </entry>
+  <entry code="listLoansReaders_empr_location_id">Identifiant de la localisation</entry>  
+  <entry code="listLoansReaders_limite_mysql"></entry>
+  <entry code="listLoansReaders_limite_page"></entry>
+  <entry code="listLoansReaders_output_description"></entry> 
+  <entry code="listLoansReaders_result">Retourne la liste des prêts</entry>
+--><!-- 
+listLoansGroups
+ -->
+  <entry code="listLoansGroups_description">Liste des prêts par groupe</entry>
+  <entry code="listLoansGroups_input_description"></entry>
+  <entry code="listLoansGroups_loan_type">
+  		le type des prêts que l'on souhaite récupérer:
+		0 (LIST_LOAN_ALL): tous les prêts
+		1 (LIST_LOAN_CURRENT): tous les prêts en cours
+		2 (LIST_LOAN_LATE): tous les prêts en retard
+  </entry>
+  <entry code="listLoansGroups_limite_mysql">Nombre de lignes retournées au maximum</entry>
+  <entry code="listLoansGroups_limite_page"></entry>
+  <entry code="listLoansGroups_output_description"></entry> 
+  <entry code="listLoansGroups_result">Retourne la liste des prêts par groupe</entry> 
+<!-- 
+buildPdfLoansRunningGroup
+ -->
+  <entry code="buildPdfLoansRunningGroup_description">Construction des PDF par groupe</entry>
+  <entry code="buildPdfLoansRunningGroup_input_description"></entry>
+  <entry code="buildPdfLoansRunningGroup_id_groupe">Identifiant du groupe</entry>  
+  <entry code="buildPdfLoansRunningGroup_output_description"></entry> 
+  <entry code="buildPdfLoansRunningGroup_result">Retourne le contenu du document généré</entry>
+<!-- 
+buildPdfLoansDelayGroup
+-->
+  <entry code="buildPdfLoansDelayGroup_description">Génération en version PDF des retards par groupe</entry>
+  <entry code="buildPdfLoansDelayGroup_input_description"></entry>
+  <entry code="buildPdfLoansDelayGroup_id_groupe">Identifiant du groupe</entry>  
+  <entry code="buildPdfLoansDelayGroup_output_description"></entry> 
+  <entry code="buildPdfLoansDelayGroup_result">Retourne le contenu du document généré</entry> 
+<!-- 
+buildPdfLoansRunningReader
+-->
+  <entry code="buildPdfLoansRunningReader_description">Génération en version PDF des prêts en cours par lecteur</entry>
+  <entry code="buildPdfLoansRunningReader_input_description"></entry>
+  <entry code="buildPdfLoansRunningReader_id_empr">Identifiant de l'emprunteur</entry>
+  <entry code="buildPdfLoansRunningReader_empr_location_id">Identifiant de la localisation</entry>
+  <entry code="buildPdfLoansRunningReader_description"></entry> 
+  <entry code="buildPdfLoansRunningReader_result">Retourne le contenu du document généré</entry>
+<!-- 
+buildPdfLoansDelayReader
+-->
+  <entry code="buildPdfLoansDelayReader_description">Génération en version PDF des prêts en retards par lecteur</entry>
+  <entry code="buildPdfLoansDelayReader_input_description"></entry>
+  <entry code="buildPdfLoansDelayReader_id_empr">Identifiant de l'emprunteur</entry>
+  <entry code="buildPdfLoansDelayReader_empr_location_id">Identifiant de la localisation</entry>
+  <entry code="buildPdfLoansDelayReader_description"></entry> 
+  <entry code="buildPdfLoansDelayReader_result">Retourne le contenu du document généré</entry>
+<!-- 
+sendMailLoansRunning
+ -->
+  <entry code="sendMailLoansRunning_description">Liste des prêts par groupe</entry>
+  <entry code="sendMailLoansRunning_input_description"></entry>
+  <entry code="sendMailLoansRunning_type_send">
+  		le type d'envoi de mail (pour le second paramètres):
+		1 (READER): référence un lecteur
+		2 (GROUP): référence un groupe de lecteurs
+  </entry>
+  <entry code="sendMailLoansRunning_ident">Identifiant du lecteur ou du groupe en fonction du type d'envoi</entry>
+  <entry code="sendMailLoansRunning_empr_location_id">Identifiant de la localisation</entry>
+  <entry code="sendMailLoansRunning_output_description"></entry> 
+  <entry code="sendMailLoansRunning_result">Retourne la liste des prêts par groupe</entry> 
+
+
+
+<!-- 
+listLoansRunning
+
+  <entry code="listLoansRunning_description">Liste des prêts en cours</entry>
+  <entry code="listLoansRunning_input_description"></entry>
+  <entry code="listLoansRunning_pmb_lecteurs_localises">Localisation</entry>  
+  <entry code="listLoansRunning_location_id">Identifiant de la localisation</entry>  
+  <entry code="listLoansRunning_limite_mysql">Nombre de lignes retournées au maximum</entry>
+  <entry code="listLoansRunning_limite_page"></entry>
+  <entry code="listLoansRunning_output_description"></entry> 
+  <entry code="listLoansRunning_result">Retourne la liste des prêts en cours</entry>
+
+listLoansByGroup
+
+  <entry code="listLoansByGroup_description">Liste des prêts par groupe</entry>
+  <entry code="listLoansByGroup_input_description"></entry>
+  <entry code="listLoansByGroup_limite_mysql">Nombre de lignes retournées au maximum</entry>
+  <entry code="listLoansByGroup_limite_page"></entry>
+  <entry code="listLoansByGroup_output_description"></entry> 
+  <entry code="listLoansByGroup_result">Retourne la liste des prêts par groupe</entry> 
+
+listLetterDelayGroup
+
+  <entry code="listLetterDelayGroup_description">Liste des retards par groupe</entry>
+  <entry code="listLetterDelayGroup_input_description"></entry>
+  <entry code="listLetterDelayGroup_id_groupe">Identifiant du groupe</entry>
+  <entry code="listLetterDelayGroup_output_description"></entry> 
+  <entry code="listLetterDelayGroup_result">Retourne la liste des retards par groupe</entry> 
+
+listLetterDelayDate
+
+  <entry code="listLetterDelayDate_description">Liste des retards par date</entry>
+  <entry code="listLetterDelayDate_input_description"></entry>
+  <entry code="listLetterDelayDate_id_groupe">Identifiant du groupe</entry>
+  <entry code="listLetterDelayDate_output_description"></entry> 
+  <entry code="listLetterDelayDate_result">Retourne la liste des retards par date</entry>
+ 
+listLetterDelayReader
+
+  <entry code="listLetterDelayReader_description">Liste des retards par lecteur</entry>
+  <entry code="listLetterDelayReader_input_description"></entry>
+  <entry code="listLetterDelayReader_pmb_lecteurs_localises">Localisation</entry>  
+  <entry code="listLetterDelayReader_location_id">Identifiant de la localisation</entry>  
+  <entry code="listLetterDelayReader_limite_mysql">Nombre de lignes retournées au maximum</entry>
+  <entry code="listLetterDelayReader_limite_page"></entry>
+  <entry code="listLetterDelayReader_output_description"></entry> 
+  <entry code="listLetterDelayReader_result">Retourne la liste des retards par lecteur</entry>
+
+ 
+generatePdfGroup
+
+  <entry code="generatePdfGroup_description">Génération des PDF par groupe</entry>
+  <entry code="generatePdfGroup_input_description"></entry>
+  <entry code="generatePdfGroup_id_groupe">Identifiant du groupe</entry>  
+  <entry code="generatePdfGroup_output_description"></entry> 
+  <entry code="generatePdfGroup_result">Retourne le contenu du document généré</entry>
+ 
+letterDelayByGroup
+
+  <entry code="letterDelayByGroup_description">Génération en version PDF des retards par groupe</entry>
+  <entry code="letterDelayByGroup_input_description"></entry>
+  <entry code="letterDelayByGroup_id_groupe">Identifiant du groupe</entry>  
+  <entry code="letterDelayByGroup_output_description"></entry> 
+  <entry code="letterDelayByGroup_result">Retourne le contenu du document généré</entry>   
+ 
+generatePdfLoansRunning
+
+  <entry code="generatePdfLoansRunning_description">Génération en version PDF des prêts en cours par lecteur</entry>
+  <entry code="generatePdfLoansRunning_input_description"></entry>
+  <entry code="generatePdfLoansRunning_input_id_empr">Identifiant de l'emprunteur</entry>
+  <entry code="generatePdfLoansRunning_description"></entry> 
+  <entry code="generatePdfLoansRunning_result">Retourne le contenu du document généré</entry>
+-->
+</XMLlist>

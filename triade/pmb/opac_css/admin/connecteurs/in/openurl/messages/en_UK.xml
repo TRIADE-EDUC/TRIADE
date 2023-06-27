@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le connecteur OAI
+****************************************************************************************
+© 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: en_UK.xml,v 1.4 2015-06-26 12:31:14 pmbs Exp $ -->
+
+<XMLlist>
+	<entry code="openurl_enrichment_source">(enrichment from %s)</entry>
+	<entry code="openurl_form_param_visuel">Display options in the OPAC</entry>
+	<entry code="openurl_libelle">Label of the tab displayed in the OPAC</entry>
+	<entry code="openurl_iwidth">Frame width</entry>
+	<entry code="openurl_iheight">Frame height</entry>
+	<entry code="openurl_form_param_transport">Transportation configuration</entry>
+	<entry code="openurl_form_param_serialization">Serialization configuration</entry>
+	<entry code="openurl_protocole">Protocol</entry>
+	<entry code="openurl_method">Method</entry>
+	<entry code="openurl_tparameters">Resolver</entry>
+	<entry code="openurl_protocole_http">HTTP</entry>
+	<entry code="openurl_protocole_https">HTTPS</entry>
+	<entry code="openurl_method_byval">By-value</entry>
+	<entry code="openurl_method_byref">By-reference</entry>
+	<entry code="openurl_method_inline">Inline</entry>
+	<entry code="openurl_serialize">Serialization mode</entry>
+	<entry code="openurl_serialization_kev">KEV</entry>
+	<entry code="openurl_serialization_xml">XML</entry>
+	<entry code="openurl_form_param_entities">Configuration of the entities</entry>
+	<entry code="openurl_entities_referent">Referent</entry>
+	<entry code="openurl_descriptors_type">Type of describers</entry>
+	<entry code="openurl_descriptors_stype">Describers</entry>
+	<entry code="openurl_descriptors_stype_allow">Use</entry>
+	<entry code="openurl_descriptors_identifier">Identifier</entry>
+	<entry code="openurl_descriptors_identifier_isbn">ISBN</entry>
+	<entry code="openurl_descriptors_identifier_issn">ISSN</entry>
+	<entry code="openurl_descriptors_identifier_doi">DOI</entry>
+	<entry code="openurl_descriptors_identifier_pmid">PMID</entry>
+	<entry code="openurl_yes">Yes</entry>
+	<entry code="openurl_no">No</entry>
+	<entry code="openurl_descriptors_byval">By-Value</entry>
+	<entry code="openurl_descriptors_byref">By-Reference</entry>
+	<entry code="openurl_descriptors_private">Private Data</entry>
+	<entry code="openurl_entities_referring_entity">Referring Entity</entry>
+	<entry code="openurl_entity_allow">Allow ?</entry>
+	<entry code="openurl_entities_requester">Requester</entry>
+	<entry code="openurl_entities_service_type">Service Type</entry>
+	<entry code="openurl_entities_resolver">Resolver</entry>
+	<entry code="openurl_entities_referrer">Referrer</entry>
+	<entry code="openurl_resolver_param">Parameter</entry>
+	<entry code="openurl_referrer_param">Parameter</entry>
+	<entry code="openurl_conf_file">Use a configuration file</entry>
+	<entry code="openurl_service">Type of Service</entry>
+	<entry code="openurl_service_use">Request</entry>
+	<entry code="openurl_requester_param">Parameter</entry>
+	<entry code="openurl_source_name">Name of the source (visible in the OPAC)</entry>
+	<entry code="openurl_byref_url">URL of the supplier By-Reference (Outgoing connector)</entry>
+	<entry code="openurl_infobulle">Tab mouseover displayed in the OPAC</entry>
+</XMLlist>

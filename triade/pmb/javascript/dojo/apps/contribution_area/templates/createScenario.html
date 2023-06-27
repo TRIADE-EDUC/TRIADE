@@ -1,0 +1,42 @@
+<form data-dojo-type='dijit/form/Form' id='scenarioCreationForm' encType='multipart/form-data' action='' method=''> 
+	<label for='name'>!!msg_scenario_name!!</label><br/>
+	<input type="hidden" name="id" id="id" value="!!idScenario!!" data-dojo-type="dijit/form/TextBox"/>
+	<input type="text" name="name" value="!!scenarioName!!" data-dojo-type="dijit/form/ValidationTextBox" data-dojo-props="trim:true, required:true" id="name"/><br/>
+	!!selector!!<br/>
+	!!checkStartScenario!!
+	<label for="startScenario">!!msg_start_scenario!!</label>
+	<br/>
+	<label for="question">!!msg_scenario_question!!</label>
+	<br/>
+	<textarea data-dojo-type="dijit/form/Textarea" id="question" name="question">!!scenarioQuestion!!</textarea>
+	<br/>
+	<label for="comment">!!msg_scenario_comment!!</label>
+	<br/>
+	<textarea data-dojo-type="dijit/form/Textarea" id="comment" name="comment">!!scenarioComment!!</textarea>
+	<br/>
+	<label for="scenarioStatus">!!msg_scenario_status!!</label>
+	!!scenarioStatus!!<br/>
+	<div id="scenarioRights">!!scenarioRights!!</div>
+	<button data-dojo-type="dijit/form/Button" id="scenarioCreationValidate" data-dojo-id="scenarioCreationValidate" data-dojo-props="" type="button">
+    	!!msg_scenario_validate!!
+    	<script type="dojo/on" data-dojo-event="click" data-dojo-args="evt">
+	        require(["dojo/dom", "dijit/registry", "dojo/topic"], function(dom, registry, topic){
+				var popup = registry.byId('createScenarioPopup');
+				var form = registry.byId('scenarioCreationForm');
+				if(form.validate()){
+					if(popup.callback){
+						popup.callback();
+					}
+					var idScenario = dom.byId("id").value;
+					if (idScenario) {
+						topic.publish("Dialog", "editScenario", form.getValues());
+					} else {
+						topic.publish("Dialog", "addScenario", form.getValues());
+					}
+					popup.destroyRecursive();
+					popup.destroy();
+				}
+        	});
+    	</script>
+	</button>
+</form>

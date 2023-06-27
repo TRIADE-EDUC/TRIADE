@@ -1,0 +1,437 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- Fichier manifest de description des méthodes disponibles
+****************************************************************************************
+© 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: manifest.xml,v 1.23 2017-11-30 10:20:53 plmrozowski Exp $ -->
+<manifest>
+	<name>pmbesTypes</name>
+	<description>msg:pmbesTypes_description</description>
+	<types>
+		<type name="item" description="msg:item_description">
+			<part name="id" type="scalar" dataType="integer" description="msg:item_id"/>
+			<part name="cb" type="scalar" dataType="string" description="msg:item_cb"/>
+			<part name="cote" type="scalar" dataType="string" description="msg:item_cote"/>
+			<part name="location_id" type="scalar" dataType="integer" description="msg:item_location_id"/>
+			<part name="location_caption" type="scalar" dataType="string" description="msg:item_location_caption"/>
+			<part name="section_id" type="scalar" dataType="integer" description="msg:item_section_id"/>
+			<part name="section_caption" type="scalar" dataType="string" description="msg:item_section_caption"/>
+			<part name="statut" type="scalar" dataType="string" description="msg:item_statut"/>
+			<part name="support" type="scalar" dataType="string" description="msg:item_support"/>
+			<part name="situation" type="scalar" dataType="string" description="msg:item_situation"/>
+			<part name="codestat" type="scalar" dataType="string" description="msg:item_codestat"/>
+		</type>
+		<type name="reader" description="msg:reader_description">
+			<part name="id" type="scalar" dataType="integer" description="msg:reader_id"/>
+			<part name="cb" type="scalar" dataType="string" description="msg:reader_cb"/>
+			<part name="personal_information" type="structure" description="msg:reader_personal_information">
+				<part name="firstname" type="scalar" dataType="string" description="msg:reader_personal_information_firstname"/>
+				<part name="lastname" type="scalar" dataType="string" description="msg:reader_personal_information_lastname"/>
+				<part name="address_part1" type="scalar" dataType="string" description="msg:reader_personal_information_address_part1"/>
+				<part name="address_part2" type="scalar" dataType="string" description="msg:reader_personal_information_address_part2"/>
+				<part name="address_cp" type="scalar" dataType="integer" description="msg:reader_personal_information_address_cp"/>
+				<part name="address_city" type="scalar" dataType="string" description="msg:reader_personal_information_address_city"/>
+				<part name="phone_number1" type="scalar" dataType="string" description="msg:reader_personal_information_phone_number1"/>
+				<part name="phone_number2" type="scalar" dataType="string" description="msg:reader_personal_information_phone_number2"/>
+				<part name="email" type="scalar" dataType="string" description="msg:reader_personal_information_email"/>
+				<part name="birthyear" type="scalar" dataType="integer" description="msg:reader_personal_information_birthyear"/>
+				<part name="sex" type="scalar" dataType="integer" description="msg:reader_personal_information_sex"/>
+			</part>
+			<part name="location_id" type="scalar" dataType="integer" description="msg:reader_location_id"/>
+			<part name="location_caption" type="scalar" dataType="string" description="msg:reader_location_caption"/>
+			<part name="adhesion_date" type="scalar" dataType="string" description="msg:reader_adhesion_date"/>
+			<part name="expiration_date" type="scalar" dataType="string" description="msg:reader_expiration_date"/>
+		</type>
+		<type name="loan" description="msg:loan_description">
+			<part name="empr_id" type="scalar" dataType="integer" description="msg:loan_empr_id"/>
+			<part name="notice_id" type="scalar" dataType="integer" description="msg:loan_notice_id"/>
+			<part name="bulletin_id" type="scalar" dataType="integer" description="msg:loan_bulletin_id"/>
+			<part name="expl_id" type="scalar" dataType="integer" description="msg:loan_expl_id"/>
+			<part name="expl_cb" type="scalar" dataType="string" description="msg:loan_expl_cb"/>
+			<part name="expl_support" type="scalar" dataType="string" description="msg:loan_expl_support"/>
+			<part name="expl_location_id" type="scalar" dataType="integer" description="msg:loan_expl_location_id"/>
+			<part name="expl_location_caption" type="scalar" dataType="string" description="msg:loan_expl_location_caption"/>
+			<part name="expl_section_id" type="scalar" dataType="integer" description="msg:loan_expl_section_id"/>
+			<part name="expl_section_caption" type="scalar" dataType="string" description="msg:loan_expl_section_caption"/>
+			<part name="expl_libelle" type="scalar" dataType="string" description="msg:loan_expl_libelle"/>
+			<part name="loan_startdate" type="scalar" dataType="string" description="msg:loan_loan_startdate"/>
+			<part name="loan_returndate" type="scalar" dataType="string" description="msg:loan_loan_returndate"/>
+		</type>
+		<type name="resa" description="msg:resa_description">
+			<part name="resa_id" type="scalar" dataType="integer" description="msg:resa_resa_id"/>
+			<part name="empr_id" type="scalar" dataType="integer" description="msg:resa_empr_id"/>
+			<part name="notice_id" type="scalar" dataType="integer" description="msg:resa_notice_id"/>
+			<part name="bulletin_id" type="scalar" dataType="integer" description="msg:resa_bulletin_id"/>
+			<part name="resa_rank" type="scalar" dataType="integer" description="msg:resa_resa_rank"/>
+			<part name="resa_dateend" type="scalar" dataType="string" description="msg:resa_resa_dateend"/>
+			<part name="resa_retrait_location_id" type="scalar" dataType="integer" description="msg:resa_resa_retrait_location_id"/>
+			<part name="resa_retrait_location" type="scalar" dataType="string" description="msg:resa_resa_retrait_location"/>
+		</type>
+		<type name="suggestion" description="msg:suggestion_description">
+			<part name="sugg_id" type="scalar" dataType="string"/>
+			<part name="sugg_date" type="scalar" dataType="string" description="msg:suggestion_sugg_date"/>
+			<part name="sugg_title" type="scalar" dataType="string" description="msg:suggestion_sugg_title"/>
+			<part name="sugg_editor" type="scalar" dataType="string" description="msg:suggestion_sugg_editor"/>
+			<part name="sugg_author" type="scalar" dataType="string" description="msg:suggestion_sugg_author"/>
+			<part name="sugg_barcode" type="scalar" dataType="string"/>
+			<part name="sugg_price" type="scalar" dataType="string"/>
+			<part name="sugg_url" type="scalar" dataType="string"/>
+			<part name="sugg_comment" type="scalar" dataType="string"/>
+			<part name="sugg_date" type="scalar" dataType="string"/>
+			<part name="sugg_source" type="scalar" dataType="integer"/>
+			<part name="sugg_source_caption" type="scalar" dataType="string"/>
+			<part name="sugg_category" type="scalar" dataType="integer"/>
+			<part name="sugg_category_caption" type="scalar" dataType="string"/>
+			<part name="sugg_location" type="scalar" dataType="integer"/>
+			<part name="sugg_state" type="scalar" dataType="string"/>
+			<part name="sugg_state_caption" type="scalar" dataType="string" description="msg:suggestion_sugg_state"/>
+		</type>
+		<type name="location" description="msg:location_description">
+			<part name="location_id" type="scalar" dataType="integer" description="msg:location_location_id"/>
+			<part name="location_caption" type="scalar" dataType="string" description="msg:location_location_caption"/>
+		</type>
+	    <type name="section" description="msg:section_description">
+			<part name="section_id" type="scalar" dataType="integer" description="msg:section_section_id"/>
+			<part name="section_location" type="scalar" dataType="integer" description="msg:section_section_location"/>
+			<part name="section_caption" type="scalar" dataType="string" description="msg:section_section_caption"/>
+			<part name="section_image" type="scalar" dataType="string" description="msg:section_section_image"/>
+	    </type>
+	    <type name="location_and_sections">
+			<part name="location" type="scalar" dataType="location"/>
+			<part name="sections" type="array">
+				<part name="asection" type="scalar" dataType="section"/>
+			</part>	
+		</type>    
+		<type name="abonnement" description="msg:abonnement_description">
+			<part name="abonnement_id" type="scalar" dataType="integer" description="msg:abonnement_abonnement_id"/>
+			<part name="abonnement_type" type="scalar" dataType="string" description="msg:abonnement_abonnement_type"/>
+			<part name="abonnement_title" type="scalar" dataType="string" description="msg:abonnement_abonnement_title"/>
+			<part name="abonnement_lastsentdate" type="scalar" dataType="string" description="msg:abonnement_abonnement_lastsentdate"/>
+			<part name="abonnement_equation_human" type="scalar" dataType="string" description="msg:abonnement_abonnement_equation_human"/>
+			<part name="abonnement_notice_count" type="scalar" dataType="integer" description="msg:abonnement_abonnement_notice_count"/>
+			<part name="empr_subscriber" type="scalar" dataType="boolean" description="msg:abonnement_empr_subscriber"/>
+		</type>
+		<type name="search_field" description="msg:search_field_description">
+			<part name="id" type="scalar" dataType="string" description="msg:search_field_id"/>
+			<part name="label" type="scalar" dataType="string" description="msg:search_field_label"/>
+			<part name="type" type="scalar" dataType="string" description="msg:search_field_type"/>
+			<part name="operators" type="array" description="msg:search_field_operators">
+				<part name="id" type="scalar" dataType="string" description="msg:search_field_operators_id"/>
+				<part name="label" type="scalar" dataType="string" description="msg:search_field_operators_label"/>
+			</part>
+			<part name="values" type="array" description="msg:search_field_values">
+				<part name="value_id" type="scalar" dataType="integer" description="msg:search_field_values_value_id"/>
+				<part name="value_caption" type="scalar" dataType="string" description="msg:search_field_values_value_caption"/>
+			</part>
+			<part name="fieldvar" type="array" description="msg:search_field_fieldvar">
+				<part name="label" type="scalar" dataType="string" description="msg:search_field_fieldvar_label"/>
+				<part name="name" type="scalar" dataType="string" description="msg:search_field_fieldvar_name"/>
+				<part name="type" type="scalar" dataType="string" description="msg:search_field_fieldvar_type"/>
+				<part name="values" type="array" description="msg:search_field_fieldvar_values">
+					<part name="value_id" type="scalar" dataType="integer" description="msg:search_field_fieldvar_values_value_id"/>
+					<part name="value_caption" type="scalar" dataType="string" description="msg:search_field_fieldvar_values_value_caption"/>
+				</part>
+			</part>
+		</type>
+		<type name="explNum" description="msg:explNum_description">
+			<part name="id" type="scalar" dataType="integer" description="msg:explNum_id"/>
+			<part name="noticeId" type="scalar" dataType="integer" description="msg:explNum_noticeId"/>
+			<part name="bulletinId" type="scalar" dataType="integer" description="msg:explNum_bulletinId"/>
+			<part name="name" type="scalar" dataType="string" description="msg:explNum_name"/>
+			<part name="mimetype" type="scalar" dataType="string" description="msg:explNum_mimetype"/>
+			<part name="extention" type="scalar" dataType="string" description="msg:explNum_extention"/>
+			<part name="filename" type="scalar" dataType="string" description="msg:explNum_filename"/>
+			<part name="filesize" type="scalar" dataType="string" description="msg:explNum_filesize"/>
+			<part name="url" type="scalar" dataType="string" description="msg:explNum_url"/>
+			<part name="downloadUrl" type="scalar" dataType="string" description="msg:explNum_downloadUrl"/>
+			<part name="vignUrl" type="scalar" dataType="string" description="msg:explNum_vignUrl"/>
+		</type>
+		<type name="shelf" description="msg:shelf_description">
+			<part name="id" type="scalar" dataType="integer" description="msg:shelf_id"/>
+			<part name="name" type="scalar" dataType="string" description="msg:shelf_name"/>
+			<part name="comment" type="scalar" dataType="string" description="msg:shelf_comment"/>
+		</type>
+		<type name="author" description="msg:author_description">
+			<part name="author_id" type="scalar" dataType="integer" description="msg:author_author_id"/>
+			<part name="author_type" type="scalar" dataType="integer" description="msg:author_author_type"/>
+			<part name="author_name" type="scalar" dataType="string" description="msg:author_author_name"/>
+			<part name="author_rejete" type="scalar" dataType="string" description="msg:author_author_rejete"/>
+			<part name="author_see" type="scalar" dataType="integer" description="msg:author_author_see"/>
+			<part name="author_date" type="scalar" dataType="string" description="msg:author_author_date"/>
+			<part name="author_web" type="scalar" dataType="string" description="msg:author_author_web"/>
+			<part name="author_comment" type="scalar" dataType="string" description="msg:author_author_comment"/>
+			<part name="author_lieu" type="scalar" dataType="string" description="msg:author_author_lieu"/>
+			<part name="author_ville" type="scalar" dataType="string" description="msg:author_author_ville"/>
+			<part name="author_pays" type="scalar" dataType="string" description="msg:author_author_pays"/>
+			<part name="author_subdivision" type="scalar" dataType="string" description="msg:author_author_subdivision"/>
+			<part name="author_numero" type="scalar" dataType="string" description="msg:author_author_numero"/>
+			<part name="author_links" type="scalar" dataType="links"/>
+		</type>
+		<type name="publisher" description="msg:publisher_description">
+			<part name="publisher_id" type="scalar" dataType="integer" description="msg:publisher_publisher_id"/>
+			<part name="publisher_name" type="scalar" dataType="string" description="msg:publisher_publisher_name"/>
+			<part name="publisher_address1" type="scalar" dataType="string" description="msg:publisher_publisher_address1"/>
+			<part name="publisher_address2" type="scalar" dataType="string" description="msg:publisher_publisher_address2"/>
+			<part name="publisher_zipcode" type="scalar" dataType="string" description="msg:publisher_publisher_zipcode"/>
+			<part name="publisher_city" type="scalar" dataType="string" description="msg:publisher_publisher_city"/>
+			<part name="publisher_country" type="scalar" dataType="string" description="msg:publisher_publisher_country"/>
+			<part name="publisher_web" type="scalar" dataType="string" description="msg:publisher_publisher_web"/>
+			<part name="publisher_comment" type="scalar" dataType="string" description="msg:publisher_publisher_comment"/>
+			<part name="publisher_links" type="scalar" dataType="links"/>
+		</type>
+		<type name="collection" description="msg:collection_description">
+			<part name="collection_id" type="scalar" dataType="integer" description="msg:collection_collection_id"/>
+			<part name="collection_name" type="scalar" dataType="string" description="msg:collection_collection_name"/>
+			<part name="collection_parent" type="scalar" dataType="integer" description="msg:collection_collection_parent"/>
+			<part name="collection_issn" type="scalar" dataType="string" description="msg:collection_collection_issn"/>
+			<part name="collection_web" type="scalar" dataType="string" description="msg:collection_collection_web"/>
+			<part name="collection_links" type="scalar" dataType="links"/>
+		</type>
+		<type name="sous_collection" description="msg:sous_collection_description">
+			<part name="sous_collection_id" type="scalar" dataType="integer" description="msg:sous_collection_sous_collection_id"/>
+			<part name="sous_collection_name" type="scalar" dataType="string" description="msg:sous_collection_sous_collection_name"/>
+			<part name="sous_collection_parent" type="scalar" dataType="integer" description="msg:sous_collection_sous_collection_parent"/>
+			<part name="sous_collection_issn" type="scalar" dataType="string" description="msg:sous_collection_sous_collection_issn"/>
+			<part name="sous_collection_web" type="scalar" dataType="string" description="msg:sous_collection_sous_collection_web"/>
+			<part name="collection_links" type="scalar" dataType="links"/>		
+		</type>
+		<type name="bulletin" description="msg:bulletin_description">
+			<part name="bulletin_id" type="scalar" dataType="integer" description="msg:bulletin_bulletin_id"/>
+			<part name="serial_id" type="scalar" dataType="integer" description="msg:bulletin_serial_id"/>
+			<part name="serial_title" type="scalar" dataType="string" description="msg:bulletin_serial_title"/>
+			<part name="notice_id" type="scalar" dataType="integer" description="msg:bulletin_notice_id"/>
+			<part name="bulletin_number" type="scalar" dataType="string" description="msg:bulletin_bulletin_number"/>
+			<part name="bulletin_date_caption" type="scalar" dataType="string" description="msg:bulletin_bulletin_date_caption"/>
+			<part name="bulletin_date" type="scalar" dataType="string" description="msg:bulletin_bulletin_date"/>
+			<part name="bulletin_title" type="scalar" dataType="string" description="msg:bulletin_bulletin_title"/>
+			<part name="bulletin_barcode" type="scalar" dataType="string" description="msg:bulletin_bulletin_barcode"/>
+		</type>
+		<type name="collstate" description="msg:collstate_description">
+			<part name="collstate_id" type="scalar" dataType="integer" description="msg:collstate_collstate_id"/>
+			<part name="collstate_location_libelle" type="scalar" dataType="integer" description="msg:collstate_collstate_location_libelle"/>
+			<part name="collstate_cote" type="scalar" dataType="string" description="msg:collstate_collstate_cote"/>
+			<part name="collstate_type_libelle" type="scalar" dataType="string" description="msg:collstate_collstate_type_libelle"/>
+			<part name="collstate_emplacement_libelle" type="scalar" dataType="string" description="msg:collstate_collstate_emplacement_libelle"/>
+			<part name="collstate_statut_opac_libelle" type="scalar" dataType="string" description="msg:collstate_collstate_statut_opac_libelle"/>
+			<part name="collstate_origine" type="scalar" dataType="string" description="msg:collstate_collstate_origine"/>
+			<part name="collstate_state_collections" type="scalar" dataType="string" description="msg:collstate_collstate_state_collections"/>
+			<part name="collstate_lacune" type="scalar" dataType="string" description="msg:collstate_collstate_lacune"/>
+		</type>
+		<type name="thesaurus">
+			<part name="thesaurus_id" type="scalar" dataType="integer"/>
+			<part name="thesaurus_caption" type="scalar" dataType="string"/>
+			<part name="thesaurus_num_root_node" type="scalar" dataType="integer"/>
+			<part name="thesaurus_num_unclassed_node" type="scalar" dataType="integer"/>
+			<part name="thesaurus_num_orphans_node" type="scalar" dataType="integer"/>
+		</type>
+		<type name="category">
+			<part name="node_id" type="scalar" dataType="integer"/>
+			<part name="category_caption" type="scalar" dataType="string"/>
+			<part name="category_lang" type="scalar" dataType="string"/>
+		</type>
+		<type name="node">
+			<part name="node_id" type="scalar" dataType="integer"/>
+			<part name="node_thesaurus_id" type="scalar" dataType="integer"/>
+			<part name="node_target_id" type="scalar" dataType="integer"/>
+			<part name="node_target_categories" type="array">
+				<part name="acategory" type="scalar" dataType="category"/>	
+			</part>
+			<part name="node_path" type="array">
+				<part name="node_id" type="scalar" dataType="integer"/>
+				<part name="categories" type="array">
+					<part name="acategory" type="scalar" dataType="category"/>	
+				</part>
+			</part>
+			<part name="node_categories" type="array">
+				<part name="acategory" type="scalar" dataType="category"/>
+			</part>
+			<part name="node_children" type="array">
+				<part name="node_id" type="scalar" dataType="integer"/>
+				<part name="is_link" type="scalar" dataType="boolean"/>
+				<part name="categories" type="array">
+					<part name="acategory" type="scalar" dataType="category"/>	
+				</part>
+			</part>
+			<part name="node_seealso" type="array">
+				<part name="node_id" type="scalar" dataType="integer"/>
+				<part name="categories" type="array">
+					<part name="acategory" type="scalar" dataType="category"/>	
+				</part>
+			</part>
+		</type>
+		<type name="serial">
+			<part name="serial_id" type="scalar" dataType="integer"/>
+			<part name="serial_title" type="scalar" dataType="string"/>
+			<part name="serial_issues_count" type="scalar" dataType="integer"/>
+			<part name="serial_items_count" type="scalar" dataType="integer"/>
+			<part name="serial_analysis_count" type="scalar" dataType="integer"/>
+		</type>
+		<type name="reading_list">
+			<part name="reading_list_id" type="scalar" dataType="integer"/>
+			<part name="reading_list_name" type="scalar" dataType="string"/>
+			<part name="reading_list_caption" type="scalar" dataType="string"/>
+			<part name="reading_list_emprid" type="scalar" dataType="integer"/>
+			<part name="reading_list_caption" type="scalar" dataType="string"/>
+			<part name="reading_list_confidential" type="scalar" dataType="boolean"/>
+			<part name="reading_list_public" type="scalar" dataType="boolean"/>
+			<part name="reading_list_readonly" type="scalar" dataType="boolean"/>
+			<part name="reading_list_notice_ids" type="array">
+				<part name="anotice_id" type="scalar" dataType="integer"/>	
+			</part>
+		</type>
+		<type name="planificateur" description="msg:planificateur_description">
+			<part name="id_planificateur" type="scalar" dataType="integer" description="msg:planificateur_id_planificateur"/>
+			<part name="num_type_tache" type="scalar" dataType="integer" description="msg:planificateur_num_type_tache"/>
+			<part name="libelle_tache" type="scalar" dataType="string" description="msg:planificateur_libelle_tache"/>
+			<part name="desc_tache" type="scalar" dataType="string" description="msg:planificateur_desc_tache"/>
+			<part name="num_user" type="scalar" dataType="integer" description="msg:planificateur_num_user"/>
+			<part name="statut" type="scalar" dataType="integer" description="msg:planificateur_statut"/>
+			<part name="calc_next_date_deb" type="scalar" dataType="date" description="msg:planificateur_calc_next_date_deb"/>
+			<part name="calc_next_heure_deb" type="scalar" dataType="string" description="msg:planificateur_calc_next_heure_deb"/>		
+		</type>
+		<type name="task" description="msg:task_description">
+			<part name="id_tache" type="scalar" dataType="integer" description="msg:task_id_tache"/>
+			<part name="libelle_tache" type="scalar" dataType="string" description="msg:task_libelle_tache"/>
+			<part name="desc_tache" type="scalar" dataType="string" description="msg:task_desc_tache"/>
+			<part name="start_at" type="scalar" dataType="date" description="msg:task_start_at"/>
+			<part name="end_at" type="scalar" dataType="date" description="msg:task_end_at"/>
+			<part name="indicat_progress" type="scalar" dataType="integer" description="msg:task_indicat_progress"/>
+			<part name="status" type="scalar" dataType="integer" description="msg:task_status"/>
+		</type>
+		<type name="bannette" description="msg:bannette_description">
+			<part name="id_bannette" type="scalar" dataType="integer" description="msg:bannette_id_bannette"/>
+			<part name="nom_bannette" type="scalar" dataType="string" description="msg:bannette_nom_bannette"/>
+			<part name="date_last_remplissage" type="scalar" dataType="date" description="msg:bannette_date_last_remplissage"/>
+			<part name="date_last_envoi" type="scalar" dataType="date" description="msg:bannette_date_last_envoi"/>
+			<part name="proprio_bannette" type="scalar" dataType="integer" description="msg:bannette_proprio_bannette"/>
+			<part name="bannette_auto" type="scalar" dataType="integer" description="msg:bannette_bannette_auto"/>
+			<part name="nb_notices_diff" type="scalar" dataType="integer" description="msg:bannette_nb_notices_diff"/>
+		</type>
+		<type name="proc" description="msg:proc_description">
+			<part name="idproc" type="scalar" dataType="integer" description="msg:proc_idproc"/>
+			<part name="name" type="scalar" dataType="string" description="msg:proc_name"/>
+			<part name="requete" type="scalar" dataType="string" description="msg:proc_requete"/>
+			<part name="comment" type="scalar" dataType="string" description="msg:proc_comment"/>
+		</type>
+		<type name="sync" description="msg:sync_description">
+			<part name="source_id" type="scalar" dataType="integer" description="msg:sync_source_id"/>
+			<part name="id_connector" type="scalar" dataType="string" description="msg:sync_id_connector"/>
+			<part name="comment" type="scalar" dataType="string" description="msg:sync_comment"/>
+			<part name="name_connector_in" type="scalar" dataType="string" description="msg:sync_name_connector_in"/>
+		</type>
+		<!--<type name="resa_extend" description="msg:resa_extend_description">
+			<part name="resa_idnotice" type="scalar" dataType="integer" description="msg:resa_extend_resa_idnotice"/>
+			<part name="resa_idbulletin" type="scalar" dataType="integer" description="msg:resa_resa_idbulletin"/>
+			<part name="resa_date" type="scalar" dataType="date" description="msg:resa_extend_resa_date"/>
+			<part name="resa_date_debut" type="scalar" dataType="date" description="msg:resa_extend_resa_date_debut"/>
+			<part name="resa_date_fin" type="scalar" dataType="date" description="msg:resa_extend_resa_date_fin"/>
+			<part name="resa_cb" type="scalar" dataType="string" description="msg:resa_extend_resa_cb"/>
+			<part name="resa_confirmee" type="scalar" dataType="integer" description="msg:resa_extend_resa_confirmee"/>
+			<part name="resa_idempr" type="scalar" dataType="integer" description="msg:resa_extend_resa_idempr"/>
+			<part name="empr_nom" type="scalar" dataType="string" description="msg:resa_extend_empr_nom"/>
+			<part name="empr_prenom" type="scalar" dataType="string" description="msg:resa_extend_empr_prenom"/>
+			<part name="empr_cb" type="scalar" dataType="integer" description="msg:resa_extend_empr_cb"/>
+			<part name="location_libelle" type="scalar" dataType="string" description="msg:resa_extend_location_libelle"/>
+			<part name="resa_loc_retrait" type="scalar" dataType="integer" description="msg:resa_extend_resa_loc_retrait"/>
+			<part name="tit" type="scalar" dataType="string" description="msg:resa_extend_tit"/>
+			<part name="id_resa" type="scalar" dataType="integer" description="msg:resa_extend_id_resa"/>
+			<part name="typdoc" type="scalar" dataType="integer" description="msg:resa_extend_typdoc"/>
+			<part name="perime" type="scalar" dataType="string" description="msg:resa_extend_tit"/>
+			<part name="aff_resa_date_debut" type="scalar" dataType="date" description="msg:resa_extend_aff_resa_date_debut"/>
+			<part name="aff_resa_date_fin" type="scalar" dataType="date" description="msg:resa_extend_aff_resa_date_fin"/>
+			<part name="aff_resa_date" type="scalar" dataType="date" description="msg:resa_extend_aff_resa_date"/>
+			<part name="rank" type="scalar" dataType="integer" description="msg:resa_extend_rank"/>
+			<part name="situation" type="scalar" dataType="integer" description="msg:resa_extend_situation"/>
+		</type>
+		--><type name="setBackup" description="msg:setBackup_description">
+			<part name="sauv_sauvegarde_id" type="scalar" dataType="integer" description="msg:setBackup_sauv_sauvegarde_id"/>
+			<part name="sauv_sauvegarde_nom" type="scalar" dataType="string" description="msg:setBackup_sauv_sauvegarde_nom"/>
+			<part name="sauv_sauvegarde_file_prefix" type="scalar" dataType="string" description="msg:setBackup_sauv_sauvegarde_file_prefix"/>
+			<part name="sauv_sauvegarde_tables" type="scalar" dataType="string" description="msg:setBackup_sauv_sauvegarde_tables"/>
+			<part name="sauv_sauvegarde_lieux" type="scalar" dataType="string" description="msg:setBackup_sauv_sauvegarde_lieux"/>
+			<part name="sauv_sauvegarde_users" type="scalar" dataType="string" description="msg:setBackup_sauv_sauvegarde_users"/>
+			<part name="sauv_sauvegarde_compress" type="scalar" dataType="integer" description="msg:setBackup_sauv_sauvegarde_compress"/>
+			<part name="sauv_sauvegarde_compress_command" type="scalar" dataType="string" description="msg:setBackup_sauv_sauvegarde_compress_command"/>
+			<part name="sauv_sauvegarde_crypt" type="scalar" dataType="integer" description="msg:setBackup_sauv_sauvegarde_crypt"/>
+			<!--<part name="sauv_sauvegarde_key1" type="scalar" dataType="string" description="msg:setBackup_sauv_sauvegarde_key1"/>
+			<part name="sauv_sauvegarde_key2" type="scalar" dataType="string" description="msg:setBackup_sauv_sauvegarde_key2"/>
+		--></type>
+		<type name="groupTables" description="msg:groupTables_description">
+			<part name="sauv_table_id" type="scalar" dataType="integer" description="msg:groupTables_sauv_table_id"/>
+			<part name="sauv_table_nom" type="scalar" dataType="string" description="msg:groupTables_sauv_table_nom"/>
+			<part name="sauv_table_tables" type="scalar" dataType="string" description="msg:groupTables_sauv_table_tables"/>
+		</type>
+		<type name="backupPerformed" description="msg:backupPerformed_description">
+			<part name="sauv_log_id" type="scalar" dataType="integer" description="msg:backupPerformed_sauv_log_id"/>
+			<part name="sauv_log_start_date" type="scalar" dataType="date" description="msg:backupPerformed_sauv_log_start_date"/>
+			<part name="sauv_log_file" type="scalar" dataType="string" description="msg:backupPerformed_sauv_log_file"/>
+			<part name="sauv_log_succeed" type="scalar" dataType="string" description="msg:backupPerformed_sauv_log_succeed"/>
+			<part name="sauv_log_messages" type="scalar" dataType="string" description="msg:backupPerformed_sauv_log_messages"/>
+			<part name="name" type="scalar" dataType="string" description="msg:backupPerformed_name"/>
+		</type>
+		<type name="view" description="msg:view_description">
+			<part name="id_vue" type="scalar" dataType="integer" description="msg:view_id_vue"/>
+			<part name="date_consolidation" type="scalar" dataType="date" description="msg:view_date_consolidation"/>
+			<part name="nom_vue" type="scalar" dataType="string" description="msg:view_nom_vue"/>
+			<part name="comment" type="scalar" dataType="string" description="msg:view_comment"/>
+		</type>
+		<type name="readerSubscription" description="msg:readerSubscription_description">
+			<part name="id_empr" type="scalar" dataType="integer" description="msg:readerSubscription_id_empr"/>
+			<part name="empr_cb" type="scalar" dataType="string" description="msg:readerSubscription_empr_cb"/>
+			<part name="empr_nom" type="scalar" dataType="string" description="msg:readerSubscription_empr_nom"/>
+			<part name="empr_prenom" type="scalar" dataType="string" description="msg:readerSubscription_empr_prenom"/>
+			<part name="empr_adr1" type="scalar" dataType="string" description="msg:readerSubscription_empr_adr1"/>
+			<part name="empr_adr2" type="scalar" dataType="string" description="msg:readerSubscription_empr_adr2"/>
+			<part name="empr_ville" type="scalar" dataType="string" description="msg:readerSubscription_empr_ville"/>
+			<part name="empr_mail" type="scalar" dataType="string" description="msg:readerSubscription_empr_mail"/>
+			<part name="empr_year" type="scalar" dataType="integer" description="msg:readerSubscription_empr_year"/>
+			<part name="aff_empr_date_expiration" type="scalar" dataType="date" description="msg:readerSubscription_aff_empr_date_expiration"/>
+			<part name="statut_libelle" type="scalar" dataType="string" description="msg:readerSubscription_statut_libelle"/>
+		</type>
+		<type name="emprunteur" description="msg:emprunteur_description">
+			<part name="id_empr" type="scalar" dataType="integer" description="msg:emprunteur_id_empr"/>
+			<part name="empr_cb" type="scalar" dataType="string" description="msg:emprunteur_empr_cb"/>
+			<part name="empr_nom" type="scalar" dataType="string" description="msg:emprunteur_empr_nom"/>
+			<part name="empr_prenom" type="scalar" dataType="string" description="msg:emprunteur_empr_prenom"/>
+		</type>
+		<type name="sendMailing" description="msg:sendMailing_description">
+			<part name="name" type="scalar" dataType="string" description="msg:sendMailing_name"/>
+			<part name="object_mail" type="scalar" dataType="integer" description="msg:sendMailing_object_mail"/>
+			<part name="nb_mail" type="scalar" dataType="integer" description="msg:sendMailing_nb_mail"/>
+			<part name="nb_mail_sended" type="scalar" dataType="integer" description="msg:sendMailing_nb_mail_sended"/>
+			<part name="nb_mail_failed" type="scalar" dataType="integer" description="msg:sendMailing_nb_mail_failed"/>
+		</type>
+		<type name="noticeAdministrative" description="msg:noticeAdministrative_description">
+			<part name="statut_id" type="scalar" dataType="integer" description="msg:noticeAdministrative_statut_id"/>
+			<part name="statut_lib" type="scalar" dataType="string" description="msg:noticeAdministrative_statut_lib"/>
+			<part name="comment_admin" type="scalar" dataType="string" description="msg:noticeAdministrative_comment_admin"/>
+			<part name="thumbnail_url" type="scalar" dataType="string" description="msg:noticeAdministrative_thumbnail_url"/>
+		</type>
+		<type name="links" description="msg:links_description">
+			<part name="autlink_to" type="scalar" dataType="string" description="msg:links_autlink_to"/>
+			<part name="autlink_to_id" type="scalar" dataType="integer" description="msg:links_autlink_to_id"/>
+			<part name="autlink_to_libelle" type="scalar" dataType="string" description="msg:links_autlink_to_libelle"/>
+			<part name="autlink_type" type="scalar" dataType="integer" description="msg:links_autlink_type"/>
+			<part name="autlink_reciproc" type="scalar" dataType="boolean" description="msg:links_autlink_reciproc"/>
+			<part name="autlink_comment" type="scalar" dataType="string" description="msg:links_autlink_comment"/>
+		</type>
+		<type name="param_import" description="msg:item_description">
+			<part name="id" type="scalar" dataType="integer" description="msg:item_id"/>
+			<part name="cb" type="scalar" dataType="string" description="msg:item_cb"/>
+			<part name="cote" type="scalar" dataType="string" description="msg:item_cote"/>
+			<part name="location_id" type="scalar" dataType="integer" description="msg:item_location_id"/>
+			<part name="location_caption" type="scalar" dataType="string" description="msg:item_location_caption"/>
+			<part name="section_id" type="scalar" dataType="integer" description="msg:item_section_id"/>
+			<part name="section_caption" type="scalar" dataType="string" description="msg:item_section_caption"/>
+			<part name="statut" type="scalar" dataType="string" description="msg:item_statut"/>
+			<part name="support" type="scalar" dataType="string" description="msg:item_support"/>
+			<part name="situation" type="scalar" dataType="string" description="msg:item_situation"/>
+		</type>
+		<type name="cms_article" description="msg:cms_article_description">
+			<part name="id_article" type="scalar" dataType="integer" description="msg:cms_id_article"/>
+			<part name="article_title" type="scalar" dataType="string" description="msg:cms_article_title"/>
+			<part name="article_resume" type="scalar" dataType="string" description="msg:cms_article_resume"/>
+			<part name="article_contenu" type="scalar" dataType="string" description="msg:cms_article_contenu"/>
+		</type>		
+	</types>
+</manifest>

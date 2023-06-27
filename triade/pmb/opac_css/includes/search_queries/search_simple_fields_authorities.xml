@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!-- $Id: search_simple_fields_authorities.xml,v 1.5 2016-06-30 14:36:03 dgoron Exp $ -->
+<pmbfields>
+
+	<!-- Zone fixedFields :
+		Liste des champs de recherche possibles de la base de données
+		Chaque champ est modélisé par le tag <field> :
+		<field @att=id,title> 
+			-id : numéro unique arbitraire
+			-title : Texte qui sera affiché dans l'écran de recherche
+			<field> contient les sous tags :
+				<input @type> : type de saisie
+					-type (text|list) : 
+						@type=list (dans le cas d'une saisie par liste), input contient les sous champs :
+						 	<queryList> : requete pour récupérer les values de la liste. La requete doit avoir 2 colonnes
+										  -la première donne le code à retourner
+										  -la deuxième donne le libellé dans la liste
+										  
+				<query> : requete associée au champ et à l'opérateur
+				<query @att=for,multipleWords,regDiacrit>
+					-for : nom de l'opérateur auquel correspond la requete 
+					 (les opérateurs non listés ne seront pas pris en compte), 
+					-multipleWords (yes|no) : la requete tient compte de plusieurs termes saisis avec des espaces
+					-regDiacrit (yes|no) : les termes sont passés par la fonction de nettoyage des mots vides et des accents
+			 		<query> contient les sous tags :
+					
+						<main> : Corps principal de la requete, 
+							-!!p!! sera remplacé dans la requete par le texte saisi pour la recherche, 
+							-!!multiple_term!! (uniquement si multipleWords="yes") sera remplacé par la série 
+							 de tests de la clause where pour chaque mot saisi
+						
+						<multipleTerm> : terme de condition utilisé pour remplacer !!multiple_term!!
+						<multipleOperator> : opérateur utilisé entre les termes de conditions 
+	-->
+	
+	<fixedFields>
+		<!-- auteur -->
+		<field title="msg:author_search" id="8" unimarcField="7XX">
+			<input type="text"/>
+			<variable name="selected_sources" type="global"/>
+			<query for="BOOLEAN" booleanSearch="yes" stemming="no">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="pert desc"/>
+				<main><![CDATA[select concat_ws('|',ufield, field_ind, field_order, usubfield, subfield_order, value,recid, source_id) as infos, !!pert_term!! as pert from entrepot_source_!!current_source!! where (!!where_term!!) and (ufield like '7%' and usubfield in ('a','b')) group by ufield,field_order,recid]]></main>
+				<table>entrepots</table>
+				<index_l>value</index_l>
+				<index_i>i_value</index_i>
+				<id_field>recid</id_field>
+			</query>
+		</field>
+
+		<!-- collection -->
+		<field title="msg:coll_search" id="4" unimarcField="225$a410$t">
+			<input type="text"/>
+			<variable name="selected_sources" type="global"/>
+			<query for="BOOLEAN" booleanSearch="yes" stemming="no">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="pert desc"/>
+				<main><![CDATA[select concat_ws('|',ufield, field_ind, field_order, usubfield, subfield_order, value,recid, source_id) as infos, !!pert_term!! as pert  from entrepot_source_!!current_source!! where (!!where_term!!) and ((ufield='225' and usubfield in ('a')) OR (ufield='410' and usubfield in ('t'))) group by ufield,field_order,recid]]></main>
+				<table>entrepots</table>
+				<index_l>value</index_l>
+				<index_i>i_value</index_i>
+				<id_field>recid</id_field>
+			</query>
+		</field>
+		
+		<!-- sous-collection -->
+		<field title="msg:subcoll_search" id="5" unimarcField="225$i411$t">
+			<input type="text"/>
+			<variable name="selected_sources" type="global"/>
+			<query for="BOOLEAN" booleanSearch="yes" stemming="no">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="pert desc"/>
+				<main><![CDATA[select concat_ws('|',ufield, field_ind, field_order, usubfield, subfield_order, value,recid, source_id) as infos, !!pert_term!! as pert from entrepot_source_!!current_source!! where (!!where_term!!) and ((ufield='225' and usubfield in ('i')) OR (ufield='411' and usubfield in ('t'))) group by ufield,field_order,recid]]></main>
+				<table>entrepots</table>
+				<index_l>value</index_l>
+				<index_i>i_value</index_i>
+				<id_field>recid</id_field>
+			</query>
+		</field>		
+		
+		<!-- indexation décimale -->
+		<field title="msg:indexint_search" id="2" unimarcField="676$a686$a">
+			<input type="text"/>
+			<variable name="selected_sources" type="global"/>
+			<query for="BOOLEAN" booleanSearch="yes">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="pert desc"/>
+				<main><![CDATA[select concat_ws('|',ufield, field_ind, field_order, usubfield, subfield_order, value,recid, source_id) as infos, !!pert_term!! as pert from entrepot_source_!!current_source!! where (!!where_term!!) and (ufield like '67%' or ufield like '68%') group by ufield,field_order,recid]]></main>
+				<table>entrepots</table>
+				<index_l>value</index_l>
+				<index_i>i_value</index_i>
+				<id_field>recid</id_field>
+			</query>
+		</field>
+		
+		<!-- éditeur -->
+		<field title="msg:publisher_search" id="3" unimarcField="210$c">
+			<input type="text"/>
+			<variable name="selected_sources" type="global"/>
+			<query for="BOOLEAN" booleanSearch="yes" stemming="no">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="pert desc"/>
+				<main><![CDATA[select concat_ws('|',ufield, field_ind, field_order, usubfield, subfield_order, value,recid, source_id) as infos, !!pert_term!! as pert from entrepot_source_!!current_source!! where (!!where_term!!) and (ufield='210' and usubfield in ('c')) group by ufield,field_order,recid]]></main>
+				<table>entrepots</table>
+				<index_l>value</index_l>
+				<index_i>i_value</index_i>
+				<id_field>recid</id_field>
+			</query>
+		</field>
+		
+		<!-- catégorie -->
+		<field title="msg:categories_search" id="1" unimarcField="606$a">
+			<input type="text"/>
+			<variable name="selected_sources" type="global"/>
+			<query for="BOOLEAN" booleanSearch="yes">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="pert desc"/>
+				<main><![CDATA[select concat_ws('|',ufield, field_ind, field_order, usubfield, subfield_order, value,recid, source_id) as infos, !!pert_term!! as pert  from entrepot_source_!!current_source!! where (!!where_term!!) and ufield='606' and usubfield = 'a' group by ufield,field_order,recid]]></main>
+				<table>entrepots</table>
+				<index_l>value</index_l>
+				<index_i>i_value</index_i>
+				<id_field>recid</id_field>
+			</query>
+		</field>
+		
+		<!-- Titres Uniformes -->
+		<field title="msg:titre_uniforme_search" id="27" unimarcField="500$a">
+			<input type="text"/>
+			<variable name="selected_sources" type="global"/>
+			<query for="BOOLEAN" booleanSearch="yes">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="pert desc"/>
+				<main><![CDATA[select concat_ws('|',ufield, field_ind, field_order, usubfield, subfield_order, value,recid, source_id) as infos, !!pert_term!! as pert from entrepot_source_!!current_source!! where (!!where_term!!) and ufield like '500' and usubfield='a' group by ufield,field_order,recid]]></main>
+				<table>entrepots</table>
+				<index_l>value</index_l>
+				<index_i>i_value</index_i>
+				<id_field>recid</id_field>
+			</query>
+		</field>				
+		
+		<!-- concept -->
+		<field title="msg:concepts_search" id="28" unimarcField="606$a">
+			<input type="text"/>
+			<variable name="selected_sources" type="global"/>
+			<query for="BOOLEAN" booleanSearch="yes">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="pert desc"/>
+				<main><![CDATA[select concat_ws('|',ufield, field_ind, field_order, usubfield, subfield_order, value,recid, source_id) as infos, !!pert_term!! as pert  from entrepot_source_!!current_source!! where (!!where_term!!) and ufield='606' and usubfield = 'a' group by ufield,field_order,recid]]></main>
+				<table>entrepots</table>
+				<index_l>value</index_l>
+				<index_i>i_value</index_i>
+				<id_field>recid</id_field>
+			</query>
+		</field>
+	</fixedFields>
+	
+	
+		
+	<specialFields visible="no">
+		<field type="external_sources" title="msg:connecteurs_source_label" id="2" delnotallowed="yes" separator="Autres"/>	
+	</specialFields>
+	
+	<operators>
+		<operator name="BOOLEAN">msg:expr_bool_query</operator>
+		<operator name="CONTAINS">msg:contient_search</operator>
+		<operator name="CONTAINS_ALL">msg:contient_tous_mots_query</operator>
+		<operator name="CONTAINS_AT_LEAST">msg:contient_plus_un_mot_query</operator>
+		<operator name="STARTWITH">msg:commence_par_query</operator>
+		<operator name="ENDWITH">msg:finit_par_query</operator>
+		<operator name="EXACT">msg:exactement_comme_query</operator>
+		<operator name="EQ">msg:eq_query</operator>
+		<operator name="GT">msg:gt_query</operator>
+		<operator name="LT">msg:lt_query</operator>
+		<operator name="GTEQ">msg:gteq_query</operator>
+		<operator name="LTEQ">msg:lteq_query</operator>
+		<operator name="ISEMPTY" emptyAllowed="yes">msg:est_vide_query</operator>
+		<operator name="ISNOTEMPTY" emptyAllowed="yes">msg:pas_vide_query</operator>
+	</operators>
+</pmbfields>

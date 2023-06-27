@@ -1,0 +1,121 @@
+/* +--------------------------------------------------------------------------+
+// 2013 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// +-------------------------------------------------+
+// $Id: slide-show.css,v 1.2 2018-01-08 13:33:34 wlair Exp $ */
+/*------------------------------------------------------------------------------------------*/
+@charset "utf-8";/**/
+.SliderHoriz {margin-bottom: 25px;}
+.SliderNot>div{
+	background: #ffffff;
+	border: solid 0px #e2e2e2;
+	margin-bottom: 25px 20px;
+}
+/* Couleur des li
+ ========================================================================== */
+.SliderHoriz li.itemSlider {
+	border-top: solid 0px #fff;
+
+}
+
+
+
+/* mise en forme dans la li
+ ========================================================================== */
+.listNotHz {
+	width: 100%;
+	text-align: center;
+	border: solid 20px transparent;
+	min-height: 100%;
+	position:relative;
+	padding: 20px 0;
+}
+.listNotHz:before {
+
+}
+/* mise en forme de image
+ ========================================================================== */
+.SliderNot .listNotHz .imgL {
+	border: solid 0px #fff;
+	box-shadow: 0 0 0px #525252;
+	margin: 0px auto 0px;
+	position: relative;
+	text-align: center;
+	padding: 0px 5px;
+}
+
+.SliderNot .listNotHz .imgL a {
+}
+.SliderNot .listNotHz .imgL a img{
+	height:170px;
+	border:solid 2px #fff;
+	box-shadow:#a1a1a1 0px 0px 0px 1px;
+	background:#f2f2f2;
+	max-width: 100%;
+	display: inline;
+}
+.SliderHoriz li.itemSlider .imgL>a+a h3 {
+}
+
+.bx-wrapper .bx-viewport {
+	border: 0px!important;
+}
+
+
+.SliderHoriz ul[id^='carousel_cms_']{
+	min-height: 100%;
+	height: auto;
+}
+.SliderHoriz ul[id^='carousel_cms_']>li {
+	height: 100%;
+}
+/* mise en forme dans la li
+ ========================================================================== */
+.slide-show-link,
+.slide-show-link h4{
+	color:#fff;
+	font-size: 16px;
+}
+.slide-show-link:hover,
+.slide-show-link h4:hover{
+	color:#fff;
+	text-decoration:none;
+}
+.slide-show-link p{
+	text-transform: none;
+	font-size: 13px;
+}
+
+/* DIRECTION CONTROLS (NEXT / PREV) 
+ ========================================================================== */
+.SliderNot .bx-wrapper .bx-prev {
+	left: auto;
+	right: 30px;
+	background: url(images/controls.png) no-repeat 0 -32px;
+}
+
+.SliderNot .bx-wrapper .bx-next {
+	right: -5px;
+	background: url(images/controls.png) no-repeat -43px -32px;
+}
+
+.SliderNot .bx-wrapper .bx-controls-direction a{
+	top: -47px;
+}
+
+/* mise en forme dans la lien
+ ========================================================================== */
+.listNotHz>a{
+	left: 0;
+	width: 100%;
+	padding: 5px;
+	box-shadow: 0px 3px 2px -2px rgba(0, 0, 0, 0.26);
+	-webkit-transition: all .2s cubic-bezier(0.4, 0, 1, 1);
+	transition: all .2s cubic-bezier(0.4, 0, 1, 1);
+}
+.listNotHz:hover a{
+	opacity:1;	
+	text-shadow:none;
+	text-decoration:none;
+}
+.listNotHz>a h3{
+}

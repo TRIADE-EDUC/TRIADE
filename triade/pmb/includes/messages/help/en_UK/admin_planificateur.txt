@@ -1,0 +1,8 @@
+<h2>Administration of the task manager</h2>
+
+<p>The <b>administration of the task manager</b> section lets you automate actions usually done manually by the administrator.
+<ul>
+<li>The <b>Task management</b> references all of the planned tasks</li>
+<li>The <b>Dashboard</b> is the part used by the cron of the Operating System to manage the tasks</li>
+
+</ul></p>

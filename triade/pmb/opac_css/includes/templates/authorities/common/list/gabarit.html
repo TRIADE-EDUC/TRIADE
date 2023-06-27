@@ -1,0 +1,68 @@
+<!-- $Id: gabarit.html,v 1.3 2018-08-03 12:47:00 arenou Exp $ -->
+
+<style type="text/css">
+.aut_display_row {
+	display: table-row;
+}
+
+.aut_display_cell {
+	display: table-cell;
+	padding-right: 5px;
+}
+.notice-child .vignAut {
+	float: right;
+}
+</style>
+<div class="notice-parent" id="el{{ list_element.uid }}{{ list_element.id }}Parent">
+  		<img style="border:0px; margin:3px 3px" onclick="expandBase('el{{ list_element.uid }}{{ list_element.id }}', true); return false;" id="el{{list_element.uid}}{{list_element.id}}Img" name="imEx" class="img_plus" src="{{ global.base_path }}/getgif.php?nomgif=plus">
+		<span class="notice-heada">
+			<small>
+				<span class='{{list_element.statut_class_html}}' style='margin-right: 3px;'>
+					<a href=# onmouseover="z=document.getElementById('zoom_statut{{ list_element.id }}'); z.style.display='';" onmouseout="z=document.getElementById('zoom_statut{{list_element.id}}'); z.style.display='none';">
+						<img src="{{ img.spacer.gif }}" width="10" height="10" />
+					</a>					
+				</span>
+			</small>
+			{% if list_element.type_icon %}
+				<img class="align_top" src="{{ list_element.type_icon }}" title="{{ list_element.type_label }}" alt="{{ list_element.type_label }}"/>
+			{% endif %}
+			<div id="zoom_statut{{ list_element.id }}" style="border: solid 2px #555555; background-color: #FFFFFF; position: absolute; display:none; z-index: 2000;">
+				<b>
+					{{ list_element.statut_label }}
+				</b>
+			</div>
+			
+			{% if list_element.context_parameters.in_selector %}
+				{% block element_link %}
+				<a href="#" data-element-id="{{ list_element.id }}" data-element-type="authorities" onclick="set_parent('{{ global.caller }}', '{{ list_element.num_object }}', '{{ list_element.isbd |  escape true }}','{{ global.callback }}')">
+					{% block element_selector_header %}
+						{{ list_element.isbd | safe }}
+					{% endblock %}
+				</a>
+				{% endblock %}
+			{% else %}
+				<a href="{{ list_element.permalink }}" data-element-id="{{ list_element.id }}" data-element-type="authorities">
+					{% block element_header %}
+						{{ list_element.isbd | safe }}
+					{% endblock %}
+				</a>
+			{% endif %}
+		</span>
+  		<br>
+</div>
+
+<div style="margin-bottom: 6px; display: block;" class="notice-child" startOpen="no" id="el{{ list_element.uid }}{{ list_element.id }}Child">
+    {% if list_element.thumbnail_url %}
+    	<div class="vignAut">{{list_element.thumbnail}}</div>
+    {% endif %}
+	<img class="align_middle" href="#"/>
+	{{ list_element.caddie }}
+	<div style="overflow:hidden;"><table width="100%">
+		<tr>
+			{% block element_content %}
+				{{ list_element.detail | safe }}
+			{% endblock element_content %}
+		</tr>
+	</table></div>
+	<div class="clear"></div>
+</div>

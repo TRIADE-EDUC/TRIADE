@@ -1,0 +1,635 @@
+@CHARSET "UTF-8";
+/* +--------------------------------------------------------------------------+
+// 2013 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// +-------------------------------------------------+
+// $Id: doc.css,v 1.3 2016-03-22 14:02:56 cgil Exp $ */
+
+/**
+	wsdl-viewer.css
+*/
+
+/**
+=========================================
+	Body
+=========================================
+*/
+
+html, body{
+	height:100%;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size:15px;
+}
+
+html {
+	background-image:url("./images/books.jpg");
+	background-repeat:no-repeat;
+	background-position:center 0 ;
+	background-attachment: fixed;
+}
+
+body {
+	margin: 0;
+	padding: 0;
+	color: white;
+}
+
+#outer_box {
+	padding: 0;
+	position:relative;
+	min-height:100%;
+}
+
+#inner_box {
+	width: auto;
+	color: black;
+}
+
+#inner_box .listDocs li{
+	list-style:none;
+}
+
+.listDocs span{
+	display:block;
+}
+
+#inner_box .listDocs{
+    text-align:center;
+}
+
+#inner_box .listDocs li{
+    display: inline-block;
+    width:15%;
+    margin: 0 3% 10px;
+    vertical-align:top;
+    min-width:150px;
+    
+}
+
+#inner_box .listDocs a{
+	text-decoration:none;
+}
+
+.target {
+	margin-top:15px;
+}
+
+
+table {
+	color: black;
+}
+
+.titleDoc {
+    color: #fff;
+    font-variant: small-caps;
+    padding: 0 0 2px;
+}
+
+
+.titleDoc:first-letter {
+	font-size:20px;	
+}
+
+#Doc_notice_tpl .titleDoc {
+    background-image: url("./images/editions.jpg");
+}
+
+#Doc_notice_tpl:hover .titleDoc {
+    background-image: url("./images/editions_hover.jpg");
+}
+
+#Doc_inhtml .titleDoc,
+#Doc_consolidation .titleDoc {
+    background-image: url("./images/administration.jpg");
+}
+
+#Doc_inhtml:hover .titleDoc,
+#Doc_consolidation:hover .titleDoc {
+    background-image: url("./images/administration_hover.jpg");
+}
+
+#Doc_interpreter .titleDoc{
+	background-image: url("./images/catalogue.jpg");
+}
+
+#Doc_interpreter:hover .titleDoc{
+	background-image: url("./images/catalogue_hover.jpg");
+}
+
+.descDoc {
+    border: 2px solid;
+    padding: 5px;
+    color:#000;
+}
+
+#Doc_inhtml .descDoc,
+#Doc_consolidation .descDoc {
+	border-color:#6b0302;
+	border-top:none;
+	color:#6b0302;
+}
+
+#Doc_notice_tpl .descDoc{
+	border-color:#6c0136;
+	border-top:none;
+	color:#6c0136;
+}
+
+#Doc_interpreter .descDoc{
+	border-color:#cd5300;
+	border-top:none;
+	color:#cd5300;
+}
+
+
+/**
+=========================================
+	Fixed box with links
+=========================================
+*/
+#outer_links { 
+	position: fixed;
+	left: 0px;
+	top: 0px;
+	margin: 3px;
+	padding: 1px;
+	z-index: 200; 
+	width: 180px;
+	height: auto;
+	background-color: gainsboro;
+	padding-top: 2px;
+	border: 1px solid navy;
+}
+
+* html #outer_links /* Override above rule for IE */ 
+{ 
+	position: absolute; 
+	width: 188px;
+	top: expression(offsetParent.scrollTop + 0); 
+} 
+
+#links {
+	margin: 1px;
+	padding: 3px;
+	background-color: white;
+	height: 350px;
+	overflow: auto;
+	border: 1px solid navy;
+}
+
+#links ul {
+	left: -999em;
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	z-index: 100;
+}
+
+#links li {
+	margin: 0;
+	padding: 2px 4px;
+	width: auto;
+	z-index: 100;
+}
+
+#links ul li {
+	margin: 0;
+	padding: 2px 4px;
+	width: auto;
+	z-index: 100;
+}
+
+#links a {
+	display: block;
+	padding: 0 2px;
+	color: blue;
+	width: auto;
+	border: 1px solid white;
+	text-decoration: none;
+	white-space: nowrap;
+}
+
+#links a:hover {
+	color: white;
+	background-color: gray;
+	border: 1px solid gray;
+} 
+
+
+/**
+=========================================
+	Navigation tabs
+=========================================
+*/
+
+#outer_nav {
+	background-color: yellow;
+	padding: 0;
+	margin: 0;
+}
+
+#nav {
+	height: 100%;
+	width: auto;
+	margin: 0;
+	padding: 0;
+	background-color: gainsboro;
+	border-top: 1px solid gray;
+	border-bottom: 3px solid gray;
+	z-index: 100;
+	font: bold 90%/120% Arial, Helvetica, sans-serif;
+	letter-spacing: 2px;
+} 
+
+#nav ul { 
+	background-color: gainsboro;
+	height: auto;
+	width: auto;
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	z-index: 100;
+
+	border: 1px solid silver; 
+	border-top-color: black; 
+	border-width: 1px 0 9px; 
+} 
+
+#nav li { 
+	display: inline; 
+	padding: 0;
+	margin: 0;
+} 
+
+#nav a { 
+	position: relative;
+	top: 3px;
+	float:left; 
+	width:auto; 
+	padding: 8px 10px 6px 10px;
+	margin: 3px 3px 0;
+	border: 1px solid gray; 
+	border-width: 2px 2px 3px 2px;
+
+	color: black; 
+	background-color: silver; 
+	text-decoration:none; 
+	text-transform: uppercase;
+}
+
+#nav a:hover { 
+	margin-top: 1px;
+	padding-top: 9px;
+	padding-bottom: 7px;
+	color: blue;
+	background-color: gainsboro;
+} 
+
+#nav a.current:link,
+#nav a.current:visited,
+#nav a.current:hover {
+	background: white; 
+	color: black; 
+	text-shadow:none; 
+	margin-top: 0;
+	padding-top: 11px;
+	padding-bottom: 9px;
+	border-bottom-width: 0;
+	border-color: red; 
+}
+
+#nav a:active { 
+	background-color: silver; 
+	color: white;
+} 
+
+
+
+/**
+=========================================
+	Content
+=========================================
+*/
+#header {
+	margin: 0;
+	 padding: 7px 0 5px;
+	color: white;
+	background-image:url("./images/navbar.jpg");
+}
+
+#content {
+	margin: 0;
+	padding: 0 2em .5em;
+}
+
+#footer {
+	color: gray;
+	background-color: #f8f8f8;
+    bottom: 0;
+    clear: both;
+    padding: 10px 0;
+    position: absolute;
+    width: 100%;
+    text-align:right;
+    
+}
+	/*clear: both;
+	margin: 0;
+	padding: .5em 2em;
+	font-size: 80%;
+	border-top: 1px dotted gray;
+	text-align: right
+*/
+
+.single_column {
+	padding: 10px 10px 10px 10px;
+	/*margin: 0px 33% 0px 0px; */
+	margin: 3px 0;
+}
+
+#flexi_column {
+	padding: 10px 10px 10px 10px;
+	/*margin: 0px 33% 0px 0px; */
+	margin: 0px 212px 0px 0px;
+}
+
+#fix_column {
+	float: right;
+	padding: 10px 10px 10px 10px;
+	margin: 0px;
+	width: 205px;
+	/*width: 30%; */
+	voice-family: "\"}\"";
+	voice-family:inherit;
+	/* width: 30%; */
+	width: 205px;
+}
+html&gt;body #rightColumn {
+	width: 205px; /* ie5win fudge ends */
+} /* Opera5.02 shows a 2px gap between. N6.01Win sometimes does.
+	Depends on amount of fill and window size and wind direction. */
+
+/**
+=========================================
+	Label / value
+=========================================
+*/
+
+.page {
+	border-bottom: 3px dotted navy;
+	margin: 0;
+	padding: 10px 0 20px 0;
+}
+
+.value, .label {
+	margin: 0;
+	padding: 0;
+}
+
+.label {
+	float: left;
+	width: 200px;
+	text-align: right;
+	font-weight: bold;
+	margin-right: 0;
+	color: darkblue;
+	clear: left;
+}
+
+.value {
+	margin-left: 210px;
+	color: black;
+	padding-bottom: .5em;
+}
+
+strong, strong a {
+	color: darkblue;
+	font-weight: bold;
+	letter-spacing: 1px;
+	margin-left: 2px;
+}
+
+.subfield_description {
+	color: #505050;
+}
+
+.input_description {
+	font-family: monospace;
+	font-size: 13px;
+}
+
+.requirement_descripter {
+	font-size: 11px;
+	color: darkblue;
+}
+
+/**
+=========================================
+	Links
+=========================================
+*/
+
+a.local:link,
+a.local:visited {
+	color: blue; 
+	margin-left: 10px;
+	border-bottom: 1px dotted blue;
+	text-decoration: none;
+	font-style: italic;
+}
+
+a.local:hover {
+	background-color: gainsboro; 
+	color: darkblue;
+	padding-bottom: 1px;
+	border-bottom: 1px solid darkblue;
+}
+
+a.target:link,
+a.target:visited,
+a.target:hover
+{
+	text-decoration: none;
+	background-color: transparent;
+	border-bottom-type: none;
+}
+
+/**
+=========================================
+	Box, Shadow
+=========================================
+*/
+
+.box {
+	padding: 6px;
+	color: black;
+	background-color: gainsboro;
+	border: 1px solid gray;
+}
+
+.shadow {
+	background: silver;
+	position: relative;
+	top: 5px;
+	left: 4px;
+}
+
+.shadow div {
+	position: relative;
+	top: -5px;
+	left: -4px;
+}
+
+/**
+=========================================
+	Floatcontainer
+=========================================
+*/
+
+.spacer
+{
+	display: block;
+	height: 0;
+	font-size: 0;
+	line-height: 0;
+	margin: 0;
+	padding: 0;
+	border-style: none;
+	clear: both; 
+	visibility:hidden;
+}
+
+.floatcontainer:after {
+	content: ".";
+	display: block;
+	height: 0;
+	font-size:0; 
+	clear: both;
+	visibility:hidden;
+}
+.floatcontainer{
+	display: inline-table;
+} /* Mark Hadley's fix for IE Mac */ /* Hides from IE Mac \*/ * 
+html .floatcontainer {
+	height: 1%;
+}
+.floatcontainer{
+	display:block;
+} /* End Hack 
+*/ 
+
+/**
+=========================================
+	Source code
+=========================================
+*/
+
+.indent {
+	margin: 2px 0 2px 20px;
+}
+
+.xml-element, .xml-proc, .xml-comment {
+	margin: 2px 0;
+	padding: 2px 0 2px 0;
+}
+
+.xml-element {
+	word-spacing: 3px;
+	color: red;
+	font-weight: bold;
+	font-style:normal;
+	border-left: 1px dotted silver;
+}
+
+.xml-element div {
+	margin: 2px 0 2px 40px;
+}
+
+.xml-att {
+	color: blue;
+	font-weight: bold;
+}
+
+.xml-att-val {
+	color: blue;
+	font-weight: normal;
+}
+
+.xml-proc {
+	color: darkred;
+	font-weight: normal;
+	font-style: italic;
+}
+
+.xml-comment {
+	color: green;
+	font-weight: normal;
+	font-style: italic;
+}
+
+.xml-text {
+	color: green;
+	font-weight: normal;
+	font-style: normal;
+}
+
+
+/**
+=========================================
+	Heading
+=========================================
+*/
+h1, h2, h3 {
+	margin: 1px 20px 2px;
+/*	font-family: Georgia, Times New Roman, Times, Serif;*/
+	font-weight: normal;
+	}
+
+h1 {
+	line-height: 100%;
+	font-size:24px;
+}
+
+h2 {
+	font-size: 18px;
+	line-height: 200%;
+	padding-left:20px;
+}
+
+h3 {
+	font-size: 16px;
+	font-style: italic;
+	margin:15px 20px 5px;
+}
+
+/**
+=========================================
+	Content formatting
+=========================================
+*/
+.port {
+	margin-bottom: 10px;
+	padding-bottom: 10px;
+	border-bottom: 1px dashed gray;
+}
+
+.operation {
+	margin-bottom: 20px;
+	padding-bottom: 10px;
+	border-bottom: 1px dashed gray;
+}
+
+
+/* --------------------------------------------------------
+	Printing
+*/
+
+/*
+@media print
+{
+	#outer_links, #outer_nav { 
+		display: none;
+	}
+*/
+/* END print media definition
+}
+*/

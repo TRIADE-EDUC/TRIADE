@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="iso-8859-1" ?>
+
+<!-- Messages localisés en français
+****************************************************************************************
+© 2002-2010 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: fr_FR.xml,v 1.9 2017-05-24 07:59:17 arenou Exp $ -->
+<messages>
+	<entry code="close">Fermer</entry>
+	<entry code="fullscreen">Plein Ecran</entry>
+	<entry code="normal">Normal</entry>
+	<entry code="nothing_to_display">Aucun document disponible.</entry>
+	<entry code="forbidden_resources">Vous ne pouvez pas accéder à ce document.</entry>
+	<entry code="download_doc">Télécharger le document hors de la visionneuse</entry>
+	
+	<entry code="zoom_in">Agrandir</entry>
+	<entry code="zoom_out">Zoom arrière</entry>
+	<entry code="onepg">Vue une page</entry>
+	<entry code="twopg">Vue deux pages</entry>
+	<entry code="thumb">Vue vignette</entry>
+	<entry code="print">Imprimer cette page</entry>
+	<entry code="embed">Export du BookReader</entry>
+	<entry code="link">Lien vers ce livre (cette page)</entry>
+	<entry code="bookmark">Marquer cette page</entry>
+	<entry code="read">Lire ce livre</entry>
+	<entry code="share">Partager ce livre</entry>
+	<entry code="info">A propos du livre</entry>
+	<entry code="full">Plein écran</entry>
+	<entry code="book_left">Tourner la page à gauche</entry>
+	<entry code="book_right">Tourner la page à droite</entry>
+	<entry code="book_up">Page up</entry>
+	<entry code="book_down">Page down</entry>
+	<entry code="play">Lire</entry>
+	<entry code="pause">Pause</entry>
+	<entry code="BRdn">Afficher/Masquer</entry>
+	<entry code="BRup">Afficher/Masquer</entry>
+	<entry code="book_top">Première page</entry>
+	<entry code="book_bottom">Dernière page</entry>
+	<entry code="contrast">Régler luminosité/contraste</entry>
+</messages>

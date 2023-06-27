@@ -1,0 +1,376 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+	xmlns:dct="http://purl.org/dc/terms/"
+	xmlns:pmb="http://www.pmbservices.fr/ontology#"
+	xmlns:owl="http://www.w3.org/2002/07/owl#"
+	xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+	xmlns:pmb_onto="http://www.pmbservices.fr/ontology_description#">
+	
+	<rdf:Description rdf:about="http://www.pmbservices.fr/ontology_description#">
+		<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Ontology"/>
+		<dct:date>2014-10-16T20:37:37+02:00</dct:date>
+		<dct:creator>Arnaud Renou</dct:creator>
+		<dct:creator>Florent Tetart</dct:creator>
+		<dct:title xml:lang="fr">Ontologie</dct:title>
+		<dct:description xml:lang="fr">Ontologie décrivant une ontologie adaptée pour PMB</dct:description>
+		<pmb:name>ontopmb</pmb:name>
+	</rdf:Description>
+  
+	
+	<!--
+	Classe représentant une Classe d'ontologie
+	  -->
+	<rdf:Description rdf:about="http://www.w3.org/2002/07/owl#Class">
+		<rdfs:subClassOf rdf:nodeID="useInConcept"/>
+		<rdfs:subClassOf rdf:nodeID="entityName"/>
+		<rdfs:subClassOf rdf:nodeID="displayLabel"/>
+		<rdfs:label xml:lang="fr">Classe</rdfs:label>
+		<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+		<pmb:displayLabel rdf:resource="http://www.w3.org/2000/01/rdf-schema#label"/>
+		<pmb:name>class</pmb:name>
+	</rdf:Description>
+	<!--
+	Classe représentant une Propriété d'ontologie
+	  -->  
+	<rdf:Description rdf:about="http://www.w3.org/2002/07/owl#ObjectProperty">
+		<rdfs:subClassOf rdf:nodeID="entityName"/>
+		<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+		<rdfs:label xml:lang="fr">Propriété</rdfs:label> 
+		<pmb:displayLabel rdf:resource="http://www.w3.org/2000/01/rdf-schema#label"/>
+		<pmb:name>property</pmb:name>
+	</rdf:Description>
+	
+	<!--
+	Classe représentant une indexation dans PMB pour une Classe d'ontologie
+	  -->
+	<rdf:Description rdf:about="http://www.pmbservices.fr/ontology#indexation">
+		<rdfs:subClassOf rdf:nodeID="onProperty"/>
+		<rdfs:subClassOf rdf:nodeID="field"/>
+		<rdfs:subClassOf rdf:nodeID="subfield"/>
+		<rdfs:subClassOf rdf:nodeID="pound"/>
+		<rdfs:label xml:lang="fr">Règle d'Indexation</rdfs:label>
+		<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+		<pmb:displayLabel rdf:resource="http://www.w3.org/2000/01/rdf-schema#label"/>
+		<pmb:name>indexation</pmb:name>
+	</rdf:Description> 
+	<!--
+	Classe représentant une restriction OWL appliquée à une Classe pour une Propriété d'ontologie
+	  -->
+	<rdf:Description rdf:about="http://www.w3.org/2002/07/owl#Restriction">
+		<rdfs:subClassOf rdf:nodeID="onProperty"/>
+		<rdfs:subClassOf rdf:nodeID="minCardinality"/>
+		<rdfs:subClassOf rdf:nodeID="maxCardinality"/>
+		<rdfs:label xml:lang="fr">Règle de Restriction</rdfs:label>
+		<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+		<pmb:displayLabel rdf:resource="http://www.w3.org/2000/01/rdf-schema#label"/>
+		<pmb:name>restriction</pmb:name>
+	</rdf:Description> 	
+		
+	<!--
+	Définition des propriétés communes à toutes les classes
+	-->
+	<!-- Libellé de la Propriété	 -->
+	<rdf:Description rdf:about="http://www.w3.org/2000/01/rdf-schema#label">
+		<rdfs:label xml:lang="fr">Libellé</rdfs:label>
+		<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+		<rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+		<rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+		<pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#small_text"/>
+		<pmb:name>label</pmb:name>
+	</rdf:Description>
+	<!-- Nom machine de la Propriété	 -->
+	<rdf:Description rdf:about="http://www.pmbservices.fr/ontology#name">
+		<rdfs:label xml:lang="fr">nom PMB (nom machine)</rdfs:label>
+		<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+		<rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+		<rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+		<pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#small_text"/>
+		<pmb:name>pmbname</pmb:name>
+	</rdf:Description>
+	<!-- Description de la Propriété	 -->
+  	<rdf:Description rdf:about="http://www.pmbservices.fr/ontology_description#description">
+		<rdfs:label xml:lang="fr">Description</rdfs:label>
+		<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+		<rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+		<rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+		<pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#text"/>
+		<pmb:name>description</pmb:name>
+	</rdf:Description>
+	
+	<!--
+	Définition des propriétés liées aux Classes
+	-->
+	<!-- Propriété à utliser comme libellé d'affichage d'une Classe	 -->
+	<rdf:Description rdf:about="http://www.pmbservices.fr/ontology#displayLabel">
+		<rdfs:label xml:lang="fr">Propriété à utiliser pour le libellé</rdfs:label>
+		<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+		<rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+		<rdfs:domain rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+		<rdfs:range rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+		<pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#resource_selector"/>
+		<pmb:name>pmbdisplaylabel</pmb:name>
+	</rdf:Description>
+	<!-- Classe d'indexation à associer à la Classe de l'Ontologie	 -->
+	<rdf:Description rdf:about="http://www.pmbservices.fr/ontology_description#indexWith">
+		<rdfs:label xml:lang="fr">Indexer avec</rdfs:label>
+		<rdfs:subClassOf rdf:resource="http://www.w3.org/2000/01/rdf-schema#subClassOf"/>
+		<rdfs:domain rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+		<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+		<rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+		<rdfs:range rdf:resource="http://www.pmbservices.fr/ontology#indexation"/>
+		<pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#resource_selector"/>
+		<pmb:name>indexwith</pmb:name>
+	</rdf:Description>
+	<!-- Classe de restriction à associer à la Classe de l'Ontologie	 -->  
+	<rdf:Description rdf:about="http://www.pmbservices.fr/ontology_description#restrictWith">
+		<rdfs:label xml:lang="fr">Restreindre avec</rdfs:label>
+		<rdfs:subClassOf rdf:resource="http://www.w3.org/2000/01/rdf-schema#subClassOf"/>
+		<rdfs:domain rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+		<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+		<rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+		<rdfs:range rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+		<pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#resource_selector"/>
+		<pmb:name>restrictWith</pmb:name>
+	</rdf:Description>
+
+	<rdf:Description rdf:about="http://www.pmbservices.fr/ontology_description#useInConcept">
+		<rdfs:label xml:lang="fr">Utiliser dans les Concepts</rdfs:label>
+		<rdfs:subClassOf rdf:resource="http://www.w3.org/2000/01/rdf-schema#subClassOf"/>
+		<rdfs:domain rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+		<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+		<rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+		<rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+		<pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#checkbox"/>
+		<pmb:name>useinconcepts</pmb:name>
+	</rdf:Description>	
+	
+	<!--
+	Définition des propriétés liées aux Propriétés
+	  -->
+	
+	  <!-- Domaine d'application d'une propriété-->
+	<rdf:Description rdf:about="http://www.w3.org/2000/01/rdf-schema#domain">
+		<rdfs:label xml:lang="fr">Applicable à (Domain)</rdfs:label>
+		<rdfs:domain rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+		<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+		<rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+		<rdfs:range rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+		<pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#resource_selector"/>
+		<pmb:name>domain</pmb:name>
+	</rdf:Description>
+	<!-- Range d'une propriété-->
+	<rdf:Description rdf:about="http://www.w3.org/2000/01/rdf-schema#range">
+		<rdfs:label xml:lang="fr">Type de valeur (Range)</rdfs:label>
+		<rdfs:domain rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+		<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+		<rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+		<rdfs:range rdf:nodeID="range_range_node1"/>
+		<pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#range_selector"/>
+		<pmb:name>range</pmb:name>
+	</rdf:Description>
+	
+	<!-- Marclist d'une propriété-->
+	<rdf:Description rdf:about="http://www.pmbservices.fr/ontology#marclist_type">
+		<rdfs:label xml:lang="fr">Nom du marclist à utiliser</rdfs:label>
+		<rdfs:domain rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+		<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+		<rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+		<rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+		<pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#marclist_selector"/>
+		<pmb:name>marclist_name</pmb:name>
+	</rdf:Description>
+	
+	<rdf:Description rdf:nodeID="range_range_node1">
+		<rdf:first rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+		<rdf:rest rdf:nodeID="range_range_node2"/>
+	</rdf:Description>
+	<rdf:Description rdf:nodeID="range_range_node2">
+		<rdf:first rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+		<rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+	</rdf:Description>
+	<!-- Type de donnée PMB-->
+	<rdf:Description rdf:about="http://www.pmbservices.fr/ontology#datatype">
+		<rdfs:label xml:lang="fr">Type de donnée</rdfs:label>
+		<rdfs:domain rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+		<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+		<rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+		<rdfs:range rdf:resource="http://www.pmbservices.fr/ontology#datatype"/>
+		<pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#pmbdatatype_selector"/>
+		<pmb:name>pmbdatatype</pmb:name>
+	</rdf:Description>
+	<!-- Flag PMB-->
+	<rdf:Description rdf:about="http://www.pmbservices.fr/ontology#flag">
+		<rdfs:label xml:lang="fr">Flag PMB</rdfs:label>
+		<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+		<rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+		<rdfs:domain rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+		<rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+		<pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#small_text"/>
+		<pmb:name>pmbflag</pmb:name>
+	</rdf:Description>
+	<!-- Propriété distincte d'une autre   -->
+	<rdf:Description rdf:about="http://www.pmbservices.fr/ontology#distinctwith">
+		<rdfs:label xml:lang="fr">Différent de</rdfs:label>
+		<rdfs:domain rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+		<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+		<rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+		<rdfs:range rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+		<owl:inverseOf rdf:resource="http://www.pmbservices.fr/ontology#distinctwith"/>
+		<pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#resource_selector"/>
+		<pmb:name>distinctwith</pmb:name>
+	</rdf:Description> 
+	<!-- Propriété inverse d'une autre   -->
+	<rdf:Description rdf:about="http://www.w3.org/2002/07/owl#inverseOf">
+		<rdfs:label xml:lang="fr">Inverse de</rdfs:label>
+		<rdfs:domain rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+		<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+		<rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+		<rdfs:range rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+		<owl:inverseOf rdf:resource="http://www.w3.org/2002/07/owl#inverseOf"/>
+		<pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#resource_selector"/>
+		<pmb:name>inverseOf</pmb:name>
+	</rdf:Description>
+	
+	
+	<!-- 
+	Propriétés liées aux Classes d'indexation et de restriction
+	-->
+	<!-- Propriété à utiliser -->
+	<rdf:Description rdf:about="http://www.w3.org/2002/07/owl#onProperty">
+		<rdfs:label xml:lang="fr">Pour la propriété</rdfs:label>
+		<rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#indexation"/>
+		<rdfs:domain rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+		<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+		<rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+		<rdfs:range rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+		<rdfs:range rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+		<pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#resource_selector"/>
+		<pmb:name>onProperty</pmb:name>
+	</rdf:Description>
+	
+	<!-- 
+	Propriétés propres à la classe représentant une indexation pour PMB
+	-->
+	<!-- Valeur du code champ -->
+	<rdf:Description rdf:about="http://www.pmbservices.fr/ontology#field">
+		<rdfs:label xml:lang="fr">Champ</rdfs:label>
+		<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+		<rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+		<rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#indexation"/>
+		<rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+		<pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#integer"/>
+		<pmb:name>field</pmb:name>
+		<pmb:flag>indexation_selector_form</pmb:flag>
+	</rdf:Description> 
+	<!-- Valeur du code sous-champ -->
+	<rdf:Description rdf:about="http://www.pmbservices.fr/ontology#subfield">
+		<rdfs:label xml:lang="fr">Sous-champ</rdfs:label>
+		<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+		<rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+		<rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#indexation"/>
+		<rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+		<pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#integer"/>
+		<pmb:name>subfield</pmb:name>
+		<pmb:flag>indexation_selector_form</pmb:flag>
+	</rdf:Description>
+	<!-- Propriété à utliser si la valeur de la propriété à indexer est une Classe de l'ontologie -->
+	<rdf:Description rdf:about="http://www.pmbservices.fr/ontology#useProperty">
+		<rdfs:label xml:lang="fr">Propriété de la resource à utiliser</rdfs:label>
+		<rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#indexation"/>
+		<rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+		<rdfs:range rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+		<pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#resource_selector"/>
+		<pmb:name>useProperty</pmb:name>
+	</rdf:Description>
+	<!-- Pondération de ce champ d'indexation -->
+	<rdf:Description rdf:about="http://www.pmbservices.fr/ontology#pound">
+		<rdfs:label xml:lang="fr">Pondération</rdfs:label>
+		<rdfs:comment xml:lang="fr">La valeur de référence est 100</rdfs:comment>
+		<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+		<rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+		<rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#indexation"/>
+		<rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+		<pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#integer"/>
+		<pmb:name>pound</pmb:name>
+		<pmb:flag>indexation_selector_form</pmb:flag>
+	</rdf:Description>  	
+	
+	<!-- 
+	Propriétés propres à la classe représentant une restriction
+	-->
+	<!-- Nombre de valeurs maximum -->
+	<rdf:Description rdf:about="http://www.w3.org/2002/07/owl#maxCardinality">
+		<rdfs:label xml:lang="fr">Nombre de valeurs maximum</rdfs:label>
+		<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+		<rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+		<rdfs:domain rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+		<rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+		<pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#integer"/>
+		<pmb:name>maxCardinality</pmb:name>
+	</rdf:Description>
+	<!-- Nombre de valeurs minimum -->
+	<rdf:Description rdf:about="http://www.w3.org/2002/07/owl#minCardinality">
+		<rdfs:label xml:lang="fr">Nombre de valeurs minimum</rdfs:label>
+		<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+		<rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+		<rdfs:domain rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+		<rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+		<pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#integer"/>
+		<pmb:name>minCardinality</pmb:name>
+	</rdf:Description>
+	
+	<!--
+	Définition des cardinalités
+	-->
+	<rdf:Description rdf:nodeID="useInConcept">
+    	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+    	<owl:onProperty rdf:resource="http://www.pmbservices.fr/ontology_description#useInConcept"/>
+    	<owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="entityName">
+    	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+    	<owl:onProperty rdf:resource="http://www.pmbservices.fr/ontology#name"/>
+    	<owl:minCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:minCardinality>
+    	<owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="displayLabel">
+    	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+    	<owl:onProperty rdf:resource="http://www.pmbservices.fr/ontology#displayLabel"/>
+    	<owl:minCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:minCardinality>
+    	<owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
+  </rdf:Description> 
+  <rdf:Description rdf:nodeID="onProperty">
+    	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+    	<owl:onProperty rdf:resource="http://www.w3.org/2002/07/owl#onProperty"/>
+    	<owl:minCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:minCardinality>
+    	<owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="maxCardinality">
+    	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+    	<owl:onProperty rdf:resource="http://www.w3.org/2002/07/owl#maxCardinality"/>
+    	<owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
+  </rdf:Description>
+   <rdf:Description rdf:nodeID="minCardinality">
+    	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+    	<owl:onProperty rdf:resource="http://www.w3.org/2002/07/owl#minCardinality"/>
+    	<owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="field">
+    	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+    	<owl:onProperty rdf:resource="http://www.pmbservices.fr/ontology#field"/>
+    	<owl:minCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:minCardinality>
+    	<owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="subfield">
+    	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+    	<owl:onProperty rdf:resource="http://www.pmbservices.fr/ontology#subfield"/>
+    	<owl:minCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:minCardinality>
+    	<owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="pound">
+    	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+    	<owl:onProperty rdf:resource="http://www.pmbservices.fr/ontology#pound"/>
+    	<owl:minCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:minCardinality>
+    	<owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
+  </rdf:Description>
+</rdf:RDF> 

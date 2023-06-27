@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le module Article
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_metadatas_datasource_metadatas_record.xml,v 1.4 2018-01-15 10:06:34 ngantier Exp $ -->
+
+<XMLlist>
+	<entry code="cms_module_common_selector_record">Sélecteur manuel d'une notice</entry>
+	<entry code="cms_module_common_selector_env_var">Sélecteur depuis une variable d'environnement</entry>
+	<entry code="cms_module_common_selector_type_section">Sélecteur par la valeur d'un champ d'un type de contenu de rubrique</entry>
+	<entry code="cms_module_common_selector_type_article">Sélecteur par la valeur d'un champ d'un type de contenu d'article</entry>
+	<entry code="cms_module_common_selector_type_article_generic">Sélecteur par la valeur d'un champ générique d'article</entry>
+	<entry code="cms_module_common_selector_type_section_generic">Sélecteur par la valeur d'un champ générique de rubrique</entry>
+	<entry code="cms_module_common_selector_record_permalink">Sélecteur depuis un permalink</entry>
+
+	<entry code='cms_module_metadatas_datasource_metadatas_record_link_desc'>Lien vers la notice</entry>
+	<entry code='cms_module_metadatas_datasource_metadatas_record_record_desc'>Description de la notice</entry>
+	<entry code="cms_module_metadatas_datasource_main_fields">Champs principaux</entry>
+	<entry code="cms_module_metadatas_datasource_record_id_desc">Identifiant de la notice</entry>
+	<entry code="cms_module_metadatas_datasource_record_header_desc">En-tête</entry>
+	<entry code="cms_module_metadatas_datasource_record_resume_desc">Résumé</entry>
+	<entry code="cms_module_metadatas_datasource_record_content_desc">Contenu</entry>
+	<entry code="cms_module_metadatas_datasource_record_link_desc">Lien</entry>
+	<entry code="cms_module_metadatas_datasource_record_title_desc">Titre</entry>
+	<entry code="cms_module_metadatas_datasource_record_vign_desc">Vignette</entry>
+	<entry code="cms_module_metadatas_datasource_record_used_template">Choix du template</entry>
+	<entry code="cms_module_metadatas_datasource_record_data">Données de la notice</entry>
+</XMLlist>

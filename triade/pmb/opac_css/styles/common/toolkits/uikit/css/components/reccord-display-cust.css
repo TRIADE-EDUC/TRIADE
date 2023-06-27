@@ -1,0 +1,24 @@
+@charset "utf-8";
+.reccord-item>div.bottom-item:after {
+	content:"";
+	display:block;	
+	border-bottom: solid 2px #eaeaea;	
+}
+.reccord-item:last-child>div.bottom-item:after {
+	content:"";
+	display:block;	
+	border-bottom: solid 0px #eaeaea;	
+}
+.reccord-item:nth-child(odd){
+}
+.dispoLien_notice{
+	text-align:right;
+	padding-bottom:10px;	
+}
+.thumb-item .vignetteDocNot{
+	border-left: 6px solid #ddd;
+	padding:10px 0;
+}
+.thumb-item .vignetteNot{
+	border:none;
+}

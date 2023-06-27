@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<XMLlist>
+	<entry code='cms_module_opacitem_selector_opacitem_choose'>Opac element</entry>
+	<entry code='cms_module_opacitem_selector_opacitem_globals'>Settings</entry>
+	
+	
+	<entry code='cms_module_opacitem_item_infopage'>Infopages</entry>
+	<entry code='cms_module_opacitem_item_navperio'>Serial browser</entry>
+	<entry code='cms_module_opacitem_item_categ'>Display of the categories</entry>
+	<entry code='cms_module_opacitem_item_bannettes_abo'>Display of the private SDI baskets</entry>
+	<entry code='cms_module_opacitem_item_bannettes_pub'>Display of the public SDI baskets</entry>
+	<entry code='cms_module_opacitem_item_section'>Display of the sections</entry>
+	<entry code='cms_module_opacitem_item_margueritte'>Daisy of colours</entry>
+	<entry code='cms_module_opacitem_item_centcases'>100 boxes display</entry>
+	<entry code='cms_module_opacitem_item_dernotices'>Latest records</entry>
+	<entry code='cms_module_opacitem_item_etageres'>Shelves</entry>
+	<entry code='cms_module_opacitem_item_rssflux'>RSS feed</entry>
+	<entry code='cms_module_opacitem_item_contact_form'>Contact form</entry>
+	<entry code="cms_module_opacitem_item_collstate_bulletins_display">Constitution des reliures</entry>
+</XMLlist>

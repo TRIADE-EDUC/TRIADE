@@ -1,0 +1,114 @@
+/* +--------------------------------------------------------------------------+
+// 2013 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// +-------------------------------------------------+
+// $Id: simple-search.css,v 1.3 2018-07-12 10:23:19 wlair Exp $ */
+/*------------------------------------------------------------------------------------------*/
+@charset "utf-8";/**/
+/* ========================================================================
+   Component: simple search
+ ==========================================================================  */
+div[id^="cms_module_search"] {
+	position: relative;
+}
+
+.searchbox {
+	text-align: left;
+	background: transparent;
+	padding: 0px 0;
+	min-height: 100%;
+}
+
+.searchbox_title {
+}
+
+.research_inputs {
+	display: block;
+	margin-bottom: 20px;
+	background: url(images/hack-tile.svg) #ddd;
+	padding: 25px;
+}
+
+.searchbox input[value="Aide"]:hover {
+}
+
+.searchbox .research_inputs>input {
+	margin: 0;
+	box-shadow: none;
+}
+
+.searchbox input[name="user_query"] {
+	line-height: 40px;
+	height: 40px;
+	padding: 4px 10px;
+	font-size: 14px;
+	width: calc(100% - 40px);
+	border-color: #fff;
+}
+
+.searchbox input.bouton[type="submit"] {
+	background: #fff no-repeat center url('./images/glass.svg');
+	height: 40px;
+	width: 40px;
+	border:none;
+	border-radius:0;
+	font-size:0;
+}
+.searchbox input.bouton[type="submit"]:hover {
+	background-color:#fff;
+}
+.searchbox input.bouton[value="Aide"] {
+	vertical-align: bottom;
+	margin-top: 20px;
+	margin-left: 20px;
+}
+
+.search_other_link {
+}
+
+.search_other_link a {
+	color: #444;
+}
+
+.search_other_link a:before {
+	content: url('./images/advance-search.svg');
+	vertical-align: middle;
+	margin-right: 8px;
+}
+
+.search_advanced_link {
+}
+
+.search_advanced_link a, .search_other_link>a {
+	margin-right: 7px;
+}
+
+.search_advanced_link a:hover, .search_other_link a:hover {color: #fff;text-decoration: none;}
+
+.search_advanced_link a:active, .search_other_link a:active {
+}
+
+.search_advanced_link a:focus, .search_other_link a:focus {
+}
+
+/* ========================================================================
+   mise en forme place holder
+ ==========================================================================  */
+.searchbox input[name="user_query"]::-webkit-input-placeholder {
+	color: #bcbbbb;
+	font-style: normal;
+}
+
+.searchbox input[name="user_query"]::-moz-placeholder {
+	color: #bcbbbb;
+	font-style: normal;
+}
+
+.searchbox input[name="user_query"]:-ms-input-placeholder {
+	color: #bcbbbb;
+	font-style: normal;
+}
+
+.searchbox input[name="user_query"]:-moz-placeholder {
+	color: #bcbbbb;
+	font-style: normal;
+}

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- Fichier manifest de description des méthodes disponibles
+****************************************************************************************
+© 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: manifest.xml,v 1.2 2015-03-17 10:39:28 abacarisse Exp $ -->
+<manifest>
+	<name>pmbesScanDocnum</name>
+	<methods>
+		<method name="get_doc_num" rights="" version="1.0" comment="msg:get_doc_num_description" language_independant="true">
+			<inputs>
+				<description>msg:ScanDocnum_input_description</description>
+				<param name="explnum" type="scalar" dataType="array" description="msg:ScanDocnum_explnum"/>
+				<param name="upload_folder" type="scalar" dataType="string" description="msg:ScanDocnum_upload_folder"/>
+			</inputs>
+			<outputs>
+				<description>msg:ScanDocnum_output_description</description>
+				<result name="report" type="scalar" dataType="array" description="msg:ScanDocnum_report"/>
+			</outputs>
+		</method>
+	</methods>
+</manifest>
+

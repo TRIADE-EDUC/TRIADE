@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour la classe racine d'un module
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_root.xml,v 1.2 2016-08-12 13:52:00 vtouchard Exp $ -->
+
+<XMLlist>
+	<entry code="cms_manage_module_save">Save</entry>
+	<entry code="cms_module_common_link_constructor_page_var">Variable to use</entry>
+	<entry code="cms_module_common_link_constructor_page">Default page</entry>
+	<entry code="cms_module_root_delete">Delete</entry>
+	<entry code="cms_module_root_no_parameters">No parameter</entry>
+	<entry code="yes">Yes</entry>
+	<entry code="no">No</entry> 
+	<entry code="home">Home</entry> 
+</XMLlist>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+
+<!-- Declaration d'un connecteur
+****************************************************************************************
+© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: manifest.xml,v 1.1 2016-12-05 16:17:12 dgoron Exp $ -->
+
+<manifest>
+	<name>facettes_external_filter</name>
+	<comment>Permet de paramétrer la visibilité Facettes externes.</comment>
+	<author>Dimitri Goron</author>
+	<org>PMB Services</org>
+	<date>2016-10-14</date>
+	<status>open</status>
+	<url>http://www.sigb.net</url>
+</manifest>

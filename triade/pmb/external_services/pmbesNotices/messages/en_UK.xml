@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- messages localisés en français pour la classe de fonctions search_functions
+****************************************************************************************
+© 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: en_UK.xml,v 1.2 2015-06-22 14:53:30 pmbs Exp $ -->
+
+<!DOCTYPE XMLlist SYSTEM "../../../includes/XMLlist.dtd" >
+<XMLlist>
+  <!--
+pmbesNotices
+-->
+  <entry code="pmbesNotices_description">Functions related to the records</entry>
+  <!--
+fetchNoticeList
+-->
+  <entry code="fetchNoticeList_description">Retrieves a list of records by their ids, in a specific format</entry>
+  <entry code="fetchNoticeList_input_description">Be careful about the charset requirements if you use this function. For example, if you use SOAP, you will have to manage utf-8 records.</entry>
+  <entry code="fetchNoticeList_output_description"></entry>
+  <entry code="fetchNoticeList_noticelist">A table containing the list of the ids of records that we want to retrieve</entry>
+  <entry code="fetchNoticeList_recordFormat">the format in which we want these bitches</entry>
+  <entry code="fetchNoticeList_recordCharset">the charset in which we want the results</entry>
+  <entry code="fetchNoticeList_includeLinks">include the links between records, issues and articles</entry>
+  <entry code="fetchNoticeList_includeItems">include the copies in the zone 995</entry>
+  <entry code="fetchNoticeList_results">The different records</entry>
+  <entry code="fetchNoticeList_results_noticeId">the record's id</entry>
+  <entry code="fetchNoticeList_results_noticeContent">the record in the wanted format</entry>
+<!--
+fetchNoticeListArray
+-->
+	<entry code="fetchNoticeListArray_description">Acts like the function fetchNoticeList, except that the records are not converted into a specific format, but are sent directly as a unimarc table</entry>
+	<entry code="fetchNoticeListArray_input_description">Care about the charset protocols if you use this fonction. For example, if you use SOAT, you have to transform records directly into utf-8.</entry>
+	<entry code="fetchNoticeListArray_output_description"></entry>
+	<entry code="fetchNoticeListArray_noticelist">A table containing a list of ideas of records we want to retriever</entry>
+	<entry code="fetchNoticeListArray_recordCharset">The charset in which we want the results</entry>
+	<entry code="fetchNoticeListArray_includeLinks">include links between records, issues and articles</entry>
+	<entry code="fetchNoticeListArray_includeItems">include the copies in the 995 zone</entry>
+	<entry code="fetchNoticeListArray_results">The different records</entry>
+  <!--
+listNoticeExplNums
+-->
+  <entry code="listNoticeExplNums_description">Lists the digital documents linked to a record</entry>
+  <entry code="listNoticeExplNums_input_description"></entry>
+  <entry code="listNoticeExplNums_output_description"></entry>
+  <entry code="listNoticeExplNums_noticeId">the id of the relevant record</entry>
+  <entry code="listNoticeExplNums_OPACUserId">the id of a borrower, to theck his/her access right on this record.
+	-1: Do not take into account
+	0: anonymous borrower
+	x: id of the borrower</entry>
+  <entry code="listNoticeExplNums_results">informations about the digital document(s) if they exist</entry>
+  <!--
+listBulletinExplNums
+-->
+  <entry code="listBulletinExplNums_description">List of the digital documents connected to an issue</entry>
+  <entry code="listBulletinExplNums_input_description"></entry>
+  <entry code="listBulletinExplNums_output_description"></entry>
+  <entry code="listBulletinExplNums_bulletinId">id of the relevant issue</entry>
+  <entry code="listBulletinExplNums_OPACUserId">id of a borrower, to check the access rights on this record.
+	-1: Do not take into account
+	0: emprunteur anonymous
+	x: id of the borrower</entry>
+  <entry code="listBulletinExplNums_results">informations about the digital document(s) if they exist</entry>
+
+<!--
+listNoticesExplNums
+-->
+	<entry code="listNoticesExplNums_description">Does the same as listNoticeExplNums but for many records at the same times</entry>
+	<entry code="listNoticesExplNums_input_description"></entry>
+	<entry code="listNoticesExplNums_output_description"></entry>
+	<entry code="listNoticesExplNums_noticesid">A table containing the ids and the and issue</entry>
+	<entry code="listNoticesExplNums_OPACUserId">The id of a borrower, to check the access rights on this record
+	-1: Do not take into account
+	0: anonymous borrower
+	x: id of the borrower</entry>
+	<entry code="listNoticesExplNums_result">The results</entry>
+	<entry code="listNoticesExplNums_result_noticeid">The id of the record</entry>
+	<entry code="listNoticesExplNums_result_explnums">The digital copies of the record</entry>
+
+<!--
+listBulletinsExplNums
+-->
+	<entry code="listBulletinsExplNums_description">Does the same as listBulletinsExplNums but for many issues at the same time</entry>
+	<entry code="listBulletinsExplNums_input_description"></entry>
+	<entry code="listBulletinsExplNums_output_description"></entry>
+	<entry code="listBulletinsExplNums_bulletin_ids">A table containing the ids of the issues</entry>
+	<entry code="listBulletinsExplNums_OPACUserId">the id of a borrower, to check the access rights on this record.
+	-1: Do not take into account
+	0: anonymous borrower
+	x: id of the borrower</entry>
+	<entry code="listBulletinsExplNums_results">The results</entry>
+	<entry code="listBulletinsExplNums_results_bulletin_id">The id of the issue</entry>
+	<entry code="listBulletinsExplNums_results_bulletin_explnums">The digital copies of the issue</entry>
+
+<!--
+fetch_notices_bulletins
+-->
+	<entry code="fetch_notices_bulletins_description">Returns the issues connected to serial records</entry>
+	<entry code="fetch_notices_bulletins_input_description"></entry>
+	<entry code="fetch_notices_bulletins_output_description"></entry>
+	<entry code="fetch_notices_bulletins_noticesid">A table containing the ids of the records</entry>
+	<entry code="fetch_notices_bulletins_noticesid_anoticeid"></entry>
+	<entry code="fetch_notices_bulletins_OPACUserId">the id of a borrower, to theck his/her access right on this record.
+	-1: Do not take into account
+	0: anonymous borrower
+	x: id of the borrower</entry>
+	<entry code="fetch_notices_bulletins_result">The results</entry>
+	<entry code="fetch_notices_bulletins_result_noticeid">The id of the record</entry>
+	<entry code="fetch_notices_bulletins_result_bulletins">The issues of the record</entry>
+
+<!--
+fetchNoticeListFull
+-->
+	<entry code="fetchNoticeListFull_description">Returns as many informations as possible on a series of records</entry>
+	<entry code="fetchNoticeListFull_input_description"></entry>
+	<entry code="fetchNoticeListFull_output_description"></entry>
+	<entry code="fetchNoticeListFull_noticelist">A table containing the ids of the records we want to find</entry>
+	<entry code="fetchNoticeListFull_recordFormat">The format in which we want to find the record</entry>
+	<entry code="fetchNoticeListFull_recordCharset">The charset of the format. Choose utf-8 if it is to be used through a connector</entry>
+	<entry code="fetchNoticeListFull_includeLinks">Include the links between records</entry>
+	<entry code="fetchNoticeListFull_results">The results</entry>
+	<entry code="fetchNoticeListFull_results_noticeId">The id of the record</entry>
+	<entry code="fetchNoticeListFull_results_noticeContent">The record in the wanted format</entry>
+	<entry code="fetchNoticeListFull_results_noticeItems">The copies of the record</entry>
+	<entry code="fetchNoticeListFull_results_noticeDocNums">The digital copies of the record</entry>
+	<entry code="fetchNoticeListFull_results_noticeBulletins">The issues of the record, if it is a record of a serial</entry>
+	<entry code="fetchNoticeListFull_results_noticeAdministrative">The informations of record management</entry>
+
+<!--
+fetch_bulletin_list
+-->
+	<entry code="fetch_bulletin_list_description">Returns a list of issues</entry>
+	<entry code="fetch_bulletin_list_input_description"></entry>
+	<entry code="fetch_bulletin_list_output_description"></entry>
+	<entry code="fetch_bulletin_list_bulletin_ids">The ids of the issues</entry>
+	<entry code="fetch_bulletin_list_result">The issues</entry>
+
+<!--
+fetchBulletinListFull
+-->
+	<entry code="fetchBulletinListFull_description">Returns the most informations on a series of issues</entry>
+	<entry code="fetchBulletinListFull_input_description"></entry>
+	<entry code="fetchBulletinListFull_output_description"></entry>
+	<entry code="fetchBulletinListFull_bulletinlist">The ids of the issues to retrieve</entry>
+	<entry code="fetchBulletinListFull_recordFormat">The format in which we want the record of the issue (if it exists)</entry>
+	<entry code="fetchBulletinListFull_recordCharset">The charset of the format. Choose utf-8 if it is to be used through a connector</entry>
+	<entry code="fetchBulletinListFull_results">The results</entry>
+	<entry code="fetchBulletinListFull_results_bulletin_id">The id of the issue</entry>
+	<entry code="fetchBulletinListFull_results_bulletin_bulletin">The issue in itself</entry>
+	<entry code="fetchBulletinListFull_results_bulletin_notice">The record linked to the issue, if it exists</entry>
+	<entry code="fetchBulletinListFull_results_bulletin_items">The copies of the issue</entry>
+	<entry code="fetchBulletinListFull_results_bulletin_doc_nums">The digital documents of the issue</entry>
+ 
+  <!--
+fetchNoticeCollstates
+-->
+
+  <entry code="fetchNoticeCollstates_description"></entry>
+  <entry code="fetchNoticeCollstates_input_description"></entry>
+  <entry code="fetchNoticeCollstates_output_description"></entry>
+  <entry code="fetchNoticeCollstates_serial_id"></entry>
+  <entry code="fetchNoticeCollstates_OPACUserId"></entry>
+  <entry code="fetchNoticeCollstates_result"></entry>
+
+<!--
+fetchNoticesAdministrative
+-->
+	<entry code="fetchNoticesAdministrative_description">Returns the management informations of a record</entry>
+	<entry code="fetchNoticesAdministrative_noticelist">A table containing the ids of the records we want to find</entry>
+	<entry code="fetchNoticesAdministrative_list_result">Management informations of the record</entry>
+	<entry code="fetchNoticesAdministrative_results_noticeId">The id of the record</entry>
+	<entry code="fetchNoticesAdministrative_results_administrative">Management informations of a record</entry>
+	
+</XMLlist>

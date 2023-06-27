@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour la classe datasource
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_common_view_record.xml,v 1.1 2015-06-16 10:24:25 pmbs Exp $ -->
+
+<XMLlist>
+	<entry code="cms_module_common_view_record_used_template">Choice of the template</entry>
+	<entry code="cms_module_common_view_record_header_desc">Record header</entry>
+	<entry code="cms_module_common_view_record_content_desc">Record content (ISBD tab, final appearance of the record template,...)</entry>
+	<entry code="cms_module_common_view_record_link_desc">Permalink of the record</entry>
+</XMLlist>

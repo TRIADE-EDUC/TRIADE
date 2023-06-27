@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- messages localisés en français pour le nettoyage de la base PMB
+****************************************************************************************
+© 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: fr_FR.xml,v 1.1 2018-03-09 13:44:08 dgoron Exp $ -->
+
+<XMLlist>
+	<entry code="scheduler_mails_waiting_server_configuration">Configuration de l'envoi des mails</entry>
+</XMLlist>

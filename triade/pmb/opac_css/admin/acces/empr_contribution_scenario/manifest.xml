@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+
+<!-- Declaration d'un domaine de gestion des droits d'acces
+****************************************************************************************
+© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: manifest.xml,v 1.1 2017-09-04 12:47:43 tsamson Exp $ -->
+
+<manifest>
+	<name>empr_contribution_scenario</name>
+	<comment>dom_empr_contribution_scenario</comment>
+	<activation_param>gestion_acces_empr_contribution_scenario</activation_param>
+	<author>Thomas Samson</author>
+	<author>Alexis Petithomme</author>
+	<org>PMB Services</org>
+	<date>2016-10-21</date>
+	<url>http://www.sigb.net</url>
+</manifest>

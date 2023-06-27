@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+
+<!-- Catalogue de connecteurs sortants
+****************************************************************************************
+© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: catalog.xml,v 1.7 2015-05-26 10:31:07 ngantier Exp $ -->
+
+<catalog>
+	<item name="oai" path="oai" id="3"/>
+	<item name="apisoap" path="apisoap" id="4"/>
+	<item name="apijsonrpc" path="apijsonrpc" id="5"/>
+	<item name="mobile" path="mobile" id="6"/>
+	<item name="openurl_out" path="openurl_out" id="7"/>
+	<item name="webdav" path="webdav" id="8"/>
+	<item name="rdf" path="rdf" id="9"/>
+	<item name="bibloto" path="bibloto" id="10"/>
+</catalog>

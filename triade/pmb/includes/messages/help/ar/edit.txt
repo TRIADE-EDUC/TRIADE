@@ -1,0 +1,4 @@
+﻿<h1<h2>g src="./images/icone_editions.gif" hspace="6" vspace="6" align="middle"> module d'&eacute;ditions</h2>
+<p> أنتم تدخلون الى نشر التطبيقPMB.</p>
+<div align="right"> فرقة مطورين المشروع
+</div>

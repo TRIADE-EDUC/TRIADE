@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!-- 
+****************************************************************************************
+© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: template.xml,v 1.4 2015-06-15 12:55:35 pmbs Exp $ -->
+<template default_lang='fr_FR'>
+	<content lang='fr_FR'><![CDATA[
+		<h2>Autorités</h2>
+		<div class='row'>
+			<div class='title'>Auteurs : </div>
+			<div class='value'>{{author.nb}}</div>
+		</div>
+		<div class='row'>
+			<div class='title'>Catégories : </div>
+			<div class='value'>{{categ.nb}}</div>
+		</div>
+		<div class='row'></div>
+		
+		]]>
+	</content>
+	
+	<content lang='en_UK'><![CDATA[
+		<h2>Authorities</h2>
+		<div class='row'>
+			<div class='title'>Authors : </div>
+			<div class='value'>{{author.nb}}</div>
+		</div>
+		<div class='row'>
+			<div class='title'>Categories : </div>
+			<div class='value'>{{categ.nb}}</div>
+		</div>
+		<div class='row'></div>
+		
+		]]>
+	</content>
+</template>

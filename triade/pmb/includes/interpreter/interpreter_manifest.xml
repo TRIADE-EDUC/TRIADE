@@ -1,0 +1,334 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- Fichier manifest de description des méthodes disponibles
+****************************************************************************************
+© 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: interpreter_manifest.xml,v 1.1 2015-07-24 12:52:42 vdesiles Exp $ -->
+<manifest>
+	<name>interpreter</name>
+	<description>msg:Fonction Interpreter</description>
+	<methods comment="msg:classbib">
+		<method name="#romain();" rights="" version="1.0" comment="msg:romain_description" language_independant="true">
+			<inputs>
+				<description>msg:romain_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:romain_output_description</description>
+			</outputs>
+		</method>
+		<method name="#roman($param);" rights="" version="1.0" comment="msg:roman_description" language_independant="true">
+			<inputs>
+				<description>msg:roman_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:roman_output_description</description>
+			</outputs>
+		</method>
+		<method name="#date($param);" rights="" version="1.0" comment="msg:date_description" language_independant="true">
+			<inputs>
+				<description>msg:date_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:date_output_description</description>
+			</outputs>
+		</method>
+		<method name="#day($param);" rights="" version="1.0" comment="msg:day_description" language_independant="true">
+			<inputs>
+				<description>msg:day_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:day_output_description</description>
+			</outputs>
+		</method>
+		<method name="#dayofweek($param);" rights="" version="1.0" comment="msg:dayofweek_description" language_independant="true">
+			<inputs>
+				<description>msg:dayofweek_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:dayofweek_output_description</description>
+			</outputs>
+		</method>
+		<method name="#month($param);" rights="" version="1.0" comment="msg:month_description" language_independant="true">
+			<inputs>
+				<description>msg:month_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:month_output_description</description>
+			</outputs>
+		</method>
+		<method name="#week($param);" rights="" version="1.0" comment="msg:week_description" language_independant="true">
+			<inputs>
+				<description>msg:week_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:week_output_description</description>
+			</outputs>
+		</method>
+		<method name="#year($param);" rights="" version="1.0" comment="msg:year_description" language_independant="true">
+			<inputs>
+				<description>msg:year_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:year_output_description</description>
+			</outputs>
+		</method>
+		<method name="#str_day($param);" rights="" version="1.0" comment="msg:str_day_description" language_independant="true">
+			<inputs>
+				<description>msg:str_day_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:str_day_output_description</description>
+			</outputs>
+		</method>
+		<method name="#str_month($param);" rights="" version="1.0" comment="msg:str_month_description" language_independant="true">
+			<inputs>
+				<description>msg:str_month_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:str_month_output_description</description>
+			</outputs>
+		</method>
+		<method name="#str_short_day($param);" rights="" version="1.0" comment="msg:str_short_day_description" language_independant="true">
+			<inputs>
+				<description>msg:str_short_day_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:str_short_day_output_description</description>
+			</outputs>
+		</method>
+		<method name="#str_short_month($param);" rights="" version="1.0" comment="msg:str_short_month_description" language_independant="true">
+			<inputs>
+				<description>msg:str_short_month_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:str_short_month_output_description</description>
+			</outputs>
+		</method>
+		<method name="#season($param);" rights="" version="1.0" comment="msg:season_description" language_independant="true">
+			<inputs>
+				<description>msg:season_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:season_output_description</description>
+			</outputs>
+		</method>
+		<method name="#str_season($param);" rights="" version="1.0" comment="msg:str_season_description" language_independant="true">
+			<inputs>
+				<description>msg:str_season_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:str_season_output_description</description>
+			</outputs>
+		</method>
+		<method name="#seasonS($param);" rights="" version="1.0" comment="msg:seasonS_description" language_independant="true">
+			<inputs>
+				<description>msg:seasonS_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:seasonS_output_description</description>
+			</outputs>
+		</method>
+		<method name="#str_seasonS($param);" rights="" version="1.0" comment="msg:str_seasonS_description" language_independant="true">
+			<inputs>
+				<description>msg:str_seasonS_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:str_seasonS_output_description</description>
+			</outputs>
+		</method>
+		<method name="#sql($param);" rights="" version="1.0" comment="msg:sql_description" language_independant="true">
+			<inputs>
+				<description>msg:sql_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:sql_output_description</description>
+			</outputs>
+		</method>
+		<method name="#+($param);" rights="" version="1.0" comment="msg:+_description" language_independant="true">
+			<inputs>
+				<description>msg:+_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:+_output_description</description>
+			</outputs>
+		</method>
+		<method name="#-($param);" rights="" version="1.0" comment="msg:-_description" language_independant="true">
+			<inputs>
+				<description>msg:-_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:-_output_description</description>
+			</outputs>
+		</method>
+		<method name="#*($param);" rights="" version="1.0" comment="msg:*_description" language_independant="true">
+			<inputs>
+				<description>msg:*_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:*_output_description</description>
+			</outputs>
+		</method>
+		<method name="#%($param);" rights="" version="1.0" comment="msg:%_description" language_independant="true">
+			<inputs>
+				<description>msg:%_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:%_output_description</description>
+			</outputs>
+		</method>
+		<method name="#/($param);" rights="" version="1.0" comment="msg:/_description" language_independant="true">
+			<inputs>
+				<description>msg:/_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:/_output_description</description>
+			</outputs>
+		</method>
+		<method name="#+day($param);" rights="" version="1.0" comment="msg:+day_description" language_independant="true">
+			<inputs>
+				<description>msg:+day_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:+day_output_description</description>
+			</outputs>
+		</method>
+		<method name="#+month($param);" rights="" version="1.0" comment="msg:+month_description" language_independant="true">
+			<inputs>
+				<description>msg:+month_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:+month_output_description</description>
+			</outputs>
+		</method>
+		<method name="#+year($param);" rights="" version="1.0" comment="msg:+year_description" language_independant="true">
+			<inputs>
+				<description>msg:+year_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:+year_output_description</description>
+			</outputs>
+		</method>
+		<method name="#-day($param);" rights="" version="1.0" comment="msg:-day_description" language_independant="true">
+			<inputs>
+				<description>msg:-day_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:-day_output_description</description>
+			</outputs>
+		</method>
+		<method name="#-month($param);" rights="" version="1.0" comment="msg:-month_description" language_independant="true">
+			<inputs>
+				<description>msg:-month_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:-month_output_description</description>
+			</outputs>
+		</method>
+		<method name="#-year($param);" rights="" version="1.0" comment="msg:-year_description" language_independant="true">
+			<inputs>
+				<description>msg:-year_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:-year_output_description</description>
+			</outputs>
+		</method>
+		<method name="#quarter($param);" rights="" version="1.0" comment="msg:quarter_description" language_independant="true">
+			<inputs>
+				<description>msg:quarter_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:quarter_output_description</description>
+			</outputs>
+		</method>
+		<method name="#dayofyear($param);" rights="" version="1.0" comment="msg:dayofyear_description" language_independant="true">
+			<inputs>
+				<description>msg:dayofyear_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:dayofyear_output_description</description>
+			</outputs>
+		</method>
+		<method name="#curdate($param);" rights="" version="1.0" comment="msg:curdate_description" language_independant="true">
+			<inputs>
+				<description>msg:curdate_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:curdate_output_description</description>
+			</outputs>
+		</method>
+		<method name="#0day($param);" rights="" version="1.0" comment="msg:0day_description" language_independant="true">
+			<inputs>
+				<description>msg:0day_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:0day_output_description</description>
+			</outputs>
+		</method>
+		<method name="#0month($param);" rights="" version="1.0" comment="msg:0month_description" language_independant="true">
+			<inputs>
+				<description>msg:0month_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:0month_output_description</description>
+			</outputs>
+		</method>
+		<method name="#1ucase($param);" rights="" version="1.0" comment="msg:1ucase_description" language_independant="true">
+			<inputs>
+				<description>msg:1ucase_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:1ucase_output_description</description>
+			</outputs>
+		</method>
+		<method name="#ucase($param);" rights="" version="1.0" comment="msg:ucase_description" language_independant="true">
+			<inputs>
+				<description>msg:ucase_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:ucase_output_description</description>
+			</outputs>
+		</method>
+		<method name="#1ucasew($param);" rights="" version="1.0" comment="msg:1ucasew_description" language_independant="true">
+			<inputs>
+				<description>msg:1ucasew_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:1ucasew_output_description</description>
+			</outputs>
+		</method>
+		<method name="#i2char($param);" rights="" version="1.0" comment="msg:i2char_description" language_independant="true">
+			<inputs>
+				<description>msg:i2char_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:i2char_output_description</description>
+			</outputs>
+		</method>
+		<method name="#semester($param);" rights="" version="1.0" comment="msg:semester_description" language_independant="true">
+			<inputs>
+				<description>msg:semester_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:semester_output_description</description>
+			</outputs>
+		</method>
+		<method name="#ordinal($param);" rights="" version="1.0" comment="msg:ordinal_description" language_independant="true">
+			<inputs>
+				<description>msg:ordinal_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:ordinal_output_description</description>
+			</outputs>
+		</method>
+		<method name="#str_ordinal($param);" rights="" version="1.0" comment="msg:str_ordinal_description" language_independant="true">
+			<inputs>
+				<description>msg:str_ordinal_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:str_ordinal_output_description</description>
+			</outputs>
+		</method>			
+	</methods>
+		
+</manifest>

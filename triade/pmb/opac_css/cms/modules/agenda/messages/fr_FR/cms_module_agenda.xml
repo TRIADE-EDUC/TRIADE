@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le module Agenda
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_agenda.xml,v 1.5 2017-02-02 10:59:48 ngantier Exp $ -->
+
+<XMLlist>
+	<entry code='cms_module_agenda_view_calendar'>Vue en Calendrier</entry>
+	<entry code='cms_module_agenda_view_event'>Vue d'un évènement</entry>
+	<entry code='cms_module_agenda_view_eventslist'>Vue d'une liste d'évènements</entry>
+	<entry code='cms_module_agenda_view_calendar_django'>Vue en Calendrier Django</entry>
+	<entry code='cms_module_agenda_manage_title'>Définition de vos calendriers</entry>
+	<entry code='cms_module_agenda_add_calendar'>Ajouter un calendrier</entry>
+	<entry code='cms_module_agenda_calendar_name'>Nom</entry>
+	<entry code='cms_module_agenda_calendar_color'>Couleur</entry>
+	<entry code='cms_module_agenda_calendar_type'>Type d'article à utiliser</entry>
+	<entry code='cms_module_agenda_type_choice'>Choisissez un type d'article</entry>
+	<entry code='cms_module_agenda_calendar_start_date'>Champ à utiliser pour le début d'un évènement</entry>
+	<entry code='cms_module_agenda_calendar_end_date'>Champ à utiliser pour la fin d'un évènement</entry>
+	<entry code='cms_module_agenda_delete_calendar'>Etes-vous sur de vouloir supprimer ce calendrier ?</entry>
+	<entry code='cms_module_agenda_view_carousel'>Vue en Carrousel</entry>
+	<entry code='cms_module_agenda_view_carousel_responsive'>Vue en Carrousel responsive</entry>
+</XMLlist>

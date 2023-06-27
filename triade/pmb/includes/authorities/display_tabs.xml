@@ -1,0 +1,374 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!-- 
+****************************************************************************************
+© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: display_tabs.xml,v 1.14 2017-11-29 10:56:14 tsamson Exp $ -->
+
+<pmbtabs>
+	<!--
+		tab #Onglet à afficher
+			@name : nom de l'onglet
+			@label : libellé de l'onglet
+			@contentType (records|authorities) : type de contenu de l'onglet
+			@for : autorité à laquelle appartient cet onglet (common pour afficher dans toutes les autorités)
+			authorityType #Dans le cas d'un onglet qui affiche des autorités, spécifie le type d'autorité à afficher, utilise les constantes AUT_TABLE_{authority}
+			query #Requête associée
+				@getConcepts (true|false) : indique si la requête doit s'effectuer sur les concepts utilisant l'autorité, plutôt que sur l'autorité elle-même. False par défaut.
+				select #Champ de la table contenant les identifiants des éléments à afficher dans l'onglet
+				table #Nom de la table
+				join #Jointure
+					table #Nom de la table à joindre
+					referenceField #Champ de la table de référence à utiliser pour la jointure
+					externalField #Champ de la table à joindre à utiliser pour la jointure
+					condition #Condition supplémentaire à appliquer sur la jointure
+				elementField #Champ de la table à comparer avec l'identifiant de l'autorité courante (répétable)
+				conceptField #Si getConcepts est à true, champ de la table à comparer avec les identifiants de concepts récupérés
+				condition #Condition supplémentaire à appliquer sur la requête
+				order #Tri à appliquer au résultat de la requête
+					table #Table à joindre contenant le champ sur lequel appliquer le tri
+					field #Champ sur lequel appliquer le tri
+					referenceField #Champ de la table de référence à utiliser pour la jointure
+					externalField #Champ de la table à joindre à utiliser pour la jointure
+					joinclause #Portion de requête contenant la jointure nécessaire au tri (dans le cas de jointure plus complexe)
+			filters #Filtres à appliquer au contenu de l'onglet
+				filter #Filtre à appliquer au contenu de l'onglet
+					@name : nom du filtre
+					@label : libellé du filtre
+					@type (marc_list | callable) : type de filtre
+					marcName #Dans le cas d'un type marc_list, nom du fichier marc_list à utiliser
+					field #Dans le cas d'un type marc_list, nom du champ de la table correspondant au code du marc_list à récupérer dans la table
+					class #Dans le cas d'un type callable, classe à appeler
+					method #Dans le cas d'un type callable, méthode à appeler
+			callable #Callable associé
+				class #Classe à appeler
+				method #Méthode à appeler
+	 -->
+	<!-- Auteurs -->
+	<tab name="author_records" label="msg:130" contentType="records" for="author">
+		<query>
+			<select>responsability_notice</select>
+			<table>responsability</table>
+			<elementField>responsability_author</elementField>
+			<order>
+				<table>notices</table>
+				<field>index_sew</field>
+				<referenceField>responsability_notice</referenceField>
+				<externalField>notice_id</externalField>
+			</order>
+		</query>
+		<filters>
+			<filter name="author_records_per_function" label="msg:authority_tabs_author_records_by_functions" type="marc_list">
+				<marcName>function</marcName>
+				<field>responsability_fonction</field>
+			</filter>
+			<filter name="author_records_per_role" label="msg:authority_tabs_author_records_by_roles" type="callable">
+				<class>authority_tabs_author</class>
+				<method>get_author_records_per_role</method>
+			</filter>
+		</filters>
+	</tab>
+	<tab name="author_oeuvres" label="msg:aut_menu_titre_uniforme" contentType="authorities" for="author">
+		<authorityType>AUT_TABLE_TITRES_UNIFORMES</authorityType>
+		<query>
+			<select>responsability_tu_num</select>
+			<table>responsability_tu</table>
+			<elementField>responsability_tu_author_num</elementField>
+			<order>
+				<table>titres_uniformes</table>
+				<field>index_tu</field>
+				<referenceField>responsability_tu_num</referenceField>
+				<externalField>tu_id</externalField>
+			</order>
+		</query>
+		<filters>
+			<filter name="author_tu_per_function" label="msg:authority_tabs_author_tu_by_functions" type="marc_list">
+				<marcName>function</marcName>
+				<field>responsability_tu_fonction</field>
+			</filter>
+			<filter name="author_tu_per_role" label="msg:authority_tabs_author_tu_by_roles" type="callable">
+				<class>authority_tabs_author</class>
+				<method>get_author_tu_per_role</method>
+			</filter>
+		</filters>
+	</tab>
+	<!-- Catégories -->
+	<tab name="category_records" label="msg:130" contentType="records" for="category">
+		<query>
+			<select>notcateg_notice</select>
+			<table>notices_categories</table>
+			<elementField>num_noeud</elementField>
+			<order>
+				<table>notices</table>
+				<field>index_sew</field>
+				<referenceField>notcateg_notice</referenceField>
+				<externalField>notice_id</externalField>
+			</order>
+		</query>
+	</tab>
+	<!-- Editeurs -->
+	<tab name="publisher_records" label="msg:130" contentType="records" for="publisher">
+		<query>
+			<select>notice_id</select>
+			<table>notices</table>
+			<elementField>ed1_id</elementField>
+			<elementField>ed2_id</elementField>
+			<order>
+				<field>index_sew</field>
+			</order>
+		</query>
+	</tab>
+	<tab name="publisher_collections" label="msg:136" contentType="authorities" for="publisher">
+		<authorityType>AUT_TABLE_COLLECTIONS</authorityType>
+		<query>
+			<select>collection_id</select>
+			<table>collections</table>
+			<elementField>collection_parent</elementField>
+			<order>
+				<field>index_coll</field>
+			</order>
+		</query>
+	</tab>
+	<!-- Collections -->
+	<tab name="collection_records" label="msg:130" contentType="records" for="collection">
+		<query>
+			<select>notice_id</select>
+			<table>notices</table>
+			<elementField>coll_id</elementField>
+			<order>
+				<field>index_sew</field>
+			</order>
+		</query>
+	</tab>
+	<tab name="collection_sub_collections" label="msg:137" contentType="authorities" for="collection">
+		<authorityType>AUT_TABLE_SUB_COLLECTIONS</authorityType>
+		<query>
+			<select>sub_coll_id</select>
+			<table>sub_collections</table>
+			<elementField>sub_coll_parent</elementField>
+			<order>
+				<field>index_sub_coll</field>
+			</order>
+		</query>
+	</tab>
+	<!-- Sous-collections -->
+	<tab name="subcollection_records" label="msg:130" contentType="records" for="subcollection">
+		<query>
+			<select>notice_id</select>
+			<table>notices</table>
+			<elementField>subcoll_id</elementField>
+			<order>
+				<field>index_sew</field>
+			</order>
+		</query>
+	</tab>
+	<!-- Série -->
+	<tab name="serie_records" label="msg:130" contentType="records" for="serie">
+		<query>
+			<select>notice_id</select>
+			<table>notices</table>
+			<elementField>tparent_id</elementField>
+			<order>
+				<field>index_sew</field>
+			</order>
+		</query>
+	</tab>
+	<!-- Titres uniformes -->
+	<tab name="oeuvre_records" label="msg:130" contentType="records" for="titre_uniforme">
+		<query>
+			<select>ntu_num_notice</select>
+			<table>notices_titres_uniformes</table>
+			<elementField>ntu_num_tu</elementField>
+			<order>
+				<table>notices</table>
+				<field>index_sew</field>
+				<referenceField>ntu_num_notice</referenceField>
+				<externalField>notice_id</externalField>
+			</order>
+		</query>
+	</tab>
+	<tab name="oeuvre_execution_nomenclature_docnums" label="msg:authority_tabs_titre_uniforme_execution_nomenclature_docnums" contentType="docnums" for="titre_uniforme">
+		<callable>
+			<class>authority_tabs_titre_uniforme</class>
+			<method>get_tab_titre_uniforme_execution_nomenclature_docnums</method>
+		</callable>
+	</tab>
+	<tab name="oeuvre_expressions" label="msg:authority_tabs_titre_uniforme_expressions" contentType="authorities" for="titre_uniforme">
+		<authorityType>AUT_TABLE_TITRES_UNIFORMES</authorityType>
+		<query>
+			<select>oeuvre_link_from</select>
+			<table>tu_oeuvres_links</table>
+			<elementField>oeuvre_link_to</elementField>
+			<condition>oeuvre_link_expression = 1</condition>
+			<order>
+				<table>titres_uniformes</table>
+				<field>index_tu</field>
+				<referenceField>oeuvre_link_from</referenceField>
+				<externalField>tu_id</externalField>
+			</order>
+		</query>
+	</tab>
+	<tab name="oeuvre_other_links" label="msg:aut_oeuvre_form_other_link" contentType="authorities" for="titre_uniforme">
+		<authorityType>AUT_TABLE_TITRES_UNIFORMES</authorityType>
+		<query>
+			<select>oeuvre_link_to</select>
+			<table>tu_oeuvres_links</table>
+			<elementField>oeuvre_link_from</elementField>
+			<condition>oeuvre_link_other_link = 1</condition>
+			<order>
+				<table>titres_uniformes</table>
+				<field>index_tu</field>
+				<referenceField>oeuvre_link_to</referenceField>
+				<externalField>tu_id</externalField>
+			</order>
+		</query>
+		<filters>
+			<filter name="oeuvre_other_links_by_links" label="msg:authority_tabs_oeuvre_other_links_by_links" type="marc_list">
+				<marcName>oeuvre_link</marcName>
+				<field>oeuvre_link_type</field>
+			</filter>
+		</filters>
+	</tab>
+	<tab name="oeuvre_events" label="msg:authority_tabs_titre_uniforme_evenements" contentType="authorities" for="titre_uniforme">
+		<authorityType>AUT_TABLE_AUTHPERSO</authorityType>
+		<query>
+			<select>oeuvre_event_authperso_authority_num</select>
+			<table>tu_oeuvres_events</table>
+			<elementField>oeuvre_event_tu_num</elementField>
+			<order>
+				<field>oeuvre_event_order</field>
+			</order>
+		</query>
+	</tab>
+	<!-- Indexations décimales -->
+	<tab name="indexint_records" label="msg:130" contentType="records" for="indexint">
+		<query>
+			<select>notice_id</select>
+			<table>notices</table>
+			<elementField>indexint</elementField>
+			<order>
+				<field>index_sew</field>
+			</order>
+		</query>
+	</tab>
+	<!-- Concepts -->
+	<tab name="concept_records" label="msg:130" contentType="records" for="concept">
+		<callable>
+			<class>authority_tabs_concept</class>
+			<method>get_tab_concept_records</method>
+		</callable>
+		<filters>
+			<filter name="concepts_autoposted_records" label="msg:authority_tabs_records_indexed_with_autoposted_concepts" type="callable">
+				<class>authority_tabs_concept</class>
+				<method>get_filtered_records_by_concepts_autoposted</method>
+			</filter>
+		</filters>
+	</tab>
+	<tab name="concept_authorities" label="msg:132" contentType="authorities" for="concept">
+		<callable>
+			<class>authority_tabs_concept</class>
+			<method>get_tab_concept_authorities</method>
+		</callable>
+	</tab>
+	<!-- Autorités persos -->
+	<tab name="authpersos_records" label="msg:130" contentType="records" for="authperso">
+		<query>
+			<select>notice_authperso_notice_num</select>
+			<table>notices_authperso</table>
+			<elementField>notice_authperso_authority_num</elementField>
+			<order>
+				<table>notices</table>
+				<field>index_sew</field>
+				<referenceField>notice_authperso_notice_num</referenceField>
+				<externalField>notice_id</externalField>
+			</order>
+		</query>
+	</tab>
+	<tab name="authpersos_oeuvres_events" label="msg:authority_tabs_authperso_oeuvres" contentType="authorities" for="authperso">
+		<authorityType>AUT_TABLE_TITRES_UNIFORMES</authorityType>
+		<query>
+			<select>oeuvre_event_tu_num</select>
+			<table>tu_oeuvres_events</table>
+			<elementField>oeuvre_event_authperso_authority_num</elementField>
+			<order>
+				<table>titres_uniformes</table>
+				<field>index_tu</field>
+				<referenceField>oeuvre_event_tu_num</referenceField>
+				<externalField>tu_id</externalField>
+			</order>
+		</query>
+	</tab>
+	<!-- Communs -->
+	<tab name="common_indexed_records" label="msg:authority_tabs_records_indexed" contentType="records" for="common">
+		<query getConcepts="true">
+			<select>notice_id</select>
+			<table>notices</table>
+			<join>
+				<table>index_concept</table>
+				<referenceField>notice_id</referenceField>
+				<externalField>num_object</externalField>
+				<condition>index_concept.type_object = 1</condition>
+			</join>
+			<conceptField>num_concept</conceptField> 
+			<order>
+				<field>index_sew</field>
+			</order>
+		</query>
+	</tab>
+	<tab name="common_indexed_authorities" label="msg:authority_tabs_authorities_indexed" contentType="authorities" for="common">
+		<callable>
+			<class>authority_tabs</class>
+			<method>get_tab_authorities_indexed_with_authority</method>
+		</callable>
+	</tab>
+	<tab name="common_composed_concepts" label="msg:skos_view_concepts_composed_concepts" contentType="authorities" for="common">
+		<authorityType>AUT_TABLE_CONCEPT</authorityType>
+		<callable>
+			<class>authority_tabs</class>
+			<method>get_tab_composed_concepts</method>
+		</callable>
+	</tab>
+	<tab name="common_composed_records" label="msg:authority_tabs_composed_records" contentType="records" for="common">
+		<callable>
+			<class>authority_tabs</class>
+			<method>get_tab_composed_records</method>
+		</callable>
+	</tab>
+	<tab name="get_tab_composed_tus" label="msg:authority_tabs_composed_tus" contentType="authorities" for="common">
+		<callable>
+			<class>authority_tabs</class>
+			<method>get_tab_composed_tus</method>
+		</callable>
+	</tab>
+	<tab name="common_used_in_pperso_authorities" label="msg:authority_tabs_used_in_pperso_authorities" contentType="authorities" for="common">
+		<callable>
+			<class>authority_tabs</class>
+			<method>get_tab_used_in_pperso_authorities</method>
+		</callable>
+	</tab>
+	<tab name="common_used_in_pperso_records" label="msg:authority_tabs_used_in_pperso_records" contentType="records" for="common">
+		<callable>
+			<class>authority_tabs</class>
+			<method>get_tab_used_in_pperso_records</method>
+		</callable>
+	</tab>
+	<tab name="common_used_in_pperso_cms_editorial_sections" label="msg:authority_tabs_used_in_pperso_cms_editorial_sections" contentType="sections" for="common">
+		<callable>
+			<class>authority_tabs</class>
+			<method>get_tab_used_in_pperso_cms_editorial_sections</method>
+		</callable>
+	</tab>
+	<tab name="common_used_in_pperso_cms_editorial_articles" label="msg:authority_tabs_used_in_pperso_cms_editorial_articles" contentType="articles" for="common">
+		<callable>
+			<class>authority_tabs</class>
+			<method>get_tab_used_in_pperso_cms_editorial_articles</method>
+		</callable>
+	</tab>
+	<tab name="common_entity_graph" label="msg:authority_tabs_entities_graphed" contentType="graph" for="common">
+		<callable>
+			<class>authority_tabs</class>
+			<method>get_tab_entities_graphed</method>
+		</callable>
+	</tab>
+</pmbtabs>

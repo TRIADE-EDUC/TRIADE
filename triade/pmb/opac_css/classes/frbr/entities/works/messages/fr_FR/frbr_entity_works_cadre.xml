@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le module Articleslist
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: frbr_entity_works_cadre.xml,v 1.1 2017-04-25 15:23:21 dgoron Exp $ -->
+
+<XMLlist>
+	<entry code='frbr_entity_works_view_workslist'>Liste d'oeuvres - template Django</entry>
+	<entry code='frbr_entity_works_view_carousel'>Vue en carrousel</entry>
+	<entry code='frbr_entity_works_view_carousel_responsive'>Vue en carrousel responsive</entry>
+</XMLlist>

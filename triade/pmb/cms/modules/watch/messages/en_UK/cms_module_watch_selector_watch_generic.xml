@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le module Article
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_watch_selector_watch_generic.xml,v 1.1 2015-06-15 12:55:34 pmbs Exp $ -->
+
+<XMLlist>
+	<entry code="cms_module_common_selector_sub_choice_label">Method of recovery of the watch</entry>
+	<entry code="cms_module_common_selector_sub_choice">Choose a method</entry>
+	<entry code="cms_module_watch_selector_watch">Manual selection</entry>
+	<entry code="cms_module_common_selector_env_var">Selection via an environment variable</entry>
+	<entry code="cms_module_watch_selector_watch_by_item">Selection from an item</entry>	
+	<entry code="cms_module_common_selector_type_article_generic">Selection via a generic field of article</entry>	
+	<entry code="cms_module_common_selector_type_article">Selection via a field of an article's content type</entry>	
+	<entry code="cms_module_common_selector_type_section_generic">Selection via a generic field of rubric</entry>	
+	<entry code="cms_module_common_selector_type_section">Selection via a rubric's content type field</entry>	
+</XMLlist>

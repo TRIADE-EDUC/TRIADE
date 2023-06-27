@@ -1,0 +1,55 @@
+<!-- $Id: records_elements_tabs.html,v 1.9 2017-11-22 14:47:47 dgoron Exp $ -->
+
+<br/>
+<div class="hmenu" id="record_tabs">
+	{% for element_list_tab in records_tabs.tabs %}
+		{% if element_list_tab.nb_results %}
+			<span{% if global.quoi == element_list_tab.name %} class='selected' {% endif %}>
+				<a href="./catalog.php?categ={{ global.categ }}&sub={{ global.sub }}{% if global.id %}&id={{ records_tabs.record.id }}{% endif %}{% if global.serial_id %}&serial_id={{ records_tabs.record.id }}{% endif %}{% if bulletin_id %}&bul_id={{ bulletin_id }}{% endif %}{% if global.action %}&action={{ global.action }}{% endif %}&quoi={{ element_list_tab.name }}{% if global.view %}&view={{ global.view }}{% endif %}{% if global.tab_nb_per_page %}&tab_nb_per_page={{ global.tab_nb_per_page }}{% endif %}#record_tabs">
+					{{ element_list_tab.label }} ({{ element_list_tab.nb_results }})
+				</a>
+			</span>
+		{% endif %}
+	{% endfor %}
+</div>
+
+{% for group_name, groups in records_tabs.record.records_list_ui.groups %}
+	{% if loop.first %}
+		<form class="form-catal-groups" method="post" action="./catalog.php?categ={{ global.categ }}&sub={{ global.sub }}{% if global.id %}&id={{ records_tabs.record.id }}{% endif %}{% if global.serial_id %}&serial_id={{ records_tabs.record.id }}{% endif %}{% if bulletin_id %}&bul_id={{ bulletin_id }}{% endif %}{% if global.action %}&action={{ global.action }}{% endif %}&quoi={{ global.quoi }}{% if global.view %}&view={{ global.view }}{% endif %}{% if global.tab_nb_per_page %}&tab_nb_per_page={{global.tab_nb_per_page}}{% endif %}#record_tabs">
+			<div class="form-contenu">
+				<div style="display:table">
+	{% endif %}
+	<div style="display:table-row">
+		<div style="display:table-cell">
+			<input type="hidden" name="elements_list_filters_{{ group_name }}_post" value="1"/>
+			<b>{{ groups.label }} : </b>
+		</div>
+		<div style="display:table-cell">
+			{% for group_id, group_infos in groups.elements %}
+				{% if group_id %}
+					<input type="checkbox" id="elements_list_filters_{{ group_name }}_{{ loop.counter0 }}" value="{{ group_id }}" name="elements_list_filters[{{ group_name }}][]" {% for group_filter_name, filter in session.elements_list_filters %}{% if group_filter_name == group_name %}{% for filter_id in filter %}{% if filter_id == group_id %}checked="checked"{% endif %}{% endfor %}{% endif %}{% endfor %} title="{{ group_infos.nb_results }}"/>
+					<label title="{{ group_infos.nb_results }}" for="elements_list_filters_{{ group_name }}_{{ loop.counter0 }}" class="etiquette">{{ group_infos.label }}</label>
+				{% endif %}
+			{% endfor %}
+		</div>
+	</div>
+	{% if loop.last %}
+					<div class="row">
+						<input type="submit" class="bouton" value="{{ msg.sauv_list_filtrer }}"/>
+					</div>
+				</div>
+			</div>
+		</form>
+	{% endif %}
+{% endfor %}
+
+{% if records_tabs.record.records_list_ui.elements_list %}
+	{% if records_tabs.record.records_list_ui.expandable %}
+		<a href="javascript:expandAll_ajax(0, document.getElementById('elements_list'))"><img style="border:0px" id="expandall" src="{{ img.expand_all.gif }}"></a>
+		<a href="javascript:collapseAll(document.getElementById('elements_list'))"><img style="border:0px" id="collapseall" src="{{ img.collapse_all.gif }}"></a>
+	{% endif %}
+	<div id="elements_list">
+		{{ records_tabs.record.records_list_ui.elements_list }}
+	</div>
+	{{ records_tabs.record.records_list_ui.get_elements_list_nav }}
+{% endif %}

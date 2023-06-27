@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- messages localisés en français pour les méthodes de pmbesReaders
+****************************************************************************************
+© 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: fr_FR.xml,v 1.1 2011-07-29 12:32:12 dgoron Exp $ -->
+
+<!DOCTYPE XMLlist SYSTEM "../../../includes/XMLlist.dtd" >
+<XMLlist>
+<!-- 
+pmbesReaders
+-->
+  <entry code="Readers_functions_description">Fonctions relatives aux lecteurs</entry>
+<!-- 
+listReadersSubscription 
+-->
+  <entry code="listReadersSubscription_description">Liste des abonnements lecteurs</entry>
+  <entry code="listReadersSubscription_input_description"></entry>
+  <entry code="listReadersSubscription_search">encours - limite - depassee</entry>
+  <entry code="listReadersSubscription_empr_location_id">Identifiant de la localisation</entry>
+  <entry code="listReadersSubscription_empr_statut_edit">Identifiant du statut de l'emprunteur</entry>
+  <entry code="listReadersSubscription_sortby">Critère de tri</entry>
+  <entry code="listReadersSubscription_output_description"></entry>
+  <entry code="listReadersSubscription_result">Retourne la liste des abonnements</entry>   
+<!-- 
+listGroupReaders
+-->
+  <entry code="listGroupReaders_description">Liste des groupes de lecteurs</entry>
+  <entry code="listGroupReaders_input_description"></entry>
+  <entry code="listGroupReaders_description"></entry> 
+  <entry code="listGroupReaders_result">Retourne la liste</entry>
+<!-- 
+generatePdfReadersSubscription 
+-->
+  <entry code="generatePdfReadersSubscription_description">Génération PDF</entry>
+  <entry code="generatePdfReadersSubscription_input_description"></entry>
+  <entry code="generatePdfReadersSubscription_id_empr">Identifiant de l'emprunteur</entry>
+  <entry code="generatePdfReadersSubscription_empr_location_id">Identifiant de la localisation</entry>
+  <entry code="generatePdfReadersSubscription_output_description"></entry>
+  <entry code="generatePdfReadersSubscription_result">Retourne le contenu</entry> 
+<!-- 
+generateMailReadersSubscription 
+-->
+  <entry code="generateMailReadersSubscription_description">Envoi de mail</entry>
+  <entry code="generateMailReadersSubscription_input_description"></entry>
+  <entry code="generateMailReadersSubscription_id_empr">Identifiant de l'emprunteur</entry>
+  <entry code="generateMailReadersSubscription_empr_location_id">Identifiant de la localisation</entry>
+  <entry code="generateMailReadersSubscription_output_description"></entry>
+  <entry code="generateMailReadersSubscription_result">Envoi de mail réussi ou non</entry> 
+
+</XMLlist>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- Fichier manifest de description des méthodes disponibles
+****************************************************************************************
+© 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: manifest.xml,v 1.1 2018-06-08 08:10:27 vtouchard Exp $ -->
+<manifest>
+	<name>pmbesLoans</name>
+	<description>msg:Loans_functions_description</description>
+	<methods>
+		<method name="loanBook" rights="" version="1.0" comment="msg:loanBook_description" language_independant="true">
+			<pmb_requirements>
+				<pmb_requirement start_path="class" file="pnb/pnb.class.php"/>
+			</pmb_requirements>
+			<inputs>
+				<description>msg:loanBook_input_description</description>
+				<param name="id_empr" type="scalar" dataType="string" description="msg:loanBook_id_empr"/>
+				<param name="record_id" type="scalar" dataType="string" description="msg:loanBook_record_id"/>
+				<param name="user_agent" type="scalar" dataType="string" description="msg:loanBook_user_agent"/>
+			</inputs>
+			<outputs>
+				<description>msg:loanBook_output_description</description>
+				<!-- -<result name="result" type="scalar" dataType="type_a_definir" description="msg:filterLoansReaders_result"/> -->
+			</outputs>
+		</method>
+	</methods>
+</manifest>
+

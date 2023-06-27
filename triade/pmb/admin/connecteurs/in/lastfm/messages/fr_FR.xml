@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le connecteur LastFM
+****************************************************************************************
+© 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: fr_FR.xml,v 1.3 2012-02-15 14:40:41 arenou Exp $ -->
+
+<XMLlist>
+	<entry code="lastfm">LastFM</entry>
+	<entry code="lastfm_callback_url">URL à renseigner en Callback URL à l'inscription sur LastFM</entry>
+	<entry code="lastfm_api_key">Clé API</entry>
+	<entry code="lastfm_secret_key">Clé secrète</entry>
+	<entry code="lastfm_no_source">Enregistrer d'abord la source pour avoir l'URL!</entry>
+	<entry code="lastfm_token">Autoriser l'application sur LastFM</entry>
+	<entry code="lastfm_link_allow_ws">Cliquer pour autoriser</entry>
+	<entry code="lastfm_ws_allow_in_progress">Vous devez enregistrer la source pour valider</entry>
+	<entry code="lastfm_ws_allowed">Autorisation effectuée</entry>
+	<entry code="lastfm_allow_need_api_key">Vous devez renseigner les clés avant de demander d'autorisation</entry>
+	<entry code="lastfm_enrichment_source">(source Last FM)</entry>
+	<entry code="lastfm_see_picture">Voir l'image sur LastFM</entry>
+	<entry code="lastfm_no_informations">Aucune information disponible.</entry>
+</XMLlist>

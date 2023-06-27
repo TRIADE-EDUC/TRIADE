@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- Fichier manifest de description des méthodes disponibles
+****************************************************************************************
+© 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: manifest.xml,v 1.13 2017-12-07 09:03:42 vtouchard Exp $ -->
+<manifest>
+	<name>pmbesClean</name>
+	<methods>
+		<method name="indexGlobal" rights="" version="1.0" comment="msg:indexGlobal_description" language_independant="true">
+			<pmb_requirements>
+				<pmb_requirement start_path="class" file="notice.class.php"/>
+				<pmb_requirement start_path="class" file="noeuds.class.php"/>
+			</pmb_requirements>
+			<inputs/>
+			<outputs>
+				<description>msg:indexGlobal_output_description</description>
+				<result name="result" type="scalar" dataType="string" description="msg:indexGlobal_result"/>
+			</outputs>
+		</method>
+		<method name="indexNotices" rights="" version="1.0" comment="msg:indexNotices_description" language_independant="true">
+			<inputs/>
+			<outputs>
+				<description>msg:indexNotices_output_description</description>
+				<result name="result" type="scalar" dataType="string" description="msg:indexNotices_result"/>
+			</outputs>
+		</method>
+		<method name="cleanAuthors" rights="" version="1.0" comment="msg:cleanAuthors_description" language_independant="true">
+			<inputs/>
+			<outputs>
+				<description>msg:cleanAuthors_output_description</description>
+				<result name="result" type="scalar" dataType="string" description="msg:cleanAuthors_result"/>
+			</outputs>
+		</method>
+		<method name="cleanPublishers" rights="" version="1.0" comment="msg:cleanPublishers_description" language_independant="true">
+			<inputs/>
+			<outputs>
+				<description>msg:cleanPublishers_output_description</description>
+				<result name="result" type="scalar" dataType="string" description="msg:cleanPublishers_result"/>
+			</outputs>
+		</method>
+		<method name="cleanCollections" rights="" version="1.0" comment="msg:cleanCollections_description" language_independant="true">
+			<inputs/>
+			<outputs>
+				<description>msg:cleanCollections_output_description</description>
+				<result name="result" type="scalar" dataType="string" description="msg:cleanCollections_result"/>
+			</outputs>
+		</method>
+		<method name="cleanSubcollections" rights="" version="1.0" comment="msg:cleanSubcollections_description" language_independant="true">
+			<inputs/>
+			<outputs>
+				<description>msg:cleanSubcollections_output_description</description>
+				<result name="result" type="scalar" dataType="string" description="msg:cleanSubcollections_result"/>
+			</outputs>
+		</method>
+		<method name="cleanCategories" rights="" version="1.0" comment="msg:cleanCategories_description" language_independant="true">
+			<pmb_requirements>
+				<pmb_requirement start_path="class" file="thesaurus.class.php"/>
+				<pmb_requirement start_path="class" file="noeuds.class.php"/>
+				<pmb_requirement start_path="class" file="categories.class.php"/>
+			</pmb_requirements>
+			<inputs/>
+			<outputs>
+				<description>msg:cleanCategories_output_description</description>
+				<result name="result" type="scalar" dataType="string" description="msg:cleanCategories_result"/>
+			</outputs>
+		</method>
+		<method name="cleanSeries" rights="" version="1.0" comment="msg:cleanSeries_description" language_independant="true">
+			<inputs/>
+			<outputs>
+				<description>msg:cleanSeries_output_description</description>
+				<result name="result" type="scalar" dataType="string" description="msg:cleanSeries_result"/>
+			</outputs>
+		</method>
+		<method name="cleanTitresUniformes" rights="" version="1.0" comment="msg:cleanTitresUniformes_description" language_independant="true">
+			<pmb_requirements>
+				<pmb_requirement start_path="class" file="titre_uniforme.class.php"/>
+			</pmb_requirements>
+			<inputs/>
+			<outputs>
+				<description>msg:cleanTitresUniformes_output_description</description>
+				<result name="result" type="scalar" dataType="string" description="msg:cleanTitresUniformes_result"/>
+			</outputs>
+		</method>
+		<method name="cleanIndexint" rights="" version="1.0" comment="msg:cleanIndexint_description" language_independant="true">
+			<pmb_requirements>
+				<pmb_requirement start_path="class" file="indexint.class.php"/>
+			</pmb_requirements>
+			<inputs/>
+			<outputs>
+				<description>msg:cleanIndexint_output_description</description>
+				<result name="result" type="scalar" dataType="string" description="msg:cleanIndexint_result"/>
+			</outputs>
+		</method>
+		<method name="cleanRelations" rights="" version="1.0" comment="msg:cleanRelations_description" language_independant="true">
+			<pmb_requirements>
+				<pmb_requirement start_path="class" file="notice_relations.class.php"/>
+			</pmb_requirements>
+			<inputs/>
+			<outputs>
+				<description>msg:cleanRelations_output_description</description>
+				<result name="result" type="scalar" dataType="string" description="msg:cleanRelations_result"/>
+			</outputs>
+		</method>
+		<method name="cleanNotices" rights="" version="1.0" comment="msg:cleanNotices_description" language_independant="true">
+			<inputs/>
+			<outputs>
+				<description>msg:cleanNotices_output_description</description>
+				<result name="result" type="scalar" dataType="string" description="msg:cleanNotices_result"/>
+			</outputs>
+		</method>
+		<method name="indexAcquisitions" rights="" version="1.0" comment="msg:indexAcquisitions_description" language_independant="true">
+			<inputs/>
+			<outputs>
+				<description>msg:indexAcquisitions_output_description</description>
+				<result name="result" type="scalar" dataType="string" description="msg:indexAcquisitions_result"/>
+			</outputs>
+		</method>
+		<method name="genSignatureNotice" rights="" version="1.0" comment="msg:genSignatureNotice_description" language_independant="true">
+			<pmb_requirements>
+				<pmb_requirement start_path="class" file="notice_doublon.class.php"/>
+			</pmb_requirements>
+			<inputs/>
+			<outputs>
+				<description>msg:genSignatureNotice_output_description</description>
+				<result name="result" type="scalar" dataType="string" description="msg:genSignatureNotice_result"/>
+			</outputs>
+		</method>
+		<method name="genPhonetique" rights="" version="1.0" comment="msg:genPhonetique_description" language_independant="true">
+			<pmb_requirements>
+				<pmb_requirement start_path="class" file="double_metaphone.class.php"/>
+				<pmb_requirement start_path="class" file="stemming.class.php"/>
+			</pmb_requirements>
+			<inputs/>
+			<outputs>
+				<description>msg:genPhonetique_output_description</description>
+				<result name="result" type="scalar" dataType="string" description="msg:genPhonetique_result"/>
+			</outputs>
+		</method>
+		<method name="nettoyageCleanTags" rights="" version="1.0" comment="msg:nettoyageCleanTags_description" language_independant="true">
+			<pmb_requirements>
+				<pmb_requirement start_path="class" file="notice.class.php"/>
+			</pmb_requirements>
+			<inputs/>
+			<outputs>
+				<description>msg:nettoyageCleanTags_output_description</description>
+				<result name="result" type="scalar" dataType="string" description="msg:nettoyageCleanTags_result"/>
+			</outputs>
+		</method>
+		<method name="cleanCategoriesPath" rights="" version="1.0" comment="msg:cleanCategoriesPath_description" language_independant="true">
+			<pmb_requirements>
+				<pmb_requirement start_path="class" file="thesaurus.class.php"/>
+				<pmb_requirement start_path="class" file="noeuds.class.php"/>
+				<pmb_requirement start_path="class" file="categories.class.php"/>
+			</pmb_requirements>
+			<inputs/>
+			<outputs>
+				<description>msg:cleanCategoriesPath_output_description</description>
+				<result name="result" type="scalar" dataType="string" description="msg:cleanCategoriesPath_result"/>
+			</outputs>
+		</method>
+		<method name="genDatePublicationArticle" rights="" version="1.0" comment="msg:genDatePublicationArticle_description" language_independant="true">
+			<inputs/>
+			<outputs>
+				<description>msg:genDatePublicationArticle_output_description</description>
+				<result name="result" type="scalar" dataType="string" description="msg:genDatePublicationArticle_result"/>
+			</outputs>
+		</method>
+		<method name="genDateTri" rights="" version="1.0" comment="msg:genDateTri_description" language_independant="true">
+			<pmb_requirements>
+				<pmb_requirement start_path="class" file="notice.class.php"/>
+			</pmb_requirements>
+			<inputs/>
+			<outputs>
+				<description>msg:genDateTri_output_description</description>
+				<result name="result" type="scalar" dataType="string" description="msg:genDateTri_result"/>
+			</outputs>
+		</method>
+		<method name="indexDocnum" rights="" version="1.0" comment="msg:indexDocnum_description" language_independant="true">
+			<inputs/>
+			<outputs>
+				<description>msg:indexDocnum_output_description</description>
+				<result name="result" type="scalar" dataType="string" description="msg:indexDocnum_result"/>
+			</outputs>
+		</method>
+		<method name="cleanRdfStore" rights="" version="1.0" comment="msg:cleanRdfStore_description" language_independant="true">
+			<pmb_requirements>
+				<pmb_requirement start_path="class" file="rdf/ontology.class.php"/>
+			</pmb_requirements>
+			<inputs/>
+			<outputs>
+				<description>msg:cleanRdfStore_output_description</description>
+				<result name="result" type="scalar" dataType="string" description="msg:cleanRdfStore_result"/>
+			</outputs>
+		</method>
+		<method name="cleanSynchroRdfStore" rights="" version="1.0" comment="msg:cleanSynchroRdfStore_description" language_independant="true">
+			<pmb_requirements>
+				<pmb_requirement start_path="class" file="synchro_rdf.class.php"/>
+				<pmb_requirement start_path="class" file="serials.class.php"/>
+			</pmb_requirements>
+			<inputs/>
+			<outputs>
+				<description>msg:cleanSynchroRdfStore_output_description</description>
+				<result name="result" type="scalar" dataType="string" description="msg:cleanSynchroRdfStore_result"/>
+			</outputs>
+		</method>
+		<method name="cleanFAQ" rights="" version="1.0" comment="msg:cleanFAQ_description" language_independant="true">
+			<pmb_requirements>
+				<pmb_requirement start_path="class" file="indexation.class.php"/>
+			</pmb_requirements>
+			<inputs/>
+			<outputs>
+				<description>msg:cleanFAQ_output_description</description>
+				<result name="result" type="scalar" dataType="string" description="msg:cleanFAQ_result"/>
+			</outputs>
+		</method>
+		<method name="cleanCMS" rights="" version="1.0" comment="msg:cleanCMS_description" language_independant="true">
+			<pmb_requirements>
+				<pmb_requirement start_path="class" file="cms/cms_article.class.php"/>
+				<pmb_requirement start_path="class" file="cms/cms_section.class.php"/>
+			</pmb_requirements>
+			<inputs/>
+			<outputs>
+				<description>msg:cleanCMS_output_description</description>
+				<result name="result" type="scalar" dataType="string" description="msg:cleanCMS_result"/>
+			</outputs>
+		</method>
+		<method name="cleanConcept" rights="" version="1.0" comment="msg:cleanConcept_description" language_independant="true">
+			<pmb_requirements>
+				<pmb_requirement start_path="class" file="onto/onto_index.class.php"/>
+				<pmb_requirement start_path="class" file="autoloader.class.php"/>
+			</pmb_requirements>
+			<inputs/>
+			<outputs>
+				<description>msg:cleanConcept_output_description</description>
+				<result name="result" type="scalar" dataType="string" description="msg:cleanConcept_result"/>
+			</outputs>
+		</method>
+		<method name="hashEmprPassword" rights="" version="1.0" comment="msg:hashEmprPassword_description" language_independant="true">
+			<pmb_requirements>
+				<pmb_requirement start_path="class" file="emprunteur.class.php"/>
+			</pmb_requirements>
+			<inputs/>
+			<outputs>
+				<description>msg:hashEmprPassword_output_description</description>
+				<result name="result" type="scalar" dataType="string" description="msg:hashEmprPassword_result"/>
+			</outputs>
+		</method>
+		<method name="indexAuthorities" rights="" version="1.0" comment="msg:indexAuthorities_description" language_independant="true">
+			<pmb_requirements>
+				<pmb_requirement start_path="class" file="indexation_authority.class.php"/>
+				<pmb_requirement start_path="class" file="indexation_authperso.class.php"/>
+				<pmb_requirement start_path="class" file="netbase/netbase_authorities.class.php"/>
+		  		<requirement group="pmbesClean" name="indexAuthors" version="1.0"/>
+		  		<requirement group="pmbesClean" name="indexPublishers" version="1.0"/>
+		  		<requirement group="pmbesClean" name="indexCategories" version="1.0"/>
+		  		<requirement group="pmbesClean" name="indexCollections" version="1.0"/>
+		  		<requirement group="pmbesClean" name="indexSubCollections" version="1.0"/>
+		  		<requirement group="pmbesClean" name="indexSeries" version="1.0"/>
+		  		<requirement group="pmbesClean" name="indexIndexint" version="1.0"/>
+		  		<requirement group="pmbesClean" name="indexTitresUniformes" version="1.0"/>
+		  		<requirement group="pmbesClean" name="indexAuthperso" version="1.0"/>
+			</pmb_requirements>
+			<inputs/>
+			<outputs>
+				<description>msg:indexAuthorities_output_description</description>
+				<result name="result" type="scalar" dataType="string" description="msg:indexAuthorities_result"/>
+			</outputs>
+		</method>
+	</methods>
+</manifest>
+

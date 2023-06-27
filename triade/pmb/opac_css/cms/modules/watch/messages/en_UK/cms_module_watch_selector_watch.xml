@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le module Article
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_watch_selector_watch.xml,v 1.1 2015-06-16 10:25:29 pmbs Exp $ -->
+
+<XMLlist>
+	<entry code="cms_module_watch_selector_watch_id_watch">Choose a watch</entry>
+	<entry code="cms_module_watch_selector_watch_no_watch">No watch available</entry>
+</XMLlist>

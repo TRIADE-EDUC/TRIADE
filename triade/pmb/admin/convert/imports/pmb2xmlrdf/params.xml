@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<params>
+	<!-- Nom de l'import -->
+	<importname>Base PMB -&gt; XML RDF</importname>
+	<!-- Nombre de notices traitées par passe -->
+	<nperpass>200</nperpass>
+	<!-- Type de l'entrée -->
+	<input type="xml" rootelement="*" noticeelement="notice" specialexport="yes" />
+	<!-- Type de sortie -->
+	<output importable="no" type="custom" script="pmb2xmlrdf_output.class.php" suffix="xml" mimetype="application/xml" specialdoctype="no"/>
+</params>

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour la classe datasource
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_common_view_django.xml,v 1.11 2018-10-31 17:46:06 dgoron Exp $ -->
+
+<XMLlist>
+	<entry code="cms_module_common_view_django_add_template">Ajouter un template</entry>
+	<entry code="cms_module_common_view_django_template_name">Nom du template</entry>
+	<entry code="cms_module_common_view_django_template_content">Contenu du template</entry>
+	<entry code="cms_module_common_view_django_template_choice">Choisissez le template à utiliser</entry>
+	<entry code="cms_module_common_view_django_delete_template">Etes-vous de vouloir supprimer ce template ?</entry>
+	<entry code="cms_module_common_view_error_template">Erreur sur le template</entry>
+	<entry code="cms_module_common_view_django_get_vars_desc">Variables GET (remplacer "&lt;variable&gt;" par le nom de la variable)</entry>
+	<entry code="cms_module_common_view_django_post_vars_desc">Variables POST (remplacer "&lt;variable&gt;" par le nom de la variable)</entry>
+	<entry code="cms_module_common_view_django_session_vars_desc">Variables de Sessions</entry>
+	<entry code="cms_module_common_view_django_session_vars_view_desc">Idenfiant de la vue</entry>
+	<entry code="cms_module_common_view_django_session_vars_id_empr_desc">Identifiant de l'emprunteur</entry>
+	<entry code="cms_module_common_view_django_env_vars_desc">Variables d'environnement</entry>
+	<entry code="cms_module_common_view_django_session_vars_script_desc">Variable $_SERVER['SCRIPT_NAME']</entry>
+	<entry code="cms_module_common_view_django_session_vars_request_desc">Variable $_SERVER['REQUEST_URI']</entry>
+	<entry code='cms_module_common_view_django_id_desc'>Identifiant du cadre</entry>
+	<entry code="cms_module_common_view_django_session_vars_opac_url_desc">Variable $opac_url_base</entry>
+	<entry code="cms_module_common_view_django_session_vars_platform_desc">Nom du système d'exploitation</entry>
+	<entry code="cms_module_common_view_django_session_vars_browser_desc">Nom du navigateur</entry>
+	<entry code="cms_module_common_view_django_session_vars_empr_nom_desc">Nom de l'emprunteur</entry>
+	<entry code="cms_module_common_view_django_session_vars_empr_prenom_desc">Prénom de l'emprunteur</entry>
+	<entry code="cms_module_common_view_django_session_vars_empr_mail_desc">Mail de l'emprunteur</entry>
+	<entry code="cms_module_common_view_django_session_vars_empr_login_desc">Login de l'emprunteur</entry>
+	<entry code="cms_module_common_view_django_session_vars_empr_adr1_desc">Adr1 de l'emprunteur</entry>
+	<entry code="cms_module_common_view_django_session_vars_empr_adr2_desc">Adr2 de l'emprunteur</entry>
+	<entry code="cms_module_common_view_django_session_vars_empr_cp_desc">Code postal de l'emprunteur</entry>
+	<entry code="cms_module_common_view_django_session_vars_empr_ville_desc">Ville de l'emprunteur</entry>
+	<entry code="cms_module_common_view_django_session_vars_empr_categ_desc">Categ de l'emprunteur</entry>
+	<entry code="cms_module_common_view_django_session_vars_empr_codestat_desc">Codestat de l'emprunteur</entry>
+	<entry code="cms_module_common_view_django_session_vars_empr_sexe_desc">Sexe de l'emprunteur</entry>
+	<entry code="cms_module_common_view_django_session_vars_empr_year_desc">Année de l'emprunteur</entry>
+	<entry code="cms_module_common_view_django_session_vars_empr_cb_desc">CB de l'emprunteur</entry>
+	<entry code="cms_module_common_view_django_session_vars_empr_prof_desc">Profession de l'emprunteur</entry>
+	<entry code="cms_module_common_view_django_session_vars_empr_tel1_desc">Tel1 de l'emprunteur</entry>
+	<entry code="cms_module_common_view_django_session_vars_empr_tel2_desc">Tel 2 de l'emprunteur</entry>
+	<entry code="cms_module_common_view_django_session_vars_empr_location_desc">Localisation de l'emprunteur</entry>
+	<entry code="cms_module_common_view_django_session_vars_empr_date_adhesion_desc">Date d'adhésion de l'emprunteur</entry>
+	<entry code="cms_module_common_view_django_session_vars_empr_date_expiration_desc">Date d'expiration de l'emprunteur</entry>
+	<entry code="cms_module_common_view_django_session_vars_empr_statut_desc">Statut de l'emprunteur</entry>
+	<entry code="cms_module_common_view_django_session_vars_empr_first_authentification_desc">Première connexion OPAC de l'emprunteur</entry>
+</XMLlist>

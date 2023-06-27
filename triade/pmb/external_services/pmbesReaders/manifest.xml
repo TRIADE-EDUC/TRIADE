@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- Fichier manifest de description des méthodes disponibles
+****************************************************************************************
+© 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: manifest.xml,v 1.1 2011-07-29 12:32:12 dgoron Exp $ -->
+<manifest>
+	<name>pmbesReaders</name>
+	<description>msg:Readers_functions_description</description>
+	<requirements>
+		<requirement group="pmbesTypes"/>
+	</requirements>
+	<types>
+		<type name="readerSubscription" imported="true" imported_from="pmbesTypes"/>
+	</types>
+	<methods>
+		<method name="listReadersSubscription" rights="" version="1.0" comment="msg:listReadersSubscription_description" language_independant="true">
+			<inputs>
+				<description>msg:listReadersSubscription_input_description</description>
+				<param name="search" type="scalar" dataType="string" description="msg:listReadersSubscription_search"/>
+				<param name="empr_location_id" type="scalar" dataType="integer" description="msg:listReadersSubscription_empr_location_id"/>
+				<param name="empr_statut_edit" type="scalar" dataType="integer" description="msg:listReadersSubscription_empr_statut_edit"/>
+				<param name="sortby" type="scalar" dataType="string" description="msg:listReadersSubscription_sortby"/>
+			</inputs>
+			<outputs>
+				<description>msg:listReadersSubscription_output_description</description>
+				<result name="result" type="scalar" dataType="readerSubscription" description="msg:listReadersSubscription_result"/>
+			</outputs>
+		</method>
+		<method name="relanceReadersSubscription" rights="" version="1.0" comment="msg:relanceReadersSubscription_description" language_independant="true">
+			<pmb_requirements>
+				<pmb_requirement start_path="class" file="fpdf.class.php"/>
+				<pmb_requirement start_path="include" file="fpdf.inc.php"/>
+				<pmb_requirement start_path="class" file="emprunteur.class.php"/>
+			</pmb_requirements>
+			<inputs>
+				<description>msg:relanceReadersSubscription_input_description</description>
+				<param name="tresults" type="scalar" dataType="array" description="msg:relanceReadersSubscription_tresults"/>
+				<param name="empr_location_id" type="scalar" dataType="integer" description="msg:relanceReadersSubscription_empr_location_id"/>
+			</inputs>
+			<outputs>
+				<description>msg:relanceReadersSubscription_output_description</description>
+				<result name="result" type="scalar" dataType="string" description="msg:relanceReadersSubscription_result"/>
+			</outputs>
+		</method>
+		<method name="listGroupReaders" rights="" version="1.0" comment="msg:listGroupReaders_description" language_independant="true">
+			<inputs>
+				<description>msg:listGroupReaders_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:listGroupReaders_output_description</description>
+				<result name="result" type="scalar" dataType="string" description="msg:listGroupReaders_result"/>
+			</outputs>
+		</method>
+		<!--<method name="relanceReadersSubscription" rights="" version="1.0" comment="msg:relanceReadersSubscription_description" language_independant="true">
+			<pmb_requirements>
+				<pmb_requirement start_path="class" file="fpdf.class.php"/>
+				<pmb_requirement start_path="include" file="fpdf.inc.php"/>
+				<pmb_requirement start_path="class" file="emprunteur.class.php"/>
+			</pmb_requirements>
+			<inputs>
+				<description>msg:relanceReadersSubscription_input_description</description>
+				<param name="search" type="scalar" dataType="string" description="msg:relanceReadersSubscription_search"/>
+				<param name="empr_location_id" type="scalar" dataType="integer" description="msg:relanceReadersSubscription_empr_location_id"/>
+				<param name="empr_statut_edit" type="scalar" dataType="integer" description="msg:relanceReadersSubscription_empr_statut_edit"/>
+				<param name="sortby" type="scalar" dataType="string" description="msg:relanceReadersSubscription_sortby"/>
+			</inputs>
+			<outputs>
+				<description>msg:relanceReadersSubscription_output_description</description>
+				<result name="result" type="scalar" dataType="string" description="msg:relanceReadersSubscription_result"/>
+			</outputs>
+		</method>
+		--><method name="generatePdfReadersSubscription" rights="" version="1.0" comment="msg:generatePdfReadersSubscription_description" language_independant="true">
+			<pmb_requirements>
+				<pmb_requirement start_path="class" file="fpdf.class.php"/>
+				<pmb_requirement start_path="include" file="fpdf.inc.php"/>
+				<pmb_requirement start_path="class" file="emprunteur.class.php"/>
+			</pmb_requirements>
+			<inputs>
+				<description>msg:generatePdfReadersSubscription_input_description</description>
+				<param name="id_empr" type="scalar" dataType="integer" description="msg:generatePdfReadersSubscription_id_empr"/>
+				<param name="empr_location_id" type="scalar" dataType="integer" description="msg:generatePdfReadersSubscription_empr_location_id"/>
+			</inputs>
+			<outputs>
+				<description>msg:generatePdfReadersSubscription_output_description</description>
+				<result name="result" type="scalar" dataType="string" description="msg:generatePdfReadersSubscription_result"/>
+			</outputs>
+		</method>
+		<method name="generateMailReadersSubscription" rights="" version="1.0" comment="msg:generateMailReadersSubscription_description" language_independant="true">
+			<pmb_requirements>
+				<pmb_requirement start_path="include" file="mail.inc.php"/>
+				<pmb_requirement start_path="include" file="misc.inc.php"/>
+			</pmb_requirements>
+			<inputs>
+				<description>msg:generateMailReadersSubscription_input_description</description>
+				<param name="id_empr" type="scalar" dataType="integer" description="msg:generateMailReadersSubscription_id_empr"/>
+				<param name="empr_location_id" type="scalar" dataType="integer" description="msg:generateMailReadersSubscription_empr_location_id"/>
+			</inputs>
+			<outputs>
+				<description>msg:generateMailReadersSubscription_output_description</description>
+				<result name="result" type="scalar" dataType="boolean" description="msg:generateMailReadersSubscription_result"/>
+			</outputs>
+		</method>
+	</methods>
+</manifest>
+

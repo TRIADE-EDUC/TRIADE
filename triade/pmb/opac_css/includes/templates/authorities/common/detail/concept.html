@@ -1,0 +1,26 @@
+{% extends 'gabarit.html' %}
+
+<!-- $Id: concept.html,v 1.2 2019-05-22 10:01:41 ngantier Exp $ -->
+
+{% block detail %}
+	<b>{{ msg.ontology_object_uri }} :</b> {{ element.uri }}<br />
+	{{ element.schemes_list }}
+	{{ element.broaders_list }} 
+	{{ element.narrowers_list }} 
+	<div class='row'>&nbsp;</div>
+	{% if element.note %}
+		<div class="aut_display_row">
+			<div class="aut_display_cell">
+				<b>{{ msg.onto_common_note }} :</b>
+			</div>
+			<div class="aut_display_cell">
+				{{ element.note | nl2br }}
+			</div>
+		</div>
+	{% endif %}
+	{% if element.map.map %}
+		<div class="map_notice">
+			{{ element.map.map }}
+		</div>
+	{% endif %}
+{% endblock detail %}

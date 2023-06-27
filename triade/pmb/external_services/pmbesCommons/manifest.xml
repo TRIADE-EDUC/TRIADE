@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- Fichier manifest de description des méthodes disponibles
+****************************************************************************************
+© 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: manifest.xml,v 1.4 2013-02-25 11:17:09 mbertin Exp $ -->
+<manifest>
+	<name>pmbesCommons</name>
+	<description>msg:pmbesCommons_description</description>
+	<methods>
+		<method name="get_unimarc_labels" rights="" version="1.0" comment="msg:get_uniumarc_labels_description" language_independant="false">
+			<inputs>
+				<description>msg:get_unimarc_labels_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:get_unimarc_labels_output_description</description>
+				<result name="unimarc_labels" type="scalar" dataType="string" description="msg:unimarc_labels_description"/>
+			</outputs>
+		</method>
+	</methods>
+</manifest>

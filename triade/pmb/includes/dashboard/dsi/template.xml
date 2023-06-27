@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!-- 
+****************************************************************************************
+© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: template.xml,v 1.5 2015-08-05 14:14:18 agiraud Exp $ -->
+<template default_lang='fr_FR'>
+	<content lang='fr_FR'><![CDATA[
+		<h2>Bannettes</h2>
+		<div class='row'>
+			<div class='title'>Total : </div>
+			<div class='value'>{{nb_bannettes.0.total}}</div>
+		</div>
+		<div class='row'>
+			<div class='title'>dont privées : </div>
+			<div class='value'>{{nb_bannettes_privees.0.total}}</div>
+		</div>
+				<h5>Publiques</h5>
+		<div class='row'>
+			<div class='title'>Automatiques : </div>
+			<div class='value'>{{nb_bannettes_publiques_auto.0.total}}</div>
+		</div>
+		<div class='row'>
+			<div class='title'>Manuelles : </div>
+			<div class='value'>{{nb_bannettes_publiques_manu.0.total}}</div>
+		</div>
+						<h5>Automatiques et à diffuser</h5>
+		<div class='row'>
+			<div class='title'>Privées : </div>
+			<div class='value'>{{nb_bannettes_privees_auto_diff.0.total}}</div>
+		</div>
+		<div class='row'>
+			<div class='title'>Publiques :</div>
+			<div class='value'>{{nb_bannettes_publiques_auto_diff.0.total}}</div>
+		</div>
+		<div class='row'>&nbsp;</div>
+		]]>
+	</content>
+	
+	<content lang='en_UK'><![CDATA[
+		<h2>Baskets</h2>
+		<div class='row'>
+			<div class='title'>Amount : </div>
+			<div class='value'>{{nb_bannettes.0.total}}</div>
+		</div>
+		<div class='row'>
+			<div class='title'>including private baskets : </div>
+			<div class='value'>{{nb_bannettes_privees.0.total}}</div>
+		</div>
+				<h5>Public baskets</h5>
+		<div class='row'>
+			<div class='title'>Automatic : </div>
+			<div class='value'>{{nb_bannettes_publiques_auto.0.total}}</div>
+		</div>
+		<div class='row'>
+			<div class='title'>Manual : </div>
+			<div class='value'>{{nb_bannettes_publiques_manu.0.total}}</div>
+		</div>
+						<h5>Automatic baskets to be sent</h5>
+		<div class='row'>
+			<div class='title'>Private : </div>
+			<div class='value'>{{nb_bannettes_privees_auto_diff.0.total}}</div>
+		</div>
+		<div class='row'>
+			<div class='title'>Public :</div>
+			<div class='value'>{{nb_bannettes_publiques_auto_diff.0.total}}</div>
+		</div>
+		<div class='row'>&nbsp;</div>
+		]]>
+	</content>
+</template>

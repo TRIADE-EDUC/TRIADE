@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!-- $Id: records.xml,v 1.1 2018-10-08 13:59:40 vtouchard Exp $ -->
+<pmbtabs>
+	<url_target>catalog.php?categ=search</url_target>
+	<default_mode>0</default_mode>
+	<tabs>
+		<tab title="msg:354" mode="0">
+			<searchFields>
+				<field title="msg:global_search" id="1">
+					<input type="text" ifSearchEmpty="*" />
+					<class type="records"></class>
+				</field>
+				<field title="msg:233" id="2">
+					<input type="text"/>
+					<class type='records' mode='title'></class>
+				</field>
+				<field title="msg:234" id="3">
+					<input type="authoritie" ajax="authors" selector="auteur"/>
+					<class type='records' mode='authors'></class>
+				</field>
+				<field title="msg:search_categorie_title" id="4">
+					<input type="text"/>
+					<class type='records' mode='categories'></class>
+				</field>
+				<field title="msg:skos_concept" id="5">
+					<input type="authoritie" ajax="onto" att_id_filter="http://www.w3.org/2004/02/skos/core#Concept" />
+					<class type='records' mode='concepts'></class>
+				</field>
+			</searchFields>
+			<filterFields>
+				<field title="msg:17" id="1">
+					<input type="marc_list">
+						<name>doctype</name>
+						<restrictquery allChoice="yes" titleAllChoice="msg:tous_types_docs">SELECT group_concat(distinct typdoc SEPARATOR ',') as all_typdoc FROM notices where typdoc!=''</restrictquery>				
+					</input>
+					<globalvar>typdoc_query</globalvar>
+				</field>
+				<field title="msg:noti_statut_noti" id="2">
+					<input type="query_list">
+						<query allChoice="yes" titleAllChoice="msg:tous_statuts_notice">SELECT id_notice_statut, concat(gestion_libelle, ' (',count(statut),')') as label FROM notices, notice_statut where id_notice_statut=statut GROUP BY id_notice_statut order by gestion_libelle</query>
+					</input>
+					<globalvar>statut_query</globalvar>
+				</field>
+				<field title="msg:notice_id_libelle" id="3">
+					<input type="text" />
+					<globalvar>f_notice_id</globalvar>
+				</field>
+			</filterFields>
+		</tab>
+		<tab title="msg:356" mode="2">
+			<searchFields>
+				<field title="msg:356" id="1">
+					<input type="text" />
+					<class type='records' mode='publishers'></class>
+				</field>
+			</searchFields>
+		</tab>
+		<tab title="msg:titre_uniforme_search" mode="9">
+			<searchFields>
+				<field title="msg:titre_uniforme_search" id="1">
+					<input type="text" />
+					<class type='records' mode='titres_uniformes'></class>
+				</field>
+			</searchFields>
+		</tab>
+		<tab title="msg:search_extended" mode="6" multiSearchCriteria="yes" />
+	</tabs>
+</pmbtabs>

@@ -1,0 +1,92 @@
+/* ---------------------------------------------------------------------------*/
+/*                                 modelisation                               */
+/* ---------------------------------------------------------------------------*/
+
+
+body.modelling h1, .modelling h1 {
+	background:#bd4180;
+	background: -moz-linear-gradient(top, #c44e89 0%, #bd4180 49%, #a82d6a 100%); 
+	background: linear-gradient(to bottom, #c44e89 0%,#bd4180 49%,#a82d6a 100%); 
+	color: #ffffff;
+	padding-left: 15px;
+	padding-right: 15px;
+	padding-top: 3px;
+	padding-bottom: 3px;
+	margin-bottom: 15px;
+}
+
+body.modelling h2, body.modelling h3, .modelling h2, .modelling h3 {
+	color: #bd4180;
+}
+
+body.modelling #conteneur #menu li a:hover, .modelling #conteneur #menu li a:hover  {
+	background: -moz-linear-gradient(top, #c44e89 0%, #bd4180 49%, #a82d6a 100%); 
+	background: linear-gradient(to bottom, #c44e89 0%,#bd4180 49%,#a82d6a 100%); 
+	background-repeat: repeat-x;
+	background-position: left top;
+	background-color: #bd4180;
+	color: #ffffff;
+}
+
+body.modelling .hmenu span.selected a, .modelling .hmenu span.selected a{
+	background: -moz-linear-gradient(top, #c44e89 0%, #bd4180 49%, #a82d6a 100%); 
+	background: linear-gradient(to bottom, #c44e89 0%,#bd4180 49%,#a82d6a 100%); 
+	background-color: #bd4180;
+	color: #ffffff;
+}
+
+body.modelling table th, .modelling table th{
+	background: -moz-linear-gradient(top, #c44e89 0%, #bd4180 49%, #a82d6a 100%); 
+	background: linear-gradient(to bottom, #c44e89 0%,#bd4180 49%,#a82d6a 100%); 
+	background-position: left bottom;
+	background-color: #bd4180;
+	color: #ffffff;
+	padding-left: 15px;
+	padding-right: 15px;
+	padding-top: 3px;
+	padding-bottom: 3px;
+	margin-bottom: 15px;
+}
+
+body.modelling table th h3, .modelling table th h3  {
+	color: #ffffff;
+}
+
+body.modelling table tr.surbrillance, .modelling .sortable tr:hover, .modelling table tr.surbrillance, .modelling .sortable tr:hover{
+	background: -moz-linear-gradient(top, #c44e89 0%, #bd4180 49%, #a82d6a 100%); 
+	background: linear-gradient(to bottom, #c44e89 0%,#bd4180 49%,#a82d6a 100%); 
+	background-position: left top;
+	background-color: #a82d6a;
+	color: #ffffff;
+}
+
+body.modelling input, body.modelling select, body.modelling textarea, .modelling input, .modelling select, .modelling textarea {
+	-moz-box-shadow: 1px 1px 1px #a82d6a inset;
+	-o-box-shadow: 1px 1px 1px #a82d6a inset;
+	-webkit-box-shadow: 1px 1px 1px #a82d6a inset;
+	box-shadow: 1px 1px 1px #a82d6a inset;
+}
+
+body.modelling .saisie-contenu, body.modelling .astuce,  .modelling .saisie-contenu, .modelling .astuce{
+	background: -moz-linear-gradient(top, #c44e89 0%, #bd4180 49%, #a82d6a 100%); 
+	background: linear-gradient(to bottom, #c44e89 0%,#bd4180 49%,#a82d6a 100%); 
+	background-position: left bottom;
+	background-color: #bd4180;
+}
+
+body.modelling #content_onglet_perio span.onglet-perio-selected a, .modelling #content_onglet_perio span.onglet-perio-selected a{
+	background: -moz-linear-gradient(top, #c44e89 0%, #bd4180 49%, #a82d6a 100%); 
+	background: linear-gradient(to bottom, #c44e89 0%,#bd4180 49%,#a82d6a 100%); 
+	background-position: left bottom;
+	background-color: #bd4180;
+	color: #ffffff;
+}
+
+.modelling .saisie-5emr, .modelling .saisie-10emr, .modelling .saisie-15emr, .modelling .saisie-20emr, .modelling .saisie-30emr, .modelling .saisie-50emr, .modelling .saisie-80emr {
+	background-color: #bd4180;
+	color: #ffffff;
+	-moz-box-shadow: 1px 1px 10px #bd4180 inset;
+	-o-box-shadow: 1px 1px 10px #bd4180 inset;
+	-webkit-box-shadow: 1px 1px 10px #bd4180 inset;
+	box-shadow: 1px 1px 10px #bd4180 inset;
+}

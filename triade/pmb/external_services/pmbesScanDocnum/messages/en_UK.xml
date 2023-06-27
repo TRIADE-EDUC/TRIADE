@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- messages localisés en français pour la classe de fonctions pmbesMySQL
+****************************************************************************************
+© 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: en_UK.xml,v 1.2 2015-06-22 14:42:09 pmbs Exp $ -->
+
+<!DOCTYPE XMLlist SYSTEM "../../../includes/XMLlist.dtd" >
+<XMLlist>
+<!--
+pmbesScanDocnum
+-->
+  <entry code="ScanDocnum_functions_description">Functions related to the attachment of digital documents</entry>
+  <entry code="get_doc_num_description">Reading function and attachment to a digital document</entry>
+  <entry code="get_doc_num_upload_repertoire_do_not_exist">The upload directory does not exist</entry>
+  <entry code="get_doc_num_rename_error">Error when moving the file</entry>   
+  <entry code="get_doc_num_file_not_found">File not found</entry>
+  <entry code="get_doc_num_cant_create_explnum">Error creating the digital copy</entry>
+  <entry code="get_doc_num_missing_param">There is a missing parameter for the addition of the document</entry>
+  <entry code="get_doc_num_missing_link">Digital document with no link to a record or an issue</entry>
+</XMLlist>

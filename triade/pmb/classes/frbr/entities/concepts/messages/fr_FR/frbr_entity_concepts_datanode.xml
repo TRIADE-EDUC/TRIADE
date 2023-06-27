@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le module Articleslist
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: frbr_entity_concepts_datanode.xml,v 1.4 2019-01-10 15:39:47 apetithomme Exp $ -->
+
+<XMLlist>
+	<entry code='frbr_entity_concepts_datasource_records'>Notices</entry>
+	<entry code='frbr_entity_concepts_datasource_authors'>Auteurs</entry>
+	<entry code='frbr_entity_concepts_datasource_categories'>Catégories</entry>
+	<entry code='frbr_entity_concepts_datasource_publishers'>Editeurs</entry>
+	<entry code='frbr_entity_concepts_datasource_collections'>Collections</entry>
+	<entry code='frbr_entity_concepts_datasource_subcollections'>Sous-collections</entry>
+	<entry code='frbr_entity_concepts_datasource_series'>Titres de série</entry>
+	<entry code='frbr_entity_concepts_datasource_indexint'>Indexations décimales</entry>
+	<entry code='frbr_entity_concepts_datasource_works'>Oeuvres</entry>
+	<entry code='frbr_entity_concepts_datasource_used_in_custom_fields'>Entités utilisant les concepts dans un champ personnalisé</entry>
+	<entry code='frbr_entity_concepts_datasource_entities_used_in_composed_concept'>Entités utilisées en composition du concept</entry>
+</XMLlist>

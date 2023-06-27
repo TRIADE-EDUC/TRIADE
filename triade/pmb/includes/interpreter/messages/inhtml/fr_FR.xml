@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- messages localisés en français pour les méthodes externes de procédures
+****************************************************************************************
+© 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: fr_FR.xml,v 1.1 2015-07-24 14:23:02 mbertin Exp $ -->
+
+<!DOCTYPE XMLlist SYSTEM "../../../../includes/XMLlist.dtd" >
+<XMLlist>
+<!-- notice_tpl -->
+  <entry code="inhtml_functions_description">Fonctions relatives au parse HTML</entry>
+
+<!-- #if_logged(param0); -->
+  <entry code="if_logged_description">Permet de savoir si le lecteur est connecté à l'Opac</entry>
+  <entry code="if_logged_input_description">param[0] = Valeur à retourner si l'utilisateur est connecté
+param[1] = Valeur à retourner si l'utilisateur n'est pas connecté (optionnel)
+  </entry>
+  <entry code="if_logged_output_description"></entry>
+
+<!--#if_logged_lang(param0);-->
+  <entry code="if_logged_lang_description">Permet de savoir si le lecteur est dans une langue particulière et si il connecté à l'Opac</entry>
+  <entry code="if_logged_lang_input_description">param[0] = Valeur à retourner si l'utilisateur est connecté
+param[1] = Valeur à retourner si l'utilisateur n'est pas connecté (optionnel)
+param[2] = Code de la langue
+  </entry>
+  <entry code="if_logged_lang_output_description">La fonction ne retournera rien si l'Opac n'est pas dans la langue testée</entry>
+  
+<!--#message_lang(param0);-->
+  <entry code="message_lang_description">Permet de tester la langue de l'Opac</entry>
+  <entry code="message_lang_input_description">param[0] = Valeur à retourner si l'Opac est dans la langue souhaitée
+param[1] = Code de la langue
+  </entry>
+  <entry code="message_lang_output_description"></entry>
+  
+<!--#if_param(param);-->
+  <entry code="if_param_description">Permet de faire une comparaison de variable global php</entry>
+  <entry code="if_param_input_description">param[0] = Nom de la variable PHP
+param[1] = Valeur de comparaison
+param[2] = Valeur à retourner si vrai
+param[3] = Valeur à retourner si faux
+  </entry>
+  <entry code="if_param_output_description"></entry>
+  
+<!--#eval_php(param0);-->
+  <entry code="eval_php_description">Permet d'exécuter du code PHP</entry>
+  <entry code="eval_php_input_description">param[0] = code php à exécuter</entry>
+  <entry code="eval_php_output_description"></entry>
+  
+<!--#perio_a2z(param0);-->
+  <entry code="perio_a2z_description">Affiche le navigateur de périodique</entry>
+  <entry code="perio_a2z_input_description"></entry>
+  <entry code="perio_a2z_output_description"></entry>
+
+<!--#if_session_param(param0);-->
+  <entry code="if_session_param_description">Permet de faire une comparaison d'une variable de session php</entry>
+  <entry code="if_session_param_input_description">param[0] = Nom de la variable de session
+param[1] = Valeur de comparaison
+param[2] = Valeur à retourner si vrai
+param[3] = Valeur à retourner si faux
+  </entry>
+  <entry code="if_session_param_output_description"></entry>
+  
+</XMLlist>

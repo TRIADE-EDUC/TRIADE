@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le module Article
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_common_selector_env_var.xml,v 1.2 2012-05-29 09:46:00 arenou Exp $ -->
+
+<XMLlist>
+	<entry code="cms_module_common_selector_env_var">Sélectionnez une variable d'environnement</entry>
+	<entry code="cms_module_common_selector_env_var_no_vars">Aucune variable d'environnement sur cette page de l'OPAC</entry>
+</XMLlist>

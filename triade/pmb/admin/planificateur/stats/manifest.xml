@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- gestion des commandes pour les stats
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: manifest.xml,v 1.2 2012-07-31 10:12:14 dgoron Exp $ -->
+
+<manifest>
+	<capacities>
+		<nostates>
+			<state name="STOPPED"/>
+			<state name="SUSPENDED"/>
+		</nostates>
+		<states>
+			<state name="RUNNING">
+				<nocommand commands="SUSPEND"/>
+				<nocommand commands="ABORT"/>
+				<nocommand commands="STOP"/>
+			</state>
+		</states>
+		<commands>
+			<command />
+		</commands>
+	</capacities>
+	<directory_upload>0</directory_upload>
+</manifest>

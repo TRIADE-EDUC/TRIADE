@@ -1,0 +1,318 @@
+#pmbopac.tundra .dijitCalendar {
+	background-color: #fff;
+	text-align: center;
+	padding: 4px;
+	border: 0px solid #9e9e9e;
+	border-collapse: separate;
+	border-radius: 3px;
+}
+#pmbopac.tundra .dijitCalendarBodyContainer{
+	border:0px;
+}
+.tundra .dijitCalendarMonthContainer th {
+	text-align: center;
+	line-height: 20px;
+	vertical-align: middle;
+	margin: 4px 0;
+}
+
+#pmbopac.tundra .dijitCalendarIncrementControl {
+	background: url('../images/controls-c.png') 0px 0px no-repeat;
+	height:20px;
+	width:20px;
+}
+#pmbopac.tundra .dijitCalendarIncrementArrow .dijitCalendarIncrementControl{
+	background-position: 100% 0;
+}
+
+.tundra .dijitCalendarDecrease:before {
+	content: "\f000";
+}
+
+.tundra .dijitCalendarIncrease:before {
+	content: "\f001";
+}
+.tundra .dijitCalendarWeekTemplate{
+	height: 45px;
+}
+.tundra .dijitCalendarArrowHover .dijitCalendarIncrementControl, .tundra .dijitCalendarArrow:hover .dijitCalendarIncrementControl, .tundra .dijitCalendarNextYearHover, .tundra .dijitCalendarNextYear:hover, .tundra .dijitCalendarPreviousYearHover, .tundra .dijitCalendarPreviousYear:hover {
+	border-style: solid;
+	border-width: 1px;
+	border-color: #9e9e9e;
+	padding: 4px;
+	border-radius: 3px;
+	line-height: 20px;
+	cursor: pointer;
+	-webkit-transition: all 0.05s linear;
+	-moz-transition: all 0.05s linear;
+	-o-transition: all 0.05s linear;
+	-ms-transition: all 0.05s linear;
+	transition: all 0.05s linear;
+	background: #fff;
+	padding: 4px;
+}
+
+.tundra .dijitCalendarArrowActive .dijitCalendarIncrementControl, .tundra .dijitCalendarArrow:active .dijitCalendarIncrementControl, .tundra .dijitCalendarNextYearActive, .tundra .dijitCalendarNextYear:active, .tundra .dijitCalendarPreviousYearActive, .tundra .dijitCalendarPreviousYear:active {
+	-webkit-transition: none;
+	-moz-transition: none;
+	-o-transition: none;
+	-ms-transition: none;
+	transition: none;
+	outline: none;
+	-webkit-box-shadow: inset 0 3px 5px rgba(0,0,0,0.05);
+	box-shadow: inset 0 3px 5px rgba(0,0,0,0.05);
+	background: #e0e0e0;
+	border-color: #b3b3b3;
+}
+#pmbopac.tundra .dijitCalendarPreviousMonth, 
+#pmbopac.tundra .dijitCalendarNextMonth{
+	background:#fff;
+}
+.tundra .dijitCalendarPreviousMonth>span, 
+.tundra .dijitCalendarNextMonth>span{
+	background:#f4f4f4;
+}
+.tundra .dijitA11ySideArrow {
+	/* text +/- labels instead of arrow icons, for high contrast mode */
+	display: none;
+}
+
+.tundra .dijitCalendarContainer th, 
+.tundra .dijitCalendarContainer td,
+.tundra .dijitCalendarSelectedDate {
+	padding: 4px;
+	background: #fff;
+	border: none;
+}
+#pmbopac.tundra .dijitCalendarSelectedDate {
+	background-color: #fff!important;
+}
+.tundra .dijitCalendarDayLabelTemplate {
+	text-align: center;
+	border-bottom: #9e9e9e;
+	height: 35px;
+}
+
+.tundra .dijitCalendarDayLabel {
+	font-weight: bold;
+	text-align: center;
+}
+
+.tundra .dijitCalendarDateTemplate {
+	font-size: 0.9em;
+	letter-spacing: 0.05em;
+	text-align: center;
+}
+
+.tundra .dijitCalendarDateTemplate .dijitCalendarDateLabel {
+	text-decoration: none;
+	display: block;
+	padding: 0;
+	border: 0 none;
+	border-radius: 4px;
+	height: 28px;
+	width: 28px;
+	line-height: 28px;
+	font-weight: 500;
+	text-indent: 1px;
+}
+#pmbopac.tundra .dijitCalendarHoveredDate {
+	background-color: inherit;
+}
+.tundra .dijitCalendarPreviousMonth .dijitCalendarDateLabel, .tundra .dijitCalendarNextMonth .dijitCalendarDateLabel {
+	color: #d7d7d7;
+}
+
+.tundra .dijitCalendarCurrentDate .dijitCalendarDateLabel {
+	border: #7acad1 solid 1px;
+	background: #f4f4f4;
+	color: #ffffff;
+	font-weight:700;
+}
+
+.tundra .dijitCalendarHoveredDate .dijitCalendarDateLabel, 
+.tundra .dijitCalendarEnabledDate:hover .dijitCalendarDateLabel {
+	color:#fff;
+	box-shadow:inset 0px 0px 0px 20px rgba(66, 66, 77, 0.34);
+}
+
+.tundra .dijitCalendarActiveDate .dijitCalendarDateLabel, 
+.tundra .dijitCalendarEnabledDate:active .dijitCalendarDateLabel {
+	background-color: #e6e6e6;
+}
+
+.tundra .dijitCalendarSelectedDate .dijitCalendarDateLabel, .tundra .dijitCalendarSelectedDate.dijitCalendarHoveredDate .dijitCalendarDateLabel {
+	color: #fff;
+	background-color: #139cd8;
+}
+
+.tundra .dijitCalendarDisabledDate .dijitCalendarDateLabel {
+	opacity: 0.65;
+	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=65)";
+	filter: alpha(opacity=65);
+}
+
+.tundra .dijitCalendarYearContainer {
+	vertical-align: middle;
+}
+
+.tundra .dijitCalendarYearLabel {
+	padding: 4px 0 0 0;
+	margin: 0;
+	font-size: 1.15em;
+}
+#pmbopac.tundra .dijitCalendarYearContainer{
+	border:none;
+	background: #fff;
+}
+.tundra .dijitCalendarYearLabel span {
+	vertical-align: middle;
+	font-weight: 500;
+	color: #999!important;
+}
+#pmbopac.tundra .dijitCalendarSelectedYear{
+	background-color: #fff!important;
+	font-weight: 600;
+	color: #222!important;
+}
+
+.tundra .dijitCalendarSelectedYear, .tundra .dijitCalendarNextYear, .tundra .dijitCalendarPreviousYear {
+	padding: 4px;
+}
+
+.tundra .dijitCalendarSelectedYear {
+	color: #2196f3;
+}
+
+.tundra .dijitCalendarNextYear, .tundra .dijitCalendarPreviousYear {
+	color: #2196f3;
+	font-size: 0.9em;
+	line-height: 20px;
+	border: 1px solid transparent;
+}
+
+.tundra .dijitCalendarSelectedYear {
+	padding: 0 4px;
+}
+.dijitReset.dijitCalendarMonthContainer:after{
+	content:"";
+	display:block;
+	clear:both;
+}
+#pmbopac.tundra .dijitCalendar .dijitDropDownButton {
+	margin: 0;
+}
+#pmbopac.tundra .dijitCalendar .dijitDropDownButton .dijitButtonNode{
+	border: 1px solid #c0c0c0!important;
+	text-transform:uppercase;
+	background: #f5f5f5;
+	border-radius: 2px;
+	border-color: #ddd;
+}
+.tundra .dijitCalendarMonthMenu {
+	padding: 8px 0;
+}
+
+.tundra .dijitCalendarMonthMenu .dijitCalendarMonthLabel {
+	padding: 4px;
+	font-weight:600;
+}
+
+#pmbopac.tundra .dijitCalendarMonthMenu .dijitCalendarMonthLabelHover {
+	color: #fff;
+	background-color: #7acad1;
+}
+#pmbopac.tundra .dijitMenu,
+#pmbopac.tundra .dijitMenuBar {
+	border: 1px solid #e9ebee;
+	margin: 0;
+	padding: 0;
+	background-color: #f7f7f7;
+}
+/* curseur mois
+ ========================================================================== */
+.dijitReset.dijitCalendarMonthContainer{
+	position:relative;
+}
+#pmbopac.tundra .dijitReset.dijitCalendarArrow{
+	position:absolute;
+	top:0;
+	height: 20px;
+	width: 20px;
+	z-index: 20;	
+	background: url('../images/controls-c.png') 0px 0px no-repeat;	
+}
+#pmbopac.tundra .dijitReset.dijitCalendarIncrementArrow{
+	right:0px;
+	background-position-x: 100%;
+}
+#pmbopac.tundra .dijitReset.dijitCalendarDecrementArrow{
+	right:30px;
+}
+#pmbopac.tundra .dijitCalendarMonthLabel {
+	color: #444;
+	font-weight: 500;
+	padding: 0 4px;
+}
+
+#pmbopac .dijitArrowButtonChar,
+#pmbopac .dj_a11y .dijitArrowButtonChar {
+	display: none !important;
+}
+#pmbopac.tundra .dijitArrowButtonInner {
+	background: url(images/spriteArrows.png) no-repeat scroll 0 center;
+	width: 7px;
+	height: 7px;
+	margin: 0 4px 0 4px;
+}
+/* liste des evenement
+ ========================================================================== */
+.cms_module_agenda>.row:after{
+	content:"";
+	display:block;
+	clear:both;
+}
+.cms_module_agenda>.row{
+	background-color:#fff;
+}
+.cms_module_agenda>.row>div{
+	padding:5px 0;
+ }
+/* liste des evenement active
+ ========================================================================== */
+#cms_module_agenda_85 td[class^="cms_module_agenda_event"]{
+ 	background: #fff!important;
+ 	color:#fff;
+}
+
+div[id^="cms_module_agenda"] td.cms_module_agenda_event_13 .dijitCalendarDateLabel{
+ 	background: #e63120;
+}
+div[id^="cms_module_agenda"] td.cms_module_agenda_event_3 .dijitCalendarDateLabel{
+ 	background: #10a091;
+}
+div[id^="cms_module_agenda"] td.cms_module_agenda_event_14 .dijitCalendarDateLabel{
+ 	background: #ea7f49;
+}
+.cms_module_agenda div.row{
+	padding:0 10px;
+}
+.cms_module_agenda div[style*="background"]{
+	display:block;
+	border-radius: 0%;
+	margin-top: 5px;
+	width: 10px!important;
+	height: 10px!important;
+}
+.cms_module_agenda_view_calendar_eventslist{
+	background:#fff;
+	padding:5px 10px;
+	font-size:12px;
+}
+/* Agenda responsive
+ ========================================================================== */
+ @media screen and (max-device-width: 960px) {
+	.tundra .dijitCalendarDateTemplate .dijitCalendarDateLabel{
+		width: auto;
+	}
+}

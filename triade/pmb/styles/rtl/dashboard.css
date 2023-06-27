@@ -1,0 +1,33 @@
+/* +--------------------------------------------------------------------------+
+// ? 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// //this style edit by kouider bounama 20016 kouiderbounama@gmail.com
+// +-------------------------------------------------+
+// $Id: dashboard.css,v 1.2 2016-09-05 13:33:25 touraine37 Exp $ */
+
+#navbar ul {
+	width : calc(100% - 80px);
+}
+
+#dashboards .dashboard {
+	direction:rtl;
+	border-radius : 10px;
+	box-shadow: 10px 10px 10px #aaa; 
+}
+
+#dashboards .dashboard h3{
+	color : white;
+	padding :10px;
+	border-top-left-radius: 10px;
+	border-top-right-radius: 10px;
+	vertical-align: middle;
+	background-color : #E87111;
+}
+
+#dashboards .dashboard .dashboard_content .title, #notifications .title {
+	float:right;
+	text-align:right;
+	direction:rtl;
+}
+#dashboards .dashboard .dashboard_content .value, #notifications .value{
+	text-align: right;
+}

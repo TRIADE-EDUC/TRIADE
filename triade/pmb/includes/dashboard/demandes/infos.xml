@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!-- 
+****************************************************************************************
+© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: infos.xml,v 1.3 2016-11-29 15:33:37 agiraud Exp $ -->
+<informations>
+	<information>
+		<name>nb_demandes</name>
+		<query>select count(id_demande) as total from demandes</query>	
+	</information>
+	<information>
+		<name>nb_demandes_a_valider</name>
+		<query>select count(id_demande) as total from demandes where etat_demande=1</query>	
+	</information>
+	<information>
+		<name>nb_demandes_validees</name>
+		<query>SELECT count(id_demande) as total from demandes where etat_demande=2</query>	
+	</information>
+	<information>
+		<name>nb_demandes_refusees</name>
+		<query>select count(id_demande) as total from demandes where etat_demande=3</query>	
+	</information>
+	<information>
+		<name>nb_demandes_terminees</name>
+		<query>select count(id_demande) as total from demandes where etat_demande=4</query>	
+	</information>
+	<information>
+		<name>nb_demandes_abandonnees</name>
+		<query>select count(id_demande) as total from demandes where etat_demande=5</query>	
+	</information>
+	<information>
+		<name>nb_demandes_archivees</name>
+		<query>select count(id_demande) as total from demandes where etat_demande=6</query>	
+	</information>	
+	<!-- <information>
+		<name>nb_records</name>
+		<query>select count(*) as total from notices</query>	
+	</information>
+ 	<information>
+		<name>nb_relance</name>
+		<fonction>
+			<class name='notice'>
+				<contruct_param>136</contruct_param>
+			</class>
+			<param>18/03/1857</param>
+			<method>get_date_parution</method>
+		</fonction>
+		<action></action>	
+	</information>
+	<information>
+		<name>loc_emprs</name>
+		<variables>
+			<var type='global' name='deflt2docs_location' />
+		</variables>
+		<query>select count(*) as total, sum(if(empr_date_expiration&lt;CURDATE(),1,0)) as expired, location_libelle as title from empr join docs_location on empr_location=idlocation where empr_location in(!!deflt2docs_location!!)</query>	
+	</information>-->
+
+</informations>

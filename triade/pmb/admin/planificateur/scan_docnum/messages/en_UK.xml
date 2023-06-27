@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- messages localisés en français pour la maintenance mySQL
+****************************************************************************************
+© 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: en_UK.xml,v 1.1 2015-06-15 12:55:34 pmbs Exp $ -->
+
+<XMLlist>
+	<entry code="planificateur_scan_docnum_upload_folder">Folder to scan</entry>
+	<entry code="planificateur_scan_docnum_upload_repertoire">Target digital document folder</entry>
+	<entry code="planificateur_scan_docnum_doc_a_traiter">Documents to process</entry>
+	<entry code="planificateur_scan_docnum_doc_traites">Documents processed with success</entry>
+	<entry code="planificateur_scan_docnum_doc_non_traites">Documents processing failed</entry>
+	<entry code="planificateur_scan_docnum_no_upload_repertoire">No available folder</entry>
+	<entry code="planificateur_scan_docnum_bad_params">Check the settings of your task</entry>
+	<entry code="planificateur_scan_docnum_no_docnum">No digital document to process</entry>
+	
+</XMLlist>

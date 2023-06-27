@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- messages localisés en français pour les procédures
+****************************************************************************************
+© 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: en_UK.xml,v 1.3 2018-06-25 12:19:39 ngantier Exp $ -->
+
+<XMLlist>
+	<entry code="pnb_import_notice_statut">Statut des notices importées</entry>
+	<entry code="pnb_import_one_notice_imported">1 notice a été importée.</entry>
+	<entry code="pnb_import_nb_notice_imported">%s notices ont été importées.</entry>	
+	<entry code="pnb_import_error_pmbesConvertImport_convert">Erreur, la méthode pmbesConvertImport_convert n'existe pas dans la classe proxy.</entry>	
+	<entry code="pnb_import_no_xml">Aucun fichier xml récupéré.</entry>		
+	<entry code="pnb_import_error_ftp_login">Erreur de connection FTP.</entry>
+	<entry code="pnb_import_no_notice_imported">Aucune notice importée</entry>
+</XMLlist>

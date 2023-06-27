@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour la classe racine d'un module
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_common_module.xml,v 1.25 2019-02-22 11:53:29 dgoron Exp $ -->
+
+<XMLlist>
+	<entry code="cms_module_datasource_choice">Choisissez une source de donnée</entry>
+	<entry code="cms_module_common_module_save">Enregistrer</entry>
+	<entry code="cms_module_common_module_cancel">Annuler</entry>
+	<entry code="cms_module_common_module_name">Nom du Cadre</entry>
+	<entry code="cms_module_common_module_new_cadre">Création d'un nouveau cadre</entry>
+	<entry code="cms_module_common_module_alter_cadre">Modification de cadre - %s</entry>
+	<entry code="cms_module_common_module_view_choice">Choisissez une vue</entry>
+	<entry code="cms_module_common_module_saved">Sauvegarde effectuée</entry>
+	<entry code="cms_module_common_module_save_error">Erreur à l'enregistrement</entry>
+	<entry code="cms_module_common_module_conditions_selector">Conditions d'affichage</entry>
+	<entry code="cms_module_common_module_conditions_selector_choice">Choisissez une condition d'affichage</entry>
+	<entry code="cms_module_common_condition_authentificated">Personnes Authentifiées</entry>
+	<entry code="cms_module_common_condition_page">Page</entry>
+	<entry code="cms_module_common_module_delete">Supprimer</entry>
+	<entry code="cms_module_common_module_confirm_delete">Voulez-vous vraiment supprimer ce cadre ?</entry>
+	<entry code="cms_module_common_module_deleted">Suppression effectuée</entry>
+	<entry code="cms_module_common_module_delete_error">Erreur à la suppression</entry>
+	<entry code="cms_module_common_condition_lvl">Type de page OPAC</entry>
+	<entry code="cms_manage_module">Paramétrage</entry>
+
+	<entry code="cms_manage_module_general">Général</entry>
+	<entry code="cms_manage_module_views">Vues</entry>
+	<entry code="cms_manage_module_datasources">Sources de données</entry>
+	<entry code="cms_manage_module_conditions">Conditions</entry>
+	<entry code="cms_module_common_module_fixed">Cadre fixe ?</entry>
+	<entry code="cms_module_view_choice">Choisissez une vue</entry>
+	<entry code="cms_module_common_module_memo_url">Conserver l'URL de construction ?</entry>
+	<entry code="cms_module_common_module_name_empty">Veuillez saisir le nom du cadre.</entry>
+	<entry code="cms_module_common_module_filter_label">Utiliser un filtre</entry>
+	<entry code="cms_module_common_module_filter_choice">Choisissez un filtre</entry>
+	<entry code="cms_module_common_filter_articles_by_cp">Par la valeur d'un champ d'un type de contenu</entry>
+	<entry code="cms_module_common_filter_articles_by_type">Par le type de contenu</entry>
+	<entry code="cms_module_common_filter_articles_by_publication_state">Par le statut de publication</entry>
+	<entry code="cms_module_common_filter_sections_by_cp">Par la valeur d'un champ d'un type de contenu</entry>
+	<entry code="cms_module_common_filter_sections_by_type">Par le type de contenu</entry>
+	<entry code="cms_module_common_filter_sections_by_publication_state">Par le statut de publication</entry>
+	<entry code="cms_module_common_condition_global_var">Présence d'une variable globale</entry>
+	<entry code="cms_module_common_condition_global_var_value">Valeur d'une variable globale</entry>
+	<entry code="cms_module_common_condition_view">Vues OPAC</entry>
+
+	<entry code="cms_module_commom_module_cadre_save_error">Erreur à la sauvegarde du cadre "%s"</entry>
+	<entry code="cms_module_commom_module_datasource_save_error">Erreur à la sauvegarde de la source de données "%s"</entry>
+	<entry code="cms_module_commom_module_condition_save_error">Erreur à la sauvegarde des conditions</entry>
+	<entry code="cms_module_commom_module_view_save_error">Erreur à la sauvegarde de la vue "%s"</entry>
+	
+	<entry code="cms_module_common_module_modcache">Mode de mise en cache</entry>
+	<entry code="cms_module_common_module_no_cache">Pas de mise en cache</entry>
+	<entry code="cms_module_common_module_cache_get_post">Selon les GET et POST</entry>
+	<entry code="cms_module_common_module_cache_get_post_view">Selon les GET,POST et vues OPAC</entry>
+	<entry code="cms_module_common_module_cache_view">Selon les vues OPAC</entry>
+	<entry code="cms_module_common_module_cache_all">Systématique</entry>
+	<entry code="cms_module_common_module_css_class">Classe CSS</entry>
+	<entry code="cms_module_common_module_duplicate">Dupliquer</entry>
+	<entry code="cms_module_common_condition_lang">Langues de l'OPAC</entry>
+	<entry code="cms_module_common_filter_articles_by_all_cp">Par la valeur d'un champ de tous les types de contenu</entry>
+	<entry code="cms_module_common_filter_sections_by_all_cp">Par la valeur d'un champ de tous les types de contenu</entry>
+	<entry code="cms_module_common_condition_readers_categories">Catégories de lecteurs</entry>
+	<entry code="cms_module_common_condition_readers_statuses">Statuts de lecteurs</entry>
+</XMLlist>

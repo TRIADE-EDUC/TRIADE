@@ -1,0 +1,138 @@
+div[downlight="cms_block_downlight"] {
+	width:100%!important;
+	padding:5px!important;
+	margin:0!important;
+	float:none!important;
+	background-color:#fff!important;
+	position:relative!important;
+	border:none!important;
+	outline:none!important;
+	color: #3c763d;
+	background-color: #f0d8ea;
+	border-color: #e9c6d3;	
+}
+
+div[downlight="cms_block_downlight"]:before{
+	content:"";
+	display:block!important;
+	width:100%!important;
+	height:100%!important;
+	position:absolute!important;
+	top:0!important;
+	left:0!important;
+	background-color:#fcfcfc!important;
+	border:solid 1px #e9c6d3!important;
+	border-radius:1px!important;
+	z-index:0!important;
+}
+div[downlight="cms_block_downlight"]:after{
+	content:none!important;	
+}
+*:not(.notice-heada)[draggable="yes"]{
+	width:100%!important;
+	height:auto!important;
+	padding:2px!important;
+	margin:10px 0!important;
+	float:none!important;
+	background-color:transparent!important;
+	position:relative!important;
+	border:none!important;
+	outline:none!important;
+	left:auto!important;
+	top:auto!important;
+	right:auto!important;
+	bottom:auto!important;
+	overflow:hidden!important;
+	color: #31708f!important;
+	background-color: #d9edf7!important;
+	border-color: #78bcc9;	
+}
+*:not(.notice-heada)[draggable="yes"][type="cms_module_hidden"]{
+	padding:0px!important;
+	margin: 0!important;
+	background-color:transparent!important;	
+}
+*:not(.notice-heada)[draggable="yes"]:after{
+	content:"";
+	display:block!important;
+	width:100%!important;
+	height:100%!important;
+	position:absolute!important;
+	top:0!important;
+	left:0!important;
+	background-color:rgba(245,245,245,0)!important;
+	border:solid 1px #78bcc9!important;
+	border-radius:0px!important;
+	z-index:0!important;
+}
+span[type="cms_module_hidden"]>*{
+	background-color:#817e7e;
+	opacity:0.8;
+	position:relative;
+	margin:10px auto!important;
+	color: #8a6d3b;
+	background-color: #fcf8e3;
+	border: solid 1px #faebcc!important;
+	padding: 0px 5px;
+}
+*[type="cms_module_hidden"]>*:before{
+	content:"";
+	display:block!important;
+	width:100%!important;
+	height:100%!important;
+	position:absolute!important;
+	top:0!important;
+	left:0!important;
+	border: solid 0px #919191;
+}
+
+div#cadre_depos[id="cadre_depos"]{
+	position: absolute!important;
+	width: 10%!important;
+	height: 10px!important;
+	background-color: rgb(34, 255, 134)!important;
+}
+div#cadre_depos[id="cadre_depos"][style*="visible"]{
+	display: block;
+}
+.cms_drag {
+	border: solid 0px #e7c0c7 !important;
+	position: relative!important;
+}
+.cms_drag>* {
+	cursor: move;
+	z-index: 1999;
+	-webkit-box-sizing: border-box;
+   	-moz-box-sizing: border-box;
+   	-o-box-sizing: border-box;
+   	-ms-box-sizing: border-box;
+   	box-sizing: border-box;
+	outline: solid 0px #e7c0c7 !important;
+}
+*[draggable="no"].cms_drag:after {
+	content:"";
+	display:block;
+	height:100%;
+	width:100%;
+	color: #a94442;
+	position: absolute;
+	z-index: 20;
+	background:rgba(255, 255, 221, 0.48);
+	top: 0;
+	left:0;
+	box-shadow:0px 0px 0px 10px  #f9f963 inset;
+}
+*[draggable="yes"].cms_drag:after {
+	content:"";
+	display:block;
+	height:100%;
+	width:100%;
+	position: absolute;
+	z-index: 20;
+	top: 0;
+	left:0;
+	box-shadow:0px 0px 0px 10px  #f9f963 inset;
+}
+*[id$="drag_"]>*{
+	outline: solid 4px #4caf50!important;
+}

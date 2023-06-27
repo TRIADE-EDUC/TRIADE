@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: frbr_entity_collections_view_collectionslist.xml,v 1.1 2017-04-27 16:06:57 dgoron Exp $ -->
+
+<XMLlist>
+	<entry code="frbr_entity_collections_view_title">Titre de la liste</entry>
+	<entry code="frbr_entity_collections_view_collections_desc">Collections</entry>
+	<entry code="frbr_entity_collections_view_collectionslist_title">Liste des collections</entry>
+</XMLlist>

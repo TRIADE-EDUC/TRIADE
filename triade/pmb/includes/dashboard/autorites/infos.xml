@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!-- 
+****************************************************************************************
+© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: infos.xml,v 1.2 2014-01-07 14:34:02 touraine37 Exp $ -->
+<informations>
+ 	<information>
+		<name>categ</name>
+		<fonction type='internal'>
+			<method>get_categories_informations</method>
+		</fonction>
+		<action></action>
+	</information>
+	<information>
+		<name>author</name>
+		<fonction type='internal'>
+			<method>get_authors_informations</method>
+		</fonction>
+		<action></action>
+	</information>
+</informations>

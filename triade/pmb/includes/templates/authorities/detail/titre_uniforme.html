@@ -1,0 +1,259 @@
+{% extends 'gabarit.html' %}
+
+<!-- $Id: titre_uniforme.html,v 1.3 2019-02-15 08:30:30 ngantier Exp $ -->
+
+{% block isbd %}
+	{{ element.get_isbd_simple }}
+{% endblock isbd %}
+
+{% block detail %}
+	{% for author in element.sorted_responsabilities.authors %}
+		{% if loop.first %}
+			<div class="aut_display_row">
+				<div class="aut_display_cell">
+					<b>{{ msg.aut_oeuvre_form_auteur }} :</b>
+				</div>
+				<div class="aut_display_cell">
+		{% else %}/{% endif %}	
+		<a href='autorites.php?categ=see&sub=author&id={{author.id}}'>{{ author.objet.display }}</a>{% for attribute in author.attributes %}{% if attribute.fonction_label %}, {{ attribute.fonction_label }}{% endif %}{% if attribute.qualif_label %} ({{ attribute.qualif_label }}){% endif %}{% endfor %}
+		{% if loop.last %}
+				</div>
+			</div>
+		{% endif %}
+	{% endfor %}
+	{% for performer in element.sorted_responsabilities.performers %}
+		{% if loop.first %}
+			<div class="aut_display_row">
+				<div class="aut_display_cell">
+					<b>{{ msg.aut_oeuvre_form_interprete }} :</b>
+				</div>
+				<div class="aut_display_cell">
+		{% else %}/{% endif %}
+		<a href='autorites.php?categ=see&sub=author&id={{performer.id}}'>{{ performer.objet.display }}</a>{% for attribute in performer.attributes %}{% if attribute.fonction_label %}, {{ attribute.fonction_label }}{% endif %}{% if attribute.qualif_label %} ({{ attribute.qualif_label }}){% endif %}{% endfor %}
+		{% if loop.last %}
+				</div>
+			</div>
+		{% endif %}
+	{% endfor %}
+	{% if element.oeuvre_type_name %}
+		<div class="aut_display_row">
+			<div class="aut_display_cell">
+				<b>{{ msg.aut_oeuvre_form_oeuvre_type }} :</b>
+			</div>
+			<div class="aut_display_cell">
+				{{ element.oeuvre_type_name }}
+			</div>
+		</div>
+	{% endif %}
+	{% if element.oeuvre_nature_name %}
+		<div class="aut_display_row">
+			<div class="aut_display_cell">
+				<b>{{ msg.aut_oeuvre_form_oeuvre_nature }} :</b>
+			</div>
+			<div class="aut_display_cell">
+				{{ element.oeuvre_nature_name }}
+			</div>
+		</div>
+	{% endif %}
+	
+	{% if element.oeuvre_expressions_list_ui.nb_results %}
+		<div class="aut_display_row">
+			<div class="aut_display_cell">
+				<b>{{ msg.aut_oeuvre_form_oeuvre_expression }} :</b>
+			</div>
+			<div class="aut_display_cell">
+				{{ element.oeuvre_expressions_list_ui.elements_list }}
+			</div>
+		</div>
+	{% endif %}
+	
+	{% if element.form %}
+		<div class="aut_display_row">
+			<div class="aut_display_cell">
+				<b>{{ msg.aut_oeuvre_form_forme }} :</b>
+			</div>
+			<div class="aut_display_cell">
+				{{ element.form }}
+			</div>
+		</div>
+	{% endif %}
+	{% if element.date %}
+		<div class="aut_display_row">
+			<div class="aut_display_cell">
+				<b>{{ msg.aut_oeuvre_form_date }} :</b>
+			</div>
+			<div class="aut_display_cell">
+				{{ element.date }}
+			</div>
+		</div>
+	{% endif %}
+	{% if element.place %}
+		<div class="aut_display_row">
+			<div class="aut_display_cell">
+				<b>{{ msg.aut_oeuvre_form_lieu }} :</b>
+			</div>
+			<div class="aut_display_cell">
+				{{ element.place }}
+			</div>
+		</div>
+	{% endif %}
+	{% if element.subject %}
+		<div class="aut_display_row">
+			<div class="aut_display_cell">
+				<b>{{ msg.aut_oeuvre_form_sujet }} :</b>
+			</div>
+			<div class="aut_display_cell">
+				{{ element.subject | nl2br }}
+			</div>
+		</div>
+	{% endif %}
+	{% if element.intended_termination == 1 %}
+		<div class="aut_display_row">
+			<div class="aut_display_cell">
+				<b>{{ msg.aut_oeuvre_form_completude }} :</b>
+			</div>
+			<div class="aut_display_cell">
+				{{ msg.aut_oeuvre_form_completude_finished }}
+			</div>
+		</div>
+	{% else %}
+		{% if element.intended_termination == 2 %}
+			<div class="aut_display_row">
+				<div class="aut_display_cell">
+					<b>{{ msg.aut_oeuvre_form_completude }} :</b>
+				</div>
+				<div class="aut_display_cell">
+					{{ msg.aut_oeuvre_form_completude_infinite }}
+				</div>
+			</div>
+		{% endif %}
+	{% endif %}
+	{% if element.intended_audience %}
+		<div class="aut_display_row">
+			<div class="aut_display_cell">
+				<b>{{ msg.aut_oeuvre_form_public }} :</b>
+			</div>
+			<div class="aut_display_cell">
+				{{ element.intended_audience }}
+			</div>
+		</div>
+	{% endif %}
+	{% if element.history %}
+		<div class="aut_display_row">
+			<div class="aut_display_cell">
+				<b>{{ msg.aut_oeuvre_form_histoire }} :</b>
+			</div>
+			<div class="aut_display_cell">
+				{{ element.history | nl2br }}
+			</div>
+		</div>
+	{% endif %}
+	{% if element.context %}
+		<div class="aut_display_row">
+			<div class="aut_display_cell">
+				<b>{{ msg.aut_oeuvre_form_contexte }} :</b>
+			</div>
+			<div class="aut_display_cell">
+				{{ element.context | nl2br }}
+			</div>
+		</div>
+	{% endif %}
+	{% if element.distrib %}
+		{% for distribution in element.distrib %}
+			{% if loop.first %}
+				<div class="aut_display_row">
+					<div class="aut_display_cell">
+						<b>{{ msg.aut_titre_uniforme_form_distribution }} :</b>
+					</div>
+					<div class="aut_display_cell">
+			{% else %}; {% endif %}
+			{{ distribution.label }}
+			{% if loop.last %}
+					</div>
+				</div>
+			{% endif %}
+		{% endfor %}
+	{% endif %}
+	{% if element.ref %}
+		{% for reference in element.ref %}
+			{% if loop.first %}
+				<div class="aut_display_row">
+					<div class="aut_display_cell">
+						<b>{{ msg.aut_titre_uniforme_form_ref_numerique }} :</b>
+					</div>
+					<div class="aut_display_cell">
+			{% else %}; {% endif %}
+			{{ reference.label }}
+			{% if loop.last %}
+					</div>
+				</div>
+			{% endif %}
+		{% endfor %}
+	{% endif %}
+	{% if element.tonalite %}
+		<div class="aut_display_row">
+			<div class="aut_display_cell">
+				<b>{{ msg.aut_titre_uniforme_form_tonalite }} :</b>
+			</div>
+			<div class="aut_display_cell">
+				{{ element.tonalite }}
+			</div>
+		</div>
+	{% endif %}
+	{% if element.coordinates %}
+		<div class="aut_display_row">
+			<div class="aut_display_cell">
+				<b>{{ msg.aut_oeuvre_form_coordonnees }} :</b>
+			</div>
+			<div class="aut_display_cell">
+				{{ element.coordinates }}
+			</div>
+		</div>
+	{% endif %}
+	{% if element.equinox %}
+		<div class="aut_display_row">
+			<div class="aut_display_cell">
+				<b>{{ msg.aut_oeuvre_form_equinoxe }} :</b>
+			</div>
+			<div class="aut_display_cell">
+				{{ element.equinox }}
+			</div>
+		</div>
+	{% endif %}
+	{% if element.subdiv %}
+		{% for subdivision in element.subdiv %}
+			{% if loop.first %}
+				<div class="aut_display_row">
+					<div class="aut_display_cell">
+						<b>{{ msg.aut_titre_uniforme_form_subdivision_forme }} :</b>
+					</div>
+					<div class="aut_display_cell">
+			{% else %}; {% endif %}
+			{{ subdivision.label }}
+			{% if loop.last %}
+					</div>
+				</div>
+			{% endif %}
+		{% endfor %}
+	{% endif %}
+	{% if element.characteristic %}
+		<div class="aut_display_row">
+			<div class="aut_display_cell">
+				<b>{{ msg.aut_oeuvre_form_caracteristique }} :</b>
+			</div>
+			<div class="aut_display_cell">
+				{{ element.characteristic | nl2br }}
+			</div>
+		</div>
+	{% endif %}
+	{% if element.comment %}
+		<div class="aut_display_row">
+			<div class="aut_display_cell">
+				<b>{{msg.707}} :</b>
+			</div>
+			<div class="aut_display_cell">
+				{{ element.comment | nl2br }}
+			</div>
+		</div>
+	{% endif %}
+{% endblock detail %}

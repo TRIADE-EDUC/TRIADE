@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_menu_datasource_menu_editorial.xml,v 1.2 2012-08-17 13:50:55 arenou Exp $ -->
+
+<XMLlist>
+	<entry code='cms_module_menu_datasource_menu_editorial_max_depth'>Profondeur maximale du menu</entry>
+	<entry code='cms_module_menu_datasource_menu_editorial_link_constructor'>Construction du lien vers une rubrique</entry>
+	<entry code='cms_module_menu_selector_section'>Sélection manuelle d'une rubrique racine</entry>
+	<entry code='cms_module_common_selector_env_var'>Sélection de rubrique racine via une variable d'environnement</entry>
+</XMLlist>

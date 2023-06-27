@@ -1,0 +1,221 @@
+@charset "utf-8";
+/* +--------------------------------------------------------------------------+
+// 2017 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// +-------------------------------------------------+
+// $Id: set-circ-color.css,v 1.7 2018-04-17 15:21:19 wlair Exp $ */
+/*------------------------------------------------------------------------------------------*/
+/* Color :
+base :#469de1
+hover :#51a8ea
+active/focus :#318fd9
+*/
+.uk-navbar-nav li#navbar-circ a:after,
+.circ .hmenu.uk-tab>*:hover>a{
+	border-bottom-color:#469de1;
+}
+li#navbar-circ.current,
+.circ input[type="checkbox"]:checked, 
+.circ input[type="checkbox"]:indeterminate, 
+.circ input[type="radio"]:checked,
+.circ input[type="checkbox"]:checked:focus, 
+.circ input[type="checkbox"]:indeterminate:focus, 
+.circ input[type="radio"]:checked:focus,
+.circ div#extra2 span.uk-icon,
+.circ div#extra2 .notification.ui-active {
+	background-color:#469de1;	
+}
+.circ input[type="text"]:focus, 
+.circ select:focus, 
+.circ textarea:focus,
+.circ input[type="checkbox"]:focus, 
+.circ input[type="radio"]:focus,
+.circ select:focus,
+.circ.claro.pure .dijitButtonHover .dijitButtonNode,
+.circ.claro.pure .dijitDropDownButtonHover .dijitButtonNode,
+.circ.claro.pure .dijitComboButton .dijitButtonNodeHover,
+.circ.claro.pure .dijitComboButton .dijitDownArrowButtonHover,
+.circ.claro.pure .dijitToggleButtonHover .dijitButtonNode,
+.circ.claro.pure .dijitTextBoxHover,
+.circ #contenu .uk-button-default:focus,
+.circ #contenu .uk-button-default:hover,
+.circ .hmenu.uk-tab>.uk-active>a,
+.circ  iframe {
+	border-color: #469de1;
+}
+.uk-navbar-nav li#navbar-circ a:hover,
+.circ h1.section-title i,
+.circ h1.section-sub-title ,
+.circ .uk-link,
+.circ a,
+.circ .uk-link:hover,
+.circ a:hover,
+.circ h3:not(.section-sub-title),
+.circ .article-title i,
+.circ #menu .uk-nav>li>a i,
+.circ #menu .uk-nav>li.uk-active>a,
+.circ #menu .uk-nav>li>a i,
+.circ #menu .uk-nav>li.uk-active>a,
+.circ #menu .uk-nav>li>a:hover ,
+.circ .h2-like i,
+.circ #extra span.uk-icon:hover,
+.circ #extra i:hover,
+.circ #navbar .dashboard:hover,
+.pure .circ .uk-tab > * > a:hover,
+.pure .circ .uk-tab > * > a:focus,
+.circ .categ_browser a,
+.circ .categ_browser a:hover,
+.circ .categ_browser a:focus,
+.circ .categ_browser a:active,
+.circ .hmenu.uk-tab>.uk-active>a{
+	color:#469de1;
+}
+.circ #contenu input.wyr-input[type='file']:focus{
+	outline-color: #469de1;
+}
+.circ .stat-child .uk-table th{
+	color: #469de1;
+	font-weight: 500;
+}
+.circ #menu ul.uk-nav{		
+	border-top: solid 2px #469de1;		
+}
+.circ #menu>h3 .uk-icon{		
+	background: #469de1;		
+}
+.circ.claro.pure .dijitMenu .dijitMenuItemHover td, 
+.circ.claro.pure .dijitMenu .dijitMenuItemSelected td, 
+.circ.claro.pure .dijitMenuItemHover, 
+.circ.claro.pure .dijitComboBoxMenu .dijitMenuItemHover, 
+.circ.claro.pure .dijitMenuItemSelected,
+.circ.claro.pure .dojoDndItemOver {
+    background-color:rgba(70, 157, 225, 0.3);
+    border-color:#469de1;
+    background-image: none;
+}
+.circ form ,
+.circ .row.bkg-grey{
+	border-color:#99c3e4;
+}
+.circ input.wyr-input[type='submit'],
+.circ .uk-button,
+.circ .search_cancel>input,
+.circ.claro.pure .dijitButton .dijitButtonNode,
+.circ.claro.pure .dijitDropDownButton .dijitButtonNode,
+.circ.claro.pure .dijitComboButton .dijitButtonNode,
+.circ.claro.pure .dijitToggleButton .dijitButtonNode{
+	background-color: #469de1;
+		
+}
+.circ input.wyr-input[type='submit']:hover,
+.circ .uk-button:hover,
+.circ .search_cancel>input:hover,
+.circ.claro.pure .dijitButton .dijitButtonNode:hover,
+.circ.claro.pure .dijitDropDownButton .dijitButtonNode:hover,
+.circ.claro.pure .dijitComboButton .dijitButtonNode:hover,
+.circ.claro.pure .dijitToggleButton .dijitButtonNode:hover {
+	background-color: #469de1;
+}
+.circ input.wyr-input[type='submit']:focus,
+.circ input.wyr-input[type='submit']:active,
+.circ .uk-button:focus,
+.circ .uk-button:active,
+.circ .search_cancel>input:focus,
+.circ .search_cancel>input:active,
+.circ.claro.pure .dijitButton .dijitButtonNode:focus,
+.circ.claro.pure .dijitDropDownButton .dijitButtonNode:focus,
+.circ.claro.pure .dijitComboButton .dijitButtonNode:focus,
+.circ.claro.pure .dijitToggleButton .dijitButtonNode:focus,
+.circ.claro.pure .dijitButton .dijitButtonNode:active,
+.circ.claro.pure .dijitDropDownButton .dijitButtonNode:active,
+.circ.claro.pure .dijitComboButton .dijitButtonNode:active,
+.circ.claro.pure .dijitToggleButton .dijitButtonNode:active {
+	background-color: #318fd9;
+}
+.circ .uk-label,
+.circ .uk-label:hover {
+	background: #469de1;
+	color:#fff;		
+}
+.circ  .search-result-item.notice-child[style*='block'],
+.circ  .child[style*='block'],
+.circ  div[startopen="Yes"] {
+	border-color: #99c3e4;
+}
+.circ select:focus{
+	outline-color: #318fd9;
+}
+/*
+*Aut color
+*/
+.circ .saisie-5emr,
+.circ .saisie-10emr,
+.circ .saisie-15emr,
+.circ .saisie-20emr,
+.circ .saisie-30emr,
+.circ .saisie-50emr,
+.circ .saisie-80emr.pure,
+.circ input[class^='saisie'][class*='emr']:hover,
+.pure .circ input[class^='saisie'][class*='emr']:active,
+.pure .circ input[class^='saisie'][class*='emr']:focus{
+  background: #85c1f0;
+  color:#000;	
+}
+/*
+*Retours 
+*/
+
+.circ .form-retour-expl  {
+  background-color: rgb(229, 248, 255);
+  border: solid 1px #abd6ff;
+}
+
+.circ .form-retour-expl .uk-form-label.wyr-form-label {
+  color: #595959;
+}
+
+.circ #contenu .form-retour-expl input.wyr-input {
+  border: solid 1px #abd6ff;
+}
+
+/* ========================================================================
+inside menu //  button
+===========================================================================  */
+
+
+.pure.circ .hmenu .wui-button.uk-active {
+    background: #469de1;
+    border-color: #469de1;
+}
+.pure.circ .hmenu .wui-button.uk-active:hover  a,
+.pure.circ .hmenu .wui-button:hover a,
+.pure.circ .hmenu .wui-button.uk-active:hover ,
+.pure.circ .hmenu .wui-button:hover,
+.pure.circ .hmenu .wui-button.uk-active:active ,
+.pure.circ .hmenu .wui-button:active
+.pure.circ .hmenu .wui-button.uk-active:focus ,
+.pure.circ .hmenu .wui-button:focus,
+.circ #empr-name,
+.pure.circ .hmenu .wui-button  {
+    border-color: #469de1;    
+}
+ 
+.circ input[type='submit'],
+.circ input[type='button'],
+.circ .bouton{
+	background-color: #469de1;
+}
+.circ input[type='submit']:hover,
+.circ input[type='button']:hover,
+.circ .bouton:hover{
+	background-color: #51a8ea;
+}
+
+.circ input[type='submit']:focus,
+.circ input[type='button']:focus,
+.circ .bouton:focus,  
+.circ input[type='submit']:active,
+.circ input[type='button']:active,
+.circ .bouton:active{
+	background-color: #318fd9;
+
+}

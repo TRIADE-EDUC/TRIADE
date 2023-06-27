@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<params>
+	<!-- Nom de l'import -->
+	<importname>MEMODOCNET BCDI -&gt; pmb-XML UNIMARC</importname>
+	<!-- Nombre de notices traitées par passe -->
+	<nperpass>200</nperpass>
+	
+	<!-- Type de l'entrée -->
+	<input type="custom"  script="bcdimemodocnet2pmbxmluni_input.class.php" rootelement="MEMO_NOTICES" noticeelement="NOTICES"/>
+	
+	<!-- Type de la sortie -->
+	<output importable="no" type="xml" suffix="xml">
+		<rootelement>unimarc</rootelement>
+	</output>
+	
+	<step type="xmltransform">
+		<!-- Conversion en xml unimarc -->
+		<xslfile>bcdi_memodocnet.xsl</xslfile>
+		<rootelement>MEMO_NOTICES</rootelement>
+		<noticeelement>NOTICES</noticeelement>
+		<trootelement>unimarc</trootelement>
+		<tnoticeelement>notice</tnoticeelement>
+	</step>
+	
+</params>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- messages localisés en français pour les méthodes de pmbesReaders
+****************************************************************************************
+© 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: en_UK.xml,v 1.2 2015-06-22 14:51:46 pmbs Exp $ -->
+
+<!DOCTYPE XMLlist SYSTEM "../../../includes/XMLlist.dtd" >
+<XMLlist>
+<!-- 
+pmbesReaders
+-->
+  <entry code="Readers_functions_description">Functions related to the readers</entry>
+<!-- 
+listReadersSubscription 
+-->
+  <entry code="listReadersSubscription_description">List of the reader subscriptions</entry>
+  <entry code="listReadersSubscription_input_description"></entry>
+  <entry code="listReadersSubscription_search">ongoing - due - overdue</entry>
+  <entry code="listReadersSubscription_empr_location_id">Identifier of the location</entry>
+  <entry code="listReadersSubscription_empr_statut_edit">Identifier of the borrower's status</entry>
+  <entry code="listReadersSubscription_sortby">Sort by</entry>
+  <entry code="listReadersSubscription_output_description"></entry>
+  <entry code="listReadersSubscription_result">Return the list of subscriptions</entry>   
+<!-- 
+listGroupReaders
+-->
+  <entry code="listGroupReaders_description">List of the groups of readers</entry>
+  <entry code="listGroupReaders_input_description"></entry>
+  <entry code="listGroupReaders_description"></entry> 
+  <entry code="listGroupReaders_result">Returns the list</entry>
+<!-- 
+generatePdfReadersSubscription 
+-->
+  <entry code="generatePdfReadersSubscription_description">PDF generation</entry>
+  <entry code="generatePdfReadersSubscription_input_description"></entry>
+  <entry code="generatePdfReadersSubscription_id_empr">Borrower's identifier</entry>
+  <entry code="generatePdfReadersSubscription_empr_location_id">Identifier of the location</entry>
+  <entry code="generatePdfReadersSubscription_output_description"></entry>
+  <entry code="generatePdfReadersSubscription_result">Returns the content</entry> 
+<!-- 
+generateMailReadersSubscription 
+-->
+  <entry code="generateMailReadersSubscription_description">E-mail sending</entry>
+  <entry code="generateMailReadersSubscription_input_description"></entry>
+  <entry code="generateMailReadersSubscription_id_empr">Borrower's identifier</entry>
+  <entry code="generateMailReadersSubscription_empr_location_id">Identifier of the location</entry>
+  <entry code="generateMailReadersSubscription_output_description"></entry>
+  <entry code="generateMailReadersSubscription_result">E-mail sending result</entry> 
+
+</XMLlist>

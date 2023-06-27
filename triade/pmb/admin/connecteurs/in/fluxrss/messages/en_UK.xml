@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le connecteur nasa_ads
+****************************************************************************************
+© 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: en_UK.xml,v 1.1 2018-05-04 10:01:53 ngantier Exp $ -->
+
+<XMLlist>
+	<entry code="rec_addr">Enregistrez une adresse pour pouvoir accéder aux propriétés du serveur</entry>
+	<entry code="error_contact_server">Erreur d'accès au serveur de Flux Rss</entry>
+	<entry code="fluxrss_url">URL</entry>
+	<entry code="fluxrss_title">Titre</entry>
+	<entry code="fluxrss_description">Description</entry>
+	<entry code="fluxrss_author">Auteur</entry>
+	<entry code="fluxrss_contact">Contact</entry>
+	<entry code="fluxrss_unconfigured">La source du connecteur n'est pas configurée</entry>
+	<entry code="fluxrss">Flux Rss</entry>
+	<entry code="fluxrss_enrichment_source">(source Flux Rss)</entry>
+	<entry code="fluxrss_enrichment_template">Template d'affichage de l'enrichissement</entry>
+	<entry code="fluxrss_xslt_file">Fichier xslt pour la conversion en unimarc</entry>
+	<entry code="fluxrss_xslt_file_linked">Un fichier xslt a été associé : %s</entry>
+	<entry code="fluxrss_del_xslt_file">Le supprimer</entry>
+</XMLlist>

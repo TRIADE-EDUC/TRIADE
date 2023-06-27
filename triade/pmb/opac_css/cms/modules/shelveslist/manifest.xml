@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+
+<!-- Declaration d'un module
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: manifest.xml,v 1.2 2016-09-20 10:25:41 apetithomme Exp $ -->
+
+<manifest>
+	<name lang="fr_FR">Liste d'étagères</name>
+	<name lang="en_UK">List of shelves</name>
+	<author>
+		<name>Alexis PETITHOMME</name>
+		<organisation>PMB Services</organisation>
+	</author>
+	<created_date>2013-01-17</created_date>
+	<version>1.0</version>
+	<default_language>fr_FR</default_language>
+	<managed>true</managed>
+	<use>
+		<datasources>
+			<datasource>cms_module_shelveslist_datasource_shelveslist</datasource>
+		</datasources>
+		<views>
+			<view>cms_module_common_view_shelveslist</view>
+		</views>
+		<conditions>
+			<condition>cms_module_common_condition_global_var</condition>
+		</conditions>
+	</use>
+</manifest>

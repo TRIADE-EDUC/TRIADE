@@ -1,0 +1,30 @@
+<h2>Management of imports</h2>
+<p>This page lets you manage the import of data linked to records or copies.</p>
+
+<p>The procedure is composed of different steps : 
+	<ul>
+		<li>Definition of import parameters :<br /><br />
+			for the records:<br /><br />
+			<ul>
+				<li>ISBN mandatory</li>
+				<li>Verification of duplicates on ISBN (if yes, new entries will not be created for existing records)</li>
+				<li>Updating records (on identical ISBN)</li>
+				<li>Ignoring ISSN (for periodicals) </li>
+				<li>Status of records (in order to precisely identify imported records)</li>
+			</ul>
+			<br/>	for the copies:<br /><br />
+			<ul>
+				<li>Lender (ex: Public Library)</li>
+				<li>Status of copies (ex: "being imported")</li>
+				<li>Location of the copies</li>
+				<li>Mandatory call number</li>
+				<li>Conformity between Code 995 and your library collections for types of materials, statistical codes and sections</li>
+			</ul>
+		</li>
+		<li>Downloading files,</li>
+		<li>Importing records or copies,</li>
+		<li>For copies, tagging of the imports to check conformity between loan listing and copies actually received.</li>
+	</ul>	
+</p>
+<p>You can perform this check very quickly by using a barcode scanner.</p>
+

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+
+<!-- Profils de gestion droits d'acces Emprunteurs - Scénario de contribution
+****************************************************************************************
+© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: domain.xml,v 1.2 2017-09-06 15:33:47 tsamson Exp $ -->
+
+<domain>
+
+	<!--  empr -->
+	<user lib="msg:379" properties="1,4" >
+		<ref type="table" name="empr" key="id_empr" />
+		<property_link with="1" >
+			<r_query type="field" value="empr_categ" />					<!--  champ emprunteur categorie de lecteur  -->
+		</property_link>
+		<property_link with="4"  >
+			<r_query type="field" value="empr_location" />				<!--  champ emprunteur localisation  -->
+		</property_link>
+		<property_link with="5" >
+			<r_query type="session" value="opac_view" />				<!--  variable session vue OPAC  -->
+		</property_link>
+		<property_link with="6">
+			<r_query type="field" value="empr_codestat" />				<!--  champ emprunteur code statistique de lecteur  -->
+		</property_link>
+	</user>
+
+	<!--  contribution -->
+	<resource lib="msg:130" properties="2,7">
+		<ref type="rdf" name="contribution_area_graphstore" key="http://www.w3.org/1999/02/22-rdf-syntax-ns#type" value="http://www.pmbservices.fr/ca/Scenario"/>
+		<property_link with="2" >
+			<c_query type="var" value="entityType" />									<!-- variable de l'entité PMB -->
+			<i_query type="callable" class_path="./classes/contribution_area/contribution_area_scenario.class.php" class="contribution_area_scenario" method="get_entity_type" /><!-- variable de l'entité PMB -->
+		</property_link>
+		<property_link with="7" >
+			<c_query type="var" value="scenarioStatus" />			
+			<i_query type="callable" class_path="./classes/contribution_area/contribution_area_scenario.class.php" class="contribution_area_scenario" method="get_status" /><!-- variable de l'entité PMB -->
+		</property_link>
+	</resource>
+
+	<properties>
+		<property id="1" lib="msg:lecteurs_categories">
+			<ref type="table" name="empr_categ" key="id_categ_empr" value="libelle" />
+		</property>	
+		<property id="2" lib="msg:admin_contribution_area_equation_type">
+			<ref type="callable" name="scenario_entity_type" class_path="./classes/contribution_area/contribution_area.class.php" class="contribution_area" method="get_pmb_entities" />
+		</property>	
+		<property id="4" lib="msg:21">
+			<ref type="table" name="docs_location" key="idlocation" value="location_libelle" />
+		</property>			
+		<property id="5" lib="msg:opac_view">
+			<ref type="table" name="opac_views" key="opac_view_id" value="opac_view_name" />
+		</property>
+		<property id="6" lib="msg:24">
+			<ref type="table" name="empr_codestat" key="idcode" value="libelle" />
+		</property>
+		<property id="7" lib="msg:contribution_area_status">
+			<ref type="table" name="contribution_area_status" key="contribution_area_status_id" value="contribution_area_status_gestion_libelle" />
+		</property>
+	</properties>
+
+	<controls>
+		<control id='1' global="yes" lib='msg:dom_mod_rights' />
+		<control id='2' global="yes" lib='dom_mod_pro' />
+		<control id='3' lib='create' />
+		<control id='4' lib='edit' />
+		<control id='5' lib='push' />
+		<control id='10' global="yes" lib='dom_override_rights' />
+	</controls>
+
+</domain>

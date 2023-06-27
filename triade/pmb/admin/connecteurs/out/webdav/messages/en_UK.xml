@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../../../../../includes/XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+	<!--
+		messages localisés en français
+		****************************************************************************************
+		© 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs
+		(voir www.sigb.net)
+		****************************************************************************************
+		$Id: en_UK.xml,v 1.3 2016-02-11 10:13:41 apetithomme Exp $
+	-->
+
+<XMLlist>
+	<entry code="webdav_restricted_sets">Restrict to one or more sets</entry>
+	<entry code="webdav_user_thesaurus">Thesaurus to use for the navigation</entry>
+	<entry code="webdav_only_with_notices">Only display the categories which contain related records</entry>
+	<entry code="webdav_yes">Yes</entry>
+	<entry code="webdav_no">No</entry>
+	<entry code="webdav_tree">Creation of the tree view</entry>
+	<entry code="webdav_authentication">Authentication</entry>
+	<entry code="webdav_write_permission">Allow the the addition/modification of documents</entry>
+	<entry code="webdav_authenticate_gest">Management side</entry>
+	<entry code="webdav_authenticate_opac">OPAC side</entry>
+	<entry code="webdav_anonymous">Anonymous access</entry>
+	<entry code="webdav_restricted_write_permission">Restrict the permission to certain groups/categories of users/readers :</entry>
+	<entry code="webdav_restricted_empr_write_permission">Categories of readers</entry>
+	<entry code="webdav_restricted_user_write_permission">Groups of users</entry>
+	<entry code="webdav_default_statut">Default status when creating a record</entry>
+	<entry code="webdav_base_uri">Base URI of the webdav server</entry>
+	<entry code="webdav_allow_web">Allow the web interface</entry>
+	<entry code="webdav_default_docnum_statut">Default status of the digital document at its creation</entry>
+	<entry code="webdav_select_tree_elem">Sélectionnez un élément</entry>
+	<entry code="webdav_metasMapper_class">Choix de la classe pour le traitement des metas données</entry>
+	<entry code="webdav_collections_group_tree">Type de collections dans l'arborescence</entry>
+	<entry code="webdav_collections_group_standard">Standard</entry>
+	<entry code="webdav_collections_group_scan_request">Demande de numérisation</entry>
+	<entry code="webdav_collection_typdoc">Type de document</entry>
+	<entry code="webdav_collection_status">Statut</entry>
+	<entry code="webdav_collection_categorie">Catégorie</entry>
+	<entry code="webdav_collection_indexint">Indexation décimale</entry>
+	<entry code="webdav_collection_priority">Priorité</entry>
+	<entry code="webdav_collection_music">Musique</entry>
+	<entry code="webdav_collection_music_concept_before">Concept à associer aux partitions avant exécution</entry>
+	<entry code="webdav_collection_music_concept_after">Concept à associer aux partitions après exécution</entry>
+	<entry code="webdav_collection_music_concept_blank">Concept à associer aux partitions originales</entry>
+</XMLlist>

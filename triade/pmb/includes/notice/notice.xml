@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!-- Dedoublonnage de notices en  creation
+****************************************************************************************
+© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: notice.xml,v 1.7 2017-02-16 12:29:32 jpermanne Exp $ -->
+
+
+<fields>
+	<field name="typdoc" label="msg:type_doc_sort" size_max="1">
+		<html>typdoc</html>
+		<html_ext>typdoc</html_ext>	
+		<sql>select typdoc from notices where notice_id ='!!id!!'</sql>	
+	</field>
+	<field name="niveau_biblio" label="msg:niveau_biblio" size_max="1">
+		<html>niveau_biblio</html>
+		<html_ext>niveau_biblio</html_ext>	
+		<sql>select niveau_biblio from notices where notice_id ='!!id!!'</sql>	
+	</field>
+	<field name="tit1" label="msg:237" size_max="1">
+		<html>f_tit1</html>	
+		<html_ext>f_title_0</html_ext>
+		<sql>select tit1 from notices where notice_id ='!!id!!'</sql>	
+		<sql_ext>select value from entrepot_source_!!source_id!! where ufield = 200 and usubfield="a" and recid = !!id!!</sql_ext>
+	</field>	
+	<field name="tit2" label="msg:238" size_max="1">
+		<html>f_tit2</html>	
+		<html_ext>f_title_1</html_ext>
+		<sql>select tit2 from notices where notice_id ='!!id!!'</sql>
+		<sql_ext>select value from entrepot_source_!!source_id!! where ufield = 200 and usubfield="c" and recid = !!id!!</sql_ext>
+	</field>	
+	<field name="tit3" label="msg:239" size_max="1">
+		<html>f_tit3</html>	
+		<html_ext>f_title_2</html_ext>
+		<sql>select tit3 from notices where notice_id ='!!id!!'</sql>
+		<sql_ext>select value from entrepot_source_!!source_id!! where ufield = 200 and usubfield="d" and recid = !!id!!</sql_ext>	
+	</field>	
+	<field name="tit4" label="msg:240" size_max="1">
+		<html>f_tit4</html>
+		<html_ext>f_title_3</html_ext>
+		<sql>select tit4 from notices where notice_id ='!!id!!'</sql>
+		<sql_ext>select value from entrepot_source_!!source_id!! where ufield = 200 and usubfield="e" and recid = !!id!!</sql_ext>	
+	</field>	
+	<field name="f_tparent_id" label="msg:241" size_max="1">
+		<html>f_tparent_id</html>
+		<html_ext>f_serie_id</html_ext>
+		<sql>select tparent_id from notices where notice_id ='!!id!!'</sql>	
+		<sql_ext>select value from entrepot_source_!!source_id!! where ufield = 200 and usubfield="i" and recid = !!id!!</sql_ext>	
+	</field>	
+	<field name="tnvol" label="msg:242" size_max="1">
+		<html>tnvol</html>	
+		<html_ext>f_nbr_in_serie</html_ext>
+		<sql>select tnvol from notices where notice_id ='!!id!!' </sql>
+		<sql_ext>select value from entrepot_source_!!source_id!! where ufield = 200 and usubfield="h" and recid = !!id!!</sql_ext>	
+	</field>	
+	<field name="aut0_id" label="msg:244" size_max="1">
+		<html>f_aut0_id</html>	
+		<html_ext>f_aut0_existing_id</html_ext>		
+		<sql>select author_id from authors,responsability where responsability_author = author_id and responsability_type = '0' and responsability_notice = '!!id!!'</sql>
+		<sql_ext>select group_concat(value SEPARATOR ", ") from entrepot_source_!!source_id!! where (ufield = 700 or ufield = 710) and (usubfield="a" or usubfield = "b") and recid = !!id!! group by ufield</sql_ext>	
+	</field>	
+	<field name="f0_code" label="msg:245" size_max="1">
+		<html>f_f0_code</html>
+		<html_ext></html_ext>
+		<sql>select responsability_fonction from authors,responsability where responsability_author = author_id and responsability_type = '0' and responsability_notice = '!!id!!'</sql>
+		<sql_ext>select value from entrepot_source_!!source_id!! where (ufield = 700 or ufield = 710) and usubfield="4" and recid = !!id!! group by ufield</sql_ext>	
+	</field>	
+	<field name="aut1_id0" label="msg:246" size_max="10">
+		<html>f_aut1_id0</html>	
+		<html_ext>f_aut1_id0</html_ext>
+		<sql>select author_id from authors,responsability where responsability_author = author_id and responsability_type = '1' and responsability_notice = '!!id!!'</sql>	
+		<sql_ext>select group_concat(value SEPARATOR ", ") from entrepot_source_!!source_id!! where (ufield = 701 or ufield=711) and (usubfield="a" or usubfield = "b") and recid = !!id!! group by ufield</sql_ext>	
+	</field>	
+	<field name="f1_code" label="msg:245" size_max="1">
+		<html>f_f1_code0</html>	
+		<html_ext>f_f1_code0</html_ext>
+		<sql>select responsability_fonction from authors,responsability where responsability_author = author_id and responsability_type = '1' and responsability_notice = '!!id!!'</sql>	
+		<sql_ext>select value from entrepot_source_!!source_id!! where (ufield = 701 or ufield=711) and usubfield="4" and recid = !!id!! group by ufield</sql_ext>	
+	</field>	
+	<field name="aut2_id0" label="msg:247" size_max="1">
+		<html>f_aut2_id0</html>	
+		<html_ext>f_aut2_id0</html_ext>
+		<sql>select  author_id from authors,responsability where responsability_author = author_id and responsability_type = '2' and responsability_notice = '!!id!!'</sql>	
+		<sql_ext>select group_concat(value SEPARATOR ", ") from entrepot_source_!!source_id!! where (ufield = 702 or ufield=712) and (usubfield="a" or usubfield = "b") and recid = !!id!! group by ufield</sql_ext>	
+	</field>
+	<field name="f2_code" label="msg:245" size_max="1">
+		<html>f_f2_code0</html>	
+		<html_ext>f_f2_code0</html_ext>
+		<sql>select responsability_fonction from authors,responsability where responsability_author = author_id and responsability_type = '2' and responsability_notice = '!!id!!' </sql>	
+		<sql_ext>select value from entrepot_source_!!source_id!! where (ufield = 702 or ufield=712) and usubfield="4" and recid = !!id!! group by ufield</sql_ext>	
+	</field>
+	<field name="ed1_id" label="msg:164" size_max="1">
+		<html>f_ed1_id</html>	
+		<html_ext>f_ed1_id</html_ext>
+		<sql>select ed1_id from notices where notice_id ='!!id!!'</sql>	
+		<sql_ext>select value from entrepot_source_!!source_id!! where ufield = 210 and usubfield="c" and recid = !!id!! order by subfield_order</sql_ext>
+	</field>	
+	<field name="coll_id" label="msg:250" size_max="1">
+		<html>f_coll_id</html>	
+		<html_ext>f_coll_existing_id</html_ext>
+		<sql>select coll_id from notices where notice_id ='!!id!!'</sql>
+		<sql_ext>select value from entrepot_source_!!source_id!! where ufield = 410 and usubfield="t" and recid = !!id!! union select value from entrepot_source_!!source_id!! where ufield = 225 and usubfield="a" and recid = !!id!!</sql_ext>			
+	</field>	
+	<field name="nocoll" label="msg:253" size_max="1">
+		<html>f_nocoll</html>	
+		<html_ext>f_nbr_in_collection</html_ext>
+		<sql>select nocoll from notices where notice_id ='!!id!!'</sql>
+		<sql_ext>select value from entrepot_source_!!source_id!! where ufield = 410 and usubfield="v" and recid = !!id!! union select value from entrepot_source_!!source_id!! where ufield = 225 and usubfield="v" and recid = !!id!!</sql_ext>	
+	</field>	
+	<field name="subcoll_id" label="msg:251" size_max="1">
+		<html>f_subcoll_id</html>	
+		<html_ext>f_subcoll_existing_id</html_ext>
+		<sql>select subcoll_id from notices where notice_id ='!!id!!'</sql>
+		<sql_ext>select value from entrepot_source_!!source_id!! where ufield = 411 and usubfield="t" and recid = !!id!! union select value from entrepot_source_!!source_id!! where ufield = 225 and usubfield="i" and recid = !!id!!</sql_ext>					
+	</field>	
+	<field name="year" label="msg:252" size_max="1">
+		<html>f_year</html>	
+		<html_ext>f_year</html_ext>
+		<sql>select year from notices where notice_id ='!!id!!'</sql>	
+		<sql_ext>select value from entrepot_source_!!source_id!! where ufield = 210 and usubfield="d" and recid = !!id!!</sql_ext>
+	</field>	
+	<field name="mention_edition" label="msg:mention_edition" size_max="1">
+		<html>f_mention_edition</html>
+		<html_ext>f_mention_edition</html_ext>	
+		<sql>select mention_edition from notices where notice_id ='!!id!!'</sql>
+		<sql_ext>select value from entrepot_source_!!source_id!! where ufield = 205 and usubfield="a" and recid = !!id!!</sql_ext>
+	</field>	
+	<field name="ed2_id" label="msg:254" size_max="1">
+		<html>f_ed2_id</html>	
+		<html_ext>f_ed11_id</html_ext>
+		<sql>select ed2_id from notices where notice_id ='!!id!!'</sql>
+		<sql_ext>select value from entrepot_source_!!source_id!! where ufield = 210 and usubfield="c" and recid = !!id!! order by subfield_order desc</sql_ext>
+	</field>		
+	<field name="cb" label="msg:255" size_max="1">
+		<html>f_cb</html>	
+		<html_ext>f_cb</html_ext>
+		<sql>select code from notices where notice_id ='!!id!!'</sql>	
+		<sql_ext>select value from entrepot_source_!!source_id!! where ufield = 010 and usubfield="a" and recid = !!id!! union select value from entrepot_source_!!source_id!! where ufield = 011 and usubfield="a" and recid = !!id!!  </sql_ext>		
+	</field>	
+	<field name="npages" label="msg:259" size_max="1">
+		<html>f_npages</html>	
+		<html_ext>f_page_nbr</html_ext>
+		<sql>select npages from notices where notice_id ='!!id!!'</sql>	
+		<sql_ext>select value from entrepot_source_!!source_id!! where ufield = 215 and usubfield="a" and recid = !!id!!</sql_ext>
+	</field>	
+	<field name="ill" label="msg:260" size_max="1">
+		<html>f_ill</html>	
+		<html_ext>f_illustration</html_ext>
+		<sql>select ill from notices where notice_id ='!!id!!'</sql>	
+		<sql_ext>select value from entrepot_source_!!source_id!! where ufield = 215 and usubfield="c" and recid = !!id!!</sql_ext>
+	</field>	
+	<field name="size" label="msg:260" size_max="1">
+		<html>f_size</html>	
+		<html_ext>f_size</html_ext>
+		<sql>select size from notices where notice_id ='!!id!!'</sql>
+		<sql_ext>select value from entrepot_source_!!source_id!! where ufield = 215 and usubfield="d" and recid = !!id!!</sql_ext>
+	</field>	
+	<field name="prix" label="msg:4050" size_max="1">
+		<html>f_prix</html>	
+		<html_ext>f_prix</html_ext>
+		<sql>select prix from notices where notice_id ='!!id!!'</sql>
+		<sql_ext>select value from entrepot_source_!!source_id!! where ufield = 010 and usubfield="d" and recid = !!id!!</sql_ext>
+	</field>	
+	<field name="accomp" label="msg:262" size_max="1">
+		<html>f_accomp</html>	
+		<html_ext>f_accompagnement</html_ext>
+		<sql>select accomp from notices where notice_id ='!!id!!'</sql>	
+		<sql_ext>select value from entrepot_source_!!source_id!! where ufield = 215 and usubfield="e" and recid = !!id!!</sql_ext>
+	</field>	
+	<field name="n_gen" label="msg:265" size_max="1">
+		<html>f_n_gen</html>	
+		<html_ext>f_general_note</html_ext>
+		<sql>select n_gen from notices where notice_id ='!!id!!'</sql>
+		<sql_ext>select value from entrepot_source_!!source_id!! where ufield = 300 and usubfield="a" and recid = !!id!!</sql_ext>
+	</field>	
+	<field name="n_contenu" label="msg:266" size_max="1">
+		<html>f_n_contenu</html>
+		<html_ext>f_content_note</html_ext>	
+		<sql>select n_contenu from notices where notice_id ='!!id!!'</sql>	
+		<sql_ext>select value from entrepot_source_!!source_id!! where ufield = 327 and usubfield="a" and recid = !!id!!</sql_ext>
+	</field>	
+	<field name="n_resume" label="msg:267" size_max="1">
+		<html>f_n_resume</html>	
+		<html_ext>f_abstract_note</html_ext>
+		<sql>select n_resume from notices where notice_id ='!!id!!'</sql>
+		<sql_ext>select value from entrepot_source_!!source_id!! where ufield = 330 and usubfield="a" and recid = !!id!!</sql_ext>	
+	</field>	
+	<field name="num_noeud" label="msg:134" size_max="10">
+		<html>f_categ_id0</html>	
+		<html_ext>f_categ_id0</html_ext>
+		<sql>select num_noeud from notices_categories where notcateg_notice ='!!id!!'</sql>
+		<sql_ext>select value from entrepot_source_!!source_id!! where ufield like '60%' and usubfield="a" and recid = !!id!!</sql_ext>
+	</field>					
+	<field name="indexint" label="msg:indexint_catal_title" size_max="1">
+		<html>f_indexint_id</html>	
+		<html_ext>f_indexint_id</html_ext>
+		<sql>select indexint from notices where notice_id ='!!id!!'</sql>
+		<sql_ext>select value from entrepot_source_!!source_id!! where (ufield = 676 or ufield = 686) and usubfield="a" and recid = !!id!!</sql_ext>
+	</field>	
+	<field name="index_l" label="msg:324" size_max="1">
+		<html>f_indexation</html>	
+		<html_ext>f_free_index</html_ext>
+		<sql>select index_l from notices where notice_id ='!!id!!'</sql>	
+		<sql_ext>select value from entrepot_source_!!source_id!! where ufield = 610 and usubfield="a" and recid = !!id!!</sql_ext>
+	</field>	
+	<field name="lang_code" label="msg:710" size_max="1">
+		<html>f_lang_code0</html>	
+		<html_ext>f_lang_code0</html_ext>
+		<sql>select code_langue from notices_langues  where type_langue='0' and num_notice='!!id!!'</sql>
+		<sql_ext>select value from entrepot_source_!!source_id!! where ufield = 101 and usubfield="a" and recid = !!id!!</sql_ext>
+	</field>	
+	<field name="langorg_code" label="msg:711" size_max="1">
+		<html>f_langorg_code0</html>
+		<html_ext>f_langorg_code0</html_ext>	
+		<sql>select code_langue from notices_langues  where type_langue='0' and num_notice='!!id!!'</sql>	
+		<sql_ext>select value from entrepot_source_!!source_id!! where ufield = 101 and usubfield="c" and recid = !!id!!</sql_ext>
+	</field>			
+	<field name="lien" label="msg:275" size_max="1">
+		<html>f_lien</html>	
+		<html_ext>f_link_url</html_ext>
+		<sql>select lien from notices where notice_id ='!!id!!'</sql>
+		<sql_ext>select value from entrepot_source_!!source_id!! where ufield = 856 and usubfield="u" and recid = !!id!!</sql_ext>
+	</field>	
+	<field name="eformat" label="msg:276" size_max="1">
+		<html>f_eformat</html>	
+		<html_ext>f_link_format</html_ext>
+		<sql>select eformat from notices where notice_id ='!!id!!'</sql>	
+		<sql_ext>select value from entrepot_source_!!source_id!! where ufield = 856 and usubfield="q" and recid = !!id!!</sql_ext>
+	</field>			
+	<field name="relation_type" label="msg:notice_type_relations" size_max="10">
+		<html>f_rel_type_0</html>	
+		<html_ext></html_ext>
+		<sql>select relation_type from notices_relations where num_notice ='!!id!!'</sql>	
+	</field>	
+	<field name="linked_notice" label="msg:notice_relations" size_max="10">
+		<html>f_rel_id_0</html>
+		<html_ext></html_ext>
+		<sql>select linked_notice from notices_relations where num_notice ='!!id!!'</sql>	
+	</field>			
+	<field name="status" label="msg:notice_statut_gestion" size_max="1">
+		<html>form_notice_statut</html>
+		<html_ext>form_notice_statut</html_ext>
+		<sql>select status from notices where notice_id ='!!id!!'</sql>	
+	</field>	
+	<field name="commentaire_gestion" label="msg:notice_commentaire_gestion" size_max="1">
+		<html>f_commentaire_gestion</html>
+		<html_ext>f_commentaire_gestion</html_ext>
+		<sql>select commentaire_gestion from notices where notice_id ='!!id!!'</sql>
+		<sql_ext>select value from entrepot_source_!!source_id!! where ufield = 856 and usubfield="u" and recid = !!id!!</sql_ext>	
+	</field>			
+</fields>

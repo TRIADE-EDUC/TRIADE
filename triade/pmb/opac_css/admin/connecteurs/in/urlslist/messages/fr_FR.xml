@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisÃ©s en franÃ§ais pour le connecteur OAI
+****************************************************************************************
+Â© 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: fr_FR.xml,v 1.2 2012-03-30 09:25:15 arenou Exp $ -->
+
+<XMLlist>
+	<entry code="urlslist_enrichment_source">(source %s)</entry>
+	<entry code="urlslist_libelle">Libellé de l'onglet affiché en OPAC</entry>
+	<entry code="urlslist_source_name">Nom de la source (visible en OPAC)</entry>
+	<entry code="urlslist_infobulle">Infobulle de l'onglet affichée en OPAC</entry>
+	<entry code="urlslist_source_field">Champ personnalisable à utiliser</entry>
+	<entry code="urlslist_no_field">Aucun champ de type URL</entry>
+	<entry code="urlslist_no_informations">Aucune Information disponible</entry>
+</XMLlist>

@@ -1,0 +1,215 @@
+<!-- $Id: rent_account_invoice.tpl.html,v 1.16 2017-10-03 14:05:10 ngantier Exp $ -->
+
+<style type='text/css'>
+	table.account_list {
+		border-width: 5px;
+		border-spacing: 0px;
+		border-style: outset;
+		border-color: gray;
+		border-collapse: separate;
+		background-color: rgb(255, 250, 250);
+		vertical-align: middle;
+	}
+	table.account_list th {
+		border-width: 1px;
+		padding: 4px;
+		margin:0px;
+		border-style: solid;
+		border-color: gray;
+		background-color: white;
+		-moz-border-radius: ;
+	}
+	table.account_list td {
+		border-width: 1px;
+		padding: 4px;
+		margin:0px;
+		border-style: solid;
+		border-color: gray;
+		background-color: white;
+		-moz-border-radius: ;
+	}
+</style>
+						
+<page backtop='2mm' backbottom='2mm' backleft='1mm' backright='2mm' >
+	<table>
+    	<tr>
+			<td>
+				<table  style='text-align:center; font-size:8pt;'>
+    				<tr>
+						<td style='width:120;'>
+							{% if invoice.entity.logo %}
+								<img src='./images/{{ invoice.entity.logo }}' />
+							{% endif %}
+						</td>
+						<td style='width:100;'></td>
+						<td style='width:300; text-align:center; font-size:12pt;'><strong>DECOMPTE JUSTIFICATIF<br /><span style='font-size:10pt;'>payable par {{ invoice.entity.raison_sociale }}</span></strong></td>
+    				</tr>
+				</table>
+			</td>
+    	</tr>			
+		<tr>
+			<td>
+				<table  style='text-align:center; font-size:10pt;'>
+    				<tr>
+						<td style='width:117;'><strong>{{ invoice.entity.raison_sociale }}</strong><br />
+							<span style='font-size:8pt;'>{{ invoice.address_entity.libelle }}<br />
+							 {{ invoice.address_entity.adr1 }}<br />
+							 {{ invoice.address_entity.adr2 }} - 
+							 {{ invoice.address_entity.cp }} 
+							 {{ invoice.address_entity.ville }}</span>
+						</td>
+						<td style='width:420;'></td>
+						<td>
+							<table class='account_list' style='text-align:left; border:solid 1px black;' cellspacing='0' font-size:10pt;'>
+			    				<tr>
+									<td style='width:60;'>N&deg;</td>
+									<td style='width:86; text-align:center;'><strong>{{ invoice.accounts.0.exercice.libelle }} / {{ invoice.id }}</strong></td>						
+			    				</tr>
+			    				<tr>
+									<td style='width:60; height:30;'>Trimestre</td>
+									<td style='width:86; text-align:center;'><strong>{{ invoice.quarter }}</strong></td>						
+			    				</tr>
+							</table>
+						</td>
+    				</tr>
+				</table>				
+			</td>
+    	</tr>
+		<tr>
+			<td>
+				<table  style='text-align:center; font-size:8pt;'>
+    				<tr>
+						<td style='width:115;'><i>FN1TNHP</i></td>						
+    				</tr>
+				</table>			
+				
+			</td>
+    	</tr>					
+		<tr>
+			<td>
+				<table  class='account_list' style='text-align:center; font-size:10pt; border:solid 1px black;' cellspacing='0'>
+    				<tr>
+    					{% if invoice.in_edit %}
+    						<th style='width:10;'></th>
+    					{% endif %}
+						<th style='width:90;'>EDITEUR ET N&deg; DE CONVENTION</th>
+						<th style='width:250;'>
+						{% if invoice.accounts.0.supplier.raison_sociale %}
+							{{ invoice.accounts.0.supplier.raison_sociale }}<br />
+							{% if invoice.accounts.0.supplier_coords.libelle %}
+								{{ invoice.accounts.0.supplier_coords.libelle }}<br />
+							{% endif %}	
+							{{ invoice.accounts.0.supplier_coords.adr1 }}<br />
+							{% if invoice.accounts.0.supplier_coords.adr2 %}
+								{{ invoice.accounts.0.supplier_coords.adr2 }}<br />
+							{% endif %}	
+							{{ invoice.accounts.0.supplier_coords.cp }} {{ invoice.accounts.0.supplier_coords.ville }} {{ invoice.accounts.0.supplier_coords.etat }} {{ invoice.accounts.0.supplier_coords.pays }}
+							{% if invoice.accounts.0.supplier.num_cp_client %}
+								<br />N&deg; de convention {{ invoice.accounts.0.supplier.num_cp_client }}
+							{% endif %}	
+						{% else %}
+							{{ invoice.accounts.0.publisher.display  }}
+						{% endif %}											
+						</th>
+						<th style='width:40;'></th>
+						<th style='width:80;'>{{ invoice.accounts.0.type_name }}</th>
+						<th style='width:73;'>{{ invoice.accounts.0.pricing_system.label }}</th>					
+						<th style='width:85;'>{{ invoice.destination_name }}</th>
+    				</tr>
+				</table>						
+			</td>
+    	</tr>	
+		<tr>	
+			<td>
+				<table>
+    				<tr><td style='height:20;'> </td></tr>
+				</table>
+			</td>
+    	</tr>						
+		<tr>
+			<td>
+				<table  class='account_list' style='text-align:center; font-size:10pt; border:solid 1px black;' cellspacing='0'>
+    				<tr>
+    					{% if invoice.in_edit %}
+    						<td style='width:10;background:#F7BE81;'></td>
+    					{% endif %}
+						<td style='width:90;background:#F7BE81;'>N&deg; Demande de loc.</td>
+						<td style='width:250;background:#F7BE81;'>D&eacute;tail Prestations</td>
+						<td style='width:40;background:#F7BE81;'>%</td>
+						<td style='width:80;background:#F7BE81;'>Dur&eacute;e</td>
+						<td style='width:73;background:#F7BE81;'>Total</td>					
+						<td style='width:85;background:#F7BE81;'>Station Radio</td>
+    				</tr>
+					{% for account in invoice.accounts %}
+						<tr id='account_{{ account.id }}'>
+							{% if invoice.in_edit %}
+	    						<td {% if account.web %} rowspan='2' {% endif %} {% if invoice.nb_accounts > 1 %} style='vertical-align : middle; text-align:center; cursor:pointer; ' onclick='invoices_delete_account({{ account.id }}, {{invoice.id}}); return false;' {% endif %}>{% if invoice.nb_accounts > 1 %}<img src='./images/trash.png' />{% endif %}</td>
+	    					{% endif %}
+							<td {% if account.web %} rowspan='2' style='vertical-align : middle' {% endif %}>{{ account.short_year_date }} / {{ account.id }}</td>
+							<td style='width:250;text-align:left;'>{% if account.event_date != '0000-00-00 00:00:00' %}{{ account.formatted_event_date }}{% if account.event_place %} - {% endif %}{% endif %}{{ account.event_place }}{% if account.event_formation %} - {% endif %}{{ account.event_formation }}<br />{{ account.author.name }}{% if account.author.name %} : {% endif %}{{ account.title }}</td>
+							<td style='width:40;text-align:right;'>{{ account.percent }} %</td>
+							<td style='width:80;'>{{ account.formatted_time }}</td>
+							<td style='width:73;text-align:right;'>{{ account.price }} &euro;</td>							
+							<td></td>
+	    				</tr>					
+						{% if account.web %}	
+							<tr id='account_web_{{ account.id }}'>
+								<td style='text-align:right;'>Diffusion WEB</td>
+								<td style='width:40;text-align:right;'>{{ account.web_percent }} %</td>
+								<td style='width:80;'></td>
+								<td style='width:73;text-align:right;'>{{ account.web_price }} &euro;</td>							
+								<td></td>
+		    				</tr>	
+						{% endif %}	
+					{% endfor %}
+					<tr>
+						{% if invoice.in_edit %}
+   							<td style='background:#BDBDBD;'></td>
+    					{% endif %}
+						<td style='background:#BDBDBD;'></td>
+						<td style='background:#BDBDBD;'></td>
+						<td style='background:#BDBDBD;'></td>
+						<td style='background:#BDBDBD;'></td>
+						<td style='background:#BDBDBD; color:red; text-align:right;'>{{ invoice.total_price }} &euro;</td>							
+						<td style='background:#BDBDBD;'></td>
+    				</tr>	
+				</table>				
+			</td>
+    	</tr>				
+		{% if invoice.status == 1 %}	
+    	<tr>
+			<td>
+				<table  style='text-align:center; font-size:18pt;'>
+    				<tr>
+						<td style='width:750; color:red;'><i>FACTURE NON FINALISEE</i></td>						
+    				</tr>
+				</table>			
+				
+			</td>
+    	</tr>			
+		{% endif %}	
+		<tr>
+			<td>
+				<table style='text-align:center; font-size:10pt;'>
+    				<tr>
+						<td style='width:130; text-align:left;'>Paris, le</td>
+						<td style='width:250; text-align:left;'>{% now d/m/Y %}</td>
+						<td style='width:20;'></td>
+						<td style='width:180; text-align:center;'>
+							<strong>{{  invoice.user.prenom }} {{ invoice.user.nom }}</strong><br />
+							<span style='font-size:8pt;'><i>
+								{{ invoice.entity.raison_sociale }}<br />								
+								{{ invoice.address_entity.libelle }}<br />
+								{{ invoice.address_entity.adr2 }}<br /> 
+								{{ invoice.address_entity.cp }} 
+								{{ invoice.address_entity.ville }}
+							</i></span> 
+						</td>
+						<td style='width:63;'></td>							
+						<td style='width:85;'></td>			
+    				</tr>
+				</table>			
+			</td>
+    	</tr>			
+	</table>
+</page>

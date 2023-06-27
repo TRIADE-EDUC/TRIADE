@@ -1,0 +1,217 @@
+/* +--------------------------------------------------------------------------+
+// ? 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// +-------------------------------------------------+
+// $Id: dashboard.css,v 1.3 2018-04-18 08:40:19 wlair Exp $ */
+/* Top menu
+ ==========================================================================  */
+#extra2 {
+	position: absolute;
+	height: 35px;
+	left: 15px;
+	top: 5px;
+	z-index: 100;
+}
+
+#extra2 div {
+	display: inline;
+}
+
+/* Nav bar
+ ==========================================================================  */
+#navbar ul {
+	position: relative;
+	left: 60px;
+	width: calc(100% - 60px);
+}
+
+/* Notification
+ ==========================================================================  */
+#notification_zone {
+	position: absolute;
+	display : none;
+	top: 50px;
+	left: 5px;
+	background-color: #fafafa;
+	z-index : 999;
+	padding: 5px 10px;
+	border-radius: 2px;
+	border : 1px solid #adadad;
+	min-width: 250px;
+	box-shadow: 0 5px 8px 0 rgba(133, 133, 134, 0.57);
+}
+
+#notification_zone.zone_active {
+	display : block;
+}
+
+#notification_zone form {
+	width: auto;
+}
+
+/* Dashboard content
+ ==========================================================================  */
+body.dashboard {
+	background: #f1efef!important;
+}
+
+#conteneur.dashboard {
+	max-width: 90%;
+	margin: 0 auto;
+}
+
+#dashboards {
+	padding-bottom: 40px;
+}
+
+/*
+* grid 
+*/
+#dashboards .dashboard {
+	margin: 0px;
+	background: transparent;
+	padding-left: 40px;
+	margin-bottom: 20px;
+}
+
+#dashboards .dashboard>div {
+	border-radius : 0px;
+	box-shadow: none;
+	background: white;
+	width: 100%;
+	margin: 0;
+	min-height: 100%;
+	box-shadow: 0 5px 8px 0 rgba(160, 166, 168, 0.35);
+}
+#dashboards .uk-grid + .uk-grid{
+	margin-top:20px;
+}
+#dashboards .dashboard .dashboard_content {
+	padding : 10px;
+	min-height: 180px;
+}
+
+#dashboards .dashboard .dashboard_content .row {
+	clear: left;
+	overflow: hidden;
+}
+
+.dashboard h2 {
+	font-size: 18px;
+	margin: 0 0 15px;
+	font-weight: 500;
+}
+
+#dashboards .dashboard .dashboard_content .title, #notifications .title {
+	text-align: right;
+	width: auto;
+	float: left;
+}
+
+#dashboards .dashboard .dashboard_content .value, #notifications .value {
+	text-align: left;
+}
+
+#dashboards .dashboard .alert {
+	padding : 15px 10px;
+	min-height: 150px;
+	float : right;
+	max-width : 165px;
+}
+
+#dashboards .colonne2 {
+	width: 50%;
+}
+
+#dashboards .colonne3 {
+	width: 33%;
+}
+
+#dashboards .colonne4 {
+	width: 25%;
+}
+
+@media (max-width: 1200px) {
+	#dashboards .colonne2 {
+		width: 50%;
+	}
+
+	#dashboards .colonne3 {
+		width: 50%;
+	}
+
+	#dashboards .colonne4 {
+		width: 50%;
+	}
+}
+
+@media (max-width: 760px) {
+	#dashboards .colonne2 {
+		width: 100%;
+	}
+
+	#dashboards .colonne3 {
+		width: 100%;
+	}
+
+	#dashboards .colonne4 {
+		width: 100%;
+	}
+}
+
+#notification_zone .ui-flex-between>div+div {
+	flex: 1 1 auto;
+}
+
+#notification_zone .ui-flex-between>div.ui-flex-grow {
+	flex: 0 1 auto;
+}
+
+#dashboards .dashboard h3 {
+	color : white;
+	padding: 15px 15px;
+	vertical-align: middle;
+	position: relative;
+}
+
+#dashboards .dashboard h3:after {
+	content: "";
+	display: block;
+	height: 100%;
+	width: 100%;
+	position: absolute;
+	top: 0;
+	left: 0;
+	background: linear-gradient(to right , rgba(255, 255, 255, 0.12), rgba(0, 0, 0, 0.01));
+	; }
+
+#dashboards .dashboard.circ h3 {
+	background-color : #469de1;
+}
+
+#dashboards .dashboard.catalog h3 {
+	background-color : #ef8800;
+}
+
+#dashboards .dashboard.autorites h3 {
+	background-color : #3b609a;
+}
+
+#dashboards .dashboard.dsi h3 {
+	background-color : #d970a9;
+}
+
+#dashboards .dashboard.acquisition h3 {
+	background-color : #6eab50;
+}
+
+#dashboards .dashboard.demandes h3 {
+	background-color : #b2a57a;
+}
+
+#dashboards .dashboard.cms h3 {
+	background-color : #74a3cf;
+}
+
+#dashboards .dashboard.admin h3 {
+	background-color : #df115c;
+}

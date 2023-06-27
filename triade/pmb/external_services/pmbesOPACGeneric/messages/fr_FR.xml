@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!--
+****************************************************************************************
+© 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: fr_FR.xml,v 1.7 2015-06-15 12:55:34 pmbs Exp $ -->
+
+<!DOCTYPE XMLlist SYSTEM "../../../includes/XMLlist.dtd" >
+<XMLlist>
+  <entry code="pmbesOPACGeneric_description">Fonctions relatives à l'OPAC, qui s'utilisent aussi bien en anonyme qu'en loggué</entry>
+  <!--
+    list_shelves
+  -->
+  <entry code="list_shelves_description">Liste les différentes étagères visibles dans l'opac</entry>
+  <entry code="list_shelves_input_description"></entry>
+  <entry code="list_shelves_output_description"></entry>
+  <entry code="list_shelves_OPACUserId">Id d'un emprunteur, pour vérifier les droits d'accès sur cette étagère.
+    -1: Ne pas tenir compte
+    0: emprunteur anonyme
+    x: id de l'emprunteur</entry>
+  <entry code="list_shelves_shelves">Les différentes étagères</entry>
+  <!--
+    retrieve_shelf_content
+  -->
+  <entry code="retrieve_shelf_content_description">Liste les différentes notices contenues dans une étagère</entry>
+  <entry code="retrieve_shelf_content_input_description"></entry>
+  <entry code="retrieve_shelf_content_output_description">Cette fonction tient compte des différents droits d'accès applicables à l'emprunteur</entry>
+  <entry code="retrieve_shelf_content_OPACUserId">Id d'un emprunteur, pour vérifier les droits d'accès sur les notices.
+    -1: Ne pas tenir compte
+    0: emprunteur anonyme
+    x: id de l'emprunteur</entry>
+  <entry code="retrieve_shelf_content_self_id">Id de l'étagère</entry>
+  <entry code="retrieve_shelf_content_shelf_content">Ids des notices</entry>
+  
+  <entry code="list_locations_description">Liste les différentes localisations de l'OPAC</entry>
+  <entry code="list_locations_input_description"></entry>
+  <entry code="list_locations_output_description"></entry>
+  <entry code="list_locations_locations">Les différentes localications</entry>
+
+   <!--
+is_also_borrowed_enabled
+--><entry code="is_also_borrowed_enabled_description">Permet de savoir si la fonction "Autre Lecture" est activée ou non</entry>
+   <entry code="is_also_borrowed_enabled_input_description"></entry>
+   <entry code="is_also_borrowed_enabled_output_description"></entry>
+   <entry code="is_also_borrowed_enabled_result">Si la fonction est activée ou non</entry>
+
+  <entry code="also_borrowed_description">Renvoie les autres lectures associées à une notice</entry>
+  <entry code="also_borrowed_input_description"></entry>
+  <entry code="also_borrowed_input_notice_id">L'id de la notice</entry>
+  <entry code="also_borrowed_input_bulletin_id">L'id du bulletin</entry>
+  <entry code="also_borrowed_output_description"></entry>
+  <entry code="also_borrowed_notice_reference">Les différentes autres lectures</entry>
+  <entry code="also_borrowed_list_also_borrowed_notice_reference">L'id de la notice</entry>
+  <entry code="also_borrowed_notice_reference_notice_id">L'id de la notice</entry>
+  <entry code="also_borrowed_notice_reference_notice_title">Le titre de la notice</entry>
+  <entry code="also_borrowed_notice_reference_notice_author">L'auteur de la notice</entry>
+
+   <!--
+list_sections
+--><entry code="list_sections_description">Liste les différentes sections visibles de l'OPAC</entry>
+   <entry code="list_sections_input_description"></entry>
+   <entry code="list_sections_output_description"></entry>
+   <entry code="list_sections_location">La localisation des sections</entry>
+   <entry code="list_sections_sections">Les différentes sections</entry>
+
+	<!--
+	get_location_information
+	-->
+	<entry code="get_location_information_description">Renvoie les informations associées à une localisation</entry>
+	<entry code="get_location_information_input_description"></entry>
+	<entry code="get_location_information_output_description"></entry>
+	<entry code="get_location_information_location_id">L'id de la localisation</entry>
+	<entry code="get_location_information_location">Les informations</entry>
+	<!--
+	get_location_information_and_sections
+	-->
+	<entry code="get_location_information_and_sections_description">Renvoie les informations et les différentes sections associées à une localisation</entry>
+	<entry code="get_location_information_and_sections_input_description"></entry>
+	<entry code="get_location_information_and_sections_output_description"></entry>
+	<entry code="get_location_information_and_sections_location_id">L'id de la localisation</entry>
+	<entry code="get_location_information_and_sections_location">Les informations</entry>
+	<entry code="get_location_information_and_sections_sections">Les différentes sections</entry>
+	
+	<!--
+	get_section_information
+	-->
+	<entry code="get_section_information_description">Renvoie les informations associées à une section</entry>
+	<entry code="get_section_information_input_description"></entry>
+	<entry code="get_section_information_output_description"></entry>
+	<entry code="get_section_information_section_id">L'id de la section</entry>
+	<entry code="get_section_information_section">Les informations</entry>
+	
+	<!--
+	get_marc_table
+	-->
+	<entry code="get_marc_table_description">Récupère les informations contenues dans les fichiers xml de paramètrage de PMB. Permet d'avoir notamment les libellés corespondants à des codes utilisés dans PMB</entry>
+	<entry code="get_marc_table_type">Type d'information souhaitée:
+country -&gt; Pays
+icondoc -&gt; Images associées aux notices
+icondoc_big -&gt; Images associées aux notices (grand format)
+lang -&gt; Langues
+doctype -&gt; Types de documents
+recordtype -&gt; Type de notices
+function -&gt; Fonctions d'auteurs
+section_995 -&gt; Section d'exemplaires
+typdoc_995 -&gt; Support d'exemplaires
+codstatdoc_995 -&gt; Code stat d'exemplaire
+diacritique -&gt; Caractères diacritiques
+nivbiblio -&gt; Niveau bibliographique
+relationtypeup -&gt; Lien entre notice fille -> mère
+relationtypedown -&gt; Lien entre notice mère -> fille
+relationtype_aut -&gt; Lien entre autorité mère -> fille
+relationtype_autup -&gt; Lien entre autorité fille -> mère
+relationtypeup_unimarc -&gt; Code unimarc du champ pour les liens fille -> mère
+relationtypedown_unimarc -&gt; Code unimarc du champ pour les liens mère -> fille
+	</entry>
+	<entry code="get_marc_table_result">Tableau avec les associations [code] =&gt; Libellé/valeur</entry>
+	
+</XMLlist>

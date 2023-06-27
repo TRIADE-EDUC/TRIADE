@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le module Article
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_menu_view_menu.xml,v 1.2 2012-10-05 09:00:37 arenou Exp $ -->
+
+<XMLlist>
+	<entry code='cms_module_menu_view_menu_no_parameters'>Aucun paramètre pour cette vue.</entry>
+</XMLlist>

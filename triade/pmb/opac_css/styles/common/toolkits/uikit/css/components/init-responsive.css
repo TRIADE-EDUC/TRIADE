@@ -1,0 +1,14 @@
+/*Facette in responsive
+========================================================================== */
+#facette.uk-offcanvas{
+	position: fixed;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	z-index: 1000;
+	touch-action: none;
+	background: rgba(0,0,0,.1);
+	margin: 0;
+	border: 0px solid #e0e0e0;
+}

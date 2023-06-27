@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../../../../../includes/XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français
+****************************************************************************************
+© 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: fr_FR.xml,v 1.10 2016-11-18 09:32:12 jpermanne Exp $ -->
+
+<XMLlist>
+	<entry code="illegal_verb">Verbe invalide</entry>
+	<entry code="set_none">[Aucun]</entry>
+	<entry code="repository_name">Nom de l'entrepot</entry>
+	<entry code="admin_email">Adresse email de l'administrateur</entry>
+	<entry code="included_sets">Sets inclus dans la source</entry>
+	<entry code="repositoryIdentifier">Identifiant de l'entrepot</entry>
+	<entry code="unconfigured_source">Cette source OAI n'est pas configurée</entry>
+	<entry code="cannotDisseminateFormat">%s n'est pas un format supporté par cet entrepot</entry>
+	<entry code="chunksize">Nombre de résultats par requête</entry>
+	<entry code="token_lifeduration">Durée de vie en secondes des tokens</entry>
+	<entry code="unknown_set">Le set spécifié n'existe pas dans cet entrepot</entry>
+	<entry code="badResumptionToken">Le token spécifié est soit expiré soit invalide</entry>
+	<entry code="cache_complete_records">Mettre en cache les enregistrements complets</entry>
+	<entry code="cache_complete_records_seconds">Durée de vie des enregistrements dans le cache (secondes)</entry>
+	<entry code="idDoesNotExist">L'enregistrement demandé n'existe pas dans cet entrepot</entry>
+	<entry code="link_status_to_deletion">Lier un statut de notice à l'information de suppression OAI</entry>
+	<entry code="linked_status_to_deletion">Statut lié</entry>
+	<entry code="noRecordsMatch">Aucun enregistrement trouvé</entry>
+	<entry code="allow_gzip_compression">Autoriser la compression gzip des requêtes</entry>
+	<entry code="allowed_admin_convert_paths">Formats de conversion supplémentaires autorisés</entry>
+	<entry code="builtin_formats">Formats inclus par défaut</entry>
+	<entry code="baseURL">URL de base de l'entrepot</entry>
+	<entry code="baseURL_default">Adresse par défaut</entry>
+	<entry code="baseURL_sourceadd">Enregistrer la source pour pouvoir modifier ce champ</entry>
+	<entry code="include_items">Conserver les informations des exemplaires dans la zone 995</entry>
+	<entry code='feuille_xslt'>Feuille XSLT personnalisée pour le Dublin Core</entry>
+	<entry code='suppr_feuille_xslt'>Supprimer cette feuille</entry>
+	<entry code='deletion_management'>Mode de gestion des suppressions des enregistrements</entry>
+	<entry code='deletion_management_none'>Aucune</entry>
+	<entry code='deletion_management_transient'>Transitoire</entry>
+	<entry code='deletion_management_transient_duration'>durée (secondes) :</entry>
+	<entry code='deletion_management_persistent'>Persistant</entry>
+	<entry code='if_none_status_to_deletion'>(Si aucun statut lié)</entry>
+	<entry code="use_items_update_date">Tenir compte de la date de modification des exemplaires</entry>
+	<entry code="badArgument">Argument invalide</entry>
+	<entry code="noSetHierarchy">Set introuvable</entry>
+	<entry code="oai_pmh_valid">Validité OAI-PMH</entry>
+</XMLlist>

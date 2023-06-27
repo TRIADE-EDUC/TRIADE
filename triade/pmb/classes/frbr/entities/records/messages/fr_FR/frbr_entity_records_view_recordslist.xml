@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: frbr_entity_records_view_recordslist.xml,v 1.4 2018-06-13 14:13:39 tsamson Exp $ -->
+
+<XMLlist>
+	<entry code="frbr_entity_records_view_title">Titre de la liste</entry>
+	<entry code="frbr_entity_records_view_records_desc">Notices</entry>
+	<entry code="frbr_entity_records_view_record_content_desc">Notice</entry>
+	<entry code="frbr_entity_records_view_recordslist_title">Liste des notices</entry>
+	<entry code="frbr_entity_records_view_django_directory">Répertoire des templates</entry>
+	<entry code="frbr_entity_records_view_works_desc">Oeuvres</entry>
+</XMLlist>

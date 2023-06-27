@@ -1,0 +1,216 @@
+
+/*****************************************************************************************
+	Note explicative
+
+	Les contenus decrits ici ont pour but de renseigner les parametres
+	dans la partie gestion de l'opac PMB. Les valeurs sont a renseigner 
+	suivant les directives #obligatoire #recommande...
+
+	Il est possible que certains parametres non decrits ci-dessous n'aient pas l'affichage 
+	souhaite, auquel cas il vous faudra contacter le realisateur de cette charte pour
+	implementer le parametre en question.
+	
+	Une sauvegarde des valeurs est toujours souhaitee avant modification, 
+	communement en collant le contenu du champ "Valeur" dans le champ "Explication"
+	
+*****************************************************************************************/
+
+
+/*********************************
+      default_style_addon
+*********************************/
+
+
+/* parametre des couleurs
+ ========================================================================== */
+/* Couleur Ton moyen
+ ========================================================================== */
+
+/* Couleur de fond de titre et modules
+------------------------------------- */
+
+.SliderArt h3.titleInside,
+.SliderArt .bx-wrapper .bx-pager.bx-default-pager a:hover,
+.SliderArt .bx-wrapper .bx-pager.bx-default-pager a.active,
+.SliderHoriz .SliderNot>h3,
+.listselect h3,
+.listselect .itemVign .imgL.uk-panel-box,
+#resume_panier,
+#lienHistorique,
+#adresse,
+#facette,
+#lvl1,
+.titleContenu,
+.listArticlesGen .itemAbrege>h3,
+.listeSameArticle .itemAbrege>h3,
+.listItemsEvent .itemAbrege>h3,
+.listResultArticles .itemAbrege>h3,
+.listArticlesGen .itemAbrege>a>h3 {
+    background-color: #83c7d4!important;
+}
+
+/* Couleur des bordures
+------------------------------------- */
+
+.NavResponsive .SousNavResponsive li:hover>a:before,
+.itemSolo h4,
+.listProd>h3,
+.listEtageresRub>h3,
+.fluxRSSRub>h3,
+.infosArt>h3,
+.SameNot>h3,
+.SliderHoriz>h3,
+#aut_details_liste>h3 span.aut_details_liste_titre,
+.listArticlesGen>h3,
+.listeSameArticle>h3,
+.listItemsEvent>h3,
+.listResultArticles>h3,
+.fluxRSSPage>h3,
+.document_list>h3,
+ul.empr_tabs li.subTabCurrent,
+ul.onglets_isbd_public li.isbd_public_active,
+ul.empr_tabs #current,
+ul.search_tabs li#current,
+ul.empr_tabs li.subTabCurrent,
+ul.empr_tabs li.subTabCurrent:hover,
+#search_result>h3,
+#location h3,
+#last_entries h3,
+#etageres h3,
+.notice_contenu {
+    border-color: #83c7d4!important;
+}
+/*=========================================================================*/
+/* Couleur Fonce
+ ==========================================================================*/
+/* Couleur de fond de titre et modules
+------------------------------------- */
+
+.searchbox,
+.brevesBandeau,
+#titrePortail,
+#logo,
+.uk-nav-navbar>li>a:focus,
+.uk-nav-navbar>li>a:hover,
+.TgllSearch,
+.rubContent>h3:hover:after,
+.listItemsGen .itemAbrege:hover h3:after,
+span.imgComment,
+span.imgStatutPartN,
+.onglet_basketNotCourte .img_basketNotCourte img,
+.onglet_basketNot .img_basketNot img,
+div[class='onglet_basketNotCourte'],
+div[class='avisNCourte'],
+div[class='tagsNCourte'],
+div[class='listeLectureNCourte'] a,
+div[class='suggestNCourte'],
+div[class='onglet_basketNot'] a.img_basketNot,
+div[class='tagsN'],
+div[class='suggestN'],
+div[class='docnumNCourte docnumNCourtePermalink'],
+div[class='docnumNCourte'],
+div[class='listeLectureN'] a,
+span.imgComment,
+span.imgStatutPartN,
+span.imgDocNum {
+    background-color: #3598c1!important;
+}
+/* Couleur des bordures
+------------------------------------- */
+
+.NavResponsive li:hover>a:before,
+ul.search_tabs li:hover,
+ul.empr_tabs li:hover,
+ul.list_tabs li:hover,
+ul.empr_tabs #current,
+.listEtageres>h3 a {
+    border-color: #3598c1!important;
+}
+/* Couleur au survole
+------------------------------------- */
+
+.Rub .infosRub:hover .resume {
+    color: #3598c1;
+}
+
+/*Couleur liens 
+------------------------------------- */
+
+.uk-link,
+a,
+.liensExtrn li a,
+.brevesBandeau .lirePlus {
+    color: #3598c1;
+}
+/*Couleur liens au survole
+------------------------------------- */
+
+.ItemResume:hover h4,
+.ItemResume:hover .lirePlus,
+.MenuHoriz .Nav>li>a:hover,
+.listEtageres>h3 a:hover {
+    color: #3598c1!important;
+}
+/* ========================================================================*/
+/* Couleur complémentaire
+===========================================================================*/
+
+.tundra .dijitCalendarMonthContainer th,
+.tundra .dijitMenu,
+.tundra .dijitMenuBar,
+#connexion,
+.TglUser,
+.fluxRSS>h3,
+#widget>h3,
+.tb_pret_location_row,
+#cms_module_agenda_85 td.cms_module_agenda_event_13,
+#cms_module_agenda_85 td.cms_module_agenda_event_3,
+#cms_module_agenda_85 > div.row > div > div:first-child{
+     background-color: #e1383b!important;
+}
+/* Couleur des textes
+------------------------------------- */
+.tundra .dijitCalendarDayLabelTemplate,
+.fluxRSS>.itemAbrege h4 a {
+    color: #e1383b!important;
+}
+/*=========================================================================*/
+/* Couleur des textes
+ ===========================================================================*/
+/* Coleur de texte de base
+------------------------------------- */
+
+body,
+.Rub .infosRub .resume {
+    color: #444;
+}
+/* Texte clair
+------------------------------------- */
+
+.Slider .itemContent .resume {
+    color: #999999!important;
+}
+/* Texte Sombre
+------------------------------------- */
+
+.SliderArt .itemContent .ItemResume h4,
+.MenuHoriz .Nav>li>a,
+.MenuHoriz .SousNav li a {
+    color: #6C6C6C!important;
+}
+
+/*=========================================================================*/
+/*Couleur blanche ne pas toucher
+ ==========================================================================*/
+
+#container .uk-nav-navbar>li>a:focus,
+#container .uk-nav-navbar>li>a:hover,
+.brevesBandeau .itemAbrege .resume,
+.tb_pret_location_row>td,
+#cart_info_iframe_content a,
+.searchbox input[value="Aide"],
+#cart_info_iframe_content a,
+#cart_info_iframe_content a:hover {
+    color: #fff!important;
+}
+}

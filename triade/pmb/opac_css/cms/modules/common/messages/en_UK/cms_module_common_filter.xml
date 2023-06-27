@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour la classe datasource
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_common_filter.xml,v 1.1 2015-06-16 10:24:25 pmbs Exp $ -->
+
+<XMLlist>
+	<entry code="cms_module_common_filter_selector_choice">Choose a selector for the filter</entry>
+	<entry code="cms_module_common_selector_confirm_change_selector">You are about to change your selector. Do you want to continue ?</entry>	
+	<entry code="cms_module_common_selector_env_var">Environment variable</entry>
+	<entry code="cms_module_common_filter_compare_with">Compare with</entry>
+	<entry code="cms_module_common_filter_compare_from">Field to compare</entry>
+	<entry code="cms_module_common_selector_empr_infos">Borrower's informations</entry>
+	<entry code="cms_module_common_selector_value">Manual value</entry>
+</XMLlist>

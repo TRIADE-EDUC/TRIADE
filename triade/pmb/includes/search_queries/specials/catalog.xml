@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!-- $Id: catalog.xml,v 1.18 2019-04-12 14:21:45 ccraig Exp $ -->
+<specialfields>
+	<type name="combine" class="combine_search" path="combine"></type>
+	<type name="combine_unimarc" class="combine_search_unimarc" path="combine_unimarc"></type>
+	<type name="combine_expl" class="combine_search_expl" path="combine_expl"></type>	
+	<type name="external_sources" class="external_sources" path="external_sources"></type>
+	<type name="facette" class="facette_search" path="facette"></type>
+	<type name="periodique" class="periodique_search" path="periodique"></type>
+	<type name="openurl" class="openurl_search" path="openurl"></type>
+	<type name="serials_list" class="serials_list" path="serials_list"></type>
+	<type name="remote_serials_list" class="remote_serials_list" path="remote_serials_list"></type>
+	<type name="combine_empr" class="combine_search_empr" path="combine_empr"></type>
+	<type name="simple_search" class="simple_search_search" path="simple_search"></type>
+	<type name="tu_qualified_author" class="tu_qualified_author" path="tu_qualified_author"></type>
+	<type name="tu_qualified_interpreter" class="tu_qualified_author" path="tu_qualified_author"></type>
+	<type name="last_import_isbn_doublons" class="last_import_isbn_doublons_search" path="last_import_isbn_doublons"></type>
+	<type name="last_import_isbn_doublons_expl" class="last_import_isbn_doublons_expl_search" path="last_import_isbn_doublons_expl"></type>
+	<type name="search_universe_segment" class="search_universe_segment_search" path="search_universe_segment"></type>	
+	<type name="combine_extended_search" class="combine_extended_search" path="combine_extended_search"></type>
+	<type name="record_qualified_author" class="record_qualified_author" path="record_qualified_author"></type>
+	<type name="map_circle" class="map_circle" path="map_circle"></type>
+	<type name="map_address" class="map_address" path="map_address"></type>
+</specialfields>

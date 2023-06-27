@@ -1,0 +1,1048 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- Fichier manifest de description des méthodes disponibles
+****************************************************************************************
+© 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: notice_tpl_manifest.xml,v 1.21 2019-01-21 13:23:17 dgoron Exp $ -->
+<manifest>
+	<name>notice_tpl</name>
+	<description>msg:Notice_tpl_functions_description</description>
+	<methods comment="msg:classbib">
+		<method name="#author();" rights="" version="1.0" comment="msg:author_description" language_independant="true">
+			<inputs>
+				<description>msg:author_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:author_output_description</description>
+			</outputs>
+		</method>
+		<method name="#author_1(param0,param1);" rights="" version="1.0" comment="msg:author_1_description" language_independant="true">
+			<inputs>
+				<description>msg:author_1_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:author_1_output_description</description>
+			</outputs>
+		</method>
+		<method name="#author_2(param0,param1);" rights="" version="1.0" comment="msg:author_2_description" language_independant="true">
+			<inputs>
+				<description>msg:author_2_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:author_2_output_description</description>
+			</outputs>
+		</method>
+		<method name="#authors(param0,param1,param2,param3,param4,param5,param6,param7);" rights="" version="1.0" comment="msg:authors_description" language_independant="true">
+			<inputs>
+				<description>msg:authors_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:authors_output_description</description>
+			</outputs>
+		</method>
+		<method name="#authors_by_type(param0,param1,param2,param3,param4,param5,param6);" rights="" version="1.0" comment="msg:authors_by_type_description" language_independant="true">
+			<inputs>
+				<description>msg:authors_by_type_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:authors_by_type_output_description</description>
+			</outputs>
+		</method>
+		<method name="#authors_by_type_dir(param0,param1,param2,param3,param4,param5,param6);" rights="" version="1.0" comment="msg:authors_by_type_dir_description" language_independant="true">
+			<inputs>
+				<description>msg:authors_by_type_dir_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:authors_by_type_dir_output_description</description>
+			</outputs>
+		</method>
+		<method name="#authors_by_type_with_tpl(param0,param1,param2,param3,param4,param5,param6,#{param7};,param8);" rights="" version="1.0" comment="msg:parents_authors_by_type_with_tpl_description" language_independant="true">
+			<inputs>
+				<description>msg:authors_by_type_with_tpl_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:authors_by_type_with_tpl_output_description</description>
+			</outputs>
+		</method>
+		<method name="#authperso_name(param0);" rights="" version="1.0" comment="msg:authperso_name_description" language_independant="true">
+			<inputs>
+				<description>msg:authperso_name_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:authperso_name_output_description</description>
+			</outputs>
+		</method>
+		<method name="#authperso_isbd(param0);" rights="" version="1.0" comment="msg:authperso_isbd_description" language_independant="true">
+			<inputs>
+				<description>msg:authperso_isbd_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:authperso_isbd_output_description</description>
+			</outputs>
+		</method>
+		<method name="#avis(param0,param1,param2);" rights="" version="1.0" comment="msg:avis_description" language_independant="true">
+			<inputs>
+				<description>msg:avis_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:avis_output_description</description>
+			</outputs>
+		</method>
+		<method name="#avis_with_tpl(param0,param1,param2);" rights="" version="1.0" comment="msg:avis_with_tpl_description" language_independant="true">
+			<inputs>
+				<description>msg:avis_with_tpl_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:avis_with_tpl_output_description</description>
+			</outputs>
+		</method>
+		<method name="#categories(param0,param1,param2,param3,param4,param5);" rights="" version="1.0" comment="msg:categories_description" language_independant="true">
+			<inputs>
+				<description>msg:categories_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:categories_output_description</description>
+			</outputs>
+		</method>
+		<method name="#categories_with_tpl(param0,param1,param2,param3,param4,param5);" rights="" version="1.0" comment="msg:categories_with_tpl_description" language_independant="true">
+			<inputs>
+				<description>msg:categories_with_tpl_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:categories_with_tpl_output_description</description>
+			</outputs>
+		</method>
+		<method name="#collation();" rights="" version="1.0" comment="msg:collation_description" language_independant="true">
+			<inputs>
+				<description>msg:collation_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:collation_output_description</description>
+			</outputs>
+		</method>
+		<method name="#collection();" rights="" version="1.0" comment="msg:collection_description" language_independant="true">
+			<inputs>
+				<description>msg:collection_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:collection_output_description</description>
+			</outputs>
+		</method>
+		<method name="#collection_with_tpl(param0);" rights="" version="1.0" comment="msg:collection_with_tpl_description" language_independant="true">
+			<inputs>
+				<description>msg:collection_with_tpl_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:collection_with_tpl_output_description</description>
+			</outputs>
+		</method>
+		<method name="#complement_title();" rights="" version="1.0" comment="msg:complement_title_description" language_independant="true">
+			<inputs>
+				<description>msg:complement_title_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:complement_title_output_description</description>
+			</outputs>
+		</method>
+		<method name="#contenu();" rights="" version="1.0" comment="msg:contenu_description" language_independant="true">
+			<inputs>
+				<description>msg:contenu_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:contenu_output_description</description>
+			</outputs>
+		</method>
+		<method name="#cost();" rights="" version="1.0" comment="msg:cost_description" language_independant="true">
+			<inputs>
+				<description>msg:cost_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:cost_output_description</description>
+			</outputs>
+		</method>
+		<method name="#date_publication();" rights="" version="1.0" comment="msg:date_publication_description" language_independant="true">
+			<inputs>
+				<description>msg:date_publication_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:date_publication_output_description</description>
+			</outputs>
+		</method>
+		<method name="#expl();" rights="" version="1.0" comment="msg:expl_description" language_independant="true">
+			<inputs>
+				<description>msg:expl_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:expl_output_description</description>
+			</outputs>
+		</method>
+		<method name="#expl_by_field(param0,param1,param2,param3);" rights="" version="1.0" comment="msg:expl_by_field_description" language_independant="true">
+			<inputs>
+				<description>msg:expl_by_field_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:expl_by_field_output_description</description>
+			</outputs>
+		</method>
+		<method name="#expl_with_tpl(param0,param1,param2,param3);" rights="" version="1.0" comment="msg:expl_with_tpl_description" language_independant="true">
+			<inputs>
+				<description>msg:expl_with_tpl_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:expl_with_tpl_output_description</description>
+			</outputs>
+		</method>
+		<method name="#expl_num_number(param0);" rights="" version="1.0" comment="msg:expl_num_number_description" language_independant="true">
+			<inputs>
+				<description>msg:expl_num_number_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:expl_num_number_output_description</description>
+			</outputs>
+		</method>
+		<method name="#expl_num(param0);" rights="" version="1.0" comment="msg:expl_num_description" language_independant="true">
+			<inputs>
+				<description>msg:expl_num_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:expl_num_output_description</description>
+			</outputs>
+		</method>
+		<method name="#expl_num_vign_reduit(param0,param1,param2,param3,param4,param5);" rights="" version="1.0" comment="msg:expl_num_vign_reduit_description" language_independant="true">
+			<inputs>
+				<description>msg:expl_num_vign_reduit_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:expl_num_vign_reduit_output_description</description>
+			</outputs>
+		</method>
+		<method name="#expl_num_with_tpl(param0,param1,param2,param3,param4,param5,param6);" rights="" version="1.0" comment="msg:expl_num_with_tpl_description" language_independant="true">
+			<inputs>
+				<description>msg:expl_num_with_tpl_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:expl_num_with_tpl_output_description</description>
+			</outputs>
+		</method>
+		<method name="#format_date();" rights="" version="1.0" comment="msg:format_date_description" language_independant="true">
+			<inputs>
+				<description>msg:format_date_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:format_date_output_description</description>
+			</outputs>
+		</method>
+		<method name="#month_in_letters();" rights="" version="1.0" comment="msg:month_in_letters_description" language_independant="true">
+			<inputs>
+				<description>msg:month_in_letters_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:month_in_letters_output_description</description>
+			</outputs>
+		</method>
+		<method name="#iconcart();" rights="" version="1.0" comment="msg:iconcart_description" language_independant="true">
+			<inputs>
+				<description>msg:iconcart_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:iconcart_output_description</description>
+			</outputs>
+		</method>
+		<method name="#icondoc();" rights="" version="1.0" comment="msg:icondoc_description" language_independant="true">
+			<inputs>
+				<description>msg:icondoc_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:icondoc_output_description</description>
+			</outputs>
+		</method>
+		<method name="#img();" rights="" version="1.0" comment="msg:img_description" language_independant="true">
+			<inputs>
+				<description>msg:img_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:img_output_description</description>
+			</outputs>
+		</method>
+		<method name="#img_url();" rights="" version="1.0" comment="msg:img_url_description" language_independant="true">
+			<inputs>
+				<description>msg:img_url_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:img_url_output_description</description>
+			</outputs>
+		</method>
+		<method name="#indexint(param0,param1,param2,param3,param4,param5);" rights="" version="1.0" comment="msg:indexint_description" language_independant="true">
+			<inputs>
+				<description>msg:indexint_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:indexint_output_description</description>
+			</outputs>
+		</method>
+		<method name="#indexint_with_tpl(param0,param1,param2,param3);" rights="" version="1.0" comment="msg:indexint_with_tpl_description" language_independant="true">
+			<inputs>
+				<description>msg:indexint_with_tpl_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:indexint_with_tpl_output_description</description>
+			</outputs>
+		</method>
+		<method name="#isbd();" rights="" version="1.0" comment="msg:isbd_description" language_independant="true">
+			<inputs>
+				<description>msg:isbd_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:isbd_output_description</description>
+			</outputs>
+		</method>
+		<method name="#isbn();" rights="" version="1.0" comment="msg:isbn_description" language_independant="true">
+			<inputs>
+				<description>msg:isbn_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:isbn_output_description</description>
+			</outputs>
+		</method>
+		<method name="#lang();" rights="" version="1.0" comment="msg:lang_description" language_independant="true">
+			<inputs>
+				<description>msg:lang_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:lang_output_description</description>
+			</outputs>
+		</method>
+		<method name="#lang_or();" rights="" version="1.0" comment="msg:lang_or_description" language_independant="true">
+			<inputs>
+				<description>msg:lang_or_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:lang_or_output_description</description>
+			</outputs>
+		</method>
+		<method name="#map();" rights="" version="1.0" comment="msg:map_description" language_independant="true">
+			<inputs>
+				<description>msg:map_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:map_output_description</description>
+			</outputs>
+		</method>
+		<method name="#map_echelle();" rights="" version="1.0" comment="msg:map_echelle_description" language_independant="true">
+			<inputs>
+				<description>msg:map_echelle_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:map_echelle_output_description</description>
+			</outputs>
+		</method>
+		<method name="#map_equinoxe();" rights="" version="1.0" comment="msg:map_equinoxe_description" language_independant="true">
+			<inputs>
+				<description>msg:map_equinoxe_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:map_equinoxe_output_description</description>
+			</outputs>
+		</method>
+		<method name="#map_isbd();" rights="" version="1.0" comment="msg:map_isbd_description" language_independant="true">
+			<inputs>
+				<description>msg:map_isbd_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:map_isbd_output_description</description>
+			</outputs>
+		</method>
+		<method name="#map_projection();" rights="" version="1.0" comment="msg:map_projection_description" language_independant="true">
+			<inputs>
+				<description>msg:map_projection_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:map_projection_output_description</description>
+			</outputs>
+		</method>
+		<method name="#map_ref();" rights="" version="1.0" comment="msg:map_ref_description" language_independant="true">
+			<inputs>
+				<description>msg:map_ref_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:map_ref_output_description</description>
+			</outputs>
+		</method>
+		<method name="#mention_edition();" rights="" version="1.0" comment="msg:mention_edition_description" language_independant="true">
+			<inputs>
+				<description>msg:mention_edition_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:mention_edition_output_description</description>
+			</outputs>
+		</method>
+		<method name="#nb_expl_available();" rights="" version="1.0" comment="msg:nb_expl_available_description" language_independant="true">
+			<inputs>
+				<description>msg:nb_expl_available_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:nb_expl_available_output_description</description>
+			</outputs>
+		</method>
+		<method name="#note();" rights="" version="1.0" comment="msg:note_description" language_independant="true">
+			<inputs>
+				<description>msg:note_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:note_output_description</description>
+			</outputs>
+		</method>
+		<method name="#note_avg();" rights="" version="1.0" comment="msg:note_avg_description" language_independant="true">
+			<inputs>
+				<description>msg:note_avg_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:note_avg_output_description</description>
+			</outputs>
+		</method>
+		<method name="#notice_field(champ);" rights="" version="1.0" comment="msg:notice_field_description" language_independant="true">
+			<inputs>
+				<description>msg:notice_field_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:notice_field_output_description</description>
+			</outputs>
+		</method>
+		<method name="#opac_url();" rights="" version="1.0" comment="msg:opac_url_description" language_independant="true">
+			<inputs>
+				<description>msg:opac_url_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:opac_url_output_description</description>
+			</outputs>
+		</method>
+		<method name="#p_authperso(nom_du_champ,[séparateur,limite,1]);" rights="" version="1.0" comment="msg:p_authperso_description" language_independant="true">
+			<inputs>
+				<description>msg:p_authperso_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:p_authperso_output_description</description>
+			</outputs>
+		</method>
+		<method name="#p_perso(champ,option);" rights="" version="1.0" comment="msg:p_perso_description" language_independant="true">
+			<inputs>
+				<description>msg:p_perso_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:p_perso_output_description</description>
+			</outputs>
+		</method>
+		<method name="#page();" rights="" version="1.0" comment="msg:page_description" language_independant="true">
+			<inputs>
+				<description>msg:page_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:page_output_description</description>
+			</outputs>
+		</method>
+		<method name="#parallel_title();" rights="" version="1.0" comment="msg:parallel_title_description" language_independant="true">
+			<inputs>
+				<description>msg:parallel_title_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:parallel_title_output_description</description>
+			</outputs>
+		</method>
+		<method name="#permalink();" rights="" version="1.0" comment="msg:permalink_description" language_independant="true">
+			<inputs>
+				<description>msg:permalink_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:permalink_output_description</description>
+			</outputs>
+		</method>
+		<method name="#publisher();" rights="" version="1.0" comment="msg:publisher_description" language_independant="true">
+			<inputs>
+				<description>msg:publisher_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:publisher_output_description</description>
+			</outputs>
+		</method>
+		<method name="#publisher_name();" rights="" version="1.0" comment="msg:publisher_name_description" language_independant="true">
+			<inputs>
+				<description>msg:publisher_name_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:publisher_name_output_description</description>
+			</outputs>
+		</method>
+		<method name="#publisher_place();" rights="" version="1.0" comment="msg:publisher_place_description" language_independant="true">
+			<inputs>
+				<description>msg:publisher_place_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:publisher_place_output_description</description>
+			</outputs>
+		</method>
+		<method name="#publisher_1();" rights="" version="1.0" comment="msg:publisher_1_description" language_independant="true">
+			<inputs>
+				<description>msg:publisher_1_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:publisher_1_output_description</description>
+			</outputs>
+		</method>
+		<method name="#publisher_1_name();" rights="" version="1.0" comment="msg:publisher_1_name_description" language_independant="true">
+			<inputs>
+				<description>msg:publisher_1_name_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:publisher_1_name_output_description</description>
+			</outputs>
+		</method>
+		<method name="#publisher_1_place();" rights="" version="1.0" comment="msg:publisher_1_place_description" language_independant="true">
+			<inputs>
+				<description>msg:publisher_1_place_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:publisher_1_place_output_description</description>
+			</outputs>
+		</method>
+		<method name="#publisher_with_tpl(param0);" rights="" version="1.0" comment="msg:publisher_with_tpl_description" language_independant="true">
+			<inputs>
+				<description>msg:publisher_with_tpl_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:publisher_with_tpl_output_description</description>
+			</outputs>
+		</method>
+		<method name="#publisher_1_with_tpl(param0);" rights="" version="1.0" comment="msg:publisher_1_with_tpl_description" language_independant="true">
+			<inputs>
+				<description>msg:publisher_1_with_tpl_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:publisher_1_with_tpl_output_description</description>
+			</outputs>
+		</method>
+			<method name="#resume();" rights="" version="1.0" comment="msg:resume_description" language_independant="true">
+			<inputs>
+				<description>msg:resume_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:resume_output_description</description>
+			</outputs>
+		</method>
+		<method name="#serie_with_tpl(param0);" rights="" version="1.0" comment="msg:serie_with_tpl_description" language_independant="true">
+			<inputs>
+				<description>msg:serie_with_tpl_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:serie_with_tpl_output_description</description>
+			</outputs>
+		</method>
+		<method name="#statut(param0);" rights="" version="1.0" comment="msg:statut_description" language_independant="true">
+			<inputs>
+				<description>msg:statut_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:statut_output_description</description>
+			</outputs>
+		</method>
+		<method name="#subcollection_with_tpl(param0);" rights="" version="1.0" comment="msg:subcollection_with_tpl_description" language_independant="true">
+			<inputs>
+				<description>msg:subcollection_with_tpl_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:subcollection_with_tpl_output_description</description>
+			</outputs>
+		</method>
+		<method name="#title();" rights="" version="1.0" comment="msg:title_description" language_independant="true">
+			<inputs>
+				<description>msg:title_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:title_output_description</description>
+			</outputs>
+		</method>
+		<method name="#titre_uniforme_with_tpl(param0,param1,param2,param3,param4);" rights="" version="1.0" comment="msg:titre_uniforme_with_tpl_description" language_independant="true">
+			<inputs>
+				<description>msg:titre_uniforme_with_tpl_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:titre_uniforme_with_tpl_output_description</description>
+			</outputs>
+		</method>
+		<method name="#typdoc();" rights="" version="1.0" comment="msg:typdoc_description" language_independant="true">
+			<inputs>
+				<description>msg:typdoc_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:typdoc_output_description</description>
+			</outputs>
+		</method>
+			<method name="#url();" rights="" version="1.0" comment="msg:url_description" language_independant="true">
+			<inputs>
+				<description>msg:url_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:url_output_description</description>
+			</outputs>
+		</method>
+		<method name="#vignette();" rights="" version="1.0" comment="msg:vignette_description" language_independant="true">
+			<inputs>
+				<description>msg:vignette_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:vignette_output_description</description>
+			</outputs>
+		</method>
+		<method name="#year_publication();" rights="" version="1.0" comment="msg:year_publication_description" language_independant="true">
+			<inputs>
+				<description>msg:year_publication_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:year_publication_output_description</description>
+			</outputs>
+		</method>
+		<method name="#keywords(param0);" rights="" version="1.0" comment="msg:keywords_description" language_independant="true">
+			<inputs>
+				<description>msg:keywords_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:keywords_output_description</description>
+			</outputs>
+		</method>
+		<method name="#creator(param0);" rights="" version="1.0" comment="msg:creator_description" language_independant="true">
+			<inputs>
+				<description>msg:creator_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:creator_output_description</description>
+			</outputs>
+		</method>
+		
+	</methods>
+	<methods comment="msg:classnoti">
+	
+		<method name="#bull_for_art_expl_num(param0);" rights="" version="1.0" comment="msg:bull_for_art_expl_num_description" language_independant="true">
+			<inputs>
+				<description>msg:bull_for_art_expl_num_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:bull_for_art_expl_num_output_description</description>
+			</outputs>
+		</method>
+		<method name="#bull_for_art_expl_num_vign_reduit(param0,param1,param2,param3,param4,param5);" rights="" version="1.0" comment="msg:bull_for_art_expl_num_vign_reduit_description" language_independant="true">
+			<inputs>
+				<description>msg:bull_for_art_expl_num_vign_reduit_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:bull_for_art_expl_num_vign_reduit_output_description</description>
+			</outputs>
+		</method>
+		<method name="#bull_for_art_expl_num_with_tpl(param0,param1,param2,param3,param4,param5,param6);" rights="" version="1.0" comment="msg:bull_for_art_expl_num_with_tpl_description" language_independant="true">
+			<inputs>
+				<description>msg:bull_for_art_expl_num_with_tpl_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:bull_for_art_expl_num_with_tpl_output_description</description>
+			</outputs>
+		</method>
+		<method name="#collstate();" rights="" version="1.0" comment="msg:collstate_description" language_independant="true">
+			<inputs>
+				<description>msg:collstate_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:collstate_output_description</description>
+			</outputs>
+		</method>
+		<method name="#date_bulletin(param0);" rights="" version="1.0" comment="msg:date_bulletin_description" language_independant="true">
+			<inputs>
+				<description>msg:date_bulletin_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:date_bulletin_output_description</description>
+			</outputs>
+		</method>
+			<method name="#issn();" rights="" version="1.0" comment="msg:issn_description" language_independant="true">
+			<inputs>
+				<description>msg:issn_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:issn_output_description</description>
+			</outputs>
+		</method>
+		<method name="#nom_revue();" rights="" version="1.0" comment="msg:nom_revue_description" language_independant="true">
+			<inputs>
+				<description>msg:nom_revue_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:nom_revue_output_description</description>
+			</outputs>
+		</method>
+			<method name="#numero_bulletin();" rights="" version="1.0" comment="msg:numero_bulletin_description" language_independant="true">
+			<inputs>
+				<description>msg:numero_bulletin_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:numero_bulletin_output_description</description>
+			</outputs>
+		</method>
+			<method name="#titre_bulletin();" rights="" version="1.0" comment="msg:titre_bulletin_description" language_independant="true">
+			<inputs>
+				<description>msg:titre_bulletin_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:titre_bulletin_output_description</description>
+			</outputs>
+		</method>
+		
+	</methods>
+	<methods comment="msg:classserial">
+	
+		<method name="#get_childs_in_tpl();" rights="" version="1.0" comment="msg:get_childs_in_tpl_description" language_independant="true">
+			<inputs>
+				<description>msg:get_childs_in_tpl_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:get_childs_in_tpl_output_description</description>
+			</outputs>
+		</method>
+				<method name="#get_parents_in_tpl();" rights="" version="1.0" comment="msg:get_parents_in_tpl_description" language_independant="true">
+			<inputs>
+				<description>msg:get_parents_in_tpl_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:get_parents_in_tpl_output_description</description>
+			</outputs>
+		</method>
+		<method name="#group(param0,param1,param2,#{param3};,param4);" rights="" version="1.0" comment="msg:group_description" language_independant="true">
+			<inputs>
+				<description>msg:group_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:group_output_description</description>
+			</outputs>
+		</method>
+		<method name="#linked_id(param0,param1);" rights="" version="1.0" comment="msg:linked_id_description" language_independant="true">
+			<inputs>
+				<description>msg:linked_id_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:linked_id_output_description</description>
+			</outputs>
+		</method>
+		<method name="#parents_authors_by_type_with_tpl(param0,param1,param2,param3,param4,param5,param6,param7);" rights="" version="1.0" comment="msg:parents_authors_by_type_with_tpl_description" language_independant="true">
+			<inputs>
+				<description>msg:parents_authors_by_type_with_tpl_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:parents_authors_by_type_with_tpl_output_description</description>
+			</outputs>
+		</method>
+			<method name="#parents_mention_edition();" rights="" version="1.0" comment="msg:parents_mention_edition_description" language_independant="true">
+			<inputs>
+				<description>msg:parents_mention_edition_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:parents_mention_edition_output_description</description>
+			</outputs>
+		</method>
+			<method name="#parents_page();" rights="" version="1.0" comment="msg:parents_page_description" language_independant="true">
+			<inputs>
+				<description>msg:parents_page_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:parents_page_output_description</description>
+			</outputs>
+		</method>
+		<method name="#parents_publisher_name();" rights="" version="1.0" comment="msg:parents_publisher_name_description" language_independant="true">
+			<inputs>
+				<description>msg:parents_publisher_name_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:parents_publisher_name_output_description</description>
+			</outputs>
+		</method>
+		<method name="#parents_publisher_place();" rights="" version="1.0" comment="msg:parents_publisher_place_description" language_independant="true">
+			<inputs>
+				<description>msg:parents_publisher_place_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:parents_publisher_place_output_description</description>
+			</outputs>
+		</method>
+		<method name="#parents_title();" rights="" version="1.0" comment="msg:parents_title_description" language_independant="true">
+			<inputs>
+				<description>msg:parents_title_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:parents_title_output_description</description>
+			</outputs>
+		</method>
+		<method name="#parents_year_publication();" rights="" version="1.0" comment="msg:parents_year_publication_description" language_independant="true">
+			<inputs>
+				<description>msg:parents_year_publication_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:parents_year_publication_output_description</description>
+			</outputs>
+		</method>
+		<method name="#serial_linked_id(param0);" rights="" version="1.0" comment="msg:serial_linked_id_description" language_independant="true">
+			<inputs>
+				<description>msg:serial_linked_id_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:serial_linked_id_output_description</description>
+			</outputs>
+		</method>
+		
+	</methods>
+	<methods comment="msg:classcond">
+
+			<method name="#a_empty(a,b);" rights="" version="1.0" comment="msg:a_empty_description" language_independant="true">
+			<inputs>
+				<description>msg:a_empty_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:a_empty_output_description</description>
+			</outputs>
+		</method>
+		<method name="#b_empty(a,b);" rights="" version="1.0" comment="msg:b_empty_description" language_independant="true">
+			<inputs>
+				<description>msg:b_empty_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:b_empty_output_description</description>
+			</outputs>
+		</method>
+		<method name="#not_empty(a,b);" rights="" version="1.0" comment="msg:not_empty_description" language_independant="true">
+			<inputs>
+				<description>msg:not_empty_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:not_empty_output_description</description>
+			</outputs>
+		</method>
+		<method name="#if_empty(a,b);" rights="" version="1.0" comment="msg:if_empty_description" language_independant="true">
+			<inputs>
+				<description>msg:if_empty_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:if_empty_output_description</description>
+			</outputs>
+		</method>
+		<method name="#if(condition,a,b);" rights="" version="1.0" comment="msg:if_description" language_independant="true">
+			<inputs>
+				<description>msg:if_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:if_output_description</description>
+			</outputs>
+		</method>
+		<method name="#ifequal(param0,param1,param2,param3);" rights="" version="1.0" comment="msg:ifequal_description" language_independant="true">
+			<inputs>
+				<description>msg:ifequal_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:ifequal_output_description</description>
+			</outputs>
+		</method>
+		<method name="#is_article();" rights="" version="1.0" comment="msg:is_article_description" language_independant="true">
+			<inputs>
+				<description>msg:is_article_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:is_article_output_description</description>
+			</outputs>
+		</method>
+		<method name="#is_bull();" rights="" version="1.0" comment="msg:is_bull_description" language_independant="true">
+			<inputs>
+				<description>msg:is_bull_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:is_bull_output_description</description>
+			</outputs>
+		</method>
+		<method name="#is_mono();" rights="" version="1.0" comment="msg:is_mono_description" language_independant="true">
+			<inputs>
+				<description>msg:is_mono_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:is_mono_output_description</description>
+			</outputs>
+		</method>
+		<method name="#is_serial();" rights="" version="1.0" comment="msg:is_serial_description" language_independant="true">
+			<inputs>
+				<description>msg:is_serial_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:is_serial_output_description</description>
+			</outputs>
+		</method>
+		
+		</methods>
+	<methods comment="msg:classoutils">
+	
+		<method name="#ellipse(param0,param1,param2,param3);" rights="" version="1.0" comment="msg:ellipse_description" language_independant="true">
+			<inputs>
+				<description>msg:ellipse_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:ellipse_output_description</description>
+			</outputs>
+		</method>
+		<method name="#extract_path(param0,param1);" rights="" version="1.0" comment="msg:extract_path_description" language_independant="true">
+			<inputs>
+				<description>msg:extract_path_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:extract_path_output_description</description>
+			</outputs>
+		</method>
+		<method name="#gen_tpl(tableau,texte,option);" rights="" version="1.0" comment="msg:gen_tpl_description" language_independant="true">
+			<inputs>
+				<description>msg:gen_tpl_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:gen_tpl_output_description</description>
+			</outputs>
+		</method>
+		<method name="#gen_plus(titre,contenu,option);" rights="" version="1.0" comment="msg:gen_plus_description" language_independant="true">
+			<inputs>
+				<description>msg:gen_plus_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:gen_plus_output_description</description>
+			</outputs>
+		</method>
+		<method name="#header_link(titre,option);" rights="" version="1.0" comment="msg:header_link_description" language_independant="true">
+			<inputs>
+				<description>msg:header_link_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:header_link_output_description</description>
+			</outputs>
+		</method>
+		<method name="#htmlentities(param0);" rights="" version="1.0" comment="msg:htmlentities_description" language_independant="true">
+			<inputs>
+				<description>msg:htmlentities_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:htmlentities_output_description</description>
+			</outputs>
+		</method>
+		<method name="#initiale(param0,param1,param2);" rights="" version="1.0" comment="msg:initiale_description" language_independant="true">
+			<inputs>
+				<description>msg:initiale_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:initiale_output_description</description>
+			</outputs>
+		</method>
+		<method name="#lastchr(param0);" rights="" version="1.0" comment="msg:lastchr_description" language_independant="true">
+			<inputs>
+				<description>msg:lastchr_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:lastchr_output_description</description>
+			</outputs>
+		</method>
+		<method name="#msg(param0);" rights="" version="1.0" comment="msg:msg_description" language_independant="true">
+			<inputs>
+				<description>msg:msg_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:msg_output_description</description>
+			</outputs>
+		</method>
+		<method name="#replace(texte,info);" rights="" version="1.0" comment="msg:replace_description" language_independant="true">
+			<inputs>
+				<description>msg:replace_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:replace_output_description</description>
+			</outputs>
+		</method>
+		<method name="#str_replace(param0,param1,param2);" rights="" version="1.0" comment="msg:str_replace_description" language_independant="true">
+			<inputs>
+				<description>msg:str_replace_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:str_replace_output_description</description>
+			</outputs>
+		</method>
+		<method name="#strtoupper(param0);" rights="" version="1.0" comment="msg:strtoupper_description" language_independant="true">
+			<inputs>
+				<description>msg:strtoupper_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:strtoupper_output_description</description>
+			</outputs>
+		</method>
+		<method name="#strtolower(param0);" rights="" version="1.0" comment="msg:strtolower_description" language_independant="true">
+			<inputs>
+				<description>msg:strtolowerr_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:strtolower_output_description</description>
+			</outputs>
+		</method>
+		<method name="#substr(param0,param1,param2);" rights="" version="1.0" comment="msg:substr_description" language_independant="true">
+			<inputs>
+				<description>msg:substr_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:substr_output_description</description>
+			</outputs>
+		</method>
+		<method name="#trim(param0);" rights="" version="1.0" comment="msg:trim_description" language_independant="true">
+			<inputs>
+				<description>msg:trim_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:trim_output_description</description>
+			</outputs>
+		</method>
+		<method name="#ucfirst(param0);" rights="" version="1.0" comment="msg:ucfirst_description" language_independant="true">
+			<inputs>
+				<description>msg:ucfirst_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:ucfirst_output_description</description>
+			</outputs>
+		</method>
+		<method name="#set_variable(param0);" rights="" version="1.0" comment="msg:set_variable_description" language_independant="true">
+			<inputs>
+				<description>msg:set_variable_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:set_variable_output_description</description>
+			</outputs>
+		</method>
+		<method name="#get_variable(param0);" rights="" version="1.0" comment="msg:get_variable_description" language_independant="true">
+			<inputs>
+				<description>msg:get_variable_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:get_variable_output_description</description>
+			</outputs>
+		</method>
+		<method name="#strip_tags(param0);" rights="" version="1.0" comment="msg:strip_tags_description" language_independant="true">
+			<inputs>
+				<description>msg:strip_tags_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:strip_tags_output_description</description>
+			</outputs>
+		</method>
+	</methods>
+	<methods comment="msg:classdsi">
+		<method name="#bannette_id();" rights="" version="1.0" comment="msg:bannette_id_description" language_independant="true">
+			<inputs>
+				<description>msg:bannette_id_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:bannette_id_output_description</description>
+			</outputs>
+		</method>
+	</methods>
+		
+</manifest>

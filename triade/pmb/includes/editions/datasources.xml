@@ -1,0 +1,903 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- sources de données pour les éditions
+$Id: datasources.xml,v 1.7 2019-03-01 07:55:03 ngantier Exp $ -->
+
+<!-- DTD Rapide pour la formation du fichier
+datasources -> balise racine
+datasource (dans datasources)  -> Balise pour définir une source
+	- id -> Identifiant de la source (doit être unique)
+	- name -> Libellé de la source ( = 'msg:code_fichier_message' ou 'directement le libellé')
+table (dans datasource) -> Table utilisé comme élément unitaire de la source (table principale)
+fields (dans datasource) -> Liste des champs disponibles dans la source
+field (dans fields) -> Description d'un champ de la source
+	- id ->Identifiant du champ de la source  (doit être unique)
+	- field -> contenue de la partie "select" de la réquete qui récupère les informations. Peut-être un champ, une sous requete, une concaténation, un comptage, ...
+	- label ->  Libellé du champ ( = 'msg:code_fichier_message' ou 'directement le libellé')
+	- type -> Type de champ (date,integer,text)
+	- input -> Type d'entrée (calc => "donnée calculée (pour date)", list => "donnée obtenue à partir d'une liste", manual => "à saisir")
+	- repeat -> Chaîne utilisée pour séparer les valeurs dans le résultat (est utilisé pour découper les valeurs du résultat et faire un raprochement entre le code obtenue et un libellé)
+	- field_alias -> Alias utilisé pour le champ (dans le cas ou un alias est utilisé dans 'field'
+before_joins (dans field) -> jointure intermédiaire utilisée pour récupérer les informations. A utiliser si cette jointure peut-être présente pour récupérer les informations d'un autre "field"
+join (dans field) -> jointure utilisé pour récupérer les informations utilisé dans 'field'
+	- field_join -> Champ utilisé pour filtrer les résultat si ce n'est pas field
+	- field_group -> Champ utilisé pour grouper toutes les lignes du résultat (à ne plus utiliser sauf cas particulier depuis l'onglet "Groupe" de l'interface)
+	- authorized_null -> Si on aplique un fitre alors en plus de la valeur définie la valeur null est possible
+values (dans field) -> La façon d'obtenir les résultats d'une liste
+	- type -> La technique d'obtention des résultats (xml : "a partir d'un fichier xml de PMB", enum : "énunération de valeur (voir value)", query : "requete")
+query (dans values) -> La requete pour obtenir les valeurs de la liste
+value (dans values) -> Les valeurs de la liste ou le nom du fichier xml de PMB
+	- code -> Code utilisé dans la liste pour représenter la valeur
+-->
+
+<datasources>
+	<datasource id='loans' name='msg:editions_datasource_loans'>
+		<table>pret_archive</table>
+		<fields>
+			<field id='pret_archive_arc_id' field='pret_archive.arc_id' label='msg:editions_datasource_arc_id' type='text' input='manual'/>
+			<field id='pret_archive_arc_debut' field='pret_archive.arc_debut' label='msg:empr_late_date_pret' type='date' input='calc'/>	
+			<field id='pret_archive_arc_fin' field='pret_archive.arc_fin' label='msg:empr_late_date_retour' type='date' input='calc'/>		
+			<field id='pret_archive_arc_empr_cp' field='pret_archive.arc_empr_cp' label='msg:71' type='text' input='manual'/>
+			<field id='pret_archive_arc_empr_ville' field='pret_archive.arc_empr_ville' label='msg:72' type='text' input='manual'/>
+			<field id='pret_archive_arc_empr_prof' field='pret_archive.arc_empr_prof' label='msg:74' type='text' input='manual'/>
+			<field id='pret_archive_arc_empr_year' field='pret_archive.arc_empr_year' label='msg:75' type='text' input='manual'/>
+			<field id='empr_categ_libelle' field='empr_categ.libelle' label='msg:editions_datasource_empr_categ' type='integer' input='list'>
+				<join field_join='pret_archive.arc_empr_categ'>left join empr_categ on pret_archive.arc_empr_categ = empr_categ.id_categ_empr</join>
+				<values type='query'>
+					<query>select id_categ_empr as id, libelle as list_value from empr_categ order by 2 asc</query>	
+				</values>
+			</field>
+			<field id='empr_codestat_libelle' field='empr_codestat.libelle' label='msg:editions_datasource_empr_codestat' type='integer' input='list'>
+				<join field_join='pret_archive.arc_empr_codestat'>left join empr_codestat on pret_archive.arc_empr_codestat = empr_codestat.idcode</join>
+				<values type='query'>
+					<query>select idcode as id, libelle as list_value from empr_codestat order by 2 asc</query>	
+				</values>
+			</field>
+			<field id='pret_archive_arc_empr_sexe' field='pret_archive.arc_empr_sexe' label='msg:125' type='integer' input='list'>
+				<values type='enum'>
+					<value code='0'>msg:128</value>
+					<value code='1'>msg:126</value>
+					<value code='2'>msg:127</value>
+				</values>
+			</field>
+			<field id='empr_statut_statut_libelle' field='empr_statut.statut_libelle' label='msg:editions_datasource_empr_statut' type='integer' input='list'>
+				<join field_join='pret_archive.arc_empr_statut'>left join empr_statut on pret_archive.arc_empr_statut = empr_statut.idstatut</join>
+				<values type='query'>
+					<query>select idstatut as id, statut_libelle as list_value from empr_statut order by 2 asc</query>	
+				</values>
+			</field>
+				<field id='empr_location_location_libelle' field='empr_location.location_libelle' label='msg:editions_datasource_empr_location' type='integer' input='list'>
+				<join field_join='pret_archive.arc_empr_location'>left join docs_location as empr_location on pret_archive.arc_empr_location = empr_location.idlocation</join>
+				<values type='query'>
+					<query>select idlocation as id, location_libelle as list_value from docs_location order by 2 asc</query>	
+				</values>
+			</field>			
+			<field id='docs_type_tdoc_libelle' field='docs_type.tdoc_libelle' label='msg:editions_datasource_expl_type' type='integer' input='list'>
+				<join field_join='pret_archive.arc_expl_typdoc'>left join docs_type on pret_archive.arc_expl_typdoc = docs_type.idtyp_doc</join>
+				<values type='query'>
+					<query>select idtyp_doc as id, tdoc_libelle as list_value from docs_type order by 2 asc</query>	
+				</values>
+			</field>			
+			<field id='pret_archive_arc_expl_cote' field='pret_archive.arc_expl_cote' label='msg:296' type='text' input='manual'/>
+			<field id='docs_statut_statut_libelle' field='docs_statut.statut_libelle' label='msg:editions_datasource_expl_statut' type='integer' input='list'>
+				<join field_join='pret_archive.arc_expl_statut'>left join docs_statut on pret_archive.arc_expl_statut = docs_statut.idstatut</join>
+				<values type='query'>
+					<query>select idstatut as id, statut_libelle as list_value from docs_statut order by 2 asc</query>	
+				</values>
+			</field>
+			<field id='expl_location_location_libelle' field='expl_location.location_libelle' label='msg:editions_datasource_expl_location' type='integer' input='list'>
+				<join field_join='pret_archive.arc_expl_location'>left join docs_location as expl_location on pret_archive.arc_expl_location = expl_location.idlocation</join>
+				<values type='query'>
+					<query>select idlocation as id, location_libelle as list_value from docs_location order by 2 asc</query>	
+				</values>
+			</field>		
+			<field id='docs_codestat_codestat_libelle' field='docs_codestat.codestat_libelle' label='msg:editions_datasource_expl_codestat' type='integer' input='list'>
+				<join field_join='pret_archive.arc_expl_codestat'>left join docs_codestat on pret_archive.arc_expl_codestat = docs_codestat.idcode</join>
+				<values type='query'>
+					<query>select idcode as id, codestat_libelle as list_value from docs_codestat order by 2 asc</query>	
+				</values>
+			</field>
+			<field id='lenders_lender_libelle' field='lenders.lender_libelle' label='msg:editions_datasource_expl_lender' type='integer' input='list'>
+				<join field_join='pret_archive.arc_expl_owner'>left join lenders on pret_archive.arc_expl_owner = lenders.idlender</join>
+				<values type='query'>
+					<query>select idlender as id, lender_libelle as list_value from lenders order by 2 asc</query>	
+				</values>
+			</field>
+
+			<field id='docs_section_section_libelle' field='docs_section.section_libelle' label='msg:295' type='integer' input='list'>
+				<join field_join='pret_archive.arc_expl_section'>left join docs_section on pret_archive.arc_expl_section = docs_section.idsection</join>
+				<values type='query'>
+					<query>select idsection as id, section_libelle as list_value from docs_section order by 2 asc</query>	
+				</values>
+			</field>
+			<field id='pret_archive_arc_expl_id' field='pret_archive.arc_expl_id' label='msg:editions_datasource_expl_id' type='integer' input='calc'/>
+		</fields>
+	</datasource>
+	<datasource id='items' name='msg:editions_datasource_items'>
+		<table>exemplaires</table>
+		<fields>
+			<field id='exemplaires_expl_id' field='exemplaires.expl_id' label='msg:editions_datasource_expl_id' type='integer' input='manual'/>
+			<field id='exemplaires_expl_cb' field='exemplaires.expl_cb' label='msg:extexpl_codebar' type='text' input='manual'/>
+			<!--<field id='exemplaires_expl_notice' field='exemplaires.expl_notice' label='msg:editions_datasource_expl_notice' type='text' input='manual'/>
+			<field id='exemplaires_expl_bulletin' field='exemplaires.expl_bulletin' label='msg:editions_datasource_expl_bulletin' type='text' input='manual'/>-->
+			<field id='docs_type_tdoc_libelle' field='docs_type.tdoc_libelle' label='msg:294' type='integer' input='list'>
+				<join field_join='docs_type.idtyp_doc'>left join docs_type on exemplaires.expl_typdoc = docs_type.idtyp_doc</join>
+				<values type='query'>
+					<query>select idtyp_doc as id, tdoc_libelle as list_value from docs_type order by 2 asc</query>	
+				</values>
+			</field>			
+			<field id='exemplaires_expl_cote' field='exemplaires.expl_cote' label='msg:296' type='text' input='manual'/>
+			<field id='docs_section_section_libelle' field='docs_section.section_libelle' label='msg:295' type='integer' input='list'>
+				<join field_join='docs_section.idsection'>left join docs_section on exemplaires.expl_section = docs_section.idsection</join>
+				<values type='query'>
+					<query>select idsection as id, section_libelle as list_value from docs_section order by 2 asc</query>	
+				</values>
+			</field>
+			<field id='docs_statut_statut_libelle' field='docs_statut.statut_libelle' label='msg:297' type='integer' input='list'>
+				<join field_join='docs_statut.idstatut'>left join docs_statut on exemplaires.expl_statut = docs_statut.idstatut</join>
+				<values type='query'>
+					<query>select idstatut as id, statut_libelle as list_value from docs_statut order by 2 asc</query>	
+				</values>
+			</field>
+			<field id='expl_location_location_libelle' field='expl_location.location_libelle' label='msg:298' type='integer' input='list'>
+				<join field_join='expl_location.idlocation'>left join docs_location as expl_location on exemplaires.expl_location = expl_location.idlocation</join>
+				<values type='query'>
+					<query>select idlocation as id, location_libelle as list_value from docs_location order by 2 asc</query>	
+				</values>
+			</field>		
+			<field id='docs_codestat_codestat_libelle' field='docs_codestat.codestat_libelle' label='msg:299' type='integer' input='list'>
+				<join field_join='docs_codestat.idcode'>left join docs_codestat on exemplaires.expl_codestat = docs_codestat.idcode</join>
+				<values type='query'>
+					<query>select idcode as id, codestat_libelle as list_value from docs_codestat order by 2 asc</query>	
+				</values>
+			</field>
+			<field id='exemplaires_expl_date_depot' field='exemplaires.expl_date_depot' label='msg:filing_date' type='date' input='calc'/>
+			<field id='exemplaires_expl_date_retour' field='exemplaires.expl_date_retour' label='msg:return_date' type='date' input='calc'/>
+			<field id='exemplaires_expl_note' field='exemplaires.expl_note' label='msg:377' type='text' input='manual'/>
+			<field id='exemplaires_expl_prix' field='exemplaires.expl_prix' label='msg:expl_price' type='text' input='manual'/>
+			<field id='lenders_lender_libelle' field='lenders.lender_libelle' label='msg:651' type='integer' input='list'>
+				<join field_join='lenders.idlender'>left join lenders on exemplaires.expl_owner = lenders.idlender</join>
+				<values type='query'>
+					<query>select idlender as id, lender_libelle as list_value from lenders order by 2 asc</query>	
+				</values>
+			</field>
+			<field id='exemplaires_expl_lastempr' field='exemplaires.expl_lastempr' label='msg:editions_datasource_expl_lastempr' type='text' input='manual'/>
+			<field id='exemplaires_last_loan_date' field='exemplaires.last_loan_date' label='msg:date_dern_emprunt' type='date' input='calc'/>
+			<field id='exemplaires_create_date' field='exemplaires.create_date' label='msg:exp_cre_date' type='date' input='calc'/>
+			<field id='exemplaires_update_date' field='exemplaires.update_date' label='msg:exp_upd_date' type='date' input='calc'/>
+			<field id='exemplaires_expl_comment' field='exemplaires.expl_comment' label='msg:expl_zone_comment' type='text' input='manual'/>
+			<!--<field id='exemplaires_total_loans' field='COUNT(DISTINCT pret_archive.arc_id) AS expl_total_loans' field_alias='expl_total_loans' label='msg:expl_prets_nb' type='integer' input='manual'>
+				<join field_group='exemplaires.expl_id'>left join pret_archive on exemplaires.expl_id = pret_archive.arc_expl_id</join>
+			</field>
+			<field id='exemplaires_total_resa' field='COUNT(DISTINCT resa_archive.resarc_id) AS expl_total_resa' field_alias='expl_total_resa' label='msg:empr_nb_resas_encours_query' type='integer' input='manual'>
+				<join field_group='exemplaires.expl_id'>left join resa_archive on exemplaires.expl_cb = resa_archive.resarc_cb</join>
+			</field>-->
+			<field id='exemplaires_total_loans' field='(SELECT COUNT(DISTINCT pret_archive.arc_id) FROM exemplaires AS expl_group left join pret_archive on expl_group.expl_id = pret_archive.arc_expl_id WHERE exemplaires.expl_id=expl_group.expl_id) AS expl_total_loans' field_alias='expl_total_loans' label='msg:expl_prets_nb' type='integer' input='manual'/>
+			<field id='exemplaires_total_resa' field='(SELECT COUNT(DISTINCT resa_archive.resarc_id) FROM exemplaires AS expl_group left join resa_archive on expl_group.expl_cb = resa_archive.resarc_cb WHERE exemplaires.expl_id=expl_group.expl_id) AS expl_total_resa' field_alias='expl_total_resa' label='msg:empr_nb_resas_encours_query' type='integer' input='manual' />
+			<field id='exemplaires_type' field='IF((exemplaires.expl_notice != 0),1,0) AS is_mono' field_alias='is_mono' label='msg:editions_datasource_type_expl' type='integer' input='list'>
+				<values type='enum'>
+					<value code='1'>msg:editions_datasource_is_mono</value>
+					<value code='0'>msg:editions_datasource_is_bull</value>
+				</values>
+			</field>
+			<field id='exemplaires_date_pret' field='IF((pret.pret_date IS NOT NULL),pret.pret_date,"") AS expl_date_pret' field_alias='expl_date_pret' label='msg:empr_late_date_pret' type='date' input='calc'>
+				<join>left join pret ON pret.pret_idexpl=exemplaires.expl_id</join>
+			</field>
+			<field id='exemplaires_pret_retour' field='IF((pret.pret_retour IS NOT NULL),pret.pret_retour,"") AS expl_pret_retour' field_alias='expl_pret_retour' label='msg:empr_late_date_retour' type='date' input='calc'>
+				<join>left join pret ON pret.pret_idexpl=exemplaires.expl_id</join>
+			</field>
+			<field id='exemplaires_retour_initial' field='IF((pret.retour_initial IS NOT NULL),pret.retour_initial,"") AS expl_retour_initial' field_alias='expl_retour_initial' label='msg:pret_date_retour_initial' type='date' input='calc'>
+				<join>left join pret ON pret.pret_idexpl=exemplaires.expl_id</join>
+			</field>
+			<field id='exemplaires_emprunteur' field='IF((empr.id_empr IS NOT NULL),CONCAT(empr.empr_nom,IF((empr.empr_prenom) != "",CONCAT(", ",empr.empr_prenom),""),CONCAT(" (",empr.empr_cb,")")),"") AS expl_lecteur' field_alias='expl_lecteur' label='msg:search_emprunteur' type='integer' input='list'>
+				<before_joins>left join pret ON pret.pret_idexpl=exemplaires.expl_id</before_joins>
+				<join field_join='empr.id_empr'>left join empr ON pret.pret_idempr=empr.id_empr</join>
+				<values type='query'>
+					<query>select empr.id_empr as id, CONCAT(empr.empr_nom,IF((empr.empr_prenom) != "",CONCAT(", ",empr.empr_prenom),""),CONCAT(" (",empr.empr_cb,")")) as list_value from empr order by 2 asc</query>	
+				</values>
+			</field>
+			<field id='exemplaires_notice_tit' field='IF((exemplaires.expl_notice != 0),notices.tit1,bulletins.bulletin_titre) AS titre' field_alias='titre' label='msg:233' type='text' input='manual'>
+				<before_joins>left join notices on exemplaires.expl_notice = notices.notice_id AND exemplaires.expl_bulletin=0</before_joins>
+				<join>LEFT JOIN bulletins ON exemplaires.expl_notice = 0 AND bulletins.bulletin_id=exemplaires.expl_bulletin</join>
+			</field>
+			<field id='exemplaires_bull_num' field='bulletins.bulletin_numero' label='msg:4025' type='text' input='manual'>
+				<join>LEFT JOIN bulletins ON exemplaires.expl_notice = 0 AND bulletins.bulletin_id=exemplaires.expl_bulletin</join>
+			</field>
+			<field id='exemplaires_bull_libdate' field='bulletins.mention_date' label='msg:bulletin_mention_periode' type='text' input='manual'>
+				<join>LEFT JOIN bulletins ON exemplaires.expl_notice = 0 AND bulletins.bulletin_id=exemplaires.expl_bulletin</join>
+			</field>
+			<field id='exemplaires_bull_datedate' field='bulletins.date_date' label='msg:4026' type='date' input='calc'>
+				<join>LEFT JOIN bulletins ON exemplaires.expl_notice = 0 AND bulletins.bulletin_id=exemplaires.expl_bulletin</join>
+			</field>
+			<field id='exemplaires_bull_titre' field='bulletins.bulletin_titre' label='msg:bulletin_mention_titre' type='text' input='manual'>
+				<join>LEFT JOIN bulletins ON exemplaires.expl_notice = 0 AND bulletins.bulletin_id=exemplaires.expl_bulletin</join>
+			</field>
+			<field id='exemplaires_notice_tit1' field='notices.tit1' label='msg:237' type='text' input='manual'>
+				<join>left join notices on exemplaires.expl_notice = notices.notice_id AND exemplaires.expl_bulletin=0</join>
+			</field>
+			<field id='exemplaires_notice_tit2' field='notices.tit2' label='msg:238' type='text' input='manual'>
+				<join>left join notices on exemplaires.expl_notice = notices.notice_id AND exemplaires.expl_bulletin=0</join>
+			</field>
+			<field id='exemplaires_notice_tit3' field='notices.tit3' label='msg:239' type='text' input='manual'>
+				<join>left join notices on exemplaires.expl_notice = notices.notice_id AND exemplaires.expl_bulletin=0</join>
+			</field>
+			<field id='exemplaires_notice_tit4' field='notices.tit4' label='msg:240' type='text' input='manual'>
+				<join>left join notices on exemplaires.expl_notice = notices.notice_id AND exemplaires.expl_bulletin=0</join>
+			</field>
+			<field id='exemplaires_notice_tnvol' field='notices.tnvol' label='msg:242' type='text' input='manual'>
+				<join>left join notices on exemplaires.expl_notice = notices.notice_id AND exemplaires.expl_bulletin=0</join>
+			</field>
+			<field id='exemplaires_notice_nocoll' field='notices.nocoll' label='msg:253' type='text' input='manual'>
+				<join>left join notices on exemplaires.expl_notice = notices.notice_id AND exemplaires.expl_bulletin=0</join>
+			</field>
+			<field id='exemplaires_notice_year' field='notices.year' label='msg:252' type='text' input='manual'>
+				<join>left join notices on exemplaires.expl_notice = notices.notice_id AND exemplaires.expl_bulletin=0</join>
+			</field>
+			<field id='exemplaires_notice_code' field='notices.code' label='msg:255' type='text' input='manual'>
+				<join>left join notices on exemplaires.expl_notice = notices.notice_id AND exemplaires.expl_bulletin=0</join>
+			</field>
+			<field id='exemplaires_notice_titrserie' field='series.serie_name' label='msg:241' type='integer' input='list'>
+				<before_joins>left join notices on exemplaires.expl_notice = notices.notice_id AND exemplaires.expl_bulletin=0</before_joins>
+				<join>LEFT JOIN series ON notices.tparent_id=series.serie_id</join>
+				<values type='query'>
+					<query>select serie_id as id, serie_name as list_value from series order by 2 asc</query>	
+				</values>
+			</field>
+			<field id='exemplaires_notices_editeur' field='(SELECT GROUP_CONCAT(DISTINCT (IF((ed1.ed_ville != ""),CONCAT(ed1.ed_ville," : ",ed1.ed_name),IF(ed1.ed_name IS NULL,"",ed1.ed_name))) SEPARATOR " ; ") FROM exemplaires AS expl_sel LEFT JOIN notices AS noti_sel ON noti_sel.notice_id=expl_sel.expl_notice AND expl_sel.expl_bulletin=0  LEFT JOIN publishers AS ed1 ON noti_sel.ed1_id=ed1.ed_id OR noti_sel.ed2_id=ed1.ed_id WHERE expl_sel.expl_id = exemplaires.expl_id) AS infoEd'  field_alias='infoEd' label='msg:serial_Editeur_group' type='text' input='manual'/>
+			<field id='exemplaires_notice_editeur1' field='IF((ed1.ed_ville != ""),CONCAT(ed1.ed_ville," : ",ed1.ed_name),ed1.ed_name) AS infoEd1'  field_alias='infoEd1' label='msg:serial_Editeur' type='integer' input='list'>
+				<before_joins>left join notices on exemplaires.expl_notice = notices.notice_id AND exemplaires.expl_bulletin=0</before_joins>
+				<join field_join='ed1.ed_id'>LEFT JOIN publishers AS ed1 ON notices.ed1_id=ed1.ed_id OR notices.ed2_id=ed1.ed_id</join>
+				<values type='query'>
+					<query>select ed_id as id, IF((ed_ville != ''),CONCAT(ed_ville,' : ',ed_name),ed_name) as list_value from publishers order by 2 asc</query>	
+				</values>
+			</field>
+			<!--<field id='exemplaires_notice_editeur2' field='IF((ed2.ed_ville != ""),CONCAT(ed2.ed_ville," : ",ed2.ed_name),ed2.ed_name) AS infoEd2'  field_alias='infoEd2' label='msg:254' type='integer' input='list'>
+				<join field_join='ed2.ed_id'>left join notices AS notice_editeur2 ON exemplaires.expl_notice = notice_editeur2.notice_id AND exemplaires.expl_bulletin=0 LEFT JOIN publishers AS ed2 ON notice_editeur2.ed2_id=ed2.ed_id</join>
+				<values type='query'>
+					<query>select ed_id as id, IF((ed_ville != ''),CONCAT(ed_ville,' : ',ed_name),ed_name) as list_value from publishers order by 2 asc</query>	
+				</values>
+			</field>-->
+			<field id='exemplaires_notice_auteurprinc' field='CONCAT(aut1.author_name, IF((aut1.author_rejete != ""),CONCAT(", ",aut1.author_rejete),""), IF((aut1.author_date != ""),CONCAT(" (",aut1.author_date,")"),"")) AS aut_princ'  field_alias='aut_princ' label='msg:244' type='integer' input='list'>
+				<join field_join='aut1.author_id'>left join responsability AS resp1 ON exemplaires.expl_notice = resp1.responsability_notice AND exemplaires.expl_bulletin=0 AND resp1.responsability_type=0 LEFT JOIN authors AS aut1 ON resp1.responsability_author=aut1.author_id</join>
+				<values type='query'>
+					<query>select author_id as id, CONCAT(author_name, IF((author_rejete != ""),CONCAT(", ",author_rejete),""), IF((author_date != ""),CONCAT(" (",author_date,")"),"")) as list_value from authors order by 2 asc</query>	
+				</values>
+			</field>
+			<!-- Si on filtre alors, seul les auteurs filtrés seront affichés 
+			<field id='exemplaires_notice_auteurautre' field='GROUP_CONCAT(DISTINCT CONCAT(aut2.author_name, IF((aut2.author_rejete != ""),CONCAT(", ",aut2.author_rejete),""), IF((aut2.author_date != ""),CONCAT(" (",aut2.author_date,")"),"")) ORDER BY resp2.responsability_ordre ASC SEPARATOR "; ") AS aut_autres'  field_alias='aut_autres' label='msg:246' type='integer' input='list'>
+				<join field_join='aut2.author_id' field_group='exemplaires.expl_id'>left join responsability AS resp2 ON exemplaires.expl_notice = resp2.responsability_notice AND exemplaires.expl_bulletin=0 AND resp2.responsability_type=1 LEFT JOIN authors AS aut2 ON resp2.responsability_author=aut2.author_id</join>
+				<values type='query'>
+					<query>select author_id as id, CONCAT(author_name, IF((author_rejete != ""),CONCAT(", ",author_rejete),""), IF((author_date != ""),CONCAT(" (",author_date,")"),"")) as list_value from authors order by 2 asc</query>	
+				</values>
+			</field> -->
+			<field id='exemplaires_notices_auteurautre_group' field='(SELECT GROUP_CONCAT(DISTINCT CONCAT(IF(aut2.author_name IS NULL,"",aut2.author_name), IF((aut2.author_rejete != ""),CONCAT(", ",aut2.author_rejete),""), IF((aut2.author_date != ""),CONCAT(" (",aut2.author_date,")"),"")) ORDER BY resp2.responsability_ordre ASC SEPARATOR "; ") FROM exemplaires AS expl_sel left join responsability AS resp2 ON expl_sel.expl_notice =  resp2.responsability_notice  AND expl_sel.expl_bulletin=0 AND resp2.responsability_type=1 LEFT JOIN authors AS aut2 ON resp2.responsability_author=aut2.author_id WHERE expl_sel.expl_id = exemplaires.expl_id) AS aut_autres_group' field_alias='aut_autres_group' label='msg:246_group' type='text' input='manual'/>
+			<field id='exemplaires_notices_auteurautre' field='CONCAT(aut2.author_name, IF((aut2.author_rejete != ""),CONCAT(", ",aut2.author_rejete),""), IF((aut2.author_date != ""),CONCAT(" (",aut2.author_date,")"),"")) AS aut_autres' field_alias='aut_autres' label='msg:246' type='integer' input='list'>
+				<join field_join='aut2.author_id'>left join responsability AS resp2 ON exemplaires.expl_notice = resp2.responsability_notice AND resp2.responsability_type=1 AND exemplaires.expl_bulletin=0 LEFT JOIN authors AS aut2 ON resp2.responsability_author=aut2.author_id</join>
+				<values type='query'>
+					<query>select author_id as id, CONCAT(author_name, IF((author_rejete != ""),CONCAT(", ",author_rejete),""), IF((author_date != ""),CONCAT(" (",author_date,")"),"")) as list_value from authors order by 2 asc</query>	
+				</values>
+			</field>
+			<!-- Si on filtre alors, seul les auteurs filtrés seront affichés
+			<field id='exemplaires_notice_auteursec' field='GROUP_CONCAT(DISTINCT CONCAT(aut3.author_name, IF((aut3.author_rejete != ""),CONCAT(", ",aut3.author_rejete),""), IF((aut3.author_date != ""),CONCAT(" (",aut3.author_date,")"),"")) ORDER BY resp3.responsability_ordre ASC SEPARATOR "; ") AS aut_sec'  field_alias='aut_sec' label='msg:247' type='integer' input='list'>
+				<join field_join='aut3.author_id' field_group='exemplaires.expl_id'>left join responsability AS resp3 ON exemplaires.expl_notice = resp3.responsability_notice AND exemplaires.expl_bulletin=0 AND resp3.responsability_type=2 LEFT JOIN authors AS aut3 ON resp3.responsability_author=aut3.author_id</join>
+				<values type='query'>
+					<query>select author_id as id, CONCAT(author_name, IF((author_rejete != ""),CONCAT(", ",author_rejete),""), IF((author_date != ""),CONCAT(" (",author_date,")"),"")) as list_value from authors order by 2 asc</query>	
+				</values>
+			</field>  -->
+			
+			<field id='exemplaires_notices_auteursec_group' field='(SELECT GROUP_CONCAT(DISTINCT CONCAT(IF(aut3.author_name IS NULL,"",aut3.author_name), IF((aut3.author_rejete != ""),CONCAT(", ",aut3.author_rejete),""), IF((aut3.author_date != ""),CONCAT(" (",aut3.author_date,")"),"")) ORDER BY resp3.responsability_ordre ASC SEPARATOR "; ") FROM exemplaires AS expl_sel left join responsability AS resp3 ON expl_sel.expl_notice =  resp3.responsability_notice  AND expl_sel.expl_bulletin=0 AND resp3.responsability_type=2 LEFT JOIN authors AS aut3 ON resp3.responsability_author=aut3.author_id WHERE expl_sel.expl_id = exemplaires.expl_id) AS aut_sec_group' field_alias='aut_sec_group' label='msg:247_group' type='text' input='manual'/>
+			<field id='exemplaires_notices_auteursec' field='CONCAT(aut3.author_name, IF((aut3.author_rejete != ""),CONCAT(", ",aut3.author_rejete),""), IF((aut3.author_date != ""),CONCAT(" (",aut3.author_date,")"),"")) AS aut_sec' field_alias='aut_sec' label='msg:247' type='integer' input='list'>
+				<join field_join='aut3.author_id'>left join responsability AS resp3 ON exemplaires.expl_notice = resp3.responsability_notice AND resp3.responsability_type=2 AND exemplaires.expl_bulletin=0 LEFT JOIN authors AS aut3 ON resp3.responsability_author=aut3.author_id</join>
+				<values type='query'>
+					<query>select author_id as id, CONCAT(author_name, IF((author_rejete != ""),CONCAT(", ",author_rejete),""), IF((author_date != ""),CONCAT(" (",author_date,")"),"")) as list_value from authors order by 2 asc</query>	
+				</values>
+			</field>
+			
+			<field id='exemplaires_notice_coll' field='CONCAT(collections.collection_name, IF((collections.collection_issn != ""),CONCAT(" (",collections.collection_issn,")"),"")) AS infocoll' field_alias='infocoll' label='msg:250' type='integer' input='list'>
+				<before_joins>left join notices on exemplaires.expl_notice = notices.notice_id AND exemplaires.expl_bulletin=0</before_joins>
+				<join field_join='collections.collection_id' >LEFT JOIN collections ON notices.coll_id=collections.collection_id</join>
+				<values type='query'>
+					<query>select collection_id as id, CONCAT(collections.collection_name, IF((collections.collection_issn != ""),CONCAT(" (",collections.collection_issn,")"),"")) as list_value from collections order by 2 asc</query>	
+				</values>
+			</field>
+			<field id='exemplaires_notice_subcoll' field='CONCAT(subcoll.sub_coll_name, IF((subcoll.sub_coll_issn != ""),CONCAT(" (",subcoll.sub_coll_issn,")"),"")) AS infosubcoll' field_alias='infosubcoll' label='msg:251' type='integer' input='list'>
+				<before_joins>left join notices on exemplaires.expl_notice = notices.notice_id AND exemplaires.expl_bulletin=0</before_joins>
+				<join field_join='subcoll.sub_coll_id' >LEFT JOIN sub_collections AS subcoll ON notices.subcoll_id=subcoll.sub_coll_id</join>
+				<values type='query'>
+					<query>select sub_collections.sub_coll_id as id, CONCAT(sub_collections.sub_coll_name, IF((sub_collections.sub_coll_issn != ""),CONCAT(" (",sub_collections.sub_coll_issn,")"),"")) as list_value from sub_collections order by 2 asc</query>	
+				</values>
+			</field>
+			<field id='exemplaires_audit_type_modif' field='audit.type_modif' label='msg:editions_datasource_expl_audit_type' type='integer' input='list'>
+				<join>left join audit on exemplaires.expl_id = audit.object_id AND audit.type_obj='2'</join>
+				<values type='enum'>
+					<value code='1'>msg:audit_type1</value>
+					<value code='2'>msg:audit_type2</value>
+					<value code='3'>msg:audit_type3</value>
+				</values>
+			</field>
+			<field id='exemplaires_audit_user' field='CONCAT(audit.user_name,IF((users.nom IS NULL),"",CONCAT(" (",IF((users.nom IS NULL),"",users.nom),IF((users.prenom IS NULL OR users.prenom = ""),"",CONCAT(", ",users.prenom)),")"))) AS intervenant_info' field_alias='intervenant_info' label='msg:editions_datasource_audit_intervenant' type='text' input='list'>
+				<before_joins>left join audit on exemplaires.expl_id = audit.object_id AND audit.type_obj='2'</before_joins>
+				<join field_join='audit.user_name'>left join users on audit.user_id = users.userid</join>
+				<values type='query'>
+					<query>select audit.user_name as id, CONCAT(audit.user_name,IF((users.nom IS NULL),"",CONCAT(" (",IF((users.nom IS NULL),"",users.nom),IF((users.prenom IS NULL OR users.prenom = ""),"",CONCAT(", ",users.prenom)),")"))) as list_value from audit LEFT JOIN users ON audit.user_id = users.userid WHERE audit.type_obj='2' GROUP BY audit.user_name order by 2 asc</query>	
+				</values>
+			</field>
+			<field id='exemplaires_audit_date' field='audit.quand' label='msg:editions_datasource_audit_date' type='date' input='calc'>
+				<join>left join audit on exemplaires.expl_id = audit.object_id AND audit.type_obj='2'</join>
+			</field>
+			<field id='exemplaires_caddie' field='IF((caddie.name IS NULL),"",caddie.name) AS caddie_name' field_alias='caddie_name' label='msg:caddie_de_EXPL' type='integer' input='list'>
+				<before_joins>left join caddie_content on exemplaires.expl_id = caddie_content.object_id</before_joins>
+				<join field_join='caddie.idcaddie'>left join caddie on caddie_content.caddie_id = caddie.idcaddie AND caddie.type='EXPL'</join>
+				<values type='query'>
+					<query>select caddie.idcaddie as id, caddie.name as list_value from caddie WHERE caddie.type='EXPL' order by 2 asc</query>	
+				</values>
+			</field>
+			<field id='exemplaires_caddie_flag' field='IF((caddie.name IS NULL),0,IF((caddie_content.flag IS NULL),1,2)) AS caddie_flag' field_alias='caddie_flag' label='msg:editions_datasource_caddie_pointe' type='integer' input='list'>
+				<before_joins>left join caddie_content on exemplaires.expl_id = caddie_content.object_id</before_joins>
+				<join>left join caddie on caddie_content.caddie_id = caddie.idcaddie AND caddie.type='EXPL'</join>
+				<values type='enum'>
+					<value code='0'>msg:editions_datasource_caddie_absent</value>
+					<value code='1'>msg:39</value>
+					<value code='2'>msg:40</value>	
+				</values>
+			</field>
+			<field id='exemplaires_transfert_id' field='transferts_demande.id_transfert_demande' label='msg:editions_datasource_expl_id_transfert' type='integer' input='manual'>
+				<join>left join transferts_demande on exemplaires.expl_id = transferts_demande.num_expl</join>
+			</field>
+			<field id='exemplaires_transfert_date_creation' field='transferts_demande.date_creation' label='msg:editions_datasource_expl_date_transfert' type='date' input='calc'>
+				<join>left join transferts_demande on exemplaires.expl_id = transferts_demande.num_expl</join>
+			</field>
+			<field id='exemplaires_transfert_loc_source' field='expl_location_trans_source.location_libelle AS transfert_loc_source' field_alias='transfert_loc_source'  label='msg:editions_datasource_expl_loc_source_transfert' type='integer' input='list'>
+				<before_joins>left join transferts_demande on exemplaires.expl_id = transferts_demande.num_expl</before_joins>
+				<join field_join='transferts_demande.num_location_source'>left join docs_location as expl_location_trans_source on transferts_demande.num_location_source = expl_location_trans_source.idlocation</join>
+				<values type='query'>
+					<query>select idlocation as id, location_libelle as list_value from docs_location order by 2 asc</query>	
+				</values>
+			</field>
+			<field id='exemplaires_transfert_loc_destination' field='expl_location_trans_destination.location_libelle AS transfert_loc_destination' field_alias='transfert_loc_destination'  label='msg:editions_datasource_expl_loc_destination_transfert' type='integer' input='list'>
+				<before_joins>left join transferts_demande on exemplaires.expl_id = transferts_demande.num_expl</before_joins>
+				<join field_join='transferts_demande.num_location_dest'>left join docs_location as expl_location_trans_destination on transferts_demande.num_location_dest = expl_location_trans_destination.idlocation</join>
+				<values type='query'>
+					<query>select idlocation as id, location_libelle as list_value from docs_location order by 2 asc</query>	
+				</values>
+			</field>
+			<field id='exemplaires_transfert_etat_demande' field='transferts_demande.etat_demande'  label='msg:editions_datasource_expl_etat_demande_transfert' type='integer' input='list'>
+				<join>left join transferts_demande on exemplaires.expl_id = transferts_demande.num_expl</join>
+				<values type='enum'>
+					<value code='0'>msg:editions_datasource_expl_etat_demande_0</value>
+					<value code='1'>msg:editions_datasource_expl_etat_demande_1</value>
+					<value code='2'>msg:editions_datasource_expl_etat_demande_2</value>
+					<value code='3'>msg:editions_datasource_expl_etat_demande_3</value>
+					<value code='4'>msg:editions_datasource_expl_etat_demande_4</value>
+					<value code='5'>msg:editions_datasource_expl_etat_demande_5</value>
+					<value code='6'>msg:editions_datasource_expl_etat_demande_6</value>	
+				</values>
+			</field>
+			<field id='exemplaires_transfert_etat_transfert' field='transferts.etat_transfert'  label='msg:editions_datasource_expl_etat_transfert' type='integer' input='list'>
+				<before_joins>left join transferts_demande on exemplaires.expl_id = transferts_demande.num_expl</before_joins>
+				<join>left join transferts on transferts.id_transfert=transferts_demande.num_transfert</join>
+				<values type='enum'>
+					<value code='0'>msg:editions_datasource_expl_etat_transfert_0</value>
+					<value code='1'>msg:editions_datasource_expl_etat_transfert_1</value>
+				</values>
+			</field>
+		</fields>
+	</datasource>
+	<datasource id='lenders' name='msg:1120'>
+		<table>empr</table>
+		<fields>
+			<field id='empr_id_empr' field='empr.id_empr' label='msg:editions_datasource_id_empr' type='integer' input='manual'/>
+			<field id='empr_empr_cb' field='empr.empr_cb' label='msg:38' type='integer' input='manual'/>
+			<field id='empr_empr_nom' field='empr.empr_nom' label='msg:67' type='text' input='manual'/>
+			<field id='empr_empr_prenom' field='empr.empr_prenom' label='msg:68' type='text' input='manual'/>
+			<field id='empr_empr_adr1' field='empr.empr_adr1' label='msg:69' type='text' input='manual'/>
+			<field id='empr_empr_adr2' field='empr.empr_adr2' label='msg:70' type='text' input='manual'/>
+			<field id='empr_empr_cp' field='empr.empr_cp' label='msg:71' type='text' input='list'>
+				<values type='query'>
+					<query>select empr_cp as id, IF((TRIM(empr_cp) !=''),empr_cp,'!!msg:editions_datasource_empty!!') as list_value from empr GROUP BY 2 order by 2 asc</query>	
+				</values>
+			</field>
+			<field id='empr_empr_ville' field='empr.empr_ville' label='msg:72' type='text' input='list'>
+				<values type='query'>
+					<query>select empr_ville as id, IF((TRIM(empr_ville) !=''),empr_ville,'!!msg:editions_datasource_empty!!') as list_value from empr GROUP BY 2 order by 2 asc</query>	
+				</values>
+			</field>
+			<field id='empr_empr_pays' field='empr.empr_pays' label='msg:empr_pays' type='text' input='list'>
+				<values type='query'>
+					<query>select empr_pays as id, IF((TRIM(empr_pays) !=''),empr_pays,'!!msg:editions_datasource_empty!!') as list_value from empr GROUP BY 2 order by 2 asc</query>	
+				</values>
+			</field>
+			<field id='empr_empr_mail' field='empr.empr_mail' label='msg:58' type='text' input='manual'/>
+			<field id='empr_empr_tel1' field='empr.empr_tel1' label='msg:73' type='text' input='manual'/>
+			<field id='empr_empr_tel2' field='empr.empr_tel2' label='msg:73tel2' type='text' input='manual'/>
+			<field id='empr_empr_prof' field='empr.empr_prof' label='msg:74' type='text' input='list'>
+				<values type='query'>
+					<query>select empr_prof as id, IF((TRIM(empr_prof) !=''),empr_prof,'!!msg:editions_datasource_empty!!') as list_value from empr GROUP BY 2 order by 2 asc</query>	
+				</values>
+			</field>
+			<field id='empr_empr_year' field='empr.empr_year' label='msg:75' type='text' input='list'>
+				<values type='query'>
+					<query>select empr_year as id, IF((TRIM(empr_year) !=''),empr_year,'!!msg:editions_datasource_empty!!') as list_value from empr GROUP BY 2 order by 2 asc</query>	
+				</values>
+			</field>
+			<field id='empr_categ_libelle' field='empr_categ.libelle' label='msg:59' type='integer' input='list'>
+				<join field_join='empr_categ.id_categ_empr'>left join empr_categ on empr.empr_categ = empr_categ.id_categ_empr</join>
+				<values type='query'>
+					<query>select id_categ_empr as id, libelle as list_value from empr_categ order by 2 asc</query>	
+				</values>
+			</field>
+			<field id='empr_codestat_libelle' field='empr_codestat.libelle' label='msg:60' type='integer' input='list'>
+				<join field_join='empr_codestat.idcode'>left join empr_codestat on empr.empr_codestat = empr_codestat.idcode</join>
+				<values type='query'>
+					<query>select idcode as id, libelle as list_value from empr_codestat order by 2 asc</query>	
+				</values>
+			</field>
+			<field id='empr_empr_creation' field='empr.empr_creation' label='msg:exp_cre_date' type='date' input='calc'/>
+			<field id='empr_empr_modif' field='empr.empr_modif' label='msg:exp_upd_date' type='date' input='calc'/>
+			<field id='empr_empr_sexe' field='empr.empr_sexe' label='msg:125' type='integer' input='list'>
+				<values type='enum'>
+					<value code='0'>msg:128</value>
+					<value code='1'>msg:126</value>
+					<value code='2'>msg:127</value>
+				</values>
+			</field>
+			<field id='empr_empr_login' field='empr.empr_login' label='msg:empr_login' type='text' input='manual'/>
+			<field id='empr_empr_date_adhesion' field='empr.empr_date_adhesion' label='msg:editions_datasource_empr_date_adhesion' type='date' input='calc'/>
+			<field id='empr_empr_date_expiration' field='empr.empr_date_expiration' label='msg:editions_datasource_empr_date_expiration' type='date' input='calc'/>
+			<field id='empr_empr_msg' field='empr.empr_msg' label='msg:message_emprunteur' type='text' input='manual'/>
+			<field id='empr_empr_lang' field='empr.empr_lang' label='msg:empr_langue_opac' type='text' input='manual'/>
+			<field id='empr_type_abt_libelle' field='type_abts.type_abt_libelle' label='msg:type_abts_type' type='integer' input='list'>
+				<join field_join='type_abts.id_type_abt'>left join type_abts on empr.type_abt = type_abts.id_type_abt</join>
+				<values type='query'>
+					<query>select id_type_abt as id, type_abt_libelle as list_value from type_abts order by 2 asc</query>	
+				</values>
+			</field>
+			<field id='empr_last_loan_date' field='empr.last_loan_date' label='msg:editions_datasource_last_loan_date' type='date' input='calc'/>
+			<field id='empr_location_libelle' field='empr_location.location_libelle' label='msg:298' type='integer' input='list'>
+				<join field_join='empr_location.idlocation'>left join docs_location as empr_location on empr.empr_location = empr_location.idlocation</join>
+				<values type='query'>
+					<query>select idlocation as id, location_libelle as list_value from docs_location order by 2 asc</query>	
+				</values>
+			</field>
+			<field id='empr_date_fin_blocage' field='empr.date_fin_blocage' label='msg:editions_datasource_date_fin_blocage' type='date' input='calc'/>
+			<field id='empr_total_loans' field='empr.total_loans' label='msg:empr_nb_prets_encours_query' type='integer' input='manual'/>			
+			<field id='empr_statut_libelle' field='empr_statut.statut_libelle' label='msg:297' type='integer' input='list'>
+				<join field_join='empr_statut.idstatut'>left join empr_statut on empr.empr_statut = empr_statut.idstatut</join>
+				<values type='query'>
+					<query>select idstatut as id, statut_libelle as list_value from empr_statut order by 2 asc</query>	
+				</values>
+			</field>
+			<field id='empr_empr_sms' field='empr.empr_sms' label='msg:fichier_action_sms' type='integer' input='list'>
+				<values type='enum'>
+					<value code='0'>msg:editions_datasource_sms_inactif</value>
+					<value code='1'>msg:editions_datasource_sms_actif</value>
+				</values>
+			</field>
+			<!--<field id='empr_total_loans' field='COUNT(DISTINCT pret_archive.arc_id) AS empr_total_loans' field_alias='empr_total_loans' label='msg:expl_prets_nb' type='integer' input='manual'>
+				<join field_group='empr.id_empr'>left join pret_archive on empr.id_empr = pret_archive.arc_id_empr</join>
+			</field>
+			<field id='empr_total_resa' field='COUNT(DISTINCT resa_archive.resarc_id) AS empr_total_resa' field_alias='empr_total_resa' label='msg:empr_nb_resas_encours_query' type='integer' input='manual'>
+				<join field_group='empr.id_empr'>left join resa_archive on empr.id_empr = resa_archive.resarc_id_empr</join>
+			</field>-->
+			<field id='empr_total_loans' field='(SELECT COUNT(DISTINCT pret_archive.arc_id) FROM empr AS empr_group left join pret_archive on empr_group.id_empr = pret_archive.arc_id_empr WHERE empr.id_empr=empr_group.id_empr) AS empr_total_loans' field_alias='empr_total_loans' label='msg:expl_prets_nb' type='integer' input='manual'/>
+			<field id='empr_total_resa' field='(SELECT COUNT(DISTINCT resa_archive.resarc_id) FROM empr AS empr_group left join resa_archive on empr_group.id_empr = resa_archive.resarc_id_empr WHERE empr.id_empr=empr_group.id_empr) AS empr_total_resa' field_alias='empr_total_resa' label='msg:empr_nb_resas_encours_query' type='integer' input='manual'/>
+			<field id='empr_total_suggestion' field='(SELECT COUNT(DISTINCT suggestions_origine.num_suggestion) FROM empr AS empr_group left join suggestions_origine on empr_group.id_empr = suggestions_origine.origine AND type_origine="1" WHERE empr.id_empr=empr_group.id_empr) AS empr_total_suggestion' field_alias='empr_total_suggestion' label='msg:acquisition_sugg_nb' type='integer' input='manual'/>
+			<field id='empr_tranche_age' field='CASE WHEN empr_year=0 THEN "0" WHEN (EXTRACT(YEAR FROM CURDATE()) - empr_year) &lt; 18 THEN 2  WHEN (EXTRACT(YEAR FROM CURDATE()) - empr_year) &gt;= 18 THEN 1 END AS tranche'  field_alias='tranche' label='msg:editions_datasource_tranche_age' type='text' input='list'>
+				<values type='enum'>
+					<value code='0'>msg:editions_datasource_empty</value>
+					<value code='1'>msg:editions_datasource_majeur</value>
+					<value code='2'>msg:editions_datasource_mineur</value>
+				</values>
+			</field>
+			<field id='empr_caddie' field='IF((empr_caddie.name IS NULL),"",empr_caddie.name) AS caddie_name' field_alias='caddie_name' label='msg:caddie_de_EMPR' type='integer' input='list'>
+				<before_joins>left join empr_caddie_content on empr.id_empr = empr_caddie_content.object_id</before_joins>
+				<join field_join='empr_caddie.idemprcaddie'>left join empr_caddie on empr_caddie_content.empr_caddie_id = empr_caddie.idemprcaddie</join>
+				<values type='query'>
+					<query>select empr_caddie.idemprcaddie as id, empr_caddie.name as list_value from empr_caddie order by 2 asc</query>	
+				</values>
+			</field>
+			<field id='empr_caddie_flag' field='IF((empr_caddie.name IS NULL),0,IF((empr_caddie_content.flag IS NULL),1,2)) AS caddie_flag' field_alias='caddie_flag' label='msg:editions_datasource_caddie_pointe' type='integer' input='list'>
+				<before_joins>left join empr_caddie_content on empr.id_empr = empr_caddie_content.object_id</before_joins>
+				<join>left join empr_caddie on empr_caddie_content.empr_caddie_id = empr_caddie.idemprcaddie</join>
+				<values type='enum'>
+					<value code='0'>msg:editions_datasource_caddie_absent</value>
+					<value code='1'>msg:39</value>
+					<value code='2'>msg:40</value>	
+				</values>
+			</field>
+		</fields>
+	</datasource>
+	<datasource id='notices' name='msg:editions_datasource_notices'>
+		<table>notices</table>
+		<fields>
+			<field id='notices_id' field='notices.notice_id' label='msg:editions_datasource_expl_notice' type='integer' input='manual'/>
+			<field id='notices_typdoc' field='notices.typdoc' label='msg:z3950_type_doc' type='text' input='list'>
+				<values type='xml'>
+					<value>doctype</value>
+				</values>
+			</field>
+			<field id='notices_niveau_biblio' field='notices.niveau_biblio' label='msg:doc_perio_art_query' type='text' input='list'>
+				<values type='xml'>
+					<value>nivbiblio</value>
+				</values>
+			</field>
+			<field id='notices_lib_statut' field='notice_statut.gestion_libelle' label='msg:statut_notice_sort' type='integer' input='list'>
+				<join field_join='notices.statut'>left join notice_statut on notices.statut = notice_statut.id_notice_statut</join>
+				<values type='query'>
+					<query>select id_notice_statut as id, gestion_libelle as list_value from notice_statut order by 2 asc</query>	
+				</values>
+			</field>
+			<field id='notices_tit1' field='notices.tit1' label='msg:237' type='text' input='manual'/>
+			<field id='notices_tit2' field='notices.tit2' label='msg:238' type='text' input='manual'/>
+			<field id='notices_tit3' field='notices.tit3' label='msg:239' type='text' input='manual'/>
+			<field id='notices_tit4' field='notices.tit4' label='msg:240' type='text' input='manual'/>
+			<field id='notices_year' field='notices.year' label='msg:252' type='text' input='manual'/>
+			<field id='notices_date_parution' field='notices.date_parution' label='msg:4026' type='date' input='calc'/>
+			<field id='notices_code' field='notices.code' label='msg:255' type='text' input='manual'/>
+			<field id='notices_titrserie' field='series.serie_name' label='msg:241' type='integer' input='list'>
+				<join>LEFT JOIN series ON notices.tparent_id=series.serie_id</join>
+				<values type='query'>
+					<query>select serie_id as id, serie_name as list_value from series order by 2 asc</query>	
+				</values>
+			</field>
+			<field id='notices_tnvol' field='notices.tnvol' label='msg:242' type='text' input='manual'/>
+			<field id='notices_coll' field='CONCAT(collections.collection_name, IF((collections.collection_issn != ""),CONCAT(" (",collections.collection_issn,")"),"")) AS infocoll' field_alias='infocoll' label='msg:250' type='integer' input='list'>
+				<join field_join='collections.collection_id' >LEFT JOIN collections ON notices.coll_id=collections.collection_id</join>
+				<values type='query'>
+					<query>select collection_id as id, CONCAT(collections.collection_name, IF((collections.collection_issn != ""),CONCAT(" (",collections.collection_issn,")"),"")) as list_value from collections order by 2 asc</query>	
+				</values>
+			</field>
+			<field id='notices_subcoll' field='CONCAT(subcoll.sub_coll_name, IF((subcoll.sub_coll_issn != ""),CONCAT(" (",subcoll.sub_coll_issn,")"),"")) AS infosubcoll' field_alias='infosubcoll' label='msg:251' type='integer' input='list'>
+				<join field_join='subcoll.sub_coll_id' >LEFT JOIN sub_collections AS subcoll ON notices.subcoll_id=subcoll.sub_coll_id</join>
+				<values type='query'>
+					<query>select sub_collections.sub_coll_id as id, CONCAT(sub_collections.sub_coll_name, IF((sub_collections.sub_coll_issn != ""),CONCAT(" (",sub_collections.sub_coll_issn,")"),"")) as list_value from sub_collections order by 2 asc</query>	
+				</values>
+			</field>
+			<field id='notices_nocoll' field='notices.nocoll' label='msg:253' type='text' input='manual'/>
+			<field id='notices_editeur' field='(SELECT GROUP_CONCAT(DISTINCT (IF((ed1.ed_ville != ""),CONCAT(ed1.ed_ville," : ",ed1.ed_name),IF(ed1.ed_name IS NULL,"",ed1.ed_name))) SEPARATOR " ; ") FROM notices AS noti_sel LEFT JOIN publishers AS ed1 ON noti_sel.ed1_id=ed1.ed_id OR noti_sel.ed2_id=ed1.ed_id WHERE noti_sel.notice_id = notices.notice_id) AS infoEd'  field_alias='infoEd' label='msg:serial_Editeur_group' type='text' input='manual'/>
+			<field id='notices_editeur1' field='IF((ed1.ed_ville != ""),CONCAT(ed1.ed_ville," : ",ed1.ed_name),ed1.ed_name) AS infoEd1'  field_alias='infoEd1' label='msg:serial_Editeur' type='integer' input='list'>
+				<join field_join='ed1.ed_id'>LEFT JOIN publishers AS ed1 ON notices.ed1_id=ed1.ed_id OR notices.ed2_id=ed1.ed_id</join>
+				<values type='query'>
+					<query>select ed_id as id, IF((ed_ville != ''),CONCAT(ed_ville,' : ',ed_name),ed_name) as list_value from publishers order by 2 asc</query>	
+				</values>
+			</field>
+			<!--<field id='notices_editeur2' field='IF((ed2.ed_ville != ""),CONCAT(ed2.ed_ville," : ",ed2.ed_name),ed2.ed_name) AS infoEd2'  field_alias='infoEd2' label='msg:254' type='integer' input='list'>
+				<join field_join='ed2.ed_id'>LEFT JOIN publishers AS ed2 ON notices.ed2_id=ed2.ed_id</join>
+				<values type='query'>
+					<query>select ed_id as id, IF((ed_ville != ''),CONCAT(ed_ville,' : ',ed_name),ed_name) as list_value from publishers order by 2 asc</query>	
+				</values>
+			</field>-->
+			<field id='notices_mention_edition' field='notices.mention_edition' label='msg:mention_edition' type='text' input='manual'/>
+			<field id='notices_npages' field='notices.npages' label='msg:259' type='text' input='manual'/>
+			<field id='notices_ill' field='notices.ill' label='msg:260' type='text' input='manual'/>
+			<field id='notices_size' field='notices.size' label='msg:261' type='text' input='manual'/>
+			<field id='notices_accomp' field='notices.accomp' label='msg:262' type='text' input='manual'/>
+			<field id='notices_n_gen' field='notices.n_gen' label='msg:265' type='text' input='manual'/>
+			<field id='notices_n_contenu' field='notices.n_contenu' label='msg:266' type='text' input='manual'/>
+			<field id='notices_n_resume' field='notices.n_resume' label='msg:267' type='text' input='manual'/>
+			<field id='notices_lien' field='notices.lien' label='msg:275' type='text' input='manual'/>
+			<field id='notices_eformat' field='notices.eformat' label='msg:276' type='text' input='manual'/>
+			<field id='notices_index_l' field='notices.index_l' label='msg:324' type='text' input='manual'/>
+			<field id='notices_prix' field='notices.prix' label='msg:4050' type='text' input='manual'/>
+			<field id='notices_auteurprinc' field='CONCAT(aut1.author_name, IF((aut1.author_rejete != ""),CONCAT(", ",aut1.author_rejete),""), IF((aut1.author_date != ""),CONCAT(" (",aut1.author_date,")"),"")) AS aut_princ'  field_alias='aut_princ' label='msg:244' type='integer' input='list'>
+				<join field_join='aut1.author_id'>left join responsability AS resp1 ON notices.notice_id = resp1.responsability_notice AND resp1.responsability_type=0 LEFT JOIN authors AS aut1 ON resp1.responsability_author=aut1.author_id</join>
+				<values type='query'>
+					<query>select author_id as id, CONCAT(author_name, IF((author_rejete != ""),CONCAT(", ",author_rejete),""), IF((author_date != ""),CONCAT(" (",author_date,")"),"")) as list_value from authors order by 2 asc</query>	
+				</values>
+			</field>
+			<!-- Si on filtre alors, seul les auteurs filtrés seront affichés  -->
+			<!--<field id='notices_auteurautre_group' field='GROUP_CONCAT(DISTINCT CONCAT(aut2.author_name, IF((aut2.author_rejete != ""),CONCAT(", ",aut2.author_rejete),""), IF((aut2.author_date != ""),CONCAT(" (",aut2.author_date,")"),"")) ORDER BY resp2.responsability_ordre ASC SEPARATOR "; ") AS aut_autres_group' field_alias='aut_autres_group' label='msg:246_group' type='integer' input='list'>
+				<join field_join='aut2.author_id' field_group='notices.notice_id'>left join responsability AS resp2 ON notices.notice_id = resp2.responsability_notice AND resp2.responsability_type=1 LEFT JOIN authors AS aut2 ON resp2.responsability_author=aut2.author_id</join>
+				<values type='query'>
+					<query>select author_id as id, CONCAT(author_name, IF((author_rejete != ""),CONCAT(", ",author_rejete),""), IF((author_date != ""),CONCAT(" (",author_date,")"),"")) as list_value from authors order by 2 asc</query>	
+				</values>
+			</field>-->
+			<field id='notices_auteurautre_group' field='(SELECT GROUP_CONCAT(DISTINCT CONCAT(IF(aut2.author_name IS NULL,"",aut2.author_name), IF((aut2.author_rejete != ""),CONCAT(", ",aut2.author_rejete),""), IF((aut2.author_date != ""),CONCAT(" (",aut2.author_date,")"),"")) ORDER BY resp2.responsability_ordre ASC SEPARATOR "; ") FROM notices AS noti_sel left join responsability AS resp2 ON noti_sel.notice_id = resp2.responsability_notice AND resp2.responsability_type=1 LEFT JOIN authors AS aut2 ON resp2.responsability_author=aut2.author_id WHERE noti_sel.notice_id = notices.notice_id) AS aut_autres_group' field_alias='aut_autres_group' label='msg:246_group' type='text' input='manual'/>
+			<field id='notices_auteurautre' field='CONCAT(aut2.author_name, IF((aut2.author_rejete != ""),CONCAT(", ",aut2.author_rejete),""), IF((aut2.author_date != ""),CONCAT(" (",aut2.author_date,")"),"")) AS aut_autres' field_alias='aut_autres' label='msg:246' type='integer' input='list'>
+				<join field_join='aut2.author_id'>left join responsability AS resp2 ON notices.notice_id = resp2.responsability_notice AND resp2.responsability_type=1 LEFT JOIN authors AS aut2 ON resp2.responsability_author=aut2.author_id</join>
+				<values type='query'>
+					<query>select author_id as id, CONCAT(author_name, IF((author_rejete != ""),CONCAT(", ",author_rejete),""), IF((author_date != ""),CONCAT(" (",author_date,")"),"")) as list_value from authors order by 2 asc</query>	
+				</values>
+			</field>
+			<field id='notices_auteursec_group' field='(SELECT GROUP_CONCAT(DISTINCT CONCAT(IF(aut3.author_name IS NULL,"",aut3.author_name), IF((aut3.author_rejete != ""),CONCAT(", ",aut3.author_rejete),""), IF((aut3.author_date != ""),CONCAT(" (",aut3.author_date,")"),"")) ORDER BY resp3.responsability_ordre ASC SEPARATOR "; ") FROM notices AS noti_sel left join responsability AS resp3 ON noti_sel.notice_id = resp3.responsability_notice AND resp3.responsability_type=2 LEFT JOIN authors AS aut3 ON resp3.responsability_author=aut3.author_id WHERE noti_sel.notice_id = notices.notice_id) AS aut_sec_group' field_alias='aut_sec_group' label='msg:247_group' type='text' input='manual'/>
+			<field id='notices_auteursec' field='CONCAT(aut3.author_name, IF((aut3.author_rejete != ""),CONCAT(", ",aut3.author_rejete),""), IF((aut3.author_date != ""),CONCAT(" (",aut3.author_date,")"),"")) AS aut_sec' field_alias='aut_sec' label='msg:247' type='integer' input='list'>
+				<join field_join='aut3.author_id'>left join responsability AS resp3 ON notices.notice_id = resp3.responsability_notice AND resp3.responsability_type=2 LEFT JOIN authors AS aut3 ON resp3.responsability_author=aut3.author_id</join>
+				<values type='query'>
+					<query>select author_id as id, CONCAT(author_name, IF((author_rejete != ""),CONCAT(", ",author_rejete),""), IF((author_date != ""),CONCAT(" (",author_date,")"),"")) as list_value from authors order by 2 asc</query>	
+				</values>
+			</field>
+			<field id='notices_create_date' field='notices.create_date' label='msg:date_creation_query' type='date' input='calc'/>
+			<field id='notices_update_date' field='notices.update_date' label='msg:date_update_query' type='date' input='calc'/>
+			<field id='notices_commentaire_gestion' field='notices.commentaire_gestion' label='msg:comment_gestion_query' type='text' input='manual'/>
+			<field id='notices_thumbnail_url' field='notices.thumbnail_url' label='msg:notice_thumbnail_url' type='text' input='manual'/>
+			<field id='notices_lib_origine' field='CONCAT(origine_notice.orinot_nom,IF((origine_notice.orinot_pays != ""),origine_notice.orinot_pays,"")) AS origine' field_alias='origine' label='msg:origine_notice_query' type='integer' input='list'>
+				<join field_join='notices.origine_catalogage'>left join origine_notice on notices.origine_catalogage = origine_notice.orinot_id</join>
+				<values type='query'>
+					<query>select origine_notice.orinot_id as id, CONCAT(origine_notice.orinot_nom,IF((origine_notice.orinot_pays != ""),origine_notice.orinot_pays,"")) as list_value from origine_notice order by 2 asc</query>	
+				</values>
+			</field>
+			<!-- Si on filtre alors, seul les données filtrés seront affichés
+			<field id='notices_langpub' field='GROUP_CONCAT(DISTINCT langpub.code_langue ORDER BY langpub.ordre_langue ASC SEPARATOR " / ") AS liblangpub' field_alias='liblangpub' label='msg:710' type='text' repeat=' / ' input='list'>
+				<join field_join='langpub.code_langue' field_group='notices.notice_id'>left join notices_langues AS langpub ON notices.notice_id=langpub.num_notice AND langpub.type_langue=0</join>
+				<values type='xml'>
+					<value>lang</value>
+				</values>
+			</field>-->
+			<field id='notices_langpub_group' field='(SELECT GROUP_CONCAT(DISTINCT IF(langpub.code_langue IS NULL, "",langpub.code_langue) ORDER BY langpub.ordre_langue ASC SEPARATOR " / ") FROM notices AS noti_sel left join notices_langues AS langpub ON noti_sel.notice_id=langpub.num_notice AND langpub.type_langue=0 WHERE noti_sel.notice_id=notices.notice_id) AS liblangpub_group' field_alias='liblangpub_group' label='msg:710_group' repeat=' / '  type='text_like' input='list'>
+				<values type='xml'>
+					<value>lang</value>
+				</values>
+			</field>
+			<field id='notices_langpub' field='langpub.code_langue' label='msg:710' type='text' input='list'>
+				<join>left join notices_langues AS langpub ON notices.notice_id=langpub.num_notice AND langpub.type_langue=0</join>
+				<values type='xml'>
+					<value>lang</value>
+				</values>
+			</field>
+			<!-- Si on filtre alors, seul les données filtrés seront affichés 
+			<field id='notices_langorig' field='GROUP_CONCAT(DISTINCT langorig.code_langue ORDER BY langorig.ordre_langue ASC SEPARATOR " / ") AS liblangorig' field_alias='liblangorig' label='msg:711' type='text' repeat=' / ' input='list'>
+				<join field_join='langorig.code_langue' field_group='notices.notice_id'>left join notices_langues AS langorig ON notices.notice_id=langorig.num_notice AND langorig.type_langue=1</join>
+				<values type='xml'>
+					<value>lang</value>
+				</values>
+			</field> -->
+			<field id='notices_langorig_group' field='(SELECT GROUP_CONCAT(DISTINCT IF(langorig.code_langue IS NULL, "",langorig.code_langue) ORDER BY langorig.ordre_langue ASC SEPARATOR " / ") FROM notices AS noti_sel left join notices_langues AS langorig ON noti_sel.notice_id=langorig.num_notice AND langorig.type_langue=1 WHERE noti_sel.notice_id=notices.notice_id) AS langorig_group' field_alias='langorig_group' label='msg:711_group' repeat=' / '  type='text_like' input='list'>
+				<values type='xml'>
+					<value>lang</value>
+				</values>
+			</field>
+			<field id='notices_langorig' field='langorig.code_langue' label='msg:711' type='text' input='list'>
+				<join>left join notices_langues AS langorig ON notices.notice_id=langorig.num_notice AND langorig.type_langue=1</join>
+				<values type='xml'>
+					<value>lang</value>
+				</values>
+			</field>
+			<field id='notices_indexintlib' field='CONCAT(indexint.indexint_name,IF((indexint.indexint_comment != ""),CONCAT(" - ",indexint.indexint_comment),"")) AS indexintlib' field_alias='indexintlib' label='msg:indexint_menu_title' type='integer' input='list'>
+				<join field_join='indexint.indexint_id' >LEFT JOIN indexint ON notices.indexint=indexint.indexint_id</join>
+				<values type='query'>
+					<query>select indexint_id as id, CONCAT('[',name_pclass,'] ',indexint.indexint_name,IF((indexint.indexint_comment != ""),CONCAT(" - ",indexint.indexint_comment),"")) as list_value from indexint JOIN pclassement ON indexint.num_pclass=pclassement.id_pclass order by 2 asc</query>	
+				</values>
+			</field>
+			<!--<field id='notices_categorielib' field='GROUP_CONCAT(DISTINCT categories.libelle_categorie ORDER BY notices_categories.ordre_categorie ASC SEPARATOR " / ") AS categorielib' field_alias='categorielib' label='msg:134' type='text' input='manual'>
+				<join field_group='notices.notice_id' >LEFT JOIN notices_categories ON notices.notice_id=notices_categories.notcateg_notice LEFT JOIN categories ON notices_categories.num_noeud=categories.num_noeud AND langue='fr_FR'</join>
+			</field>-->
+			<field id='notices_categorielib_group' field='(SELECT GROUP_CONCAT(DISTINCT IF(categories.libelle_categorie IS NULL,"",categories.libelle_categorie) ORDER BY notices_categories.ordre_categorie ASC SEPARATOR " / ")  FROM notices AS noti_sel LEFT JOIN notices_categories ON noti_sel.notice_id=notices_categories.notcateg_notice LEFT JOIN categories ON notices_categories.num_noeud=categories.num_noeud AND langue="fr_FR" WHERE noti_sel.notice_id=notices.notice_id ) AS categorielib' field_alias='categorielib' label='msg:134_group' type='text' input='manual'/>
+			<field id='notices_categorielib' field='categories.libelle_categorie' label='msg:134' type='text' input='manual'>
+				<join>LEFT JOIN notices_categories ON notices.notice_id=notices_categories.notcateg_notice LEFT JOIN categories ON notices_categories.num_noeud=categories.num_noeud AND langue='fr_FR'</join>
+			</field>
+			<!--<field id='notices_nb_expl' field='COUNT(DISTINCT exemplaires.expl_id) AS nb_expl' field_alias='nb_expl' label='msg:acquisition_nb_expl' type='integer' input='manual'>
+				<join field_group='notices.notice_id'>left join exemplaires on exemplaires.expl_notice = notices.notice_id</join>
+			</field>-->
+			<field id='notices_nb_expl' field='(SELECT COUNT(DISTINCT exemplaires.expl_id) FROM notices AS noti_sel left join exemplaires on exemplaires.expl_notice = noti_sel.notice_id WHERE noti_sel.notice_id=notices.notice_id) AS nb_expl' field_alias='nb_expl' label='msg:acquisition_nb_expl' type='integer' input='manual'/>
+			<field id='notices_expl_expl_id' field='exemplaires.expl_id' label='msg:editions_datasource_expl_id' type='integer' input='manual'>
+				<join>left join exemplaires ON exemplaires.expl_notice=notices.notice_id AND exemplaires.expl_bulletin=0</join>
+			</field>
+			<field id='notices_expl_expl_cb' field='exemplaires.expl_cb' label='msg:extexpl_codebar' type='text' input='manual'>
+				<join>left join exemplaires ON exemplaires.expl_notice=notices.notice_id AND exemplaires.expl_bulletin=0</join>
+			</field>
+			<field id='notices_expl_expl_cote' field='exemplaires.expl_cote' label='msg:296' type='text' input='manual'>
+				<join>left join exemplaires ON exemplaires.expl_notice=notices.notice_id AND exemplaires.expl_bulletin=0</join>
+			</field>
+			<field id='notices_expl_expl_prix' field='exemplaires.expl_prix' label='msg:expl_price' type='text' input='manual'>
+				<join>left join exemplaires ON exemplaires.expl_notice=notices.notice_id AND exemplaires.expl_bulletin=0</join>
+			</field>
+			<field id='notices_expl_lenders_lender_libelle' field='lenders.lender_libelle' label='msg:651' type='integer' input='list'>
+				<before_joins>left join exemplaires ON exemplaires.expl_notice=notices.notice_id AND exemplaires.expl_bulletin=0</before_joins>
+				<join field_join='lenders.idlender'>LEFT JOIN lenders on exemplaires.expl_owner = lenders.idlender</join>
+				<values type='query'>
+					<query>select idlender as id, lender_libelle as list_value from lenders order by 2 asc</query>	
+				</values>
+			</field>
+			<field id='notices_expl_tdoc_libelle' field='docs_type.tdoc_libelle' label='msg:294' type='integer' input='list'>
+				<before_joins>left join exemplaires ON exemplaires.expl_notice=notices.notice_id AND exemplaires.expl_bulletin=0</before_joins>
+				<join field_join='docs_type.idtyp_doc'>left join docs_type on exemplaires.expl_typdoc = docs_type.idtyp_doc</join>
+				<values type='query'>
+					<query>select idtyp_doc as id, tdoc_libelle as list_value from docs_type order by 2 asc</query>	
+				</values>
+			</field>
+			<field id='notices_expl_section_libelle' field='docs_section.section_libelle' label='msg:295' type='integer' input='list'>
+				<before_joins>left join exemplaires ON exemplaires.expl_notice=notices.notice_id AND exemplaires.expl_bulletin=0</before_joins>
+				<join field_join='docs_section.idsection'>left join docs_section on exemplaires.expl_section = docs_section.idsection</join>
+				<values type='query'>
+					<query>select idsection as id, section_libelle as list_value from docs_section order by 2 asc</query>	
+				</values>
+			</field>
+			<field id='notices_expl_statut_libelle' field='docs_statut.statut_libelle' label='msg:297' type='integer' input='list'>
+				<before_joins>left join exemplaires ON exemplaires.expl_notice=notices.notice_id AND exemplaires.expl_bulletin=0</before_joins>
+				<join field_join='docs_statut.idstatut'>left join docs_statut on exemplaires.expl_statut = docs_statut.idstatut</join>
+				<values type='query'>
+					<query>select idstatut as id, statut_libelle as list_value from docs_statut order by 2 asc</query>	
+				</values>
+			</field>
+			<field id='notices_expl_location_libelle' field='expl_location.location_libelle' label='msg:298' type='integer' input='list'>
+				<before_joins>left join exemplaires ON exemplaires.expl_notice=notices.notice_id AND exemplaires.expl_bulletin=0</before_joins>
+				<join field_join='expl_location.idlocation'>left join docs_location as expl_location on exemplaires.expl_location = expl_location.idlocation</join>
+				<values type='query'>
+					<query>select idlocation as id, location_libelle as list_value from docs_location order by 2 asc</query>	
+				</values>
+			</field>
+			<field id='notices_expl_codestat_libelle' field='docs_codestat.codestat_libelle' label='msg:299' type='integer' input='list'>
+				<before_joins>left join exemplaires ON exemplaires.expl_notice=notices.notice_id AND exemplaires.expl_bulletin=0</before_joins>
+				<join field_join='docs_codestat.idcode'>left join docs_codestat on exemplaires.expl_codestat = docs_codestat.idcode</join>
+				<values type='query'>
+					<query>select idcode as id, codestat_libelle as list_value from docs_codestat order by 2 asc</query>	
+				</values>
+			</field>
+			<field id='notices_audit_type_modif' field='audit.type_modif' label='msg:editions_datasource_noti_audit_type' type='integer' input='list'>
+				<join>left join audit on notices.notice_id = audit.object_id AND audit.type_obj='1'</join>
+				<values type='enum'>
+					<value code='1'>msg:audit_type1</value>
+					<value code='2'>msg:audit_type2</value>
+					<value code='3'>msg:audit_type3</value>
+				</values>
+			</field>
+			<field id='notices_audit_user' field='CONCAT(audit.user_name,IF((users.nom IS NULL),"",CONCAT(" (",IF((users.nom IS NULL),"",users.nom),IF((users.prenom IS NULL OR users.prenom = ""),"",CONCAT(", ",users.prenom)),")"))) AS intervenant_info' field_alias='intervenant_info' label='msg:editions_datasource_audit_intervenant' type='text' input='list'>
+				<before_joins>left join audit on notices.notice_id = audit.object_id AND audit.type_obj='1'</before_joins>
+				<join field_join='audit.user_name'>left join users on audit.user_id = users.userid</join>
+				<values type='query'>
+					<query>select audit.user_name as id, CONCAT(audit.user_name,IF((users.nom IS NULL),"",CONCAT(" (",IF((users.nom IS NULL),"",users.nom),IF((users.prenom IS NULL OR users.prenom = ""),"",CONCAT(", ",users.prenom)),")"))) as list_value from audit LEFT JOIN users ON audit.user_id = users.userid WHERE audit.type_obj='1' GROUP BY audit.user_name order by 2 asc</query>	
+				</values>
+			</field>
+			<field id='notices_audit_date' field='audit.quand' label='msg:editions_datasource_audit_date' type='date' input='calc'>
+				<join>left join audit on notices.notice_id = audit.object_id AND audit.type_obj='1'</join>
+			</field>
+			<field id='notices_caddie' field='IF((caddie.name IS NULL),"",caddie.name) AS caddie_name' field_alias='caddie_name' label='msg:caddie_de_NOTI' type='integer' input='list'>
+				<before_joins>left join caddie_content on notices.notice_id = caddie_content.object_id</before_joins>
+				<join field_join='caddie.idcaddie'>left join caddie on caddie_content.caddie_id = caddie.idcaddie AND caddie.type='NOTI'</join>
+				<values type='query'>
+					<query>select caddie.idcaddie as id, caddie.name as list_value from caddie WHERE caddie.type='NOTI' order by 2 asc</query>	
+				</values>
+			</field>
+			<field id='notices_caddie_flag' field='IF((caddie.name IS NULL),0,IF((caddie_content.flag IS NULL),1,2)) AS caddie_flag' field_alias='caddie_flag' label='msg:editions_datasource_caddie_pointe' type='integer' input='list'>
+				<before_joins>left join caddie_content on notices.notice_id = caddie_content.object_id</before_joins>
+				<join>left join caddie on caddie_content.caddie_id = caddie.idcaddie AND caddie.type='NOTI'</join>
+				<values type='enum'>
+					<value code='0'>msg:editions_datasource_caddie_absent</value>
+					<value code='1'>msg:39</value>
+					<value code='2'>msg:40</value>	
+				</values>
+			</field>
+			<field id='notices_notices_type_relations' field='notices_relations.relation_type' label='msg:notice_type_relations' type='text' input='list'>
+				<join field_join='linked_notice.linked_notice'>left join notices_relations ON notices.notice_id = notices_relations.num_notice LEFT JOIN notices AS linked_notice ON notices_relations.linked_notice=linked_notice.notice_id</join>
+				<values type='xml'>
+					<value>relationtypeup</value>	
+				</values>
+			</field>
+			<field id='notices_notices_relations' field='linked_notice.tit1' label='msg:notice_relations' type='integer' input='list'>
+				<join field_join='linked_notice.linked_notice'>left join notices_relations ON notices.notice_id = notices_relations.num_notice LEFT JOIN notices AS linked_notice ON notices_relations.linked_notice=linked_notice.notice_id</join>
+				<values type='query'>
+					<query>select notice_id as id, tit1 as list_value from notices order by 2 asc</query>	
+				</values>
+			</field>
+		</fields>
+	</datasource>
+	<datasource id='categories' name='msg:editions_datasource_categories'>
+		<table>noeuds</table>
+		<fields>
+			<field id='noeuds_id_noeud' field='noeuds.id_noeud' label='msg:editions_datasource_categories_id_noeud' type='integer' input='manual'/>
+			<field id='noeuds_autorite' field='noeuds.autorite' label='msg:categ_num_aut' type='text' input='manual'/>
+			<field id='categories_langue' field='categories.langue' label='msg:editions_datasource_categories_langue' type='text' input='list'>
+				<values type='xml'>
+					<value>languages</value>
+				</values>
+			</field>
+			<field id='categories_libelle_categorie' field='categories.libelle_categorie' label='msg:103' type='text' input='manual'>
+				<join>left join categories on noeuds.id_noeud = categories.num_noeud</join>
+			</field>
+			<field id='categories_note_application' field='categories.note_application' label='msg:categ_na' type='text' input='manual'>
+				<join>left join categories on noeuds.id_noeud = categories.num_noeud</join>
+			</field>
+			<field id='categories_comment_public' field='categories.comment_public' label='msg:categ_commentaire' type='text' input='manual'>
+				<join>left join categories on noeuds.id_noeud = categories.num_noeud</join>
+			</field>
+			<field id='thesaurus_libelle' field='thesaurus.libelle_thesaurus' label='msg:editions_datasource_categories_thesaurus' type='integer' input='list'>
+				<join field_join='noeuds.num_thesaurus'>left join thesaurus on noeuds.num_thesaurus = thesaurus.id_thesaurus</join>
+				<values type='query'>
+					<query>select thesaurus.id_thesaurus as id, thesaurus.libelle_thesaurus as list_value from thesaurus order by 2 asc</query>	
+				</values>
+			</field>
+			<field id='noeuds_num_parent' field='noeuds.num_parent' label='msg:editions_datasource_categories_id_noeud_parent' type='integer' input='manual'/>
+			<field id='noeuds_libelle_parent' field='IF((categ_parent.libelle_categorie IS NULL),IF((noeuds.autorite = "TOP"),"TOP",""),categ_parent.libelle_categorie) AS libelle_parent' field_alias='libelle_parent' label='msg:editions_datasource_categories_libelle_parent' type='text' input='manual'>
+				<join field_join='categ_parent.libelle_categorie'>left join categories AS categ_parent on noeuds.num_parent = categ_parent.num_noeud</join>
+			</field>
+			<field id='noeuds_langue_parent' field='IF((categ_parent.langue IS NULL OR categ_parent.langue=""),"",categ_parent.langue) AS langue_parent' field_alias='langue_parent' label='msg:editions_datasource_categories_langue_parent' type='text' input='list'>
+				<join field_join='categ_parent.langue' authorized_null='1'>left join categories AS categ_parent on noeuds.num_parent = categ_parent.num_noeud</join>
+				<values type='xml'>
+					<value>languages</value>
+				</values>
+			</field>
+			<field id='noeuds_num_renvoi_voir' field='noeuds.num_renvoi_voir' label='msg:editions_datasource_categories_id_noeud_renvoi' type='integer' input='manual'/>
+			<field id='noeuds_libelle_renvoi' field='IF((categ_renvoie.libelle_categorie IS NULL),"",categ_renvoie.libelle_categorie) AS libelle_renvoi' field_alias='libelle_renvoi' label='msg:editions_datasource_categories_libelle_renvoi' type='text' input='manual'>
+				<join field_join='categ_renvoie.libelle_categorie'>left join categories AS categ_renvoie on noeuds.num_renvoi_voir = categ_renvoie.num_noeud</join>
+			</field>
+			<field id='noeuds_langue_renvoi' field='IF((categ_renvoie.langue IS NULL OR categ_renvoie.langue=""),"",categ_renvoie.langue) AS langue_renvoi' field_alias='langue_renvoi' label='msg:editions_datasource_categories_langue_renvoi' type='text' input='list'>
+				<join field_join='categ_renvoie.langue' authorized_null='1'>left join categories AS categ_renvoie on noeuds.num_renvoi_voir = categ_renvoie.num_noeud</join>
+				<values type='xml'>
+					<value>languages</value>
+				</values>
+			</field>
+			<field id='noeuds_id_voir_aussi' field='voir_aussi.num_noeud_dest' label='msg:editions_datasource_categories_id_noeud_renvoi_aussi' type='integer' input='manual'>
+				<join>left join voir_aussi on noeuds.id_noeud = voir_aussi.num_noeud_orig</join>
+			</field>
+			<field id='noeuds_libelle_voir_aussi' field='IF((categ_voir_aussi.libelle_categorie IS NULL),"",categ_voir_aussi.libelle_categorie) AS libelle_voir_aussi' field_alias='libelle_voir_aussi' label='msg:editions_datasource_categories_libelle_renvoi_aussi' type='text' input='manual'>
+				<before_joins>left join voir_aussi on noeuds.id_noeud = voir_aussi.num_noeud_orig</before_joins>
+				<join field_join='categ_voir_aussi.libelle_categorie'>left join categories AS categ_voir_aussi on voir_aussi.num_noeud_dest = categ_voir_aussi.num_noeud</join>
+			</field>
+			<field id='noeuds_langue_voir_aussi' field='IF((categ_voir_aussi.langue IS NULL OR categ_voir_aussi.langue=""),"",categ_voir_aussi.langue) AS langue_voir_aussi' field_alias='langue_voir_aussi' label='msg:editions_datasource_categories_langue_renvoi_aussi' type='text' input='list'>
+				<before_joins>left join voir_aussi on noeuds.id_noeud = voir_aussi.num_noeud_orig</before_joins>
+				<join field_join='categ_voir_aussi.langue' authorized_null='1'>left join categories AS categ_voir_aussi on voir_aussi.num_noeud_dest = categ_voir_aussi.num_noeud</join>
+				<values type='xml'>
+					<value>languages</value>
+				</values>
+			</field>
+			<field id='noeuds_not_use_in_indexation' field='noeuds.not_use_in_indexation' label='msg:not_use_in_indexation' type='integer' input='list'>
+				<values type='enum'>
+					<value code='0'>Non</value>
+					<value code='1'>Oui</value>
+				</values>
+			</field>
+			<field id='noeuds_authority_import_denied' field='noeuds.authority_import_denied' label='msg:authority_import_denied' type='integer' input='list'>
+				<values type='enum'>
+					<value code='0'>Non</value>
+					<value code='1'>Oui</value>
+				</values>
+			</field>
+		</fields>
+	</datasource>
+	<datasource id='explnum' name='msg:editions_datasource_explnum'>
+		<table>explnum</table>
+		<fields>
+			<field id='explnum_explnum__id' field='explnum.explnum_id' label='msg:editions_datasource_explnum_id' type='integer' input='manual'/>
+			<!--<field id='explnum_explnum__notice' field='explnum.explnum_notice' label='msg:editions_datasource_explnum_notice' type='text' input='manual'/>
+			<field id='explnum_explnum__bulletin' field='explnum.explnum_bulletin' label='msg:editions_datasource_explnum_bulletin' type='text' input='manual'/>-->
+			<field id='explnum_explnum_nom' field='explnum.explnum_nom' label='msg:explnum_nom' type='text' input='manual'/>
+			<field id='explnum_explnum_mimetype' field='explnum.explnum_mimetype' label='msg:extexplnum_minetype' type='text' input='manual'/>
+			<field id='explnum_explnum_url' field='explnum.explnum_url' label='msg:explnum_url' type='text' input='manual'/>
+			<field id='explnum_explnum_thumbnail_url' field='CONCAT("vig_num.php?explnum_id=", explnum.explnum_id) AS explnum_vignette' label='msg:editions_datasource_explnum_thumbnail_url' type='text' input='manual'/>
+			<field id='explnum_explnum_extfichier' field='explnum.explnum_extfichier' label='msg:extexplnum_extfichier' type='text' input='manual'/>
+			<field id='explnum_explnum_nomfichier' field='explnum.explnum_nomfichier' label='msg:explnum_fichier' type='text' input='manual'/>
+			<field id='explnum_statut_gestion_libelle' field='explnum_statut.gestion_libelle' label='msg:extexplnum_statut' type='integer' input='list'>
+				<join field_join='explnum_statut.id_explnum_statut'>left join explnum_statut on explnum.explnum_statut = explnum_statut.id_explnum_statut</join>
+				<values type='query'>
+					<query>select id_explnum_statut as id, gestion_libelle as list_value from explnum_statut order by 2 asc</query>	
+				</values>
+			</field>
+			<field id='explnum_explnum_url' field='explnum.explnum_url' label='msg:explnum_url' type='text' input='manual'/>
+			
+			<field id='explnum_location_location_libelle' field='explnum_location.location_libelle' label='msg:editions_datasource_explnum_locations' type='integer' input='list'>
+				<join field_join='explnum_location.num_location'>left join explnum_location on explnum.explnum_id = explnum_location.num_location</join>
+				<values type='query'>
+					<query>select idlocation as id, location_libelle as list_value from docs_location order by 2 asc</query>	
+				</values>
+			</field>		
+			<field id='explnum_lenders_lender_libelle' field='lenders.lender_libelle' label='msg:554' type='integer' input='list'>
+				<join field_join='lenders.idlender'>left join explnum_lenders on explnum_lenders.explnum_lender_num_explnum = explnum.explnum_id join lenders on lenders.idlender = explnum_lenders.explnum_lender_num_lender</join>
+				<values type='query'>
+					<query>select idlender as id, lender_libelle as list_value from lenders order by 2 asc</query>	
+				</values>
+			</field>
+			<field id='explnum_create_date' field='explnum.create_date' label='msg:exp_cre_date' type='date' input='calc'/>
+			<field id='explnum_update_date' field='explnum.update_date' label='msg:exp_upd_date' type='date' input='calc'/>
+			
+			<field id='explnum_audit_type_modif' field='audit.type_modif' label='msg:editions_datasource_explnum_audit_type' type='integer' input='list'>
+				<join>left join audit on explnum.explnum_id = audit.object_id AND audit.type_obj='22'</join>
+				<values type='enum'>
+					<value code='1'>msg:audit_type1</value>
+					<value code='2'>msg:audit_type2</value>
+					<value code='3'>msg:audit_type3</value>
+				</values>
+			</field>
+			<field id='explnum_audit_user' field='CONCAT(audit.user_name,IF((users.nom IS NULL),"",CONCAT(" (",IF((users.nom IS NULL),"",users.nom),IF((users.prenom IS NULL OR users.prenom = ""),"",CONCAT(", ",users.prenom)),")"))) AS intervenant_info' field_alias='intervenant_info' label='msg:editions_datasource_audit_intervenant' type='text' input='list'>
+				<before_joins>left join audit on explnum.explnum_id = audit.object_id AND audit.type_obj='22'</before_joins>
+				<join field_join='audit.user_name'>left join users on audit.user_id = users.userid</join>
+				<values type='query'>
+					<query>select audit.user_name as id, CONCAT(audit.user_name,IF((users.nom IS NULL),"",CONCAT(" (",IF((users.nom IS NULL),"",users.nom),IF((users.prenom IS NULL OR users.prenom = ""),"",CONCAT(", ",users.prenom)),")"))) as list_value from audit LEFT JOIN users ON audit.user_id = users.userid WHERE audit.type_obj='22' GROUP BY audit.user_name order by 2 asc</query>	
+				</values>
+			</field>
+			<field id='explnum_audit_date' field='audit.quand' label='msg:editions_datasource_audit_date' type='date' input='calc'>
+				<join>left join audit on explnum.explnum_id = audit.object_id AND audit.type_obj='22'</join>
+			</field>
+			
+		</fields>
+	</datasource>
+</datasources>

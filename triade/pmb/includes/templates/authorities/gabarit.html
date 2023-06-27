@@ -1,0 +1,203 @@
+<!-- $Id: gabarit.html,v 1.29 2019-05-22 08:03:41 ngantier Exp $ -->
+
+<style type="text/css">
+.aut_display_table {
+	display: table;
+}
+
+.aut_display_row {
+	display: table-row;
+}
+
+.aut_display_cell {
+	display: table-cell;
+	padding-right: 5px;
+}
+</style>
+
+{% block header %}
+	<h1><span>{{ msg.detail_authority_title }}</span></h1>
+{% endblock %}
+
+
+<!-- Details de lautorite courante -->
+<div id="aut_details" class='notice-perio'> <!-- Classe a faire sauter (En ajouter une speciale pour les autorites) -->
+{% block detail %}
+<div id="aut_details_container">
+	<div class="vignAut">{{authority.thumbnail}}</div>
+	<small>
+		<span class='{{authority.statut_class_html}}' style='margin-right: 3px;'>
+			<a href=# onmouseover="z=document.getElementById('zoom_statut{{  authority.num_object }}'); z.style.display='';" onmouseout="z=document.getElementById('zoom_statut{{  authority.num_object }}'); z.style.display='none';">
+				<img src="{{ img.spacer.gif }}" width="10" height="10" />
+			</a>
+		</span>
+	</small>
+	<div id="zoom_statut{{ authority.num_object }}" style="border: solid 2px #555555; background-color: #FFFFFF; position: absolute; display:none; z-index: 2000;">
+		<b>
+			{{ authority.statut_label }}
+		</b>
+	</div>
+	{% if authority.type_icon %}
+		<img class="align_top" src="{{ authority.type_icon }}" title="{{ authority.type_label }}" alt="{{ authority.type_label }}"/>
+	{% endif %}
+	
+	{% block caddie %}
+		{{ authority.caddie }}
+	{% endblock %}
+	
+	{% block title %}
+	{% endblock %}
+	
+	<div id="aut_see" style="overflow:hidden;">
+		<table>
+			<tr id="authority_container" style="display:none;">
+				<td>
+					<div id="authority_display_table" class="aut_display_table">
+						{% block aut_see %}
+							{% block details %}
+							{% endblock %}							
+							{% block map %}
+							{% endblock %}
+							{% block aut_linked %}
+								{% if aut_link.display %}
+									<div class="aut_linked aut_display_row">
+										<div class="aut_display_cell">
+											<b>{{ msg.aut_link }} :</b>
+										</div>
+										<div class="aut_display_cell">
+											{{ aut_link.display }}
+										</div>
+									</div>
+								{% endif %}
+							{% endblock %}
+							
+							{% block indexing_concepts %}
+									{% for concept in authority.indexing_concepts %}
+										{% if loop.first %}
+											<div class="indexing_concepts aut_display_row">
+												<div class="aut_display_cell">
+													<b>{{ msg.ontology_skos_concept }} :</b>
+												</div>
+												<div class="aut_display_cell">
+										{% endif %}
+													<a href="./autorites.php?categ=see&sub=concept&id={{ concept.id }}">{{ concept.display_label }}</a><br/>
+										{% if loop.last %}
+												</div>	
+											</div>
+										{% endif %}
+									{% endfor %}
+							{% endblock %}	
+							
+							{% block pperso %}
+								{% for pperso in authority.p_perso %}
+									{% if pperso.AFF %}
+										<div class="aut_display_row">
+											<div class="aut_display_cell">
+												<b>{{ pperso.TITRE }}</b>
+											</div>
+											<div class="aut_display_cell">
+												{{ pperso.AFF }}
+											</div>
+										</div>
+									{% endif %}
+								{% endfor %}
+							{% endblock %}
+							
+							{% block enrichment %}
+							{% endblock %}
+						{% endblock %}
+					</div>
+				</td>
+			</tr>
+		</table>
+		<hr>
+		{% block aut_buttons %}
+		{% endblock %}
+		<div class="row">&nbsp;</div>
+	</div>
+	<script type="text/javascript">
+		//Control Script
+		var display_table = document.getElementById('authority_display_table');
+		var tr_container = document.getElementById('authority_container');
+		var content = display_table.innerHTML;
+		if(content.trim() != ""){
+			tr_container.setAttribute('style', 'display:block;');
+		}
+	</script>
+</div>
+<div class="clear"></div>
+{% endblock %}
+</div>
+
+
+
+<!-- Block de contenu (notices indexees, autorites indexees, specials) -->
+{% block aut_menu %}
+	{% for authority_tab in authority.authority_tabs.tabs %}
+		{% if loop.first %}
+			<br/>
+			<div id="content_onglet_perio" class='ui-clearfix'>
+		{% endif %}
+		{% if authority_tab.nb_results %}
+			<span{% if global.quoi == authority_tab.name %} class='onglet-perio-selected' {% else %} class='onglets-perio' {% endif %}><a href="./autorites.php?categ=see&sub={{ authority.string_type_object }}&id={{  authority.num_object }}&quoi={{ authority_tab.name }}#content_onglet_perio">{{ authority_tab.label }} ({{ authority_tab.nb_results }})</a></span>
+		{% endif %}
+		{% if loop.last %}
+			</div>
+		{% endif %}
+	{% endfor %}
+{% endblock %}
+
+{% if authority.authority_list_ui.nb_results %}
+	<div class="elts-list-tabs">
+{% endif %}
+
+{% for group_name, groups in authority.authority_list_ui.groups %}
+	{% if loop.first %}
+		<form class="form-autorites" method="post" action="./autorites.php?categ=see&sub={{ authority.string_type_object }}&id={{  authority.num_object }}&quoi={{ global.quoi }}{% if global.tab_nb_per_page %}&tab_nb_per_page={{global.tab_nb_per_page}}{% endif %}#content_onglet_perio">
+			<div class="form-contenu">
+				<div style="display:table">
+	{% endif %}
+	<div style="display:table-row">
+		<div style="display:table-cell">
+			<input type="hidden" name="elements_list_filters_{{ group_name }}_post" value="1"/>
+			<b>{{ groups.label }} : </b>
+		</div>
+		<div style="display:table-cell">
+		{% for group_id, group_infos in groups.elements %}
+			<input type="checkbox" id="elements_list_filters_{{ group_name }}_{{ loop.counter0 }}" value="{{ group_id }}" name="elements_list_filters[{{ group_name }}][]" {% for group_filter_name, filter in session.elements_list_filters %}{% if group_filter_name == group_name %}{% for filter_id in filter %}{% if filter_id == group_id %}checked="checked"{% endif %}{% endfor %}{% endif %}{% endfor %} title="{{ group_infos.nb_results }}"/>
+			<label title="{{ group_infos.nb_results }}" for="elements_list_filters_{{ group_name }}_{{ loop.counter0 }}" class="etiquette">{{ group_infos.label }}</label>
+		{% endfor %}
+		</div>
+	</div>
+	{% if loop.last %}
+				</div>
+			</div>
+			<div class="row">
+				<input type="submit" class="bouton" value="{{ msg.sauv_list_filtrer }}"/>
+			</div>
+		</form>
+	{% endif %}
+{% endfor %}
+	
+{% block aut_list %}
+	{% if authority.authority_list_ui.nb_results %}
+		{% if authority.authority_list_ui.expandable %}
+			<a href="#" onclick="expandAll_ajax(0, document.getElementById('elements_list_container')); return false;"><img style="border:0px" id="expandall" src="{{ img.expand_all.gif }}"></a>
+			<a href="#" onclick="collapseAll(document.getElementById('elements_list_container')); return false;"><img style="border:0px" id="collapseall" src="{{ img.collapse_all.gif }}"></a>
+		{% endif %}
+		<div id='elements_list_container'>
+			{{ authority.authority_list_ui.elements_list }}
+		</div>
+		{{ authority.authority_list_ui.get_elements_list_nav }}
+		</div>
+	{% endif %}
+{% endblock %}
+
+<script type="text/javascript">
+	function confirm_delete() {
+  		result = confirm("{{ msg.confirm_suppr }}");
+		if(result) {
+            {% block aut_link_delete %}{% endblock %}
+		}
+    }
+</script>

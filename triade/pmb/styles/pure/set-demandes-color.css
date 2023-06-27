@@ -1,0 +1,207 @@
+@charset "utf-8";
+/* +--------------------------------------------------------------------------+
+// 2017 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// +-------------------------------------------------+
+// $Id: set-demandes-color.css,v 1.6 2018-04-17 15:21:19 wlair Exp $ */
+/*------------------------------------------------------------------------------------------*/
+/* ========================================================================
+   demandes
+   base :#b2a57a
+   hover :#c5b47a
+   active/focus :#908356   
+ ==========================================================================  */
+
+.uk-navbar-nav li#navbar-demandes a:after,
+.demandes .hmenu.uk-tab>*:hover>a {
+  border-bottom-color: #b2a57a;
+}
+
+li#navbar-demandes.current,
+.demandes input[type="checkbox"]:checked,
+.demandes input[type="checkbox"]:indeterminate,
+.demandes input[type="radio"]:checked,
+.demandes input[type="checkbox"]:checked:focus,
+.demandes input[type="checkbox"]:indeterminate:focus,
+.demandes input[type="radio"]:checked:focus,
+.demandes div#extra2 span.uk-icon,
+.demandes div#extra2 .notification.ui-active {
+  background-color: #b2a57a;
+}
+
+.demandes input:focus,
+.demandes select:focus,
+.demandes textarea:focus,
+.demandes input[type="checkbox"]:focus,
+.demandes input[type="radio"]:focus,
+.demandes.claro.pure .dijitButtonHover .dijitButtonNode,
+.demandes.claro.pure .dijitDropDownButtonHover .dijitButtonNode,
+.demandes.claro.pure .dijitComboButton .dijitButtonNodeHover,
+.demandes.claro.pure .dijitComboButton .dijitDownArrowButtonHover,
+.demandes.claro.pure .dijitToggleButtonHover .dijitButtonNode,
+.demandes.claro.pure .dijitTextBoxHover,
+.demandes #contenu .uk-button-default:focus,
+.demandes #contenu .uk-button-default:hover,
+.demandes .hmenu.uk-tab>.uk-active>a,
+.demandes iframe {
+  border-color: #b2a57a;
+}
+
+.uk-navbar-nav li#navbar-demandes a:hover,
+.demandes h1.section-title i,
+.demandes h1.section-sub-title,
+.demandes .uk-link,
+.demandes a,
+.demandes .uk-link:hover,
+.demandes a:hover,
+.demandes h3:not(.section-sub-title),
+.demandes .article-title i,
+.demandes #menu .uk-nav>li>a i,
+.demandes #menu .uk-nav>li.uk-active>a,
+.demandes #menu .uk-nav>li>a i,
+.demandes #menu .uk-nav>li.uk-active>a,
+.demandes #menu .uk-nav>li>a:hover,
+.demandes .h2-like i,
+.demandes #extra span.uk-icon:hover,
+.demandes #extra i:hover,
+.demandes #navbar .dashboard:hover,
+.pure .demandes .uk-tab > * > a:hover,
+.pure .demandes .uk-tab > * > a:focus,
+.demandes .categ_browser a,
+.demandes .categ_browser a:hover,
+.demandes .categ_browser a:focus,
+.demandes .categ_browser a:active,
+.demandes .hmenu.uk-tab>.uk-active>a {
+  color: #b2a57a;
+}
+
+.demandes #contenu input.wyr-input[type='file']:focus {
+  outline-color: #b2a57a;
+}
+
+.demandes .stat-child .uk-table th {
+  color: #b2a57a;
+  font-weight: 500;
+}
+
+.demandes #menu ul.uk-nav {
+  border-top: solid 2px #b2a57a;
+}
+
+.demandes #menu>h3 .uk-icon {
+  background: #b2a57a;
+}
+
+.demandes.claro.pure .dijitMenu .dijitMenuItemHover td,
+.demandes.claro.pure .dijitMenu .dijitMenuItemSelected td,
+.demandes.claro.pure .dijitMenuItemHover,
+.demandes.claro.pure .dijitComboBoxMenu .dijitMenuItemHover,
+.demandes.claro.pure .dijitMenuItemSelected,
+.demandes.claro.pure .dojoDndItemOver {
+  background-color: #b2a57a;
+  border-color: #b2a57a;
+  background-image: none;
+}
+
+.demandes form .form-contenu,
+.demandes .row.bkg-grey {
+  border-color: #b2a57a;
+}
+
+.demandes input.wyr-input[type='submit'],
+.demandes .uk-button,
+.demandes .search_cancel>input,
+.demandes.claro.pure .dijitButton .dijitButtonNode,
+.demandes.claro.pure .dijitDropDownButton .dijitButtonNode,
+.demandes.claro.pure .dijitComboButton .dijitButtonNode,
+.demandes.claro.pure .dijitToggleButton .dijitButtonNode {
+  background-color: #b2a57a;
+}
+
+.demandes input.wyr-input[type='submit']:hover,
+.demandes .uk-button:hover,
+.demandes .search_cancel>input:hover,
+.demandes.claro.pure .dijitButton .dijitButtonNode:hover,
+.demandes.claro.pure .dijitDropDownButton .dijitButtonNode:hover,
+.demandes.claro.pure .dijitComboButton .dijitButtonNode:hover,
+.demandes.claro.pure .dijitToggleButton .dijitButtonNode:hover {
+  background-color: #c5b47a;
+}
+
+.demandes input.wyr-input[type='submit']:focus,
+.demandes input.wyr-input[type='submit']:active,
+.demandes .uk-button:focus,
+.demandes .uk-button:active,
+.demandes .search_cancel>input:focus,
+.demandes .search_cancel>input:active,
+.demandes.claro.pure .dijitButton .dijitButtonNode:focus,
+.demandes.claro.pure .dijitDropDownButton .dijitButtonNode:focus,
+.demandes.claro.pure .dijitComboButton .dijitButtonNode:focus,
+.demandes.claro.pure .dijitToggleButton .dijitButtonNode:focus,
+.demandes.claro.pure .dijitButton .dijitButtonNode:active,
+.demandes.claro.pure .dijitDropDownButton .dijitButtonNode:active,
+.demandes.claro.pure .dijitComboButton .dijitButtonNode:active,
+.demandes.claro.pure .dijitToggleButton .dijitButtonNode:active {
+  background-color: #908356;
+}
+
+.demandes .uk-label,
+.demandes .uk-label:hover {
+  background: #b2a57a;
+  color: #fff;
+}
+
+.demandes .search-result-item.notice-child[style*='block'],
+.demandes .child[style*='block'],
+.demandes div[startopen="Yes"] {
+  border-color: #b2a57a;
+}
+
+.demandes select:focus {
+  outline-color: #b2a57a;
+}
+
+
+/* ========================================================================
+inside menu //  button
+===========================================================================  */
+
+.pure.demandes .hmenu .wui-button.uk-active {
+    background: #b2a57a;
+    border-color: #b2a57a;
+}
+.pure.demandes .hmenu .wui-button.uk-active:hover  a,
+.pure.demandes .hmenu .wui-button:hover a,
+.pure.demandes .hmenu .wui-button.uk-active:hover ,
+.pure.demandes .hmenu .wui-button:hover,
+.pure.demandes .hmenu .wui-button.uk-active:active ,
+.pure.demandes .hmenu .wui-button:active
+.pure.demandes .hmenu .wui-button.uk-active:focus ,
+.pure.demandes .hmenu .wui-button:focus,
+.demandes #empr-name,
+.pure.demandes .hmenu .wui-button {
+    border-color: #b2a57a;    
+}
+ 
+.demandes input[type='submit'],
+.demandes input[type='button'],
+.demandes .bouton{
+	background-color: #b2a57a;
+}
+.demandes input[type='submit']:hover,
+.demandes input[type='button']:hover,
+.demandes .bouton:hover{
+	background-color: #c5b47a;
+}
+
+.demandes input[type='submit']:focus,
+.demandes input[type='button']:focus,
+.demandes .bouton:focus,  
+.demandes input[type='submit']:active,
+.demandes input[type='button']:active,
+.demandes .bouton:active{
+	background-color: #908356;
+
+}
+
+
+

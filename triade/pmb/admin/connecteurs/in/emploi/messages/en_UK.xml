@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le connecteur nasa_ads
+****************************************************************************************
+© 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: en_UK.xml,v 1.1 2015-06-15 12:55:34 pmbs Exp $ -->
+
+<XMLlist>
+	<entry code="rec_addr">Register an address to be able to access the server properties</entry>
+	<entry code="error_contact_server">Error when trying to reach the Nasa ADS server : %s</entry>
+	<entry code="emploi_url">URL</entry>
+	<entry code="emploi_title">Title</entry>
+	<entry code="emploi_description">Description</entry>
+	<entry code="emploi_author">Author</entry>
+	<entry code="emploi_contact">Contact</entry>
+	<entry code="emploi_unconfigured">The source of the connector is not configured</entry>
+	<entry code="default_schema">By default</entry>
+	<entry code="emploi_chosen_schema">Chosen schema</entry>
+	<entry code="emploi_searchfields">Allow the search on the fields:</entry>
+	<entry code="emploi_maxrecordpersearch">Nombre maximum d'enregistrements par recherche:</entry>
+	<entry code="emploi_is_mapped_to"> is equivalent to:</entry>
+	<entry code="emploi_no_index_match">This source does not allow the search on %s.</entry>
+	<entry code="emploi_no_query">Impossible to search for this on this source.</entry>
+	<entry code="emploi_automap">Fill automatically.</entry>
+	<entry code="emploi_global_search">Global search</entry>
+	<entry code="emploi_xsl_to_pmbunimarc">Style sheets to apply in order to turn the data into PMB unimarc</entry>
+	<entry code="emploi_xsl_custom">Custom file</entry>
+	<entry code="emploi_cqlfail_means_global">If the search construction fails, make a global search</entry>
+	<entry code="emploi_doc_a">Abstract</entry>
+	<entry code="emploi_doc_c">Quotes</entry>
+	<entry code="emploi_doc_d">On-line Data</entry>
+	<entry code="emploi_doc_e">Electronic Article</entry>
+	<entry code="emploi_doc_f">Printable Article</entry>
+	<entry code="emploi_doc_g">Gif Images</entry>
+	<entry code="emploi_doc_h">HEP/Spires Information</entry>
+	<entry code="emploi_doc_i">Author Comments</entry>
+	<entry code="emploi_doc_l">Library Entries</entry>
+	<entry code="emploi_doc_m">Multimedia</entry>
+	<entry code="emploi_doc_n">NED Objects</entry>
+	<entry code="emploi_doc_o">Associated Articles</entry>
+	<entry code="emploi_doc_p">Planetary Data System</entry>
+	<entry code="emploi_doc_r">References</entry>
+	<entry code="emploi_doc_s">SIMBAD Objects</entry>
+	<entry code="emploi_doc_t">Table of Contents</entry>
+	<entry code="emploi_doc_u">Also Read</entry>
+	<entry code="emploi_doc_x">arXiv e-print</entry>
+	<entry code="emploi_doc_z">Abstract</entry>
+</XMLlist>

@@ -1,0 +1,86 @@
+@charset "utf-8";
+ /* +--------------------------------------------------------------------------+
+// 2015 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// +-------------------------------------------------+
+// $Id: fontAcontent.css,v 1.2 2016-09-29 12:25:30 wlair Exp $ */
+
+/*------------------------------------------------------------------------------------------*/
+
+/*--------------------------------------------------------------------------*/
+
+#bandeau .infosBandeau .liensExtrn li:before,
+#footer .Ancre a:before,
+.itemAbrege  p.lirePlus:after,
+.itemAbrege  p.lirePlus a:after,
+.MenuHoriz .Nav>li .SousNav li a:after,
+.listBreves>.itemAbrege>a:after,
+.listBibli>.itemAbrege>a:after,
+.listEtageres>.itemAbrege>a:after,
+.fluxRSS>.itemAbrege>a:after,
+#search:after,
+#search:before,
+#search form:after,
+#search form:before,
+.search_advanced_link a:before,
+ul.search_tabs li#current:before,
+.listBreves .itemAbrege>ul li:after,
+.SliderHoriz .SliderNot .bx-prev:before,
+.SliderHoriz .SliderNot .bx-next:before,
+#lienHistorique a:before,
+.fluxRSS>.itemAbrege a:after,
+.itemSolo h4:after,
+.listProd>h3:after,
+.listEtageresRub>h3:after,
+.fluxRSSRub>.itemAbrege h4 a:after,
+#facette_wrapper th:after,
+.infosArt>h3:after,
+.fleche>a:after,
+.lienFlux a:after,
+.accesFlux a:before,
+.SliderVertic .bx-wrapper .bx-prev:after,
+.SliderVertic .bx-wrapper .bx-next:after,
+.accesFlux a:after,
+.listeFluxRss a:after,
+#lienBouton a:after,
+.imgXL a:after,
+.rss_articles p i:before,
+#aut_details_liste>h3:after,
+#lienCnx a:before,
+#lienDcnx a:before,
+.SliderNot.SliderHoz .bx-wrapper .bx-prev:after,
+.SliderNot .bx-wrapper .bx-next:after,
+#navigator > table > tbody > tr > td> a span:before,
+#facette h3:before, 
+#lvl1 h3:before,
+#facette_compare span.facette_compare:before,
+.noticesEtagere>a:after,
+.liensExtrn li a:after,
+.aut_details_liste_titre:after,
+#facette_wrapper > form > h3 > table > tbody > tr > td > a:before,
+.search_advanced_link:before {
+	font-family: FontAwesome;
+	font-weight: normal;
+	font-style: normal;
+	display: inline-block;
+	text-decoration: inherit;
+	-webkit-font-smoothing: antialiased;
+	width:1.3em;
+} 
+.headerTab:before {
+  font-family: specificIcons;
+  font-weight: normal;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  speak: none;
+  font-size: 20px;
+  color: #00abbd;
+  position: absolute;
+  top: 5px;
+  right: inherit;
+  bottom: inherit;
+  left: -2px;
+  content: '\e001';
+}

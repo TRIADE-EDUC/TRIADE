@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../../../../../includes/XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français
+****************************************************************************************
+© 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: en_UK.xml,v 1.4 2016-11-18 09:32:12 jpermanne Exp $ -->
+
+<XMLlist>
+	<entry code="illegal_verb">Illegal Verb</entry>
+	<entry code="set_none">[None]</entry>
+	<entry code="repository_name">Repository name</entry>
+	<entry code="admin_email">E-mail address of the admin</entry>
+	<entry code="included_sets">Sets included in the source</entry>
+	<entry code="repositoryIdentifier">Identifier of the repository</entry>
+	<entry code="unconfigured_source">This OAI source is not configured</entry>
+	<entry code="cannotDisseminateFormat">%s is not a format supported by this repository</entry>
+	<entry code="chunksize">Number of results per query</entry>
+	<entry code="token_lifeduration">Life duration of the tokens in seconds</entry>
+	<entry code="unknown_set">The specified set does not exist in this repository</entry>
+	<entry code="badResumptionToken">The specified token is either expired or invalid</entry>
+	<entry code="cache_complete_records">Cache the complete recordings</entry>
+	<entry code="cache_complete_records_seconds">Life duration of the recordings in the cache (seconds)</entry>
+	<entry code="idDoesNotExist">The requested recording does not exist in this repository</entry>
+	<entry code="link_status_to_deletion">Link a record status to the OAI deletion information</entry>
+	<entry code="linked_status_to_deletion">Linked status</entry>
+	<entry code="noRecordsMatch">No recording found</entry>
+	<entry code="allow_gzip_compression">Allow the gzip compression of the queries</entry>
+	<entry code="allowed_admin_convert_paths">Additional conversion formats allowed</entry>
+	<entry code="builtin_formats">Formats included by default</entry>
+	<entry code="baseURL">Base URL of the repository</entry>
+	<entry code="baseURL_default">Default address</entry>
+	<entry code="baseURL_sourceadd">Register the source to modify this field</entry>
+	<entry code="include_items">Keep the informations of the copies in the zone 995</entry>
+	<entry code='feuille_xslt'>Customized XSLT sheet for the Dublin Core</entry>
+	<entry code='suppr_feuille_xslt'>Delete this sheet</entry>
+	<entry code='deletion_management'>Mode de gestion des suppressions des enregistrements</entry>
+	<entry code='deletion_management_none'>Aucune</entry>
+	<entry code='deletion_management_transient'>Transitoire</entry>
+	<entry code='deletion_management_transient_duration'>durée (secondes) :</entry>
+	<entry code='deletion_management_persistent'>Persistant</entry>
+	<entry code='if_none_status_to_deletion'>(Si aucun statut lié)</entry>
+	<entry code="use_items_update_date">Use items update date</entry>
+	<entry code="badArgument">Bad Argument</entry>
+	<entry code="noSetHierarchy">Set introuvable</entry>
+	<entry code="oai_pmh_valid">Validité OAI-PMH</entry>
+</XMLlist>

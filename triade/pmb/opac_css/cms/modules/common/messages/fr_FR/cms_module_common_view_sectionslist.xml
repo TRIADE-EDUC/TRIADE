@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_common_view_sectionslist.xml,v 1.4 2016-09-21 09:56:04 dgoron Exp $ -->
+
+<XMLlist>
+	<entry code="cms_module_common_view_sectionslist_used_template">Choix du template</entry>
+	<entry code="cms_module_common_view_sectionslist_page_var">Variable à utiliser</entry>
+	<entry code="cms_module_common_view_sectionslist_build_section_link">Construction du lien pour les rubriques</entry>
+	<entry code="cms_module_common_view_title">Titre de la liste</entry>
+	<entry code="cms_module_common_view_section_desc">Rubriques</entry>
+	<entry code="cms_module_common_view_section_link_desc">Lien vers la rubrique</entry>
+	<entry code="cms_module_common_view_sectionslist_build_article_link">Construction du lien pour les articles</entry>
+	<entry code="cms_module_common_view_article_link_desc">Lien vers l'article</entry>
+</XMLlist>

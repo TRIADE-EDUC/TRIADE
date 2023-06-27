@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<XMLlist>
+<!-- import_basic_param -->
+<entry code="import_basic_param">Tableau avec les paramètres disponibles pour la fonction import_basic (Description -> Valeur par défaut)</entry>
+<entry code="import_basic_param_func_import">Fonction d'import à utiliser -> func_bdp.inc.php </entry>
+<entry code="import_basic_param_isbn_mandatory">ISBN obligatoire ? -> Non</entry>
+<entry code="import_basic_param_isbn_dedoublonnage">Dédoublonnage sur ISBN ? -> Oui</entry>
+<entry code="import_basic_param_isbn_only">Que les ISBN ? -> Non (Ignorer les ISSN)</entry>
+<entry code="import_basic_param_statutnot">Statut des notices importées -> Valeur du paramètre utilisateur "Statut de notice par défaut en intégration de notice"</entry>
+<entry code="import_basic_param_link_generate">Générer les liens entre notices ? -> Non</entry>
+<entry code="import_basic_param_authorities_notices">Tenir compte des notices d'autorités ? -> Non</entry>
+<entry code="import_basic_param_authorities_default_origin">Origine par défaut des autorités si non précisé dans les notices ? -> vide</entry>
+<entry code="import_basic_param_book_lender_id">Propriétaire exemplaire -> Valeur du paramètre utilisateur "Propriétaire par défaut en création d'exemplaire"</entry>
+<entry code="import_basic_param_book_statut_id">Statut exemplaire -> Valeur du paramètre utilisateur "Statut de document par défaut en création d'exemplaire"</entry>
+<entry code="import_basic_param_book_location_id">Localisation exemplaire -> Valeur du paramètre utilisateur "Localisation du document par défaut en création d'exemplaire"</entry>
+<entry code="import_basic_param_cote_mandatory">Cote exemplaire obligatoire ? -> Non</entry>
+<entry code="import_basic_param_tdoc_codage">Types de document Codage du propriétaire ? -> Non (Codage générique)</entry>
+<entry code="import_basic_param_statisdoc_codage">Codes statistiques Codage du propriétaire ? -> Non (Codage générique)</entry>
+<entry code="import_basic_param_sdoc_codage">Sections Codage du propriétaire ? -> Non (Codage générique)</entry>
+	
+<!-- pmbesRepositories -->
+<entry code="pmbesConvertImport_description">Fonctions de conversion et d'import</entry>
+
+<!-- get_convert_types -->
+<entry code="get_convert_types_description">Liste des types de conversions possibles</entry>
+<entry code="get_convert_types_output_description">Tableau avec en clé un identifiant et en valeur le libellé de la conversion (attribut "name" de la balise "item" du fichier catalog.xml)</entry>
+
+<!-- convert_by_path -->
+<entry code="convert_by_path_description">Convertit une notice d'un format vers un autre format (utilisation du chemin du type de conversion)</entry>
+<entry code="convert_input_convert_path">Chemin de la conversion à utiliser</entry>
+
+<!-- convert -->
+<entry code="convert_description">Convertit une notice d'un format vers un autre format</entry>
+<entry code="convert_input_notice">La notice à convertir</entry>
+<entry code="convert_input_convert_type_id">Identifiant de la conversion à utiliser (voir get_convert_types)</entry>
+<entry code="convert_input_import">Indique si l'import (avec la fonction import) doit être réalisé directement apres la conversion</entry>
+<entry code="convert_input_source_id">Identifiant de la source</entry>
+<entry code="convert_input_do_not_convert">Ne pas convertir la notice (Peut-être utile si notice en format Unimarc)</entry>
+<entry code="convert_output_notice">La notice à convertir</entry>
+<entry code="convert_output_converted_notice">La notice convertie</entry>
+
+<!--import -->
+<entry code="import_description">Import z3950 de notice</entry>
+<entry code="import_input_unimarc_notice">La notice en unimarc à importer</entry>
+<entry code="import_input_unimarc_source_id">Identifiant de la source</entry>
+	
+<!-- import_basic -->
+<entry code="import_basic_description">Import de notices (équivalent à celui dans l'administration de PMB)</entry>
+<entry code="import_basic_input_description"></entry>
+<entry code="import_basic_input_notices">Tableau avec les notices en unimarc à importer</entry>
+<entry code="import_basic_input_with_expl">Précise si oui ou non il faut gérer les exemplaires</entry>
+<entry code="import_basic_msg_ok">Aucune erreur constatée</entry>
+<entry code="import_basic_msg_ko">Aucune notice à traiter</entry>
+<entry code="import_basic_output_notice_deja_presente">Nombre de notices déjà présentes en base</entry>
+<entry code="import_basic_output_notice_rejetee">Nombre de notices rejetées</entry>
+<entry code="import_basic_output_nbtot_notice">Nombre total de notices</entry>
+<entry code="import_basic_output_stdout">Messages qui sont normalement affichés à l'écran lors de l'import</entry>
+<entry code="import_basic_output_result">Renseigné si aucune notice n'a été passée à la fonction ou si il n'y a eu aucun message d'erreur lors de l'import (voir ci-dessous)</entry>
+<entry code="import_basic_output_error_log"><![CDATA[Tableau de tableaux avec les erreurs relevées lors de l'import: Array([X] => Array([error_origin] => Origine de l'erreur, [error_text] => Message de l'erreur, [nb_error] => Nombre de fois ou l'erreur s'est produite))]]></entry>
+
+</XMLlist>

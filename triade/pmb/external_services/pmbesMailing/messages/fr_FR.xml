@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- messages localisés en français pour le mailing
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: fr_FR.xml,v 1.3 2019-03-14 10:36:01 tsamson Exp $ -->
+
+<!DOCTYPE XMLlist SYSTEM "../../../includes/XMLlist.dtd" >
+<XMLlist>
+<!-- 
+pmbesMailing
+-->
+  <entry code="Mailing_functions_description">Fonctions relatives au mailing</entry>
+<!-- 
+sendMailingCaddie
+-->
+  <entry code="sendMailingCaddie_description">Diffusion du template de mail</entry>
+  <entry code="sendMailingCaddie_input_description"></entry>
+  <entry code="sendMailingCaddie_id_caddie_empr">Identifiant du panier d'emprunteurs</entry> 
+  <entry code="sendMailingCaddie_id_tpl">Identifiant du template de mail</entry>
+  <entry code="sendMailingCaddie_output_description"></entry>
+  <entry code="sendMailingCaddie_result"></entry>
+  <entry code="sendMailingCaddie_email_cc">Destinataire supplémentaire en copie cachée</entry>
+  <entry code="sendMailingSearchPerso_description">Diffusion du template de mail via une recherche prédéfinie</entry>
+  <entry code="sendMailingSearchPerso_input_description"></entry>
+  <entry code="sendMailingSearchPerso_id_empr_search_perso">Identifiant de la prédéfinie d'emprunteurs</entry>    
+  <entry code="sendMailingSearchPerso_id_tpl">Identifiant du template de mail</entry>
+  <entry code="sendMailingSearchPerso_output_description"></entry>
+  <entry code="sendMailingSearchPerso_result"></entry>
+  <entry code="sendMailingSearchPerso_email_cc">Destinataire supplémentaire en copie cachée</entry>
+</XMLlist>

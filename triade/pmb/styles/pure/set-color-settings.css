@@ -1,0 +1,127 @@
+@charset "utf-8";
+/* +--------------------------------------------------------------------------+
+// 2017 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// +-------------------------------------------------+
+// $Id: set-color-settings.css,v 1.2 2018-04-17 15:21:19 wlair Exp $ */
+/*------------------------------------------------------------------------------------------*/
+/* ========================================================================
+   account // settings
+   base :#0d224c
+   hover :#10295a
+   active/focus :#07183c   
+ ==========================================================================  */
+
+.form-account .button,
+.form-account input[type='button'],
+.form-account input.wyr-input[type='submit'] {
+    border-color: #07183c;
+    background: #0d224c;
+}
+.pure .form-account .button:active,
+.pure .form-account .button:focus,
+.form-account input[type='button']:active ,
+.form-account input[type='button']:focus  {
+    background: #141a29;
+}
+.pure .form-account .button:hover,
+.form-account input[type='button']:hover {
+    background: #10295a;
+}
+.pure select[multiple], 
+.pure select[size], textarea{
+    height:auto;
+}
+li#navbar-account.current,
+.account input[type="checkbox"]:checked,
+.account input[type="checkbox"]:indeterminate,
+.account input[type="radio"]:checked,
+.account input[type="checkbox"]:checked:focus,
+.account input[type="checkbox"]:indeterminate:focus,
+.account input[type="radio"]:checked:focus,
+.account div#extra2 span.uk-icon,
+.account div#extra2 .notification.ui-active {
+  background-color: #0d224c;
+}
+.account .form-contenu input[type="radio"]:checked:focus,
+.account .form-contenu input[type="checkbox"]:checked,
+.account .form-contenu input[type="checkbox"]:checked:focus,
+.account .form-contenu input[type="checkbox"]:indeterminate:focus{
+  background-color: #0d224c;
+   border-color: #0d224c;
+
+}
+.uk-navbar-nav li#navbar-account a:hover,
+.account h1.section-title i,
+.account h1.section-sub-title,
+.account .uk-link,
+.account a,
+.account .uk-link:hover,
+.account a:hover,
+.account h3:not(.section-sub-title),
+.account .article-title i,
+.account #menu .uk-nav>li>a i,
+.account #menu .uk-nav>li.uk-active>a,
+.account #menu .uk-nav>li>a i,
+.account #menu .uk-nav>li.uk-active>a,
+.account #menu .uk-nav>li>a:hover,
+.account .h2-like i,
+.account #extra span.uk-icon:hover,
+.account #extra i:hover,
+.account #navbar .dashboard:hover,
+.pure .account .uk-tab > * > a:hover,
+.pure .account .uk-tab > * > a:focus,
+.account .categ_browser a,
+.account .categ_browser a:hover,
+.account .categ_browser a:focus,
+.account .categ_browser a:active,
+.account .hmenu.uk-tab>.uk-active>a {
+  color: #0d224c;
+}
+.account #menu>h3 .uk-icon {
+  background: #0d224c;
+}
+.account #menu ul.uk-nav {
+  border-top: solid 2px #0d224c;
+}
+/* ========================================================================
+inside menu //  button
+===========================================================================  */
+
+
+.pure.account .hmenu .wui-button.uk-active {
+    background: #0d224c;
+    border-color: #0d224c;
+}
+.pure.account .hmenu .wui-button.uk-active:hover  a,
+.pure.account .hmenu .wui-button:hover a,
+.pure.account .hmenu .wui-button.uk-active:hover ,
+.pure.account .hmenu .wui-button:hover,
+.pure.account .hmenu .wui-button.uk-active:active ,
+.pure.account .hmenu .wui-button:active
+.pure.account .hmenu .wui-button.uk-active:focus ,
+.pure.account .hmenu .wui-button:focus,
+.account #empr-name,
+.pure.account .hmenu .wui-button  {
+    border-color: #0d224c;    
+}
+ 
+.account input[type='submit'],
+.account input[type='button'],
+.account .bouton{
+	background-color: #0d224c;
+}
+.account input[type='submit']:hover,
+.account input[type='button']:hover,
+.account .bouton:hover{
+	background-color: #10295a;
+}
+
+.account input[type='submit']:focus,
+.account input[type='button']:focus,
+.account .bouton:focus,  
+.account input[type='submit']:active,
+.account input[type='button']:active,
+.account .bouton:active{
+	background-color: #07183c;
+
+}

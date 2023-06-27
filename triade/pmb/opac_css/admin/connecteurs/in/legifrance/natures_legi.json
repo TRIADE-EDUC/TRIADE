@@ -1,0 +1,17 @@
+{
+    "ARRETE":"Arrêté",
+    "ARRET":"Arret",
+    "Article":"Article",
+    "CODE":"Code", 
+    "CONSTITUTION":"Constitution", 
+    "CONVENTION":"Convention", 
+    "DECISION":"Décision",
+    "DECLARATION":"Déclaration",
+    "DECRET":"Décret",
+    "DECRET_LOI":"Décret loi",
+    "DELIBERATION":"Délibération",
+    "LOI":"Loi",
+    "LOI_CONSTIT":"Loi constitutionnelle",
+    "LOI_ORGANIQUE":"Loi organique",
+    "ORDONNANCE":"Ordonnance"
+}

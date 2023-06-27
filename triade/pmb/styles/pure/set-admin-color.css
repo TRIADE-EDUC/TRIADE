@@ -1,0 +1,223 @@
+@charset "utf-8";
+/* +--------------------------------------------------------------------------+
+// 2017 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// +-------------------------------------------------+
+// $Id: set-admin-color.css,v 1.9 2018-04-17 15:21:19 wlair Exp $ */
+/*------------------------------------------------------------------------------------------*/
+/* ========================================================================
+   admin
+   base :#df115c
+   hover :#fd055f
+   active/focus :#b10b48      
+ ==========================================================================  */
+
+.uk-navbar-nav li#navbar-admin a:after,
+.admin .hmenu.uk-tab>*:hover>a {
+  border-bottom-color: #df115c;
+}
+
+li#navbar-admin.current,
+.admin input[type="checkbox"]:checked,
+.admin input[type="checkbox"]:indeterminate,
+.admin input[type="radio"]:checked,
+.admin input[type="checkbox"]:checked:focus,
+.admin input[type="checkbox"]:indeterminate:focus,
+.admin input[type="radio"]:checked:focus,
+.admin div#extra2 span.uk-icon,
+.admin div#extra2 .notification.ui-active {
+  background-color: #df115c;
+}
+.admin .form-contenu input[type="radio"]:checked:focus,
+.admin .form-contenu input[type="checkbox"]:checked,
+.admin .form-contenu input[type="checkbox"]:checked:focus,
+.admin .form-contenu input[type="checkbox"]:indeterminate:focus{
+  background-color: #df115c;
+   border-color: #df115c;
+
+}
+.admin input:focus,
+.admin select:focus,
+.admin textarea:focus,
+.admin input[type="checkbox"]:focus,
+.admin input[type="radio"]:focus,
+.admin.claro.pure .dijitButtonHover .dijitButtonNode,
+.admin.claro.pure .dijitDropDownButtonHover .dijitButtonNode,
+.admin.claro.pure .dijitComboButton .dijitButtonNodeHover,
+.admin.claro.pure .dijitComboButton .dijitDownArrowButtonHover,
+.admin.claro.pure .dijitToggleButtonHover .dijitButtonNode,
+.admin.claro.pure .dijitTextBoxHover,
+.admin #contenu .uk-button-default:focus,
+.admin #contenu .uk-button-default:hover,
+.admin .hmenu.uk-tab>.uk-active>a,
+.admin iframe,
+.admin .vmenu>span.selected a:before {
+  border-color: #df115c;
+}
+
+.uk-navbar-nav li#navbar-admin a:hover,
+.admin h1.section-title i,
+.admin h1.section-sub-title,
+.admin .uk-link,
+.admin a,
+.admin .uk-link:hover,
+.admin a:hover,
+.admin h3:not(.section-sub-title),
+.admin .article-title i,
+.admin #menu .uk-nav>li>a i,
+.admin #menu .uk-nav>li.uk-active>a,
+.admin #menu .uk-nav>li>a i,
+.admin #menu .uk-nav>li.uk-active>a,
+.admin #menu .uk-nav>li>a:hover,
+.admin .h2-like i,
+.admin #extra span.uk-icon:hover,
+.admin #extra i:hover,
+.admin #navbar .dashboard:hover,
+.pure .admin .uk-tab > * > a:hover,
+.pure .admin .uk-tab > * > a:focus,
+.admin .categ_browser a,
+.admin .categ_browser a:hover,
+.admin .categ_browser a:focus,
+.admin .categ_browser a:active,
+.admin .hmenu.uk-tab>.uk-active>a {
+  color: #df115c;
+}
+
+.admin #contenu input.wyr-input[type='file']:focus {
+  outline-color: #df115c;
+}
+
+.admin .stat-child .uk-table th {
+  color: #df115c;
+  font-weight: 500;
+}
+
+.admin #menu ul.uk-nav {
+  border-top: solid 2px #df115c;
+}
+
+.admin #menu>h3 .uk-icon {
+  background: #df115c;
+}
+
+.admin.claro.pure .dijitMenu .dijitMenuItemHover td,
+.admin.claro.pure .dijitMenu .dijitMenuItemSelected td,
+.admin.claro.pure .dijitMenuItemHover,
+.admin.claro.pure .dijitComboBoxMenu .dijitMenuItemHover,
+.admin.claro.pure .dijitMenuItemSelected,
+.admin.claro.pure .dojoDndItemOver {
+  background-color: #df115c;
+  border-color: #df115c;
+  background-image: none;
+}
+
+.admin form .form-contenu,
+.admin .row.bkg-grey {
+  border-color: #df115c;
+}
+
+.admin input.wyr-input[type='submit'],
+.admin .uk-button,
+.admin .search_cancel>input,
+.admin.claro.pure .dijitButton .dijitButtonNode,
+.admin.claro.pure .dijitDropDownButton .dijitButtonNode,
+.admin.claro.pure .dijitComboButton .dijitButtonNode,
+.admin.claro.pure .dijitToggleButton .dijitButtonNode,
+.form-clean .uk-button {
+  background-color: #df115c;
+}
+
+.admin input.wyr-input[type='submit']:hover,
+.admin .uk-button:hover,
+.admin .search_cancel>input:hover,
+.admin.claro.pure .dijitButton .dijitButtonNode:hover,
+.admin.claro.pure .dijitDropDownButton .dijitButtonNode:hover,
+.admin.claro.pure .dijitComboButton .dijitButtonNode:hover,
+.admin.claro.pure .dijitToggleButton .dijitButtonNode:hover,
+.form-clean .uk-button:hover {
+  background-color: #fd055f;
+}
+
+.admin input.wyr-input[type='submit']:focus,
+.admin input.wyr-input[type='submit']:active,
+.admin .uk-button:focus,
+.admin .uk-button:active,
+.admin .search_cancel>input:focus,
+.admin .search_cancel>input:active,
+.admin.claro.pure .dijitButton .dijitButtonNode:focus,
+.admin.claro.pure .dijitDropDownButton .dijitButtonNode:focus,
+.admin.claro.pure .dijitComboButton .dijitButtonNode:focus,
+.admin.claro.pure .dijitToggleButton .dijitButtonNode:focus,
+.admin.claro.pure .dijitButton .dijitButtonNode:active,
+.admin.claro.pure .dijitDropDownButton .dijitButtonNode:active,
+.admin.claro.pure .dijitComboButton .dijitButtonNode:active,
+.admin.claro.pure .dijitToggleButton .dijitButtonNode:active,
+.form-clean .uk-button:active,
+.form-clean .uk-button:focus {
+  background-color: #b10b48;
+}
+
+.admin .uk-label,
+.admin .uk-label:hover {
+  background: #df115c;
+  color: #fff;
+}
+
+.admin .search-result-item.notice-child[style*='block'],
+.admin .child[style*='block'],
+.admin div[startopen="Yes"] {
+  border-color: #df115c;
+}
+
+.admin select:focus {
+  outline-color: #df115c;
+}
+
+.pure .admin .uk-table-striped tbody tr.justmodified{
+	background: #d8eafc;
+	color: #1e87f0;
+}
+.pure .admin .uk-table-striped tbody tr.justmodified .ligne_data{
+    font-weight:500;
+}
+/* ========================================================================
+inside menu //  button
+===========================================================================  */
+
+.pure.admin .hmenu .wui-button.uk-active {
+    background: #df115c;
+    border-color: #df115c;
+}
+.pure.admin .hmenu .wui-button.uk-active:hover  a,
+.pure.admin .hmenu .wui-button:hover a,
+.pure.admin .hmenu .wui-button.uk-active:hover ,
+.pure.admin .hmenu .wui-button:hover,
+.pure.admin .hmenu .wui-button.uk-active:active ,
+.pure.admin .hmenu .wui-button:active
+.pure.admin .hmenu .wui-button.uk-active:focus ,
+.pure.admin .hmenu .wui-button:focus,
+.admin #empr-name,
+.pure.admin .hmenu .wui-button {
+    border-color: #df115c;    
+}
+ 
+.admin input[type='submit'],
+.admin input[type='button'],
+.admin .bouton{
+	background-color: #df115c;
+}
+.admin input[type='submit']:hover,
+.admin input[type='button']:hover,
+.admin .bouton:hover{
+	background-color: #fd055f;
+}
+
+.admin input[type='submit']:focus,
+.admin input[type='button']:focus,
+.admin .bouton:focus,  
+.admin input[type='submit']:active,
+.admin input[type='button']:active,
+.admin .bouton:active{
+	background-color: #b10b48;
+
+}
+

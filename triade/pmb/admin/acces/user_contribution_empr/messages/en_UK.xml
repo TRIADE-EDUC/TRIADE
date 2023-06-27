@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour la gestion des droits d'accès Utilisateurs Notices
+****************************************************************************************
+© 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: en_UK.xml,v 1.1 2017-09-13 12:38:29 tsamson Exp $ -->
+
+<XMLlist>
+	<entry code="long_name">User access rights - Records</entry>
+	<entry code="menu_name">Users - Records</entry>
+	<entry code="user_prf_lib">Users roles</entry>
+	<entry code="user_prf_bt_add">Add a role</entry>
+	<entry code="user_prf_bt_calc">Automatic calculation of the roles</entry>
+	<entry code="user_prf_calc_list_lib">Users roles calculated</entry>
+	<entry code="user_prf_used_list_lib">Users roles assigned</entry>
+	<entry code="user_prf_unused_list_lib">Previous users roles to reassign</entry>
+	<entry code="user_prf_calc_lib">Role user</entry>
+	<entry code="user_prf_def_lib">Default user role (not precised)</entry>
+	
+	<entry code="res_prf_lib">Rcords profiles</entry>
+	<entry code="res_prf_bt_add">Add a profile</entry>
+	<entry code="res_prf_bt_calc">Automatic calculation of the profiles</entry>
+	<entry code="res_prf_calc_list_lib">Record profiles calculated</entry>
+	<entry code="res_prf_used_list_lib">Record profiles established</entry>
+	<entry code="res_prf_unused_list_lib">Previous record profiles to reassign</entry>
+	<entry code="res_prf_calc_lib">Record profile</entry>
+	<entry code="res_prf_def_lib">Default record profile (not precised)</entry>
+	
+	<entry code="dom_mod_pro">Modify record profile</entry>
+	<entry code="view_noti_gestion">See record</entry>
+	<entry code="view_noti_error">You don't have the rights to see this record.</entry>
+	<entry code="view_seri_error">You don't have the rights to see this periodical.</entry>
+	<entry code="view_bull_error">You don't have the rights to see this issue.</entry>
+	<entry code="view_depo_error">You don't have the rights to see this examination.</entry>
+	<entry code="mod_noti_gestion">Modify record</entry>
+	<entry code="mod_noti_error">You don't have the rights to modify this record.</entry>
+	<entry code="mod_seri_error">You don't have the rights to modify this periodical.</entry>
+	<entry code="mod_expl_error">You don't have the rights to modify this copy.</entry>
+	<entry code="mod_bull_error">You don't have the rights to modify this issue.</entry>
+	<entry code="mod_depo_error">You don't have the rights to modify this examination.</entry>
+	<entry code="mod_enum_error">You don't have the rights to modify this digital document.</entry>
+</XMLlist>

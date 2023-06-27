@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!-- liste des fonctions d'import disponible
+$Id: func_import.xml,v 1.8 2019-05-27 13:57:45 mbertin Exp $ -->
+<catalog>
+	<item name="ADAV" function="func_adav.inc.php" description="Importe les 600, 601, 602, 605, 606, 607 $a,$j,$x,$y,$z en mots-clés libres, le 856 $u en vignette de la notice, les 900 $a et 902 $a en documents numériques, les 995 $f, $r, $k, $q, $u, $m, $n, $0 en exemplaires"/>
+	<item name="BDP" function="func_bdp.inc.php" description="Importe les 600, 601, 602, 605, 606, 607 $a,$j,$x,$y,$z en mots-clés libres, les 995 $f, $r, $k, $q, $u, $m, $n, $0 en exemplaires"/>
+	<item name="BDP avec inversion titre et série" function="func_bdp2.inc.php" description="Inverse le 200$a et le 200$i, Importe les 600, 601, 602, 605, 606, 607 $a,$j,$x,$y,$z en mots-clés libres, les 995 $f, $r, $k, $q, $u, $m, $n, $0 en exemplaires"/>
+	<item name="BDP avec catégories paramétrables" function="func_bdp_without_categ.inc.php" description="Importe les 610 $a en mots clés libres, les 995 $f, $r, $k, $q, $u, $m, $n, $0 en exemplaires. L'import des 600, 606, ... est à paramétrer dans le fichier pmb/includes/category_auto/import_category.xml"/>
+	<item name="GAM" function="func_gam.inc.php" description="Importe les 600, 601, 602, 605, 606, 607 $a,$j,$x,$y,$z en mots-clés libres, le 959 $3 en vignette de la notice, les 856 $u et $z en documents numérique, les 995 $f, $r, $k, $q, $u, $m, $n, $0 en exemplaires"/>
+	<item name="Bretagne" function="func_bretagne.inc.php" description="Spécifique aux bases bretagne et échanges mémo-notice"/>
+	<item name="Catégories RAMEAU" function="func_cpt_rameau_first_level.inc.php" description="Importe les 600, 601, 602, 605, 606, 607 $a,$j,$x,$y et $z dans le thésaurus par défaut construit avec le séparateur ' -- ', les 995 $f, $r, $k, $q, $u, $m, $n, $0 en exemplaires"/>
+	<item name="PMB" function="func_pmb.inc.php" description="Spécifique aux transferts de notices entre PMB"/>
+	<item name="Ascodocpsy" function="func_ascodocpsy.inc.php" description="Spécifique aux échanges Ascodocpsy"/>
+	<item name="CVS" function="func_cvs.inc.php" description="Importe les 600, 601, 602, 605, 606, 607 $a,$j,$x,$y,$z en mots-clés libres, le 856 $u en vignette de la notice, les 910 en doc numérique url, les 995 $f, $r, $k, $q, $u, $m, $n, $0 en exemplaires"/>
+</catalog>

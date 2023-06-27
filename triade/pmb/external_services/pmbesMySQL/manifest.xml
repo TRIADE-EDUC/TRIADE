@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- Fichier manifest de description des méthodes disponibles
+****************************************************************************************
+© 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: manifest.xml,v 1.1 2011-07-29 12:32:13 dgoron Exp $ -->
+<manifest>
+	<name>pmbesMySQL</name>
+	<methods>
+		<method name="mysqlTable" rights="" version="1.0" comment="msg:mysqlTable_description" language_independant="true">
+			<inputs>
+				<description>msg:mysqlTable_input_description</description>
+				<param name="action" type="scalar" dataType="string" description="msg:mysqlTable_action"/>
+			</inputs>
+			<outputs>
+				<description>msg:mysqlTable_output_description</description>
+				<result name="result" type="scalar" dataType="string" description="msg:mysqlTable_result"/>
+			</outputs>
+		</method>
+	</methods>
+</manifest>
+

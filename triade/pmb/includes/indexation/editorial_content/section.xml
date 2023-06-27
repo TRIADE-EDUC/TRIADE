@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd">
+
+<!-- 
+****************************************************************************************
+© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: section.xml,v 1.7 2018-06-19 11:19:18 dgoron Exp $ -->
+
+<indexation>
+
+	<!-- Table d'origine (référence)-->
+	<reference>cms_sections</reference>
+	<!-- Clé primaire de la table de référence -->
+	<referencekey>id_section</referencekey>
+
+	<field name="237" id="001" pond="130" >
+		<table>
+			<tablefield>section_title</tablefield>
+		</table>
+	</field>
+
+	<field name="resume" id="002" pond="100" >
+		<table>
+			<tablefield>section_resume</tablefield>
+		</table>
+	</field>
+
+	<!-- statut de publication -->	
+	<field name="statut de publication" external="yes" id="004" datatype="publication_state">
+		<table name="cms_editorial_publications_states">
+			<tablefield id="01" name="label" pond="50">editorial_publication_state_label</tablefield>
+			<tablekey>id_publication_state</tablekey>
+			<link type="1n">
+				<referencefield>section_publication_state</referencefield>
+			</link>
+		</table>
+	</field>	
+	
+	<!-- type de contenu -->
+	<field name="type de contenu" external="yes" id="005" datatype="type_content">
+		<table name="cms_editorial_types">
+			<tablefield id="01" name="intit_sub_col" pond="60">editorial_type_label</tablefield>
+			<tablefield id="01" name="intit_sub_col" pond="10">editorial_type_comment</tablefield>
+			<tablekey>id_editorial_type</tablekey>
+			<link type="1n">
+				<referencefield>section_num_type</referencefield>
+			</link>
+		</table>
+	</field>	
+	
+	<!-- Catégories -->	
+	<field name="134" external="yes" id="006" datatype="categories">
+		<table name="categories">
+			<tablefield id="01" name="lib_categ" pond="110">libelle_categorie</tablefield>
+			<language>langue</language>
+			<tablekey>num_noeud</tablekey>
+			<link type="nn">
+				<table>cms_sections_descriptors</table>
+				<referencefield>num_section</referencefield>
+				<externalfield>num_noeud</externalfield>
+			</link>
+		</table>
+	</field>
+
+	<field name="start_date" id="007" pond="100" >
+		<table>
+			<tablefield>section_start_date</tablefield>
+		</table>
+	</field>
+		
+	<field name="end_date" id="008" pond="100" >
+		<table>
+			<tablefield>section_end_date</tablefield>
+		</table>
+	</field>
+	
+	<!-- Concepts -->	
+	<field name="ontology_skos_concept" id="009" datatype="concepts">
+		<callable name="index_concept_label" id="01" class_path="./classes/index_concept.class.php" class_name="index_concept" method="get_concepts_labels_from_entity" parameters="13" pond="110"/>
+	</field>
+	
+	<field name="index_concept_label_autopostage" id="010" datatype="concept">
+		<callable name="index_generic_concept_label_autopostage" id="01" class_path="./classes/index_concept.class.php" class_name="index_concept" method="get_generic_concepts_labels_from_entity" parameters="13" pond="50"/>
+		<callable name="index_specific_concept_label_autopostage" id="02" class_path="./classes/index_concept.class.php" class_name="index_concept" method="get_specific_concepts_labels_from_entity" parameters="13" pond="50"/>
+	</field>
+	
+	<!-- les CPs -->
+	<field name="notice_champs_perso" external="yes" id="100" datatype="custom_field" >
+		<table>cms_editorial</table>
+	</field>
+</indexation>

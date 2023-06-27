@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le module Agenda
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_agenda.xml,v 1.2 2017-02-02 10:59:48 ngantier Exp $ -->
+
+<XMLlist>
+	<entry code='cms_module_agenda_view_calendar'>Calendar view</entry>
+	<entry code='cms_module_agenda_view_event'>Event view</entry>
+	<entry code='cms_module_agenda_view_eventslist'>List of events view</entry>
+	<entry code='cms_module_agenda_view_calendar_django'>Django calendar view</entry>
+	<entry code='cms_module_agenda_manage_title'>Set up of your calendars</entry>
+	<entry code='cms_module_agenda_add_calendar'>Add a calendar</entry>
+	<entry code='cms_module_agenda_calendar_name'>Name</entry>
+	<entry code='cms_module_agenda_calendar_color'>Colour</entry>
+	<entry code='cms_module_agenda_calendar_type'>Article type to use</entry>
+	<entry code='cms_module_agenda_type_choice'>Choose an article type</entry>
+	<entry code='cms_module_agenda_calendar_start_date'>Field to use for the beginning of an event</entry>
+	<entry code='cms_module_agenda_calendar_end_date'>Field to use for the end of an event</entry>
+	<entry code='cms_module_agenda_delete_calendar'>Are you sure you want to delete this calendar ?</entry>
+	<entry code='cms_module_agenda_view_carousel'>Vue en Carrousel</entry>
+	<entry code='cms_module_agenda_view_carousel_responsive'>Vue en Carrousel responsive</entry>
+</XMLlist>

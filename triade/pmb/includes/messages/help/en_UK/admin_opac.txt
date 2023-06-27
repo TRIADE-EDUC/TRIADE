@@ -1,0 +1,19 @@
+<h2>Administration of the OPAC</h2>
+
+<p>
+The <b>Administration of the OPAC</b> section lets you configure the modules of the OPAC.
+<ul>
+	<li>
+		<b>List of searches :</b> 
+		Management of preset searches that people will be able to look up for in the OPAC.
+	</li>
+	<li>
+		<b>Statistics of the OPAC :</b> 
+		Save and create statistics about the actions of the users of the OPAC.
+	</li>
+	<li>
+		<b>Browsing by location and by section : </b>
+		 Configuration of the virtual browsing by the sorting plans
+	</li>
+</ul>
+</p>

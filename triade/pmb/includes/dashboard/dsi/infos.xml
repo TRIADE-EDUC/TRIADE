@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!-- 
+****************************************************************************************
+© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: infos.xml,v 1.4 2015-08-05 14:14:18 agiraud Exp $ -->
+<informations>
+	<information>
+		<name>nb_bannettes</name>
+		<query>select count(*) as total from bannettes</query>	
+	</information>
+
+	<information>
+		<name>nb_bannettes_privees</name>
+		<query>SELECT count(id_bannette) as total FROM bannettes WHERE proprio_bannette!=0</query>	
+	</information>
+	
+	<information>
+		<name>nb_bannettes_publiques_auto</name>
+		<query>SELECT count(id_bannette) as total FROM bannettes WHERE proprio_bannette=0 AND bannette_auto=1</query>	
+	</information>
+	
+	<information>
+		<name>nb_bannettes_publiques_manu</name>
+		<query>SELECT count(id_bannette) as total FROM bannettes WHERE proprio_bannette=0 AND bannette_auto=0</query>	
+	</information>
+	
+	<information>
+		<name>nb_bannettes_privees_auto_diff</name>
+		<query>SELECT count(id_bannette) as total FROM bannettes WHERE proprio_bannette!=0 AND bannette_auto=1 AND DATE_ADD(date_last_envoi, INTERVAL periodicite DAY)&lt;now()</query>
+	</information>
+	
+	<information>
+		<name>nb_bannettes_publiques_auto_diff</name>
+		<query>SELECT count(id_bannette) as total FROM bannettes WHERE proprio_bannette=0 AND bannette_auto=1 AND DATE_ADD(date_last_envoi, INTERVAL periodicite DAY)&lt;now()</query>
+	</information>
+	
+	<!-- <information>
+		<name>nb_records</name>
+		<query>select count(*) as total from notices</query>	
+	</information>
+ 	<information>
+		<name>nb_relance</name>
+		<fonction>
+			<class name='notice'>
+				<contruct_param>136</contruct_param>
+			</class>
+			<param>18/03/1857</param>
+			<method>get_date_parution</method>
+		</fonction>
+		<action></action>	
+	</information>
+	<information>
+		<name>loc_emprs</name>
+		<variables>
+			<var type='global' name='deflt2docs_location' />
+		</variables>
+		<query>select count(*) as total, sum(if(empr_date_expiration&lt;CURDATE(),1,0)) as expired, location_libelle as title from empr join docs_location on empr_location=idlocation where empr_location in(!!deflt2docs_location!!)</query>	
+	</information>-->
+
+</informations>

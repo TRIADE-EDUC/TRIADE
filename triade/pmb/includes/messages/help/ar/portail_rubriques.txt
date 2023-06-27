@@ -1,0 +1,5 @@
+<h2>Gestion des Rubriques</h2>
+
+<p>Ici, vous pouvez administrer les rubriques.</p>
+
+ 

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour la classe datasource
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_watcheslist_view_django_by_categories.xml,v 1.2 2015-10-09 13:30:45 dgoron Exp $ -->
+
+<XMLlist>
+	<entry code="cms_module_watcheslist_view_django_by_categories_categories_desc">Tableau des classements</entry>
+	<entry code="cms_module_watcheslist_view_django_by_categories_categories_id_desc">Identifiant de classement</entry>
+	<entry code="cms_module_watcheslist_view_django_by_categories_categories_title_desc">Nom du classement</entry>
+	<entry code="cms_module_watcheslist_view_django_by_categories_categories_watches_desc">Tableau des veilles associées à ce classement</entry>
+	<entry code="cms_module_watcheslist_view_django_by_categories_categories_children_desc">Classements enfants (la structure de données est identique à celle du tableau des classements et récursive)</entry>
+	<entry code="cms_module_watcheslist_view_django_by_categories_watches_desc">Tableau des veilles non classées</entry>
+	<entry code="cms_module_watcheslist_view_django_by_categories_build_watch_link">Construction du lien vers une veille</entry>
+	<entry code="cms_module_watcheslist_view_django_by_categories_watch_link_desc">Lien vers la veille</entry>
+</XMLlist>

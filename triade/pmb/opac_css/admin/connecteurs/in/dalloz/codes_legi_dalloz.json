@@ -1,0 +1,397 @@
+{
+    "Ancien code de la consommation": {
+        "code": "anciencodeconsommation",
+        "legi": false,
+        "dalloz": true
+    },
+    "CODE DU DOMAINE DE L'TAT": {
+        "code": "codedomainetat",
+        "legi": false,
+        "dalloz": true
+    },
+    "Code civil": {
+        "code": "codecivil",
+        "legi": true,
+        "dalloz": true
+    },
+    "Code civil (ancien)": {
+        "code": "codecivilancien",
+        "legi": false,
+        "dalloz": true
+    },
+    "Code de commerce": {
+        "code": "codecommerce",
+        "legi": true,
+        "dalloz": true
+    },
+    "Code de d\u00e9ontologie de la profession de commissaire aux comptes": {
+        "code": "codedeontologieprofessioncommissairecomptes",
+        "legi": true,
+        "dalloz": true
+    },
+    "Code de justice administrative": {
+        "code": "codejusticeadministrative",
+        "legi": true,
+        "dalloz": true
+    },
+    "Code de l'action sociale et des familles": {
+        "code": "codeactionsocialefamilles",
+        "legi": true,
+        "dalloz": true
+    },
+    "Code de l'aviation civile": {
+        "code": "codeaviationcivile",
+        "legi": true,
+        "dalloz": true
+    },
+    "Code de l'entr\u00e9e et du s\u00e9jour des \u00e9trangers et du droit d'asile": {
+        "code": "codeentreesejouretrangersdroitasile",
+        "legi": true,
+        "dalloz": true
+    },
+    "Code de l'environnement": {
+        "code": "codeenvironnement",
+        "legi": true,
+        "dalloz": true
+    },
+    "Code de l'expropriation pour cause d'utilit\u00e9 publique": {
+        "code": "codeexpropriationcauseutilitepublique",
+        "legi": true,
+        "dalloz": true
+    },
+    "Code de l'expropriation pour cause d'utilit\u00e9 publique (ancien)": {
+        "code": "codeexpropriationcauseutilitepubliqueancien",
+        "legi": false,
+        "dalloz": true
+    },
+    "Code de l'industrie cin\u00e9matographique": {
+        "code": "codeindustriecinematographique",
+        "legi": true,
+        "dalloz": true
+    },
+    "Code de l'organisation judiciaire": {
+        "code": "codeorganisationjudiciaire",
+        "legi": true,
+        "dalloz": true
+    },
+    "Code de l'urbanisme": {
+        "code": "codeurbanisme",
+        "legi": true,
+        "dalloz": true
+    },
+    "Code de l'\u00e9ducation": {
+        "code": "codeeducation",
+        "legi": true,
+        "dalloz": true
+    },
+    "Code de l'\u00e9nergie": {
+        "code": "codeenergie",
+        "legi": true,
+        "dalloz": true
+    },
+    "Code de la commande publique": {
+        "code": "codecommandepublique",
+        "legi": false,
+        "dalloz": true
+    },
+    "Code de la consommation": {
+        "code": "codeconsommation",
+        "legi": true,
+        "dalloz": true
+    },
+    "Code de la consommation (ancien)": {
+        "code": "codeconsommationancien",
+        "legi": false,
+        "dalloz": true
+    },
+    "Code de la construction et de l'habitation": {
+        "code": "codeconstructionhabitation",
+        "legi": true,
+        "dalloz": true
+    },
+    "Code de la d\u00e9fense": {
+        "code": "codedefense",
+        "legi": true,
+        "dalloz": true
+    },
+    "Code de la mutualit\u00e9": {
+        "code": "codemutualite",
+        "legi": true,
+        "dalloz": true
+    },
+    "Code de la propri\u00e9t\u00e9 intellectuelle": {
+        "code": "codeproprieteintellectuelle",
+        "legi": true,
+        "dalloz": true
+    },
+    "Code de la recherche": {
+        "code": "coderecherche",
+        "legi": true,
+        "dalloz": true
+    },
+    "Code de la route": {
+        "code": "coderoute",
+        "legi": true,
+        "dalloz": true
+    },
+    "Code de la sant\u00e9 publique": {
+        "code": "codesantepublique",
+        "legi": true,
+        "dalloz": true
+    },
+    "Code de la s\u00e9curit\u00e9 int\u00e9rieure": {
+        "code": "codesecuriteinterieure",
+        "legi": true,
+        "dalloz": true
+    },
+    "Code de la s\u00e9curit\u00e9 sociale": {
+        "code": "codesecuritesociale",
+        "legi": true,
+        "dalloz": true
+    },
+    "Code de la voirie routi\u00e8re": {
+        "code": "codevoirieroutiere",
+        "legi": true,
+        "dalloz": true
+    },
+    "Code de proc\u00e9dure civile": {
+        "code": "codeprocedurecivile",
+        "legi": true,
+        "dalloz": true
+    },
+    "Code de proc\u00e9dure civile (1807)": {
+        "code": "codeprocedurecivileancien",
+        "legi": true,
+        "dalloz": true
+    },
+    "Code de proc\u00e9dure p\u00e9nale": {
+        "code": "codeprocedurepenale",
+        "legi": true,
+        "dalloz": true
+    },
+    "Code des assurances": {
+        "code": "codeassurances",
+        "legi": true,
+        "dalloz": true
+    },
+    "Code des douanes": {
+        "code": "codedouanes",
+        "legi": true,
+        "dalloz": true
+    },
+    "Code des douanes communautaire": {
+        "code": "codedouanescommunautaire",
+        "legi": false,
+        "dalloz": true
+    },
+    "Code des douanes de l'Union": {
+        "code": "codedouanesunion",
+        "legi": false,
+        "dalloz": true
+    },
+    "Code des juridictions financi\u00e8res": {
+        "code": "codejuridictionsfinancieres",
+        "legi": true,
+        "dalloz": true
+    },
+    "Code des march\u00e9s publics": {
+        "code": "codemarchespublics",
+        "legi": false,
+        "dalloz": true
+    },
+    "Code des march\u00e9s publics (\u00e9dition 1964)": {
+        "code": "codemarchespublics1964",
+        "legi": true,
+        "dalloz": true
+    },
+    "Code des march\u00e9s publics (\u00e9dition 2001)": {
+        "code": "codemarchespublics2001",
+        "legi": true,
+        "dalloz": true
+    },
+    "Code des march\u00e9s publics (\u00e9dition 2004)": {
+        "code": "codemarchespublics2004",
+        "legi": true,
+        "dalloz": true
+    },
+    "Code des march\u00e9s publics (\u00e9dition 2006)": {
+        "code": "codemarchespublics2006",
+        "legi": true,
+        "dalloz": true
+    },
+    "Code des pensions civiles et militaires de retraite": {
+        "code": "codepensionscivilesmilitairesretraite",
+        "legi": false,
+        "dalloz": true
+    },
+    "Code des pensions militaires d'invalidit\u00e9 et des victimes de la guerre Code des pensions militaires d'invalidit\u00e9 et des victimes de guerre": {
+        "code": "codepensionsmilitairesinvaliditevictimesguerre",
+        "legi": true,
+        "dalloz": true
+    },
+    "Code des ports maritimes": {
+        "code": "codeportsmaritimes",
+        "legi": true,
+        "dalloz": true
+    },
+    "Code des postes et des communications \u00e9lectroniques": {
+        "code": "codepostescommunicationselectroniques",
+        "legi": true,
+        "dalloz": true
+    },
+    "Code des proc\u00e9dures civiles d'ex\u00e9cution": {
+        "code": "codeprocedurescivilesexecution",
+        "legi": true,
+        "dalloz": true
+    },
+    "Code des relations entre le public et l'administration": {
+        "code": "coderelationspublicadministration",
+        "legi": true,
+        "dalloz": true
+    },
+    "Code des transports": {
+        "code": "codetransports",
+        "legi": true,
+        "dalloz": true
+    },
+    "Code du cin\u00e9ma et de l'image anim\u00e9e": {
+        "code": "codecinemaimageanimee",
+        "legi": true,
+        "dalloz": true
+    },
+    "Code du domaine de l'Etat": {
+        "code": "codedomaineetat",
+        "legi": true,
+        "dalloz": true
+    },
+    "Code du domaine public fluvial et de la navigation int\u00e9rieure": {
+        "code": "codedomainepublicfluvialnavigationinterieure",
+        "legi": true,
+        "dalloz": true
+    },
+    "Code du patrimoine": {
+        "code": "codepatrimoine",
+        "legi": true,
+        "dalloz": true
+    },
+    "Code du service national": {
+        "code": "codeservicenational",
+        "legi": true,
+        "dalloz": true
+    },
+    "Code du sport": {
+        "code": "codesport",
+        "legi": true,
+        "dalloz": true
+    },
+    "Code du tourisme": {
+        "code": "codetourisme",
+        "legi": true,
+        "dalloz": true
+    },
+    "Code du travail": {
+        "code": "codetravail",
+        "legi": true,
+        "dalloz": true
+    },
+    "Code du travail (ancien)": {
+        "code": "codetravailancien",
+        "legi": false,
+        "dalloz": true
+    },
+    "Code du travail maritime": {
+        "code": "codetravailmaritime",
+        "legi": true,
+        "dalloz": true
+    },
+    "Code forestier": {
+        "code": "codeforestier",
+        "legi": true,
+        "dalloz": true
+    },
+    "Code forestier (ancien)": {
+        "code": "anciencodeforestier",
+        "legi": false,
+        "dalloz": true
+    },
+    "Code gnral de la proprit des personnes publiques": {
+        "code": "codegnralpropritpersonnespubliques",
+        "legi": false,
+        "dalloz": true
+    },
+    "Code g\u00e9n\u00e9ral de la propri\u00e9t\u00e9 des personnes publiques": {
+        "code": "codegeneralproprietepersonnespubliques",
+        "legi": true,
+        "dalloz": true
+    },
+    "Code g\u00e9n\u00e9ral des collectivit\u00e9s territoriales": {
+        "code": "codegeneralcollectivitesterritoriales",
+        "legi": true,
+        "dalloz": true
+    },
+    "Code g\u00e9n\u00e9ral des imp\u00f4ts": {
+        "code": "codegeneralimpots",
+        "legi": true,
+        "dalloz": true
+    },
+    "Code minier": {
+        "code": "codeminier",
+        "legi": true,
+        "dalloz": true
+    },
+    "Code minier (nouveau)": {
+        "code": "codeminiernouveau",
+        "legi": true,
+        "dalloz": true
+    },
+    "Code mon\u00e9taire et financier": {
+        "code": "codemonetairefinancier",
+        "legi": true,
+        "dalloz": true
+    },
+    "Code p\u00e9nal": {
+        "code": "codepenal",
+        "legi": true,
+        "dalloz": true
+    },
+    "Code p\u00e9nal (ancien)": {
+        "code": "anciencodepenal",
+        "legi": true,
+        "dalloz": true
+    },
+    "Code rural (ancien)": {
+        "code": "coderuralancien",
+        "legi": true,
+        "dalloz": true
+    },
+    "Code rural et de la p\u00eache maritime Code rural (nouveau)": {
+        "code": "coderuralpechemaritime",
+        "legi": true,
+        "dalloz": true
+    },
+    "Code \u00e9lectoral": {
+        "code": "codeelectoral",
+        "legi": true,
+        "dalloz": true
+    },
+    "Livre IV du Code de l'Urbanisme (jusqu'au 30 septembre 2007)": {
+        "code": "livreivcodeurbanismeregimeapplicable30septembre2007",
+        "legi": false,
+        "dalloz": true
+    },
+    "Livre des proc\u00e9dures fiscales": {
+        "code": "livreproceduresfiscales",
+        "legi": true,
+        "dalloz": true
+    },
+    "M\u00c9GACODE DU TRAVAIL": {
+        "code": "megacodetravail",
+        "legi": false,
+        "dalloz": true
+    },
+    "Projet de r\u00e9forme \u2013 Droits des obligations": {
+        "code": false,
+        "legi": true,
+        "dalloz": false
+    }
+}

@@ -1,0 +1,63 @@
+@charset "utf-8";/**/
+/* +--------------------------------------------------------------------------+
+// 2013 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// +-------------------------------------------------+
+// $Id: link.css,v 1.2 2018-01-08 13:33:34 wlair Exp $ */
+/*------------------------------------------------------------------------------------------*/
+/* ========================================================================
+   Component: Link
+ ==========================================================================  */
+*.uk-link,a {
+	text-decoration: none;
+	cursor: pointer;
+}
+
+*.uk-link:hover,
+a:hover,
+.uk-tab>li.uk-open>a,
+.uk-tab>li>a:focus,
+.uk-tab>li>a:hover {
+	text-decoration: underline
+}
+/* ========================================================================
+   footer: Link
+ ==========================================================================  */
+#footer a,
+.liensFooter a {
+}
+
+#footer a:hover,
+.liensFooter a:hover {
+}
+div.liensFooter{
+	margin:0 auto 0;
+	background:transparent!important;
+	border-top:solid 1px 
+}
+div.liensFooter>*{
+	max-width:1235px;
+	margin:0 auto 0;
+}
+/*
+*Nav bar link
+*/
+.liensFooter .uk-navbar-nav>li.uk-open>a,
+.liensFooter .uk-navbar-nav>li:hover>a,
+.liensFooter .uk-navbar-nav>li>a:focus {
+	 background:transparent;
+	 text-shadow:none;
+}
+.liensFooter .uk-navbar-nav>li:first-child:hover>a,
+.liensFooter .uk-navbar-nav>li:first-child>a:focus {
+	 background:transparent;
+	 text-shadow:none;
+}
+/* ========================================================================
+   tab link
+ ==========================================================================  */
+.uk-tab>li>a{
+}
+.uk-tab>li>a:hover,
+.uk-tab>li>a:focus{
+	text-decoration:none;
+}

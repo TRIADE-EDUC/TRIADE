@@ -1,0 +1,2 @@
+<h2>Management of the loan machine</h2>
+<p>Lets you manage the behaviour of a loan machine and set the messages to display depending on this behaviour.</p>

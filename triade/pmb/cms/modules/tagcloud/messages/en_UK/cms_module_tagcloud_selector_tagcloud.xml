@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le module Article
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_tagcloud_selector_tagcloud.xml,v 1.3 2016-09-20 10:25:42 apetithomme Exp $ -->
+
+<XMLlist>
+	<entry code='cms_module_tagcloud_selector_tagcloud'>Search selection</entry>
+	<entry code='cms_module_tagcloud_selector_tagcloud_no'>Select the cloud source</entry>
+	<entry code='cms_module_tagcloud_selector_tagcloud_facette'>Facet</entry>
+	<entry code='cms_module_tagcloud_selector_tagcloud_rmc'>Multi-standard</entry>
+	<entry code='cms_module_tagcloud_selector_record_facette_label'>List of facets</entry>
+	<entry code='cms_module_tagcloud_selector_record_rmc_label'>List of the multi-standard</entry>
+</XMLlist>

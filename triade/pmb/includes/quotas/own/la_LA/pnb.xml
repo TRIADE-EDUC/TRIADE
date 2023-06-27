@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+****************************************************************************************
+© 2002-2017 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: pnb.xml,v 1.1 2018-06-06 09:25:44 ngantier Exp $ -->
+<pmbquotas table="quotas_pnb">
+	<elements>
+	  	<element name="READER_CATEG" id="1" comment="Catégories de lecteurs">
+			<linkedto>READER</linkedto>
+			<tablelinked>empr</tablelinked>
+			<linkedfield>empr_categ</linkedfield>
+			<linkedid>id_empr</linkedid>
+			<table>empr_categ</table>
+			<field>id_categ_empr</field>
+			<label>libelle</label>
+		</element>
+	  	<element name="READER_LOCATION" id="2" comment="Localisations de lecteurs">
+			<linkedto>READER</linkedto>
+			<tablelinked>empr</tablelinked>
+			<linkedfield>empr_location</linkedfield>
+			<linkedid>id_empr</linkedid>
+			<table>docs_location</table>
+			<field>idlocation</field>
+			<label>location_libelle</label>
+		</element>
+	  	<element name="READER_STATUT" id="4" comment="Statuts de lecteurs">
+			<linkedto>READER</linkedto>
+			<tablelinked>empr</tablelinked>
+			<linkedfield>empr_statut</linkedfield>
+			<linkedid>id_empr</linkedid>
+			<table>empr_statut</table>
+			<field>idstatut</field>
+			<label>statut_libelle</label>
+		</element>
+	  	<element name="READER_CODESTAT" id="8" comment="Codes statistiques de lecteurs">
+			<linkedto>READER</linkedto>
+			<tablelinked>empr</tablelinked>
+			<linkedfield>empr_codestat</linkedfield>
+			<linkedid>id_empr</linkedid>
+			<table>empr_codestat</table>
+			<field>idcode</field>
+			<label>libelle</label>
+		</element>
+		<element name="READER_ALONE" id="16" comment="Lecteurs individuels">
+			<linkedto>READER</linkedto>
+			<tablelinked>empr</tablelinked>
+			<linkedfield>id_empr</linkedfield>
+			<linkedid>id_empr</linkedid>
+			<table>empr_categ</table>
+			<field>id_categ_empr</field>
+			<label>libelle</label>
+		</element>
+	</elements>
+	
+	<types>
+		<type name="PNB_LOANS" elements_label="affectations" id="1" max="no" min="no" forcelend="no" conflit_min="no" conflit_max="no" comment="" short_comment="" filter_id="">
+			<quotas>
+				<on>READER_CATEG</on>
+				<on>READER_LOCATION</on>
+				<on>READER_STATUT</on>
+				<on>READER_CODESTAT</on>
+				<on>READER_LOCATION,READER_CATEG</on>
+				<on>READER_LOCATION,READER_STATUT</on>
+				<on>READER_LOCATION,READER_CODESTAT</on>
+				<on>READER_ALONE</on>
+			</quotas>
+		</type>
+		<type name="PNB_PROLONGATION" elements_label="affectations" id="2" max="no" min="no" forcelend="no" conflit_min="no" conflit_max="no" comment="" short_comment="" filter_id="">
+			<quotas>
+				<on>READER_CATEG</on>
+				<on>READER_LOCATION</on>
+				<on>READER_STATUT</on>
+				<on>READER_CODESTAT</on>
+				<on>READER_LOCATION,READER_CATEG</on>
+				<on>READER_LOCATION,READER_STATUT</on>
+				<on>READER_LOCATION,READER_CODESTAT</on>
+				<on>READER_ALONE</on>
+			</quotas>
+		</type>
+	</types>
+</pmbquotas>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le module Article
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_breadcrumb_datasource_sections.xml,v 1.3 2017-07-25 07:42:48 arenou Exp $ -->
+
+<XMLlist>
+	<entry code='cms_module_common_selector_section'>Manual selection of a rubric</entry>
+	<entry code='cms_module_common_selector_env_var'>Selection of a rubric from an environment variable</entry>
+	<entry code='cms_module_common_selector_generic_parent_section'>Selection of a parent rubric</entry>
+	<entry code='cms_module_common_selector_global_var'>Selection of a rubric from a global variable</entry>
+</XMLlist>

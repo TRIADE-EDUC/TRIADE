@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le module Article
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_piwik.xml,v 1.1 2015-06-15 12:55:33 pmbs Exp $ -->
+
+<XMLlist>
+	<entry code='cms_module_piwik'>Piwik module</entry>
+	<entry code='cms_module_piwik_view_piwik'>PIWIK</entry>
+	<entry code='cms_module_piwik_datasource_piwik'>PIWIK</entry>
+	<entry code='cms_module_piwik_delete_server'>Are you sure you want to delete this server ?</entry>
+	<entry code='cms_module_piwik_server_name'>Name of the Piwik server</entry>
+	<entry code='cms_module_piwik_server_url'>Piwik server's address</entry>
+	<entry code='cms_module_piwik_subdomains'>Follow the visitors on every sub-domains</entry>
+	<entry code='cms_module_piwik_subdomains_description'><![CDATA[In this way, if a visitor visits x.<mondomaine> and y.<mondomaine> this will count as only one visit.]]></entry>
+	<entry code='cms_module_piwik_domain_prefix'>Prefix the domain of the site to the title of the page during the tracking</entry>
+	<entry code='cms_module_piwik_domain_prefix_description'><![CDATA[If someone visits the "About" page of the blog.<mondomaine>, the visit will be saved as "blog / About". It is the easiest way to have a preview of the internet traffic by sub-domain.]]></entry>
+	<entry code='cms_module_piwik_subdomains_links'>In the outgoing links report, hide the clicks to aliases of known addresses</entry>
+	<entry code='cms_module_piwik_subdomains_links_description'><![CDATA[In this way, a click on the addresses of aliases (ex x.<mondomaine>) will not be counted as an outgoing link.]]></entry>
+	<entry code='cms_module_piwik_site_id'>PIWIK identifier of the website</entry>
+</XMLlist>

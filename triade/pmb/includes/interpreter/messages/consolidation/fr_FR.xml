@@ -1,0 +1,437 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- messages localisés en français pour les méthodes externes de procédures
+****************************************************************************************
+© 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: fr_FR.xml,v 1.7 2019-05-11 10:14:45 dgoron Exp $ -->
+
+<!DOCTYPE XMLlist SYSTEM "../../../../includes/XMLlist.dtd" >
+<XMLlist>
+  <!-- nom des catégoriesl -->
+  <entry code="classcalculval">Fonctions de calculs qui retourne les valeurs désirées</entry>
+  <entry code="classemprun">Fonctions emprunteur</entry>
+  <entry code="classdateheure">Fonctions date/heure</entry>
+  <entry code="classnbresult">Fonctions sur les nombres de résultats lors d'une recherche</entry>
+  <entry code="classdocnum">Fonctions sur les documents numériques</entry>
+  <entry code="classmulticritere">Fonctions pour la multicritère</entry>
+  <entry code="classtypepage">Fonctions de classification des types de page</entry>
+  <entry code="classurlexternes">Fonctions sur les urls externes</entry>
+  <entry code="classnoticesbulletins">Fonctions sur les notices et les bulletins</entry>
+  <entry code="classbannettes">Fonctions sur les bannettes</entry>
+   
+  
+  <!-- #mots_saisis($param,$parser); -->
+  <entry code="mots_saisis_description">Retourne le mot saisi</entry>
+  <entry code="mots_saisis_input_description"></entry>
+  <entry code="mots_saisis_output_description"></entry>
+  
+  <!-- #url_ori($param, $parser); -->
+  <entry code="url_ori_description">Retourne l'url appelante</entry>
+  <entry code="url_ori_input_description"></entry>
+  <entry code="url_ori_output_description"></entry>
+  
+  <!-- url_asked($param, $parser); -->
+  <entry code="url_asked_description">Retourne l'url appelée</entry>
+  <entry code="url_asked_input_description"></entry>
+  <entry code="url_asked_output_description"></entry>
+  
+  <!-- #num_session($param, $parser); -->
+  <entry code="num_session_description">Retourne le numéro de session du log</entry>
+  <entry code="num_session_input_description"></entry>
+  <entry code="num_session_output_description"></entry>
+  
+  <!-- #login($param,$parser); -->
+  <entry code="login_description">Retourne le login de l'utilisateur</entry>
+  <entry code="login_input_description"></entry>
+  <entry code="login_output_description"></entry>
+  
+  <!-- #adresse_ip($param, $parser); -->
+  <entry code="adresse_ip_description">Retourne l'adresse IP de l'utilisateur</entry>
+  <entry code="adresse_ip_input_description"></entry>
+  <entry code="adresse_ip_output_description"></entry>
+  
+  <!-- #adresse_ip_forward($param, $parser); -->
+  <entry code="adresse_ip_description">Retourne l'adresse IP de l'utilisateur en cas de proxy</entry>
+  <entry code="adresse_ip_input_description"></entry>
+  <entry code="adresse_ip_output_description"></entry>
+  
+  <!-- #user_agent($param, $parser); -->
+  <entry code="user_agent_description">Retourne le user agent de l'utilisateur</entry>
+  <entry code="user_agent_input_description"></entry>
+  <entry code="user_agent_output_description"></entry>
+  
+  <!-- #top_level_domain($param, $parser); -->
+  <entry code="top_level_domain_description">Retourne le le domaine de premier niveau</entry>
+  <entry code="top_level_domain_input_description"></entry>
+  <entry code="top_level_domain_output_description"></entry>
+  
+  <!-- #host_ip_info($param, $parser); -->
+  <entry code="host_ip_info_description">Retourne les informations sur la position géographique de l'utilisateur</entry>
+  <entry code="host_ip_info_input_description">param[0]=nom de la propriété JSON récupérée via un appel cURL sur http://ip-api.com/json/[IP]</entry>
+  <entry code="host_ip_info_output_description"></entry>
+  
+  <!-- #var_post($param, $parser); -->
+  <entry code="var_post_description">Retourne une valeur de la variable $_POST</entry>
+  <entry code="var_post_input_description">param[0]=nom de la variable post</entry>
+  <entry code="var_post_output_description"></entry>
+  
+  <!-- #var_get($param, $parser); -->
+  <entry code="var_get_description">Retourne une valeur de la variable $_GET</entry>
+  <entry code="var_get_input_description">param[0]=nom de la variable get</entry>
+  <entry code="var_get_output_description"></entry>
+  
+  <!-- #var_server($param, $parser); -->
+  <entry code="var_server_description">Retourne une valeur de la variable $_SERVER</entry>
+  <entry code="var_server_input_description">param[0]=nom de la variable server</entry>
+  <entry code="var_server_output_description"></entry>
+  
+  <!-- #type_page($param, $parser); -->
+  <entry code="type_page_description">Fonction qui permet de classifier le type des pages selon un code</entry>
+  <entry code="type_page_input_description"></entry>
+  <entry code="type_page_output_description"></entry>
+  
+  <!-- #sous_type_page($param, $parser); -->
+  <entry code="sous_type_page_description">Fonction qui permet de classifier le sous type des pages selon un code</entry>
+  <entry code="sous_type_page_input_description"></entry>
+  <entry code="sous_type_page_output_description"></entry>
+  
+  <!-- #type_page_lib($param, $parser); -->
+  <entry code="type_page_lib_description">Retourne le libellé du type de page consultée</entry>
+  <entry code="type_page_lib_input_description"></entry>
+  <entry code="type_page_lib_output_description"></entry>
+  
+  <!-- #sous_type_page_lib($param, $parser); -->
+  <entry code="sous_type_page_lib_description">Retourne le libellé du sous-type de page consultée</entry>
+  <entry code="sous_type_page_lib_input_description"></entry>
+  <entry code="sous_type_page_lib_output_description"></entry>
+  
+  <!-- #multi_libelle($param, $parser); -->
+  <entry code="multi_libelle_description">Affiche le libelle des champs sélectionnés dans la multicritere</entry>
+  <entry code="multi_libelle_input_description"></entry>
+  <entry code="multi_libelle_output_description"></entry>
+  
+  <!-- #multi_contenu($param, $parser); -->
+  <entry code="multi_contenu_description">Affiche le contenu des champs sélectionnés dans la multicritere</entry>
+  <entry code="multi_contenu_input_description"></entry>
+  <entry code="multi_contenu_description"></entry>
+  
+  <!-- #multi_intitule($param, $parser); -->
+  <entry code="multi_intitule_description">Affiche l'intitulé de la requête multicritère</entry>
+  <entry code="multi_intitule_input_description"></entry>
+  <entry code="multi_intitule_output_description"></entry>
+  
+  <!-- #multi_facettes($param, $parser); -->
+  <entry code="multi_facettes_description">Affiche les intitulés des facettes</entry>
+  <entry code="multi_facettes_input_description">$param[0] = 0: Liste des critères tels qu'affichés dans pmb ou 1: Liste ordonnée des critères</entry>
+  <entry code="multi_facettes_output_description"></entry>
+  
+  <!-- #recherche_predefinie($param, $parser); -->
+  <entry code="recherche_predefinie_description">Affiche le nom de la recherche prédéfinie</entry>
+  <entry code="recherche_predefinie_input_description"></entry>
+  <entry code="recherche_predefinie_output_description"></entry>
+  
+  <!-- #vue_num($param, $parser); -->
+  <entry code="vue_num_description">Affiche l'identifiant de la vue</entry>
+  <entry code="vue_num_input_description"></entry>
+  <entry code="vue_num_output_description"></entry>
+  
+  <!-- #vue_libelle($param, $parser); -->
+  <entry code="vue_libelle_description">Affiche le libellé de la vue</entry>
+  <entry code="vue_libelle_input_description"></entry>
+  <entry code="vue_libelle_output_description"></entry>
+  
+  
+  <!-- ****************                Fonctions emprunteur                  ****************** -->
+  
+  
+  
+  <!-- #empr_age($param, $parser); -->
+  <entry code="empr_age_description">Retourne l'âge de l'utilisateur</entry>
+  <entry code="empr_age_input_description"></entry>
+  <entry code="empr_age_output_description"></entry>
+  
+  <!-- #empr_groupe($param, $parser); -->
+  <entry code="empr_groupe_description">Retourne le groupe de l'utilisateur</entry>
+  <entry code="empr_groupe_input_description"></entry>
+  <entry code="empr_groupe_output_description"></entry>
+  
+  <!-- #empr_codestat($param, $parser); -->
+  <entry code="empr_codestat_description">Retourne le code statistique de l'utilisateur</entry>
+  <entry code="empr_codestat_input_description"></entry>
+  <entry code="empr_codestat_output_description"></entry>
+  
+  <!-- #empr_categ($param, $parser); -->
+  <entry code="empr_categ_description">Retourne le statut de l'utilisateur</entry>
+  <entry code="empr_categ_input_description"></entry>
+  <entry code="empr_categ_output_description"></entry>
+  
+  <!-- #empr_statut($param, $parser); -->
+  <entry code="empr_statut_description">Retourne la catégorie de l'utilisateur</entry>
+  <entry code="empr_statut_input_description"></entry>
+  <entry code="empr_statut_output_description"></entry>
+  
+  <!-- #empr_location($param, $parser); -->
+  <entry code="empr_location_description">Retourne la localisation de l'utilisateur</entry>
+  <entry code="empr_location_input_description"></entry>
+  <entry code="empr_location_output_description"></entry>
+  
+  <!-- #empr_ville($param, $parser); -->
+  <entry code="empr_ville_description">Retourne la ville de l'utilisateur</entry>
+  <entry code="empr_ville_input_description"></entry>
+  <entry code="empr_ville_output_description"></entry>
+  
+  
+  <!-- ****************                Fonctions date/heure                  ****************** -->
+  
+  
+  
+  <!-- #timestamp($param, $parser); -->
+  <entry code="timestamp_description">Retourne l'heure du log (format: HH:MM:SS)</entry>
+  <entry code="timestamp_input_description"></entry>
+  <entry code="timestamp_output_description"></entry>
+  
+  <!-- #date($param, $parser); -->
+  <entry code="date_description">Retourne la date du log</entry>
+  <entry code="date_input_description"></entry>
+  <entry code="date_output_description"></entry>
+  
+  <!-- #year($param, $parser); -->
+  <entry code="year_description">Retourne l'année du log</entry>
+  <entry code="year_input_description"></entry>
+  <entry code="year_output_description"></entry>
+  
+  <!-- #month($param, $parser); -->
+  <entry code="month_description">Retourne le mois du log</entry>
+  <entry code="month_input_description"></entry>
+  <entry code="month_output_description"></entry>
+  
+  <!-- #day($param, $parser); -->
+  <entry code="day_description">Retourne le jour du log</entry>
+  <entry code="day_input_description"></entry>
+  <entry code="day_output_description"></entry>
+  
+  <!-- #hour($param, $parser); -->
+  <entry code="hour_description">Retourne l'heure du log</entry>
+  <entry code="hour_input_description"></entry>
+  <entry code="hour_output_description"></entry>
+  
+  <!-- #minute($param, $parser); -->
+  <entry code="minute_description">Retourne les minutes du log</entry>
+  <entry code="minute_input_description"></entry>
+  <entry code="minute_output_description"></entry>
+  
+  <!-- #seconde($param, $parser); -->
+  <entry code="seconde_description">Retourne les secondes du log</entry>
+  <entry code="seconde_input_description"></entry>
+  <entry code="seconde_output_description"></entry>
+  
+  <!-- #elapsed_time($param, $parser); -->
+  <entry code="elapsed_time_description">Retourne le temps écoulé dans un intervalle</entry>
+  <entry code="elapsed_time_input_description"></entry>
+  <entry code="elapsed_time_output_description"></entry>
+    
+  
+  <!-- ****************                Fonctions sur les nombres de résultats lors d'une recherche                 ****************** -->
+  
+  
+  
+  <!-- #nb_all($param, $parser); -->
+  <entry code="nb_all_description">Affiche le nombre de notice pour une recherche "tous champs"</entry>
+  <entry code="nb_all_input_description"></entry>
+  <entry code="nb_all_output_description"></entry>
+  
+  <!-- #nb_auteurs($param, $parser); -->
+  <entry code="nb_auteurs_description">Affiche le nombre d'auteurs</entry>
+  <entry code="nb_auteurs_input_description"></entry>
+  <entry code="nb_auteurs_output_description"></entry>
+  
+  <!-- #nb_collectivites($param, $parser); -->
+  <entry code="nb_collectivites_description">Affiche le nombre d'auteurs de type "collectivités"</entry>
+  <entry code="nb_collectivites_input_description"></entry>
+  <entry code="nb_collectivites_output_description"></entry>
+  
+  <!-- #nb_congres($param, $parser); -->
+  <entry code="nb_congres_description">Affiche le nombre d'auteur de type "congrès"</entry>
+  <entry code="nb_congres_input_description"></entry>
+  <entry code="nb_congres_output_description"></entry>
+  
+  <!-- #nb_physiques($param, $parser); -->
+  <entry code="nb_physiques_description">Affiche le nombre d'auteurs de type "physiques"</entry>
+  <entry code="nb_physiques_input_description"></entry>
+  <entry code="nb_physiques_output_description"></entry>
+  
+  <!-- #nb_editeurs($param, $parser); -->
+  <entry code="nb_editeurs_description">Affiche le nombre d'editeurs</entry>
+  <entry code="nb_editeurs_input_description"></entry>
+  <entry code="nb_editeurs_output_description"></entry>
+  
+  <!-- #nb_titres($param, $parser); -->
+  <entry code="nb_titres_description">Affiche le nombre de notices pour une recherche "titres"</entry>
+  <entry code="nb_titres_input_description"></entry>
+  <entry code="nb_titres_output_description"></entry>
+  
+  <!-- #nb_titres_uniformes($param, $parser); -->
+  <entry code="nb_titres_uniformes_description">Affiche le nombre de titres uniformes</entry>
+  <entry code="nb_titres_uniformes_input_description"></entry>
+  <entry code="nb_titres_uniformes_output_description"></entry>
+  
+  <!-- #nb_abstract($param, $parser); -->
+  <entry code="nb_abstract_description">Affiche le nombre de notices pour une recherche "résumé"</entry>
+  <entry code="nb_abstract_input_description"></entry>
+  <entry code="nb_abstract_output_description"></entry>
+  
+  <!-- #nb_categories($param, $parser); -->
+  <entry code="nb_categories_description">Affiche le nombre de categories</entry>
+  <entry code="nb_categories_input_description"></entry>
+  <entry code="nb_categories_output_description"></entry>
+  
+  <!-- #nb_collections($param, $parser); -->
+  <entry code="nb_collections_description">Affiche le nombre de collections</entry>
+  <entry code="nb_collections_input_description"></entry>
+  <entry code="nb_collections_output_description"></entry>
+  
+  <!-- #nb_subcollections($param, $parser); -->
+  <entry code="nb_subcollections_description">Affiche le nombre de sous collections</entry>
+  <entry code="nb_subcollections_input_description"></entry>
+  <entry code="nb_subcollections_output_description"></entry>
+  
+  <!-- #nb_docnum($param, $parser); -->
+  <entry code="nb_docnum_description">Affiche le nombre de documents numériques</entry>
+  <entry code="nb_docnum_input_description"></entry>
+  <entry code="nb_docnum_output_description"></entry>
+  
+  <!-- #nb_keywords($param, $parser); -->
+  <entry code="nb_keywords_description">Affiche le nombre de notices pour une recherche "mots-clés"</entry>
+  <entry code="nb_keywords_input_description"></entry>
+  <entry code="nb_keywords_output_description"></entry>
+  
+  <!-- #nb_indexint($param, $parser); -->
+  <entry code="nb_indexint_description">Affiche le nombre d'indexation décimale</entry>
+  <entry code="nb_indexint_input_description"></entry>
+  <entry code="nb_indexint_output_description"></entry>
+  
+  <!-- #nb_total($param, $parser); -->
+  <entry code="nb_total_description">Affiche le nombre total de notices</entry>
+  <entry code="nb_total_input_description"></entry>
+  <entry code="nb_total_output_description"></entry>
+  
+  
+  
+
+   <!-- ****************                Fonctions sur les documents numériques                  ****************** -->
+  
+  
+  
+  <!-- #explnum_localisation($param, $parser); -->
+  <entry code="explnum_localisation_description">Localisation du document numérique</entry>
+  <entry code="explnum_localisation_input_description"></entry>
+  <entry code="explnum_localisation_output_description"></entry>
+  
+  <!-- #explnum_nom($param, $parser); -->
+  <entry code="explnum_nom_description">Nom du document numérique</entry>
+  <entry code="explnum_nom_input_description"></entry>
+  <entry code="explnum_nom_output_description"></entry>
+  
+  <!-- #explnum_nomfichier($param, $parser); -->
+  <entry code="explnum_nomfichier_description">Nom du fichier du document numérique</entry>
+  <entry code="explnum_nomfichier_input_description"></entry>
+  <entry code="explnum_nomfichier_output_description"></entry>
+  
+  <!-- #explnum_nomrepertoire($param, $parser); -->
+  <entry code="explnum_nomrepertoire_description">Nom du répertoire du document numérique</entry>
+  <entry code="explnum_nomrepertoire_input_description"></entry>
+  <entry code="explnum_nomrepertoire_output_description"></entry>
+  
+  <!-- #explnum_path($param, $parser); -->
+  <entry code="explnum_path_description">Arborescence du document numérique dans le répertoire</entry>
+  <entry code="explnum_path_input_description"></entry>
+  <entry code="explnum_path_output_description"></entry>
+  
+  <!-- #explnum_extfichier($param, $parser); -->
+  <entry code="explnum_extfichier_description">Extension du document numérique</entry>
+  <entry code="explnum_extfichier_input_description"></entry>
+  <entry code="explnum_extfichier_output_description"></entry>
+  
+  <!-- #explnum_mimetype($param, $parser); -->
+  <entry code="explnum_mimetype_description">Type de document numérique</entry>
+  <entry code="explnum_mimetype_input_description"></entry>
+  <entry code="explnum_mimetype_output_description"></entry>
+  
+  <!-- #explnum_url($param, $parser); -->
+  <entry code="explnum_url_description">URL du document numérique</entry>
+  <entry code="explnum_url_input_description"></entry>
+  <entry code="explnum_url_output_description"></entry>
+  
+  <!-- #explnum_notice($param, $parser); -->
+  <entry code="explnum_notice_description">Id de la notice reliée au document numérique</entry>
+  <entry code="explnum_notice_input_description"></entry>
+  <entry code="explnum_notice_output_description"></entry>
+  
+  <!-- #explnum_notice_type($param, $parser); -->
+  <entry code="explnum_notice_type_description">Type de la notice reliée au document numérique</entry>
+  <entry code="explnum_notice_type_input_description"></entry>
+  <entry code="explnum_notice_type_output_description"></entry>
+  
+  <!-- #explnum_bulletin($param, $parser); -->
+  <entry code="explnum_bulletin_description">Id du bulletin relié au document numérique</entry>
+  <entry code="explnum_bulletin_input_description"></entry>
+  <entry code="explnum_bulletin_output_description"></entry>
+  
+  <!-- #explnum_id($param, $parser); -->
+  <entry code="explnum_id_description">Id du document numérique</entry>
+  <entry code="explnum_id_input_description"></entry>
+  <entry code="explnum_id_output_description"></entry>
+  
+  
+  
+  
+  <!-- ****************                Fonctions sur les documents numériques                  ****************** -->
+  
+  
+  
+  <!-- #url_externe($param, $parser); -->
+  <entry code="url_externe_description">Retourne l'url externe cliquée</entry>
+  <entry code="url_externe_input_description"></entry>
+  <entry code="url_externe_output_description"></entry>
+  
+  <!-- #url_externe_type($param, $parser); -->
+  <entry code="url_externe_type_description">Retourne le type d'url externe cliquée</entry>
+  <entry code="url_externe_type_input_description"></entry>
+  <entry code="url_externe_type_output_description"></entry>
+  
+  
+  
+  
+  <!-- ****************                Fonctions sur les notices et les bulletins                  ****************** -->
+  
+  
+  
+  <!-- #notice_id($param, $parser); -->
+  <entry code="notice_id_description">Retourne l'identifiant de la notice cliquée ou développée</entry>
+  <entry code="notice_id_input_description"></entry>
+  <entry code="notice_id_output_description"></entry>
+  
+  <!-- #bulletin_id($param, $parser); -->
+  <entry code="bulletin_id_description">Retourne l'identifiant du bulletin cliqué ou développé</entry>
+  <entry code="bulletin_id_input_description"></entry>
+  <entry code="bulletin_id_output_description"></entry>
+    
+  
+  
+  
+  <!-- ****************                Fonctions sur les bannettes                  ****************** -->
+  
+  
+  
+  <!-- #abo_bannette($param, $parser); -->
+  <entry code="abo_bannette_description">Retourne le nombre d'abonnements aux bannettes</entry>
+  <entry code="abo_bannette_input_description"></entry>
+  <entry code="abo_bannette_output_description"></entry>
+  
+  <!-- #desabo_bannette($param, $parser); -->
+  <entry code="desabo_bannette_description">Retourne le nombre de désabonnements aux bannettes</entry>
+  <entry code="desabo_bannette_input_description"></entry>
+  <entry code="desabo_bannette_output_description"></entry>
+    
+</XMLlist>

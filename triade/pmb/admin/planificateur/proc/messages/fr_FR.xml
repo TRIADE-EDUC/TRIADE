@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- messages localisés en français pour les procédures
+****************************************************************************************
+© 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: fr_FR.xml,v 1.4 2017-07-27 12:38:28 dgoron Exp $ -->
+
+<XMLlist>
+	<entry code="planificateur_proc_type">Procédure interne ou distante</entry>
+	<entry code="planificateur_proc_internal">Procédure interne</entry>
+	<entry code="planificateur_proc_remote">Procédure distante</entry>
+	<entry code="planificateur_proc_perso">Choix d'une procédure personnalisée</entry>
+	<entry code="planificateur_proc_choice">Choisir une procédure</entry>
+	<entry code="proc_error">Erreur de paramétrage</entry>
+	<entry code="proc_unknown">Procédure inexistante dans la base PMB</entry>
+	<entry code="proc_execution">Exécution de la procédure</entry>
+	<entry code="proc_execution_remote">Exécution de la procédure externe</entry>
+	<entry code="planificateur_proc_tocsv">Exporter au format  ".csv"</entry>
+	<entry code="planificateur_proc_tocsv_sep">Caractère séparateur</entry>
+	<entry code="planificateur_proc_tocsv_default_sep">,</entry>
+	<entry code="planificateur_proc_tocsv_filepath">Chemin et nom du fichier</entry>
+	<entry code="planificateur_proc_tocsv_enclosure">Caractère d'encadrement</entry>
+	<entry code="planificateur_proc_tocsv_default_enclosure"><![CDATA[]]></entry>
+</XMLlist>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le module Article
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_common_view_shelveslist.xml,v 1.5 2018-02-12 15:56:01 dgoron Exp $ -->
+
+<XMLlist>
+	<entry code="cms_module_common_view_shelveslist_build_shelve_link">Construction du lien vers une étagère</entry>
+	<entry code="cms_module_common_view_shelveslist_build_shelve_nb_notices">Nombre de notices à afficher par étagère</entry>
+	<entry code="cms_modulecommon_view_shelveslist_desc">Liste des étagères</entry>
+	<entry code="cms_modulecommon_view_shelveslist_id_desc">ID</entry>
+	<entry code="cms_modulecommon_view_shelveslist_name_desc">Nom</entry>
+	<entry code="cms_modulecommon_view_shelveslist_link_desc">Lien vers une étagère</entry>
+	<entry code="cms_modulecommon_view_shelveslist_link_rss_desc">Lien du Flux RSS</entry>
+	<entry code="cms_modulecommon_view_shelveslist_comment_desc">Commentaire</entry>
+	<entry code="cms_modulecommon_view_shelveslist_records_desc">Liste des notices</entry>
+	<entry code="cms_modulecommon_view_shelveslist_link_add_to_cart">Lien d'ajout de l'étagère dans un panier</entry>
+	<entry code='cms_module_common_view_shelveslist_django_directory'>Répertoire de templates à utiliser</entry>	
+</XMLlist>

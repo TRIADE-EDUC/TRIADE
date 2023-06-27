@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+
+<!-- Declaration d'un module
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: manifest.xml,v 1.23 2018-02-26 10:45:34 arenou Exp $ -->
+
+<manifest>
+	<name>Liste de notices</name>
+	<author>
+		<name>Arnaud RENOU</name>
+		<organisation>PMB Services</organisation>
+	</author>
+	<created_date>2012-05-14</created_date>
+	<version>1.0</version>
+	<default_language>fr_FR</default_language>
+	<managed>true</managed>
+	<use>
+		<datasources>
+			<datasource>cms_module_common_datasource_similarrecords</datasource>
+			<datasource>cms_module_common_datasource_records_categories</datasource>
+			<datasource>cms_module_common_datasource_records_by_categories</datasource>
+			<datasource conditionParam="thesaurus_concepts_active">cms_module_common_datasource_records_by_concepts</datasource>
+			<datasource conditionParam="thesaurus_concepts_active">cms_module_common_datasource_records_used_by_composed_concepts</datasource>
+			<datasource>cms_module_common_datasource_records_section_categories</datasource>
+			<datasource>cms_module_common_datasource_records</datasource>
+			<datasource>cms_module_common_datasource_records_author</datasource>
+			<datasource>cms_module_recordslist_datasource_records_publisher</datasource>
+			<datasource>cms_module_recordslist_datasource_records_collection</datasource>
+			<datasource>cms_module_recordslist_datasource_records_serie</datasource>
+			<datasource>cms_module_recordslist_datasource_records_indexint</datasource>
+			<datasource>cms_module_recordslist_datasource_records_categories</datasource>
+			<datasource>cms_module_common_datasource_records_similar_cote</datasource>
+			<datasource>cms_module_common_datasource_records_by_cp_val</datasource>
+			<datasource>cms_module_common_datasource_records_bannette</datasource>
+			<datasource>cms_module_recordslist_datasource_records_last_read</datasource>
+			<datasource>cms_module_recordslist_datasource_records_category</datasource>
+		</datasources>
+		<filters>
+			<filter>cms_module_common_filter_records_by_doctype</filter>
+			<filter>cms_module_common_filter_records_by_cp</filter>
+		</filters>
+		<views>
+			<view>cms_module_common_view_recordslist</view>
+			<view>cms_module_recordslist_view_django_directory</view>
+			<view>cms_module_recordslist_view_carousel_responsive</view>
+			<view>cms_module_recordslist_view_carousel</view>
+		</views>
+		<conditions>
+			<condition>cms_module_common_condition_global_var</condition>
+		</conditions>
+	</use>
+</manifest>

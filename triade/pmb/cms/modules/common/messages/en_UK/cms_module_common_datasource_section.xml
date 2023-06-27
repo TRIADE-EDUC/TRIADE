@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le module Article
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_common_datasource_section.xml,v 1.4 2018-06-21 16:24:19 dgoron Exp $ -->
+
+<XMLlist>
+	<entry code="cms_module_common_selector_section">Manual rubric selector</entry>
+	<entry code="cms_module_common_selector_env_var">Rubric selector from an environment variable</entry>
+	<entry code="cms_module_common_selector_generic_parent_section">Parent rubric selector</entry>
+	<entry code="cms_module_common_selector_type_section">Sélecteur par la valeur d'un champ d'un type de contenu de rubrique</entry>
+	<entry code="cms_module_common_selector_type_section_generic">Sélecteur par la valeur d'un champ générique de rubrique</entry>
+	<entry code="cms_module_common_datasource_desc_id">Rubrics identifier</entry>
+	<entry code="cms_module_common_datasource_desc_title">Title</entry>
+	<entry code="cms_module_common_datasource_desc_num_parent">Identifier of the parent rubric</entry>
+	<entry code="cms_module_common_datasource_desc_resume">Recap</entry>
+	<entry code="cms_module_common_datasource_desc_logo">Logos</entry>
+	<entry code="cms_module_common_datasource_desc_small_vign">16x16</entry>
+	<entry code="cms_module_common_datasource_desc_vign">100x100</entry>
+	<entry code="cms_module_common_datasource_desc_large">Full size</entry>
+	<entry code="cms_module_common_datasource_desc_publication_state">Publication state</entry>
+	<entry code="cms_module_common_datasource_desc_start_date">Publication date</entry>
+	<entry code="cms_module_common_datasource_desc_end_date">Date of the end of publication</entry>
+	<entry code="cms_module_common_datasource_desc_descriptors">Table of the identifiers of the categories</entry>
+	<entry code="cms_module_common_datasource_desc_type">Type of content of the rubric</entry>
+	<entry code="cms_module_common_datasource_desc_fields_type">Collective table (the key is the label of the field) of tables of fields linked to the type of content of the rubric.</entry>
+	<entry code="cms_module_common_datasource_desc_fields_type_id">Identifier of the field</entry>
+	<entry code="cms_module_common_datasource_desc_fields_type_label">Label of the field</entry>
+	<entry code="cms_module_common_datasource_desc_fields_type_values">Table of tables of values</entry>
+	<entry code="cms_module_common_datasource_desc_fields_type_values_format_value">Formated value of the field</entry>
+	<entry code="cms_module_common_datasource_desc_fields_type_values_value">Gross value of the field</entry>
+	<entry code="cms_module_common_datasource_desc_create_date">Creation date</entry>
+	<entry code="cms_module_common_datasource_main_fields">Main fields</entry>	
+	<entry code="cms_module_common_datasource_types">Types of contents</entry>
+	<entry code="cms_module_common_datasource_desc_types">fields_type value depending on the type of content</entry>
+	<entry code="cms_module_common_datasource_desc_last_update_date">Last update date</entry>
+	<entry code="cms_module_common_datasource_section_load_articles_data">A t-on besoin des informations sur les articles associés ?</entry>
+</XMLlist>

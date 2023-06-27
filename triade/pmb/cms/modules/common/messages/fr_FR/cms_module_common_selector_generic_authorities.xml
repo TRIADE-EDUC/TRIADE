@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le module Article
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_common_selector_generic_authorities.xml,v 1.1 2016-04-20 13:54:55 apetithomme Exp $ -->
+
+<XMLlist>
+	<entry code="cms_module_common_selector_sub_choice_label">Récupérer les autorités via</entry>
+	<entry code="cms_module_common_selector_sub_choice">Choisissez une méthode</entry>
+	<entry code="cms_module_common_selector_authorities_from_record">Une notice</entry>
+	<entry code="cms_module_common_selector_authorities_from_authority">Une autorité</entry>
+	<entry code="cms_module_common_selector_generic_authorities_by_type">Leur type</entry>
+</XMLlist>

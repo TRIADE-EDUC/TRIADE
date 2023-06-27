@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!-- $Id: catalog.xml,v 1.16 2018-12-14 13:46:28 ngantier Exp $ -->
+<specialfields>
+	<type name="combine" class="combine_search" path="combine"></type>
+	<type name="combine_unimarc" class="combine_search_unimarc" path="combine_unimarc"></type>
+	<type name="external_sources" class="external_sources" path="external_sources"></type>
+	<type name="periodique" class="periodique_search" path="periodique"></type>
+	<type name="openurl" class="openurl_search" path="openurl"></type>
+	<type name="facette" class="facette_search" path="facette"></type>
+	<type name="simple_search" class="simple_search_search" path="simple_search"></type>
+	<type name="navigation_section" class="navigation_section_search" path="navigation_section"></type>
+	<type name="navigation_categ" class="navigation_categ_search" path="navigation_categ"></type>
+	<type name="list_lecture" class="list_lecture_search" path="list_lecture"></type>
+	<type name="avis" class="avis_search" path="avis"></type>
+	<type name="permalink" class="permalink_search" path="permalink"></type>
+	<type name="search_segment" class="search_universe_segment_search" path="search_universe_segment"></type>	
+	<type name="combine_extended_search" class="combine_extended_search" path="combine_extended_search"></type>
+	<type name="authorities_facet" class="authorities_facet" path="authorities_facet"></type>
+	<type name="map_circle" class="map_circle" path="map_circle"></type>
+</specialfields>

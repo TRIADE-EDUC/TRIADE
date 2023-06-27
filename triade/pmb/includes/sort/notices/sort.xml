@@ -1,0 +1,481 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!-- $Id: sort.xml,v 1.24 2018-12-12 13:01:10 dgoron Exp $ -->
+<sort reference="notices" referencekey="notice_id">
+	
+	<field name="712" type="text" typefield="select" id="1">
+		<table>
+			<tablefield>index_sew</tablefield>
+		</table>
+	</field>
+	
+	<field name="indexint_menu_title" type="num" typefield="select" id="2">
+		<table name="indexint">
+			<tablefield>indexint_name</tablefield>
+			<tablekey>indexint_id</tablekey>
+			<link type="1n">
+				<referencefield>indexint</referencefield>
+			</link>
+		</table>
+	</field>
+	
+	<field name="234" type="text" typefield="select" id="3">
+		<table name="authors">
+			<tablefield nullvalue=' '>index_author</tablefield>
+			<tablekey>author_id</tablekey>
+			<orderby nullvalue='9'>responsability_type</orderby>
+			<groupby>notice_id</groupby>
+			<link type="nn">
+				<table>responsability</table>
+				<referencefield>responsability_notice</referencefield>
+				<externalfield>responsability_author</externalfield>
+			</link>
+		</table>
+	</field>
+	
+	<field name="searcher_publisher" type="text" typefield="select" id="4">
+		<table name="publishers">
+			<tablefield>ed_name</tablefield>
+			<tablekey>ed_id</tablekey>
+			<link type="1n">
+				<referencefield>ed1_id</referencefield>
+			</link>
+		</table>
+	</field>
+
+	<field name="4016" type="text" typefield="select" id="5">
+		<table name="exemplaires">
+			<filter>(notices.niveau_biblio='m' and notices.niveau_hierar=0)</filter>
+			<tablefield nullvalue=' '>expl_cote</tablefield>
+			<orderby nullvalue=' '>expl_cote</orderby>
+			<tablekey>expl_id</tablekey>
+			<groupby>notice_id</groupby>
+			<link type="n1">
+				<externalfield>expl_notice</externalfield>
+			</link>
+		</table>
+		<table name="exemplaires">
+			<filter>(notices.niveau_biblio='b' and notices.niveau_hierar=2)</filter>
+			<tablefield nullvalue=' '>expl_cote</tablefield>
+			<orderby nullvalue=' '>expl_cote</orderby>
+			<tablekey>expl_bulletin</tablekey>
+			<groupby>notice_id</groupby>
+			<link type="nn">
+				<table>bulletins</table>
+				<referencefield>num_notice and num_notice!=0</referencefield>
+				<externalfield>bulletin_id</externalfield>
+				<linkrestrict>and expl_bulletin!=0</linkrestrict>
+			</link>
+		</table>
+	</field>
+	
+	<field name="pertinence" type="num" typefield="internal" id="6">
+		<tablefield>pert</tablefield>
+	</field>
+	
+	<field name="annee_edition" type="num" typefield="select" id="7">
+		<table>
+			<tablefield nullvalue="0">year</tablefield>
+		</table>
+	</field>
+	
+	<field name="titre_serie_sort" type="text" typefield="select" id="8">
+		<table name="series">
+			<tablefield nullvalue=' '>serie_name</tablefield>
+			<tablekey>serie_index</tablekey>
+			<link type="1n">
+				<referencefield>index_serie</referencefield>
+			</link>
+		</table>
+	</field>
+	
+	<field name="numero_serie_sort" type="text" typefield="select" id="9">
+		<table>
+			<tablefield nullvalue="0">tnvol</tablefield>
+		</table>
+	</field>
+	
+	<field name="localisation_sort" type="text" typefield="select" id="10">
+		<table name="exemplaires">
+			<filter>(notices.niveau_biblio='m' and notices.niveau_hierar=0)</filter>
+			<tablefield nullvalue=' '>location_libelle</tablefield>
+			<orderby nullvalue=' '>location_libelle</orderby>
+			<groupby>notice_id</groupby>
+			<link type="n1">
+				<externalfield>expl_notice</externalfield>
+			</link>
+			<link type="n1">
+				<table>docs_location</table>
+				<tablekey>idlocation</tablekey>
+				<externalfield>expl_location</externalfield>
+			</link>
+		</table>
+		<table name="exemplaires">
+			<filter>(notices.niveau_biblio='b' and notices.niveau_hierar=2)</filter>
+			<tablefield nullvalue=' '>location_libelle</tablefield>
+			<orderby nullvalue=' '>location_libelle</orderby>
+			<groupby>notice_id</groupby>
+			<link type="nn">
+				<table>bulletins</table>
+				<referencefield>num_notice and num_notice!=0</referencefield>
+				<tablekey>bulletin_id</tablekey>
+				<externalfield>expl_bulletin</externalfield>
+				<linkrestrict>and expl_bulletin!=0</linkrestrict>
+			</link>
+			<link type="n1">
+				<table>docs_location</table>
+				<tablekey>idlocation</tablekey>
+				<externalfield>expl_location</externalfield>
+			</link>
+		</table>
+		<table name="exemplaires">
+			<filter>(notices.niveau_biblio='s' and notices.niveau_hierar=1)</filter>
+			<tablefield nullvalue=' '>location_libelle</tablefield>
+			<orderby nullvalue=' '>location_libelle</orderby>
+			<groupby>notice_id</groupby>
+			<link type="nn">
+				<table>bulletins</table>
+				<referencefield>bulletin_notice</referencefield>
+				<tablekey>bulletin_id</tablekey>
+				<externalfield>expl_bulletin</externalfield>
+				<linkrestrict>and expl_bulletin!=0</linkrestrict>
+			</link>
+			<link type="n1">
+				<table>docs_location</table>
+				<tablekey>idlocation</tablekey>
+				<externalfield>expl_location</externalfield>
+			</link>
+		</table>
+	</field>
+	
+	<field name="langue_sort" type="text" typefield="select" id="11">
+		<table name="notices_langues">
+			<tablefield>code_langue</tablefield>
+			<tablekey>num_notice</tablekey>
+			<orderby>type_langue</orderby>
+			<link type="1n">
+				<referencefield>notice_id</referencefield>
+			</link>
+		</table>
+	</field>
+	
+	<field name="statut_notice_sort" type="text"  typefield="select" id="12">
+		<table name="notice_statut">
+			<tablefield>gestion_libelle</tablefield>
+			<tablekey>id_notice_statut</tablekey>
+			<link type="1n">
+				<referencefield>statut</referencefield>
+			</link>
+		</table>
+	</field>
+	
+	<field name="type_doc_sort" type="text" typefield="select" id="13">
+		<table>
+			<tablefield>typdoc</tablefield>
+		</table>
+	</field>
+	
+	<field name="date_creation_sort" type="text" typefield="select" id="14">
+		<table>
+			<tablefield>create_date</tablefield>
+		</table>
+	</field>
+	
+	<field name="date_update_sort" type="text" typefield="select" id="28">
+		<table>
+			<tablefield>update_date</tablefield>
+		</table>
+	</field>
+	
+	<field name="codebarre_sort" type="text" typefield="select" id="15">
+		<table name="exemplaires">
+			<filter>(notices.niveau_biblio='m')</filter>
+			<tablefield nullvalue=' '>expl_cb</tablefield>
+			<orderby nullvalue=' '>expl_cb</orderby>
+			<tablekey>expl_id</tablekey>
+			<groupby>notice_id</groupby>
+			<link type="n1">
+				<externalfield>expl_notice</externalfield>
+			</link>
+		</table>
+		<table name="exemplaires">
+			<filter>(notices.niveau_biblio='b' and notices.niveau_hierar=2)</filter>
+			<tablefield nullvalue=' '>expl_cb</tablefield>
+			<orderby nullvalue=' '>expl_cb</orderby>
+			<tablekey>expl_bulletin</tablekey>
+			<groupby>notice_id</groupby>
+			<link type="nn">
+				<table>bulletins</table>
+				<referencefield>num_notice and num_notice!=0</referencefield>
+				<externalfield>bulletin_id</externalfield>
+				<linkrestrict>and expl_bulletin!=0</linkrestrict>
+			</link>
+		</table>
+	</field>
+	<field name="coll_sort" type="text" typefield="select" id="16">
+		<table name="collections">
+			<tablefield>collection_name</tablefield>
+			<tablekey>collection_id</tablekey>
+			<link type="1n">
+				<referencefield>coll_id</referencefield>
+			</link>
+		</table>
+	</field>
+	<field name="subcoll_sort" type="text" typefield="select" id="17">
+		<table name="sub_collections">
+			<tablefield>sub_coll_name</tablefield>
+			<tablekey>sub_coll_id</tablekey>
+			<link type="1n">
+				<referencefield>subcoll_id</referencefield>
+			</link>
+		</table>
+	</field>
+	<field name="num_in_coll_sort" type="num" typefield="select" id="18">
+		<table>
+			<tablefield>nocoll</tablefield>
+		</table>
+	</field>	
+	<!--Date de Parution-->
+	<field name="4026" type="text" typefield="select" id="19">
+		<table>
+			<tablefield>date_parution</tablefield>
+		</table>
+	</field>
+	
+	<!--identifiant de la notice-->
+	<field name="id_notice_sort" type="num" typefield="internal" id="20">
+		<tablefield>notice_id</tablefield>
+	</field>
+
+	<!--Auteur Principal-->
+	<field name="auteur_principal_sort" type="text" typefield="select" id="21">
+		<table name="authors">
+			<tablefield nullvalue=' '>index_author</tablefield>
+			<tablekey>author_id</tablekey>
+			<groupby>notice_id</groupby>
+			<link type="nn">
+				<table>responsability</table>
+				<referencefield>responsability_notice and responsability_type = 0</referencefield>
+				<externalfield>responsability_author</externalfield>
+			</link>
+		</table>
+	</field>
+
+	<!--Autre Auteur-->
+	<field name="autre_auteur_sort" type="text" typefield="select" id="22">
+		<table name="authors">
+			<tablefield nullvalue=' '>group_concat(index_author SEPARATOR " ")</tablefield>
+			<tablekey>author_id</tablekey>
+			<groupby>notice_id</groupby>
+			<link type="nn">
+				<table>responsability</table>
+				<referencefield>responsability_notice and responsability_type = 1</referencefield>
+				<externalfield>responsability_author</externalfield>
+			</link>
+		</table>
+	</field>
+	
+	<!--Appartenance Auteur-->
+	<field name="auteur_secondaire_sort" type="text" typefield="select" id="23">
+		<table name="authors">
+			<tablefield nullvalue=' '>group_concat(index_author SEPARATOR " ")</tablefield>
+			<tablekey>author_id</tablekey>
+			<groupby>notice_id</groupby>
+			<link type="nn">
+				<table>responsability</table>
+				<referencefield>responsability_notice and responsability_type = 2</referencefield>
+				<externalfield>responsability_author</externalfield>
+			</link>
+		</table>
+	</field>
+		
+	<!-- Numéro du bulletin -->
+	<field name="bullnum_sort" type="text" typefield="select" id="25">
+		<table name="analysis">
+			<filter>(notices.niveau_biblio='a' and notices.niveau_hierar=2)</filter>
+			<tablefield nullvalue=' '>bulletin_numero</tablefield>
+			<tablekey>analysis_notice</tablekey>
+			<link type="1n">
+				<referencefield>notice_id</referencefield>
+			</link>
+			<link type="n1">
+				<table>bulletins</table>
+				<tablekey>bulletin_id</tablekey>
+				<externalfield>analysis_bulletin</externalfield>
+			</link>
+		</table>
+		<table name="bulletins">
+			<filter>(notices.niveau_biblio='b' and notices.niveau_hierar=2)</filter>
+			<tablefield nullvalue=' '>bulletin_numero</tablefield>
+			<tablekey>num_notice</tablekey>
+			<link type="1n">
+				<referencefield>notice_id</referencefield>
+			</link>
+		</table>
+	</field>
+	
+	<field name="section_sort" type="text" typefield="select" id="26">
+		<table name="exemplaires">
+			<filter>(notices.niveau_biblio='m' and notices.niveau_hierar=0)</filter>
+			<tablefield nullvalue=' '>section_libelle</tablefield>
+			<orderby nullvalue=' '>section_libelle</orderby>
+			<groupby>notice_id</groupby>
+			<link type="n1">
+				<externalfield>expl_notice</externalfield>
+			</link>
+			<link type="n1">
+				<table>docs_section</table>
+				<tablekey>idsection</tablekey>
+				<externalfield>expl_section</externalfield>
+			</link>
+		</table>
+		<table name="exemplaires">
+			<filter>(notices.niveau_biblio='b' and notices.niveau_hierar=2)</filter>
+			<tablefield nullvalue=' '>section_libelle</tablefield>
+			<orderby nullvalue=' '>section_libelle</orderby>
+			<groupby>notice_id</groupby>
+			<link type="nn">
+				<table>bulletins</table>
+				<referencefield>num_notice and num_notice!=0</referencefield>
+				<tablekey>bulletin_id</tablekey>
+				<externalfield>expl_bulletin</externalfield>
+				<linkrestrict>and expl_bulletin!=0</linkrestrict>
+			</link>
+			<link type="n1">
+				<table>docs_section</table>
+				<tablekey>idsection</tablekey>
+				<externalfield>expl_section</externalfield>
+			</link>
+		</table>
+		<table name="exemplaires">
+			<filter>(notices.niveau_biblio='s' and notices.niveau_hierar=1)</filter>
+			<tablefield nullvalue=' '>section_libelle</tablefield>
+			<orderby nullvalue=' '>section_libelle</orderby>
+			<groupby>notice_id</groupby>
+			<link type="nn">
+				<table>bulletins</table>
+				<referencefield>bulletin_notice</referencefield>
+				<tablekey>bulletin_id</tablekey>
+				<externalfield>expl_bulletin</externalfield>
+				<linkrestrict>and expl_bulletin!=0</linkrestrict>
+			</link>
+			<link type="n1">
+				<table>docs_section</table>
+				<tablekey>idsection</tablekey>
+				<externalfield>expl_section</externalfield>
+			</link>
+		</table>
+	</field>
+	
+	<!-- Titre de périodique -->
+	<field name="serial_name_sort" type="text" typefield="select" id="27">
+		<table name="analysis">
+			<filter>(notices.niveau_biblio='a' and notices.niveau_hierar=2)</filter>
+			<tablefield nullvalue=' '>perio.tit1</tablefield>
+			<tablekey>analysis_notice</tablekey>
+			<link type="1n">
+				<referencefield>notice_id</referencefield>
+			</link>
+			<link type="n1">
+				<table alias='perio'>(select analysis_notice, n1.tit1 from analysis left join bulletins on (analysis_bulletin = bulletins.bulletin_id) left join notices as n1 on (bulletins.bulletin_notice = n1.notice_id))</table>
+				<tablekey>analysis_notice</tablekey>
+				<externalfield>analysis_notice</externalfield>
+			</link>
+		</table>
+		<table name="bulletins">
+			<filter>(notices.niveau_biblio='b' and notices.niveau_hierar=2)</filter>
+			<tablefield nullvalue=' '>perio.tit1</tablefield>
+			<tablekey>num_notice</tablekey>
+			<link type="1n">
+				<referencefield>notice_id</referencefield>
+			</link>
+			<link type="n1">
+				<table alias='perio'>notices</table>
+				<tablekey>notice_id</tablekey>
+				<externalfield>bulletin_notice</externalfield>
+			</link>
+		</table> 
+	</field>
+	
+	<!--Géoréférencement -->
+	<field name="map_echelle" type="text" typefield="select" id="29">
+		<var name="pmb_map_activate" visibility="yes">
+			<value visibility="no">0</value>
+		</var>
+		<table name="map_echelles">
+			<tablefield>map_echelle_name</tablefield>
+			<tablekey>map_echelle_id</tablekey>
+			<link type="1n">
+				<referencefield>map_echelle_num</referencefield>
+			</link>
+		</table>
+	</field>
+	<field name="map_projection" type="text" typefield="select" id="30">
+		<var name="pmb_map_activate" visibility="yes">
+			<value visibility="no">0</value>
+		</var>
+		<table name="map_projections">
+			<tablefield>map_projection_name</tablefield>
+			<tablekey>map_projection_id</tablekey>
+			<link type="1n">
+				<referencefield>map_projection_num</referencefield>
+			</link>
+		</table>
+	</field>
+	<field name="map_ref" type="text" typefield="select" id="31">
+		<var name="pmb_map_activate" visibility="yes">
+			<value visibility="no">0</value>
+		</var>
+		<table name="map_refs">
+			<tablefield>map_ref_name</tablefield>
+			<tablekey>map_ref_id</tablekey>
+			<link type="1n">
+				<referencefield>map_ref_num</referencefield>
+			</link>
+		</table>
+	</field>
+	<field name="map_equinoxe" type="text" typefield="select" id="32">
+		<var name="pmb_map_activate" visibility="yes">
+			<value visibility="no">0</value>
+		</var>
+		<table>
+			<tablefield>map_equinoxe</tablefield>
+		</table>
+	</field>
+	
+	<field name="134" type="text" typefield="select" id="33">
+		<table name="categories">
+			<tablefield nullvalue=' '>concat(index_categorie," ")</tablefield>
+			<tablekey>num_noeud</tablekey>
+			<groupby>notice_id</groupby>
+			<filter>langue = '!!lang!!'</filter>
+			<link type="nn">
+				<table>notices_categories</table>
+				<referencefield>notcateg_notice</referencefield>
+				<externalfield>num_noeud</externalfield>
+			</link>
+		</table>
+	</field>
+	<field name="notice_is_new_gestion" type="text" typefield="select" id="34">
+		<table>
+			<tablefield>notice_date_is_new</tablefield>
+		</table>
+	</field>
+	
+	<field name="external_source" type="text" typefield="select" id="35">
+		<table name="connectors_sources">
+			<tablefield>name</tablefield>
+			<tablekey>source_id</tablekey>
+			<groupby>notice_id</groupby>
+			<link type="nn">
+					<table>notices_externes</table>
+					<referencefield>num_notice</referencefield>
+					<externalfield>recid</externalfield>
+					<link type="nn">
+						<table>external_count</table>
+						<referencefield>recid</referencefield>
+						<externalfield>source_id</externalfield>
+					</link>
+				</link>
+		</table>
+	</field>
+</sort>

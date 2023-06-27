@@ -1,0 +1,84 @@
+@charset "utf-8";
+ /* +--------------------------------------------------------------------------+
+// 2015 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// +-------------------------------------------------+
+// $Id: fontAcontent.css,v 1.3 2018-03-02 14:01:26 mramage Exp $ */
+
+/*------------------------------------------------------------------------------------------*/
+
+/*--------------------------------------------------------------------------*/
+
+#bandeau .infosBandeau .liensExtrn li:before,
+#footer .Ancre a:before,
+.itemAbrege  p.lirePlus:after,
+.itemAbrege  p.lirePlus a:after,
+.MenuHoriz .Nav>li .SousNav li a:after,
+.listBreves>.itemAbrege>a:after,
+.listBibli>.itemAbrege>a:after,
+.listEtageres>.itemAbrege>a:after,
+.fluxRSS>.itemAbrege>a:after,
+#search:after,
+#search:before,
+#search form:after,
+div#TglUser a:before, 
+.uk-touch div#TglUser a:before,
+.MenuHoriz .Nav>li:first-child>a:before, 
+#search form:before,
+.search_advanced_link a:before,
+ul.search_tabs li#current:before,
+.listBreves .itemAbrege>ul li:after,
+.SliderHoriz .SliderNot .bx-prev:before,
+ul.liensExtArt li a:before,
+.SliderHoriz .SliderNot .bx-next:before,
+#lienHistorique a:before,
+.fluxRSS>.itemAbrege a:after,
+.itemSolo h4:after,
+.listProd>h3:after,
+.listEtageresRub>h3:after,
+.fluxRSSRub>.itemAbrege h4 a:after,
+#facette_wrapper th:after,
+.infosArt>h3:after,
+.fleche>a:after,
+.lienFlux a:after,
+.accesFlux a:before,
+.SliderVertic .bx-wrapper .bx-prev:after,
+.SliderVertic .bx-wrapper .bx-next:after,
+.accesFlux a:after,
+.listeFluxRss a:after,
+#lienBouton a:after,
+.imgXL a:after,
+#resultatrech_liste>.addCart a:before, 
+#resultatrech_liste>span.open_visionneuse a:before, 
+#resultatrech_liste>span.affiner_recherche a:before, 
+#resultatrech_liste>span.short_url a:before, 
+#resultatrech_liste>span.short_url_permalink a:before, 
+#resultatrech_liste>span.search_bt_sugg a:before, 
+#resultatrech_liste>span.search_bt_external a:before, 
+#resultatrech_liste span.printSearchResult a:before, 
+.rss_articles p i:before,
+#aut_details_liste>h3:after,
+#lienCnx a:before,
+#lienDcnx a:before,
+.SliderNot.SliderHoz .bx-wrapper .bx-prev:after,
+.SliderNot .bx-wrapper .bx-next:after,
+#navigator > table > tbody > tr > td> a span:before,
+#facette h3:before, 
+#lvl1 h3:before,
+#facette_compare span.facette_compare:before,
+.noticesEtagere>a:after,
+.liensExtrn li a:after,
+.aut_details_liste_titre:after,
+#facette_wrapper > form > h3 > table > tbody > tr > td > a:before,
+.search_advanced_link:before,
+.search_other_link a:before,
+.lirePlus:after,
+.infosBandeau-resp .uk-accordion-title:after,
+.infosBandeau-resp .uk-accordion-title.uk-active:after {
+	font-family: FontAwesome;
+	font-weight: normal;
+	font-style: normal;
+	display: inline-block;
+	text-decoration: inherit;
+	-webkit-font-smoothing: antialiased;
+	width:1.3em;
+} 

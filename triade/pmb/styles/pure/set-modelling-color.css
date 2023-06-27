@@ -1,0 +1,221 @@
+@charset "utf-8";
+/* +--------------------------------------------------------------------------+
+// 2017 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// +-------------------------------------------------+
+// $Id: set-modelling-color.css,v 1.3 2018-04-17 15:21:19 wlair Exp $ */
+/*------------------------------------------------------------------------------------------*/
+
+/* ========================================================================
+   modelling
+   base :#bd4180
+   hover :#d04a8e
+   active/focus :#ab3671  
+ ==========================================================================  */
+.uk-navbar-nav li#navbar-modelling a:after,
+.modelling .hmenu.uk-tab>*:hover>a{
+	border-bottom-color:#bd4180;
+}
+li#navbar-modelling.current,
+.modelling input[type="checkbox"]:checked, 
+.modelling input[type="checkbox"]:indeterminate, 
+.modelling input[type="radio"]:checked,
+.modelling input[type="checkbox"]:checked:focus, 
+.modelling input[type="checkbox"]:indeterminate:focus, 
+.modelling input[type="radio"]:checked:focus,
+.modelling div#extra2 span.uk-icon,
+.modelling div#extra2 .notification.ui-active {
+	background-color:#bd4180;	
+}
+.modelling input:focus, 
+.modelling select:focus, 
+.modelling textarea:focus,
+.modelling input[type="checkbox"]:focus, 
+.modelling input[type="radio"]:focus,
+.modelling.claro.pure .dijitButtonHover .dijitButtonNode,
+.modelling.claro.pure .dijitDropDownButtonHover .dijitButtonNode,
+.modelling.claro.pure .dijitComboButton .dijitButtonNodeHover,
+.modelling.claro.pure .dijitComboButton .dijitDownArrowButtonHover,
+.modelling.claro.pure .dijitToggleButtonHover .dijitButtonNode,
+.modelling.claro.pure .dijitTextBoxHover,
+.modelling #contenu .uk-button-default:focus,
+.modelling #contenu .uk-button-default:hover,
+.modelling .hmenu.uk-tab>.uk-active>a,
+.modelling  iframe {
+	border-color: #bd4180;
+}
+.uk-navbar-nav li#navbar-modelling a:hover,
+.modelling h1.section-title i,
+.modelling h1.section-sub-title ,
+.modelling .uk-link,
+.modelling a,
+.modelling .uk-link:hover,
+.modelling a:hover,
+.modelling h3:not(.section-sub-title),
+.modelling .article-title i,
+.modelling #menu .uk-nav>li>a i,
+.modelling #menu .uk-nav>li.uk-active>a,
+.modelling #menu .uk-nav>li>a i,
+.modelling #menu .uk-nav>li.uk-active>a,
+.modelling #menu .uk-nav>li>a:hover ,
+.modelling .h2-like i,
+.modelling #extra span.uk-icon:hover,
+.modelling #extra i:hover,
+.modelling #navbar .dashboard:hover,
+.pure .modelling .uk-tab > * > a:hover,
+.pure .modelling .uk-tab > * > a:focus,
+.modelling .categ_browser a,
+.modelling .categ_browser a:hover,
+.modelling .categ_browser a:focus,
+.modelling .categ_browser a:active,
+.modelling .hmenu.uk-tab>.uk-active>a{
+	color:#bd4180;
+}
+.modelling #contenu input.wyr-input[type='file']:focus{
+	outline-color: #bd4180;
+}
+.modelling .stat-child .uk-table th{
+	color: #bd4180;
+	font-weight: 500;
+}
+.modelling #menu ul.uk-nav{		
+	border-top: solid 2px #bd4180;		
+}
+.modelling #menu>h3 .uk-icon{		
+	background: #bd4180;		
+}
+.modelling.claro.pure .dijitMenu .dijitMenuItemHover td, 
+.modelling.claro.pure .dijitMenu .dijitMenuItemSelected td, 
+.modelling.claro.pure .dijitMenuItemHover, 
+.modelling.claro.pure .dijitComboBoxMenu .dijitMenuItemHover, 
+.modelling.claro.pure .dijitMenuItemSelected,
+.modelling.claro.pure .dojoDndItemOver {
+    background-color:rgba(70, 157, 225, 0.3);
+    border-color:#bd4180;
+    background-image: none;
+}
+.modelling form .form-contenu,
+.modelling .row.bkg-grey{
+	border-color:#d65495;
+}
+.modelling input.wyr-input[type='submit'],
+.modelling .uk-button,
+.modelling .search_cancel>input,
+.modelling.claro.pure .dijitButton .dijitButtonNode,
+.modelling.claro.pure .dijitDropDownButton .dijitButtonNode,
+.modelling.claro.pure .dijitComboButton .dijitButtonNode,
+.modelling.claro.pure .dijitToggleButton .dijitButtonNode{
+	background-color: #bd4180;
+		
+}
+.modelling input.wyr-input[type='submit']:hover,
+.modelling .uk-button:hover,
+.modelling .search_cancel>input:hover,
+.modelling.claro.pure .dijitButton .dijitButtonNode:hover,
+.modelling.claro.pure .dijitDropDownButton .dijitButtonNode:hover,
+.modelling.claro.pure .dijitComboButton .dijitButtonNode:hover,
+.modelling.claro.pure .dijitToggleButton .dijitButtonNode:hover {
+	background-color: #bd4180;
+}
+.modelling input.wyr-input[type='submit']:focus,
+.modelling input.wyr-input[type='submit']:active,
+.modelling .uk-button:focus,
+.modelling .uk-button:active,
+.modelling .search_cancel>input:focus,
+.modelling .search_cancel>input:active,
+.modelling.claro.pure .dijitButton .dijitButtonNode:focus,
+.modelling.claro.pure .dijitDropDownButton .dijitButtonNode:focus,
+.modelling.claro.pure .dijitComboButton .dijitButtonNode:focus,
+.modelling.claro.pure .dijitToggleButton .dijitButtonNode:focus,
+.modelling.claro.pure .dijitButton .dijitButtonNode:active,
+.modelling.claro.pure .dijitDropDownButton .dijitButtonNode:active,
+.modelling.claro.pure .dijitComboButton .dijitButtonNode:active,
+.modelling.claro.pure .dijitToggleButton .dijitButtonNode:active {
+	background-color: #b63777;
+}
+.modelling .uk-label,
+.modelling .uk-label:hover {
+	background: #bd4180;
+	color:#fff;		
+}
+.modelling  .search-result-item.notice-child[style*='block'],
+.modelling  .child[style*='block'],
+.modelling  div[startopen="Yes"] {
+	border-color: #bd4180;
+}
+.modelling select:focus{
+	outline-color: #b63777;
+}
+/*
+*Aut color
+*/
+.modelling .saisie-5emr,
+.modelling .saisie-10emr,
+.modelling .saisie-15emr,
+.modelling .saisie-20emr,
+.modelling .saisie-30emr,
+.modelling .saisie-50emr,
+.modelling .saisie-80emr.pure,
+.modelling input[class^='saisie'][class*='emr']:hover,
+.pure .modelling input[class^='saisie'][class*='emr']:active,
+.pure .modelling input[class^='saisie'][class*='emr']:focus{
+  background: #bd4180;
+  color:#000;	
+}
+/*
+*Retours 
+*/
+
+.modelling .form-retour-expl .row {
+  background-color: rgb(229, 248, 255);
+  border: solid 1px #bd4180;
+}
+
+.modelling .form-retour-expl .uk-form-label.wyr-form-label {
+  color: #595959;
+}
+
+.modelling #contenu .form-retour-expl input.wyr-input {
+  border: solid 1px #bd4180;
+}
+/* ========================================================================
+inside menu //  button
+===========================================================================  */
+
+.pure.modelling .hmenu .wui-button.uk-active {
+    background: #bd4180;
+    border-color: #bd4180;
+}
+.pure.modelling .hmenu .wui-button.uk-active:hover  a,
+.pure.modelling .hmenu .wui-button:hover a,
+.pure.modelling .hmenu .wui-button.uk-active:hover ,
+.pure.modelling .hmenu .wui-button:hover,
+.pure.modelling .hmenu .wui-button.uk-active:active ,
+.pure.modelling .hmenu .wui-button:active
+.pure.modelling .hmenu .wui-button.uk-active:focus ,
+.pure.modelling .hmenu .wui-button:focus,
+.modelling #empr-name,
+.pure.modelling .hmenu .wui-button {
+    border-color: #bd4180;    
+}
+ 
+.modelling input[type='submit'],
+.modelling input[type='button'],
+.modelling .bouton{
+	background-color: #bd4180;
+}
+.modelling input[type='submit']:hover,
+.modelling input[type='button']:hover,
+.modelling .bouton:hover{
+	background-color: #d04a8e;
+}
+
+.modelling input[type='submit']:focus,
+.modelling input[type='button']:focus,
+.modelling .bouton:focus,  
+.modelling input[type='submit']:active,
+.modelling input[type='button']:active,
+.modelling .bouton:active{
+	background-color: #ab3671;
+
+}
+

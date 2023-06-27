@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!-- Fichier manifest de description des méthodes disponibles
+****************************************************************************************
+© 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: manifest.xml,v 1.2 2018-10-29 16:18:43 tsamson Exp $ -->
+
+<manifest>
+	<name>pmbesContributions</name>
+	<description>msg:contributions_functions_description</description>
+	<methods>
+	<!--
+ 
+	Méthodes relative au connecteur de contributions
+ 
+	-->
+		<method name="integrate_entity" comment="msg:integrate_entity_description" rights="" version="1.0" language_independant="true">
+			<pmb_requirements>
+				<pmb_requirement start_path="class" file="explnum.class.php"/>
+				<pmb_requirement start_path="include" file="explnum.inc.php"/>
+			</pmb_requirements>
+			<inputs>
+				<description>msg:integrate_entity_input_description</description>
+				<param name="uri" type="scalar" dataType="string" description="msg:integrate_entity_entity_uri"/>
+			</inputs>
+			<outputs>
+				<description>msg:integrate_entity_output_description</description>
+				<!--<result name="SESSID"  type="scalar" dataType="string" description="msg:check_token_SESSID"/>-->
+			</outputs>
+		</method>
+	</methods>
+</manifest>

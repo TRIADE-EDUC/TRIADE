@@ -1,0 +1,54 @@
+ /* +--------------------------------------------------------------------------+
+// 2013 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// +-------------------------------------------------+
+// $Id: fonts.css,v 1.2 2016-01-19 11:08:38 mramage Exp $ */
+
+@font-face {
+    font-family: 'apercu';
+    src: url('./fonts/apercu_bold-webfont.eot');
+    src: url('./fonts/apercu_bold-webfont.eot?#iefix') format('embedded-opentype'),
+         url('./fonts/apercu_bold-webfont.woff2') format('woff2'),
+         url('./fonts/apercu_bold-webfont.woff') format('woff'),
+         url('./fonts/apercu_bold-webfont.ttf') format('truetype'),
+         url('./fonts/apercu_bold-webfont.svg#apercubold') format('svg');
+    font-weight: 600;
+    font-style: normal;
+
+}
+@font-face {
+    font-family: 'apercu';
+    src: url('./fonts/apercu_bold_italic-webfont.eot');
+    src: url('./fonts/apercu_bold_italic-webfont.eot?#iefix') format('embedded-opentype'),
+         url('./fonts/apercu_bold_italic-webfont.woff2') format('woff2'),
+         url('./fonts/apercu_bold_italic-webfont.woff') format('woff'),
+         url('./fonts/apercu_bold_italic-webfont.ttf') format('truetype'),
+         url('./fonts/apercu_bold_italic-webfont.svg#apercubold_italic') format('svg');
+    font-weight: 600;
+    font-style: italic;
+
+}
+@font-face {
+    font-family: 'apercu';
+    src: url('./fonts/apercu_regular-webfont.eot');
+    src: url('./fonts/apercu_regular-webfont.eot?#iefix') format('embedded-opentype'),
+         url('./fonts/apercu_regular-webfont.woff2') format('woff2'),
+         url('./fonts/apercu_regular-webfont.woff') format('woff'),
+         url('./fonts/apercu_regular-webfont.ttf') format('truetype'),
+         url('./fonts/apercu_regular-webfont.svg#apercuregular') format('svg');
+    font-weight: 400;
+    font-style: normal;
+
+}
+@font-face {
+    font-family: 'apercu';
+    src: url('./fonts/apercu_regular_italic-webfont.eot');
+    src: url('./fonts/apercu_regular_italic-webfont.eot?#iefix') format('embedded-opentype'),
+         url('./fonts/apercu_regular_italic-webfont.woff2') format('woff2'),
+         url('./fonts/apercu_regular_italic-webfont.woff') format('woff'),
+         url('./fonts/apercu_regular_italic-webfont.ttf') format('truetype'),
+         url('./fonts/apercu_regular_italic-webfont.svg#apercuitalic') format('svg');
+    font-weight: 400;
+    font-style: italic;
+}
+
+

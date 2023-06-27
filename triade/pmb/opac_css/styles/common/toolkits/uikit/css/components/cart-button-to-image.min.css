@@ -1,0 +1,49 @@
+@charset "utf-8";
+ /* +--------------------------------------------------------------------------+
+// 2013 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// +-------------------------------------------------+
+// $Id: cart-button-to-image.min.css,v 1.2 2017-02-14 10:20:25 wlair Exp $ */
+
+/*------------------------------------------------------------------------------------------*/
+
+/*--------------------------------------------------------------------------*/
+#cart_action input[type="button"]{display: none!important;}
+#cart_action input[type="image"]{
+	color: #2a2f81;
+	padding: 5px 10px;
+	line-height: normal;
+	display: block;
+	margin-bottom: 4px;
+	background-color: #F9F9F9;
+	border: solid 1px rgb(239, 239, 239);
+	border-radius: 0px;
+	font-weight: 400;
+	transition-duration: 0.15s;
+	transition-timing-function: ease-out;
+	text-decoration: none;
+	padding: 7px!important;
+	width: 35px;
+	margin: 0px 0px 0px 5px;
+	float: left;
+}
+#cart_action input:hover[type="image"] {
+	background-color: #eee;
+}
+#cart_action input[type="image"].ready{
+	display:block;
+}
+#main #cart_action input#show_cart_reserve_checked {
+    margin-left: 5px!important;
+}
+#http_response:empty{
+	display:none
+}
+
+@media screen and (max-width: 767px) {
+
+	#main #cart_action input[type="image"] {
+		width: auto;
+		margin:8px 5px;
+		word-wrap: normal;
+	}
+}

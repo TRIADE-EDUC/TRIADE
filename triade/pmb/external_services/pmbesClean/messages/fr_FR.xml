@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- messages localisés en français pour la classe de fonctions pmbesMySQL
+****************************************************************************************
+© 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: fr_FR.xml,v 1.6 2015-11-06 15:13:22 dgoron Exp $ -->
+
+<!DOCTYPE XMLlist SYSTEM "../../../includes/XMLlist.dtd" >
+<XMLlist>
+<!--
+pmbesClean
+-->
+  <entry code="Clean_functions_description">Fonctions relatives au nettoyage de PMB</entry>   
+<!--
+indexGlobal
+-->
+  <entry code="indexGlobal_description">Réindexer l'index global</entry>
+  <entry code="indexGlobal_output_description"></entry>
+  <entry code="indexGlobal_result">Résultat de la réindexation de la base</entry> 
+<!--
+indexNotices
+-->
+  <entry code="indexNotices_description">Réindexer tous les champs de recherche</entry>
+  <entry code="indexNotices_output_description"></entry>
+  <entry code="indexNotices_result">Résultat de la réindexation sur tous les champs de recherche</entry> 
+<!--
+cleanAuthors
+-->
+  <entry code="cleanAuthors_description">Supprimer les auteurs inutilisés</entry>
+  <entry code="cleanAuthors_output_description"></entry>
+  <entry code="cleanAuthors_result">Résultat de la suppression des auteurs inutilisés</entry>
+<!--
+cleanPublishers
+-->
+  <entry code="cleanPublishers_description"> Supprimer les éditeurs inutilisés</entry>
+  <entry code="cleanPublishers_output_description"></entry>
+  <entry code="cleanPublishers_result">Résultat de la suppression des éditeurs inutilisés</entry>
+<!--
+cleanCollections
+-->
+  <entry code="cleanCollections_description">Supprimer les collections inutilisées</entry>
+  <entry code="cleanCollections_output_description"></entry>
+  <entry code="cleanCollections_result">Résultat de la suppression des collections inutilisés</entry>
+<!--
+cleanSubCollections
+-->
+  <entry code="cleanSubcollections_description">Supprimer les sous-collections inutilisées</entry>
+  <entry code="cleanSubcollections_output_description"></entry>
+  <entry code="cleanSubcollections_result">Résultat de la suppression des sous-collections inutilisés</entry>
+<!--
+cleanCategories
+-->
+  <entry code="cleanCategories_description">Supprimer les catégories inutilisées</entry>
+  <entry code="cleanCategories_output_description"></entry>
+  <entry code="cleanCategories_result">Résultat de la suppression des catégories inutilisés</entry>
+<!--
+cleanSeries
+-->
+  <entry code="cleanSeries_description">Supprimer les titres de série inutilisés</entry>
+  <entry code="cleanSeries_output_description"></entry>
+  <entry code="cleanSeries_result">Résultat de la suppression des titres de série inutilisés</entry>
+<!--
+cleanTitresUniformes
+-->
+  <entry code="cleanTitresUniformes_description">Supprimer les titres uniformes inutilisés</entry>
+  <entry code="cleanTitresUniformes_output_description"></entry>
+  <entry code="cleanTitresUniformes_result">Résultat de la suppression des titres uniformes inutilisés</entry>
+<!--
+cleanIndexint
+-->
+  <entry code="cleanIndexint_description">Supprimer les indexations décimales inutilisées</entry>
+  <entry code="cleanIndexint_output_description"></entry>
+  <entry code="cleanIndexint_result">Résultat de la suppression des indexations décimales inutilisées</entry>
+<!--
+cleanRelations
+-->
+  <entry code="cleanRelations_description">Nettoyer les relations avec les bannettes, les paniers et les catégories</entry>
+  <entry code="cleanRelations_output_description"></entry>
+  <entry code="cleanRelations_result">Résultat du nettoyage des relations</entry>
+<!--
+cleanNotices
+-->
+  <entry code="cleanNotices_description">Supprimer les notices sans exemplaire</entry>
+  <entry code="cleanNotices_output_description"></entry>
+  <entry code="cleanNotices_result">Résultat de la suppression des notices sans exemplaire</entry>
+<!--
+indexAcquisitions
+-->
+  <entry code="indexAcquisitions_description">Réindexation des acquisitions</entry>
+  <entry code="indexAcquisitions_output_description"></entry>
+  <entry code="indexAcquisitions_result">Résultat de la réindexation des acquisitions</entry>
+<!--
+genSignatureNotice
+-->
+  <entry code="genSignatureNotice_description">Générer toutes les signatures de notices</entry>
+  <entry code="genSignatureNotice_output_description"></entry>
+  <entry code="genSignatureNotice_result">Résultat de la génération des signatures de notices</entry>
+<!--
+genPhonetique
+-->
+  <entry code="genPhonetique_description">Générer l'index pour la recherche par 'stemming' à l'OPAC</entry>
+  <entry code="genPhonetique_output_description"></entry>
+  <entry code="genPhonetique_result">Résultat de la génération des index pour la recherche par 'stemming' à l'OPAC</entry>
+<!--
+nettoyageCleanTags
+-->
+  <entry code="nettoyageCleanTags_description">Nettoyer les mots clés des notices</entry>
+  <entry code="nettoyageCleanTags_output_description"></entry>
+  <entry code="nettoyageCleanTags_result">Résultat du nettoyage des mots clés des notices</entry>
+<!--
+cleanCategoriesPath
+-->
+  <entry code="cleanCategoriesPath_description">Générer les liens entre les catégories nécessaires à l'autopostage</entry>
+  <entry code="cleanCategoriesPath_output_description"></entry>
+  <entry code="cleanCategoriesPath_result">Résultat de la génération des liens entre les catégories nécessaires à l'autopostage</entry>
+<!--
+genDatePublicationArticle
+-->
+  <entry code="genDatePublicationArticle_description">Générer l'année de publication des articles de périodique</entry>
+  <entry code="genDatePublicationArticle_output_description"></entry>
+  <entry code="genDatePublicationArticle_result">Résultat de la génération de l'année de publication des articles de périodique</entry>
+<!--
+genDateTri
+-->
+  <entry code="genDateTri_description">Générer les dates de parution des notices</entry>
+  <entry code="genDateTri_output_description"></entry>
+  <entry code="genDateTri_result">Résultat de la génération des dates de parution des notices</entry>
+<!--
+indexDocnum
+-->
+  <entry code="indexDocnum_description">Réindexer les documents numériques</entry>
+  <entry code="indexDocnum_output_description"></entry>
+  <entry code="indexDocnum_result">Résultat de la réindexation des documents numériques</entry>
+<!--
+rdfStore
+-->
+  <entry code="cleanRdfStore_description">Réindexer le magasin RDF</entry>
+  <entry code="cleanRdfStore_output_description"></entry>
+  <entry code="cleanRdfStore_result">Résultat de la réindexation du magasin RDF</entry>   
+<!--
+synchroRdfStore
+-->
+  <entry code="cleanSynchroRdfStore_description">Réindexer la synchronisation rdf</entry>
+  <entry code="cleanSynchroRdfStore_output_description"></entry>
+  <entry code="cleanSynchroRdfStore_result">Résultat de la réindexation de la synchronisation rdf</entry>
+<!--
+FAQ
+-->
+  <entry code="cleanFAQ_description">Réindexer la FAQ</entry>
+  <entry code="cleanFAQ_output_description"></entry>
+  <entry code="cleanFAQ_result">Résultat de la réindexation de la FAQ</entry>
+  <!--
+CMS
+-->
+  <entry code="cleanCMS_description">Réindexer le contenu éditorial</entry>
+  <entry code="cleanCMS_output_description"></entry>
+  <entry code="cleanCMS_result">Résultat de la réindexation du contenu éditorial</entry>
+  <!--
+concept
+-->
+  <entry code="cleanConcept_description">Réindexer les concepts</entry>
+  <entry code="cleanConcept_output_description"></entry>
+  <entry code="cleanConcept_result">Résultat de la réindexation des concepts</entry>
+  <!--
+hashEmprPassword
+-->
+  <entry code="hashEmprPassword_description">Encoder les mots de passe lecteurs pour la connexion à l'Opac</entry>
+  <entry code="hashEmprPassword_output_description"></entry>
+  <entry code="hashEmprPassword_result">Résultat du réencodage des mots de passe</entry>
+<!--
+indexAuthorities
+-->
+  <entry code="indexAuthorities_description">Réindexer toutes les autorités</entry>
+  <entry code="indexAuthorities_output_description"></entry>
+  <entry code="indexAuthorities_result">Résultat de la réindexation des autorités</entry>   
+</XMLlist>

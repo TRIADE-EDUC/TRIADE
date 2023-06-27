@@ -1,0 +1,96 @@
+/* ========================================================================
+   Component: Utility
+ ========================================================================== */
+/* Container
+ ========================================================================== */
+#container {
+  box-sizing: border-box;
+  max-width: 980px;
+  padding: 0 25px;
+}
+/* Large screen and bigger */
+@media (min-width: 1220px) {
+  #container {
+    max-width: 1200px;
+    padding: 0 35px;
+  }
+}
+/*
+ * Micro clearfix
+ * Can't use `table` because it creates a 1px gap when it becomes a flex item, only in Webk
+ */
+#container:before,
+#container:after {
+  content: "";
+  display: block;
+  overflow: hidden;
+}
+#container:after {
+  clear: both;
+}
+/*
+ * Center container
+ */
+#container {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* ========================================================================
+   Component: Zone Grid only add to container 
+ ========================================================================== */
+.wyk-grid {
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  -ms-flex-wrap: wrap;
+  -webkit-flex-wrap: wrap;
+  flex-wrap: wrap;
+  padding: 0;
+  list-style: none;
+}
+/*
+ * Grid cell
+ */
+.wyk-grid > div {
+  /* 1 */
+  -ms-flex: none;
+  -webkit-flex: none;
+  flex: none;
+  margin: 0;
+  float: left;
+}
+/*
+ * Remove margin from the last-child
+ */
+.uk-grid > * > :last-child {
+  margin-bottom: 0;
+}
+/* ========================================================================
+   Component: Grid sub zone only add to main_hors_footer and cms_module 
+ ========================================================================== */
+.wyk-sub-grid {
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  -ms-flex-wrap: wrap;
+  -webkit-flex-wrap: wrap;
+  flex-wrap: wrap;
+  padding: 0;
+  list-style: none;
+}
+.wyk-sub-grid > *{
+	width:100%;
+}
+.cmsNoStyles {
+  border: 0!important;
+  margin: 0!important;
+  padding: 0!important;
+  height: 0!important;
+  background-color: transparent;
+  visibility: 0;
+}
+div[id^="cms_module"]:empty,
+div:empty:not(.clear){
+  display:none;
+}

@@ -1,0 +1,300 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- messages localisés en français pour la classe de fonctions search_functions
+****************************************************************************************
+© 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: fr_FR.xml,v 1.5 2018-10-12 12:28:34 vtouchard Exp $ -->
+
+<!DOCTYPE XMLlist SYSTEM "../../../includes/XMLlist.dtd" >
+<XMLlist>
+
+<!--
+pmbesEmpr
+-->
+	<entry code="pmbesEmpr_description">Fonctions relatives au lecteur</entry>
+	
+<!--
+fetch_empr
+-->
+	<entry code="fetch_empr">Renvoie les informations d'un lecteur par un de ses identifiants</entry>
+	<entry code="fetch_empr_input_description">Au choix: empr_cb ou empr_id</entry>
+	<entry code="fetch_empr_output_description"></entry>
+	<entry code="result">Réponse</entry>
+	<entry code="status">0: erreur. 1: ok</entry>
+	<entry code="status_msg">Message d'information relatif au statut</entry>	
+	<entry code="fetch_empr_empr_data">Tableau des données retournées</entry>
+	<entry code="fetch_empr_empr_id">L'Id du lecteur</entry>
+	<entry code="fetch_empr_empr_cb">Le code barres du lecteur</entry>
+	<entry code="fetch_empr_nom">Nom</entry>
+	<entry code="fetch_empr_prenom">Prénom</entry>
+	<entry code="fetch_empr_sexe">Sexe. Non précisé: 0, Masculin: 1, Féminin: 2</entry>
+	<entry code="fetch_empr_birth">Année de naissance</entry>
+	<entry code="fetch_empr_adr1">Adresse 1</entry>
+	<entry code="fetch_empr_adr2">Adresse 2</entry>
+	<entry code="fetch_empr_cp">Code Postal</entry>
+	<entry code="fetch_empr_ville">Ville</entry>
+	<entry code="fetch_empr_pays">Pays</entry>
+	<entry code="fetch_empr_mail">E-mail</entry>
+	<entry code="fetch_empr_tel1">Téléphone</entry>
+	<entry code="fetch_empr_sms">Envoi de Sms. Non: 0, Actif:1</entry>
+	<entry code="fetch_empr_tel2">Autre téléphone</entry>
+	<entry code="fetch_empr_prof">Profession</entry>
+	<entry code="fetch_empr_categ">Id de la catégorie du lecteur</entry>
+	<entry code="fetch_empr_cat_l">Libellé de la catégorie du lecteur</entry>
+	<entry code="fetch_empr_cstat">Code statistique.</entry>
+	<entry code="fetch_empr_cstat_l">Libellé du code statistique</entry>
+	<entry code="fetch_empr_cdate">Date de création</entry>
+	<entry code="fetch_empr_mdate">Date de modification</entry>
+	<entry code="fetch_empr_login">Login pour services OPAC</entry>
+	<entry code="fetch_empr_pwd">Mot de passe OPAC</entry>
+	<entry code="fetch_empr_type_abt">Type d'abonnement</entry>
+	<entry code="fetch_empr_location">Id de la localisation</entry>
+	<entry code="fetch_empr_location_l">Libellé de la localisation</entry>
+	<entry code="fetch_empr_date_blocage">Date de fin de blocage</entry>
+	<entry code="fetch_empr_statut">Id du statut</entry>
+	<entry code="fetch_empr_statut_libelle">Libellé du statut</entry>	
+	<entry code="fetch_empr_total_loans">Nombre de prêts total</entry>
+	<entry code="fetch_empr_allow_loan">Prêt autorisé</entry>
+	<entry code="fetch_empr_allow_book">Réservation autorisée</entry>
+	<entry code="fetch_empr_allow_opac">Connexion Opac autorisée</entry>
+	<entry code="fetch_empr_allow_dsi">DSI autorisée</entry>
+	<entry code="fetch_empr_allow_dsi_priv">DSI privée autorisée</entry>
+	<entry code="fetch_empr_allow_sugg">Suggestions d'acquisition autorisées</entry>
+	<entry code="fetch_empr_allow_prol">Prolongation de prêt autorisée</entry>
+	<entry code="fetch_empr_date_adhesion">Date d'adhésion</entry>
+	<entry code="fetch_empr_date_expiration">Date d'expiration de l'adhésion</entry>
+	<entry code="fetch_empr_last_loan_date">Date du dernier emprunt</entry>
+	<entry code="fetch_empr_nb_pret">Nombre de prêts en cours</entry>
+	<entry code="fetch_empr_msg">Message de la fiche lecteur</entry>
+	<entry code="fetch_empr_ldap">Ldap. Non: 0, Actif:1</entry>
+	<entry code="fetch_empr_pperso_list">Tableau des champs perso</entry>
+	<entry code="fetch_empr_list_fields">Champs perso</entry>
+	<entry code="fetch_empr_pperso_id">Identifiant</entry>
+	<entry code="fetch_empr_pperso_name">Nom</entry>
+	<entry code="fetch_empr_pperso_libelle">Libellé</entry>
+	<entry code="fetch_empr_pperso_value">Valeur</entry>
+	<entry code="fetch_empr_groupe_list">Tableau des groupes du lecteur</entry>
+	<entry code="fetch_empr_groupe_fields">Champs d'un groupe</entry>
+	<entry code="fetch_empr_groupe_id">Identifiant</entry>
+	<entry code="fetch_empr_groupe_libelle">Libellé</entry>
+	<entry code="fetch_empr_pret_list">Tableau des prêts du lecteur</entry>
+	<entry code="fetch_empr_pret_cb">Code barres de l'exemplaire</entry>
+	<entry code="fetch_empr_pret_id">Identifiant de l'exemplaire</entry>
+	<entry code="fetch_empr_pret_libelle">Entête de la notice</entry>
+	<entry code="fetch_empr_pret_typdoc">Support de l'exemplaire</entry>
+	<entry code="fetch_empr_pret_section">Section de l'exemplaire</entry>
+	<entry code="fetch_empr_pret_location">Localisation de l'exemplaire</entry>
+	<entry code="fetch_empr_pret_idlocation">Identifiant de localisation de l'exemplaire</entry>
+	<entry code="fetch_empr_pret_date_pret">Date du prêt</entry>
+	<entry code="fetch_empr_pret_date_retour">Date de retour (Format d'affichage)</entry>
+	<entry code="fetch_empr_pret_short_loan_flag">S'agit-il d'un prêt court (0: Non, 1:Oui)</entry>
+	<entry code="fetch_empr_pret_sql_date_retour">Date de retour (Format AAAA-MM-JJ)</entry>
+	<entry code="fetch_empr_pret_org_ret_date">Date de retour (Format AAAAMMJJ)</entry>
+	<entry code="fetch_empr_pret_pret_retard">Le prêt est-il en retard (0: Non, 1:Oui)</entry>
+	<entry code="fetch_empr_pret_retour_initial">Date de retour initial</entry>
+	<entry code="fetch_empr_pret_cpt_prolongation">Nombre de prolongations</entry>
+	<entry code="fetch_empr_pret_sur_location">Sur-localisation de l'exemplaire</entry>
+	<entry code="fetch_empr_nb_retard">Nombre de retards</entry>
+	<entry code="fetch_empr_nb_resa">Nombre de réservations</entry>
+	<entry code="fetch_empr_nb_previsions">Nombre de prévisions</entry>
+	<entry code="fetch_empr_empr_thumbnail">Photo du lecteur</entry>
+<!--
+delete_empr
+-->	
+	<entry code="delete_empr">Suppression d'un lecteur</entry>
+	<entry code="delete_empr_empr">Suppression d'un lecteur</entry>
+
+<!--
+create_empr
+-->	
+	<entry code="create_empr">Création d'un lecteur</entry>
+	<entry code="create_empr_empr_cb">Cb du lecteur, si pas de génération automatique de code-barre</entry>
+	<entry code="create_empr_empr_data">Tableau des infos du lecteur. Les champs 'nom', 'location', 'categ', 'statut', 'cstat' doivent être présents et cohérents avec la base de donnée</entry>
+
+<!--
+empr_list
+-->	
+	<entry code="empr_list">Liste de lecteur</entry>	
+	<entry code="empr_list_filters">Liste des filtres. Optionnels, pour filtrer avec les champs de la table empr</entry>
+	<entry code="empr_list_separator">Séparateur sql avec le champ suivant: and, or... ("and" par défaut)</entry>		
+	<entry code="empr_list_field">Champs de la table empr</entry>
+	<entry code="empr_list_operator">Opérateur sql: =, !=, Like...</entry>		
+	<entry code="empr_list_value">Valeur du champ</entry>		
+
+<!--
+update_empr
+-->	
+	<entry code="update_empr">Modification d'un lecteur</entry>
+	<entry code="update_empr_empr_data">Tableau des infos du lecteur. Les champs 'nom', 'location', 'categ', 'statut', 'cstat' doivent être présents et cohérents avec la base de donnée</entry>
+	
+<!--
+statut_list
+-->	
+	<entry code="statut_list">Liste des statuts de lecteur</entry>
+	<entry code="statut_list_fields">Tableau des statuts de lecteur</entry>
+	<entry code="statut_list_id">Id</entry>
+	<entry code="statut_list_libelle">Libellé</entry>
+	<entry code="statut_list_allow_loan">Prêt autorisé</entry>
+	<entry code="statut_list_allow_loan_hist">Historique des prêts</entry>
+	<entry code="statut_list_allow_book">Réservation autorisée</entry>
+	<entry code="statut_list_allow_opac">Connexion à l'OPAC autorisé</entry>
+	<entry code="statut_list_allow_dsi">DSI</entry>
+	<entry code="statut_list_allow_dsi_priv">DSI privée</entry>	
+	<entry code="statut_list_allow_sugg">Suggestions d'acquisition</entry>
+	<entry code="statut_list_allow_dema">Demandes de recherche</entry>
+	<entry code="statut_list_allow_prol">Prolongation</entry>
+	<entry code="statut_list_allow_avis">Avis</entry>
+	<entry code="statut_list_allow_tag">Tags</entry>
+	<entry code="statut_list_allow_pwd">Changement demot de passe</entry>	
+	<entry code="statut_list_allow_liste_lecture">listes de lecture</entry>
+	<entry code="statut_list_allow_self_checkout">Prêt autonome</entry>
+	<entry code="statut_list_allow_self_checkin">Retour autonome</entry>
+	<entry code="statut_list_allow_serialcirc">Circulation des périodiques</entry>
+
+<!--
+categ_list
+-->	
+	<entry code="categ_list">Liste des catégories de lecteur</entry>
+	<entry code="categ_list_fields">Tableau des catégories de lecteur</entry>
+	<entry code="categ_list_id">Id</entry>
+	<entry code="categ_list_libelle">Libellé</entry>
+	<entry code="categ_list_duree_adhesion">Durée d'adhésion (jours)</entry>
+	<entry code="categ_list_tarif_abt">Tarif de l'abonnement</entry>
+	<entry code="categ_list_age_min">Âge minimum (inclus)</entry>
+	<entry code="categ_list_age_max">Âge maximum (inclus)</entry>
+
+<!--
+codestat_list
+-->	
+	<entry code="codestat_list">Liste des codes statistiques de lecteur</entry>
+	<entry code="codestat_list_fields">Tableau des codes statistiques de lecteur</entry>
+	<entry code="codestat_list_id">Id</entry>
+	<entry code="codestat_list_libelle">Libellé</entry>
+	
+<!--
+lang_list
+-->	
+	<entry code="lang_list">Liste des codes de langue</entry>
+	<entry code="lang_list_fields">Tableau des codes de langue</entry>
+	<entry code="lang_list_codelang">Code de la langue</entry>
+	<entry code="lang_list_libelle">Libellé</entry>
+	
+<!--
+groupe_list
+-->			
+	<entry code="groupe_list">Liste des groupe de lecteur</entry>
+	<entry code="groupe_list_fields">Tableau des groupe de lecteur</entry>
+	<entry code="groupe_list_id">Id</entry>
+	<entry code="groupe_list_libelle">Libellé</entry>
+	<entry code="groupe_list_resp_groupe">Id du reponsable du groupe</entry>
+	<entry code="groupe_list_lettre_rappel">Lettre de rappel</entry>
+	<entry code="groupe_list_mail_rappel">Mail de rappel</entry>
+	<entry code="groupe_list_lettre_rappel_show_nomgroup">Afficher le nom du groupe dans la lettre de rappel</entry>
+
+<!--
+abt_list
+-->		
+	<entry code="abt_list">Liste des types d'abonnement</entry>
+	<entry code="abt_list_fields">Tableau des types d'abonnement</entry>
+	<entry code="abt_list_id">Id</entry>
+	<entry code="abt_list_libelle">Libellé</entry>
+	<entry code="abt_list_commentaire">Commentaire</entry>
+	<entry code="abt_list_prepay"></entry>
+	<entry code="abt_list_prepay_deflt_mnt"></entry>
+	<entry code="abt_list_tarif">Tarif abonnement (exemple: 10.00)</entry>
+	<entry code="abt_list_caution">Caution (exemple: 00.00)</entry>
+	<entry code="abt_list_localisations">Ids des localisations uniquement concernées. Si vide, s'applique à toutes.</entry>
+
+<!--
+location_list
+-->			
+	<entry code="location_list">Liste des localisations</entry>
+	<entry code="location_list_fields">Tableau des localisations</entry>
+	<entry code="location_list_id">Id</entry>
+	<entry code="location_list_libelle">Libellé</entry>
+	<entry code="location_list_visible_opac">Visible dans l'Opac</entry>
+	<entry code="location_list_codage_import">Codage interne pour les imports</entry>
+	<entry code="location_list_name">Nom de la bibliothèque ou du centre de ressources</entry>
+	<entry code="location_list_adr1">Ligne 1 d'adresse</entry>
+	<entry code="location_list_adr2">Ligne 2 d'adresse</entry>
+	<entry code="location_list_cp">Code postal</entry>
+	<entry code="location_list_town">Ville</entry>
+	<entry code="location_list_state">Etat</entry>
+	<entry code="location_list_country">Pays</entry>
+	<entry code="location_list_phone">Téléphone</entry>
+	<entry code="location_list_email">Email</entry>
+	<entry code="location_list_website">Site internet</entry>
+	<entry code="location_list_logo">Nom du fichier du logo</entry>
+	<entry code="location_list_commentaire">Commentaire</entry>
+	<entry code="location_list_surloc_num">Id de la surlocalisation</entry>
+	<entry code="location_list_surloc_used">Utiliser les coordonnées de la sur-localisation</entry>
+	
+<!--
+surlocation_list
+-->			
+	<entry code="surlocation_list">Liste des sur-localisations</entry>
+	<entry code="surlocation_list_fields">Tableau des sur-localisations</entry>
+	<entry code="surlocation_list_id">Id</entry>
+	<entry code="surlocation_list_libelle">Libellé</entry>
+	<entry code="surlocation_list_visible_opac">Visible dans l'Opac</entry>
+	<entry code="surlocation_list_codage_import">Codage interne pour les imports</entry>
+	<entry code="surlocation_list_name">Nom de la bibliothèque ou du centre de ressources</entry>
+	<entry code="surlocation_list_adr1">Ligne 1 d'adresse</entry>
+	<entry code="surlocation_list_adr2">Ligne 2 d'adresse</entry>
+	<entry code="surlocation_list_cp">Code postal</entry>
+	<entry code="surlocation_list_town">Ville</entry>
+	<entry code="surlocation_list_state">Etat</entry>
+	<entry code="surlocation_list_country">Pays</entry>
+	<entry code="surlocation_list_phone">Téléphone</entry>
+	<entry code="surlocation_list_email">Email</entry>
+	<entry code="surlocation_list_website">Site internet</entry>
+	<entry code="surlocation_list_logo">Nom du fichier du logo</entry>
+	<entry code="surlocation_list_commentaire">Commentaire</entry>	
+	
+<!--
+caddie_list
+-->		
+	<entry code="caddie_list">Liste des paniers de lecteur</entry>
+	<entry code="caddie_list_data">Information des paniers</entry>
+	<entry code="caddie_id">Id du panier</entry>
+	<entry code="caddie_list_libelle">Libellé</entry>
+	<entry code="caddie_list_comment">Commentaire</entry>
+	<entry code="caddie_list_autorisations">Autorisations</entry>
+	
+<!--
+caddie_empr_list
+-->			
+	<entry code="caddie_empr_list">Liste des lecteurs d'un panier</entry>
+	<entry code="caddie_empr_list_id">Id du panier</entry>
+	<entry code="caddie_list_data">Liste des lecteurs du panier</entry>
+	<entry code="empr_id">Id du lecteur</entry>
+	<entry code="empr_cb">Cb du lecteur</entry>
+	<entry code="caddie_empr_list_flag">Pointage. 0: non pointé, 1: pointé</entry>
+	
+<!--
+is_in_caddie
+-->			
+	<entry code="is_in_caddie">Présence dans un panier</entry>
+	<entry code="is_in_caddie_status">Présent dans le panier</entry>
+	<entry code="is_in_caddie_flag">Pointage: 0: Non, 1: Oui</entry>
+
+<!--
+caddie_pointage_raz
+-->			
+	<entry code="caddie_pointage_raz">Raz des pointages d'un panier</entry>						
+	
+<!--
+pperso_list_type_values
+-->			
+	<entry code="pperso_list_type_values">Liste des valeurs d'un champ personnalisé de type liste</entry>
+	<entry code="pperso_name">Nom du champ personnalisé</entry>
+	<entry code="pperso_list_type_values_value">Valeur</entry>
+	<entry code="pperso_list_type_values_libelle">Libellé</entry>
+
+<!--
+bibloto_empr_list
+-->	
+	<entry code="bibloto_empr_list">Liste de lecteurs pour bibloto</entry>	
+		
+</XMLlist>

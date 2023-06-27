@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<composed_headings>
+	<heading>
+		<subdivision order="1" code="subdivision_tete" min="1" max="1" name="msg:vedette_subdivision_tete"/>
+		<subdivision order="2" code="subdivision_sujet" name="msg:vedette_subdivision_sujet"/>
+		<subdivision order="3" code="subdivision_geo" name="msg:vedette_subdivision_geo"/>
+		<subdivision order="4" code="subdivision_chrono" name="msg:vedette_subdivision_chrono"/>
+		<subdivision order="5" code="subdivision_forme" name="msg:vedette_subdivision_forme"/>
+	</heading>
+	<available_fields>
+		<field num="2" type="author" class_name="vedette_authors" name="msg:vedette_authors"/>
+		<field num="3" type="category" class_name="vedette_categories" name="msg:vedette_categories"/>
+		<field num="4" type="publisher" class_name="vedette_publishers" name="msg:vedette_publishers"/>
+		<field num="5" type="collection" class_name="vedette_collections" name="msg:vedette_collections"/>
+		<field num="6" type="subcollection" class_name="vedette_subcollections" name="msg:vedette_subcollections"/>
+		<field num="7" type="serie" class_name="vedette_series" name="msg:vedette_series"/>
+		<field num="8" type="titre_uniforme" class_name="vedette_titres_uniformes" name="msg:vedette_titres_uniformes"/>
+		<field num="9" type="indexint" class_name="vedette_indexint" name="msg:vedette_indexint"/>
+		<field num="17" type="concept" class_name="vedette_concepts" name="msg:vedette_concepts"/>
+		<field num="1" type="records" class_name="vedette_records" name="msg:vedette_records"/>
+		<field num="1000" type="authperso" class_name="vedette_authpersos"/>
+		<field num="2000" type="ontologie" class_name="vedette_ontologies"/>
+	  </available_fields>
+	<separator> -- </separator>
+</composed_headings>

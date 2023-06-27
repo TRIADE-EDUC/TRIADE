@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: frbr_entity_works_view_workslist.xml,v 1.1 2017-04-25 15:23:21 dgoron Exp $ -->
+
+<XMLlist>
+	<entry code="frbr_entity_works_view_workslist_page_var">Variable à utiliser</entry>
+	<entry code="frbr_entity_works_view_title">Titre de la liste</entry>
+	<entry code="frbr_entity_works_view_works_desc">Oeuvres</entry>
+	<entry code="frbr_entity_works_view_workslist_title">Liste d'oeuvres</entry>
+</XMLlist>

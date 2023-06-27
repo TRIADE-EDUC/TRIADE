@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- messages localisés en français pour la classe de fonctions search_functions
+****************************************************************************************
+© 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: fr_FR.xml,v 1.1 2011-07-29 12:32:15 dgoron Exp $ -->
+
+<!DOCTYPE XMLlist SYSTEM "../../../includes/XMLlist.dtd" >
+<XMLlist>
+<!-- 
+pmbesBackup
+ -->
+ <entry code="Backup_functions_description">Fonctions relatives à la sauvegarde</entry>
+<!-- 
+listGroupsTables
+ --> 
+  <entry code="listGroupsTables_description">Liste des groupements de tables pour la sauvegarde</entry>
+  <entry code="listSauvPerformed_output_description"></entry>
+  <entry code="listGroupsTables_result">Retourne la liste des groupes de tables</entry>   
+<!-- 
+listTablesUnsaved
+ -->  
+  <entry code="listTablesUnsaved_description">Liste des tables non sauvegardées</entry>
+  <entry code="listSauvPerformed_output_description"></entry>
+  <entry code="listTablesUnsaved_unsavedTables">Retourne la liste des tables non sauvegardées</entry>  
+<!-- 
+launchBackup
+ -->
+  <entry code="launchBackup_description">Lancement d'un jeu de sauvegarde</entry>
+  <entry code="launchBackup_input_description"></entry>
+  <entry code="launchBackup_id_sauvegarde">Identifiant du jeu de sauvegarde</entry>  
+  <entry code="listSauvPerformed_output_description"></entry>
+  <entry code="launchBackup_result">Retourne le rapport de la sauvegarde</entry> 
+<!-- 
+listSetBackup
+ -->
+  <entry code="listSetBackup_description">Liste des jeux de sauvegardes</entry>
+  <entry code="listSetBackup_input_description"></entry>
+  <entry code="listSauvPerformed_output_description"></entry>
+  <entry code="listSetBackup_result">Retourne la liste des jeux de sauvegardes enregistrés</entry>   
+ <!-- 
+listSauvPerformed
+ -->
+  <entry code="listSauvPerformed_description">liste des sauvegardes effectuées</entry>
+  <entry code="listSauvPerformed_output_description"></entry>
+  <entry code="listSauvPerformed_result">Retourne les sauvegardes effectuées</entry>
+ <!-- 
+deleteSauvPerformed
+ -->
+  <entry code="deleteSauvPerformed_description">Suppression d'une sauvegarde effectuée</entry>
+  <entry code="deleteSauvPerformed_ids_log">Identifiants séparés par une ","</entry>
+  <entry code="deleteSauvPerformed_output_description"></entry>
+  <entry code="deleteSauvPerformed_result">
+  	1 : si tout les identifiants en paramètre ont été supprimés 
+  	0 :  si une erreur est survenue
+  </entry>    
+</XMLlist>

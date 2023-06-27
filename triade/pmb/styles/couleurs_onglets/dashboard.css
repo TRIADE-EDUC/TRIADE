@@ -1,0 +1,83 @@
+/* +--------------------------------------------------------------------------+
+// ? 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// +-------------------------------------------------+
+// $Id: dashboard.css,v 1.4 2016-03-09 13:59:54 mbertin Exp $ */
+
+#navbar ul {
+	left:10px;
+	width: calc(100% - 50px);
+}
+
+#dashboards .dashboard {
+	border-radius : 10px;
+	box-shadow: 10px 10px 10px #aaa; 
+}
+
+#dashboards .dashboard h3{
+	color : white;
+	padding :10px;
+	border-top-left-radius: 10px;
+	border-top-right-radius: 10px;
+	vertical-align: middle;
+	margin-top: 0px;
+}
+
+#dashboards .colonne2 {
+	width:calc(50% - 23px);
+}
+
+#dashboards .colonne3 {
+	width:calc(33% - 23px);
+}
+
+#dashboards .colonne4 {
+	width:calc(25% - 23px);
+}
+
+
+#dashboards .dashboard.circ h3{
+	color : #5DA40A;
+}
+#dashboards .dashboard.catalog h3{
+	color : #C9B90B;
+}
+#dashboards .dashboard.autorites h3{
+	color : #806CD6;
+}
+#dashboards .dashboard.dsi h3{
+	color : #3C65A2;
+}
+#dashboards .dashboard.acquisition h3{	
+	color : #236827;
+}
+#dashboards .dashboard.demandes h3{
+	color : #E87111;
+}
+#dashboards .dashboard.cms h3{
+	color : #E87111;
+}
+
+#dashboards .dashboard.circ {
+	border : 1px solid #5DA40A;
+}
+#dashboards .dashboard.catalog {
+	border : 1px solid #C9B90B;
+}
+#dashboards .dashboard.autorites {
+	border : 1px solid #806CD6;
+}
+#dashboards .dashboard.dsi {
+	border : 1px solid #3C65A2;
+}
+#dashboards .dashboard.acquisition {	
+	border : 1px solid #236827;
+}
+#dashboards .dashboard.demandes {
+	border : 1px solid #E87111;
+}
+#dashboards .dashboard.cms {
+	border : 1px solid #E87111;
+}
+#dashboards .dashboard.admin {
+	border : 1px solid #F6DCDC;
+}

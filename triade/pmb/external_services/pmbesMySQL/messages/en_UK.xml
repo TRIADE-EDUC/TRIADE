@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- messages localisés en français pour la classe de fonctions pmbesMySQL
+****************************************************************************************
+© 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: en_UK.xml,v 1.1 2015-06-15 12:55:34 pmbs Exp $ -->
+
+<!DOCTYPE XMLlist SYSTEM "../../../includes/XMLlist.dtd" >
+<XMLlist>
+<!--
+pmbesMySQL
+-->
+  <entry code="MySQL_functions_description">Fonctions relatives à la maintenance MySQL</entry>
+<!-- 
+mysqlTable
+-->
+  <entry code="mysqlTable_description">Opération MySQL</entry>
+  <entry code="mysqlTable_input_description"></entry>
+  <entry code="mysqlTable_action">
+  l'action que l'on souhaite réaliser:
+		(CHECK): vérification des tables
+		(ANALYZE): analyse des tables
+		(REPAIR): réparation des tables
+		(OPTIMIZE): optimisation des tables
+  </entry>  
+  <entry code="mysqlTable_result">Retourne le rapport de la maintenance</entry>   
+</XMLlist>

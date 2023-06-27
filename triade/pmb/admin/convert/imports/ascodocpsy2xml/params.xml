@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!-- 
+$Id: params.xml,v 1.2 2018-07-25 06:19:18 dgoron Exp $ -->
+
+<params>
+    <!-- Nom de l'import -->
+    <importname>ASCODOCPSY -&gt; UNIMARC ISO 2709</importname>
+    <!-- Nombre de notices traitées par passe -->
+    <nperpass>200</nperpass>
+    <!-- Type de l'entrée -->
+    <input type="custom" script="ascodocpsy2xml_input.class.php"/>
+    <!-- type de la sortie -->
+    <output importable="no" type="xml" suffix="xml">
+        <rootelement>unimarc</rootelement>
+    </output>
+
+    <step type="custom">
+        <!-- Conversion texte ASCODOCPSY en unimarc -->
+        <script>ascodocpsy2xml.class.php</script>
+		<callback>convert_data</callback>
+    </step>
+</params>

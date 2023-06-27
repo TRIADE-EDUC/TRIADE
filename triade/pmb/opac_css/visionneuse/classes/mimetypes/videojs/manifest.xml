@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- Mimetypes supportés par la classe
+****************************************************************************************
+© 2002-2010 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: manifest.xml,v 1.2 2014-01-10 15:46:42 apetithomme Exp $ -->
+
+<manifest name="videojs">
+	<desc msg="Affichage des videos."/>
+	<screenshoot url="images/flexpdf.class.png"></screenshoot>
+	<mimetypes>
+		<mimetype name="video/mp4"/>
+		<mimetype name="video/webm"/>
+		<mimetype name="video/ogg"/>
+		<mimetype name="audio/ogg"/>
+	</mimetypes>
+</manifest>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour la classe datasource
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_common_view_record.xml,v 1.3 2014-12-30 11:21:41 dgoron Exp $ -->
+
+<XMLlist>
+	<entry code="cms_module_common_view_record_used_template">Choix du template</entry>
+	<entry code="cms_module_common_view_record_header_desc">Entête de la notice</entry>
+	<entry code="cms_module_common_view_record_content_desc">Contenu la notice (Onglet ISBD,rendu de template de notice,...)</entry>
+	<entry code="cms_module_common_view_record_link_desc">Permalink de la notice</entry>
+</XMLlist>

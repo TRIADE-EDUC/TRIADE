@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: docwatch_selector_sections_type_section_generic.xml,v 1.1 2019-03-19 14:38:56 dgoron Exp $ -->
+
+<XMLlist>
+	<entry code="docwatch_selector_sections_type_section_generic_no">Pas de champ générique</entry>
+	<entry code="docwatch_selector_sections_type_section_generic_select">Sélecteur d'un champ générique</entry>
+	<entry code="docwatch_selector_sections_type_section_generic_select_invit">Choisissez un champ générique</entry>
+	<entry code="docwatch_selector_sections_type_section_generic_field_value">Valeur du champ</entry>
+</XMLlist>

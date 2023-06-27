@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le module Article
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_common_datasource_multiple.xml,v 1.1 2017-09-28 13:23:12 arenou Exp $ -->
+
+<XMLlist>
+	<entry code="cms_module_common_datasource_add_datasource">Ajouter une nouvelle source</entry>
+	<entry code="cms_module_common_datasource_datasource_choice">Sélectionner une source dans la liste</entry>
+
+</XMLlist>

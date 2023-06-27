@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- messages localisés en français pour la classe de fonctions search_functions
+****************************************************************************************
+© 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: en_UK.xml,v 1.1 2015-06-15 12:55:35 pmbs Exp $ -->
+
+<!DOCTYPE XMLlist SYSTEM "../../../includes/XMLlist.dtd" >
+<XMLlist>
+
+	<entry code="pmbesAutLinks_description">Functions for the links between authorities </entry>
+<!--
+getLinks
+-->
+	<entry code="getLinks">Allows to retrieve longend authorities</entry>
+	<entry code="getLinks_authTable">Authority type:
+1 -&gt; Author,
+2 -&gt; Category,
+3 -&gt; Publisher,
+4 -&gt; Collection,
+5 -&gt; Sub-collection,
+6 -&gt; Serie title,
+7 -&gt; Uniform title,
+8 -&gt; Indexing</entry>
+	<entry code="getLinks_authId">Identifier of the authority</entry>
+	<entry code="getLinks_links">Informations on the linked authorities</entry>
+
+
+</XMLlist>

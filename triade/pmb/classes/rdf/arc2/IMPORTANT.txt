@@ -1,0 +1,6 @@
+Modifications apportées à ARC2
+
+26/07/2013 : 
+Modification de arc2/store/ARC2_Store.php
+Fonction createDBCON
+Ajout paramètre new_link = true en ligne 51 pour mysql_connect 

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- workflow des commandes
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: workflow.xml,v 1.2 2012-07-31 10:12:16 dgoron Exp $ -->
+
+<workflow>
+	<states>
+		<state id="1" name="WAITING">
+			<nextState>WAITING</nextState>
+			<nextState>RUNNING</nextState>
+		</state>
+		<state id="2" name="RUNNING">
+			<nextState commands="SUSPEND">SUSPENDED</nextState>
+			<nextState commands="ABORT">ABORTED</nextState>
+			<nextState commands="STOP">STOPPED</nextState>
+			<nextState commands="FAIL" dontsend="yes">FAILED</nextState>
+			<nextState>FAILED</nextState>
+		</state>
+		<state id="3" name="ENDED">
+			<nextState>ENDED</nextState>
+		</state>
+		<state id="4" name="SUSPENDED">
+			<nextState commands="RESUME">WAITING</nextState>
+			<nextState commands="STOP">STOPPED</nextState>
+			<nextState commands="ABORT">ABORTED</nextState>
+			<nextState commands="FAIL" dontsend="yes">FAILED</nextState>
+		</state>
+		<state id="5" name="STOPPED">
+			<!--<nextState commands="ABORT" dontsend="yes">ENDED</nextState>
+			--><!--<nextState commands="RESUME">RUNNING</nextState>-->
+		</state>
+		<state id="6" name="FAILED">
+			<nextState commands="STOP" dontsend="yes">STOPPED</nextState>
+			<nextState commands="ABORT" dontsend="yes">ENDED</nextState>
+		</state>
+	</states>
+	<commands>
+		<command id="1" name="RESUME" label="msg:task_resume"/>
+		<command id="2" name="SUSPEND" label="msg:task_suspend"/>
+		<command id="3" name="STOP" label="msg:task_stop"/>
+		<command id="4" name="RETRY" label="msg:task_retry"/>
+		<command id="5" name="ABORT" label="msg:task_abort"/>
+		<command id="6" name="FAIL" label="msg:task_fail"/>
+		<!-- <command id="6" name="USER_DEFINED"/> -->
+	</commands>
+</workflow>
+
+

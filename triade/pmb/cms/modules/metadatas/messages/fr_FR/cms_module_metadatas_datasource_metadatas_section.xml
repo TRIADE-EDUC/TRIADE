@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour la classe datasource
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_metadatas_datasource_metadatas_section.xml,v 1.1 2014-12-18 10:20:10 dgoron Exp $ -->
+
+<XMLlist>
+	<entry code='cms_module_common_selector_section'>Sélection manuelle d'une rubrique</entry>
+	<entry code='cms_module_metadatas_datasource_metadatas_section_link_desc'>Lien vers la rubrique</entry>
+	<entry code='cms_module_metadatas_datasource_metadatas_section_section_desc'>Description de la rubrique</entry>
+</XMLlist>

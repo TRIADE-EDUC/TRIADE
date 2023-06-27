@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le connecteur arteVOD
+****************************************************************************************
+© 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: fr_FR.xml,v 1.4 2017-11-30 15:23:04 apetithomme Exp $ -->
+
+<XMLlist>
+	<entry code="odilotk_endpoint_url">Endpoint URL</entry>
+	<entry code="odilotk_api_endpoint_url">API Endpoint URL</entry>
+	<entry code="odilotk_api_endpoint_url_placeholder">Par exemple : EndpointUrl/api/v2</entry>
+	<entry code="odilotk_client_id">Client ID</entry>
+	<entry code="odilotk_client_secret">Client Secret</entry>
+	<entry code="odilotk_source_field">Champ personnalisable à utiliser</entry>
+	<entry code="odilotk_no_field">Aucun champ personnalisable de type texte</entry>
+	<entry code="odilotk_authentication_failed">Erreur d'authentification</entry>
+	<entry code="odilotk_shared_secret_key">Clé secrète partagée pour le SSO</entry>
+	<entry code="odilotk_records_inactive">désactivé(s)</entry>
+	<entry code="odilotk_nonotice_sync">Aucune notices synchronisées</entry>
+	<entry code="odilotk_get_notices">Rapatrier les notices publiées</entry>
+	<entry code="odilotk_last_sync">Depuis la dernière synchronisation</entry>
+	<entry code="odilotk_sync_from">Depuis le</entry>
+	<entry code="odilotk_syncinfo_date_baserecent">Date de la notice la plus récente dans la base: %s</entry>
+	<entry code="odilotk_form_from_select">Sélectionner</entry>
+</XMLlist>

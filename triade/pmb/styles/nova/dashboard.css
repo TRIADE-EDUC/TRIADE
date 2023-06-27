@@ -1,0 +1,76 @@
+/* +--------------------------------------------------------------------------+
+// ? 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// +-------------------------------------------------+
+// $Id: dashboard.css,v 1.4 2016-03-09 13:59:54 mbertin Exp $ */
+
+#navbar ul {
+	width: calc(100% - 150px);
+}
+
+.dashboard #quick_actions form{
+	width: calc(100% - 50px);
+	margin-left:35px;
+}
+
+#notification_zone{
+	margin-left : 35px;
+	width: calc(100% - 60px);
+}
+
+#notification_zone .erreur,#notification_zone .erreur ul{
+	border: none;
+}
+
+#dashboards{
+	margin: 35px;
+}
+
+#dashboards .colonne2 {
+	width:calc(50% - 55px);
+}
+
+#dashboards .colonne3 {
+	width:calc(33% - 55px);
+}
+
+#dashboards .colonne4 {
+	width:calc(25% - 55px);
+}
+
+#dashboards .dashboard {
+	border-radius : 10px;
+	box-shadow: 10px 10px 10px #aaa; 
+}
+
+#dashboards .dashboard h3{
+	padding :10px;
+	border-top-left-radius: 10px;
+	border-top-right-radius: 10px;
+	vertical-align: middle;
+	border-bottom : 2px solid #000;
+}
+
+#dashboards .dashboard.circ h3{
+	background: url("images/contenu_puce_circ.png") no-repeat scroll 0 0 rgba(0, 0, 0, 0);
+}
+#dashboards .dashboard.catalog h3{
+	background: url("images/contenu_puce_catalog.png") no-repeat scroll 0 0 rgba(0, 0, 0, 0);
+}
+#dashboards .dashboard.autorites h3{
+	background: url("images/contenu_puce_autorites.png") no-repeat scroll 0 0 rgba(0, 0, 0, 0);
+}
+#dashboards .dashboard.dsi h3{
+	background: url("images/contenu_puce_dsi.png") no-repeat scroll 0 0 rgba(0, 0, 0, 0);
+}
+#dashboards .dashboard.acquisition h3{	
+	background: url("images/contenu_puce_acquisition.png") no-repeat scroll 0 0 rgba(0, 0, 0, 0);
+}
+#dashboards .dashboard.demandes h3{
+	background: url("images/contenu_puce.png") no-repeat scroll 0 0 rgba(0, 0, 0, 0);
+}
+#dashboards .dashboard.cms h3{
+	background: url("images/contenu_puce.png") no-repeat scroll 0 0 rgba(0, 0, 0, 0);
+}
+#dashboards .dashboard.admin h3{
+	background: url("images/contenu_puce_admin.png") no-repeat scroll 0 0 rgba(0, 0, 0, 0);
+}

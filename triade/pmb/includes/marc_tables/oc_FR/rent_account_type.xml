@@ -1,0 +1,1 @@
+<?xml version="1.0" encoding="iso-8859-1"?><!DOCTYPE XMLlist SYSTEM "../../XMLlist.dtd"><!-- liste des types de décomptes$Id: rent_account_type.xml,v 1.1 2016-06-04 13:05:06 dgoron Exp $ --><XMLlist>	<entry code="l">Location</entry>	<entry code="t">Retransmission</entry>	<entry code="d">Rediffusion</entry>	<entry code="e">Envoi International</entry></XMLlist>

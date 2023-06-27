@@ -1,0 +1,11 @@
+<h2>Files module</h2>
+<p>This module allows you to establish a generic database (address book, ...) based on the custom fields set.
+The informations are stored as records.
+</p>
+
+<h2>Browse</h2>
+Allows to do simple or multi-standard searches on the previously set custom fields and to show the records related to this search.<br />
+<h2>Input</h2>
+Creation of a new form through custom fields.<br />
+<h2>Management</h2>
+Management of custom fields, display of the fields, reindexation of the records<br />

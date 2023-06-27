@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le connecteur OAI
+****************************************************************************************
+© 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: en_UK.xml,v 1.2 2015-06-26 13:02:52 pmbs Exp $ -->
+
+<XMLlist>
+	<entry code="zotero_auth">Authentication</entry>
+	<entry code="zotero_userid">userID</entry>
+	<entry code="zotero_client_key">Private Key</entry>
+	<entry code="zotero_record_to_see_more">Save the authentication settings to access all the available collections.</entry>
+	<entry code="zotero_collections_restrict">Limit to the collections</entry>
+	<entry code="zotero_no_collection">No collection set.</entry>
+	<entry code="zotero_error">Access error, please check your connection settings..</entry>
+</XMLlist>

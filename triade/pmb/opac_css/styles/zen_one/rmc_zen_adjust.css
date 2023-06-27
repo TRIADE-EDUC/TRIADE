@@ -1,0 +1,73 @@
+/* ========================================================================
+   multiple crit
+ =========================================================================  */
+
+.search_value input,
+*[id^="elfield"] input,
+#perio_a2z_search {
+    margin: 0px;
+}
+
+*[id^="elfield"] span {
+    /* margin-top:5px; */
+    /* display:inline-block; */
+}
+
+div[id^="elfield"] {
+    margin-top: 10px;
+    border: solid 1px #e5e5e5;
+    padding: 5px;
+    background-color: #f4f4f4;
+    box-shadow: inset 0px 0px 0px 0px rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+}
+
+div[id^="elfield"]>div {
+    margin-top: 10px;
+}
+
+span.search_dico {
+    display: inline-block;
+    padding: 0px 5px;
+}
+
+#search input.text_query {
+    line-height: 1px;
+    margin: 0 10px 0 0;
+    vertical-align: bottom;
+}
+
+.form-contenu input[value="..."],
+.form-contenu input[value="+"] {
+    margin-right: 10px !important;
+}
+
+span[class^="search_variable"] {
+    display: inline-block;
+    height: 33px;
+    line-height: 33px;
+}
+
+span[class^="search_variable"] input {
+    vertical-align: middle;
+}
+
+.form-contenu table {
+    margin-top: 10px;
+}
+
+.form-contenu input+input {}
+
+#td_search_submit {
+    border-bottom: 0px solid #E5E5E5;
+    text-align: right;
+    padding-right: 0;
+}
+
+#form_search_bull .dijitTextBox {
+    margin-right: 7px;
+}
+
+#search form .form-contenu input[type="button"] {
+    display: inline-block;
+}

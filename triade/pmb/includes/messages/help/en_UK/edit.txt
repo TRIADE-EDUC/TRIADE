@@ -1,0 +1,4 @@
+<h2><img src="./images/icone_editions.gif" hspace="6" vspace="6" align="middle"> edition module</h2>
+<p>You have just accessed the Edit module of PMB..</p>
+<div align="right">The Development Team</div>
+

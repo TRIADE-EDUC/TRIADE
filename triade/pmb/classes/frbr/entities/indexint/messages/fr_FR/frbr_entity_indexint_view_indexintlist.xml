@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: frbr_entity_indexint_view_indexintlist.xml,v 1.1 2017-04-28 09:06:36 dgoron Exp $ -->
+
+<XMLlist>
+	<entry code="frbr_entity_indexint_view_title">Titre de la liste</entry>
+	<entry code="frbr_entity_indexint_view_indexint_desc">Titres de l'indexation décimale</entry>
+	<entry code="frbr_entity_indexint_view_indexintlist_title">Liste des indexations décimales</entry>
+</XMLlist>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<AUTHORITY>
+	<thesaurus id="3">
+		<CATEGORY id="TOP">
+			<FIELD code="606" authority_number="3" >
+				<SUBFIELD code="a" repeat="1" />
+				<SUBFIELD code="b" prefix=", "/>
+				<SUBFIELD code="f" prefix=" (" suffix=")"/>
+				<SUBFIELD code="x" prefix=" -- "/>
+				<SUBFIELD code="y" prefix=" -- "/>
+				<SUBFIELD code="z" prefix=" -- "/>
+			</FIELD>
+		</CATEGORY>
+	</thesaurus>
+	<thesaurus id="2">
+		<CATEGORY id="TOP">
+			<FIELD code="607" order="import">
+				<SUBFIELD code="a"/>
+				<SUBFIELD code="b" prefix=", "/>
+				<SUBFIELD code="f" prefix=" (" suffix=")"/>
+				<SUBFIELD code="x" prefix=" -- "/>
+				<SUBFIELD code="y" prefix=" -- "/>
+				<SUBFIELD code="z" prefix=" -- "/>
+			</FIELD>
+		</CATEGORY>
+	</thesaurus>
+	<thesaurus id="1">
+		<CATEGORY id="12">
+			<FIELD code="608">
+				<SUBFIELD code="a" repeat="2" prefix=" -- "/>
+				<SUBFIELD code="x" prefix=" -- "/>
+			</FIELD>
+		</CATEGORY>
+		<CATEGORY id="13">
+			<FIELD code="609">
+				<SUBFIELD code="a">
+					<SUBFIELD code="b">
+						<SUBFIELD code="c"/>
+					</SUBFIELD>
+				</SUBFIELD>
+			</FIELD>
+		</CATEGORY>
+	</thesaurus>
+</AUTHORITY>

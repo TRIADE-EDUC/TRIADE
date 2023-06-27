@@ -1,0 +1,58 @@
+<!-- $Id: frbr_cataloging_schemes_list.html,v 1.1 2018-02-02 10:10:43 tsamson Exp $ -->
+
+<style type="text/css">
+.aut_display_row {
+	display: table-row;
+}
+
+.aut_display_cell {
+	display: table-cell;
+	padding-right: 5px;
+}
+</style>
+
+<div class="notice-parent" id="scheme{{scheme.id}}Parent">
+  		<img style="border:0px; margin:3px 3px" onclick="expandBase('scheme{{scheme.id}}', true); return false;" id="scheme{{scheme.id}}Img" name="imEx" class="img_plus" src="{{ img.plus.gif }}">
+		<span class="notice-heada">
+			<small>
+				<span class='' style='margin-right: 3px;'>
+					<img src="{{ img.spacer.gif }}" width="10" height="10" />
+				</span>
+			</small>
+			{% if scheme.type_icon %}
+				<img class="align_top" src="{{ scheme.icon }}" title="{{ scheme.name }}" alt="{{ scheme.name }}"/>
+			{% endif %}
+			<a href="{{scheme.cataloging_link}}" data-element-id="{{ scheme.id }}">
+				{{ scheme.name}}
+			</a>
+		</span>
+  		<br>
+</div>
+
+<div style="margin-bottom: 6px; display: block;" class="notice-child" startOpen="no" id="scheme{{scheme.id}}Child">
+	<img class="align_middle" href="#"/>
+	<h3>{{ scheme.name }}</h3>
+	<div style="overflow:hidden;">
+		{% for element in linked_elements %}
+			{% if element.entity %}
+				 {{ element.entity }}
+			{% endif %}
+			{% if element.link %}
+				&nbsp;
+				<i class="fa fa-arrow-right" aria-hidden="true"></i>
+				&nbsp; 
+				{{ element.link }}
+				&nbsp;
+				<i class="fa fa-arrow-right" aria-hidden="true"></i>
+				&nbsp; 
+			{% endif %}
+			{% if element.link_type %}
+				{{ element.link_type }}
+				&nbsp;
+				<i class="fa fa-arrow-right" aria-hidden="true"></i>
+				&nbsp; 
+			{% endif %}
+		{% endfor %}
+	</div>
+	<div class="clear"></div>
+</div>

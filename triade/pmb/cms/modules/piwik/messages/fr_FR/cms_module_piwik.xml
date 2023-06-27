@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le module Article
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_piwik.xml,v 1.1 2014-12-19 10:06:33 arenou Exp $ -->
+
+<XMLlist>
+	<entry code='cms_module_piwik'>Module Piwik</entry>
+	<entry code='cms_module_piwik_view_piwik'>PIWIK</entry>
+	<entry code='cms_module_piwik_datasource_piwik'>PIWIK</entry>
+	<entry code='cms_module_piwik_delete_server'>Etes-vous sur de vouloir supprimer ce serveur ?</entry>
+	<entry code='cms_module_piwik_server_name'>Nom du Serveur Piwik</entry>
+	<entry code='cms_module_piwik_server_url'>Adresse du Serveur Piwik</entry>
+	<entry code='cms_module_piwik_subdomains'>Suivre les visiteurs sur tous les sous-domaines</entry>
+	<entry code='cms_module_piwik_subdomains_description'><![CDATA[Ainsi si un visiteur visite x.<mondomaine> et y.<mondomaine>, cela sera comptabilisé comme une visite unique.]]></entry>
+	<entry code='cms_module_piwik_domain_prefix'>Préfixer le domaine du site au titre de la page lors du suivi</entry>
+	<entry code='cms_module_piwik_domain_prefix_description'><![CDATA[Si un internaute visite la page "À propos" sur blog.<mondomaine>, la visite sera enregistrée en tant que "blog / À propos". C'est la manière la plus facile d'avoir un aperçu du trafic par sous-domaine.]]></entry>
+	<entry code='cms_module_piwik_subdomains_links'>Dans le rapport des liens sortants, cacher les clics vers des alias d'adresses connues</entry>
+	<entry code='cms_module_piwik_subdomains_links_description'><![CDATA[Ainsi un clic sur les adresses d'alias (ex x.<mondomaine>) ne sera pas compté comme un lien sortant.]]></entry>
+	<entry code='cms_module_piwik_site_id'>Identifiant PIWIK du site</entry>
+</XMLlist>

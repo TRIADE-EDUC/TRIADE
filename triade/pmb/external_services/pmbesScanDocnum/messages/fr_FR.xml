@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- messages localisés en français pour la classe de fonctions pmbesMySQL
+****************************************************************************************
+© 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: fr_FR.xml,v 1.2 2015-03-17 10:39:28 abacarisse Exp $ -->
+
+<!DOCTYPE XMLlist SYSTEM "../../../includes/XMLlist.dtd" >
+<XMLlist>
+<!--
+pmbesScanDocnum
+-->
+  <entry code="ScanDocnum_functions_description">Fonctions relatives au rattachement des documents numériques</entry>
+  <entry code="get_doc_num_description">Fonction de lecture et rattachement des documents numériques</entry>
+  <entry code="get_doc_num_upload_repertoire_do_not_exist">Le repertoire d'upload n'existe pas</entry>
+  <entry code="get_doc_num_rename_error">Erreur de deplacement du fichier</entry>   
+  <entry code="get_doc_num_file_not_found">Le fichier est introuvable</entry>
+  <entry code="get_doc_num_cant_create_explnum">Erreur de création de l'exemplaire numérique</entry>
+  <entry code="get_doc_num_missing_param">Il manque un paramètre pour l'ajout du document</entry>
+  <entry code="get_doc_num_missing_link">Document numérique sans lien vers une notice ou un bulletin</entry>
+</XMLlist>

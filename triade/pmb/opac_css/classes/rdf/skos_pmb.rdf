@@ -1,0 +1,754 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- $Id: skos_pmb.rdf,v 1.8 2019-05-09 14:07:17 ccraig Exp $ -->
+
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+  xmlns:dct="http://purl.org/dc/terms/"
+  xmlns:pmb="http://www.pmbservices.fr/ontology#"
+  xmlns:owl="http://www.w3.org/2002/07/owl#"
+  xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+  xmlns:skos="http://www.w3.org/2004/02/skos/core#">
+
+  <rdf:Description rdf:about="http://www.w3.org/2004/02/skos/core">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Ontology"/>
+    <dct:date>2014-04-22T10:20:37+02:00</dct:date>
+    <dct:contributor>Florent Tétart</dct:contributor>
+    <dct:creator>Matthieu Bertin</dct:creator>
+    <dct:creator>Didier Bellamy</dct:creator>
+    <dct:title xml:lang="fr">Vocabulaire SKOS - PMB</dct:title>
+    <dct:description xml:lang="fr">Ontologie PMB basée sur Skos</dct:description>
+    <pmb:name>skos</pmb:name>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="http://www.w3.org/2004/02/skos/core#Concept">
+    <owl:disjointWith rdf:resource="http://www.w3.org/2004/02/skos/core#ConceptScheme"/>
+    <owl:disjointWith rdf:resource="http://www.w3.org/2004/02/skos/core#Collection"/>
+    <rdfs:label xml:lang="en">Concept</rdfs:label>
+    <rdfs:isDefinedBy rdf:resource="http://www.w3.org/2004/02/skos/core"/>
+    <skos:definition xml:lang="en">An idea or notion; a unit of thought.</skos:definition>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+    <rdfs:subClassOf rdf:nodeID="inscheme"/>
+    <rdfs:subClassOf rdf:nodeID="conceptindex"/>
+    <rdfs:subClassOf rdf:nodeID="preflabel"/>
+    <pmb:displayLabel rdf:resource="http://www.w3.org/2004/02/skos/core#prefLabel"/>
+    <pmb:searchLabel rdf:resource="http://www.w3.org/2004/02/skos/core#prefLabel"/>
+    <pmb:searchLabel rdf:resource="http://www.w3.org/2004/02/skos/core#altLabel"/>
+    <pmb:name>concept</pmb:name>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="http://www.w3.org/2004/02/skos/core#ConceptScheme">
+    <rdfs:label xml:lang="en">Concept Scheme</rdfs:label>
+    <rdfs:isDefinedBy rdf:resource="http://www.w3.org/2004/02/skos/core"/>
+    <skos:definition xml:lang="en">A set of concepts, optionally including statements about semantic relationships between those concepts.</skos:definition>
+    <skos:scopeNote xml:lang="en">A concept scheme may be defined to include concepts from different sources.</skos:scopeNote>
+    <skos:example xml:lang="en">Thesauri, classification schemes, subject heading lists, taxonomies, 'folksonomies', and other types of controlled vocabulary are all examples of concept schemes. Concept schemes are also embedded in glossaries and terminologies.</skos:example>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+    <owl:disjointWith rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+    <owl:disjointWith rdf:resource="http://www.w3.org/2004/02/skos/core#Collection"/>
+    <rdfs:subClassOf rdf:nodeID="inscheme"/>
+    <rdfs:subClassOf rdf:nodeID="preflabel"/>
+    <rdfs:subClassOf rdf:nodeID="conceptschemeindex"/>
+    <pmb:displayLabel rdf:resource="http://www.w3.org/2004/02/skos/core#prefLabel"/>
+    <pmb:searchLabel rdf:resource="http://www.w3.org/2004/02/skos/core#prefLabel"/>
+    <pmb:searchLabel rdf:resource="http://www.w3.org/2004/02/skos/core#altLabel"/>
+    <pmb:name>conceptscheme</pmb:name>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="http://www.w3.org/2004/02/skos/core#Collection">
+    <rdfs:label xml:lang="en">Collection</rdfs:label>
+    <rdfs:isDefinedBy rdf:resource="http://www.w3.org/2004/02/skos/core"/>
+    <skos:definition xml:lang="en">A meaningful collection of concepts.</skos:definition>
+    <skos:scopeNote xml:lang="en">Labelled collections can be used where you would like a set of concepts to be displayed under a 'node label' in the hierarchy.</skos:scopeNote>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+    <owl:disjointWith rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+    <owl:disjointWith rdf:resource="http://www.w3.org/2004/02/skos/core#ConceptScheme"/>
+    <rdfs:subClassOf rdf:nodeID="inscheme"/>
+    <rdfs:subClassOf rdf:nodeID="preflabel"/>
+    <pmb:displayLabel rdf:resource="http://www.w3.org/2004/02/skos/core#prefLabel"/>
+    <pmb:searchLabel rdf:resource="http://www.w3.org/2004/02/skos/core#prefLabel"/>
+    <pmb:searchLabel rdf:resource="http://www.w3.org/2004/02/skos/core#altLabel"/>
+    <pmb:name>collection</pmb:name>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="http://www.w3.org/2004/02/skos/core#OrderedCollection">
+    <rdfs:label xml:lang="en">Ordered Collection</rdfs:label>
+    <rdfs:isDefinedBy rdf:resource="http://www.w3.org/2004/02/skos/core"/>
+    <skos:definition xml:lang="en">An ordered collection of concepts, where both the grouping and the ordering are meaningful.</skos:definition>
+    <skos:scopeNote xml:lang="en">Ordered collections can be used where you would like a set of concepts to be displayed in a specific order, and optionally under a 'node label'.</skos:scopeNote>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/2004/02/skos/core#Collection"/>
+    <rdfs:subClassOf rdf:nodeID="inscheme"/>
+    <rdfs:subClassOf rdf:nodeID="preflabel"/>
+    <pmb:displayLabel rdf:resource="http://www.w3.org/2004/02/skos/core#prefLabel"/>
+    <pmb:searchLabel rdf:resource="http://www.w3.org/2004/02/skos/core#prefLabel"/>
+    <pmb:searchLabel rdf:resource="http://www.w3.org/2004/02/skos/core#altLabel"/>
+    <pmb:name>orderedcollection</pmb:name>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="http://www.w3.org/2004/02/skos/core#inScheme">
+    <rdfs:label xml:lang="en">is in scheme</rdfs:label>
+    <rdfs:isDefinedBy rdf:resource="http://www.w3.org/2004/02/skos/core"/>
+    <skos:definition xml:lang="en">Relates a resource (for example a concept) to a concept scheme in which it is included.</skos:definition>
+    <skos:scopeNote xml:lang="en">A concept may be a member of more than one concept scheme.</skos:scopeNote>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+    <rdfs:range rdf:resource="http://www.w3.org/2004/02/skos/core#ConceptScheme"/>
+    <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#resource_selector"/>
+    <pmb:name>inscheme</pmb:name>
+    <pmb:defaultValueType rdf:resource="http://www.pmbservices.fr/ontology#variable"/>
+    <pmb:defaultValue>concept_scheme</pmb:defaultValue>
+    <pmb:flag>concept_selector_form</pmb:flag>
+    <pmb:flag>conceptscheme_selector_form</pmb:flag>
+    <pmb:flag>collection_selector_form</pmb:flag>
+    <pmb:flag>orderedcollection_selector_form</pmb:flag>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="http://www.w3.org/2004/02/skos/core#hasTopConcept">
+    <rdfs:label xml:lang="en">has top concept</rdfs:label>
+    <rdfs:isDefinedBy rdf:resource="http://www.w3.org/2004/02/skos/core"/>
+    <skos:definition xml:lang="en">Relates, by convention, a concept scheme to a concept which is topmost in the broader/narrower concept hierarchies for that scheme, providing an entry point to these hierarchies.</skos:definition>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+    <rdfs:domain rdf:resource="http://www.w3.org/2004/02/skos/core#ConceptScheme"/>
+    <rdfs:range rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+    <owl:inverseOf rdf:resource="http://www.w3.org/2004/02/skos/core#topConceptOf"/>
+    <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#resource_selector"/>
+    <pmb:name>hastopconcept</pmb:name>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="http://www.w3.org/2004/02/skos/core#topConceptOf">
+    <rdfs:label xml:lang="en">is top concept in scheme</rdfs:label>
+    <rdfs:isDefinedBy rdf:resource="http://www.w3.org/2004/02/skos/core"/>
+    <skos:definition xml:lang="en">Relates a concept to the concept scheme that it is a top level concept of.</skos:definition>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+    <rdfs:subPropertyOf rdf:resource="http://www.w3.org/2004/02/skos/core#inScheme"/>
+    <owl:inverseOf rdf:resource="http://www.w3.org/2004/02/skos/core#hasTopConcept"/>
+    <rdfs:domain rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+    <rdfs:range rdf:resource="http://www.w3.org/2004/02/skos/core#ConceptScheme"/>
+    <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#resource_selector"/>
+    <pmb:name>topconceptof</pmb:name>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="http://www.w3.org/2004/02/skos/core#prefLabel">
+    <rdfs:label xml:lang="en">preferred label</rdfs:label>
+    <rdfs:isDefinedBy rdf:resource="http://www.w3.org/2004/02/skos/core"/>
+    <skos:definition xml:lang="en">The preferred lexical label for a resource, in a given language.</skos:definition>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AnnotationProperty"/>
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+    <rdfs:subPropertyOf rdf:resource="http://www.w3.org/2000/01/rdf-schema#label"/>
+    <rdfs:comment xml:lang="en">A resource has no more than one value of skos:prefLabel per language tag, and no more than one value of skos:prefLabel without language tag.</rdfs:comment>
+    <rdfs:comment xml:lang="en">The range of skos:prefLabel is the class of RDF plain literals.</rdfs:comment>
+    <rdfs:comment xml:lang="en">skos:prefLabel, skos:altLabel and skos:hiddenLabel are pairwise
+      disjoint properties.</rdfs:comment>
+    <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+    <pmb:distinctWith rdf:resource="http://www.w3.org/2004/02/skos/core#altLabel"/>
+    <pmb:distinctWith rdf:resource="http://www.w3.org/2004/02/skos/core#hiddenLabel"/>
+    <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#small_text"/>
+    <pmb:name>preflabel</pmb:name>
+    <pmb:pound>130</pmb:pound>
+    <pmb:flag>concept_selector_form</pmb:flag>
+    <pmb:flag>conceptscheme_selector_form</pmb:flag>
+    <pmb:flag>collection_selector_form</pmb:flag>
+    <pmb:flag>orderedcollection_selector_form</pmb:flag>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="http://www.w3.org/2004/02/skos/core#altLabel">
+    <rdfs:label xml:lang="en">alternative label</rdfs:label>
+    <rdfs:isDefinedBy rdf:resource="http://www.w3.org/2004/02/skos/core"/>
+    <skos:definition xml:lang="en">An alternative lexical label for a resource.</skos:definition>
+    <skos:example xml:lang="en">Acronyms, abbreviations, spelling variants, and irregular plural/singular forms may be included among the alternative labels for a concept. Mis-spelled terms are normally included as hidden labels (see skos:hiddenLabel).</skos:example>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AnnotationProperty"/>
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+    <rdfs:subPropertyOf rdf:resource="http://www.w3.org/2000/01/rdf-schema#label"/>
+    <rdfs:comment xml:lang="en">The range of skos:altLabel is the class of RDF plain literals.</rdfs:comment>
+    <rdfs:comment xml:lang="en">skos:prefLabel, skos:altLabel and skos:hiddenLabel are pairwise disjoint properties.</rdfs:comment>
+    <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+    <pmb:distinctWith rdf:resource="http://www.w3.org/2004/02/skos/core#prefLabel"/>
+    <pmb:distinctWith rdf:resource="http://www.w3.org/2004/02/skos/core#hiddenLabel"/>
+    <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#small_text"/>
+    <pmb:name>altlabel</pmb:name>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="http://www.w3.org/2004/02/skos/core#hiddenLabel">
+    <rdfs:label xml:lang="en">hidden label</rdfs:label>
+    <rdfs:isDefinedBy rdf:resource="http://www.w3.org/2004/02/skos/core"/>
+    <skos:definition xml:lang="en">A lexical label for a resource that should be hidden when generating visual displays of the resource, but should still be accessible to free text search operations.</skos:definition>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AnnotationProperty"/>
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+    <rdfs:subPropertyOf rdf:resource="http://www.w3.org/2000/01/rdf-schema#label"/>
+    <rdfs:comment xml:lang="en">The range of skos:hiddenLabel is the class of RDF plain literals.</rdfs:comment>
+    <rdfs:comment xml:lang="en">skos:prefLabel, skos:altLabel and skos:hiddenLabel are pairwise disjoint properties.</rdfs:comment>
+    <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+    <pmb:distinctWith rdf:resource="http://www.w3.org/2004/02/skos/core#prefLabel"/>
+    <pmb:distinctWith rdf:resource="http://www.w3.org/2004/02/skos/core#altLabel"/>
+    <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#small_text"/>
+    <pmb:name>hiddenlabel</pmb:name>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="http://www.w3.org/2004/02/skos/core#notation">
+    <rdfs:label xml:lang="en">notation</rdfs:label>
+    <rdfs:isDefinedBy rdf:resource="http://www.w3.org/2004/02/skos/core"/>
+    <skos:definition xml:lang="en">A notation, also known as classification code, is a string of characters such as &quot;T58.5&quot; or &quot;303.4833&quot; used to uniquely identify a concept within the scope of a given concept scheme.</skos:definition>
+    <skos:scopeNote xml:lang="en">By convention, skos:notation is used with a typed literal in the object position of the triple.</skos:scopeNote>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+    <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+    <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#small_text"/>
+    <pmb:name>notation</pmb:name>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="http://www.w3.org/2004/02/skos/core#note">
+    <rdfs:label xml:lang="en">note</rdfs:label>
+    <rdfs:isDefinedBy rdf:resource="http://www.w3.org/2004/02/skos/core"/>
+    <skos:definition xml:lang="en">A general note, for any purpose.</skos:definition>
+    <skos:scopeNote xml:lang="en">This property may be used directly, or as a super-property for more specific note types.</skos:scopeNote>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AnnotationProperty"/>
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+    <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+    <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#text"/>
+    <pmb:name>note</pmb:name>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="http://www.w3.org/2004/02/skos/core#changeNote">
+    <rdfs:label xml:lang="en">change note</rdfs:label>
+    <rdfs:isDefinedBy rdf:resource="http://www.w3.org/2004/02/skos/core"/>
+    <skos:definition xml:lang="en">A note about a modification to a concept.</skos:definition>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AnnotationProperty"/>
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+    <rdfs:subPropertyOf rdf:resource="http://www.w3.org/2004/02/skos/core#note"/>
+    <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+    <rdfs:domain rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+    <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#text"/>
+    <pmb:name>changenote</pmb:name>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="http://www.w3.org/2004/02/skos/core#definition">
+    <rdfs:label xml:lang="en">definition</rdfs:label>
+    <rdfs:isDefinedBy rdf:resource="http://www.w3.org/2004/02/skos/core"/>
+    <skos:definition xml:lang="en">A statement or formal explanation of the meaning of a concept.</skos:definition>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AnnotationProperty"/>
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+    <rdfs:subPropertyOf rdf:resource="http://www.w3.org/2004/02/skos/core#note"/>
+    <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+    <rdfs:domain rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+    <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#text"/>
+    <pmb:name>definition</pmb:name>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="http://www.w3.org/2004/02/skos/core#editorialNote">
+    <rdfs:label xml:lang="en">editorial note</rdfs:label>
+    <rdfs:isDefinedBy rdf:resource="http://www.w3.org/2004/02/skos/core"/>
+    <skos:definition xml:lang="en">A note for an editor, translator or maintainer of the vocabulary.</skos:definition>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AnnotationProperty"/>
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+    <rdfs:subPropertyOf rdf:resource="http://www.w3.org/2004/02/skos/core#note"/>
+    <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+    <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#text"/>
+    <pmb:name>editorialnote</pmb:name>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="http://www.w3.org/2004/02/skos/core#example">
+    <rdfs:label xml:lang="en">example</rdfs:label>
+    <rdfs:isDefinedBy rdf:resource="http://www.w3.org/2004/02/skos/core"/>
+    <skos:definition xml:lang="en">An example of the use of a concept.</skos:definition>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AnnotationProperty"/>
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+    <rdfs:subPropertyOf rdf:resource="http://www.w3.org/2004/02/skos/core#note"/>
+    <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+    <rdfs:domain rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+    <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#text"/>
+    <pmb:name>example</pmb:name>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="http://www.w3.org/2004/02/skos/core#historyNote">
+    <rdfs:label xml:lang="en">history note</rdfs:label>
+    <rdfs:isDefinedBy rdf:resource="http://www.w3.org/2004/02/skos/core"/>
+    <skos:definition xml:lang="en">A note about the past state/use/meaning of a concept.</skos:definition>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AnnotationProperty"/>
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+    <rdfs:subPropertyOf rdf:resource="http://www.w3.org/2004/02/skos/core#note"/>
+    <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+    <rdfs:domain rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+    <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#text"/>
+    <pmb:name>historynote</pmb:name>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="http://www.w3.org/2004/02/skos/core#scopeNote">
+    <rdfs:label xml:lang="en">scope note</rdfs:label>
+    <rdfs:isDefinedBy rdf:resource="http://www.w3.org/2004/02/skos/core"/>
+    <skos:definition xml:lang="en">A note that helps to clarify the meaning and/or the use of a concept.</skos:definition>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AnnotationProperty"/>
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+    <rdfs:subPropertyOf rdf:resource="http://www.w3.org/2004/02/skos/core#note"/>
+    <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+    <rdfs:domain rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+    <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#text"/>
+    <pmb:name>scopenote</pmb:name>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="http://www.w3.org/2004/02/skos/core#semanticRelation">
+    <rdfs:label xml:lang="en">is in semantic relation with</rdfs:label>
+    <rdfs:isDefinedBy rdf:resource="http://www.w3.org/2004/02/skos/core"/>
+    <skos:definition xml:lang="en">Links a concept to a concept related by meaning.</skos:definition>
+    <skos:scopeNote xml:lang="en">This property should not be used directly, but as a super-property for all properties denoting a relationship of meaning between concepts.</skos:scopeNote>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+    <rdf:type rdf:resource="http://www.pmbservices.fr/ontology#noAssertionProperty"/>
+    <rdfs:domain rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+    <rdfs:range rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+    <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#resource_selector"/>
+    <pmb:name>semanticrelation</pmb:name>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="http://www.w3.org/2004/02/skos/core#broader">
+    <rdfs:label xml:lang="en">has broader</rdfs:label>
+    <rdfs:isDefinedBy rdf:resource="http://www.w3.org/2004/02/skos/core"/>
+    <skos:definition xml:lang="en">Relates a concept to a concept that is more general in meaning.</skos:definition>
+    <rdfs:comment xml:lang="en">Broader concepts are typically rendered as parents in a concept hierarchy (tree).</rdfs:comment>
+    <skos:scopeNote xml:lang="en">By convention, skos:broader is only used to assert an immediate (i.e. direct) hierarchical link between two conceptual resources.</skos:scopeNote>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+    <rdfs:subPropertyOf rdf:resource="http://www.w3.org/2004/02/skos/core#broaderTransitive"/>
+    <owl:inverseOf rdf:resource="http://www.w3.org/2004/02/skos/core#narrower"/>
+    <rdfs:range rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+    <rdfs:domain rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+    <pmb:distinctWith rdf:resource="http://www.w3.org/2004/02/skos/core#narrower"/>
+    <pmb:distinctWith rdf:resource="http://www.w3.org/2004/02/skos/core#related"/>
+    <pmb:distinctWith rdf:resource="http://www.w3.org/2004/02/skos/core#narrowerTransitive"/>
+    <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#resource_selector"/>
+    <pmb:name>broader</pmb:name>
+    <pmb:defaultValueType rdf:resource="http://www.pmbservices.fr/ontology#variable"/>
+    <pmb:defaultValue>parent_id</pmb:defaultValue>
+    <pmb:flag>concept_selector_form</pmb:flag>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="http://www.w3.org/2004/02/skos/core#narrower">
+    <rdfs:label xml:lang="en">has narrower</rdfs:label>
+    <rdfs:isDefinedBy rdf:resource="http://www.w3.org/2004/02/skos/core"/>
+    <skos:definition xml:lang="en">Relates a concept to a concept that is more specific in meaning.</skos:definition>
+    <skos:scopeNote xml:lang="en">By convention, skos:broader is only used to assert an immediate (i.e. direct) hierarchical link between two conceptual resources.</skos:scopeNote>
+    <rdfs:comment xml:lang="en">Narrower concepts are typically rendered as children in a concept hierarchy (tree).</rdfs:comment>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+    <rdfs:subPropertyOf rdf:resource="http://www.w3.org/2004/02/skos/core#narrowerTransitive"/>
+    <owl:inverseOf rdf:resource="http://www.w3.org/2004/02/skos/core#broader"/>
+    <rdfs:range rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+    <rdfs:domain rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+    <pmb:distinctWith rdf:resource="http://www.w3.org/2004/02/skos/core#broader"/>
+    <pmb:distinctWith rdf:resource="http://www.w3.org/2004/02/skos/core#related"/>
+    <pmb:distinctWith rdf:resource="http://www.w3.org/2004/02/skos/core#broaderTransitive"/>
+    <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#resource_selector"/>
+    <pmb:name>narrower</pmb:name>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="http://www.w3.org/2004/02/skos/core#related">
+    <rdfs:label xml:lang="en">has related</rdfs:label>
+    <rdfs:isDefinedBy rdf:resource="http://www.w3.org/2004/02/skos/core"/>
+    <skos:definition xml:lang="en">Relates a concept to a concept with which there is an associative semantic relationship.</skos:definition>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#SymmetricProperty"/>
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+    <rdfs:subPropertyOf rdf:resource="http://www.w3.org/2004/02/skos/core#semanticRelation"/>
+    <rdfs:comment xml:lang="en">skos:related is disjoint with skos:broaderTransitive</rdfs:comment>
+    <rdfs:range rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+    <rdfs:domain rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+    <pmb:distinctWith rdf:resource="http://www.w3.org/2004/02/skos/core#broader"/>
+    <pmb:distinctWith rdf:resource="http://www.w3.org/2004/02/skos/core#broaderTransitive"/>
+    <pmb:distinctWith rdf:resource="http://www.w3.org/2004/02/skos/core#narrower"/>
+    <pmb:distinctWith rdf:resource="http://www.w3.org/2004/02/skos/core#narrowerTransitive"/>
+    <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#resource_selector"/>
+    <pmb:name>related</pmb:name>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="http://www.w3.org/2004/02/skos/core#broaderTransitive">
+    <rdfs:label xml:lang="en">has broader transitive</rdfs:label>
+    <rdfs:isDefinedBy rdf:resource="http://www.w3.org/2004/02/skos/core"/>
+    <skos:definition>skos:broaderTransitive is a transitive superproperty of skos:broader.</skos:definition>
+    <skos:scopeNote xml:lang="en">By convention, skos:broaderTransitive is not used to make assertions. Rather, the properties can be used to draw inferences about the transitive closure of the hierarchical relation, which is useful e.g. when implementing a simple query expansion algorithm in a search application.</skos:scopeNote>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#TransitiveProperty"/>
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+    <rdf:type rdf:resource="http://www.pmbservices.fr/ontology#noAssertionProperty"/>
+    <rdfs:subPropertyOf rdf:resource="http://www.w3.org/2004/02/skos/core#semanticRelation"/>
+    <owl:inverseOf rdf:resource="http://www.w3.org/2004/02/skos/core#narrowerTransitive"/>
+    <rdfs:range rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+    <rdfs:domain rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+    <pmb:distinctWith rdf:resource="http://www.w3.org/2004/02/skos/core#narrower"/>
+    <pmb:distinctWith rdf:resource="http://www.w3.org/2004/02/skos/core#related"/>
+    <pmb:distinctWith rdf:resource="http://www.w3.org/2004/02/skos/core#narrowerTransitive"/>
+    <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#resource_selector"/>
+    <pmb:name>broadertransitive</pmb:name>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="http://www.w3.org/2004/02/skos/core#narrowerTransitive">
+    <rdfs:label xml:lang="en">has narrower transitive</rdfs:label>
+    <rdfs:isDefinedBy rdf:resource="http://www.w3.org/2004/02/skos/core"/>
+    <skos:definition>skos:narrowerTransitive is a transitive superproperty of skos:narrower.</skos:definition>
+    <skos:scopeNote xml:lang="en">By convention, skos:narrowerTransitive is not used to make assertions. Rather, the properties can be used to draw inferences about the transitive closure of the hierarchical relation, which is useful e.g. when implementing a simple query expansion algorithm in a search application.</skos:scopeNote>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#TransitiveProperty"/>
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+    <rdf:type rdf:resource="http://www.pmbservices.fr/ontology#noAssertionProperty"/>
+    <rdfs:subPropertyOf rdf:resource="http://www.w3.org/2004/02/skos/core#semanticRelation"/>
+    <owl:inverseOf rdf:resource="http://www.w3.org/2004/02/skos/core#broaderTransitive"/>
+    <rdfs:range rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+    <rdfs:domain rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+    <pmb:distinctWith rdf:resource="http://www.w3.org/2004/02/skos/core#broader"/>
+    <pmb:distinctWith rdf:resource="http://www.w3.org/2004/02/skos/core#related"/>
+    <pmb:distinctWith rdf:resource="http://www.w3.org/2004/02/skos/core#broaderTransitive"/>
+    <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#resource_selector"/>
+    <pmb:name>narrowertransitive</pmb:name>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="http://www.w3.org/2004/02/skos/core#member">
+    <rdfs:label xml:lang="en">has member</rdfs:label>
+    <rdfs:isDefinedBy rdf:resource="http://www.w3.org/2004/02/skos/core"/>
+    <skos:definition xml:lang="en">Relates a collection to one of its members.</skos:definition>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+    <rdfs:domain rdf:resource="http://www.w3.org/2004/02/skos/core#Collection"/>
+    <rdfs:range rdf:nodeID="b3799927661_arc92ccb1"/>
+    <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#resource_selector"/>
+    <pmb:name>member</pmb:name>
+  </rdf:Description>
+
+  <rdf:Description rdf:nodeID="b3799927661_arc92ccb1">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+    <owl:unionOf rdf:nodeID="b2071403223_arc92ccb2"/>
+  </rdf:Description>
+
+  <rdf:Description rdf:nodeID="b2071403223_arc92ccb2">
+    <rdf:first rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+    <rdf:rest rdf:nodeID="b208677441_arc92ccb3"/>
+  </rdf:Description>
+
+  <rdf:Description rdf:nodeID="b208677441_arc92ccb3">
+    <rdf:first rdf:resource="http://www.w3.org/2004/02/skos/core#Collection"/>
+    <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="http://www.w3.org/2004/02/skos/core#memberList">
+    <rdfs:label xml:lang="en">has member list</rdfs:label>
+    <rdfs:isDefinedBy rdf:resource="http://www.w3.org/2004/02/skos/core"/>
+    <skos:definition xml:lang="en">Relates an ordered collection to the RDF list containing its members.</skos:definition>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+    <rdfs:domain rdf:resource="http://www.w3.org/2004/02/skos/core#OrderedCollection"/>
+    <rdfs:range rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#List"/>
+    <rdfs:comment xml:lang="en">For any resource, every item in the list given as the value of the
+      skos:memberList property is also a value of the skos:member property.</rdfs:comment>
+    <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#resource_selector"/>
+    <pmb:name>memberlist</pmb:name>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="http://www.w3.org/2004/02/skos/core#mappingRelation">
+    <rdfs:label xml:lang="en">is in mapping relation with</rdfs:label>
+    <rdfs:isDefinedBy rdf:resource="http://www.w3.org/2004/02/skos/core"/>
+    <skos:definition xml:lang="en">Relates two concepts coming, by convention, from different schemes, and that have comparable meanings</skos:definition>
+    <rdfs:comment xml:lang="en">These concept mapping relations mirror semantic relations, and the data model defined below is similar (with the exception of skos:exactMatch) to the data model defined for semantic relations. A distinct vocabulary is provided for concept mapping relations, to provide a convenient way to differentiate links within a concept scheme from links between concept schemes. However, this pattern of usage is not a formal requirement of the SKOS data model, and relies on informal definitions of best practice.</rdfs:comment>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+    <rdf:type rdf:resource="http://www.pmbservices.fr/ontology#noAssertionProperty"/>
+    <rdfs:subPropertyOf rdf:resource="http://www.w3.org/2004/02/skos/core#semanticRelation"/>
+    <rdfs:range rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+    <rdfs:domain rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+    <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#resource_selector"/>
+    <pmb:name>mappingrelation</pmb:name>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="http://www.w3.org/2004/02/skos/core#broadMatch">
+    <rdfs:label xml:lang="en">has broader match</rdfs:label>
+    <rdfs:isDefinedBy rdf:resource="http://www.w3.org/2004/02/skos/core"/>
+    <skos:definition xml:lang="en">skos:broadMatch is used to state a hierarchical mapping link between two conceptual resources in different concept schemes.</skos:definition>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+    <rdfs:subPropertyOf rdf:resource="http://www.w3.org/2004/02/skos/core#mappingRelation"/>
+    <rdfs:subPropertyOf rdf:resource="http://www.w3.org/2004/02/skos/core#broader"/>
+    <owl:inverseOf rdf:resource="http://www.w3.org/2004/02/skos/core#narrowMatch"/>
+    <rdfs:range rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+    <rdfs:domain rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+    <pmb:distinctWith rdf:resource="http://www.w3.org/2004/02/skos/core#exactMatch"/>
+    <pmb:distinctWith rdf:resource="http://www.w3.org/2004/02/skos/core#relatedMatch"/>
+    <pmb:distinctWith rdf:resource="http://www.w3.org/2004/02/skos/core#narrowMatch"/>
+    <pmb:distinctWith rdf:resource="http://www.w3.org/2004/02/skos/core#closeMatch"/>
+    <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#resource_selector"/>
+    <pmb:name>broadmatch</pmb:name>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="http://www.w3.org/2004/02/skos/core#narrowMatch">
+    <rdfs:label xml:lang="en">has narrower match</rdfs:label>
+    <rdfs:isDefinedBy rdf:resource="http://www.w3.org/2004/02/skos/core"/>
+    <skos:definition xml:lang="en">skos:narrowMatch is used to state a hierarchical mapping link between two conceptual resources in different concept schemes.</skos:definition>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+    <rdfs:subPropertyOf rdf:resource="http://www.w3.org/2004/02/skos/core#mappingRelation"/>
+    <rdfs:subPropertyOf rdf:resource="http://www.w3.org/2004/02/skos/core#narrower"/>
+    <owl:inverseOf rdf:resource="http://www.w3.org/2004/02/skos/core#broadMatch"/>
+    <rdfs:range rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+    <rdfs:domain rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+    <pmb:distinctWith rdf:resource="http://www.w3.org/2004/02/skos/core#exactMatch"/>
+    <pmb:distinctWith rdf:resource="http://www.w3.org/2004/02/skos/core#relatedMatch"/>
+    <pmb:distinctWith rdf:resource="http://www.w3.org/2004/02/skos/core#broadMatch"/>
+    <pmb:distinctWith rdf:resource="http://www.w3.org/2004/02/skos/core#closeMatch"/>
+    <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#resource_selector"/>
+    <pmb:name>narrowmatch</pmb:name>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="http://www.w3.org/2004/02/skos/core#relatedMatch">
+    <rdfs:label xml:lang="en">has related match</rdfs:label>
+    <rdfs:isDefinedBy rdf:resource="http://www.w3.org/2004/02/skos/core"/>
+    <skos:definition xml:lang="en">skos:relatedMatch is used to state an associative mapping link between two conceptual resources in different concept schemes.</skos:definition>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#SymmetricProperty"/>
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+    <rdfs:subPropertyOf rdf:resource="http://www.w3.org/2004/02/skos/core#mappingRelation"/>
+    <rdfs:subPropertyOf rdf:resource="http://www.w3.org/2004/02/skos/core#related"/>
+    <owl:inverseOf rdf:resource="http://www.w3.org/2004/02/skos/core#relatedMatch"/>
+    <rdfs:range rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+    <rdfs:domain rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+    <pmb:distinctWith rdf:resource="http://www.w3.org/2004/02/skos/core#exactMatch"/>
+    <pmb:distinctWith rdf:resource="http://www.w3.org/2004/02/skos/core#narrowMatch"/>
+    <pmb:distinctWith rdf:resource="http://www.w3.org/2004/02/skos/core#broadMatch"/>
+    <pmb:distinctWith rdf:resource="http://www.w3.org/2004/02/skos/core#closeMatch"/>
+    <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#resource_selector"/>
+    <pmb:name>relatedmatch</pmb:name>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="http://www.w3.org/2004/02/skos/core#exactMatch">
+    <rdfs:label xml:lang="en">has exact match</rdfs:label>
+    <rdfs:isDefinedBy rdf:resource="http://www.w3.org/2004/02/skos/core"/>
+    <skos:definition xml:lang="en">skos:exactMatch is used to link two concepts, indicating a high degree of confidence that the concepts can be used interchangeably across a wide range of information retrieval applications. skos:exactMatch is a transitive property, and is a sub-property of skos:closeMatch.</skos:definition>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#SymmetricProperty"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#TransitiveProperty"/>
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+    <rdfs:subPropertyOf rdf:resource="http://www.w3.org/2004/02/skos/core#closeMatch"/>
+    <owl:inverseOf rdf:resource="http://www.w3.org/2004/02/skos/core#exactMatch"/>
+    <rdfs:comment xml:lang="en">skos:exactMatch is disjoint with each of the properties skos:broadMatch and skos:relatedMatch.</rdfs:comment>
+    <rdfs:range rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+    <rdfs:domain rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+    <pmb:distinctWith rdf:resource="http://www.w3.org/2004/02/skos/core#relatedMatch"/>
+    <pmb:distinctWith rdf:resource="http://www.w3.org/2004/02/skos/core#narrowMatch"/>
+    <pmb:distinctWith rdf:resource="http://www.w3.org/2004/02/skos/core#broadMatch"/>
+    <pmb:distinctWith rdf:resource="http://www.w3.org/2004/02/skos/core#closeMatch"/>
+    <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#resource_selector"/>
+    <pmb:name>exactmatch</pmb:name>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="http://www.w3.org/2004/02/skos/core#closeMatch">
+    <rdfs:label xml:lang="en">has close match</rdfs:label>
+    <rdfs:isDefinedBy rdf:resource="http://www.w3.org/2004/02/skos/core"/>
+    <skos:definition xml:lang="en">skos:closeMatch is used to link two concepts that are sufficiently similar that they can be used interchangeably in some information retrieval applications. In order to avoid the possibility of &quot;compound errors&quot; when combining mappings across more than two concept schemes, skos:closeMatch is not declared to be a transitive property.</skos:definition>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#SymmetricProperty"/>
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+    <rdfs:subPropertyOf rdf:resource="http://www.w3.org/2004/02/skos/core#mappingRelation"/>
+    <rdfs:range rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+    <rdfs:domain rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+    <pmb:distinctWith rdf:resource="http://www.w3.org/2004/02/skos/core#relatedMatch"/>
+    <pmb:distinctWith rdf:resource="http://www.w3.org/2004/02/skos/core#narrowMatch"/>
+    <pmb:distinctWith rdf:resource="http://www.w3.org/2004/02/skos/core#broadMatch"/>
+    <pmb:distinctWith rdf:resource="http://www.w3.org/2004/02/skos/core#exactMatch"/>
+    <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#resource_selector"/>
+    <pmb:name>closematch</pmb:name>
+  </rdf:Description>
+  
+  <!-- ces propriétés sont calculées directement dans PMB
+  <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#broadPath">
+    <rdfs:label xml:lang="en">broad path</rdfs:label>
+    <rdfs:isDefinedBy rdf:resource="http://www.w3.org/2004/02/skos/core"/>
+    <skos:definition xml:lang="en">A path of concepts which are more and more general in meaning.</skos:definition>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AnnotationProperty"/>
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+    <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+    <rdfs:domain rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+    <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#small_text"/>
+    <pmb:name>broadpath</pmb:name>
+    <pmb:undisplayed>1</pmb:undisplayed>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#narrowPath">
+    <rdfs:label xml:lang="en">narrow path</rdfs:label>
+    <rdfs:isDefinedBy rdf:resource="http://www.w3.org/2004/02/skos/core"/>
+    <skos:definition xml:lang="en">A path of concepts which are more and more specific in meaning.</skos:definition>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AnnotationProperty"/>
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+    <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+    <rdfs:domain rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+    <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#small_text"/>
+    <pmb:name>narrowpath</pmb:name>
+    <pmb:undisplayed>1</pmb:undisplayed>
+  </rdf:Description>-->
+  
+<!--
+  <rdf:Description rdf:nodeID="inscheme">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+    <owl:onProperty rdf:resource="http://www.w3.org/2004/02/skos/core#inScheme"/>
+    <owl:minCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:minCardinality>
+  </rdf:Description>
+-->
+
+  <rdf:Description rdf:nodeID="preflabel">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+    <owl:onProperty rdf:resource="http://www.w3.org/2004/02/skos/core#prefLabel"/>
+    <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
+    <owl:minCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:minCardinality>
+  </rdf:Description>
+    
+  <rdf:Description rdf:nodeID="conceptindex">
+    <rdf:type rdf:resource="http://www.pmbservices.fr/ontology#indexation"/>
+    <owl:onProperty rdf:resource="http://www.w3.org/2004/02/skos/core#prefLabel"/>
+    <pmb:pound>130</pmb:pound>
+ 	<pmb:field>1</pmb:field>
+ 	<pmb:subfield>1</pmb:subfield>
+    <owl:unionOf rdf:nodeID="conceptindex_1"/>
+  </rdf:Description>
+   <rdf:Description rdf:nodeID="conceptindex_1">
+    <rdf:type rdf:resource="http://www.pmbservices.fr/ontology#indexation"/>
+    <owl:onProperty rdf:resource="http://www.w3.org/2004/02/skos/core#altLabel"/>
+    <pmb:pound>130</pmb:pound>
+ 	<pmb:field>2</pmb:field>
+ 	<pmb:subfield>1</pmb:subfield>
+    <owl:unionOf rdf:nodeID="conceptindex_2"/>
+  </rdf:Description> 
+  <rdf:Description rdf:nodeID="conceptindex_2">
+    <rdf:type rdf:resource="http://www.pmbservices.fr/ontology#indexation"/>
+    <owl:onProperty rdf:resource="http://www.w3.org/2004/02/skos/core#hiddenLabel"/>
+    <pmb:pound>130</pmb:pound>
+ 	<pmb:field>3</pmb:field>
+ 	<pmb:subfield>1</pmb:subfield>
+    <owl:unionOf rdf:nodeID="conceptindex_3"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="conceptindex_3">
+    <rdf:type rdf:resource="http://www.pmbservices.fr/ontology#indexation"/>
+    <owl:onProperty rdf:resource="http://www.w3.org/2004/02/skos/core#inScheme"/>
+    <pmb:useProperty rdf:resource="http://www.w3.org/2004/02/skos/core#prefLabel"/>
+    <pmb:pound>80</pmb:pound>
+ 	<pmb:field>4</pmb:field>
+ 	<pmb:subfield>1</pmb:subfield>
+    <owl:unionOf rdf:nodeID="conceptindex_6"/>
+  </rdf:Description>
+  <!--<rdf:Description rdf:nodeID="conceptindex_4">
+    <rdf:type rdf:resource="http://www.pmbservices.fr/ontology#indexation"/>
+    <owl:onProperty rdf:resource="http://www.pmbservices.fr/ontology#broadPath"/>
+    <pmb:pound>80</pmb:pound>
+ 	<pmb:field>5</pmb:field>
+ 	<pmb:subfield>1</pmb:subfield>
+    <owl:unionOf rdf:nodeID="conceptindex_5"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="conceptindex_5">
+    <rdf:type rdf:resource="http://www.pmbservices.fr/ontology#indexation"/>
+    <owl:onProperty rdf:resource="http://www.pmbservices.fr/ontology#narrowPath"/>
+    <pmb:pound>80</pmb:pound>
+ 	<pmb:field>6</pmb:field>
+ 	<pmb:subfield>1</pmb:subfield>    
+  <owl:unionOf rdf:nodeID="conceptindex_6"/>
+  </rdf:Description>-->
+  <rdf:Description rdf:nodeID="conceptindex_6">
+    <rdf:type rdf:resource="http://www.pmbservices.fr/ontology#indexation"/>
+    <owl:onProperty rdf:resource="http://www.w3.org/2004/02/skos/core#notation"/>
+    <pmb:pound>50</pmb:pound>
+ 	<pmb:field>7</pmb:field>
+ 	<pmb:subfield>1</pmb:subfield>    
+    <owl:unionOf rdf:nodeID="conceptindex_7"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="conceptindex_7">
+    <rdf:type rdf:resource="http://www.pmbservices.fr/ontology#indexation"/>
+    <owl:onProperty rdf:resource="http://www.w3.org/2004/02/skos/core#note"/>
+    <pmb:pound>50</pmb:pound>
+ 	<pmb:field>8</pmb:field>
+ 	<pmb:subfield>1</pmb:subfield>    
+    <owl:unionOf rdf:nodeID="conceptindex_8"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="conceptindex_8">
+    <rdf:type rdf:resource="http://www.pmbservices.fr/ontology#indexation"/>
+    <owl:onProperty rdf:resource="http://www.w3.org/2004/02/skos/core#changeNote"/>
+    <pmb:pound>50</pmb:pound>
+ 	<pmb:field>9</pmb:field>
+ 	<pmb:subfield>1</pmb:subfield>    
+    <owl:unionOf rdf:nodeID="conceptindex_9"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="conceptindex_9">
+    <rdf:type rdf:resource="http://www.pmbservices.fr/ontology#indexation"/>
+    <owl:onProperty rdf:resource="http://www.w3.org/2004/02/skos/core#definition"/>
+    <pmb:pound>50</pmb:pound>
+ 	<pmb:field>10</pmb:field>
+ 	<pmb:subfield>1</pmb:subfield>    
+    <owl:unionOf rdf:nodeID="conceptindex_10"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="conceptindex_10">
+    <rdf:type rdf:resource="http://www.pmbservices.fr/ontology#indexation"/>
+    <owl:onProperty rdf:resource="http://www.w3.org/2004/02/skos/core#editorialNote"/>
+    <pmb:pound>50</pmb:pound>
+ 	<pmb:field>11</pmb:field>
+ 	<pmb:subfield>1</pmb:subfield>    
+    <owl:unionOf rdf:nodeID="conceptindex_11"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="conceptindex_11">
+    <rdf:type rdf:resource="http://www.pmbservices.fr/ontology#indexation"/>
+    <owl:onProperty rdf:resource="http://www.w3.org/2004/02/skos/core#example"/>
+    <pmb:pound>50</pmb:pound>
+ 	<pmb:field>12</pmb:field>
+ 	<pmb:subfield>1</pmb:subfield>    
+    <owl:unionOf rdf:nodeID="conceptindex_12"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="conceptindex_12">
+    <rdf:type rdf:resource="http://www.pmbservices.fr/ontology#indexation"/>
+    <owl:onProperty rdf:resource="http://www.w3.org/2004/02/skos/core#historyNote"/>
+    <pmb:pound>50</pmb:pound>
+ 	<pmb:field>13</pmb:field>
+ 	<pmb:subfield>1</pmb:subfield>
+    <owl:unionOf rdf:nodeID="conceptindex_13"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="conceptindex_13">
+    <rdf:type rdf:resource="http://www.pmbservices.fr/ontology#indexation"/>
+    <owl:onProperty rdf:resource="http://www.w3.org/2004/02/skos/core#scopeNote"/>
+    <pmb:pound>50</pmb:pound>
+ 	<pmb:field>14</pmb:field>
+ 	<pmb:subfield>1</pmb:subfield>
+  </rdf:Description>
+    
+  <rdf:Description rdf:nodeID="conceptschemeindex">
+    <rdf:type rdf:resource="http://www.pmbservices.fr/ontology#indexation"/>
+    <owl:onProperty rdf:resource="http://www.w3.org/2004/02/skos/core#prefLabel"/>
+ 	<pmb:field>100</pmb:field>
+ 	<pmb:subfield>1</pmb:subfield>
+    <pmb:pound>130</pmb:pound>
+    <owl:unionOf rdf:nodeID="conceptschemeindex_1"/>
+  </rdf:Description> 
+  <rdf:Description rdf:nodeID="conceptschemeindex_1">
+    <rdf:type rdf:resource="http://www.pmbservices.fr/ontology#indexation"/>
+    <owl:onProperty rdf:resource="http://www.w3.org/2004/02/skos/core#altLabel"/>
+ 	<pmb:field>101</pmb:field>
+ 	<pmb:subfield>1</pmb:subfield>
+    <pmb:pound>130</pmb:pound>
+    <owl:unionOf rdf:nodeID="conceptschemeindex_2"/>
+  </rdf:Description> 
+  <rdf:Description rdf:nodeID="conceptschemeindex_2">
+    <rdf:type rdf:resource="http://www.pmbservices.fr/ontology#indexation"/>
+    <owl:onProperty rdf:resource="http://www.w3.org/2004/02/skos/core#hiddenLabel"/>
+ 	<pmb:field>102</pmb:field>
+ 	<pmb:subfield>1</pmb:subfield>
+    <pmb:pound>130</pmb:pound>
+    <owl:unionOf rdf:nodeID="conceptschemeindex_3"/>
+  </rdf:Description>  
+  <rdf:Description rdf:nodeID="conceptschemeindex_3">
+    <rdf:type rdf:resource="http://www.pmbservices.fr/ontology#indexation"/>
+    <owl:onProperty rdf:resource="http://www.w3.org/2004/02/skos/core#hasTopConcept"/>
+    <pmb:useProperty rdf:resource="http://www.w3.org/2004/02/skos/core#prefLabel"/>
+    <pmb:pound>60</pmb:pound>
+ 	<pmb:field>103</pmb:field>
+ 	<pmb:subfield>1</pmb:subfield>
+    <owl:unionOf rdf:nodeID="conceptschemeindex_4'"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="conceptschemeindex_4">
+    <rdf:type rdf:resource="http://www.pmbservices.fr/ontology#indexation"/>
+    <owl:onProperty rdf:resource="http://www.w3.org/2004/02/skos/core#inScheme"/>
+    <pmb:useProperty rdf:resource="http://www.w3.org/2004/02/skos/core#prefLabel"/>
+    <pmb:pound>60</pmb:pound>
+ 	<pmb:field>104</pmb:field>
+ 	<pmb:subfield>1</pmb:subfield>
+  </rdf:Description>
+</rdf:RDF>

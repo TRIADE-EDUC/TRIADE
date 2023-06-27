@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+
+<!-- Catalogue de connecteurs
+****************************************************************************************
+© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: catalog.xml,v 1.33 2019-06-03 09:53:53 arenou Exp $ -->
+
+<catalog>
+	<item name="Z 39.50" path="z3950" id="1"/>
+	<item name="sru" path="sru" id="2"/>
+	<item name="OAI" id="3" path="oai"/>  
+	<item name="aligastore" path="aligastore" id="5"/>
+	<item name="entrez" path="entrez" id="7"/>
+	<item name="cfile" path="cfile" id="6"/>
+	<item name="Amazon ECommerce Service" path="amazon" id="4"/>
+	<item name="Lehmanns.de" path="lehmanns" id="10"/>
+	<item name="Agnostic" path="agnostic" id="8"/>
+	<item name="Pmb" path="pmb" id="9"/>	
+	<item name="Nasa ADS" path="nasa_ads" id="11"/>	
+	<item name="Google Books" path="google_book" id="12"/>
+	<item name="Babelio" path="babelio" id="13"/>
+	<item name="OpenURL" path="openurl" id="14"/>
+	<item name="LastFM" path="lastfm" id="15"/>
+	<item name="Wikipedia" path="wikipedia" id="16"/>
+	<item name="Dailymotion" path="dailymotion" id="17"/>
+	<item name="YouTube" path="youtube" id="18"/>
+	<item name="Liste d'Urls" path="urlslist" id="19"/>
+	<item name="OECD" path="oecd" id="20"/>
+	<item name="Travail-emploi" path="emploi" id="21"/>
+	<item name="Sudoc" path="sudoc" id="22"/>
+	<item name="Liste Entrepot Externe" path="es_list" id="23"/>
+	<item name="Zotero" path="zotero" id="24"/>
+	<item name="data.bnf.fr" path="databnf" id="25"/>
+	<item name="ArteVOD" path="artevod" id="26"/>
+	<item name="Tout Apprendre" path="toutapprendre" id="27"/>
+	<item name="Cairn.info" path="cairn" id="28"/>
+	<item name="OdiloTK" path="odilotk" id="29"/>
+	<item name="Electre API V3" path="electre" id="30"/>
+	<item name="Isidore" path="isidore" id="31"/>
+	<item name="Flux RSS" path="fluxrss" id="32"/>
+        <item name="Legifrance" path="legifrance" id="33"/>
+        <item name="Dalloz" path="dalloz" id="34"/>
+        <item name="Mediawiki" path="mediawiki" id="35"/>
+        <item name="Isidore API" path="isidoreapi" id="36"/>
+</catalog>

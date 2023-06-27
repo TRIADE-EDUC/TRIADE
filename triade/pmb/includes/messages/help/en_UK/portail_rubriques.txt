@@ -1,0 +1,5 @@
+<h2>Management of the Rubrics</h2>
+
+<p>Here, you can manage the rubrics.</p>
+
+ 

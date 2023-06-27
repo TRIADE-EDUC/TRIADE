@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_menu_datasource_menu.xml,v 1.1 2015-06-16 10:24:25 pmbs Exp $ -->
+
+<XMLlist>
+	<entry code='cms_module_menu_datasource_menu_items_desc'>Menu elements table</entry>
+	<entry code='cms_module_menu_datasource_menu_item_id_desc'>Element identifier in the menu</entry>
+	<entry code='cms_module_menu_datasource_menu_item_title_desc'>Label of the element</entry>
+	<entry code='cms_module_menu_datasource_menu_item_link_desc'>Link of the element</entry>
+	<entry code='cms_module_menu_datasource_menu_item_children_desc'>Table of the sub-elements(its structure is the one of items and may be recursive depending on the configuration)</entry>
+	<entry code='cms_module_menu_datasource_menu_item_details_desc'>Item details (Only for the editorial content)</entry>
+</XMLlist>

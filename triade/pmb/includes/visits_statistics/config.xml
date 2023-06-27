@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- $Id: config.xml,v 1.3 2017-12-12 08:13:47 mbertin Exp $ -->
+<stats>
+	<main type="nb_visits" name="msg:dashboard_visits_statistics_nb_visits" color="#FB454E" show_shortcut="yes"/>
+	<services>
+		<service type="practical_info" name="msg:dashboard_visits_statistics_practical_info" color="#FFD101" show_shortcut="yes"/>
+		<service type="consultation" name="msg:dashboard_visits_statistics_consultation" color="#235AAC" show_shortcut="yes"/>
+		<service type="search_support" name="msg:dashboard_visits_statistics_search_support" color="#A4DD56" show_shortcut="yes"/>
+		<service type="photocopy" name="msg:dashboard_visits_statistics_photocopy" color="#CE8AB6" show_shortcut="yes"/>
+	</services>
+</stats>

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le connecteur nasa_ads
+****************************************************************************************
+© 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: en_UK.xml,v 1.1 2015-06-15 12:55:34 pmbs Exp $ -->
+
+<XMLlist>
+
+<entry code="rec_addr">Register an address to be able to access the server properties</entry>
+	<entry code="error_contact_server">Error accessing the NASA ADS server: %s</entry>
+	<entry code="oecd_url">URL</entry>
+	<entry code="oecd_title">Title</entry>
+	<entry code="oecd_description">Description</entry>
+	<entry code="oecd_author">Author</entry>
+	<entry code="oecd_contact">Contact</entry>
+	<entry code="default_schema">By default</entry>
+	<entry code="oecd_chosen_schema">Selected schema</entry>
+	<entry code="oecd_searchfields">Allow queries on fields:</entry>
+	<entry code="oecd_maxrecordpersearch">Maximum number of records returned per query:</entry>
+	<entry code="oecd_is_mapped_to"> corresponds to:</entry>
+	<entry code="oecd_no_index_match">This source does not allow the query on %s.</entry>
+	<entry code="oecd_no_query">Unable to perform this query on this source.</entry>
+	<entry code="oecd_automap">Autofill.</entry>
+	<entry code="oecd_global_search">Global search</entry>
+	<entry code="oecd_xsl_to_pmbunimarc">Style sheets to apply to get to PMB Unimarc</entry>
+	<entry code="oecd_xsl_custom">Custom file</entry>
+	<entry code="oecd_cqlfail_means_global">If the query has failed, perform a global search.</entry>
+	<entry code="oecd_doc_a">Abstract</entry>
+	<entry code="oecd_doc_c">Citations</entry>
+	<entry code="oecd_doc_d">On-line Data</entry>
+	<entry code="oecd_doc_e">Electronic Article</entry>
+	<entry code="oecd_doc_f">Printable Article</entry>
+	<entry code="oecd_doc_g">Gif Images</entry>
+	<entry code="oecd_doc_h">HEP/Spires Information</entry>
+	<entry code="oecd_doc_i">Author Comments</entry>
+	<entry code="oecd_doc_l">Library Entries</entry>
+	<entry code="oecd_doc_m">Multimedia</entry>
+	<entry code="oecd_doc_n">NED Objects</entry>
+	<entry code="oecd_doc_o">Associated Articles</entry>
+	<entry code="oecd_doc_p">Planetary Data System</entry>
+	<entry code="oecd_doc_r">References</entry>
+	<entry code="oecd_doc_s">SIMBAD Objects</entry>
+	<entry code="oecd_doc_t">Table of Contents</entry>
+	<entry code="oecd_doc_u">Also Read</entry>
+	<entry code="oecd_doc_x">arXiv e-print</entry>
+	<entry code="oecd_doc_z">Abstract</entry>
+</XMLlist>

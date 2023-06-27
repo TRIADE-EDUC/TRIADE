@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_common_view_breadcrumb.xml,v 1.4 2016-12-01 12:07:57 arenou Exp $ -->
+
+<XMLlist>
+	<entry code="cms_module_common_view_breadcrumb_build_section_link">Construction du lien pour les rubriques</entry>
+	<entry code="cms_module_common_view_home_title_desc">Libellé du lien de la page d'accueil</entry>
+	<entry code="cms_module_common_view_home_link_desc">Lien vers la page d'accueil</entry>
+	<entry code="cms_module_common_view_section_desc">Tableau des rubriques correspondantes au fil d'Arianne</entry>
+	<entry code="cms_module_common_view_section_link_desc">Lien vers la rubrique</entry>
+	<entry code="cms_module_common_view_article_desc">Information de l'article si la source le permet</entry>
+</XMLlist>

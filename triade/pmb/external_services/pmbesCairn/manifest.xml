@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!-- Fichier manifest de description des méthodes disponibles
+****************************************************************************************
+© 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: manifest.xml,v 1.3 2017-09-15 10:29:40 apetithomme Exp $ -->
+
+<manifest>
+	<name>pmbesCairn</name>
+	<description>msg:cairn_functions_description</description>
+	<methods>
+	<!--
+ 
+	Méthodes relative au connecteur Cairn.info
+ 
+	-->
+		<method name="check_token" comment="msg:check_token_description" rights="" version="1.0" language_independant="true">
+			<inputs>
+				<description>msg:check_token_input_description</description>
+				<param name="token" type="scalar" dataType="string" description="msg:check_token_token"/>
+			</inputs>
+			<outputs>
+				<description>msg:check_token_output_description</description>
+				<result name="SESSID"  type="scalar" dataType="string" description="msg:check_token_SESSID"/>
+				<result name="id_cairn"  type="scalar" dataType="string" description="msg:check_token_id_cairn"/>
+				<result name="id_empr"  type="scalar" dataType="string" description="msg:check_token_id_empr"/>
+				<result name="expiration"  type="scalar" dataType="timestamp" description="msg:check_token_expiration"/>
+				<result name="error"  type="scalar" dataType="boolean" description="msg:check_token_error"/>
+				<result name="error_message"  type="scalar" dataType="string" description="msg:check_token_error_message"/>
+			</outputs>
+		</method>
+	</methods>
+</manifest>

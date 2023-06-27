@@ -1,0 +1,9 @@
+<h2>Gerenciamento do estado da cole&ccedil;&atilde;o</h2>
+
+<p>A se&ccedil;&atilde;o <b>Gerenciamento do estado da cole&ccedil;&atilde;o</b> permite definir configura&ccedil;&otilde;es para cole&ccedil;&otilde;es de peri&oacute;dicos.
+<ul>
+<li><b>Local</b> permite definir os locais onde os peri&oacute;dicos s&atilde;o armazenados.</li>
+<li><b>Tipos de m&iacute;dia</b> permite definir os tipos de m&iacute;dia da cole&ccedil;&atilde;o.</li>
+<li><b>Status</b> permite processar cole&ccedil;&otilde;es de diversas maneiras.</li>
+<li><b>Campos personalizados</b> permite criar campos personalizados nos estados da cole&ccedil;&atilde;o.</li>
+</ul></p>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le module Article
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_record.xml,v 1.2 2016-05-17 14:35:48 apetithomme Exp $ -->
+
+<XMLlist>
+	<entry code='cms_module_common_view_record'>Django view</entry>
+	<entry code='cms_module_common_datasource_record'>Records</entry>
+	<entry code='cms_module_record_view_django_directory'>Vue depuis un répertoire de templates</entry>
+</XMLlist>

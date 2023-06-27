@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le module Article
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_common_view_carousel_responsive.xml,v 1.2 2015-08-26 11:42:13 jpermanne Exp $ -->
+
+<XMLlist>
+	<entry code='cms_module_common_view_carousel_mode'>Display mode</entry>
+	<entry code='cms_module_common_view_carousel'>Carousel</entry>
+	<entry code='cms_module_common_view_carousel_mode_horizontal'>Horizontal</entry>
+	<entry code='cms_module_common_view_carousel_mode_vertical'>Vertical</entry>
+	<entry code='cms_module_common_view_carousel_mode_fade'>Fade</entry>
+	<entry code='cms_module_common_view_carousel_speed'>Transition time (in ms)</entry>
+	<entry code='cms_module_common_view_carousel_pause'>Pause time (in ms)</entry>
+	<entry code='cms_module_common_view_carousel_display_max_quantity'>Maximum number of elements per page</entry>
+	<entry code='cms_module_common_view_carousel_display_min_quantity'>Minimum number of elements per page</entry>
+	<entry code='cms_module_common_view_carousel_slide_quantity'>Number of moved elements</entry>
+	<entry code='cms_module_common_view_carousel_autostart'>Automatic start</entry>
+	<entry code='cms_module_common_view_carousel_autohover'>Pause when the mouse pointer is over</entry>
+	<entry code='cms_module_common_view_carousel_pager'>Displays the paginator</entry>
+	<entry code='cms_module_common_view_carousel_yes'>Yes</entry>
+	<entry code='cms_module_common_view_carousel_no'>No</entry>
+	<entry code='cms_module_common_manage_default_css'>Default CSS to apply</entry>
+	<entry code='cms_module_common_view_template_item'>Template of an item</entry>
+	<entry code='cms_module_common_view_carousel_css'>Linked CSS</entry>
+	<entry code='cms_module_common_view_carousel_id_desc'>Identifier of the frame</entry>
+	<entry code='cms_module_common_view_carousel_record_content_desc'>Final appearance of a record template</entry>
+	<entry code='cms_module_common_view_django_template_record_content'>Record template to use for the content</entry>
+	<entry code='cms_module_common_view_carousel_advanced_parameters'>Advanced configuration</entry>
+	<entry code='cms_module_common_view_carousel_general_parameters'>General configuration</entry>
+	<entry code='cms_module_common_view_carousel_slide_width'>Width of an element (in px)</entry>
+	<entry code='cms_module_common_view_carousel_slide_margin'>Marge between the elements (in px)</entry>
+	<entry code='cms_module_common_view_carousel_auto_delay'>Time before the start (in ms)</entry>
+	<entry code='cms_module_common_view_carousel_auto_direction'>Scrolling direction</entry>
+	<entry code='cms_module_common_view_carousel_auto_controls_combine'>Display a Start/Stop toggle</entry>
+	<entry code='cms_module_common_view_carousel_stop_text'>Text of the Stop button</entry>
+	<entry code='cms_module_common_view_carousel_start_text'>Text of the Start button</entry>
+	<entry code='cms_module_common_view_carousel_auto_controls'>Display Start/Stop</entry>
+	<entry code='cms_module_common_view_carousel_previous_text'>Text of the "Previous" button</entry>
+	<entry code='cms_module_common_view_carousel_next_text'>Text of the "Next" button</entry>
+	<entry code='cms_module_common_view_carousel_controls'>Display Next/Previous</entry>
+	<entry code='cms_module_common_view_carousel_pager_short_separator'>Separator for the simple paginator</entry>
+	<entry code='cms_module_common_view_carousel_page_type'>Type of paginator</entry>
+	<entry code='cms_module_common_view_carousel_page_type_short'>Simple</entry>
+	<entry code='cms_module_common_view_carousel_page_type_full'>Complete</entry>
+	<entry code='cms_module_common_view_carousel_adaptive_height_speed'>Time of adaptation in height (in ms)</entry>
+	<entry code='cms_module_common_view_carousel_adaptive_height'>Automatically adapt the height</entry>
+	<entry code='cms_module_common_view_carousel_captions'>Use the title of the img tags for the title</entry>
+	<entry code='cms_module_common_view_carousel_easing'>Transition</entry>
+	<entry code='cms_module_common_view_carousel_easing_linear'>linear</entry>
+	<entry code='cms_module_common_view_carousel_easing_ease'>ease</entry>
+	<entry code='cms_module_common_view_carousel_easing_ease_in'>ease-in</entry>
+	<entry code='cms_module_common_view_carousel_easing_ease_in_out'>ease-in-out</entry>
+	<entry code='cms_module_common_view_carousel_easing_ease_out'>ease-out</entry>
+	<entry code='cms_module_common_view_carousel_random_start'>Random start</entry>
+	<entry code='cms_module_common_view_carousel_auto_direction_prev'>In the direction of the previous one</entry>
+	<entry code='cms_module_common_view_carousel_auto_direction_next'>In the direction of the next one</entry>
+	<entry code='cms_module_common_view_carousel_no_image'>Default image to use</entry>	
+	<entry code='cms_module_common_view_carousel_no_image_desc'>Link to the "no-image" image</entry>
+	<entry code='cms_module_common_view_carousel_autotransition'>Automatic transition</entry>
+</XMLlist>

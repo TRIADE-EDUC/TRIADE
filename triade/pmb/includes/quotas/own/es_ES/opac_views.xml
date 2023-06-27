@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+****************************************************************************************
+© 2002-2017 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: opac_views.xml,v 1.2 2017-07-04 07:58:24 mbertin Exp $ -->
+<pmbquotas table="quotas_opac_views">
+	<elements>
+	  	<element name="READER_CATEG" id="1" comment="Catégories de lecteurs">
+			<linkedto>READER</linkedto>
+			<tablelinked>empr</tablelinked>
+			<linkedfield>empr_categ</linkedfield>
+			<linkedid>id_empr</linkedid>
+			<table>empr_categ</table>
+			<field>id_categ_empr</field>
+			<label>libelle</label>
+		</element>
+	  	<element name="READER_LOCATION" id="2" comment="Localisations de lecteurs">
+			<linkedto>READER</linkedto>
+			<tablelinked>empr</tablelinked>
+			<linkedfield>empr_location</linkedfield>
+			<linkedid>id_empr</linkedid>
+			<table>docs_location</table>
+			<field>idlocation</field>
+			<label>location_libelle</label>
+		</element>
+	  	<element name="READER_STATUT" id="4" comment="Statuts de lecteurs">
+			<linkedto>READER</linkedto>
+			<tablelinked>empr</tablelinked>
+			<linkedfield>empr_statut</linkedfield>
+			<linkedid>id_empr</linkedid>
+			<table>empr_statut</table>
+			<field>idstatut</field>
+			<label>statut_libelle</label>
+		</element>
+	  	<element name="READER_CODESTAT" id="8" comment="Codes statistiques de lecteurs">
+			<linkedto>READER</linkedto>
+			<tablelinked>empr</tablelinked>
+			<linkedfield>empr_codestat</linkedfield>
+			<linkedid>id_empr</linkedid>
+			<table>empr_codestat</table>
+			<field>idcode</field>
+			<label>libelle</label>
+		</element>
+		<element name="READER_ALONE" id="16" comment="Lecteurs individuels">
+			<linkedto>READER</linkedto>
+			<tablelinked>empr</tablelinked>
+			<linkedfield>id_empr</linkedfield>
+			<linkedid>id_empr</linkedid>
+			<table>empr_categ</table>
+			<field>id_categ_empr</field>
+			<label>libelle</label>
+		</element>
+	</elements>
+	
+	<types>
+		<type name="OPAC_VIEW" elements_label="affectations" id="1" max="no" min="no" forcelend="no" conflit_min="no" conflit_max="no" comment="Choix des Vues autorisées" specialclass="opac_views" default_value_label="Vues autorisées si aucune correspondance" short_comment="Vues autorisées">
+			<quotas>
+				<on>READER_CATEG</on>
+				<on>READER_LOCATION</on>
+				<on>READER_STATUT</on>
+				<on>READER_CODESTAT</on>
+				<on>READER_LOCATION,READER_CATEG</on>
+				<on>READER_LOCATION,READER_STATUT</on>
+				<on>READER_LOCATION,READER_CODESTAT</on>
+				<on>READER_ALONE</on>
+			</quotas>
+		</type>
+	</types>
+</pmbquotas>

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- Fichier manifest de description des méthodes disponibles
+****************************************************************************************
+© 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: manifest.xml,v 1.5 2018-09-20 13:14:23 dgoron Exp $ -->
+<manifest>
+	<name>pmbesSync</name>
+	<description>msg:Sync_functions_description</description>
+	<requirements>
+		<requirement group="pmbesTypes"/>
+	</requirements>
+	<types>
+		<type name="sync" imported="true" imported_from="pmbesTypes"/>
+	</types>
+	<methods>
+		<method name="listEntrepotSources" rights="" version="1.0" comment="msg:listEntrepotSources_description" language_independant="true">
+			<inputs/>
+			<outputs>
+				<description>msg:listEntrepotSources_output_description</description>
+				<result name="result" type="scalar" dataType="sync" description="msg:listEntrepotSources_result"/>
+			</outputs>
+		</method>
+		<method name="doSync" rights="" version="1.0" comment="msg:doSync_description" language_independant="true">
+			<pmb_requirements>
+				<pmb_requirement start_path="class" file="z3950_notice.class.php"/>
+				<pmb_requirement start_path="class" file="notice_doublon.class.php"/>
+				<pmb_requirement start_path="include" file="external.inc.php"/>
+			</pmb_requirements>
+			<inputs>
+				<description>msg:doSync_input_description</description>
+				<param name="id_connector" type="scalar" dataType="integer" description="msg:doSync_id_connector"/>
+				<param name="id_source" type="scalar" dataType="integer" description="msg:doSync_id_source"/>
+				<param name="auto_import" type="scalar" dataType="boolean" description="msg:doSync_auto_import"/>
+				<param name="id_tache" type="scalar" dataType="integer" description="msg:doSync_id_tache"/>
+				<param name="callback_listen" type="scalar" dataType="array" description="msg:doSync_callback_listen"/>
+				<param name="callback_command" type="scalar" dataType="array" description="msg:doSync_callback_command"/>
+				<param name="auto_delete" type="scalar" dataType="boolean" description="msg:doSync_auto_delete"/>
+				<param name="not_in_notices_externes" type="scalar" dataType="boolean" description="msg:doSync_not_in_notices_externes"/>
+				<param name="date_start" type="scalar" dataType="string" description="msg:doSync_date_start"/>
+				<param name="date_end" type="scalar" dataType="string" description="msg:doSync_date_end"/>
+			</inputs>
+			<outputs>
+				<description>msg:doSync_output_description</description>
+				<result name="result" type="scalar" dataType="string" description="msg:doSync_result"/>
+			</outputs>
+		</method>
+		<method name="emptySource" rights="" version="1.0" comment="msg:emptySource_description" language_independant="true">
+			<pmb_requirements>
+				<pmb_requirement start_path="class" file="connecteurs.class.php"/>
+			</pmb_requirements>
+			<inputs>
+				<description>msg:emptySource_input_description</description>
+				<param name="id_connector" type="scalar" dataType="integer" description="msg:emptySource_id_connector"/>
+				<param name="id_source" type="scalar" dataType="integer" description="msg:emptySource_id_source"/>
+			</inputs>
+			<outputs>
+				<description>msg:emptySource_output_description</description>
+				<result name="result" type="scalar" dataType="string" description="msg:emptySource_result"/>
+			</outputs>
+		</method>
+	</methods>
+</manifest>
+

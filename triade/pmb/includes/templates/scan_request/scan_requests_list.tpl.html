@@ -1,0 +1,38 @@
+<!-- $Id: scan_requests_list.tpl.html,v 1.6 2016-11-08 10:27:23 ngantier Exp $ -->
+{% for scan_request in scan_requests.scan_requests %}
+	{% if loop.first %}
+		<table>
+			<tr>
+				<th style="width:20px;"></th>
+				<th onclick='scan_request_search_order("title");' style='cursor:pointer;'>
+					{{ msg.scan_request_title }}&nbsp;<i class='fa fa-sort{% if global.scan_request_order_by == "title" %}-{{ global.scan_request_order_by_sens }}{% endif %}'></i>
+				</th>
+				<th >
+					{{ msg.scan_request_creator_name }}
+				</th>
+				<th onclick='scan_request_search_order("empr");' style='cursor:pointer;'>
+					{{ msg.empr_nom_prenom }}&nbsp;<i class='fa fa-sort{% if global.scan_request_order_by == "empr" %}-{{ global.scan_request_order_by_sens }}{% endif %}'></i>
+				</th>
+				<th onclick='scan_request_search_order("date");' style='cursor:pointer;'>
+					{{ msg.scan_request_date }}&nbsp;<i class='fa fa-sort{% if global.scan_request_order_by == "date" %}-{{ global.scan_request_order_by_sens }}{% endif %}'></i>
+				</th>
+				<th onclick='scan_request_search_order("wish_date");' style='cursor:pointer;'>
+					{{ msg.scan_request_wish_date }}&nbsp;<i class='fa fa-sort{% if global.scan_request_order_by == "wish_date" %}-{{ global.scan_request_order_by_sens }}{% endif %}'></i>
+				</th>
+				<th onclick='scan_request_search_order("deadline_date");' style='cursor:pointer;'>
+					{{ msg.scan_request_deadline_date }}&nbsp;<i class='fa fa-sort{% if global.scan_request_order_by == "deadline_date" %}-{{ global.scan_request_order_by_sens }}{% endif %}'></i>
+				</th>
+				<th onclick='scan_request_search_order("priority");' style='cursor:pointer;'>
+					{{ msg.scan_request_priority }}&nbsp;<i class='fa fa-sort{% if global.scan_request_order_by == "priority" %}-{{ global.scan_request_order_by_sens }}{% endif %}'></i>
+				</th>
+				<th onclick='scan_request_search_order("status");' style='cursor:pointer;'>
+					{{ msg.scan_request_status }}&nbsp;<i class='fa fa-sort{% if global.scan_request_order_by == "status" %}-{{ global.scan_request_order_by_sens }}{% endif %}'></i>
+				</th>
+				<th></th>
+			</tr>
+	{% endif %}
+	{{ scan_request.display_in_list | safe }}
+	{% if loop.last %}
+		</table>
+	{% endif %}
+{% endfor %}

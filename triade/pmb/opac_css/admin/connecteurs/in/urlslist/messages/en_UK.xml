@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le connecteur OAI
+****************************************************************************************
+© 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: en_UK.xml,v 1.2 2015-06-26 12:36:50 pmbs Exp $ -->
+
+<XMLlist>
+	<entry code="urlslist_enrichment_source">(enrichment from %s)</entry>
+	<entry code="urlslist_libelle">Label of the tab displayed in the OPAC</entry>
+	<entry code="urlslist_source_name">Name of the source (visible in the OPAC)</entry>
+	<entry code="urlslist_infobulle">Mouseover of the tab displayed in the OPAC</entry>
+	<entry code="urlslist_source_field">Custom field to use</entry>
+	<entry code="urlslist_no_field">No URL type field</entry>
+	<entry code="urlslist_no_informations">No information available</entry>
+</XMLlist>

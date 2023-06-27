@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+
+<!-- Profils de gestion droits d'acces Emprunteurs - Scénario de contribution
+****************************************************************************************
+© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: domain.xml,v 1.1 2017-09-06 15:33:47 tsamson Exp $ -->
+
+<domain>
+
+	<!--  modérateurs -->
+	<user lib="msg:379" properties="1,4" >
+		<ref type="table" name="empr" key="id_empr" />
+		<property_link with="1" >
+			<r_query type="field" value="empr_categ" />					<!--  champ emprunteur categorie de lecteur  -->
+		</property_link>
+		<property_link with="2"  >
+			<r_query type="field" value="empr_location" />				<!--  champ emprunteur localisation  -->
+		</property_link>
+		<property_link with="3" >
+			<r_query type="session" value="opac_view" />				<!--  variable session vue OPAC  -->
+		</property_link>
+		<property_link with="4">
+			<r_query type="field" value="empr_codestat" />				<!--  champ emprunteur code statistique de lecteur  -->
+		</property_link>
+	</user>
+
+	<!--  contributeurs -->
+	<resource lib="msg:130" properties="1,4">
+		<ref type="table" name="empr" key="id_empr" />
+		<property_link with="1" >
+			<c_query type="var" value="form_categ" />
+			<i_query type="field" value="empr_categ" />					<!--  champ emprunteur categorie de lecteur  -->
+		</property_link>
+		<property_link with="2"  >
+			<c_query type="var" value="empr_location_id" />
+			<i_query type="field" value="empr_location" />				<!--  champ emprunteur localisation  -->
+		</property_link>
+		<property_link with="4">
+			<c_query type="var" value="form_codestat" />
+			<i_query type="field" value="empr_codestat" />				<!--  champ emprunteur code statistique de lecteur  -->
+		</property_link>
+	</resource>
+
+	<properties>
+		<property id="1" lib="msg:lecteurs_categories">
+			<ref type="table" name="empr_categ" key="id_categ_empr" value="libelle" />
+		</property>
+		<property id="2" lib="msg:21">
+			<ref type="table" name="docs_location" key="idlocation" value="location_libelle" />
+		</property>			
+		<property id="3" lib="msg:opac_view">
+			<ref type="table" name="opac_views" key="opac_view_id" value="opac_view_name" />
+		</property>
+		<property id="4" lib="msg:24">
+			<ref type="table" name="empr_codestat" key="idcode" value="libelle" />
+		</property>
+	</properties>
+
+	<controls>
+		<control id='1' global="yes" lib='msg:dom_mod_rights' />
+		<control id='2' global="yes" lib='dom_mod_pro' />
+		<control id='3' lib='view' />
+		<control id='4' lib='edit' />
+		<control id='5' lib='push' />
+		<control id='10' global="yes" lib='dom_override_rights' />
+	</controls>
+
+</domain>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour la vue du module de recherche
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_search_view_search.xml,v 1.11 2018-11-19 10:17:28 ngantier Exp $ -->
+
+<XMLlist>
+	<entry code='cms_module_search_button_label'>Search</entry>
+	<entry code='cms_module_search_view_help'>Display the help button</entry>
+	<entry code='cms_module_search_view_help_yes'>Yes</entry>
+	<entry code='cms_module_search_view_help_no'>No</entry>
+	<entry code='cms_module_search_help'>Help</entry>
+	<entry code='cms_module_search_view_title'>Title of the search frame</entry>
+	<entry code='cms_module_search_view_link_search_advanced'>Display the advanced search link</entry>
+	<entry code='cms_module_search_view_link_search_advanced_yes'>Yes</entry>
+	<entry code='cms_module_search_view_link_search_advanced_no'>No</entry>
+	<entry code='cms_module_search_view_link_search_advanced_display'>Advanced search</entry>
+	<entry code='cms_module_search_view_input_placeholder'>Default informative text</entry>
+	<entry code='cms_module_search_view_advanced_parameters'>Paramétrage avancé</entry>
+	<entry code='cms_module_search_view_others_links'>Autres liens :</entry>
+	<entry code='cms_module_search_view_link_url'>Lien :</entry>
+	<entry code='cms_module_search_view_link_check'>Vérifier</entry>
+	<entry code='cms_module_search_view_link_label'>Libellé :</entry>
+	<entry code='cms_module_search_view_link_target'>Open in a new tab</entry>
+	<entry code='cms_module_search_view_nofill'>Vider la saisie de recherche après en avoir effectuée une</entry>
+</XMLlist>

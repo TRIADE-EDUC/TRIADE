@@ -1,0 +1,9 @@
+<h2>Administration des template mail</h2>
+<p>Cette page permet d&apos;&eacute;diter des templates de mail pour effectuer du mailing</p>
+<p>Param&eacute;trage &agrave; effectuer:</p>
+
+<p>mail_html_format : Format d&apos;envoi des mails &agrave; partir de l&apos;opac 
+<br> 1: HTML 
+<br> 2: HTML, images incluses</p>
+<p>img_folder : R&eacute;pertoire de stockage des images, en chemin absolu, de type /home/.../public_html/pmb/includes/img/</p>
+<p>img_url : URL d&apos;acc&egrave;s du r&eacute;pertoire des images de type http://pmb.com/.../pmb/includes/img/</p>

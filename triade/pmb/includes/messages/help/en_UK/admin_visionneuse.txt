@@ -1,0 +1,2 @@
+<h2>Viewer management</h2>
+<p>Allows to manage the behaviour of the viewer</p>

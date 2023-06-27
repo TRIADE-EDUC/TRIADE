@@ -1,0 +1,5 @@
+<h2>Beheer toegangsrechten</h2>
+
+<p>Via het beheer van de <b>toegangsrechten</b> kun je zeer precies de gebruiksrechten instellen voor alle onderdelen van PMB</p>
+<br />
+ 

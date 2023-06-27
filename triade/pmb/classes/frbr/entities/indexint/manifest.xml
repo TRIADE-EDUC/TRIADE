@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+
+<!-- Declaration d'un module
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: manifest.xml,v 1.4 2018-06-11 14:18:45 vtouchard Exp $ -->
+
+<manifest>
+	<name lang="fr_FR">Indexation décimale</name>
+	<author>
+		<name>Dimitri Goron</name>
+		<organisation>PMB Services</organisation>
+	</author>
+	<created_date>2017-04-26</created_date>
+	<version>1.0</version>
+	<default_language>fr_FR</default_language>
+	<path_indexation directory="authorities">indexint</path_indexation>
+	<use>
+		<datasources>
+			<datasource>frbr_entity_indexint_datasource_records</datasource>
+			<datasource>frbr_entity_indexint_datasource_concepts</datasource>
+			<datasource>frbr_entity_common_datasource_custom_fields</datasource>
+			<datasource>frbr_entity_common_datasource_aut_link</datasource>
+			<datasource>frbr_entity_common_datasource_composed_concepts</datasource>
+		</datasources>
+		<views>
+			<view>frbr_entity_indexint_view_indexintlist</view>
+		</views>
+	</use>
+</manifest>

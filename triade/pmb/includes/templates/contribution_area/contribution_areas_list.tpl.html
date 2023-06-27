@@ -1,0 +1,75 @@
+<!-- $Id: contribution_areas_list.tpl.html,v 1.2 2019-03-21 16:19:24 ccraig Exp $ -->
+
+<style type="text/css">
+	.contribution_form_table {
+		display: table;
+		text-align: center;
+		width:100%;
+		border-spacing: 0px 2px;
+		table-layout: fixed;
+	}
+	
+	.contribution_form_table_row {
+		display: table-row;
+	}
+	
+	.contribution_form_table_cell {
+		display: table-cell;
+		vertical-align: middle;
+		height: 80px;
+		
+	}
+	
+	.contribution_form_table_cell:hover {
+		text-shadow: initial;
+	}
+	
+	.contribution_form_table_row.odd {
+		background-color: #F8F8F8;
+	}
+	.contribution_form_table_row.even {
+	    background-color: #EEEEEE;
+	}
+	.contribution_form_table_row.last_modified {
+		font-weight: bold;
+	}
+</style>
+<!-- Ne rien sortir si il n'y a rien -->	
+{% if forms | length %}
+	{* Liste des contributions *}
+	{% for type_form, forms_by_type in forms %}
+		{% if type_form != 'last_contribution' %}
+			<div class="contribution_form_type_title"><h3>{{type_form}}</h3></div>
+			<div class='contribution_form_table'>
+				{% for form in forms_by_type %}		
+					<div class='contribution_form_table_row {% if loop.odd %}odd{%else%}even{% endif %} '>
+						<a  style='border-left: 5px solid {{ form.area.color }};' class='contribution_form_table_cell' href='./catalog.php?categ=contribution_area&action=edit&sub={{ form.sub }}&area_id={{ form.area.id }}&form_id={{ form.form_id }}&form_uri={{ form.form_uri }}&id={{ form.uri_id }}&scenario={{ form.parent_scenario_uri }}{% if form.contributor %}&contributor={{ form.contributor.id }}{% endif %}'>
+							{{ form.displayLabel }}
+						</a>
+						{% if form.contributor %}
+							<div class='contribution_form_table_cell'>
+								{{ form.contributor.name }}
+							</div>
+						{% endif %}
+						<div class='contribution_form_table_cell'>
+							{{ form.last_edit }}
+						</div>
+						<div class='contribution_form_table_cell'>
+							<a href='./catalog.php?categ=contribution_area&action=push&sub={{ form.sub }}&id={{ form.uri_id }}&action=push' onclick='if(!confirm(pmbDojo.messages.getMessage("contribution", "onto_contribution_push_confirm"))){return false;}'>
+								<input type="button" value="{{ msg.contribution_area_validate }}" class="bouton"/>
+							</a>
+							<a href='./catalog.php?categ=contribution_area&action=edit&sub={{ form.sub }}&area_id={{ form.area.id }}&form_id={{ form.form_id }}&form_uri={{ form.form_uri }}&id={{ form.uri_id }}&scenario={{ form.parent_scenario_uri }}{% if form.contributor %}&contributor={{ form.contributor.id }}{% endif %}'>
+								<input type="button" value="{{ msg.62 }}" class="bouton"/>
+							</a>
+							<a href='./catalog.php?categ=contribution_area&action=delete&sub={{ form.sub }}&id={{ form.uri_id }}&action=delete' onclick='if(!confirm("{{ msg.onto_contribution_delete_confirm }}")){return false;}'>
+								<input type="button" value="{{ msg.63 }}" class="bouton"/>
+							</a>
+						</div>
+					</div>
+				{% endfor %}
+			</div>
+		{% endif %}
+	{% endfor %}
+{% else %}
+	<div class="contribution_form_type_title">{{ msg.contribution_area_no_moderation }}.</div>
+{% endif %}

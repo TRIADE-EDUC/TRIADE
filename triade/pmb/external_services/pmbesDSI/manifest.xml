@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- Fichier manifest de description des méthodes disponibles
+****************************************************************************************
+© 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: manifest.xml,v 1.2 2018-02-20 10:10:49 dbellamy Exp $ -->
+<manifest>
+	<name>pmbesDSI</name>
+	<description>msg:DSI_functions_description</description>
+	<requirements>
+		<requirement group="pmbesTypes"/>
+	</requirements>
+	<types>
+		<type name="bannette" imported="true" imported_from="pmbesTypes"/>
+	</types>
+	<methods>
+		<method name="listBannettesAuto" rights="" version="1.0" comment="msg:listBannettesAuto_description" language_independant="true">
+			<inputs>
+				<description>msg:listBannettesAuto_input_description</description>
+				<param name="filtre_search" type="scalar" dataType="string" description="msg:listBannettesAuto_filtre_search"/>
+				<param name="id_classement" type="scalar" dataType="integer" description="msg:listBannettesAuto_id_classement"/>
+			</inputs>
+			<outputs>
+				<description>msg:listBannettesAuto_output_description</description>
+				<result name="result" type="array" dataType="bannette" description="msg:listBannettesAuto_result"/>
+			</outputs>
+		</method>
+		<method name="diffuseBannettesFullAuto" rights="" version="1.0" comment="msg:diffuseBannettesFullAuto_description" language_independant="true">
+			<pmb_requirements>
+				<pmb_requirement start_path="class" file="bannette.class.php"/>
+			</pmb_requirements>
+			<inputs>
+				<description>msg:diffuseBannettesFullAuto_input_description</description>
+				<param name="lst_bannettes" type="scalar" dataType="array" description="msg:diffuseBannettesFullAuto_lst_bannettes"/>
+			</inputs>
+			<outputs>
+				<description>msg:diffuseBannettesFullAuto_output_description</description>
+				<result name="result" type="scalar" dataType="string" description="msg:diffuseBannettesFullAuto_result"/>
+			</outputs>
+		</method>
+		<method name="diffuseBannetteFullAuto" rights="" version="1.0" comment="msg:diffuseBannetteFullAuto_description" language_independant="true">
+			<pmb_requirements>
+				<pmb_requirement start_path="class" file="bannette.class.php"/>
+			</pmb_requirements>
+			<inputs>
+				<description>msg:diffuseBannetteFullAuto_input_description</description>
+				<param name="id_bannette" type="scalar" dataType="integer" description="msg:diffuseBannetteFullAuto_id_bannette"/>
+			</inputs>
+			<outputs>
+				<description>msg:diffuseBannetteFullAuto_output_description</description>
+				<result name="result" type="scalar" dataType="string" description="msg:diffuseBannetteFullAuto_result"/>
+			</outputs>
+		</method>
+		<method name="flushBannette" rights="" version="1.0" comment="msg:flushBannette_description" language_independant="true">
+			<pmb_requirements>
+				<pmb_requirement start_path="class" file="bannette.class.php"/>
+			</pmb_requirements>
+			<inputs>
+				<description>msg:flushBannette_input_description</description>
+				<param name="id_bannette" type="scalar" dataType="integer" description="msg:flushBannette_id_bannette"/>
+			</inputs>
+			<outputs>
+				<description>msg:flushBannette_output_description</description>
+				<result name="result" type="scalar" dataType="string" description="msg:flushBannette_result"/>
+			</outputs>
+		</method>
+		<method name="fillBannette" rights="" version="1.0" comment="msg:fillBannette_description" language_independant="true">
+			<pmb_requirements>
+				<pmb_requirement start_path="class" file="bannette.class.php"/>
+			</pmb_requirements>
+			<inputs>
+				<description>msg:fillBannette_input_description</description>
+				<param name="id_bannette" type="scalar" dataType="integer" description="msg:fillBannette_id_bannette"/>
+			</inputs>
+			<outputs>
+				<description>msg:fillBannette_output_description</description>
+				<result name="result" type="scalar" dataType="string" description="msg:fillBannette_result"/>
+			</outputs>
+		</method>
+		<method name="diffuseBannette" rights="" version="1.0" comment="msg:diffuseBannette_description" language_independant="true">
+			<pmb_requirements>
+				<pmb_requirement start_path="class" file="bannette.class.php"/>
+			</pmb_requirements>
+			<inputs>
+				<description>msg:diffuseBannette_input_description</description>
+				<param name="id_bannette" type="scalar" dataType="integer" description="msg:diffuseBannette_id_bannette"/>
+			</inputs>
+			<outputs>
+				<description>msg:diffuseBannette_output_description</description>
+				<result name="result" type="scalar" dataType="string" description="msg:diffuseBannette_result"/>
+			</outputs>
+		</method>
+		<method name="exportBannette" rights="" version="1.0" comment="msg:exportBannette_description" language_independant="true">
+			<pmb_requirements>
+				<pmb_requirement start_path="class" file="fpdf.class.php"/>
+				<pmb_requirement start_path="class" file="pdf_html.class.php"/>
+				<pmb_requirement start_path="class" file="bannette.class.php"/>
+				<pmb_requirement start_path="class" file="notice_tpl_gen.class.php"/>
+				<pmb_requirement start_path="class" file="mono_display.class.php"/>
+				<pmb_requirement start_path="class" file="serial_display.class.php"/>
+				<pmb_requirement start_path="include" file="export_notices.inc.php"/>
+			</pmb_requirements>
+			<inputs>
+				<description>msg:exportBannette_input_description</description>
+				<param name="id_bannette" type="scalar" dataType="integer" description="msg:exportBannette_id_bannette"/>
+			</inputs>
+			<outputs>
+				<description>msg:exportBannette_output_description</description>
+				<result name="result" type="scalar" dataType="string" description="msg:exportBannette_result"/>
+			</outputs>
+		</method>
+	</methods>
+</manifest>
+

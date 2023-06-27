@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français 
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_recordslist_datasource_records_category.xml,v 1.2 2017-03-16 10:14:52 ngantier Exp $ -->
+
+<XMLlist>
+	<entry code="cms_module_common_selector_category">Sélection manuelle d'une catégorie</entry>
+	<entry code="cms_module_common_selector_env_var">Sélection d'une catégorie depuis une variable d'environnement</entry>
+	<entry code="cms_module_common_selector_category_permalink">Sélection d'une catégorie depuis le permalink</entry>
+</XMLlist>

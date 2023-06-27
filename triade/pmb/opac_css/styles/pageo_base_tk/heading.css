@@ -1,0 +1,162 @@
+@charset "utf-8";/**/
+/* +--------------------------------------------------------------------------+
+// 2013 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// +-------------------------------------------------+
+// $Id: heading.css,v 1.2 2018-01-08 13:33:34 wlair Exp $ */
+/*------------------------------------------------------------------------------------------*/
+/* ========================================================================
+   Home titre de section
+ ========================================================================== */
+.ui-section-title{
+	text-transform: uppercase;
+	font-size: 2.5em;
+	font-weight: 600;
+	margin-top: 0;
+	padding-bottom: 15px;
+	line-height: 1;
+	border-bottom: solid 5px #333;
+}
+/* ========================================================================
+   In titre de section // titre de page
+ ========================================================================== */
+#resultatrech>h3,
+.itemSolo>h2{
+	text-transform: uppercase;
+	font-size: 2.5em;
+	font-weight: 600;
+	margin: 7px 0;
+	padding-bottom: 10px;
+	line-height: 1;
+	border-bottom: solid 5px transparent;
+	border-image: url(images/hack-a.svg) 100% 0% repeat;
+	border-image-repeat: repeat;
+	padding-bottom: 7px;
+	border-image-outset: 0px;
+	border-image-width: 0px 0px 5px 0px;
+	display:block;
+}
+.uk-panel-title{
+	border-left: solid 5px transparent;
+	border-image: url(images/hack-a.svg) 0% 100% repeat;
+	border-image-repeat: repeat;
+	text-transform: uppercase;
+	padding-left: 10px;
+	border-image-outset: 0px;
+	border-image-width: 3px 0px 2px 5px;
+}
+/* ========================================================================
+   reset titre
+ ========================================================================== */
+#resultatrech h3 span{
+	font-size:1em;
+}
+
+/* ========================================================================
+   titre de sous section
+ ========================================================================== */
+.infosBib>h3,
+.itemSolo h4,
+.listProd>h3,
+.listEtageresRub>h3,
+.fluxRSSRub>h3,
+.infosArt>h3,
+.SameNot>h3,
+#aut_details_liste>h3 span.aut_details_liste_titre,
+.listArticlesGen>h3,
+.listeSameArticle>h3,
+.listItemsEvent>h3,
+.listResultArticles>h3,
+.fluxRSSPage>h3,
+.document_list>h3,
+#empr-resa>h3,
+#empr-all>h3,
+#location h3,
+#last_entries h3,
+#etageres h3,
+.SliderNot>h3,
+h3.section-title,
+.SliderArt h3.titleInside,
+.titleContenu,
+.listselect-item>h3,
+.wl-flux-RSS .uk-article-title,
+.SliderArt h3,
+.SliderNot>h3,
+.listselect>h3,
+.ListActus>h3,
+.listBibli>h3,
+.listEtageres>h3,
+.listBreves>h3,
+.infosPage h3,
+.fluxRSS>h3,
+#rechercheForm>h3,
+#webdoc>h3,
+#facette h3,
+#lvl1 h3,
+#search_result>h3,
+.listRubs h2,
+.listRubsAbbr>h2,
+.itemSoloFlux h2,
+.SliderVertic>h3,
+.fluxRSSJuridique>h2,
+.fluxRSSJuridique>h3,
+#make_sugg h3,
+#searchWebdoc h3,
+#listeFlux h3,
+.titleContenu,
+.title_notCourte h3,
+.wl-title-article,
+#titre_exemplaires,
+.login_invite{
+  height: auto;
+  line-height: 30px;
+  width: auto;
+  position: relative;
+  font-weight: 400;
+  font-size: 1.35em;
+  margin-bottom: 5px;
+  overflow: hidden;
+  text-transform:uppercase;	
+}
+/* ========================================================================
+   titre home page
+ ========================================================================== */
+.SliderNot>h3,
+.listselect-item>h3{
+	text-align: left;
+	font-size: 2.3em;
+	margin-bottom: 20px;
+}
+.SliderNot>h3{
+}
+/* ========================================================================
+   Sous titre
+ ========================================================================== */
+#resultatrech_see>h3>span{
+	text-transform:none;
+	font-size:1em;
+}
+#lvl1_list .current {
+  color: #757575;
+  font-weight:400;
+  font-style: italic;
+}
+
+.listEtageres>h3 a{
+	text-transform: uppercase;
+	font-size: 1em;
+	font-weight: 600;
+	margin: 7px 0;
+	padding-bottom: 5px;
+	line-height: 1;
+	border-bottom: solid 1px #333333;
+	display:block;
+	color:#333333;
+}
+.SameNot>h3 {
+	text-transform: uppercase;
+	font-weight: 600;
+	margin: 7px 0;
+	padding-bottom: 5px;
+	line-height: 1;
+	border-bottom: solid 1px #333333;
+}

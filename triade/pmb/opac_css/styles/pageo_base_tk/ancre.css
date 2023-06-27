@@ -1,0 +1,45 @@
+/* +--------------------------------------------------------------------------+
+// 2013 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// +-------------------------------------------------+
+// $Id: ancre.css,v 1.2 2018-01-08 13:33:34 wlair Exp $ */
+/*------------------------------------------------------------------------------------------*/
+@charset "utf-8";/**/
+.Ancre{
+	max-width: 1235px;
+	margin:0 auto;
+	position: relative;
+}
+.Ancre a{
+	position: absolute;
+	top: 16px;
+	left: auto;
+	background-color: transparent;
+	right: 0;
+}
+
+.Ancre a {
+	text-decoration: none;
+	text-align: center;
+	padding: 0px;
+	color: #fff;
+	font-size: 0px;
+	background: url(images/arrow-up-full.svg) #000000 no-repeat 50%;
+	background-size: 18px;
+	display: block;
+	height: 40px;
+	width: 40px;
+	border-radius: 0%;
+	border: solid 1px #4f4f4f;
+	z-index: 125;
+}
+
+.Ancre a:hover {
+	background-color: #454545;
+}
+
+.Ancre a:before {
+}
+
+.Ancre:hover a {
+	text-decoration: none;
+}

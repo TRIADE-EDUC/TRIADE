@@ -1,0 +1,90 @@
+@charset "utf-8";
+/* +--------------------------------------------------------------------------+
+// 2013 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// +-------------------------------------------------+
+// $Id: connexion.css,v 1.3 2018-07-12 10:23:19 wlair Exp $ */
+/*------------------------------------------------------------------------------------------*/
+/* ========================================================================
+   Component: connexion
+ ==========================================================================  */
+#connexion {
+	background: transparent none repeat scroll 0 0;
+	/* padding: 15px; */
+	z-index: 99;
+	/* box-shadow: 0px 3px 6px 0px rgba(0, 0, 0, 0.22); */
+	border: #bfbfbf solid 0px;
+	top: 0px;
+	max-width: 100%;
+	right: 0;
+}
+#login_form{
+	margin-bottom: 20px;
+	background: url(images/hack-tile.svg) #ccc;
+	padding: 25px;
+	display: block;
+}
+#connexion br{
+    display:none;
+}
+#connexion input[size]{
+    display: block;
+    height: 40px;
+    width: 100%;
+    margin-bottom: 20px;
+    background: #ffffff;
+    border: none;
+}
+#connexion input.password{
+}
+#connexion input[name="ok"]{
+    width: auto;
+    display:inline-block;
+    margin-bottom: 0;
+}
+#connexion input.login{
+
+}
+#connexion form>label{
+    padding:0px;
+    margin:0px;
+    display:block;
+    font-style: italic;
+    margin: 2px 0 5px;
+    color: #5c5c5c;
+}
+.mdp_forgotten{
+	margin-left: 12px;
+	right: 30px;
+	bottom: 15px;
+}
+/*
+*Heading
+*/
+#connexion h3.login_invite {
+	color: #ccc;
+}
+/* ========================================================================
+  Fermeture toggle connexion
+ ==========================================================================  */
+#connexion .toggle-user-btn{
+	position:absolute;
+	right:25px;
+	border-radius:5px;
+	width: 35px;
+	padding: 0;
+	z-index: 99;
+}
+#connexion .toggle-user-btn img{
+	height: 19px;
+	vertical-align: middle;
+	padding-bottom: 2px;
+}
+
+/* ========================================================================
+  responsive
+ ==========================================================================  */ 
+@media screen and (max-device-width:1025px) {
+  #connexion {
+  }
+}
+

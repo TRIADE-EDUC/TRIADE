@@ -1,0 +1,36 @@
+<h2>Raccourcis clavier</h2>
+
+<ul class='shortcuts_list'>
+	<h2>Catalogage</h2>
+	<li><kbd>Esc</kbd>+<kbd>A</kbd>Autorit&eacute;s &gt; Auteurs</li>
+	<li><kbd>Esc</kbd>+<kbd>D</kbd>Catalogue &gt; Derni&egrave;res notices</li>
+	<li><kbd>Esc</kbd>+<kbd>F</kbd>Catalogue &gt; Bulletinage</li>
+	<li><kbd>Esc</kbd>+<kbd>G</kbd>Catalogue &gt; Paniers &gt; Actions</li>
+	<li><kbd>Esc</kbd>+<kbd>N</kbd>Catalogue &gt; Nouvelle notice</li>
+	<li><kbd>Esc</kbd>+<kbd>Z</kbd>Catalogue &gt; Recherche Z39.50</li>
+	
+	<h2>Circulation des documents</h2>
+	<li><kbd>Esc</kbd>+<kbd>C</kbd>Circulation &gt; Pr&ecirc;ts de documents</li>
+	<li><kbd>Esc</kbd>+<kbd>E</kbd>&Eacute;ditions &gt; Pr&ecirc;ts en cours</li>
+	<li><kbd>Esc</kbd>+<kbd>J</kbd>Circulation &gt; Documents &agrave; traiter</li>
+	<li><kbd>Esc</kbd>+<kbd>L</kbd>Circulation &gt; Nouveau lecteur</li>
+	<li><kbd>Esc</kbd>+<kbd>R</kbd>Circulation &gt; Retour de documents</li>
+	<li><kbd>Esc</kbd>+<kbd>T</kbd>Circulation &gt; R&eacute;servations &agrave; traiter</li>
+	<li><kbd>Esc</kbd>+<kbd>U</kbd>Circulation &gt; Retour secouru de documents</li>
+</ul>
+<ul class='shortcuts_list'>
+	<h2>Recherche</h2>
+	<li><kbd>Esc</kbd>+<kbd>B</kbd>Catalogue &gt; Recherche N&deg; expl, isbn, N&deg; commercial</li>
+	<li><kbd>Esc</kbd>+<kbd>I</kbd>Catalogue &gt; Pr&eacute;d&eacute;finies</li>
+	<li><kbd>Esc</kbd>+<kbd>K</kbd>Catalogue &gt; Recherche auteur/titre : Tous champs</li>
+	<li><kbd>Esc</kbd>+<kbd>M</kbd>Catalogue &gt; Recherche toutes notices multi-crit&egrave;res</li>
+	<li><kbd>Esc</kbd>+<kbd>V</kbd>Circulation &gt; Voir l'exemplaire</li>
+	
+	<h2>Administration</h2>
+	<li><kbd>Esc</kbd>+<kbd>S</kbd>Administration &gt; Lancement d'une sauvegarde</li>
+	<li><kbd>Esc</kbd>+<kbd>X</kbd>Administration &gt; Param&egrave;tres</li>
+	
+	<h2>Au quotidien</h2>
+	<li><kbd>Esc</kbd>+<kbd>P</kbd>Pr&eacute;f&eacute;rences de l'utilisateur courant</li>
+	<li><kbd>Esc</kbd>+<kbd>Q</kbd>D&eacute;connexion</li>
+</ul>

@@ -1,0 +1,326 @@
+{% extends 'gabarit.html' %}
+
+<!-- $Id: titre_uniforme.html,v 1.22 2019-02-15 08:30:30 ngantier Exp $ -->
+
+{% block header %}
+	<h1><span>{{ msg.titre_uniforme_see_title }}</span></h1>
+{% endblock %}
+
+{% block title %}
+	<h3 style='display:inline'>{{ authority.isbd }}</h3>
+	<script type="text/javascript">
+		document.title = "{{ authority.name }}";
+	</script>
+{% endblock %}
+
+{% block details %}
+	{% for author in authority.sorted_responsabilities.authors %}
+		{% if loop.first %}
+			<div class="aut_display_row">
+				<div class="aut_display_cell">
+					<b>{{ msg.aut_oeuvre_form_auteur }} :</b>
+				</div>
+				<div class="aut_display_cell">
+		{% else %}/{% endif %}	
+		<a href='autorites.php?categ=see&sub=author&id={{author.id}}'>{{ author.objet.display }}</a>{% for attribute in author.attributes %}{% if attribute.fonction_label %}, {{ attribute.fonction_label }}{% endif %}{% if attribute.qualif_label %} ({{ attribute.qualif_label }}){% endif %}{% endfor %}
+		{% if loop.last %}
+				</div>
+			</div>
+		{% endif %}
+	{% endfor %}
+	{% for performer in authority.sorted_responsabilities.performers %}
+		{% if loop.first %}
+			<div class="aut_display_row">
+				<div class="aut_display_cell">
+					<b>{{ msg.aut_oeuvre_form_interprete }} :</b>
+				</div>
+				<div class="aut_display_cell">
+		{% else %}/{% endif %}
+		<a href='autorites.php?categ=see&sub=author&id={{performer.id}}'>{{ performer.objet.display }}</a>{% for attribute in performer.attributes %}{% if attribute.fonction_label %}, {{ attribute.fonction_label }}{% endif %}{% if attribute.qualif_label %} ({{ attribute.qualif_label }}){% endif %}{% endfor %}
+		{% if loop.last %}
+				</div>
+			</div>
+		{% endif %}
+	{% endfor %}
+	{% if authority.oeuvre_type_name %}
+		<div class="aut_display_row">
+			<div class="aut_display_cell">
+				<b>{{ msg.aut_oeuvre_form_oeuvre_type }} :</b>
+			</div>
+			<div class="aut_display_cell">
+				{{ authority.oeuvre_type_name }}
+			</div>
+		</div>
+	{% endif %}
+	{% if authority.oeuvre_nature_name %}
+		<div class="aut_display_row">
+			<div class="aut_display_cell">
+				<b>{{ msg.aut_oeuvre_form_oeuvre_nature }} :</b>
+			</div>
+			<div class="aut_display_cell">
+				{{ authority.oeuvre_nature_name }}
+			</div>
+		</div>
+	{% endif %}
+	{% for event in authority.oeuvre_events %}
+		{% if loop.first %}
+			<div class="aut_display_row">
+				<div class="aut_display_cell">
+					<b>{{ msg.aut_oeuvre_form_oeuvre_event }} :</b>
+				</div>
+				<div class="aut_display_cell">
+		{% else %}
+			<br/>
+		{% endif %}
+				<a href='autorites.php?categ=see&sub=authperso&id={{event.id}}'>{{ event.isbd }}</a>
+		{% if loop.last %}
+				</div>
+			</div>
+		{% endif %}
+	{% endfor %}
+	
+	{% if authority.oeuvre_expressions_list_ui.nb_results %}
+		<div class="aut_display_row">
+			<div class="aut_display_cell">
+				<b>{{ msg.aut_oeuvre_form_oeuvre_expression }} :</b>
+			</div>
+			<div class="aut_display_cell">
+				{{ authority.oeuvre_expressions_list_ui.elements_list }}
+			</div>
+		</div>
+	{% endif %}
+	
+	{% if authority.form %}
+		<div class="aut_display_row">
+			<div class="aut_display_cell">
+				<b>{{ msg.aut_oeuvre_form_forme }} :</b>
+			</div>
+			<div class="aut_display_cell">
+				{{ authority.form }}
+			</div>
+		</div>
+	{% endif %}
+	{% if authority.date %}
+		<div class="aut_display_row">
+			<div class="aut_display_cell">
+				<b>{{ msg.aut_oeuvre_form_date }} :</b>
+			</div>
+			<div class="aut_display_cell">
+				{{ authority.date }}
+			</div>
+		</div>
+	{% endif %}
+	{% if authority.place %}
+		<div class="aut_display_row">
+			<div class="aut_display_cell">
+				<b>{{ msg.aut_oeuvre_form_lieu }} :</b>
+			</div>
+			<div class="aut_display_cell">
+				{{ authority.place }}
+			</div>
+		</div>
+	{% endif %}
+	{% if authority.subject %}
+		<div class="aut_display_row">
+			<div class="aut_display_cell">
+				<b>{{ msg.aut_oeuvre_form_sujet }} :</b>
+			</div>
+			<div class="aut_display_cell">
+				{{ authority.subject | nl2br }}
+			</div>
+		</div>
+	{% endif %}
+	{% if authority.intended_termination == 1 %}
+		<div class="aut_display_row">
+			<div class="aut_display_cell">
+				<b>{{ msg.aut_oeuvre_form_completude }} :</b>
+			</div>
+			<div class="aut_display_cell">
+				{{ msg.aut_oeuvre_form_completude_finished }}
+			</div>
+		</div>
+	{% else %}
+		{% if authority.intended_termination == 2 %}
+			<div class="aut_display_row">
+				<div class="aut_display_cell">
+					<b>{{ msg.aut_oeuvre_form_completude }} :</b>
+				</div>
+				<div class="aut_display_cell">
+					{{ msg.aut_oeuvre_form_completude_infinite }}
+				</div>
+			</div>
+		{% endif %}
+	{% endif %}
+	{% if authority.intended_audience %}
+		<div class="aut_display_row">
+			<div class="aut_display_cell">
+				<b>{{ msg.aut_oeuvre_form_public }} :</b>
+			</div>
+			<div class="aut_display_cell">
+				{{ authority.intended_audience }}
+			</div>
+		</div>
+	{% endif %}
+	{% if authority.history %}
+		<div class="aut_display_row">
+			<div class="aut_display_cell">
+				<b>{{ msg.aut_oeuvre_form_histoire }} :</b>
+			</div>
+			<div class="aut_display_cell">
+				{{ authority.history | nl2br }}
+			</div>
+		</div>
+	{% endif %}
+	{% if authority.context %}
+		<div class="aut_display_row">
+			<div class="aut_display_cell">
+				<b>{{ msg.aut_oeuvre_form_contexte }} :</b>
+			</div>
+			<div class="aut_display_cell">
+				{{ authority.context | nl2br }}
+			</div>
+		</div>
+	{% endif %}
+	{% if authority.distrib %}
+		{% for distribution in authority.distrib %}
+			{% if loop.first %}
+				<div class="aut_display_row">
+					<div class="aut_display_cell">
+						<b>{{ msg.aut_titre_uniforme_form_distribution }} :</b>
+					</div>
+					<div class="aut_display_cell">
+			{% else %}; {% endif %}
+			{{ distribution.label }}
+			{% if loop.last %}
+					</div>
+				</div>
+			{% endif %}
+		{% endfor %}
+	{% endif %}
+	{% if authority.ref %}
+		{% for reference in authority.ref %}
+			{% if loop.first %}
+				<div class="aut_display_row">
+					<div class="aut_display_cell">
+						<b>{{ msg.aut_titre_uniforme_form_ref_numerique }} :</b>
+					</div>
+					<div class="aut_display_cell">
+			{% else %}; {% endif %}
+			{{ reference.label }}
+			{% if loop.last %}
+					</div>
+				</div>
+			{% endif %}
+		{% endfor %}
+	{% endif %}
+	{% if authority.tonalite %}
+		<div class="aut_display_row">
+			<div class="aut_display_cell">
+				<b>{{ msg.aut_titre_uniforme_form_tonalite }} :</b>
+			</div>
+			<div class="aut_display_cell">
+				{{ authority.tonalite }}
+			</div>
+		</div>
+	{% endif %}
+	{% if authority.coordinates %}
+		<div class="aut_display_row">
+			<div class="aut_display_cell">
+				<b>{{ msg.aut_oeuvre_form_coordonnees }} :</b>
+			</div>
+			<div class="aut_display_cell">
+				{{ authority.coordinates }}
+			</div>
+		</div>
+	{% endif %}
+	{% if authority.equinox %}
+		<div class="aut_display_row">
+			<div class="aut_display_cell">
+				<b>{{ msg.aut_oeuvre_form_equinoxe }} :</b>
+			</div>
+			<div class="aut_display_cell">
+				{{ authority.equinox }}
+			</div>
+		</div>
+	{% endif %}
+	{% if authority.subdiv %}
+		{% for subdivision in authority.subdiv %}
+			{% if loop.first %}
+				<div class="aut_display_row">
+					<div class="aut_display_cell">
+						<b>{{ msg.aut_titre_uniforme_form_subdivision_forme }} :</b>
+					</div>
+					<div class="aut_display_cell">
+			{% else %}; {% endif %}
+			{{ subdivision.label }}
+			{% if loop.last %}
+					</div>
+				</div>
+			{% endif %}
+		{% endfor %}
+	{% endif %}
+	{% if authority.characteristic %}
+		<div class="aut_display_row">
+			<div class="aut_display_cell">
+				<b>{{ msg.aut_oeuvre_form_caracteristique }} :</b>
+			</div>
+			<div class="aut_display_cell">
+				{{ authority.characteristic | nl2br }}
+			</div>
+		</div>
+	{% endif %}
+	{% if authority.comment %}
+		<div class="aut_display_row">
+			<div class="aut_display_cell">
+				<b>{{ msg.707 }} :</b>
+			</div>
+			<div class="aut_comment aut_display_cell">
+				{{ authority.comment | nl2br }}
+			</div>
+		</div>
+	{% endif %}
+{% endblock %}
+
+{% block enrichment %}
+	{% if authority.enrichment %}
+		<h3>Editions numeriques avec Galica et data.bnf</h3>
+		<div class='row'>
+			{% for gallica in authority.enrichment %}
+				<div class='colonne4'><a href='{{gallica.uri_gallica}}' target='_blank'>{{gallica.titre}}<br/>{{gallica.editeur}} ({{gallica.date}})</a></div>
+			{% endfor %}
+			<div class='row'></div>
+		</div>
+	{% endif %}
+{% endblock %}
+
+{% block aut_buttons %}
+	<div class='row'>
+		<div class='left'>
+			<input type='button' class='bouton' value='{{msg.62}}' onclick="document.location='./autorites.php?categ=titres_uniformes&sub=titre_uniforme_form&id={{authority.num_object}}'"/>
+			<input type='button' class='bouton' value='{{msg.158}}' onclick="document.location='./autorites.php?categ=titres_uniformes&sub=replace&id={{authority.num_object}}'"/>
+			<input type='button' class='bouton' value='{{msg.aut_duplicate}}' onclick="document.location='./autorites.php?categ=titres_uniformes&sub=duplicate&id={{authority.num_object}}'" />
+			{% for profile in authority.mapping_profiles %}
+				{% if profile.0.is_dropdown %}
+					<input type='button' id='dropDown_{{loop.counter}}' class='bouton' value='{{profile.0.label}}'/>
+					<div data-dojo-type="dijit/Tooltip" data-dojo-props="connectId:'dropDown_{{loop.counter}}', position:['below']">
+					  {% for combination in profile.0.profiles %}
+						<input class="bouton" type="button" onclick="window.open('{{combination.url}}', '_blank')" value="{{ combination.label }}"><br/>
+			  		  {% endfor %}
+					</div>
+				{% else %}
+					<input class="bouton" type="button" onclick="window.open('{{profile.0.profiles.url}}', '_blank')" value="{{ profile.0.profiles.label }}">
+				{% endif %}
+			{% endfor %}
+			{% if global.pmb_type_audit %}
+				<input type='button' class='bouton' value='{{msg.audit_button}}' onclick="openPopUp('./audit.php?type_obj={{authority.audit_type}}&object_id={{authority.num_object}}', 'audit_popup')"/>
+			{% endif %}	
+		</div>
+		<div class='right'>
+			<input type='button' class='bouton' value='{{msg.63}}' onclick="confirm_delete();" />
+		</div>
+	</div>
+{% endblock %}
+
+{% block aut_link_delete %}
+	document.location='./autorites.php?categ=titres_uniformes&sub=delete&id={{authority.num_object}}';
+{% endblock %}

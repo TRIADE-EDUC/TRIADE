@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour la classe racine d'un module
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: frbr_entity_common_entity.xml,v 1.3 2018-06-11 14:18:45 vtouchard Exp $ -->
+
+<XMLlist>
+	<entry code="frbr_entity_common_entity_save">Enregistrer</entry>
+	<entry code="frbr_entity_common_entity_duplicate">Dupliquer</entry>
+	<entry code="frbr_entity_common_entity_cancel">Annuler</entry>
+	<entry code="frbr_entity_common_entity_saved">Sauvegarde effectuée</entry>
+	<entry code="frbr_entity_common_entity_save_error">Erreur à l'enregistrement</entry>
+	<entry code="frbr_entity_common_entity_delete">Supprimer</entry>
+	<entry code="frbr_entity_common_entity_deleted">Suppression effectuée</entry>
+	<entry code="frbr_entity_common_entity_delete_error">Erreur à la suppression</entry>
+	<entry code="frbr_entity_common_entity_page_label">Page</entry>
+	<entry code="frbr_entity_common_entity_datanode_label">Jeu de données</entry>
+	<entry code='frbr_entity_common_datasource_composed_concepts'>Concepts composés</entry>
+</XMLlist>

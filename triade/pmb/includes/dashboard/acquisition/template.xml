@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!-- 
+****************************************************************************************
+© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: template.xml,v 1.3 2015-06-15 12:55:35 pmbs Exp $ -->
+<template default_lang='fr_FR'>
+	<content lang='fr_FR'><![CDATA[
+		<h2>Suggestions</h2>
+		<div class='row'>
+			<div class='title'>A valider : </div>
+			<div class='value'>{{nb_records_a_valider.0.total}}</div>
+		</div>
+		<div class='row'>
+			<div class='title'>Validées ou confirmées : </div>
+			<div class='value'>{{nb_records_valid_confirm.0.total}}</div>
+		</div>
+		<div class='row'>
+			<div class='title'>Commandées : </div>
+			<div class='value'>{{nb_records_devis_cde.0.total}}</div>
+		</div>
+		<div class='row'>&nbsp;</div>
+		<h2>Commandes</h2>
+		<div class='row'>
+			<div class='title'>A valider : </div>
+			<div class='value'>{{nb_cde_a_valider.0.total}}</div>
+		</div>
+		<div class='row'>
+			<div class='title'>En cours : </div>
+			<div class='value'>{{nb_cde_en_cours.0.total}}</div>
+		</div>
+		]]>
+	</content>
+	
+		<content lang='en_UK'><![CDATA[
+		<h2>Suggestions</h2>
+		<div class='row'>
+			<div class='title'>Waiting for validation : </div>
+			<div class='value'>{{nb_records_a_valider.0.total}}</div>
+		</div>
+		<div class='row'>
+			<div class='title'>Validated or confirmed : </div>
+			<div class='value'>{{nb_records_valid_confirm.0.total}}</div>
+		</div>
+		<div class='row'>
+			<div class='title'>Ordered : </div>
+			<div class='value'>{{nb_records_devis_cde.0.total}}</div>
+		</div>
+		<div class='row'>&nbsp;</div>
+		<h2>Commandes</h2>
+		<div class='row'>
+			<div class='title'>Waiting for validation : </div>
+			<div class='value'>{{nb_cde_a_valider.0.total}}</div>
+		</div>
+		<div class='row'>
+			<div class='title'>Ongoing : </div>
+			<div class='value'>{{nb_cde_en_cours.0.total}}</div>
+		</div>
+		]]>
+	</content>
+</template>
+
+<!-- 
+
+Pour sugg : 
+		<div class='row'>
+			<div class='title'>Reçues : </div>
+			<div class='value'>{{nb_records_recues.0.total}}</div>
+		</div>
+		<div class='row'>
+			<div class='title'>Abandonnées, archivées : </div>
+			<div class='value'>{{nb_records_abandon_arc_rej.0.total}}</div>
+		</div>
+
+Pour commandes : 
+		<div class='row'>
+			<div class='title'>Reçues ou archivées : </div>
+			<div class='value'>{{nb_cde_liv_arc.0.total}}</div>
+		</div>
+
+
+
+ -->

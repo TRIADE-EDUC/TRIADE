@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: docwatch_datasource_sections.xml,v 1.1 2019-03-19 14:38:56 dgoron Exp $ -->
+
+<XMLlist>
+	<entry code="docwatch_datasource_selector_sections_type_section_generic">Sélection via un champ générique de rubrique</entry>
+	<entry code="docwatch_datasource_selector_sections_type_section">Sélection via un champ d'un type de contenu de rubrique</entry>
+</XMLlist>

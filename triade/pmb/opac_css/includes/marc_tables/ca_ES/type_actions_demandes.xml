@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!--
+/*************************************************************************
+ *																		 *
+ * Fichier qui regroupe les différents types d'action 					 *
+ *					d'une demande de recherche  						 *
+ *																		 *
+ *************************************************************************/
+-->
+<XMLlist>
+	<entry code="1">Pregunta / resposta</entry>
+	<entry code="2">Recerca</entry>
+	<entry code="3">Informació complementària</entry>
+	<entry code="4">Cita</entry>
+</XMLlist>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour la classe datasource
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_common_datasource.xml,v 1.10 2019-03-20 10:51:52 dgoron Exp $ -->
+
+<XMLlist>
+	<entry code="cms_module_common_datasource_selector_choice">Choisissez un sélecteur pour la source de données</entry>
+	<entry code="cms_module_common_selector_confirm_change_selector">Vous êtes sur le point de changer de sélecteur. Voulez-vous continuer?</entry>	
+	<entry code="cms_module_common_selector_env_var">Sélecteur depuis une variable d'environnement</entry>	
+	<entry code="cms_module_common_selector_global_var">Sélecteur depuis une variable globale</entry>	
+	<entry code="cms_module_commom_datasource_selector_save_error">Erreur à la sauvegarde du sélecteur "%s"</entry>
+	<entry code="cms_module_common_selector_doctypes">Sélecteur d'un ou plusieurs types de document</entry>	
+	<entry code="cms_module_common_datasource_categories_use_autopostage">Etendre aux catégories filles</entry>
+	<entry code="cms_module_common_datasource_operator_between_authorities">Opérateur entre autorités</entry>
+	<entry code="cms_module_common_datasource_operator_between_authorities_or">Ou</entry>
+	<entry code="cms_module_common_datasource_operator_between_authorities_and">Et</entry>
+</XMLlist>

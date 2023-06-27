@@ -1,0 +1,285 @@
+@charset "utf-8";
+/*Calendar  
+-------------------------------------------------------------------------
+--------------------------------------------------------------------------
+---------------------------------------------------------------------------*/
+
+.tundra .dijitCalendarMonthContainer th {
+	background-image: none!important;
+}
+
+.tundra .dijitCalendarIncrementControl.dijitCalendarDecrease {
+	width: 11px;
+	height: 16px;
+	background-image: url(./images/gauche_calendar.png)!important;
+	background-repeat: no-repeat;
+	background-position: center center!important;
+}
+
+.tundra .dijitCalendarIncrementControl.dijitCalendarIncrease {
+	width: 11px;
+	height: 16px;
+	background-image: url(./images/droite_calendar.png)!important;
+	background-repeat: no-repeat;
+	background-position: center center!important;
+}
+
+.tundra .dijitCalendarIncrease {
+  background-position: -12px 0;
+}
+.tundra .dijitButtonNode {
+	border: 0px solid transparent!important;
+}
+
+.tundra .dijitDropDownButtonHover .dijitButtonNode {
+	border-bottom-color: #6c6c6c;
+}
+.tundra .dijitDropDownButtonHover .dijitCalendarMonthLabel{
+	color:#fff!important;
+}
+
+.dijitCalendarMonthMenu .dijitCalendarMonthLabel {
+	text-align: center;
+	color: #243C5F;
+}
+
+.dijitCalendarMonthMenu .dijitCalendarMonthLabel {
+	text-align: center;
+	color: #243C5F!important;
+	font-family: arial;
+	font-weight: 600;
+	font-size: 90%;
+	line-height: 22px;
+}
+
+.tundra .dijitCalendarMonthMenu .dijitCalendarMonthLabelHover {
+	background-color: rgba(0,0,0,0.2);
+	color: #fff!important;
+}
+
+.tundra .dijitArrowButtonInner {
+	background: url(images/month_calendar.png) no-repeat scroll 0 center!important;
+	width: 10px!important;
+}
+
+.tundra .dijitCalendarMonthLabel {
+	color: #ffffff!important;
+	text-transform: capitalize;
+	background-color: #4bcfa8;
+	font-weight: 600!important;
+	text-transform: uppercase;
+}
+
+.tundra .dijitCalendarDayLabelTemplate {
+	/* color: #FF8A00!important; */
+	background-image: none!important;
+	background-color: #4bcfa8!important;
+	line-height: 35px;
+	color: #ffffff!important;
+	border-top: 0px solid #eeeeee!important;
+	font-weight: 800;
+	padding: 0px 0px;
+}
+
+.tundra .dijitCalendarMonthContainer th {
+	background-image: none!important;
+	/* background-color: #F9F9F9!important; */
+	padding: 5px 0px;
+}
+.dijitCalendarMonthContainer{
+	background-color: #4bcfa8!important;
+	width: 100%!important;
+	display: block;
+	/* outline: solid 1px #e94e1b; */
+	/* padding: 10px 4px!important; */
+}
+.tundra .dijitCalendarContainer {
+		margin-bottom: 5px;
+		border: 0px!important;
+		border-bottom: 2px solid #f2f2f2;
+		font-size: 0.9em;
+}
+
+.tundra .dijitCalendarContainer>table {
+    width: 100%;
+}
+
+.tundra .dijitCalendarBodyContainer {
+    border-bottom: 0px!important;
+}
+
+.tundra .dijitCalendarBodyContainer td {
+	border: solid 0px #f4f4f4;
+	border-top: solid 0px #f4f4f4;
+	color: #454545;
+	padding: 6px 0px;
+	background: #ffffff;
+	transition-duration: 0.3s;
+	transition-timing-function: cubic-bezier(0.21, 0.35, 0.2, 0.6);
+}
+.tundra td.dijitCalendarEnabledDate {
+
+/* background: transparent; */
+
+/* color: #fff; */
+}
+
+.tundra .dijitCalendarCurrentDate {
+    /* background-color: #ececec!important; */
+    color: #4bcfa8!important;
+}
+
+#cms_module_agenda_85 div[id^="cms_module"]:empty,
+#cms_module_agenda_85 div:empty:not(.clear){
+  display:block;
+} 
+
+.tundra td[class^='cms_module_agenda_event_']{
+    color: #fff;
+}
+.tundra td.dijitCalendarPreviousMonth ,
+.tundra td.dijitCalendarNextMonth 		{/* days that are part of the previous or next month */
+	color: #d3d3d3;
+	background-color: #ffffff;
+	border-color: #F9F9F9;
+	/* box-shadow: 0px 0px 0px 1px #FBFBFB inset; */
+}
+/*jour*/
+
+.tundra .dijitCalendarHoveredDate {
+	background-color: #F3F3F3;
+	color: #777777!important;
+	box-shadow: 0px 0px 0px 50px rgba(21, 21, 21, 0.1) inset;
+}
+.tundra td[class^='cms_module_agenda_event_'].dijitCalendarHoveredDate {
+	color: #fff!important;
+	box-shadow: 0px 0px 0px 20px rgba(0, 0, 0, 0.13) inset;
+}
+.tundra td[class^='cms_module_agenda_event_'].dijitCalendarNextMonth {
+	transition-duration:0s;
+}
+span.dijitCalendarDateLabel {
+	min-width: 17px;
+	display: inline-block;
+	padding: 4px 0px;
+	font-weight: 600;
+}
+/*Année*/
+
+#pmbopac.tundra .dijitCalendarSelectedYear {
+	color: #454545;
+	font-weight: 600!important;
+	background-color: #ffffff!important;
+	border-radius: 0px;
+}
+
+#pmbopac.tundra .dijitCalendarNextYear, #pmbopac.tundra .dijitCalendarPreviousYear {
+    color: #dfdedc!important;
+    font-weight: 500!important;
+    font-size: 100%!important;
+}
+
+.tundra .dijitCalendarYearLabel {
+    padding: 10px 0 0 0!important;
+    font-size: 100%!important;
+}
+.tundra .dijitCalendarYearContainer {
+	background: #ffffff!important;
+	border: 0px solid #ccc!important;
+	background-image: none!important;
+}
+.tundra .dijitCalendarYearLabel{
+	
+padding: 0 0 5px;
+	
+font-size: 0.85em;
+	
+background-image: none;
+}
+/*fleche*/
+.tundra .dijitCalendarIncrementControl{
+	
+}
+/*menu*/
+.tundra .dijitMenu,
+.tundra .dijitMenuBar {
+	border: 1px solid rgba(0, 0, 0, 0.13);
+	margin: 0;
+	padding: 0;
+	background-color: #E94E1B;
+}
+
+#cms_module_agenda_85 {
+	/* width: auto; */
+	/* overflow: hidden; */
+	/* background-color: #f4f4f4; */
+	/* margin: 0 0 25px 0; */
+	/* padding: 20px; */
+	/* float: none; */
+	/* border: 0px; */
+	position: relative;
+}
+
+#cms_module_agenda_85>div {
+    padding: 20px 20px 50px;
+    background: #fff;
+    position: relative;
+    /* min-height: 100%; */
+}
+
+#cms_module_agenda_85>div.row {
+    padding-top: 0;
+    position: absolute;
+    bottom: 20px;
+    left: 25px;
+}
+#cms_module_agenda_85 > div.row > div > div:first-child {
+	border-radius: 3px;
+	width: 14px!important;
+	height: 14px!important;
+	margin-top: 4px;
+	font-size: 14px;
+}
+
+#cms_module_agenda_85 > div.row > div > div:last-child {padding-top: 2px;color: #333;}
+#cms_module_agenda_85 > div.row > div{
+	padding: 0px;
+	font-size: 1em;
+	/* width: 100%; */
+	background-color: #ffffff;
+	padding: 5px 5px 0 5px;
+}
+.cms_module_agenda_view_calendar_eventslist{
+	margin:0px;
+}
+/*960 responsive
+========================================================================== */
+#cms_module_agenda_85 td.cms_module_agenda_event_13,
+#cms_module_agenda_85 td.cms_module_agenda_event_3,
+#cms_module_agenda_85 > div.row > div > div:first-child {
+}
+#cms_module_agenda_85 td.cms_module_agenda_event_3{
+}
+#cms_module_agenda_85 > div.row > div+div > div:first-child {
+	/* box-shadow:0px 0px 0px 20px rgba(0,0,0,0.23) inset; */
+}
+#cms_module_agenda_85 td.cms_module_agenda_event_13{
+
+}
+/*960 responsive
+========================================================================== */
+@media screen and (max-width: 980px) {
+	#cms_module_agenda_85{
+		/* margin-left: 72%; */
+	}
+}
+
+/*767 responsive
+========================================================================== */
+@media screen and (max-width: 767px) {
+	#bandeau #cms_module_agenda_85{
+		max-width: 100%;
+		margin-left: 0%;
+		margin-top: 25px;
+	}	
+}

@@ -1,0 +1,240 @@
+<?xml version='1.0' encoding='iso-8859-1'?>
+<unilabels>
+	<field code="dt" label="Type de document"/>
+	<field code="bl" label="niveau bibliographique (a: Notice d&#039;article, m: Notice de monographie, s: Notice de périodique ou de bulletin)"/>
+	<field code="hl" label="niveau hiérarchique (0: Notice de monographie, 1: Notice de périodique, 2: Notice de bulletin ou d&#039;article)"/>
+	<field code="001" label="Identifiant PMB de la notice"/>
+	<field code="010" label="Informations commerciales">
+		<subfield code="a" label="ISBN,EAN ou no.commercial"/>
+		<subfield code="d" label="Prix"/>
+	</field>
+	<field code="011" label="">
+		<subfield code="a" label="ISBN,EAN ou no.commercial"/>
+	</field>
+	<field code="100" label="Information codée de la notice dont la date de création"/>
+	<field code="101" label="Langues de publication">
+		<subfield code="a" label="Langues de la publication"/>
+		<subfield code="c" label="Langues originales"/>
+	</field>
+	<field code="200" label="Zone de titre">
+		<subfield code="a" label="Titre propre"/>
+		<subfield code="c" label="Titre propre d&#039;un auteur différent"/>
+		<subfield code="d" label="Titre parallèle"/>
+		<subfield code="e" label="Complément du titre"/>
+		<subfield code="i" label="Titre du bulletin si notice de bulletin"/>
+		<subfield code="h" label="Numéro du bulletin si notice de bulletin"/>
+		<subfield code="9" label="id:Identifiant du bulletin si notice de bulletin"/>
+	</field>
+	<field code="205" label="">
+		<subfield code="a" label="Mention d&#039;édition"/>
+	</field>
+	<field code="210" label="Editeur">
+		<subfield code="9" label="id:Identifiant de l&#039;éditeur"/>
+		<subfield code="a" label="Ville de l&#039;éditeur"/>
+		<subfield code="b" label="Adresse de l&#039;éditeur"/>
+		<subfield code="c" label="Nom de l&#039;éditeur"/>
+		<subfield code="d" label="Année ou libellé de périoque si notice de bulletin"/>
+		<subfield code="h" label="Date de publication si notice de bulletin"/>
+	</field>
+	<field code="215" label="Collation">
+		<subfield code="a" label="Importance matérielle"/>
+		<subfield code="c" label="Autres caractéristiques matérielles"/>
+		<subfield code="d" label="Format"/>
+		<subfield code="e" label="Matériel d&#039;accompagnement"/>
+	</field>
+	<field code="225" label="Collection">
+		<subfield code="a" label="Collection"/>
+		<subfield code="x" label="ISSN"/>
+		<subfield code="i" label="Sous-collection"/>
+		<subfield code="v" label="No. dans la collection"/>
+		<subfield code="9" label="id:Identifiant de la collection/sous-collection"/>
+	</field>
+	<field code="300" label="">
+		<subfield code="a" label="Note générale"/>
+	</field>
+	<field code="327" label="">
+		<subfield code="a" label="Note de contenu"/>
+	</field>
+	<field code="330" label="">
+		<subfield code="a" label="Résumé"/>
+	</field>
+	<field code="345" label="Informations commerciales">
+		<subfield code="b" label="ISBN,EAN ou no.commercial"/>
+		<subfield code="d" label="Prix"/>
+	</field>
+	<field code="410" label="Collection">
+		<subfield code="9" label="id:Identifiant de la collection"/>
+		<subfield code="t" label="Collection"/>
+		<subfield code="v" label="No. dans la collection"/>
+		<subfield code="x" label="ISSN"/>
+	</field>
+	<field code="411" label="Sous-collection">
+		<subfield code="9" label="id:Identifiant de la sous-collection"/>
+		<subfield code="t" label="Sous-collection"/>
+		<subfield code="x" label="ISSN"/>
+	</field>
+	<field code="461" label="Série">
+		<subfield code="t" label="Partie de"/>
+		<subfield code="v" label="No. de partie"/>
+	</field>
+	<field code="4XX" label="Liens entre notice (voir fichiers relationtypedown_unimarc.xml et relationtypeup_unimarc.xml (pmb/includes/marc_tables/fr_FR/) pour avoir le code unimarc en fonction du lien dans PMB)">
+		<subfield code="0" label="Identifant de la notice liée (si on export les notices liées)"/>
+		<subfield code="9" label="bl:niveau hiérarchique et bibliographique de la notice liée"/>
+		<subfield code="9" label="id:Identifant de la notice liée ou du bulletin lié"/>
+		<subfield code="9" label="type_lnk:code du lien entre les deux notices"/>
+		<subfield code="9" label="lnk:child, lnk:parent, lnk:bull, lnk:perio ou lnk:art : Définit le lien"/>
+		<subfield code="9" label="rank: Ordre d&#039;apparition dans les liens"/>
+		<subfield code="9" label="page: Pagination si la notice liée est un article"/>
+		<subfield code="t" label="Titre de la notice liée"/>
+		<subfield code="a" label="Auteurs de la notice liée si c&#039;est une monographie"/>
+		<subfield code="y" label="ISBN de la notice liée si c&#039;est une monographie"/>
+		<subfield code="t" label="Titre du bulletin si la notice liée est un article ou un bulletin"/>
+		<subfield code="t" label="Titre du périodique si la notice liée est un article ou un bulletin"/>
+		<subfield code="v" label="Numéro du bulletin si la notice liée est un article ou un bulletin"/>
+		<subfield code="d" label="Date du bulletin si la notice liée est un article ou un bulletin"/>
+		<subfield code="e" label="Libellé de période du bulletin si la notice liée est un article ou un bulletin"/>
+		<subfield code="x" label="ISSN du périodique si la notice liée est un article ou un bulletin"/>
+	</field>
+	<field code="500" label="Titre uniforme">
+		<subfield code="9" label="id:Identifiant du titre uniforme"/>
+		<subfield code="a" label="Nom du titre uniforme"/>
+		<subfield code="i" label="Titre de section ou de partie"/>
+		<subfield code="k" label="Date de publication"/>
+		<subfield code="l" label="Sous-vedette de forme"/>
+		<subfield code="m" label="Langue"/>
+		<subfield code="n" label="Commentaire"/>
+		<subfield code="q" label="Version"/>
+		<subfield code="u" label="Tonalité"/>
+		<subfield code="w" label="Mention d&#039;arrangement"/>
+		<subfield code="r" label="Distribution instrumentale et vocale"/>
+		<subfield code="s" label="Référence numérique"/>
+		<subfield code="j" label="Subdivision de forme"/>
+	</field>
+	<field code="530" label="Si notice de bulletin">
+		<subfield code="a" label="Titre du périodique"/>
+	</field>
+	<field code="606" label="Catégorie">
+		<subfield code="9" label="id:Identifiant de la catégorie"/>
+		<subfield code="a" label="Libellé"/>
+	</field>
+	<field code="610" label="">
+		<subfield code="a" label="Mots-clés libres"/>
+	</field>
+	<field code="676" label="Indexation décimale">
+		<subfield code="9" label="id:Identifiant l&#039;indexation décimale"/>
+		<subfield code="a" label="Indexation décimale"/>
+		<subfield code="l" label="Commentaire de l&#039;indexation décimale"/>
+	</field>
+	<field code="686" label="Indexation PCDM">
+		<subfield code="a" label="Indexation décimale (musique)"/>
+		<subfield code="l" label="Commentaire de l&#039;indexation décimale (musique)"/>
+	</field>
+	<field code="700" label="Auteur principal (personne)">
+		<subfield code="9" label="id:Identifiant de l&#039;auteur"/>
+		<subfield code="a" label="Elément d&#039;entrée ou nom"/>
+		<subfield code="b" label="Elément réjeté ou prénom"/>
+		<subfield code="c" label="Commentaire"/>
+		<subfield code="f" label="Dates"/>
+		<subfield code="4" label="Fonction"/>
+		<subfield code="N" label="Adresse Web"/>
+	</field>
+	<field code="701" label="Co-auteur (personne)">
+		<subfield code="9" label="id:Identifiant de l&#039;auteur"/>
+		<subfield code="a" label="Elément d&#039;entrée ou nom"/>
+		<subfield code="b" label="Elément réjeté ou prénom"/>
+		<subfield code="c" label="Commentaire"/>
+		<subfield code="f" label="Dates"/>
+		<subfield code="4" label="Fonction "/>
+		<subfield code="N" label="Adresse Web"/>
+	</field>
+	<field code="702" label="Auteur secondaire (personne)">
+		<subfield code="9" label="id:Identifiant de l&#039;auteur"/>
+		<subfield code="a" label="Elément d&#039;entrée ou nom"/>
+		<subfield code="b" label="Elément réjeté ou prénom"/>
+		<subfield code="c" label="Commentaire"/>
+		<subfield code="f" label="Dates"/>
+		<subfield code="4" label="Fonction "/>
+		<subfield code="N" label="Adresse Web"/>
+	</field>
+	<field code="710" label="Auteur principal (collectivité (1er indicateur = 0) ou congrès (1er indicateur = 1))">
+		<subfield code="9" label="id:Identifiant de l&#039;auteur"/>
+		<subfield code="a" label="Elément d&#039;entrée ou nom"/>
+		<subfield code="b" label="Subdivision"/>
+		<subfield code="c" label="Commentaire"/>
+		<subfield code="d" label="Numéro"/>
+		<subfield code="e" label="Lieu"/>
+		<subfield code="f" label="Dates"/>
+		<subfield code="g" label="Elément réjeté ou prénom"/>
+		<subfield code="K" label="Lieu"/>
+		<subfield code="L" label="Ville"/>
+		<subfield code="M" label="Pays"/>
+		<subfield code="N" label="Site web"/>
+		<subfield code="4" label="Fonction"/>
+	</field>
+	<field code="711" label="Co-auteur (collectivité (1er indicateur = 0) ou congrès (1er indicateur = 1))">
+		<subfield code="9" label="id:Identifiant de l&#039;auteur"/>
+		<subfield code="a" label="Elément d&#039;entrée ou nom"/>
+		<subfield code="b" label="Subdivision"/>
+		<subfield code="c" label="Commentaire"/>
+		<subfield code="d" label="Numéro"/>
+		<subfield code="e" label="Lieu"/>
+		<subfield code="f" label="Dates"/>
+		<subfield code="g" label="Elément réjeté ou prénom"/>
+		<subfield code="K" label="Lieu"/>
+		<subfield code="L" label="Ville"/>
+		<subfield code="M" label="Pays"/>
+		<subfield code="N" label="Site web"/>
+		<subfield code="4" label="Fonction"/>
+	</field>
+	<field code="712" label="Auteur secondaire (collectivité (1er indicateur = 0) ou congrès (1er indicateur = 1))">
+		<subfield code="9" label="id:Identifiant de l&#039;auteur"/>
+		<subfield code="a" label="Elément d&#039;entrée ou nom"/>
+		<subfield code="b" label="Subdivision"/>
+		<subfield code="c" label="Commentaire"/>
+		<subfield code="d" label="Numéro"/>
+		<subfield code="e" label="Lieu"/>
+		<subfield code="f" label="Dates"/>
+		<subfield code="g" label="Elément réjeté ou prénom"/>
+		<subfield code="K" label="Lieu"/>
+		<subfield code="L" label="Ville"/>
+		<subfield code="M" label="Pays"/>
+		<subfield code="N" label="Site web"/>
+		<subfield code="4" label="Fonction"/>
+	</field>
+	<field code="801" label="Origine de la notice">
+		<subfield code="a" label="Pays de production de la notice"/>
+		<subfield code="b" label="Origine de la notice"/>
+	</field>
+	<field code="856" label="lien">
+		<subfield code="u" label="URL associée"/>
+		<subfield code="q" label="Format électronique de la resource"/>
+	</field>
+	<field code="887" label="Documents numérique">
+		<subfield code="a" label="URL ou chemin d&#039;accès du fichier"/>
+		<subfield code="b" label="Libellé du fichier"/>
+		<subfield code="f" label="Nom du fichier"/>
+	</field>
+	<field code="896" label="lien">
+		<subfield code="a" label="URL de la vignette"/>
+	</field>
+	<field code="900" label="Champs personalisés de la notice">
+		<subfield code="a" label="Valeur du champ personalisé"/>
+		<subfield code="l" label="Libellé du champ personalisé"/>
+		<subfield code="n" label="Nom du champ personalisé"/>
+	</field>
+	<field code="995" label="Exemplaires">
+		<subfield code="a" label="Localisation"/>
+		<subfield code="f" label="No. exemplaire"/>
+		<subfield code="k" label="Cote"/>
+		<subfield code="q" label="Section"/>
+		<subfield code="r" label="Support"/>
+		<subfield code="u" label="Message exemplaire"/>
+		<subfield code="z" label="Commentaire non bloquant"/>
+	</field>
+	<field code="999" label="Champs personalisés des exemplaires">
+		<subfield code="a" label="Valeur du champ personalisé"/>
+		<subfield code="l" label="Libellé du champ personalisé"/>
+		<subfield code="n" label="Nom du champ personalisé"/>
+		<subfield code="f" label="Code barres de l&#039;exemplaire"/>
+	</field>
+</unilabels>

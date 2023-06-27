@@ -1,0 +1,8 @@
+/* Catalogue
+ ========================================================================== */
+/*CRÉATION D'UN PÉRIODIQUE*/
+/* $Id: gestion-patch.css,v 1.2 2018-04-18 08:40:19 wlair Exp $ */
+#contenu>form[class^='form']>h3>div.left{
+	float:none;
+	display:inline;
+}

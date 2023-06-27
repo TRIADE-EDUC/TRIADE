@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!--
+****************************************************************************************
+© 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: en_UK.xml,v 1.1 2017-02-07 14:43:32 apetithomme Exp $ -->
+
+<!DOCTYPE XMLlist SYSTEM "../../../includes/XMLlist.dtd" >
+<XMLlist>
+	<entry code="contributions_functions_description">Fonctions relatives au connecteur de contributions</entry>
+	<entry code="integrate_entity_description">Intègre dans PMB une entité issue d'une contribution</entry>
+	<entry code="integrate_entity_input_description">Paramètre de la méthode</entry>
+	<entry code="integrate_entity_entity_uri">URI de l'entité à intégrer</entry>
+	<entry code="integrate_entity_output_description">Retour de la méthode</entry>
+</XMLlist>

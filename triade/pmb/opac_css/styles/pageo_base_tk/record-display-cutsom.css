@@ -1,0 +1,239 @@
+/* +--------------------------------------------------------------------------+
+// 2013 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// +-------------------------------------------------+
+// $Id: record-display-cutsom.css,v 1.2 2018-01-08 13:33:34 wlair Exp $ */
+/*------------------------------------------------------------------------------------------*/
+
+.asideContentNot a{
+	text-decoration:none;
+}
+.asideContentNot a:hover{
+	text-decoration:none;
+	color:#222;
+}
+/* Picto panier
+ ========================================================================== */
+.onglet_basketNotCourte .img_basketNotCourte img{
+	width: 32px;
+	padding: 0px 7px;
+	vertical-align: middle;
+}
+
+/* Avis
+ ========================================================================== */
+.avisN {
+	display: -ms-flexbox;
+	display: -webkit-flex;
+	display: flex;
+	-ms-flex-align: center;
+	-webkit-align-items: center;
+	align-items: center;
+	flex: 1 1 0%;
+	-ms-flex: 1 1 0%;
+	-webkit-flex: 1 1 0%;
+}
+
+.avisN a {
+	text-decoration: none;
+	font-weight: inherit;
+	color: inherit;
+	padding: 2px 7px 2px 7px;
+	background-color: #ffffff;
+}
+.avisN a:hover,
+.avisNCourte a:hover{
+	text-decoration: none;	
+}
+span.avisN {
+	margin: inherit;
+	background-color: #f9f9f9!important;
+}
+span.img_permalink,
+span.imgTag,
+span.imgSuggest,
+.listeLectureN a span:first-child,
+span.ExtnotCom.imgListeLecture {
+	background-color: transparent;
+}
+div[class='onglet_basketNotCourte'],
+div[class='avisNCourte'],
+div[class='tagsNCourte'],
+div[class='listeLectureNCourte'] a,
+div[class='suggestNCourte'],
+div[class='onglet_basketNot'] a.img_basketNot,
+div[class='tagsN'],
+div[class='suggestN'],
+div[class='docnumNCourte docnumNCourtePermalink'],
+div[class='docnumNCourte'],
+div[class='listeLectureN'] a,
+div[class='avisN'],
+span.imgComment,
+span.imgStatutPartN,
+span.imgDocNum,
+div[class='onglet_basketNotCourte'] a span:nth-child(1) img,
+div[class='avisNCourte']  span:nth-child(1) img,
+a[class='img_basketNot']  span:nth-child(1) img,
+div.lienP,
+div[class='onglet_basketNotCourte'] a span:nth-child(1){
+	background-color: #b2d965;
+}
+div[class='onglet_basketNotCourte'] a span:nth-child(2),
+div[class='avisNCourte'] span:nth-child(2),
+div[class='tagsNCourte'] span:nth-child(2),
+div[class='suggestNCourte'] span:nth-child(2),
+div[class='listeLectureNCourte'] a span:nth-child(2),
+div[class='onglet_basketNot'] a span:nth-child(2),
+div[class='tagsN'] span:nth-child(2),
+div[class='suggestN'] span:nth-child(2),
+div[class='docnumNCourte docnumNCourtePermalink'] span:nth-child(2),
+div[class='docnumNCourte'] span:nth-child(2),
+div[class='listeLectureN'] a span:nth-child(2),
+.lienP,
+span.avisN>a,
+.lienP span.label_permalink {
+	background-color: #ffffff;
+	box-shadow: none;
+	font-weight: 400;
+	font-size: 13px;
+}
+span.avisN>a{
+	width:100%;
+}
+.wyr #blocNotice_descr ul.onglets_isbd_publicNot .isbd_public_active a{
+	display:block;
+	margin:0;
+}
+#blocNotice_descr ul.onglets_isbd_publicNot li{
+	padding:0;
+	margin:0;
+}
+/* details
+ ========================================================================== */
+.resume_notCourte span {
+}
+
+.infoCompl_notCourte {
+	font-weight: 500;
+}
+
+.infoCompl_notCourte span {
+	font-size: 1em;
+	color: inherit;
+}
+
+.title_notCourte h3 {
+	font-size: 1.15em;
+	font-weight: 500;
+}
+
+.title_notCourte h3 a {
+}
+.plusN a{
+	font-weight:600;
+}
+/* Smart display
+ ========================================================================== */
+.parentNotCourte:last-child {
+	padding: 20px 5px 0px;
+	border-bottom: 0px solid #e7e7e7;
+}
+/* Panier
+ ========================================================================== */
+div[class='onglet_basketNot'] a.img_basketNot{
+	flex: 1 1 0%;
+	-ms-flex: 1 1 0%;
+	-webkit-flex: 1 1 0%;	
+}
+.onglet_basketNot .img_basketNot img{
+	margin:0;
+	background-color: transparent;
+}
+.onglet_basketNotCourte .img_basketNotCourte,
+a[id^="liste_lecture"] {
+	text-decoration: none;
+	background-color: inherit;
+	color: #555252;
+	vertical-align: top;
+	line-height: 30px;
+}
+a.img_basketNotCourte:hover,
+a[id^="liste_lecture"]:hover{
+	text-decoration:inherit;
+	color:inherit;
+}
+/* grid reset
+ ========================================================================== */
+.record-footer:after {
+	content:"";
+	display:block;
+	margin-top:10px;
+	border-bottom: 1px solid #e7e7e7;
+}
+.parentNotCourt:last-child :after {
+	border-bottom:0px solid #e7e7e7;
+}
+/* Permalink
+ ========================================================================== */
+.lienP {
+	border:none;
+}
+/* A to Z
+ ========================================================================== */
+.a2z_perio #noticeNot{
+	max-width: 100%;
+	margin-bottom: 10px;
+}
+.links_for_serials ul li a i{
+	font-style:normal;
+}
+
+.a2z_contens .asideContentNot{
+	float: left;
+	margin-right:0;
+	width: 25%;	
+}
+.a2z_contens .asideContentNot .thumb-item{
+	width:100%;
+}
+.a2z_contens .notice_contenu {
+	margin-left: 26%;
+	overflow: hidden;
+}
+/* Notice etagere
+ ========================================================================== */
+
+.noticesEtagere{
+
+}
+.noticesEtagere .uk-width-large-1-5.thumb-item{
+	width: 12%;
+}
+.noticesEtagere .uk-width-large-3-5.content-item{
+	width: 68%;
+}
+.noticesEtagere .vignetteDocNot img{
+	min-height: 110px;
+	min-width:1px;
+}
+
+/* Aside content compatibility
+ ========================================================================== */
+.asideContentNot .uk-width-large-1-5,
+.asideContentNot .uk-width-medium-1-4 {
+	width: 100%;	
+}
+/* reserver
+ ========================================================================== */
+#resa_notice{
+	float:none;
+	font-style:normal;
+	font-size:1em;
+	float:right;
+}
+#resa_notice h3{
+	margin:0;
+	padding-right:10px;
+}
+#resa_notice a {
+	color: #ef6f64;
+}

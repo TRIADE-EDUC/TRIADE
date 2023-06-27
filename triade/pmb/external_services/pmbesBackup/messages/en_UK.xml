@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- messages localisés en français pour la classe de fonctions search_functions
+****************************************************************************************
+© 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: en_UK.xml,v 1.1 2015-06-15 12:55:34 pmbs Exp $ -->
+
+<!DOCTYPE XMLlist SYSTEM "../../../includes/XMLlist.dtd" >
+<XMLlist>
+<!-- 
+pmbesBackup
+ -->
+ <entry code="Backup_functions_description">Backup-related functions</entry>
+<!-- 
+listGroupsTables
+ --> 
+  <entry code="listGroupsTables_description">List of table groupments for the backup</entry>
+  <entry code="listSauvPerformed_output_description"></entry>
+  <entry code="listGroupsTables_result">Returns the list of the groups of tables</entry>   
+<!-- 
+listTablesUnsaved
+ -->  
+  <entry code="listTablesUnsaved_description">List of unsaved tables</entry>
+  <entry code="listSauvPerformed_output_description"></entry>
+  <entry code="listTablesUnsaved_unsavedTables">Returns the list of unsaved tables</entry>  
+<!-- 
+launchBackup
+ -->
+  <entry code="launchBackup_description">Launching of a backup set</entry>
+  <entry code="launchBackup_input_description"></entry>
+  <entry code="launchBackup_id_sauvegarde">Identifier of the backup set</entry>  
+  <entry code="listSauvPerformed_output_description"></entry>
+  <entry code="launchBackup_result">Return the backup result</entry> 
+<!-- 
+listSetBackup
+ -->
+  <entry code="listSetBackup_description">List of the backup sets</entry>
+  <entry code="listSetBackup_input_description"></entry>
+  <entry code="listSauvPerformed_output_description"></entry>
+  <entry code="listSetBackup_result">Returns the list of the backup sets saved</entry>   
+ <!-- 
+listSauvPerformed
+ -->
+  <entry code="listSauvPerformed_description">list of backups made</entry>
+  <entry code="listSauvPerformed_output_description"></entry>
+  <entry code="listSauvPerformed_result">Returns the already made backups</entry>
+ <!-- 
+deleteSauvPerformed
+ -->
+  <entry code="deleteSauvPerformed_description">Deletion of a save made</entry>
+  <entry code="deleteSauvPerformed_ids_log">Identifiers, separated by a coma ","</entry>
+  <entry code="deleteSauvPerformed_output_description"></entry>
+  <entry code="deleteSauvPerformed_result">
+  	1 :  if the identifiers passed to parameters have been deleted
+  	0 :  if an error happened
+  </entry>    
+</XMLlist>

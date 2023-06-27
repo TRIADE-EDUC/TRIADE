@@ -1,0 +1,145 @@
+<!-- $Id: scan_request.tpl.html,v 1.6 2017-10-27 14:10:57 ngantier Exp $ -->
+<div class='row scan_request_title'>
+	<h3>{{ scan_request.title }}</h3>
+</div>
+<br/>
+{% if scan_request.desc %}
+	<div class='row scan_request_desc'>
+		<div class='colonne25'>
+			{{ msg.scan_request_desc }} :
+		</div>
+		<div class='colonne'>
+			{{ scan_request.desc | escape true | nl2br }}
+		</div>
+	</div>
+{% endif %}
+<div class='row scan_request_status'>
+	<div class='colonne25'>
+		{{ msg.scan_request_status }} :
+	</div>
+	<div class='colonne'>
+		{{ scan_request.status.label }}
+	</div>
+</div>
+<div class='row'></div>
+<hr/>
+<div class='row scan_request_priority'>
+	<div class='colonne25'>
+		{{ msg.scan_request_priority }} :
+	</div>
+	<div class='colonne'>
+		{{ scan_request.priority.label }}
+	</div>
+</div>
+<div class='row scan_request_date'>
+	<div class='colonne25'>
+		{{ msg.scan_request_date }} :
+	</div>
+	<div class='colonne'>
+		{{ scan_request.formatted_date }}
+	</div>
+</div>
+<div class='row scan_request_wish_date'>
+	<div class='colonne25'>
+		{{ msg.scan_request_wish_date }} :
+	</div>
+	<div class='colonne'>
+		{{ scan_request.formatted_wish_date }}
+	</div>
+</div>
+<div class='row scan_request_deadline_date'>
+	<div class='colonne25'>
+		{{ msg.scan_request_deadline_date }} :
+	</div>
+	<div class='colonne'>
+		{{ scan_request.formatted_deadline_date }}
+	</div>
+</div>
+<div class='row'></div>
+<hr/>
+<div class='row scan_request_update_date'>
+	<div class='colonne25'>
+		{{ msg.scan_request_update_date }} :
+	</div>
+	<div class='colonne'>
+		{{ scan_request.formatted_update_date }}
+	</div>
+</div>
+{% if scan_request.elapsed_time %}
+<div class='row scan_request_elapsed_time'>
+	<div class='colonne25'>
+		{{ msg.scan_request_elapsed_time }} :
+	</div>
+	<div class='colonne'>
+		{{ scan_request.elapsed_time }} {{ msg.scan_request_elapsed_time_unit }}
+	</div>
+</div>
+{% endif %}
+{% if scan_request.comment %}
+	<div class='row scan_request_comment'>
+		<div class='colonne25'>
+			{{ msg.scan_request_comment }} :
+		</div>
+		<div class='colonne'>
+			{{ scan_request.comment | escape true | nl2br }}
+		</div>
+	</div>
+{% endif %}
+{% for record in scan_request.linked_records %}
+	{% if loop.first %}
+		<div class='row scan_request_linked_records'>
+			<table class='scan_request_linked_records_table'>
+				<tr>
+					<th>{{ msg.scan_request_linked_record }}</th>
+					<th>{{ msg.scan_request_linked_record_comment }}</th>
+				</tr>
+	{% endif %}
+	<tr class='{% if loop.even %}even{% else %}odd{% endif %}'>
+		<td>{{ record.display }}</td>
+		<td>{% if record.comment %}{{ record.comment | escape true | nl2br }}{% endif %}</td>
+	</tr>
+	{% if loop.last %}
+				</table>
+			</div>
+		</div>
+	{% endif %}
+{% endfor %}
+<div class='row'>&nbsp;</div>
+{% if scan_request.nb_explnums %}
+	{{ scan_request.linked_records.0.explnums_datas.visionneuse_script }}
+	<div class='row scan_request_linked_records_explnums'>
+		<a name="docnum"><h3><span id="titre_explnum">{{ msg.explnum }}</span></h3></a>
+{% endif %}
+{% for record in scan_request.linked_records %}
+	{% if record.explnums_datas.nb_explnums %}
+		{% for explnum in record.explnums_datas.explnums %}
+			<div style='height:150px;' class='colonne3 docnum'>
+					{{ explnum.access_datas.script }}
+					<a href="{{ explnum.access_datas.href }}" {% if explnum.access_datas.onclick %}onclick="{{ explnum.access_datas.onclick }}"{% endif %}>
+						<img src="{{ explnum.thumbnail_url }}" alt="{{ explnum.name }} - {{ explnum.mimetype }}" title="{{ explnum.name }} - {{ explnum.mimetype }}" />
+					</a>
+					<br />
+					<span class="title_docnum">{{ explnum.name }}</span>
+					<div class="explnum_type">{{ explnum.mimetype }}</div>
+					<div class="record_display">{{ record.display }}</div>
+			</div>
+		{% endfor %}
+	{% endif %}
+{% endfor %}
+{% if scan_request.nb_explnums %}
+	</div>
+{% endif %}
+<div class='row'>
+	<div class='left'>
+		<input type='button' class='bouton' onclick='document.location="./empr.php?tab=scan_requests&lvl=scan_requests_list"' value='{{ msg.scan_request_back }}' />
+		{% if scan_request.status.infos_editable %}
+			<input type='button' class='bouton' onclick='document.location="{{ scan_request.edit_link }}"' value='{{ msg.scan_request_edit }}' />
+		{% endif %}
+	</div>
+	<div class='right-clear-right'>
+		{% if scan_request.status.cancelable %}
+			<input type='button' class='bouton' onclick='if (confirm("{{ msg.scan_request_confirm_cancel | escape 1 }}")) {document.location="{{ scan_request.cancel_link }}";}' value='{{ msg.scan_request_cancel }}' />
+		{% endif %}
+	</div>
+</div>
+<div class='row'>&nbsp;</div>

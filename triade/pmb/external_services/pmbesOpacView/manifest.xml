@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- Fichier manifest de description des méthodes disponibles
+****************************************************************************************
+© 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: manifest.xml,v 1.2 2013-02-20 16:09:28 mbertin Exp $ -->
+<manifest>
+	<name>pmbesOpacView</name>
+	<requirements>
+		<requirement group="pmbesTypes"/>
+	</requirements>
+	<methods>
+		<method name="gen_search" rights="" version="1.0" language_independant="false">
+			<pmb_requirements>
+				<pmb_requirement start_path="class" file="opac_view.class.php"/>
+			</pmb_requirements>
+			<inputs>			
+			</inputs>
+			<outputs>
+			</outputs>
+		</method>
+	</methods>
+</manifest>

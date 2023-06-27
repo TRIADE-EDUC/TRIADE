@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- messages localisés en français pour les méthodes externes de procédures
+****************************************************************************************
+© 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: fr_FR.xml,v 1.2 2012-06-20 09:18:57 dgoron Exp $ -->
+
+<!DOCTYPE XMLlist SYSTEM "../../../includes/XMLlist.dtd" >
+<XMLlist>
+<!-- 
+pmbesProcs
+-->
+  <entry code="Procs_functions_description">Fonctions relatives aux procédures</entry>
+<!-- 
+listProcs
+-->
+  <entry code="listProcs_description">Liste des procédures</entry>
+  <entry code="listProcs_input_description"></entry>
+  <entry code="listProcs_result">Retourne la liste</entry>   
+<!-- 
+executeProc
+-->   
+  <entry code="executeProc_description">Exécution d'une procédure</entry>
+  <entry code="executeProc_input_description"></entry>
+  <entry code="executeProc_procedure">Procédure interne ou distante :
+  	1 : Interne
+  	2 : Distante
+  </entry>
+  <entry code="executeProc_idProc">Identifiant de la procédure</entry>
+  <entry code="executeProc_tparams">Tableau de paramètres</entry>
+  <entry code="executeProc_result">Résultat de l'exécution</entry>  
+</XMLlist>
