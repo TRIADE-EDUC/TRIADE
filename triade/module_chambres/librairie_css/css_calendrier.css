@@ -1,0 +1,297 @@
+/*
+// -----------------------------------------
+// Source  :	http://cogites.com
+// Script  :	E RESERV
+// Version :	4.2
+// revente et redistribution interdites 
+// Vous devez laisser le copyright.
+//
+// Design plus qu'inspiré par www.vivianroldo.fr 
+// -----------------------------------------
+
+Styles appliqués au Calendrier
+*/
+
+body {
+    font-family: Helvetica, Arial, sans-serif;
+    background-color: #ffffff;
+}
+
+#wrapper {
+	width: 800px;
+	position: relative;
+	margin: 5px auto;
+}
+
+/* style général */
+#calendrier li{
+	list-style: none;
+}
+
+ul {
+/*pour enlever les puce de la liste à puce */
+	list-style-type: none;
+}
+
+h1{
+	/* Le titre du calendrier. */
+    color: #000;
+    text-align: center;
+    font-size: 22px;
+    font-style: normal;
+    font-weight: normal;
+    text-transform: normal;
+    letter-spacing: -1.2px;
+    line-height: 1.2em;
+    padding: 1px;
+    border-bottom: 1px solid #CCC;
+}
+
+h2 {
+	/* Le nom du mois. */
+	font-size: 15px;
+	font-weight: bold;
+	letter-spacing: -0.5px;
+    padding: 0 auto;
+    margin: 0 auto;
+    margin-top : 2px;
+    padding-bottom: 0px;
+    color: #000;
+    text-align: center;
+}
+
+#libelle {
+	/* Ligne des jours de la semaine en haut (L, M, M...). */
+    width: 240px;
+    margin: 0 auto;
+    padding: 0;
+    color: #333;
+    text-align: center;
+    font-size: 12px;
+}
+
+
+#libelle li {
+	/* La case de chaque jour de la semaine (L, M, M...). */
+    float : left;
+    width : 30px;
+    height: 14px;
+    color: #333;
+    border-bottom: 2px solid #666;
+    font-weight: bold;
+	}
+
+
+.ligne {
+	/* Ligne des jours affichés (1, 2, 3...). */
+    width: 240px;
+    margin: 10 auto;
+    padding: 0;
+    font-size: 12px;
+    text-align: center;
+} 
+
+.ligne li {
+	/* La case de chaque jour affiché (1, 2, 3...). */
+    color: #666666;
+    float : left; 
+    width : 30px; 
+    height: 15px;
+    padding-top: 0px;
+}
+
+#footer {
+	text-align: center;
+	border: 1px solid #CCC;
+    padding: 3 auto;
+    background-color: #F7F7F7;
+}
+
+
+.copyright{ 
+	/* copyright  */
+	font-size: 10px;
+}
+			
+a { 
+	text-decoration: none; 
+}
+a:hover, a:focus {
+	text-decoration: underline; 
+}
+
+p {
+    font-size: 12px;
+    color: #363636;
+    line-height: 1.7;
+    padding: 0px;
+    margin: 10px 0px;
+}
+
+// TABLEAU LÉGENDE DES SAISONS
+// ===========================
+
+table {
+	border-spacing:0;
+}
+
+table#saison {
+	color:#363636;
+	border-width: 0px;
+	border-style: none;
+	padding: 0px;
+	border-collapse: collapse;
+	margin-left:auto;
+	margin-right:auto;
+	width:300px;
+}
+
+table.descriptif {
+	/* Colonne descriptive. */
+}
+
+table.couleur {
+	/* Colonne des couleurs. */
+	width: 40px;
+}
+
+#saison td, #saison th {
+	border-bottom: 1px solid #ccc;
+	padding: 5px;
+	zoom: 1;
+	text-align:left;
+	font-size: 12px;
+}
+
+
+
+
+/*------------------------------------------------------------------*/
+/*------------------------------------------------------------------*/
+/* STYLE DES PERIODE RESERVEES */
+
+li.reserve, .reserv, li.reserve_deb, li.reserve_fin, li.reserv_entre, li.reserv_option_deb, li.reserv_option_fin, li.reserv_moyenne_deb, li.reserv_moyenne_fin, li.reserv_haute_deb, li.reserv_haute_fin, li.reserv_tres_haute_deb, li.reserv_tres_haute_fin, li.reserv_indispo_deb, li.reserv_indispo_fin {
+	/* date réservé */
+	background-color: #CC0000;
+	color:#ffffff;
+}
+
+
+/*
+// STYLE DE LA DATE DU JOUR
+// ========================
+*/
+
+
+.today
+ {
+	/* Date du jour sur un fond foncé. */
+	font-weight: 800;
+	color: #FFFFFF;
+}
+/*
+// STYLE DES PÉRIODES RÉSERVÉES ET LIBRES
+// ======================================
+*/
+
+
+li.reserve, li.today_reserve, .reserve {
+	/* Date réservée (rouge) */
+	background-color: #CC0000;
+	color: #FFFFFF;
+}
+
+li.libre, li.today_libre, .libre {
+	/* Date LIBRE (vert pâle) */
+	background-color: #A2D3A0;
+}
+
+
+/* images en diagonales */
+
+li.reserve_deb{
+	/* début de période réservée (triangle) */
+	background:url(../images/img_diag/reserv_deb.gif); 
+}
+li.reserve_fin{
+	/* fin de période réservée (triangle) */
+	background:url(../images/img_diag/reserv_fin.gif); 
+}
+li.reserv_entre{
+	/* entre deux périodes réservées (pointillés noirs) */
+	background:url(../images/img_diag/reserv_entre.gif); 
+}
+
+
+li.option_deb{
+	/* début de période réservée (triangle) */
+	background:url(../images/img_diag/option_deb.gif); 
+}
+li.option_entre{
+	/* entre deux périodes réservées (pointillés noirs) */
+	background:url(../images/img_diag/option_entre.gif); 
+}
+li.option_fin{
+	/* fin de période réservée (triangle) */
+	background:url(../images/img_diag/option_fin.gif); 
+}
+
+
+/*
+// STYLE POUR LE MODULE SAISONS
+// ============================
+*/
+/* Hors module saison, les période libres sont considérées comme des périodes basses. */
+
+li.libre_basse, li.today_basse, .basse {
+	/* Date libre basse saison (vert pâle). */
+	background-color: #A2D3A0;
+}
+
+li.libre_moyenne, li.today_moyenne, .moyenne {
+	/* Date libre moyenne saison (jaune pâle). */
+	background-color: #F2F980;
+}
+
+li.libre_haute, li.today_haute, .haute {
+	/* Date en option (orange). */
+	background-color: #6AC5F0;
+}
+
+li.libre_tres_haute, li.today_tres_haute, .tres_haute {
+	/* Date libre très haute saison (violet). */
+	background-color: #BC79FF;
+}
+
+li.indispo, li.today_indispo, .indispo {
+	/* Date indisponible (gris). */
+	background-color: #A3A3A3;
+}
+
+li.option, li.today_option, .option {
+	/* Date libre haute saison (bleu pâle). */
+	background-color: #FF9933;
+}
+
+/*
+// STYLE POUR LE MODULE OMNIRESA
+// =============================
+*/
+li.reserve_tot, li.today_reserve_tot {
+	/* Date réservée. */
+	color:#FFFFFF;
+	background-color: #000000;
+}
+
+li.reserv_tot_deb{
+	/* début de période réservée (triangle) */
+	color:#FFFFFF;
+	background:url(img_diag/reserv_tot_deb.gif); 
+	
+}
+li.reserv_tot_fin{
+	/* fin de période réservée (triangle) */
+	color:#FFFFFF;
+	background:url(img_diag/reserv_tot_fin.gif); 
+	
+}

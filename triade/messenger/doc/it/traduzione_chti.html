@@ -1,0 +1,119 @@
+<!--
+/*******************************************************
+ **                   IntraMessenger                  **
+ **                                                   **
+ **  Copyright:      (C) 2006 - 2009 THeUDS           **
+ **  Web:            http://www.theuds.com            **
+ **                  http://www.intramessenger.net    **
+ *******************************************************/
+
+/*******************************************************
+ **       This file is part of IntraMessenger.        **
+ **                                                   **
+ **  IntraMessenger is free software.  	              **
+ **  IntraMessenger is distributed in the hope that   **
+ **  it will be useful, but WITHOUT ANY WARRANTY.     **
+ *******************************************************/
+ -->
+<HTML>
+<HEAD>
+<TITLE>[IntraMessenger] Installation</TITLE>
+<META NAME="Author" CONTENT="THeUDS.com">
+<META NAME="copyright" content="THeUDS.com">
+<LINK REL="SHORTCUT ICON" HREF="../../images/favicon.ico">
+<meta http-equiv="Content-Type" content="text/html;charset=iso-8859-1" />
+</HEAD>
+<STYLE type="text/css">
+<!--
+Body {
+  font-family: Verdana, Arial, Tahoma;
+	font-size : 12px;
+	background-color : #FFFFFF;
+	color : #000000;
+	text-align : justify;
+	margin-left : 20px;
+	margin-right : 20px;
+}
+A,A:link,A:visited {
+  COLOR: #3333FF;
+  TEXT-DECORATION: none;
+}
+A:hover {
+  COLOR: #3333FF;
+  TEXT-DECORATION: underline;
+}
+A.Code {
+	font-size : 11px;
+	font-weight : bold;
+  color : #990000;
+}
+P.Titre {
+	text-decoration : underline;
+	font-weight : bold;
+	font-size : 18px;
+	text-align : center;
+}
+P.Chapitre {
+	background-color : #E1FFFF;
+	border : 1px solid #000000;
+	font-weight : bold;
+	font-size : 13px;
+	padding-left : 5px;
+	padding-bottom : 2px;
+	padding-top : 2px;
+	margin-top : 25px;
+}
+P.Copyright {
+	color : #808080;
+	font-size : 11px;
+	text-align : right;
+}
+//.Stile1 {font-weight: bold}
+.Stile1 {color: #116FE1}
+.Stile2 {
+	color: #0000FF;
+	font-weight: bold;
+}
+.Stile3 {color: #0000FF}
+-->
+</STYLE>
+<BODY>
+<P class="Titre">Guida di installazione per <I>IntraMessenger</I> (server)</P>
+
+
+
+<P class="Chapitre">Traduzioni chtimi (ch'ti) in diretta :-</P>
+E&igrave; possibile attivare la traduzione (di alcune parole) in Chti, per far ci&ograve; :<BR/>
+- aprire il file <I>/distant/msg_send.php</I><BR/>
+- togliere il carattere di commento  (#) all'inizio delle righe  (160 e 161 circa) :<BR/>
+<code>&nbsp;<span class="Stile1"> &nbsp; <span class="Stile2">#include ("../common/words_chti.inc.php");</span></span></code><span class="Stile1"><strong><BR/>
+<code>&nbsp; &nbsp;	<span class="Stile3">#$msg = textChti($msg);</span></code></strong></span><BR/>
+- registrare le  modifiche (e  transferirle sul server ove necessario) .<BR/>
+<BR/>
+Per modificare il dizionario chti, modificare il file <I>/common/words_chti.inc.php</I><BR/>
+<BR/>
+Funziona solo se il  cryptaggio dei files non &egrave; attivo (c_option_crypt_msg).<BR/>
+
+<BR/>
+<B>Da notare</B> : per le versioni scaricate prima del 27/04/2008, la traduzione ha  luogo sul server immediatamente prima dell'invio verso il 'client' destinatario, pertanto l'autore vede il suo testo nella versione originale (non modifificato).<BR/>
+
+<P class="Chapitre">Annotazioni o Commenti</P>
+
+
+Forum dedidacato a questa applicazione  sw: <A HREF='http://www.intramessenger.com/forum/index.php?c=4&' target='_blank'>http://www.intramessenger.com/forum/index.php?c=4&</A><BR/>
+Non esitare a proporre dei miglioramenti e delle traduzioni.<BR/>
+<BR/>
+Supporto : <A HREF='http://www.theuds.com/contact.php?lang=FR&' target='_blank'>http://www.theuds.com/contact.php?lang=FR&</A><BR/>
+
+<BR/>
+<HR>
+<FORM action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank" style="padding:0px; marging:0px;">
+<TABLE width="100%" border="0" cellspacing="0" cellpadding="0">
+<TR>
+  <TD width="100%" nowrap ALIGN=RIGHT><P class="Copyright">Powered by <A HREF='http://www.theuds.com' target='_blank'>THeUDS</A> © 2006 - 2009</P>  </TD>
+  <TD align="center" valign="middle">  </TD>
+</TR>
+</TABLE>
+</FORM>
+</BODY>
+</HTML>

@@ -1,0 +1,305 @@
+<!--
+/*******************************************************
+ **                   IntraMessenger                  **
+ **                                                   **
+ **  Copyright:      (C) 2006 - 2009 THeUDS           **
+ **  Web:            http://www.theuds.com            **
+ **                  http://www.intramessenger.net    **
+ *******************************************************/
+
+/*******************************************************
+ **       This file is part of IntraMessenger.        **
+ **                                                   **
+ **  IntraMessenger is free software.  	              **
+ **  IntraMessenger is distributed in the hope that   **
+ **  it will be useful, but WITHOUT ANY WARRANTY.     **
+ *******************************************************/
+ -->
+<HTML>
+<HEAD>
+<TITLE>Aggiornamento della versione 1.4 - IntraMessenger</TITLE>
+<META NAME="Author" CONTENT="THeUDS.com">
+<META NAME="copyright" content="THeUDS.com">
+<LINK REL="SHORTCUT ICON" HREF="../../images/favicon.ico">
+<meta http-equiv="Content-Type" content="text/html;charset=iso-8859-1" />
+</HEAD>
+<STYLE type="text/css">
+<!--
+Body {
+  font-family: Verdana, Arial, Tahoma;
+	font-size : 12px;
+	background-color : #FFFFFF;
+	color : #000000;
+	text-align : justify;
+	margin-left : 20px;
+	margin-right : 20px;
+}
+A,A:link,A:visited {
+  COLOR: #3333FF;
+  TEXT-DECORATION: none;
+}
+A:hover {
+  COLOR: #3333FF;
+  TEXT-DECORATION: underline;
+}
+A.Code {
+	font-size : 11px;
+	font-weight : bold;
+  color : #990000;
+}
+P.Titre {
+	text-decoration : underline;
+	font-weight : bold;
+	font-size : 18px;
+	text-align : center;
+}
+P.Chapitre {
+	background-color : #E1FFFF;
+	border : 1px solid #000000;
+	font-weight : bold;
+	font-size : 13px;
+	padding-left : 5px;
+	padding-bottom : 2px;
+	padding-top : 2px;
+	margin-top : 25px;
+}
+P.Copyright {
+	color : #808080;
+	font-size : 11px;
+	text-align : right;
+}
+
+div.notice {
+    margin:             0.5em 0 0.5em 0;
+    border:             0.1em solid #00FFD7;
+    padding:            10px 10px 10px 36px;
+    background-color:   #CCFFFF;
+}
+//-->
+</STYLE>
+<BODY>
+
+<P class="Titre">Aggiornamento della versione 1.4 - <I>IntraMessenger</I></P>
+
+<!-- <P class="Chapitre">Extern authentication</P> -->
+
+<div class="notice">
+Nella  versione <B>1.4</B>.0, svariate opzioni cambiano nome, la loro modifica implica il cambiamento del file <I>/common/config/<B>config</B>.inc.php</I> :<BR/>
+</div>
+
+
+
+<BR/>
+
+<TABLE BORDER='1'>
+<TR>
+  <TH>
+    Prima
+  </TH>
+  <TH>
+    Ora (version 1.4)
+  </TH>
+</TR>
+
+<TR>
+  <TD>$c_lang</TD>
+  <TD>_LANG</TD>
+</TR>
+<TR>
+  <TD>$c_nb_max_user</TD>
+  <TD>_MAX_NB_USER</TD>
+</TR>
+<TR>
+  <TD>$c_nb_max_session</TD>
+  <TD>_MAX_NB_SESSION</TD>
+</TR>
+<TR>
+  <TD>$c_nb_max_contact_by_user</TD>
+  <TD>_MAX_NB_CONTACT_BY_USER</TD>
+</TR>
+<TR>
+  <TD>$c_option_col_level_hide</TD>
+  <TD bgcolor='AQUA'>_USER_HIEARCHIC_MANAGEMENT_BY_ADMIN : <B>inverse !</B></TD>
+</TR>
+<TR>
+  <TD>$c_option_flag_country</TD>
+  <TD>_DISPLAY_USER_FLAG_COUNTRY</TD>
+</TR>
+<TR>
+  <TD>$c_del_user_after_x_days_not_use</TD>
+  <TD>_OUTOFDATE_AFTER_X_DAYS_NOT_USE</TD>
+</TR>
+<TR>
+  <TD>$c_option_nb_row_by_page</TD>
+  <TD>_NB_ROWS_PER_PAGE</TD>
+</TR>
+<TR>
+  <TD>$c_option_check_new_msg_every</TD>
+  <TD>_CHECK_NEW_MSG_EVERY</TD>
+</TR>
+<TR>
+  <TD>$c_statistics</TD>
+  <TD>_STATISTICS</TD>
+</TR>
+<TR>
+  <TD>$c_login_is_usernamePC</TD>
+  <TD>_FORCE_USERNAME_TO_PC_SESSION_NAME</TD>
+</TR>
+<TR>
+  <TD>$c_option_allow_conference</TD>
+  <TD>_ALLOW_CONFERENCE</TD>
+</TR>
+<TR>
+  <TD>$c_option_allow_invisible</TD>
+  <TD>_ALLOW_INVISIBLE</TD>
+</TR>
+<TR>
+  <TD>$c_option_can_change_contact_nickname</TD>
+  <TD>_ALLOW_CHANGE_CONTACT_NICKNAME</TD>
+</TR>
+<TR>
+  <TD>$c_option_send_offline</TD>
+  <TD>_ALLOW_SEND_TO_OFFLINE_USER</TD>
+</TR>
+<TR>
+  <TD>$c_option_force_away</TD>
+  <TD>_FORCE_AWAY_ON_SCREENSAVER</TD>
+</TR>
+<TR>
+  <TD>$c_minimum_length_of_username</TD>
+  <TD>_MINIMUM_USERNAME_LENGTH</TD>
+</TR>
+<TR>
+  <TD>$c_password_user</TD>
+  <TD>_USER_NEED_PASSWORD</TD>
+</TR>
+<TR>
+  <TD>$c_minimum_length_of_password</TD>
+  <TD>_MINIMUM_PASSWORD_LENGTH</TD>
+</TR>
+<TR>
+  <TD>$c_option_auto_add_user</TD>
+  <TD>_ALLOW_AUTO_ADD_NEW_USER_ON_SERVER</TD>
+</TR>
+<TR>
+  <TD>$c_option_need_admin_after_add</TD>
+  <TD>_PENDING_NEW_AUTO_ADDED_USER</TD>
+</TR>
+<TR>
+  <TD>$c_option_need_admin_if_chang_check</TD>
+  <TD>_PENDING_USER_ON_COMPUTER_CHANGE</TD>
+</TR>
+<TR>
+  <TD>$c_option_crypt_msg</TD>
+  <TD>_CRYPT_MESSAGES</TD>
+</TR>
+<TR>
+  <TD>$c_user_cannot_history_messages</TD>
+  <TD bgcolor='AQUA'>_ALLOW_USER_TO_HISTORY_MESSAGES : <B>inverse !</B></TD>
+</TR>
+<TR>
+  <TD>$c_option_log_messages</TD>
+  <TD>_LOG_MESSAGES</TD>
+</TR>
+<TR>
+  <TD>$c_option_log_session_open</TD>
+  <TD>_LOG_SESSION_OPEN</TD>
+</TR>
+<TR>
+  <TD>$c_option_site_url</TD>
+  <TD>_SITE_URL_TO_SHOW</TD>
+</TR>
+<TR>
+  <TD>$c_option_site_title</TD>
+  <TD>_SITE_TITLE_TO_SHOW</TD>
+</TR>
+<TR>
+  <TD>$c_option_opencommunity</TD>
+  <TD>_SPECIAL_MODE_OPEN_COMMUNITY</TD>
+</TR>
+<TR>
+  <TD>$c_option_groupcommunity</TD>
+  <TD>_SPECIAL_MODE_GROUP_COMMUNITY</TD>
+</TR>
+<TR>
+  <TD>$c_pass_im_book</TD>
+  <TD>_IM_ADDRESS_BOOK_PASSWORD</TD>
+</TR>
+<TR>
+  <TD>$c_option_lock_contact_list</TD>
+  <TD>_LOCK_USER_CONTACT_LIST</TD>
+</TR>
+<TR>
+  <TD>$c_option_lock_options</TD>
+  <TD>_LOCK_USER_OPTIONS</TD>
+</TR>
+<TR>
+  <TD>$c_option_col_name_hide</TD>
+  <TD>_HIDE_COL_FUNCTION_NAME</TD>
+</TR>
+<TR>
+  <TD>$c_password_for_private_server</TD>
+  <TD>_PASSWORD_FOR_PRIVATE_SERVER</TD>
+</TR>
+<TR>
+  <TD>_AUTHENTIFICATION_ON_DOTPROJECT</TD>
+  <TD>_AUTHENTICATION_ON_DOTPROJECT</TD>
+</TR>
+<TR>
+  <TD>_AUTHENTIFICATION_ON_EGROUPWARE</TD>
+  <TD>_AUTHENTICATION_ON_EGROUPWARE</TD>
+</TR>
+<TR>
+  <TD>_AUTHENTIFICATION_ON_OVIDENTIA</TD>
+  <TD>_AUTHENTICATION_ON_OVIDENTIA</TD>
+</TR>
+<TR>
+  <TD>_AUTHENTIFICATION_ON_SMF</TD>
+  <TD>_AUTHENTICATION_ON_SMF</TD>
+</TR>
+<TR>
+  <TD>_AUTHENTIFICATION_ON_ACHIEVO</TD>
+  <TD>_AUTHENTICATION_ON_ACHIEVO</TD>
+</TR>
+<TR>
+  <TD>$c_autentification_on_dolibarr</TD>
+  <TD>_AUTHENTICATION_ON_DOLIBARR</TD>
+</TR>
+<TR>
+  <TD>$c_autentification_on_phenix_agenda</TD>
+  <TD>_AUTHENTICATION_ON_PHENIX</TD>
+</TR>
+<TR>
+  <TD>$c_autentification_on_phpnuke</TD>
+  <TD>_AUTHENTICATION_ON_PHPNUKE</TD>
+</TR>
+<TR>
+  <TD>$c_autentification_on_joomla</TD>
+  <TD>_AUTHENTICATION_ON_JOOMLA</TD>
+</TR>
+<TR>
+  <TD>$c_autentification_on_phorum</TD>
+  <TD>_AUTHENTICATION_ON_PHORUM</TD>
+</TR>
+<TR>
+  <TD>$c_autentification_on_vBulletin</TD>
+  <TD>_AUTHENTICATION_ON_VBULLETIN</TD>
+</TR>
+<TR>
+  <TD>$c_autentification_on_phpBB_2</TD>
+  <TD>_AUTHENTICATION_ON_PHPBB_2</TD>
+</TR>
+<TR>
+  <TD></TD>
+  <TD></TD>
+</TR>
+
+</TABLE>
+
+
+
+
+
+
+</BODY>
+</HTML>

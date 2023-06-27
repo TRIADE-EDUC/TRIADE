@@ -1,0 +1,115 @@
+/***** menu CSS *****/
+@media print {
+/*A l'impression on cache le menu, marche au moins pour IE, Moz et Opéra.*/
+	.menu, .ssmenu {
+		visibility:hidden;
+	}
+}
+
+.menu, .ssmenu {
+/* Il est important de laisser une largeur et une marge, au cas où le Javascript
+   soit désactivé. */
+	background-color:#eaedf4; /* FFF7F7 */
+	color:black;
+	font-size:10px;
+	border:1px solid #cedcec; /* 9F7F85 */
+	padding:1px;
+	width:150px;
+	margin:1em;
+}
+.menu {
+	text-align:center;
+}
+.ssmenu {
+	background-image: url('lookxpback.gif');
+	/* background-attachment:left; */
+	background-repeat:repeat-y;
+}
+
+.menu span, .ssmenu span {
+/* pour cacher les ; en fin de <li>, ce qui permet aux synthèse vocales de prendre une
+	pause dans l'élocution */
+	display:none;
+}
+
+.ssmenu ul, .ssmenu li {
+/* Les items (les <li>) des sous-menus, notamment pour enlever les puces des liste */
+	padding:0;
+	list-style-type:none;
+}
+
+.menu a, .ssmenu a, .menu a:visited, .ssmenu a:visited {
+/* Les liens qui ne sont pas sous le curseur.
+	Un width:100% fait planter Mozilla, sans le width:100% c'est IE et Opera...
+	La combinaison aucun width et height:100% marche sur tous, donc ne pas toucher */
+	font-family:Verdana;
+	text-decoration:none;
+	color:black;
+	padding:4px 3px;
+/* Ne pas modifier le block */
+	display:block;
+/*	Un width:100% fait planter Mozilla, sans le width:100% c'est IE et Opera... La combinaison
+	aucun width et height:100% marche sur tous, donc ne pas toucher ces 2 lignes */
+/*	height:100%;
+	margin:0px;*/
+	margin:0px;
+	width:100%;
+/*	voice-family: "\"}\"";
+	voice-family:inherit; */
+}
+html>body .menu a, html>body .menu a:visited, html>body .menu a:hover, html>body .menu a:active,
+html>body .ssmenu a, html>body .ssmenu a:visited, html>body .ssmenu a:hover, html>body .ssmenu a:active {
+	width :auto;
+}
+
+
+.ssmenu ul:hover, .ssmenu a:hover, .ssmenu a:focus, .menu a:hover, .menu a:focus {
+/* Les liens sous le curseur.
+	On change les couleurs du texte et de fond, et on enlève le soulignement.
+	*/
+	border:1px solid #c4d2e2; /* 316BC6 */
+	background-color:#cedcec; /* C2CEEF */
+	color:black;
+	text-decoration:none;
+	padding:3px 2px;
+}
+
+img {
+	border:none;
+}
+
+.ssmenu img {
+	/* pour le look XP, il faut mettre des icônes de 16x16 pixels, on prévoit une marge*/
+	margin-right:8px;
+}
+
+
+.ssmenu img.hr {
+	margin-top:1px;
+	margin-bottom:1px;
+	margin-left:0;
+	margin-right:0;
+	width:100%;
+	height:1;
+	display:block;
+}
+
+pre {
+	margin-left:40px;
+	margin-right:50px;
+	border: 1px inset #a1a4b2;
+	padding: 6px;
+	background: #e1e4f2;
+	color: #000;
+	font-family:Arial;
+}
+h3 {
+	font-style:italic;
+}
+
+/*
+Bref... pour résumer, ce qu'il y a à modifier à la base, c'est :
+- couleurs, police, bordure et largeur des menu et ssmenu.
+- l'effet spécial IE pour les ssmenu
+- police et couleurs des liens "non survolés" et "survolés".
+*/

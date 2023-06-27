@@ -1,0 +1,4 @@
+
+ALTER TABLE `T_USR_USER` ADD `USR_LANGUAGE_CODE` char(2) NOT NULL default '';
+
+ALTER TABLE `T_USR_USER` ADD `USR_AVATAR` varchar(20) NOT NULL default '';

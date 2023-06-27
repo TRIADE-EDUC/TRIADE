@@ -1,0 +1,104 @@
+<!--
+/*******************************************************
+ **                   IntraMessenger                  **
+ **                                                   **
+ **  Copyright:      (C) 2006 - 2011 THeUDS           **
+ **  Web:            http://www.theuds.com            **
+ **                  http://www.intramessenger.net    **
+ *******************************************************/
+
+/*******************************************************
+ **       This file is part of IntraMessenger.        **
+ **                                                   **
+ **  IntraMessenger is free software.  	              **
+ **  IntraMessenger is distributed in the hope that   **
+ **  it will be useful, but WITHOUT ANY WARRANTY.     **
+ *******************************************************/
+ -->
+<HTML>
+<HEAD>
+<TITLE>Comment mettre à jour les postes clients</TITLE>
+<META NAME="Author" CONTENT="THeUDS.com">
+<META NAME="copyright" content="THeUDS.com">
+<LINK REL="SHORTCUT ICON" HREF="../../images/favicon.ico">
+<meta http-equiv="Content-Type" content="text/html;charset=iso-8859-1" />
+</HEAD>
+<STYLE type="text/css">
+<!--
+Body {
+  font-family: Verdana, Arial, Tahoma;
+	font-size : 12px;
+	background-color : #FFFFFF;
+	color : #000000;
+	text-align : justify;
+	margin-left : 20px;
+	margin-right : 20px;
+}
+A,A:link,A:visited {
+  COLOR: #3333FF;
+  TEXT-DECORATION: none;
+}
+A:hover {
+  COLOR: #3333FF;
+  TEXT-DECORATION: underline;
+}
+A.Code {
+	font-size : 11px;
+	font-weight : bold;
+  color : #990000;
+}
+P.Titre {
+	text-decoration : underline;
+	font-weight : bold;
+	font-size : 18px;
+	text-align : center;
+}
+P.Chapitre {
+	background-color : #E1FFFF;
+	border : 1px solid #000000;
+	font-weight : bold;
+	font-size : 13px;
+	padding-left : 5px;
+	padding-bottom : 2px;
+	padding-top : 2px;
+	margin-top : 25px;
+}
+P.Copyright {
+	color : #808080;
+	font-size : 11px;
+	text-align : right;
+}
+//-->
+</STYLE>
+<BODY>
+<P class="Titre">Come aggiornare i 'clients' di <I>IntraMessenger</I></P>
+
+<P class="Chapitre">Descrizione</P>
+Dalla  versione del 'client' 1.0.4.13 (1.04N) (e server  1.3.2.108), l'aggiornamento dei 'clients' &egrave; possibile.<BR/>
+Il file  (eseguibile) <I>UDS-Update.exe</I> &egrave; indispensabile che sia presente nella cartella dell'eseguibile. (/programmi/IntraMessenger/)<BR/>
+Per gli Utenti di Windows Vista : il file <I>UDS-Update.exe.manifest</I> &egrave; indispensabile che sia presente nella cartella dell'eseguibile.<BR/>
+L'aggiornamento sar&agrave; verificato dopo  30 minuti l'inizio dell'esecuzione.<BR/>
+<BR/>
+Due metodi possibili : in automatico via internet (tramite il sito ufficiale), o via il server.<BR/>
+
+
+<P class="Chapitre">Aggionamento  via internet (tramite i site ufficiale)</P>
+In ogni 'client', nelle  opzioni, &egrave; sufficiente premere il pulsante radio  "Da internet",<BR/>
+e gli aggiornamente saranno effettuati automaticamente.
+
+<P class="Chapitre">Aggionamento  via server (locale/intranet o internet)</P>
+- Mettere nella cartella  <I>/distant/update/</I> del server l'ultima versione del 'client' client <I>IntraMessenger.exe</I>.<BR/>
+- Indicare nel file  <I>/distant/update/version.ini</I> alla riga :<BR/>
+<I><B>version=</I></B><BR/>
+indicare  la versione del 'client' copiato (nella cartella indicata qu&igrave; sopra).<BR/>
+Es : <I>version=1.06H</I><BR/>
+<BR/>
+Esiste la possibilit&agrave; sul server di forzare (bloccare) l'aggiornamento grazie all'opzione : <A class="Code">_FORCE_UPDATE_BY_SERVER</A>.<BR/>
+I 'clients' non potranno impedire l'aggiornamento, n&egrave; scegliere l'aggiornamento  via internet (tramite il sito ufficiale).<BR/>
+
+<P class="Chapitre">Come conoscere il  numero di versione dell'eseguibile ?</P>
+<A HREF="http://www.intramessenger.com/forum/viewtopic.php?t=218&" target="_blank">http://www.intramessenger.com/forum/viewtopic.php?t=218&</A>
+
+</FORM>
+</BODY>
+</HTML>

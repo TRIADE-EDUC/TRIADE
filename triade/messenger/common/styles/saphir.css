@@ -1,0 +1,354 @@
+/******************
+file: Saphir.css
+begin : 02/09/2006
+version : v1.0.3	25/10/2006
+author : danny	http://www.danny-dev.ovh.org/
+license: http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
+******************/
+
+body{
+  margin: 0;
+	background-color: #eaedf4;
+	#background:#ecf0f6;
+	color:#000000;
+	font:12px Verdana,Arial,Helvetica,sans-serif;
+	#margin:8px;
+	padding:0;
+}
+
+font,th,td,p{
+	font:12px Verdana,Arial,Helvetica,sans-serif;
+}
+
+hr {
+	border-top:1px solid #d2d7f2;
+	border-bottom:1px solid #ecf0f6;
+	border-left:0;
+	border-right:0;	
+	height:2px;
+}
+
+a:link,a:active,a:visited,a.postlink{
+	background:inherit;
+	color:#006699;
+	text-decoration:none;
+}
+
+a:hover{
+	background:inherit;
+	color:#dd6900;
+	text-decoration: underline;	
+}
+
+.topictitle{
+	font-size:11px;
+	font-weight:bold;
+}
+
+a.topictitle:visited{
+	background:inherit;
+	color:#006699;
+}
+
+a.topictitle:hover{
+	background:inherit;
+	color:#dd6900;
+}
+
+.name{
+	font-size:11px;
+	font-weight:bold;
+}
+
+.row1{
+	background:#eaedf4;
+	color:inherit;
+}
+
+.row2,.helpline{
+	background:#d9e2ec;
+	color:inherit;
+}
+
+.row3{
+	background:#cedcec;
+	color:inherit;
+}
+
+td.spacerow,td.spaceRow{	
+	background:#d2d7f2;
+	color:inherit;
+}
+
+td.rowpic{	
+	background:url('saphir/cellpic2.jpg') #ffffff repeat-y;
+	color:inherit;
+}
+
+td.cat,td.catHead,td.catBottom,td.catSides,td.catLeft,td.catRight{
+	background:#d9e2ec url('saphir/cellpic1.gif') repeat-x;
+	color:#006699;
+	font-weight:bold;
+	letter-spacing:1px;
+	height:27px;
+	padding:0 10px 0 10px;
+	margin:0;
+}
+
+th,th.thTop,th.thCornerL,th.thCornerR,th.thLeft,th.thRight{
+	background:#005eb2 url('saphir/cellpic3.gif') repeat-x;
+	color:#deeef3;
+	font-size:11px;
+	font-weight:bold;
+	height:26px;
+	white-space:nowrap;
+	text-align:center;
+	padding:0 10px 0 10px;
+	margin:0;
+}
+
+.catlight{
+	background:#e5ebf3 url('saphir/cellpic4.gif') repeat-x;
+	color:#000000;
+	height:22px;
+	white-space:nowrap;
+	border-top:1px solid #98aab1;
+	border-bottom:1px solid #98aab1;
+}
+
+td.gensmall,.gensmall{
+	background:inherit;
+	color:#000000;
+	font-size:10px;
+	letter-spacing:0;
+}
+
+td.genmed,.genmed{
+	background:inherit;
+	color:#000000;
+	font-size:11px;
+	letter-spacing:0;
+}
+
+.helpline{
+	border-style:none;
+}
+
+.bodyline{
+	background:#ffffff;
+	color:inherit;
+	border:1px solid #98aab1;
+}
+
+.forumline{
+	background:#ffffff;
+	color:inherit;
+	border:1px solid #006699;
+	#width:100%;
+}
+
+.botline{
+	border-collapse:collapse;
+	height:4px;
+	#width:100%;
+}
+
+.botline_left{
+	background:url('saphir/cellpic_left.gif') no-repeat;
+	height:4px;
+	width:8px;
+}
+
+.botline_middle{
+	background:url('saphir/cellpic_middle.gif') repeat-x;
+	height:4px;
+	#width:100%;
+}
+
+.botline_right{
+	background:url('saphir/cellpic_right.gif') no-repeat;
+	height:4px;
+	width:8px;
+}
+
+.maintitle,h1{
+	font:bold 22px/120% "Trebuchet MS",Verdana,Arial,Helvetica,sans-serif;
+	background:inherit;	
+	color:#5c81b1;
+	text-decoration:none;
+}
+
+.subtitle,h2{
+	font:bold 18px/180% "Trebuchet MS",Verdana,Arial,Helvetica,sans-serif;
+	background:inherit;	
+	color:#5c81b1;	
+	text-decoration:none;
+}
+
+.explaintitle,h3{
+	background:inherit;
+	color:#5c81b1;
+	font-size:11px;
+	font-weight:bold;
+}
+
+.nav,.forumlink{
+	font-size:11px;
+	font-weight:bold;
+}
+
+.postbody{
+	font-size:12px;
+	line-height:125%;
+}
+
+.postdetails{
+	background:inherit;	
+	color:#00396a;
+	font-size:10px;
+}
+
+td.error{
+	background:#ecf0f6;	
+	color:#DD6900;
+	font-size:12px;
+	font-weight:bold;
+}
+
+.quote{
+	background:#fafafa;
+	border:1px solid #d1d7dc;
+	color:#444444;
+	font-size:11px;
+	line-height:125%;
+}
+
+.code{
+	background:#fafafa;
+	border:1px solid #d1d7dc;
+	color:#006600;
+	font:12px Courier,"Courier New",sans-serif;
+	padding:5px;
+}
+
+.menu{
+	background:inherit;
+	color:#006699;
+	font-size:10px;
+	display:block;
+	cursor:pointer;
+	height:12px;
+}
+
+.menu:hover{
+	background:inherit;
+	color:#dd6900;
+	font-weight:bold;
+}
+
+.imgspace{
+	margin:0 2px 0 2px;
+}
+
+.imgmenu{
+	margin:1px 2px 0 10px;
+}
+
+.imgicon{
+	margin:0 1px 0 1px;
+	vertical-align:text-bottom;
+}
+
+.imgfolder{
+	margin:2px 5px 2px 5px;
+}
+
+form{
+	display:inline;
+	margin:0;
+	padding:0;
+}
+
+input{
+	font:11px Verdana,Arial,Helvetica,sans-serif;
+	cursor:pointer;
+}
+
+select{
+	background:#ffffff;
+	color:#000000;
+	border:1px solid #98aab1;
+	font:11px Verdana,Arial,Helvetica,sans-serif;
+	cursor:pointer;
+	letter-spacing:0;
+}
+
+input.post,textarea.post{
+	background:#ffffff;
+	color:#000000;
+	border:1px solid #98aab1;
+	font:11px Verdana,Arial,Helvetica,sans-serif;
+	padding:0 0 2px 2px;
+}
+
+/* begin GIC */
+input.disabled,textarea.disabled {
+  color : #888888;
+	border-left: 1px #A5B3C4 solid;
+	border-top: 1px #A5B3C4 solid;
+	border-right: 1px #BDC6D0 solid;
+	border-bottom: 1px #BDC6D0 solid;
+	background-color: #D3D6DC;
+}
+/* end GIC */
+
+
+a.button_l,a.button_l:hover,a.button_l:visited{
+	background:inherit;	
+	color:#000000;
+	font-weight:bold;
+	letter-spacing:0;	
+}
+
+input.button,input.liteoption,.button{
+	background:#fafafa;
+	color:#000000;
+	font-size:11px;
+	border:1px solid #98aab1;
+	letter-spacing:0;
+}
+
+input.mainoption{
+	background:#fafafa;
+	color:#000000;
+	font-size:11px;
+	font-weight:bold;
+	border:1px solid #98aab1;
+	letter-spacing:0;
+}
+
+br.space{
+line-height:5px;
+}
+
+img,table{
+	border:none;
+}
+
+label{
+	cursor:pointer;
+}
+
+div#tooltipDiv {
+	padding:2px;
+	border:solid 1px #82A2CB;
+	display:none;
+	background:#FFFFFF;
+	color:#006699;
+	font:10px Verdana, Arial, Helvetica, sans-serif;
+	text-align:left;
+	position: absolute;
+	left:0;
+	top:0;
+	z-index: 100;
+}

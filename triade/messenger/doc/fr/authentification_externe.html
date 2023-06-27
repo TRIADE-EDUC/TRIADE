@@ -1,0 +1,247 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<!--
+/*******************************************************
+ **                  IntraMessenger - server          **
+ **                                                   **
+ **  Copyright:      (C) 2006 - 2015 THeUDS           **
+ **  Web:            http://www.theuds.com            **
+ **                  http://www.intramessenger.net    **
+ **  Licence :       GPL (GNU Public License)         **
+ **  http://opensource.org/licenses/gpl-license.php   **
+ *******************************************************/
+
+/*******************************************************
+ **       This file is part of IntraMessenger-server  **
+ **                                                   **
+ **  IntraMessenger is a free software.               **
+ **  IntraMessenger is distributed in the hope that   **
+ **  it will be useful, but WITHOUT ANY WARRANTY.     **
+ *******************************************************/
+ -->
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="fr" xml:lang="fr">
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
+    <meta http-equiv="content-language" content="fr" />
+    <meta name="description" content="Comment configurer l'authentification externe pour IntraMessenger" />
+    <meta http-equiv="content-style-type" content="text/css" />
+    <META NAME="Author" CONTENT="THeUDS.com">
+    <META NAME="copyright" content="THeUDS.com">
+    <LINK REL="SHORTCUT ICON" HREF="../../images/favicon.ico">
+    <title>Comment configurer l'authentification tierce (externe) pour IntraMessenger</title>
+    <base href="./" target="_blank" />
+    <style type="text/css" >
+      <!--
+      body {
+        font-family:"Trebuchet MS", Arial, Sans-Serif;
+        color:#444;
+        font-size:.9em;
+        background-color:#FFF;
+        margin:0;
+      }
+
+      #header {
+        background-color:#A5C2E0;
+        font-family:Georgia, serif;
+        font-size:1.5em;
+        border-bottom:1px solid #650;
+        color:#FFF;
+        padding:2px 6% 12px;
+      }
+
+      #content {
+        margin:20px 6%;
+      }
+
+      .panel {
+        border:1px solid #D8D8D8;
+        background-color:#EFEFEF;
+        margin:1em 0;
+        padding:1.2ex;
+      }
+
+      .panel h2 {
+        border-bottom:1px dashed #2181B0;
+        font-size:1.6em;
+        font-weight:400;
+        color:#2181B0;
+        margin:0 0 0.5em;
+      }
+
+      .notice {
+        background:#FFFED1;
+        border:1px solid #E5E4A0;
+        color:#4B4000;
+        margin:0 0 15px;
+        padding:10px;
+      }
+
+      ul,ol {
+        list-style:square;
+       line-height:130%;
+        text-align:justify;
+        margin:10px 8px;
+      }
+      A.Code {
+        font-size : 11px;
+        font-weight : bold;
+        color : #990000;
+      }
+      -->
+    </style>
+  </head>
+  <body>
+    <div id="header">
+      <div>
+        <h1>Instructions</h1>
+        <ul>
+        <li>Pour configurer l'authentification tierce (externe) pour IntraMessenger</li>
+        </ul>
+      </div>
+    </div>
+    <div id="content">
+    
+      <div class="panel">
+        <h2>Avant propos</h2>
+        <p>
+        Vous pouvez choisir d'effectuer l'authentification (la vérification du login/pseudo et du mot de passe) depuis une source tierce (forum, CMS ou autre).<BR/>
+        <UL>
+          <LI>
+          Si vous avez déjà un forum (ou autre), exemple : <B>http://votredomaine/forum/</B><BR/>
+          vous pouvez installer <I>IntraMessenger</I> au même niveau : <B>http://votredomaine/intramessenger/</B> <BR/>
+          ou à l'intérieur : <B>http://votredomaine/forum/intramessenger/</B>.<BR/>
+          </LI>
+          <LI>
+          Vous avez ainsi la possibilité d'autoriser l'accès à <I>IntraMessenger</I> uniquement aux membres inscrits à ce forum/CMS.<BR/>
+          Il vous suffit d'effectuer les modifications indiquée ci-dessous dans <I>IntraMessenger</I> (rien à modifier dans le forum).<BR/>
+          <I>IntraMessenger</I> ira simplement vérifier si les logins et du mot de passe sont corrects (que l'utilisateur soit connecté ou non au forum).<BR/>
+          </LI>
+        </UL>
+        </p>
+      </div>
+      
+      <div class="panel">
+        <h2>Lors de l'installation</h2>
+          <UL>
+            <A HREF='images/im_setup_step_3_FR.png' target='_blank'><IMG SRC="images/im_setup_step_3_TN.png" BORDER='0'/></A>
+            <LI>Choisir le type d'installation : <b>module/AddOn/plugin</b>.
+            </LI>
+            <LI>Choisir l'authentification (votre application).
+            </LI>
+            <LI>Préciser l'emplacement (de votre application).
+            </LI>
+          </UL>
+      </div>
+
+      <div class="panel">
+        <h2>Après l'installation, modifications à appliquer pour tous les types d'authentifications externes</h2>
+          <UL>
+            <LI>Modifier les options (stockées dans le fichier <I>/common/config/config.inc.php</I>)
+            </LI>
+            <UL>
+              <LI><A HREF='http://www.intramessenger.net/doc/im_select_extern_auth_FR.png' target='_blank'>Choisir l'option</A> spécifique (<SMALL><I>_EXTERNAL_AUTHENTICATION</I></SMALL>) :<BR/>
+              <A HREF='images/im_select_extern_auth_FR.png' target='_blank'><IMG SRC="images/im_select_extern_auth_TN.png" BORDER='0'/></A><BR/>
+              </LI>
+              <LI>éventuellement : <A HREF='http://www.intramessenger.net/doc/im_select_extern_auth2_FR.png' target='_blank'>renseigner le préfixe</A> 
+              et les <A HREF='http://www.intramessenger.net/doc/im_select_extern_auth2_FR.png' target='_blank'>paramètres de connexion</A> 
+              <small>(si un des quatre est différent d'IntraMessenger, les renseigner tous)</small><BR/>
+              <A HREF='images/im_select_extern_auth2_FR.png' target='_blank'><IMG SRC="images/im_select_extern_auth2_TN.png" BORDER='0'/></A><BR/>
+              </LI>
+              <LI>renseigner l'url (adresse) pour s'inscrire (<SMALL><I>_EXTERN_URL_TO_REGISTER</I></SMALL>)<BR/>
+              (ex: <I>http://www.intramessenger.net/phpbb2/profile.php?mode=register&</I>).<BR/>
+              <IMG SRC="images/im_select_extern_auth3_FR.png" BORDER='0'/><BR/>
+              </LI>
+              <LI>renseigner l'url (adresse) pour récupérer son mot de passe oublié (<SMALL><I>_EXTERN_URL_FORGET_PASSWORD</I></SMALL>)<BR/>
+              (ex: <I>http://www.intramessenger.net/phpbb2/profile.php?mode=sendpassword&</I>).<BR/>
+              </LI>
+            </UL>
+            <LI>Voir les éventuels <u>paramètres spécifiques</u> des chapitres ci-dessous.
+            </LI>
+            <LI>Vérifier la configuration via la page : <B>/admin/list_options_auth_test.php</B>
+            </LI>
+            <LI>Les options suivantes seront automatiquement modifiées :
+            <UL>
+              <LI><A class="Code">_USER_NEED_PASSWORD</A> : activée
+              </LI>
+              <LI><A class="Code">_ALLOW_AUTO_ADD_NEW_USER_ON_SERVER</A> : activée
+              </LI>
+              <LI><A class="Code">_PENDING_NEW_AUTO_ADDED_USER</A> : désactivée
+              </LI>
+              <LI><A class="Code">_NEED_QUICK_REGISTER_TO_AUTO_ADD_NEW_USER</A> : désactivée
+              </LI>
+            </UL>
+          </UL>
+      </div>
+
+      <div class="panel">
+        <h2>Spécificités pour l'authentification via <I>activeCollab</I></h2>
+          Fichier <I>/common/config/extern.config.inc.php</I> : indiquer le numéro de licence dans <A class="Code">LICENSE_KEY</A> (fourni dans <I>config/licence.php</I>).<BR/>
+      </div>
+
+      <div class="panel">
+        <h2>Spécificités pour l'authentification via <I>Prestashop</I></h2>
+        Fichier <I>/common/config/extern.config.inc.php</I> : indiquer le code dans <A class="Code">_COOKIE_KEY_</A> (fourni dans <I>config/settings.inc.php</I>).<BR/>
+      </div>
+
+      <div class="panel">
+        <h2>Spécificités pour l'authentification via <I>ImpressCMS</I></h2>
+          Renseigner le fichier <I>/common/config/extern.config.inc.php</I> :<BR/>
+          <UL>
+            <LI>la valeur de <A class="Code">SDATA_DB_SALT</A> : dans ImpressCMS, ouvrir /mainfile.php lignes 30 (XOOPS_TRUST_PATH) : indique le chemin et ligne 32 : indique le nom du fichier à ouvrir.
+            </LI>
+            <LI><A class="Code">$extern_prefix</A> : voir <A class="Code">SDATA_DB_PREFIX</A> (fichier ci-dessus)
+            </LI>
+          </UL>
+      </div>
+      
+      <div class="panel">
+        <h2>Spécificités pour l'authentification via <I>Kimai</I></h2>
+        Fichier <I>/common/config/extern.config.inc.php</I> : indiquer le code dans <A class="Code">$password_salt</A> (fourni dans <I>kimai/includes/autoconf.php</I>).<BR/>
+      </div>
+
+
+      <div class="panel">
+        <h2>Spécificités pour l'authentification via <I>Oxwall</I></h2>
+        Fichier <I>/common/config/extern.config.inc.php</I> : indiquer le code dans <A class="Code">OW_PASSWORD_SALT</A> (fourni dans <I>oxwall/ow_includes/config.php</I>).<BR/>
+      </div>
+
+<!--
+      <div class="panel">
+        <h2>*****</h2>
+          <UL>
+            <LI>
+            </LI>
+            <LI>
+            </LI>
+          </UL>
+      </div>
+-->
+
+      <div class="panel">
+        <h2>Informations</h2>
+          <UL>
+            <LI>
+
+            Forum officiel : <A HREF='http://www.intramessenger.com/forum/' target='_blank'>http://www.intramessenger.com/forum/</A><BR/>
+            N'hésitez pas à venir y proposer vos améliorations et suggestions ainsi que vos traductions.<BR/>
+            </LI>
+            <LI>
+            Support : <A HREF='http://www.intramessenger.net/contact.php?lang=FR&' target='_blank'>http://www.intramessenger.net/contact.php?lang=FR&</A><BR/>
+            </LI>
+
+          </UL>
+            <p class="notice">
+            Consulter la <A href="http://www.intramessenger.com/forum/viewforum.php?f=12&" target="_blank">liste des nouveautés</A> ainsi que 
+            la <A href="http://www.intramessenger.com/forum/viewtopic.php?t=341&" target="_blank">liste des prochaines améliorations</A> (sur internet).
+            </P>
+      </div>
+
+      <div class="panel">
+        <A HREF='http://www.theuds.com' target='_blank'>THeUDS</A> © 2006 - 2015
+      </div>
+
+    </div>
+  </body>
+</html>

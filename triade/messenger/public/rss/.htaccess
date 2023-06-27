@@ -1,0 +1,4 @@
+<Files *.xml>
+AddCharset ISO-8859-1 .xml
+AddType text/xml .xml
+</Files>

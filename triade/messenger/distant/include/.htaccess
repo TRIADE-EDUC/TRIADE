@@ -1,0 +1,7 @@
+<Files *>
+	Order Allow,Deny
+	Deny from All
+</Files>
+
+# Aucun script dans le dossier et ses sous-dossiers, que ce soit PHP, PERL ou autre CGI, ne pourra s'executer si ExecCGI est inactif. Et interdit d'afficher la liste des fichiers.
+OPTIONS -ExecCGI  -Indexes

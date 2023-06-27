@@ -1,0 +1,545 @@
+body, p {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	color: #000000;
+	font-size: x-small;
+}
+
+.bodyText {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: x-small;
+	color: #000000;
+}
+
+/*Links under top icons - contact, my account, faq and shopping cart*/
+.navIcon, a:visited.navIcon {
+	font-family: Geneva, Arial, Helvetica, sans-serif;
+	font-size: xx-small;
+	color: #003366;
+	text-decoration: none;
+}
+a:hover.navIcon {
+	font-family: Geneva, Arial, Helvetica, sans-serif;
+	font-size: xx-small;
+	color: #663300;
+	text-decoration: underline;
+}
+.navIconInactive {
+	font-family: Geneva, Arial, Helvetica, sans-serif;
+	font-size: xx-small;
+	color: #663300;
+	font-weight: bold;
+}
+.navIconHome, a:visited.navIconHome {
+	font-family: Geneva, Arial, Helvetica, sans-serif;
+	font-size: small;
+	color: #003366;
+	text-decoration: none;
+}
+a:hover.navIconHome {
+	font-family: Geneva, Arial, Helvetica, sans-serif;
+	font-size: small;
+	color: #663300;
+	text-decoration: underline;
+}
+/*Main top nav bar links - Home Products Solutions Support Company */
+.navTop, a:visited.navTop {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: x-small;
+	font-weight: bold;
+	color: #FFFFFF;
+	text-decoration: none;
+	text-align: center;
+	vertical-align: middle;
+
+}
+
+a:hover.navTop {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: x-small;
+	font-weight: bold;
+	color: #EADCBF;
+	text-decoration: underline;
+	text-align: center;
+	vertical-align: middle;
+
+}
+.navTopInactive {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: x-small;
+	font-weight: bold;
+	color: #EADCBF;
+	text-decoration: none;
+	text-align: center;
+	vertical-align: middle;
+
+}
+/*Left column titles - Resources for, About*/
+.navLeftTitle {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: x-small;
+	font-weight: bold;
+	color: #000000;
+
+}
+/*Left column links - Developers  Open Source  Community and so on*/
+.navLeftLink {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: x-small;
+	color: #003366;
+	text-decoration: none;
+}
+a:hover.navLeftLink{
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: x-small;
+	color: #003366;
+	text-decoration: underline;
+}
+.navLeftLinkHome {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: small;
+	color: #003366;
+	text-decoration: none;
+}
+a:hover.navLeftLinkHome{
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: small;
+	color: #003366;
+	text-decoration: underline;
+}
+.navLeftLinkInactive {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: x-small;
+	color: #003366;
+	text-decoration: none;
+	font-weight: bold;
+}
+/*Brown table on home page, titles - Solutions Products Tools */
+.tblTitle {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: x-small;
+	font-weight: bold;
+	color: #4D340D;
+	text-decoration: none;
+}
+a:visited.tblTitle {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: x-small;
+	font-weight: bold;
+	color: #000000;
+	text-decoration: none;
+}
+a:hover.tblTitle {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: x-small;
+	font-weight: bold;
+	color: #4D340D;
+	text-decoration: underline;
+}
+/*Brown table on home page, links - Prevent Credit Card Fraud, Target Banner Ads, and so on */
+.tblLink {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: x-small;
+	font-weight: normal;
+	color: #4D340D;
+	text-decoration: none;
+
+}
+
+a:visited.tblLink {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: x-small;
+	font-weight: normal;
+	color: #000000;
+	text-decoration: none;
+}
+
+a:hover.tblLink {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: x-small;
+	font-weight: normal;
+	color: #4D340D;
+	text-decoration: underline;
+}
+
+
+/*Search elements*/
+.searchButton {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	color: #FFFFFF;
+	background-color: #547093;
+	border-top: 1px solid #A4B3C7;
+	border-right: 1px solid #003366;
+	border-bottom: 1px solid #003366;
+	border-left: 1px solid #A4B3C7;
+}
+.searchField {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	color: #000000;
+	margin: 0px;
+	padding: 0px;
+}
+
+
+/*First line of links at the bottom - Home  Company  Products  Solutions  Technology */
+.navBot1 {
+
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: x-small;
+	font-weight: bold;
+	color: #003366;
+	text-decoration: none;
+	text-align: center;
+	vertical-align: middle;
+}
+a:hover.navBot1 {
+
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: x-small;
+	font-weight: bold;
+	color: #003366;
+	text-decoration: underline;
+	text-align: center;
+	vertical-align: middle;
+}
+.navBot1Inactive {
+
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: x-small;
+	font-weight: bold;
+	color: #547093;
+	text-decoration: none;
+	text-align: center;
+	vertical-align: middle;
+}
+/*Second line of links at the bottom - contact, my account, faq and shopping cart */
+
+.navBot2 {
+
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: x-small;
+	color: #003366;
+	text-decoration: none;
+	text-align: center;
+	vertical-align: middle;
+}
+a:hover.navBot2 {
+
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: x-small;
+	color: #003366;
+	text-decoration: underline;
+	text-align: center;
+	vertical-align: middle;
+}
+.navBot2Inactive {
+
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: x-small;
+	color: #547093;
+	text-decoration: none;
+	text-align: center;
+	vertical-align: middle;
+}
+
+/*Legal copy at the bottom - copyright... */
+.legal {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: x-small;
+	color: #547093;
+}
+
+
+/* Stuff added by TJ for old website compatibility */
+.header {
+        font-size: large;
+        font-weight: bold;
+        font-family: verdana, sans-serif;
+}
+
+td.box_header {
+        background-color: #C39E7F;
+}
+
+.footer, .top, td.box_top {
+        font-family: verdana, sans-serif;
+        font-size: x-small;
+}
+
+.Text {
+        color: Black;
+        text-decoration: none;
+        cursor: text;
+        font-size: 10pt;
+}
+
+td { 	
+	font-size: x-small;}
+
+.Heading {
+        padding-top: 10px;
+	font-size: x-small;
+        font-weight: bold;
+        border-bottom: solid 1px #7F3B0B;
+}
+
+.Fields {
+        border-bottom: solid 1px #EADCBF;
+        text-align: justify;
+}
+
+.ProductName {
+	font-size: x-small;
+    font-weight: bold;
+/*        text-decoration: none;*/
+}
+
+a.ProductName {
+	font-size: x-small;
+    font-weight: bold;
+	text-decoration: underline;
+}
+
+/* Stuff added by Inna */
+.PageHeader {
+	font-size: 125%;
+	font-weight: bold;
+	text-decoration: none;
+	color: #4D340D;
+}
+
+.kicker {
+	font-size: 100%;
+	font-weight: bold;
+	text-decoration: none;
+	color: #4D340D;
+}
+
+.tblProduct1 {
+	background-color: #EADCBF;
+	border-bottom: 1px solid #EADCBF;
+	font-weight: bold;
+}
+
+.tblProduct2 {
+	border-bottom: 1px solid #EADCBF;
+	background-color: #ffffff;
+}
+
+.tblBenefits {
+	border-top: 1px solid #EADCBF;
+        background-color: #EADCBF; 
+	}
+.tblProduct3 {
+	border-top: 1px solid #EADCBF;
+	background-color: #ffffff;
+}
+
+.tblFeatureHeading {
+background-color: #EADCBF;
+	border-bottom: 1px solid #FAF6EF;
+	font-weight: bold;
+} 
+
+.tblHeading{
+background-color: #4D340D;
+color: #ffffff;
+font-weight: bold;
+}
+
+.quote {
+ font-family: times new roman, serif;
+ font-size: 115%;
+ font-style: italic;
+}
+
+.lstSquare {
+list-style-type: square;
+color: #000000;
+}
+
+.productHeading {
+color: #4D340D;
+}
+
+/* more stuff added by TJ 4/25/04 to make links look better */
+
+a {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	color: #0033BB;
+}
+
+a:visited {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	color: #330066;
+}
+
+a:hover {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+        color: #003366;
+}
+
+/* Migration path for old <H3> and <H4> tags added by TJ 5/2/04 */
+
+.oldH3 {
+	font-size: 115%;
+	font-weight: bold;
+	text-decoration: none;
+	color: #4D340D;
+}
+
+.oldH4 {
+	font-size: 100%;
+	font-weight: bold;
+	text-decoration: none;
+	color: #000000;
+}
+
+/* Credit Card Fraud Detection Output screen */
+.outputName {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: x-small;
+	color: #000000;
+	background-color: #EADCBF;
+	font-weight: bold;
+}
+.output {
+
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: x-small;
+	color: #000000;
+	background-color: #FAF6EF;
+}
+.inputName {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: x-small;
+	color: #000000;
+	background-color: #E8ECF1;
+	font-weight: bold;
+}
+.input {
+
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: x-small;
+	color: #000000;
+	background-color: #F4F6F8;
+}
+.bodySmaller {
+	font-size: xx-small;
+}
+.pageHeaderSmaller {
+	font-size: xx-small;
+	color: #4D340D;
+}
+ul.productFeatures {
+	list-style-position: outside;
+	list-style-image: url(images/bullet_brown_larger.gif);
+	padding-top: 2px;
+	padding-bottom: 2px;
+	margin-top: 10px;
+}
+
+.kickerBlue {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: x-small;
+	color: #003366;
+	text-decoration: none;
+	font-weight: bold;
+}
+
+.buyHead {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: xx-small;
+	font-weight: bold;
+	color: #4D340D;
+	background-color: #EADCBF;
+	padding-top: 4px;
+	padding-right: 0px;
+	padding-bottom: 6px;
+	padding-left: 5px;
+	border-right-width: 1px;
+	border-left-width: 1px;
+	border-top-style: none;
+	border-right-style: solid;
+	border-bottom-style: none;
+	border-left-style: solid;
+	border-right-color: #FFFFFF;
+	border-left-color: #FFFFFF;
+	border-top-width: 0px;
+	border-bottom-width: 0px;
+}
+.buyLine {
+	background-color: #7F3B0B;
+	border-right-width: 1px;
+	border-left-width: 1px;
+	border-right-style: solid;
+	border-left-style: solid;
+	border-right-color: #FFFFFF;
+	border-left-color: #FFFFFF;
+}
+.buyData {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: xx-small;
+	font-weight: normal;
+	color: #000000;
+	background-color: #FAF6EF;
+	padding-right: 0px;
+	padding-bottom: 5px;
+	padding-left: 7px;
+	border-right-width: 1px;
+	border-left-width: 1px;
+	border-top-style: none;
+	border-right-style: solid;
+	border-bottom-style: none;
+	border-left-style: solid;
+	border-right-color: #FFFFFF;
+	border-left-color: #FFFFFF;
+	border-top-width: 0px;
+	border-bottom-width: 0px;
+	padding-top: 5px;
+}
+.buyRadio {
+
+
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: xx-small;
+	font-weight: normal;
+	color: #000000;
+	background-color: #FAF6EF;
+	padding-right: 0px;
+	padding-left: 2px;
+	border-right-width: 1px;
+	border-left-width: 1px;
+	border-top-style: none;
+	border-right-style: solid;
+	border-bottom-style: none;
+	border-left-style: solid;
+	border-right-color: #FFFFFF;
+	border-left-color: #FFFFFF;
+	border-top-width: 0px;
+	border-bottom-width: 0px;
+}
+.buySpace {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: xx-small;
+	font-weight: normal;
+	color: #000000;
+	background-color: #FAF6EF;
+	border-right-width: 1px;
+	border-left-width: 1px;
+	border-top-style: none;
+	border-right-style: solid;
+	border-bottom-style: none;
+	border-left-style: solid;
+	border-right-color: #FFFFFF;
+	border-left-color: #FFFFFF;
+	border-top-width: 0px;
+	border-bottom-width: 0px;
+	padding: 5px 0px 0px;
+}
+
+.code {
+        font-family: Courier, 'Courier New', sans-serif; color: #000000;
+        background-color: #f0e8d6;
+}

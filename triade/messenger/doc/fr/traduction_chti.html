@@ -1,0 +1,165 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<!--
+/*******************************************************
+ **                  IntraMessenger - server          **
+ **                                                   **
+ **  Copyright:      (C) 2006 - 2012 THeUDS           **
+ **  Web:            http://www.theuds.com            **
+ **                  http://www.intramessenger.net    **
+ **  Licence :       GPL (GNU Public License)         **
+ **  http://opensource.org/licenses/gpl-license.php   **
+ *******************************************************/
+
+/*******************************************************
+ **       This file is part of IntraMessenger-server  **
+ **                                                   **
+ **  IntraMessenger is a free software.               **
+ **  IntraMessenger is distributed in the hope that   **
+ **  it will be useful, but WITHOUT ANY WARRANTY.     **
+ *******************************************************/
+ -->
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="fr" xml:lang="fr">
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
+    <meta http-equiv="content-language" content="fr" />
+    <meta name="description" content="IntraMessenger Traduction chti" />
+    <meta http-equiv="content-style-type" content="text/css" />
+    <META NAME="Author" CONTENT="THeUDS.com">
+    <META NAME="copyright" content="THeUDS.com">
+    <LINK REL="SHORTCUT ICON" HREF="../../images/favicon.ico">
+    <title>[IntraMessenger] Traduction chti</title>
+    <base href="./" target="_blank" />
+    <style type="text/css" >
+      <!--
+      body {
+        font-family:"Trebuchet MS", Arial, Sans-Serif;
+        color:#444;
+        font-size:.9em;
+        background-color:#FFF;
+        margin:0;
+      }
+
+      #header {
+        background-color:#A5C2E0;
+        font-family:Georgia, serif;
+        font-size:1.5em;
+        border-bottom:1px solid #650;
+        color:#FFF;
+        padding:2px 6% 12px;
+      }
+
+      #content {
+        margin:20px 6%;
+      }
+
+      .panel {
+        border:1px solid #D8D8D8;
+        background-color:#EFEFEF;
+        margin:1em 0;
+        padding:1.2ex;
+      }
+
+      .panel h2 {
+        border-bottom:1px dashed #2181B0;
+        font-size:1.6em;
+        font-weight:400;
+        color:#2181B0;
+        margin:0 0 0.5em;
+      }
+
+      .notice {
+        background:#FFFED1;
+        border:1px solid #E5E4A0;
+        color:#4B4000;
+        margin:0 0 15px;
+        padding:10px;
+      }
+
+      ul,ol {
+        list-style:square;
+       line-height:130%;
+        text-align:justify;
+        margin:10px 8px;
+      }
+      A.Code {
+        font-size : 11px;
+        font-weight : bold;
+        color : #990000;
+      }
+      -->
+    </style>
+  </head>
+  <body>
+    <div id="header">
+      <div>
+        <h1>Instructions</h1>
+        <ul>
+        <li>Pour traduire en direct les messages en chti</li>
+        </ul>
+      </div>
+    </div>
+    <div id="content">
+    
+      <div class="panel">
+        <h2>Traduction chtimi (ch'ti) en direct :-)</h2>
+        <p>
+        Vous pouvez activer la traduction (de quelques mots) en Chti, pour celà :<BR/>
+        <UL>
+          <LI>ouvrir le fichier <I>/distant/include/message_send.inc.php</I>
+          </LI>
+          <LI>enlever les dièses (#) devant les lignes (210 et 211 environ) :<BR/>
+          <code>&nbsp; &nbsp;	#include ("../common/words_chti.inc.php");</code><BR/>
+          <code>&nbsp; &nbsp;	#$msg = textChti($msg);</code><BR/>
+          </LI>
+          <LI>enregistrer les modifications.
+          </LI>
+        </UL>
+        </p>
+      </div>
+      
+      <div class="panel">
+        <h2>Remarques</h2>
+        Pour modifier le dictionnaire chti, modifier le fichier <I>/common/words_chti.inc.php</I><BR/>
+        <BR/>
+        Ne fonctionne que si le crytage des fichiers n'est pas actif (_CRYPT_MESSAGES).<BR/>
+      </div>
+      
+      <div class="panel">
+        <h2>Informations</h2>
+          <UL>
+            <LI>
+            Forum officiel : <A HREF='http://www.intramessenger.com/forum/' target='_blank'>http://www.intramessenger.com/forum/</A><BR/>
+            N'hésitez pas à venir y proposer vos améliorations ainsi que vos traductions.<BR/>
+            </LI>
+            <LI>
+            Support : <A HREF='http://www.intramessenger.net/contact.php?lang=FR&' target='_blank'>http://www.intramessenger.net/contact.php?lang=FR&</A><BR/>
+            </LI>
+          </UL>
+            <p class="notice">
+            Consulter la <A href="http://www.intramessenger.com/forum/viewforum.php?f=12&" target="_blank">liste des nouveautés</A> ainsi que 
+            la <A href="http://www.intramessenger.com/forum/viewtopic.php?t=341&" target="_blank">liste des prochaines améliorations</A> (sur internet).
+            </P>
+      </div>
+      
+<!--
+      <div class="panel">
+        <h2>*****</h2>
+          <UL>
+            <LI>
+            </LI>
+            <LI>
+            </LI>
+          </UL>
+      </div>
+-->
+
+      <div class="panel">
+        <A HREF='http://www.theuds.com' target='_blank'>THeUDS</A> © 2006 - 2012
+      </div>
+
+    </div>
+  </body>
+</html>

@@ -1,0 +1,68 @@
+>F01#c_login_is_usernamePC# : retour des valeurs des options (pour démarrage appli).
+>F02#OK# : test la connexion SQL.
+>F05#nom#id_session# : ouverture de session
+>F08#share files options - backup files options#
+>F09#url du site#Nom du site#
+>F10#id_contact#contact#nom#privilege#pseudo# : carnet d'adresses
+>F11#contact#nom#pays# : liste des utilisateurs absents du carnet d'adresses (sauf ceux en attente de validation).
+>F12#contact#contact#nom#privilege# : contacts en attente de validation du user.
+>F13#contact#contact#nom#privilege# : contacts qui peuvent contacter le user   (A FAIRE)
+>F15#id_contact#contact#nom#privilege#etat session#id session#id user#pseudo# : liste des contacts online 
+>F16#contact#  : recherche de contact
+>F17#retour#country_code#language#avatar#time#etat session#
+>F20#retour# : ajout en demande autorisation de contact ; retour = OK ou KO
+>F25#retour# : vote ; retour = OK ou KO
+>F30#retour# : change etat pris en compte (OK) ou non (KO).
+>F35#retour# : liste serveurs (pour états serveurs)
+>F40#retour#num# : 'OK : message bien envoyé; 'KO' : non envoyé (num = numéro motif).
+>F42#retour#msg#heure# : lecture d'un message.
+>F42#CONF#ADD#id_conf#demandeur# :   si invite à conférence.
+>F44#nb msg à lire#  CONF#ADD#id_conf#demandeur#   si invite à conférence.
+>F46#contact1#contact2#contact3#... liste des users ayant envoyé un message.
+>F50#retour#id_conf# : conférence créé.
+>F51#retour# : confirme accept conference.
+>F52#retour#x#x#... :  list des users de la conference.
+>F54#retour# : bookmark category list
+>F55#retour# : bookmark list
+>F56#retour# : bookmark send
+(>F5#retour# : bookmark approval)
+(>F5#retour# : bookmark delete)
+>F59#retour# : bookmark vote)
+>F59#retour# : bookmark vote)
+>F60#retour# : change mot de passe : pris en compte (OK) ou non (KO).
+>F65#retour# : changement de pseudo : pris en compte (OK) ou non (KO).
+>F66#function/name#phone#email#avatar#
+>F67#retour# : changement function/name#phone#email#avatar : pris en compte (OK) ou non (KO).
+>F68#retour#... : liste avatars
+>F69#retour# : changement d'avatar : pris en compte (OK) ou non (KO).
+>F70#retour#id#debut#fin#libellé#lieu#min rappel#privé#           (Phenix)
+>F71#retour#id#debut#fin#libellé#lieu#min rappel#privé#           (OpenGoo)
+>F79#retour#   Register (Version 2.0.203)
+>F80#retour#  : shoutbox list (Version 2.0.2.212)
+>F81#retour#  : shoutbox send (Version 2.0.2.212)
+>F82#retour#  : shoutbox approval
+>F83#retour#  : shoutbox delete
+>F85#retour#  : shoutbox vote
+>F87#retour#  : shoutbox list groupes (Version 2.0.2.213)
+>F90#retour#  : group list groupes (Version 2.0.2.213)
+>F91#retour#  : group : request adding (Version 2.0.2.213)
+>F92#retour#  : group : leaving (Version 2.0.2.213)
+>F93#retour#  : group : join approval (Version 2.0.2.213)
+>F99#retour#  : dashboard
+------------------------------------------------------------------------------------------
+Version 2.0 :
+>F18#
+>F19#  (F10)
+Version 2.0.4 :
+>F140#retour# : sharefiles : request send
+>F141#retour# : sharefiles : send
+>F146#retour# : sharefiles : list
+>F1#retour# : sharefiles : 
+>F1#retour# : sharefiles : 
+>F1#retour# : sharefiles : 
+>F1#retour# : sharefiles : 
+>F1#retour# : sharefiles : 
+ 
+
+
+USR_STATUS : 1: OK // 2: locked // 3: chang conf ok (will be 1 next time user connect) // 9: leave server

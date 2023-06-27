@@ -1,0 +1,26 @@
+.menu_onglet { /* boite qui contient le menu (les onglets) */
+  padding-top:12px ; /* marge intérieure haute */
+  padding-bottom:0px;
+  text-decoration:none} /* les liens ne sont pas soulignés */
+
+.onglet { /* style des onglets inactifs */
+  margin : 0px ; /* marge extérieure */
+  padding:5px 7px 0px 7px; /* marge intérieure */
+  text-decoration:none} /* les liens ne sont pas soulignés */
+
+a.onglet { /* style des liens se trouvant dans un onglet inactif */
+  background-color:#D9E2EC; /* le fond de l'onglet est gris */
+  text-decoration:none} /* les liens ne sont pas soulignés */
+
+.onglet-actif { /* style de l'onglet de la page active */
+   border-bottom:solid 2px #F0F4FA ; /* le trait inférieur est effacé */
+   padding:5px 7px 0px 7px;  /* marge intérieure */
+   font-weight : bold;
+   background-color:#F0F4FA} /* le fond de l'onglet actif est blanc*/
+   
+a.onglet-actif { /* style de l'onglet de la page active */
+   border-bottom:solid 2px #F0F4FA ; /* le trait inférieur est effacé */
+   padding:5px 7px 0px 7px;  /* marge intérieure */
+   font-weight : bold;
+   background-color:#F0F4FA; /* le fond de l'onglet actif est blanc*/
+   text-decoration:none} /* les liens ne sont pas soulignés */

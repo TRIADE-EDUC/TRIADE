@@ -1,0 +1,131 @@
+IntraMessenger is a freeware 
+(free and no limitation, for personal and commercial use)
+is distributed in the hope that it will be useful, 
+but WITHOUT ANY WARRANTY.
+
+
+SOFTWARE LICENSE AGREEMENT
+
+THE FOLLOWING AGREEMENTS EXPLAIN HOW YOU MAY USE 'THe UDS' PROPERTIES AND SOFTWARE INSTALLED BY THIS INSTALLER PROGRAM. 
+BY CLICKING ON THE  "I ACCEPT" CHECK BOX IN THIS INSTALLER PROGRAM, YOU CONSENT AND AGREE TO BE BOUND BY 
+ALL OF THE TERMS AND CONDITIONS BELOW AND YOU MAY, SUBJECT TO THOSE TERMS AND CONDITIONS, 
+INSTALL AND USE 'THe UDS' SOFTWARE AND WEB SITE AND SERVICES. 
+IF YOU DISAGREE WITH ANY OF THE TERMS OR CONDITIONS BELOW, 'THe UDS' DOES NOT GRANT YOU A LICENSE TO USE THIS SOFTWARE; 
+CLICK ON THE CANCEL BUTTON TO EXIT THE INSTALLER PROGRAM.
+
+
+This End User License Agreement is an agreement between THe UDS and you regarding the use of software.
+Installing this software implies that you agree to the terms of this agreement. 
+If you disagree with any part of this license agreement, you must erase this software. 
+1. RIGHT TO USE THE SOFTWARE
+THeUDS you the right to use this software in accordance with the terms of this agreement. 
+You may install and use this software on any number of computers.
+You may NOT sell any part of this software as part of another software package. 
+You may not reverse engineer, decompile, or disassemble this software.
+2. COPYRIGHT
+The copyright and intellectual property rights of this software and its documentation are owned by THe UDS, 
+and are protected by the copyright laws of international intellectual property right treaties.
+3. OWNER INFORMATION
+You may not rent, lease, lend, or in any way distribute or transfer any rights in this Agreement 
+or the Software to third parties without Licensor's written approval.  
+4. NO WARRANTY 
+The Software is being delivered to you "AS IS" and Licensor and its suppliers make no warranty as to its use or performance.  
+LICENSOR AND ITS SUPPLIERS DO NOT AND CANNOT WARRANT THE PERFORMANCE OR RESULTS YOU MAY OBTAIN BY USING THE SOFTWARE.  
+LICENSOR AND ITS SUPPLIERS MAKE NO WARRANTIES, EXPRESS OR IMPLIED, AS TO NONINFRINGEMENT OF THIRD PARTY RIGHTS, 
+TITLE, MERCHANTABILITY, OR FITNESS FOR ANY PARTICULAR PURPOSE.  
+YOU ASSUME ALL RISK ASSOCIATED WITH THE QUALITY, PERFORMANCE, INSTALLATION AND USE OF THE SOFTWARE INCLUDING, 
+BUT NOT LIMITED TO, THE RISKS OF PROGRAM ERRORS, DAMAGE TO EQUIPMENT, LOSS OF DATA OR SOFTWARE PROGRAMS, 
+OR UNAVAILABILITY OR INTERRUPTION OF OPERATIONS.  
+YOU ARE SOLELY RESPONSIBLE FOR DETERMINING THE APPROPRIATENESS OF USE THE SOFTWARE AND ASSUME ALL RISKS ASSOCIATED WITH ITS USE.
+5. ACKNOWLEDGEMENT
+You acknowledge that you have read and understand this license agreement and that you agree to its terms. 
+You acknowledge that this agreement has priority over any order, engagement, advertisement, or other written agreement which preceded it.
+
+
+
+French licence :
+
+CONTRAT DE LICENCE
+Ce contrat de licence utilisateur constitue un contrat légal entre vous
+(personne physique ou personne morale) et l'éditeur (THe UDS),
+concernant le produit logiciel ci-joint ainsi que tous ses composants, 
+ce qui peut comprendre des supports, des documents imprimés et une 
+documentation "en ligne" ou électronique y relatifs 
+(le "produit logiciel" ou "logiciel")
+
+EN INSTALLANT, COPIANT, OU UTILISANT DE TOUTE MANIÈRE
+LE LOGICIEL OU UN DE SES COMPOSANTS, VOUS ACCEPTEZ DE 
+VOUS CONFORMER À TOUS LES TERMES ET À TOUTES LES CONDITIONS
+DU CONTRAT DE LICENCE SANS AUCUNE RESERVE.
+
+Dans le cas contraire, vous n'êtes en aucun cas autorisé à copier, 
+installer ou utiliser le logiciel ou un de ses composants.
+Si vous acceptez les termes et les conditions du contrat de licence, 
+l'éditeur vous concède le droit d'utiliser le Logiciel de la façon 
+décrite ci-dessous (éventuellement grâce à un numéro de licence,
+et éventuellement pour une durée limitée).
+CONCESSION DE LICENCE
+Le présent Contrat de Licence vous concède les droits d'installation 
+et d'utilisation à savoir :
+L'installation et l'utilisation du programme ci-joint.
+DROITS ET LIMITATIONS
+Le présent Logiciel et ses composants, ainsi que toute copie, 
+restent la propriété exclusive de l'éditeur.
+Le Logiciel est protégé en France par le Code de la Propriété 
+Intellectuelle et à l'étranger par les conventions internationales 
+sur le droit d'auteur. Vous devez, par conséquent, agir vis à vis 
+de ce Logiciel comme s'il s'agissait de tout autre matériel soumis 
+aux droits d'auteur.
+Vous reconnaissez que le Logiciel sous forme de code source reste 
+un secret commercial de l'éditeur, et pour cette raison acceptez de 
+ne pas tenter de modifier le Logiciel d’une quelconque façon.
+Vous vous engagez notamment à ne pas développer ou commercialiser 
+le Logiciel objet du présent contrat ou des produits susceptibles 
+de le concurrencer, et/ou basé sur un ou des éléments qui en ont 
+été extraits. 
+Il est strictement interdit d’adapter, arranger, modifier ou 
+simplement tenter de modifier le Logiciel ainsi ses composants.
+En application de l'article L 122-6-1 du code de la propriété 
+intellectuelle, l'éditeur se réservent le droit de corriger les 
+erreurs, et d'établir les modalités particulières auxquelles 
+seront soumis les actes étant définis ci avant.
+La modification/reproduction du code du Logiciel sont interdites m
+êmes lorsque elles sont indispensables pour obtenir les informations 
+nécessaires à l'interopérabilité du Logiciel avec d'autres logiciels 
+ou systèmes d’exploitation.
+Il est rappelé que la violation de l'un des droits des auteurs du 
+Logiciel est un délit de contrefaçon, et que toute contrefaçon est 
+sanctionnée en France par l'article L.335-2 du code de la propriété 
+intellectuelle et punie de deux ans d'emprisonnement et de 
+15 000 euros d'amende.
+MISES À JOUR
+Toute nouvelle version du Logiciel vient remplacer la précédente et 
+demeure soumise au présent Contrat de licence, sous réserve de 
+modification dudit Contrat.
+LIMITE DE RESPONSABILITÉ
+En aucun cas l'éditeur ne peux être tenu pour responsable de tous 
+dommages directs ou indirects ou consécutif, de quelque nature que ce 
+soit résultant de l'utilisation ou de l’installation du logiciel ci-joint 
+ou d’un de ses composants (composants, documentations...) y compris 
+notamment pour tout manque à gagner, pertes d’exploitation, pertes de 
+bénéfices, interruption d’activité ou autres pertes de natures pécuniaire.
+Ce logiciel est fourni en l'état. L'utilisateur l'utilise à ses 
+risques et périls, sans garantie d'aucune sorte de la part de 
+l'éditeur. L'éditeur n'a aucune obligation de corriger les bogues ou 
+autres déficiences quels qu'ils soient du logiciel.
+DISPOSITIONS GÉNÉRALES
+Le présent Contrat de licence est régi et interprété conformément au 
+droit français. En cas de litige découlant de son interprétation ou de son 
+exécution, les parties s'engagent à rechercher une solution amiable.
+A défaut, ce différend sera la compétence exclusive des Tribunaux français. 
+L'éditeur se réserve ses droits sur tous les droits non expressément 
+concédés au titre de ce document.
+L'éditeur se réserve le droit de modification sans préavis du présent Contrat.
+L'éditeur se réserve le droit d’annuler sans préavis la licence d’utilisation.
+Si l'une quelconque des stipulations du contrat est retenue pour
+nulle ou sans objet, elle sera réputée non écrite et n'entraînera pas 
+la nullité des autres stipulations.
+Le présent document constitue l'intégralité du Contrat conclu entre vous même
+et l'éditeur quant au Logiciel. Il annule et remplace toutes déclarations,
+discussions, engagements, contrats de licence de l'utilisateur final,
+communications et annonces publicitaires antérieurs concernant le Logiciel.
