@@ -1,0 +1,75 @@
+/*
+	Fichier de ressource permettant à FGJSDIAPO d'afficher des transitions sous IE.
+*/
+
+//Pour créer vos propres transition allez ici : http://msdn.microsoft.com/workshop/samples/author/dhtml/DXTidemo/DXTidemo.htm
+
+filterdiapo = new Array();
+
+filterdiapo[0] = "FILTER: progid:DXImageTransform.Microsoft.Barn( motion=out,orientation=horizontal);";
+filterdiapo[1] = "FILTER: progid:DXImageTransform.Microsoft.Barn( motion=out,orientation=vertical); ";
+filterdiapo[2] = "FILTER: progid:DXImageTransform.Microsoft.Barn( motion=in,orientation=horizontal);";
+filterdiapo[3] = "FILTER: progid:DXImageTransform.Microsoft.Barn( motion=in,orientation=vertical); ";
+filterdiapo[4] = "FILTER: progid:DXImageTransform.Microsoft.Blinds( Bands=4,direction=up);";
+filterdiapo[5] = "FILTER: progid:DXImageTransform.Microsoft.Blinds( Bands=6,direction=down);";
+filterdiapo[6] = "FILTER: progid:DXImageTransform.Microsoft.Blinds( Bands=8,direction=left);";
+filterdiapo[7] = "FILTER: progid:DXImageTransform.Microsoft.Blinds( Bands=10,direction=right);";
+filterdiapo[8] = "FILTER: progid:DXImageTransform.Microsoft.Checkerboard( Direction=up,SquaresX=2,SquaresY=8);";
+filterdiapo[9] = "FILTER: progid:DXImageTransform.Microsoft.Checkerboard( Direction=down,SquaresX=10,SquaresY=8);";
+filterdiapo[10] = "FILTER: progid:DXImageTransform.Microsoft.Checkerboard( Direction=left,SquaresX=12,SquaresY=12);";
+filterdiapo[11] = "FILTER: progid:DXImageTransform.Microsoft.Checkerboard( Direction=right,SquaresX=50,SquaresY=10);";
+filterdiapo[12] = "FILTER: progid:DXImageTransform.Microsoft.Fade(Overlap=0.25);";
+filterdiapo[13] = "FILTER: progid:DXImageTransform.Microsoft.Fade(Overlap=0.75);";
+filterdiapo[14] = "FILTER: progid:DXImageTransform.Microsoft.Fade(Overlap=1.00);";
+filterdiapo[15] = "FILTER: progid:DXImageTransform.Microsoft.GradientWipe(GradientSize=0.25,wipestyle=0,motion=forward);";
+filterdiapo[16] = "FILTER: progid:DXImageTransform.Microsoft.GradientWipe(GradientSize=0.25,wipestyle=0,motion=reverse);";
+filterdiapo[17] = "FILTER: progid:DXImageTransform.Microsoft.GradientWipe(GradientSize=0.75,wipestyle=0,motion=forward);";
+filterdiapo[18] = "FILTER: progid:DXImageTransform.Microsoft.GradientWipe(GradientSize=0.75,wipestyle=0,motion=reverse);";
+filterdiapo[19] = "FILTER: progid:DXImageTransform.Microsoft.GradientWipe(GradientSize=0.25,wipestyle=1,motion=forward);";
+filterdiapo[20] = "FILTER: progid:DXImageTransform.Microsoft.GradientWipe(GradientSize=0.25,wipestyle=1,motion=reverse);";
+filterdiapo[21] = "FILTER: progid:DXImageTransform.Microsoft.GradientWipe(GradientSize=0.75,wipestyle=1,motion=forward);";
+filterdiapo[22] = "FILTER: progid:DXImageTransform.Microsoft.GradientWipe(GradientSize=0.75,wipestyle=1,motion=reverse);";
+filterdiapo[23] = "FILTER: progid:DXImageTransform.Microsoft.Inset();";
+filterdiapo[24] = "FILTER: progid:DXImageTransform.Microsoft.Iris(irisstyle=DIAMOND,motion=out);";
+filterdiapo[25] = "FILTER: progid:DXImageTransform.Microsoft.Iris(irisstyle=DIAMOND,motion=in); ";
+filterdiapo[26] = "FILTER: progid:DXImageTransform.Microsoft.Iris(irisstyle=CIRCLE,motion=out);";
+filterdiapo[27] = "FILTER: progid:DXImageTransform.Microsoft.Iris(irisstyle=CIRCLE,motion=in);";
+filterdiapo[28] = "FILTER: progid:DXImageTransform.Microsoft.Iris(irisstyle=CROSS,motion=out);";
+filterdiapo[29] = "FILTER: progid:DXImageTransform.Microsoft.Iris(irisstyle=CROSS,motion=in);";
+filterdiapo[30] = "FILTER: progid:DXImageTransform.Microsoft.Iris(irisstyle=PLUS,motion=out); ";
+filterdiapo[31] = "FILTER: progid:DXImageTransform.Microsoft.Iris(irisstyle=PLUS,motion=in); ";
+filterdiapo[32] = "FILTER: progid:DXImageTransform.Microsoft.Iris(irisstyle=SQUARE,motion=out);";
+filterdiapo[33] = "FILTER: progid:DXImageTransform.Microsoft.Iris(irisstyle=SQUARE,motion=in);";
+filterdiapo[34] = "FILTER: progid:DXImageTransform.Microsoft.Iris(irisstyle=STAR,motion=out);";
+filterdiapo[35] = "FILTER: progid:DXImageTransform.Microsoft.Iris(irisstyle=STAR,motion=in);";
+filterdiapo[36] = "FILTER: progid:DXImageTransform.Microsoft.Pixelate(MaxSquare=5);";
+filterdiapo[37] = "FILTER: progid:DXImageTransform.Microsoft.Pixelate(MaxSquare=10);";
+filterdiapo[38] = "FILTER: progid:DXImageTransform.Microsoft.Pixelate(MaxSquare=15);";
+filterdiapo[39] = "FILTER: progid:DXImageTransform.Microsoft.Pixelate(MaxSquare=50);";
+filterdiapo[40] = "FILTER: progid:DXImageTransform.Microsoft.RadialWipe(wipestyle=CLOCK);";
+filterdiapo[41] = "FILTER: progid:DXImageTransform.Microsoft.RadialWipe(wipestyle=WEDGE);";
+filterdiapo[42] = "FILTER: progid:DXImageTransform.Microsoft.RadialWipe(wipestyle=RADIAL);";
+filterdiapo[43] = "FILTER: progid:DXImageTransform.Microsoft.RandomBars();";
+filterdiapo[44] = "FILTER: progid:DXImageTransform.Microsoft.RandomBars();";
+filterdiapo[45] = "FILTER: progid:DXImageTransform.Microsoft.RandomDissolve();";
+filterdiapo[46] = "FILTER: progid:DXImageTransform.Microsoft.Slide(slidestyle=HIDE,Bands=1);";
+filterdiapo[47] = "FILTER: progid:DXImageTransform.Microsoft.Slide(slidestyle=HIDE,Bands=25);";
+filterdiapo[48] = "FILTER: progid:DXImageTransform.Microsoft.Slide(slidestyle=PUSH,Bands=1);";
+filterdiapo[49] = "FILTER: progid:DXImageTransform.Microsoft.Slide(slidestyle=PUSH,Bands=25);";
+filterdiapo[50] = "FILTER: progid:DXImageTransform.Microsoft.Slide(slidestyle=SWAP,Bands=1);";
+filterdiapo[51] = "FILTER: progid:DXImageTransform.Microsoft.Slide(slidestyle=SWAP,Bands=25);";
+filterdiapo[52] = "FILTER: progid:DXImageTransform.Microsoft.Spiral(GridSizeX=8,GridSizeY=8);";
+filterdiapo[53] = "FILTER: progid:DXImageTransform.Microsoft.Spiral(GridSizeX=64,GridSizeY=64);";
+filterdiapo[54] = "FILTER: progid:DXImageTransform.Microsoft.Stretch(stretchstyle=HIDE);";
+filterdiapo[55] = "FILTER: progid:DXImageTransform.Microsoft.Stretch(stretchstyle=PUSH);";
+filterdiapo[56] = "FILTER: progid:DXImageTransform.Microsoft.Stretch(stretchstyle=SPIN);";
+filterdiapo[57] = "FILTER: progid:DXImageTransform.Microsoft.Strips(motion=leftup);";
+filterdiapo[58] = "FILTER: progid:DXImageTransform.Microsoft.Strips(motion=leftdown);";
+filterdiapo[59] = "FILTER: progid:DXImageTransform.Microsoft.Strips(motion=rightup);";
+filterdiapo[60] = "FILTER: progid:DXImageTransform.Microsoft.Strips(motion=rightdown);";
+filterdiapo[61] = "FILTER: progid:DXImageTransform.Microsoft.Wheel(spokes=2);";
+filterdiapo[62] = "FILTER: progid:DXImageTransform.Microsoft.Wheel(spokes=4);";
+filterdiapo[63] = "FILTER: progid:DXImageTransform.Microsoft.Wheel(spokes=8);";
+filterdiapo[64] = "FILTER: progid:DXImageTransform.Microsoft.Wheel(spokes=10);";
+filterdiapo[65] = "FILTER: progid:DXImageTransform.Microsoft.Zigzag(GridSizeX=8,GridSizeY=8);";
+filterdiapo[66] = "FILTER: progid:DXImageTransform.Microsoft.Zigzag(GridSizeX=16,GridSizeY=16);"; 

@@ -1,0 +1,16 @@
+flv=http://www.ismapp.triade-educ.com/triadev1/flvplayer/video.flv
+width=420
+height=280
+playercolor=506E87
+bgcolor1=B2CADE
+bgcolor2=B2CADE
+buttoncolor=dddddd
+buttonovercolor=f9bf37
+slidercolor1=dddddd
+slidercolor2=cccccc
+sliderovercolor=f9bf37
+loadingcolor=ffff00
+showstop=1
+showvolume=1
+showtime=1
+srt=1

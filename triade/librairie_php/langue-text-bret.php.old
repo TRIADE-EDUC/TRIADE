@@ -1,0 +1,2537 @@
+<?php
+/***************************************************************************
+ *                              T.R.I.A.D.E
+ *                            ---------------
+ *
+ *   begin                : Janvier 2000
+ *   copyright            : (C) 2000 E. TAESCH - T. TRACHET -
+ *   Site                 : http://www.triade-educ.com
+ *
+ *
+ ***************************************************************************/
+/***************************************************************************
+ *
+ *   This program is free software; you can redistribute it and/or modify
+ *   it under the terms of the GNU General Public License as published by
+ *   the Free Software Foundation; either version 2 of the License, or
+ *   (at your option) any later version.
+ *
+ ***************************************************************************/
+
+// fichier pour langue cote admin.
+// POUR TOUS -------------------
+// brmozilla($_SESSION[navigateur]);
+define("CLICKICI","Klikañ amañ");
+define("VALIDER","Asantiñ");
+define("LANGTP22"," DIWALLIT - Goulenn prouadoù - RANN");
+define("LANGTP3"," deiziataer ar prouadoù ");
+define("LANGCHOIX","Dibab ...");
+define("LANGCHOIX2","klas ebet");
+define("LANGCHOIX3","--- Dibab ---");
+define("LANGOUI","ya");
+define("LANGNON","nann");
+define("LANGFERMERFEN","Serriñ ar prenestr");
+define("LANGATT","DIWALLIT !");
+define("LANGDONENR","Titour enrollet");
+define("LANGPATIENT","Trugarez da c'hortoz");
+define("LANGSTAGE1",'Merañ ar stajoù micherel');
+define("LANGINCONNU",'dianavezet'); // doit etre identique que langinconnu cote javascript
+define("LANGABS",'ezv');
+define("LANGRTD",'dale');
+define("LANGRIEN",'mann ebet');
+define("LANGENR",'Enrollañ');
+define("LANGRAS1",'Hiziv, d\'a_ ');
+define("LANGDATEFORMAT",'dd/mm/bbbb');
+
+//------------------------------
+// titre
+//-------------------------------
+define("LANGTITRE1","Oberiantiz - Darvoud(où) ar miz");
+define("LANGTITRE2","Oberiantiz - Keleier");
+define("LANGTITRE3","Kemennadenn o tibunañ e krec'h ar bajenn");
+define("LANGTITRE4","Kemennadenn o tibunañ er vandenn");
+define("LANGTITRE5","Kemennadenn o vezañ resevet");
+define("LANGTITRE6","Krouidigezh ur gont melestrour");
+define("LANGTITRE7","Krouidigezh ur gont buhez skol");
+define("LANGTITRE8","Krouidigezh ur gont kelenner");
+define("LANGTITRE9","Krouidigezh ur gont elec'hier");
+define("LANGTITRE10","Krouidigezh ur gont skoliad");
+define("LANGTITRE11","Krouidigezh ur strollad"); //
+define("LANGTITRE12","Krouidigezh ur c'hlasad"); //
+define("LANGTITRE13","Krouidigezh un danvez"); //
+define("LANGTITRE14","Krouidigezh un is-danvez"); //
+define("LANGTITRE15","Envel ar benngelennerien");
+define("LANGTITRE16","Krouiñ kefredioù");
+define("LANGTITRE17","Krouiñ kefredioù evit ar c'hlasad");
+define("LANGTITRE18","Sellet ouzh ar c'hefredioù");
+define("LANGTITRE19","Kemm kefredioù");
+define("LANGTITRE20","Kemm kefredioù evit ar c'hlasad");
+define("LANGTITRE21","Diverkañ kefredioù");
+define("LANGTITRE22","Embarzhañ ur fichenn ASCII (txt,csv) ");
+define("LANGTITRE23","Listenn an daleoù diabeget ");
+define("LANGTITRE24","Ouzhpennañ un diskarg");
+define("LANGTITRE25","Embann / Kemm an diskargoù");
+define("LANGTITRE26","Diverkañ un diskarg");
+define("LANGTITRE27","Merañ diskargoù -  Steuñverezh");
+define("LANGTITRE28","Skritellañ / Kemm diskargoù");
+define("LANGTITRE29","Sellout ouzh ar c'hlasadoù");
+define("LANGTITRE30","Klask ur skoliad");
+define("LANGTITRE31","Embarzhañ ar fichenn GEP");
+define("LANGTITRE32","Poltredaoueg ar skolidi");
+define("LANGTITRE33","Testeni skol");
+
+//------------------------------
+define("LANGTE1","Titl");
+define("LANGTE2","Eus");
+define("LANGTE3","D'");
+define("LANGTE4","Niver a arouezioù");
+define("LANGTE5","Pal");
+define("LANGTE6","Da");
+define("LANGTE6bis","Da gerent ar re ");
+define("LANGTE7","Deiziad");
+define("LANGTE8","Diverkañ ur gemennadenn kaset d'ur c'har");
+define("LANGTE9","lennet");
+define("LANGTE10","betek :");
+define("LANGTE11","e");
+define("LANGTE12","d'a_ ");
+define("LANGTE13","da");
+define("LANGTE14","D'ar strollad ");
+
+//------------------------------
+define("LANGFETE","Gouelioù an deiz ");
+define("LANGFEN1","Darvoud an deiz");
+define("LANGFEN2","Prouad an deiz");
+//------------------------------
+define("LANGLUNDI","Lun");
+define("LANGMARDI","Meurzh");
+define("LANGMERCREDI","Merc'her");
+define("LANGJEUDI","Yaou");
+define("LANGVENDREDI","Gwener");
+define("LANGSAMEDI","Sadorn");
+define("LANGDIMANCHE","Sul");
+// ------------------------------
+define("LANGMESS1","Kas ur gemennadenn - d'a_ ");
+define("LANGMESS2","Kas ur gemennadenn d'ar velestradurezh : ");
+define("LANGMESS3","Kas ur gemennadenn d'ar gasourien : ");
+define("LANGMESS4","Kas ur gemennadenn d'ur c'helenner : ");
+define("LANGMESS5","Kas ur gemennadenn d'ur c'har er c'hlasad : ");
+define("LANGMESS6","Kemennadenn kaset");
+define("LANGMESS7","Nevezenti enrollet");
+define("LANGMESS8","Kemennadenn kaset");
+define("LANGMESS9","Respont d'ar gemennadenn - d'a_ ");
+define("LANGMESS10",'N\'eo ket enrollet deiziadoù an trimiziadoù.');
+define("LANGMESS11",'Kelaouit ar velestradurezh marplij.');
+define("LANGMESS12",'a-benn asantiñ deiziadoù an trimiziadoù.');
+define("LANGMESS13",'Klikit <a href="Resisaat_trimiziad.php">amañ</a> marplij');
+define("LANGMESS14",'N\'eo ket enrollet kefredioù ar c\'hlas-mañ.');
+define("LANGMESS15",'Klikit <a href="Envel_krouiñ_key.php">amañ</a> marplij');
+define("LANGMESS16",'a-benn asantiñ kefredioù ar c\'hlas-mañ ');
+define("LANGMESS17","Neuziadur");
+define("LANGMESS18","M");     // Lizherenn gentañ ar frazenn da heul !!!
+define("LANGMESS18bis","a ez euz meur a bostel da zisklêriañ,<br> disrannañ ar postelioù gant ur virgulenn.");
+define("LANGMESS19","Lañset");
+define("LANGMESS20","Neuziadur nevesaet");
+define("LANGMESS21","Bezañ kelaouet a-fed ur gemennadenn a zo en ho poest postelioù");
+define("LANGMESS22","Kas ur gemmennadenn d'ur rummad postelioù : ");
+define("LANGMESS23","Sevel ur rummad postelioù");
+define("LANGMESS24","Menegiñ tud ar rummadoù");
+define("LANGMESS25","Dibab pep den en ur zerc'hel pouez war an douchenn"); //
+define("LANGMESS26","Kadarnaat ar  grouidigezh");
+define("LANGMESS27","Strollad postelioù krouet");
+define("LANGMESS28","Listenn ho rummadoù postelioù");
+define("LANGMESS29","Strollad ");
+define("LANGMESS30","Listenn an dud ");
+define("LANGMESS31","Kemennadenn eus perzh ");
+define("LANGMESS32","Evit ar poent hoc'h eus ");
+define("LANGMESS33","(g,c'h)kemennadenn o c'hortoz ");
+
+// -----------------------------
+// bouton
+// PAS DE -->' (cote) !!!!
+define("LANGBTS","Heuliad >");
+define("LANGBT1","Enrollañ ar gemennadenn o tibunañ");
+define("LANGBT2","Enrollañ an ditour");
+define("LANGBT3","Kuitaat hep kas");
+define("LANGBT4","Kas kemennadenn");
+define("LANGBT5","Gortozit, Marplij");
+define("LANGBT6","Kemennadennoù meneget da skarzhañ");
+define("LANGBT7","Enrollañ ar gont");
+define("LANGBT8","Listenn ar velestrourien / Poltredaoueg");
+define("LANGBT9","Listenn ar vuhez skol  / Poltredaoueg");
+define("LANGBT10","Listenn ar gelennerien / Poltredaoueg");
+define("LANGBT11","Listenn an elec'hierien");
+define("LANGBT12","Listenn ar strolladoù");
+define("LANGBT13","Kadarnaat klas(où)");
+define("LANGBT14","Enrollañ ar grouidigezh");
+define("LANGBT15","Listenn klasoù");
+define("LANGBT16","Listenn an danvezioù");
+define("LANGBT17","Enrollañ an is-danvez");
+define("LANGBT18","Enrollañ ar statud"); //
+define("LANGBT19","Kadarnaat"); //
+define("LANGBT20","Kuitaat hep enrollañ"); //
+define("LANGBT21","Enrollañ an dibab"); //
+define("LANGBT22","Nullañ an dibab"); //
+define("LANGBT23","Kas ar fichenn"); //
+define("LANGBT24","Adkregiñ"); //
+define("LANGBT25","Adneveziñ ar bajennad"); //
+define("LANGBT26","Krouiñ klas"); //
+define("LANGBT27","Steuñviñ ezv pe dale"); //
+define("LANGBT28","Sellet"); //
+define("LANGBT29","Nullañ ezv pe dale"); //
+define("LANGBT30","Asantiñ an neveziñ"); //
+define("LANGBT31","Mont er rummad");
+define("LANGBT32","Nullañ an dispañsoù");
+define("LANGBT33","Adsevel an dispañsoù");
+define("LANGBT34","Ouzhpennañ an dispañsoù");
+define("LANGBT35","Enrollañ titour ");
+define("LANGBT36","Dispañs adsavet --  Skipailh Triade");
+define("LANGBT37","Treuzkas an ditour");
+define("LANGBT38","Kas");
+define("LANGBT39","Lañs an enklask");
+define("LANGBT40","Adimplijout");
+define("LANGBT41","Echu");
+define("LANGBT42","Asantiñ listenn skolajidi nann-enrollet");
+define("LANGBT43","Moullañ ar roll");
+define("LANGBT44","Rentañ-kont");
+define("LANGBT45","Reiñ ur sell war an titouroù");
+define("LANGBT46","Enrollañ ar poltred");
+define("LANGBT47","Cheñchamant all");
+define("LANGBT48","Kuitaat ar bloc'had");
+define("LANGBT49","Klasad a-bezh da embann");
+define("LANGBT50","Nullañ");
+define("LANGBT51","Asantiñ goulenn prouad");
+// -----------------------------
+define("LANGCA1","K"); //
+define("LANGCA1bis","emennadenn nann-lennet"); // hep al lizherenn gentañ
+define("LANGCA2","K"); //
+define("LANGCA2bis","emennadenn lennet"); // hep al lizherenn gentañ
+define("LANGCA3","M"); //
+define("LANGCA3bis","enegit DD/MM/BBBB  <BR> Betek goût ma vefe un deiziad nann <BR>anavezet, resisaat ar meneg <br>"); // hep al lizherenn gentañ
+// -----------------------------
+define("LANGNA1","Anv"); //
+define("LANGNA2","Raganv"); //
+define("LANGNA3","Ger kuzh"); //
+define("LANGNA3bis","Ger kuzh ar gerent "); //
+define("LANGNA3ter","Ger kuzh ar skoliad "); //
+define("LANGNA4","Kont nevez krouet \\n\\n Skipailh Triade "); //
+define("LANGNA5","Cheñchamant&nbsp;de&nbsp;"); //
+// -----------------------------
+define("LANGELE1","Titouroù diwar-benn ar skoliad"); //
+define("LANGELE2","Anv"); //
+define("LANGELE3","Raganv"); //
+define("LANGELE4","Klas"); //
+define("LANGELE5","Latin"); //
+define("LANGELE6","Diab/Diav"); //
+define("LANGELE7","Diabarzhad"); //
+define("LANGELE8","Hanter-diabarzhad"); //
+define("LANGELE9","Diavaezad"); //
+define("LANGELE10","Deiziad ganidigezh"); //
+define("LANGELE11","Broadelezh"); //
+define("LANGELE12","Niverenn vroadel"); //
+define("LANGELE13","Titouroù diwar-benn ar familh"); //
+define("LANGELE14","Chomlec'h 1"); //
+define("LANGELE15","Kod post"); //
+define("LANGELE16","Kêr"); //
+define("LANGELE17","Chomlec'h 2"); //
+define("LANGELE18",""); //
+define("LANGELE19",""); //
+define("LANGELE20","Niverenn bellgomz"); //
+define("LANGELE21","Micher an tad"); //
+define("LANGELE22","Pellgomz an tad"); //
+define("LANGELE23","Micher ar vamm"); //
+define("LANGELE24","Pellgomz ar vamm"); //
+define("LANGELE25","Skol orin"); //
+define("LANGELE26","Anv ar skolaj"); //
+define("LANGELE27","Niverenn ar skolaj"); //
+define("LANGELE28","Skoliad krouet -- Skipailh Triade"); //
+define("LANGELE29","Skoliad krouet dija -- Skipailh Triade"); //
+//------------------------------------------------------------
+define("LANGGRP1","Anv ar strollad"); //
+define("LANGGRP2","Klasoù da vennegiñ a-benn sevel ar strollad"); //
+define("LANGGRP3","Dibabit klasoù disheñvel en ur zerc'hel pouez war an douchenn"); //
+define("LANGGRP4","Ctrl"); //
+define("LANGGRP5","hag en ur bouezañ war touchenn gleiz al logodenn."); //
+define("LANGGRP6","Anv ar rann"); //
+define("LANGGRP7","Klas nevez krouet -- Skipailh Triade"); //
+define("LANGGRP8","Danvez nevez krouet -- Skipailh Triade"); //
+define("LANGGRP9","Anv an danvez"); //
+define("LANGGRP10","Anv an is-danvez"); //
+//------------------------------------------------------------
+//------------------------------------------------------------
+define("LANGAFF1","Kefridi evit ar c'hlasad"); //
+define("LANGAFF2","!! Krouiñ kefridioù <u> a ziverk </u> holl notennoù ar c'hlasad !!</u>"); //
+define("LANGAFF3","Kefridi ar c'hlasadoù"); //
+//------------------------------------------------------------
+define("LANGPER1","Moullañ ar maread"); //
+define("LANGPER2","Derou ar maread"); //
+define("LANGPER3","Fin ar maread"); //
+define("LANGPER4","Rann"); //
+define("LANGPER5","Adimplijout ar fichenn PDF"); //
+define("LANGPER6","Kelenner(ez) "); //
+define("LANGPER7","penngelenner(ez) e "); //
+define("LANGPER8","e klas "); //
+define("LANGPER9","Bloc'had kefridi ar c'hlasadoù."); //
+define("LANGPER10","DIWALL, implijet e vez ar bloc'had-mañ e-pad ur gefridi nevez,<br> distrujañ a ra holl notennoù skolidi ar c'hlasoù meneget."); //
+define("LANGPER11","DIWALL, diverket e vo notennoù ar c'hlasadoù dibabet. \\n Ha dalc'hit da vont ? \\n\\n Skipailh Triade"); //
+define("LANGPER12","Menegit ar c'hod alc'hwez.");
+define("LANGPER13","Gwiriañ ar c'hod");
+define("LANGPER14","Niver a zanvezioù");
+define("LANGPER15","Krouiñ kefridi evit ar c'hlasad");
+define("LANGPER16","Niv");
+define("LANGPER17","Danvez");
+define("LANGPER18","Kelenner");
+define("LANGPER19","Kenefeder");
+define("LANGPER20","Strollad");
+define("LANGPER21","Yezh");
+define("LANGPER22","Moullañ ar bajennad");
+define("LANGPER23","Kefridi");
+define("LANGPER23bis","Degemeret");  // kefridi xxxx degemeret
+define("LANGPER24","diskroget"); // kefridi xxxx diskroget
+define("LANGPER25","Klas");
+define("LANGPER26","Brassellet");
+define("LANGPER27","Sellet");
+define("LANGPER28","Sellet ouzh kefridioù ar c'hlasad");
+define("LANGPER29","!! Kemm kefredioù <u>a ziverk</u> holl notennoù ar c'hlasad !!");
+define("LANGPER30","Kemmañ");
+define("LANGPER31","Kemmañ ar c'hefridi");
+define("LANGPER32","Kemm kefridi");
+define("LANGPER32bis","diskroget"); // Modification d'affectation xxxx interrompue
+define("LANGPER33","Diverkañ ar c'hefridi evit ");
+define("LANGPER34","!! Kemm kefredioù <u>a ziverk</u> holl notennoù ar c'hlasad !!</u>");
+define("LANGPER35","Kefridioù ar c'hlas");
+define("LANGPER35bis","diverket"); // Affectation de la classe  xxxx supprimée
+//------------------------------------------------------------------------------
+define("LANGIMP1","Embarzhañ un diaz ");
+define("LANGIMP2","Menegiñ ar fichenn da embarzhañ ");
+define("LANGIMP3","Fichenn ASCII ");
+define("LANGIMP4","Fichennaoueg GEP ");
+define("LANGIMP5","Modulenn embarzhañ ur fichennaoueg ASCII.");
+define("LANGIMP6","Ar fichennaoueg da gas <FONT color=RED><B>A RANK</B></FONT> kaout <FONT COLOR=red><B>27</B></FONT> park <I>(goullo pe get)</I> dispartiet gant an arouez \"<FONT color=red><B>;</B></font>\" <I>Da lavaret eo 26 gwech an arouez \"<FONT color=red><B>;</B></font>\"</I>");
+define("LANGIMP7","Setu urzh ar parkoù da lakaat : ");
+define("LANGIMP8","anv");
+define("LANGIMP9","raganv");
+define("LANGIMP10","klas");
+define("LANGIMP11","diav/diab");
+define("LANGIMP12","deiz ganidigezh");
+define("LANGIMP13","broadelezh");
+define("LANGIMP14","anv gward");
+define("LANGIMP15","raganv gward");
+define("LANGIMP16","chomlec'h1");
+define("LANGIMP17","chomlec'h2");
+define("LANGIMP18","kod post");
+define("LANGIMP19","ker");
+define("LANGIMP20","pellgomz");
+define("LANGIMP21","micher tad");
+define("LANGIMP22","pellgomz micher tad");
+define("LANGIMP23","micher mamm");
+define("LANGIMP24","pellgomz micher mamm");
+define("LANGIMP25","niverenn skolaj");
+define("LANGIMP26","yezh1");
+define("LANGIMP27","yezh2");
+define("LANGIMP28","latin");
+define("LANGIMP29","Niverenn skoliad");
+define("LANGIMP30","DIWALL, distrujet e vo an diaz. \\n C'hoant hoc'h eus da genderc'hel ? \\n\\n Skipailh Triade");
+define("LANGIMP31","DIWALL : ar vodulenn-mañ a zo da vezañ implijet ar wech kentañ,<br> diverkañ a ra an holl ditouroù diwar-benn ar skolidi (notennoù, follennoù trimiziad, buhez skol).<br /> * park ret");
+define("LANGIMP39","Menegiñ ar fichennaoueg da gas ");
+define("LANGIMP40","Fichennaoueg kaset -- Skipailh Triade ");
+define("LANGIMP41","N'eo ket bet doujet ouzh niver a barkoù ");
+define("LANGIMP42","Menegiñ ar c'hlas a glot evit pep dave ");
+define("LANGIMP43","Fichennaoueg nann enrollet ");
+// ------------------------------------------------------------------------------
+define("LANGABS1","Merañ ezvezañsoù - daleoù an deiz");
+define("LANGABS2","Skrivañ un ezvezañs pe un dale");
+define("LANGABS3","Menegiñ anv ar skoliad");
+define("LANGABS4","Renabliñ an ezvezañsoù pe an daleoù diabeget");
+define("LANGABS5","Renabl an <b>ezvezañsoù</b> diabeget");
+define("LANGABS6","Renabl an <b>daleoù</b> diabeget");
+define("LANGABS7","Sellet ha/pe kemm un ezvezañs pe dale");
+define("LANGABS8","Menegiñ anv ar skoliad");
+define("LANGABS9","Skritelliñ ha/pe diverkañ un ezvezañs pe un dale");
+define("LANGABS10","skoliad ebet en diaz");
+define("LANGABS11","Ezv/Dale");
+define("LANGABS12","Abeg");
+define("LANGABS13","Dale d'a_");
+define("LANGABS14","Dale");
+define("LANGABS15","Ezv");
+define("LANGABS16","Nullañ");
+define("LANGABS17","Kemmañ ezv pe dale");
+define("LANGABS18","Ezvezant eus a_ ");
+define("LANGABS19","d'a_ ");
+define("LANGABS20","Ezv/Dale");
+define("LANGABS21","Padelezh");
+define("LANGABS22","Abeg");
+define("LANGABS23","Eur/Deiz");
+define("LANGABS24","Embarzhañ an ezvezañsoù pe an daleoù e klas ");
+define("LANGABS25","Merañ Ezvezañs - Dale");
+define("LANGABS26","Merañ Ezvezañs - Dale  Rakgwelet");
+define("LANGABS27","Enrollañ titour ");
+define("LANGABS28","Titour enrollet ");
+define("LANGABS29","D"); //premiere lettre
+define("LANGABS29bis","iskarget eus :"); //suite
+define("LANGABS30","Disk");
+define("LANGABS31","klas ");
+define("LANGABS32","D"); //premiere lettre
+define("LANGABS32bis","ale da "); //suite
+define("LANGABS33","e");
+define("LANGABS34","eus");
+define("LANGABS35","Ezvezañs - Dale - Diskarg a_ ");
+define("LANGABS36","Nevesadenn");
+define("LANGABS37","Moullañ ezvezañsoù - diskargoù - daleoù an deiz ");
+define("LANGABS38","Pgz.");
+define("LANGABS39","Pgz. Mich Tad ");
+define("LANGABS40","Pgz. Mich Mamm");
+define("LANGABS41","Pgz. Ker ");
+define("LANGABS42","Ezvezant a_ ");
+define("LANGABS43","e-pad ");
+define("LANGABS44","Devezh ");
+define("LANGABS45","Enrollañ an nevesadenn ");
+define("LANGABS46","adalek a_ ");
+
+define("LANGDISP8","Diverkañ diskarg");
+//----------------------------------------------------------------------------
+define("LANGPROJ1","Dibab ar c'hlas");
+define("LANGPROJ2","Dibab an trimiziad");
+define("LANGPROJ3","Trimiziad 1");
+define("LANGPROJ4","Trimiziad 2");
+define("LANGPROJ5","Trimiziad 3");
+define("LANGPROJ6","<font class=T2>Skoliad ebet er c'hlasad-mañ</font>");
+define("LANGPROJ7","Niver a zaleoù");
+define("LANGPROJ8"," Hollad");
+define("LANGPROJ9","Emzalc'h");
+define("LANGPROJ10","munutennoù");
+define("LANGPROJ11","Niver a zalc'hoù");
+define("LANGPROJ12","roet gant ");
+define("LANGPROJ13","Listenn");
+define("LANGPROJ14","Keid SKoliad");
+define("LANGPROJ15","Keid Klasad");
+define("LANGPROJ16","Keidenn Skoliad");
+// ----------------------------------------------------------------------------
+define("LANGDISP1","<font class=T2>skoliad ebet gant an anv-mañ</font>");
+define("LANGDISP2","Abeg");
+define("LANGDISP3","Paperenn digant ar mezeg");
+define("LANGDISP4","Pranted&nbsp;a_&nbsp;");
+define("LANGDISP5","en danvez ");
+define("LANGDISP6","Eur an diskarg ");
+define("LANGDISP7","<B><font color=red>M</font></B>enegit an DD/MM/BBBB  <BR> en daou bark");
+define("LANGDISP9","Skritellaoueg <b>klok</B> an diskargoù");
+define("LANGDISP10","E");
+// ----------------------------------------------------------------------------
+define("LANGASS1","TRIADE skoazell");
+define("LANGASS2","A ginnig ur skoazell evit ho sikour da implijout Triade.<br /><br />Ur gudenn hoc'h eus gant unan eus servijoù Triade, leugnit ar furmskrid da heul gant an titouroù war ar servij. Hon ijinourien a wirieko ar servij-se.");
+define("LANGASS3","Ezel dedennet");
+define("LANGASS4","Melestradurezh");
+define("LANGASS5","Kelenner");
+define("LANGASS6","Buhez skol");
+define("LANGASS6bis","Kar");
+define("LANGASS7","Ober");
+define("LANGASS8","Krouidigezh");
+define("LANGASS9","Sell");
+define("LANGASS10","Diverkadenn");
+define("LANGASS11","Tra all");
+define("LANGASS12","Servij");
+define("LANGASS13","Kont implijer");
+define("LANGASS14","Postel");
+define("LANGASS15","Kefridi");
+define("LANGASS16","Diaz titouroù");
+define("LANGASS17","Klas");
+define("LANGASS18","Danvez");
+define("LANGASS19","Enklask");
+define("LANGASS20","Prouad");
+define("LANGASS21","Steuñv");
+define("LANGASS22","Diskarg");
+define("LANGASS23","Emzalc'h");
+define("LANGASS24","Kelc'hlizher");
+define("LANGASS25","Follenn drimiziad");
+define("LANGASS26","Prantad");
+define("LANGASS27","Evezhiadenn");
+define("LANGASS28","TRIADE skoazell a drugareka ac'hanoc'h evit ho skoazell");
+define("LANGASS29","Skipailh Triade.");
+define("LANGASS30","Skipailh Triade evit ho servij");
+define("LANGASS31","Un aozad dibar ha nevez savet eo TRIADE, setu perak e c'houlennomp ganeoc'h kas dezhomp hoc'h alioù ha kinnigoù a-benn derc'hel ul lec'hienn a rento servij da vat d'an implijerien ! Trugarez deoc'h :-)");
+define("LANGASS32","Levr aour");
+define("LANGASS33","Ho testeni war-eeun : skrivit hoc'h evezhiadennoù war hol levr aour.");
+define("LANGASS34","Kaset eo bet ho kemennadenn, respontet e vo deoc'h.<br> <BR>Trugarez da implijout TRIADE, ken ar c'hentañ.<BR><BR><BR><UL><UL>Skipailh Triade.<BR>");
+define("LANGASS35","Tra all");
+define("LANGASS36","SMS");
+define("LANGASS37","WAP");
+define("LANGASS38","Poltredaoueg");
+define("LANGASS39","Kod barenn");
+define("LANGASS40","Staj Mich.");
+// -----------------------------------------------------------------------------
+define("LANGRECH1","<font class=T2>skoliad ebet er c'hlas</font>");
+define("LANGRECH2","Klask ");
+define("LANGRECH3","<font class=T2>skoliad ebet evit an enklask-mañ</font>");
+define("LANGRECH4","Titouroù / Kemm");
+// ---------------------------------------------------------------------------------
+define("LANGBASE1","DIWALL : ar bloc'had-mañ a zo da vezañ implijet e-kerzh an implij kentañ,<br> diverkañ a ra an holl ditouroù diwar-benn ar skolidi  (notennoù, follennoù trimiziad, buhez skol).");
+define("LANGBASE2"," Ar fichennaouegoù da enporzhiañ a rank bezañ dindan stumm dbf ");
+define("LANGBASE3","Sed aze listennad ar fichennaouegoù ");
+define("LANGBASE4","Modulenn embarzhañ fichennaouegoù GEP ");
+define("LANGBASE5","Enporzhiañ un diaz GEP ");
+define("LANGBASE6","Hollad ar skolidi en diaz DBF ");
+define("LANGBASE7","Hollad ar skolidi gant ur c'hlas ");
+define("LANGBASE8","Hollad ar skolidi hep klas ");
+define("LANGBASE9","Adpakañ ar gerioù kuzh ");
+define("LANGBASE10","Dibosupl da zigeriñ ar fichennaoueg F_ele.dbf");
+define("LANGBASE11","Graet eo bet war dro an diaz -- Skipailh Triade");
+define("LANGBASE12","N'eo ket reizh ar fichennaoueg selektet !");
+define("LANGBASE13","Setu listennad ar gerioù kuzh");
+define("LANGBASE14","Adpakañ al listennad o tibab ha kopiañ an holl linennoù ha pegañ e-barzh ur fichennaoueg \"txt\".");
+define("LANGBASE15","Ha gant Excel pe OpenOffice, adpakañ ar fichennaoueg \"txt\"  o tibab ar poent-skej da zispartiañ ar parkoù.");
+define("LANGBASE17"," Diwall : n'haller kaout ar gerioù kuzh nemet war <br />ar bajenn-mañ !! Soñjit en adpakañ al listennad <b>A-RAOK</b> echuiñ ");
+define("LANGBASE18","TITOUR N'HALLER KET KAOUT");
+// -----------------------------------------------------------------------------------------------------------------------
+define("LANGBULL1","Moullañ ar follennoù trimiziad");
+define("LANGBULL2","Menegit ar c'hlas");
+define("LANGBULL3","Bloavezh Skol");
+define("LANGBULL4","<b><FONT COLOR=red>DIWALL</FONT></B> Ezhomm a zo <B>Adobe Acrobat Reader</B>.  Digoust eo ar poellad <a href=\"#\" onclick=\"open('./accrobat.php','acro','width=500,height=300')\"><B>ICI</B></A>");
+// -----------------------------------------------------------------------------------------------------------------------
+define("LANGPARENT1","kemenadenn ebet");
+define("LANGPARENT2","Kannad ebet bet lakaet evit ar poent");
+define("LANGPARENT3","Kannaded ar skolidi");
+define("LANGPARENT4","Kannaded ar gerent");
+define("LANGPARENT5","Listenn ar gannaded");
+//----------------------------------------------------------------------//
+define("LANGPURG1","Modulenn diverkañ an diaz");
+define("LANGPUR2","Modulenn diverkañ an diaz");
+define("LANGPUR3","DIWALL: da vezañ implijet eo ar vodulenn-mañ <br>pa oc'h eus c'hoant da ziverkañ titouroù an diaz.");
+define("LANGPUR4","DIWALL, hollad an titouroù a vo diverket. \\n C'hoant oc'h eus da genderc'hel ? \\n\\n Skipailh Triade");
+define("LANGPUR5","An titouroù a vo diverket");
+define("LANGPUR6","Keloù : Selektiñ \"Skolidi\" a dalv e vo diverket an notennoù, ezvezañsoù, emzalc'hioù, diskargoù, daleoù");
+define("LANGPUR7","Menegiñ an elfenn(où) da zistruj : ");
+define("LANGPUR8","Da virout");
+define("LANGPUR9","Da ziverkañ");
+//----------------------------------------------------------------------//
+define("LANGCHAN0","Modulenn evit cheñch klas d'ur skoliad pe da veur a skolidi");
+define("LANGCHAN1","DIWALL: da vezañ implijet eo ar vodulenn-mañ <br>pa oc'h eus c'hoant da cheñch klas d'ur skoliad");
+define("LANGCHAN3","DIWALL, an holl ditouroù diwar-benn ar skoliad pe ar skolidi dedennet gant ar cheñchamant klas a vo diverket");
+//----------------------------------------------------------------------//
+define("LANGGEP1",'Embarzhañ ar fichennaoueg GEP');
+define("LANGGEP2",'Menegiñ ar fichennaoueg');
+//----------------------------------------------------------------------//
+define("LANGCERT1"," pellgargañ an testeni-mañ ");
+//----------------------------------------------------------------------//
+define("LANGPROFR1",'Menegiñ ar skolidi gant dale');
+define("LANGPROFR2",'Skrivañ an daleoù  ');
+define("LANGKEY1",'<font class=T1>N\'eus ket a alc\'hwez enrollañ </font>');
+define("LANGDISP20",'Ouzhpennañ diskargoù');
+define("LANGPROFA",'<br><center><font size=2>N\'eus ket a alc\'hwez enrollañ </font><br><br>Kit en darempred gant ho melestrour Triade, <br>a-benn kadarnaat enrolladenn Triade. </center><br><br>');
+define("LANGPROFB",'Ouzhpennañ un notenn e ');
+define("LANGPROFC",'Kadarnaat enrolladenn an notennoù ');
+define("LANGPROFD",'Enrollañ an notennoù');
+define("LANGPROFE",'&nbsp;&nbsp;<i><u>Keloù</u>: Gant an douchenn KAS e c\'haller tremen eus an eil notenn d\'eben.</i>');
+define("LANGPROFF",'Ouzhpennañ un notenn');
+define("LANGPROFG",'Menegiñ ar c\'hlas');
+//----------------------------------------------------------------------//
+define("LANGMETEO1",'DEIZ');
+define("LANGMETEO2",'NOZ');
+//----------------------------------------------------------------------//
+define("LANGPROFP1","Kemenadenn evit ar c'hlasad");
+define("LANGPROFP2","Enrollañ ar gemenadenn");
+define("LANGPROFP3","Kemenadenn a-berzh ar penngelenner");
+//----------------------------------------------------------------------//
+// Module Stage Pro
+define("LANGSTAGE1","Steuñviñ ar stajoù ");
+define("LANGSTAGE2","Sellet ouzh deiziadoù ar stajoù ");
+define("LANGSTAGE3","Ouzhpennañ ");
+define("LANGSTAGE4","Lakaat ");
+define("LANGSTAGE5","Ouzhpennañ deiziad ur staj ");
+define("LANGSTAGE6","Kemm deiziad ur staj ");
+define("LANGSTAGE7","Diverkañ deiziad ur staj ");
+define("LANGSTAGE8","Merañ an embregerezhioù ");
+define("LANGSTAGE9","Sellout ouzh an embregerezhioù ");
+define("LANGSTAGE10","Ouzhpennañ un embregerezh ");
+define("LANGSTAGE11","Kemm titouroù un embregerezh ");
+define("LANGSTAGE12","Diverkañ un embregerezh ");
+define("LANGSTAGE13","Merañ ar skolidi ");
+define("LANGSTAGE14","Sellout ouzh ar vugale gant un embregerezh ");
+define("LANGSTAGE15","Lakaat un embregerezh d'ur skoliad ");
+define("LANGSTAGE16","Kemm titouroù ur skoliad ");
+define("LANGSTAGE17","Diverkañ embregerezh ur skoliad ");
+define("LANGSTAGE18","Sellout ouzh deiziadoù ar stajoù");
+define("LANGSTAGE19","Staj");
+define("LANGSTAGE20","Klask embregerezhioù");
+define("LANGSTAGE21","Sellout ouzh an embregerezhioù diouzh oc'h oberiantiz");
+define("LANGSTAGE22","Sellout ouzh an embregerezhioù");
+//----------------------------------------------------------------------//
+define("LANGGEN1","Melestradurezh");
+define("LANGGEN2","Buhez skol");
+define("LANGGEN3","Kelennerien");
+//----------------------------------------------------------------------//
+define("LANGDST1","Goulenn prouadoù");
+define("LANGDST2","Demat, <br> <br> Ho koulenn prouad evit a_ ");
+define("LANGDST3","<br><br><b>n\'eo ket bet asantet</b>, dibabit un deiz all pe kit en darempred ganeomp. <br><br> Trugarez");
+define("LANGDST4","<br><br><b>a zo bet enrollet</b> kit en darempred ganeomp evit kaout titouroù ouzhpenn. <br><br> Trugarez");
+define("LANGDST5","evit a_ ");
+define("LANGDST6","Sujed / Danvez");
+define("LANGDST7","Goulenn nac'het");
+define("LANGDST8","Goulenn asantet");
+//----------------------------------------------------------------------//
+define("LANGCALEN1","Darvoud");
+define("LANGCALEN2","Steuñv a_ ");
+define("LANGCALEN3","Ouzhpennañ un darvoud");
+define("LANGCALEN4","Diverkañ un darvoud");
+define("LANGCALEN5","Nevesiñ ar bajenn");
+define("LANGCALEN6","Deiziataer an darvoudoù");
+define("LANGCALEN7","E klas ");
+define("LANGCALEN8","Prouad ");
+define("LANGCALEN9","Prouad(où) an deiz");
+//----------------------------------------------------------------------//
+//module reservation
+define("LANGRESA1","Merañ an dafar");
+define("LANGRESA2","Merañ ar salioù");
+define("LANGRESA3","Listenn an dafar");
+define("LANGRESA4","Listenn ar salioù");
+define("LANGRESA5","Ouzhpennañ un dafar");
+define("LANGRESA6","Kemm un dafar");
+define("LANGRESA7","Diverkañ un dafar");
+define("LANGRESA8","Ouzhpennañ ur sal");
+define("LANGRESA9","Kemm ur sal");
+define("LANGRESA10","Diverkañ ur sal");
+define("LANGRESA11","Mirout dafar / sal");
+define("LANGRESA12","Mirout dafar");
+define("LANGRESA13","Mirout sal");
+define("LANGRESA14","Mirout");
+define("LANGRESA15","Krouiñ un dafar");
+define("LANGRESA16","Anv an dafar");
+define("LANGRESA17","Enrollañ ar grouidigezh");
+define("LANGRESA18","Titouroù ouzhpenn");
+define("LANGRESA19","Dafar enrollet");
+define("LANGRESA20","Krouiñ ur sal");
+define("LANGRESA21","Anv ar sal");
+define("LANGRESA22","Sal enrollet");
+define("LANGRESA23","Diverkañ sal");
+define("LANGRESA24","Sal");
+define("LANGRESA25","Diverkañ ar sal");
+define("LANGRESA26","Sal diverket");
+define("LANGRESA27","ur sal");
+define("LANGRESA28","Dibosupl diverkañ ar sal-mañ. \\n\\n Sal implijet.  ");
+define("LANGRESA29","Dafar diverket");
+define("LANGRESA30","Dibosupl diverkañ an dafar-mañ. \\n\\n Dafar implijet.  ");
+define("LANGRESA31","un dafar");
+define("LANGRESA32","Diverkañ dafar");
+define("LANGRESA33","Dafar");
+define("LANGRESA34","Diverkañ un dafar");
+define("LANGRESA35","Listenn an dafar");
+define("LANGRESA36","DEIZIAD");
+define("LANGRESA37","Eus");
+define("LANGRESA38","DA");
+define("LANGRESA39","Gant");
+define("LANGRESA40","Titouroù");
+define("LANGRESA41","Kadarnaat");
+define("LANGRESA42","Kadarnaet");
+define("LANGRESA43","Nann&nbsp;Kadarnaet");
+define("LANGRESA44","Steuñv dafar");
+define("LANGRESA45","Dafar");
+define("LANGRESA46","Dafar miret dija d'an deiz-se");
+define("LANGRESA47","Sellout ouzh steuñv mirout an dafar-mañ");
+define("LANGRESA48","Mirout adalek ");
+define("LANGRESA49","D'a_ ");
+define("LANGRESA50","Dafar miret da c'hortoz bezañ kadarnaet");
+define("LANGRESA51","Steuñv sal");
+define("LANGRESA52","Sal");
+define("LANGRESA53","Sal miret dija d'an deiz-se");
+define("LANGRESA54","Sal miret da c'hortoz bezañ kadarnaet");
+define("LANGRESA55","Sellout ouzh steuñv mirout ar sal-mañ");
+define("LANGRESA56","Kadarnaat ar mirout");
+define("LANGRESA57","Steuñv");
+define("LANGRESA58","Kadarnaat");
+//----------------------------------------------------------------------//
+define("LANGTTITRE1","Mont e-barzh izili");
+define("LANGTTITRE2","Ezel");
+define("LANGTTITRE3","Digoradur ar gont");
+define("LANGTTITRE4","Trugarez da c'hortoz");
+//--------------
+define("LANGTP1","Anv");
+define("LANGTP2","Raganv");
+define("LANGTP3","Ger kuzh");
+define("LANGTCONNEXION","Lugañ");
+define("LANGTERREURCONNECT","Fazi lugañ");
+define("LANGTCONNECCOURS","O lugañ emañ ");
+define("LANGTFERMCONNEC","Klikit amañ evit serriñ ho kont");
+define("LANGTDECONNEC","Emañ o vezañ diluget");
+// --- non corrige
+define("LANGTBLAKLIST0",'<center><br><br><b><font color=red  class=T1>Serret eo ho kont !!<br> A-benn addigeriñ ho kont, kit en darempred gant ho kelenndi.</b><br><br></center>');
+
+define("LANGMOIS1","Genver");
+define("LANGMOIS2","C'hwevrer");
+define("LANGMOIS3","Meurzh");
+define("LANGMOIS4","Ebrel");
+define("LANGMOIS5","Mae");
+define("LANGMOIS6","Even");
+define("LANGMOIS7","Gouhere");
+define("LANGMOIS8","Eost");
+define("LANGMOIS9","Gwengolo");
+define("LANGMOIS10","Here");
+define("LANGMOIS11","Du");
+define("LANGMOIS12","Kerzu");
+
+
+//______________________________________________________________________//
+// non corrigé
+// -----------
+
+// non corrige non traduit en anglais
+define("LANGDEPART1","ar skoliad");
+
+define("LANGVALIDE","Kadarnaat");
+define("LANGIMP45","Embann");
+
+define("LANGMESS34","Kemenadenn diviet.");
+define("LANGMESS35","Lakaat ar strollad-mañ da vezañ publik.");
+define("LANGMESS36","Kemenadenn diverket");
+define("LANGMESS37","N'eo ket bet asantet an ober-mañ gant melestrour Triade");
+
+define("LANGRESA59","Anv ar sal");
+define("LANGRESA60","Keloù");
+
+define("LANGMAINT0","Un dalc'hidigezh a zo bet raktreset war ar poellad");
+define("LANGMAINT1","Ne vo ket tu implijout Triade ");
+define("LANGMAINT2","etre");
+define("LANGMAINT3","ha");
+
+define("LANCALED1","Bloavezh raok");
+define("LANCALED2","Bloavezh da heul");
+
+
+define("LANGTTITRE5","Kudenn mont e-barzh");
+define("LANGTTITRE6","Goulennoù");
+define("LANGTPROBL1","Bremañ emañ servij Triade o seveniñ.");
+define("LANGTPROBL2","Ur goulenn am eus");
+define("LANGTPROBL3","Enrollañ ar goulenn");
+define("LANGTPROBL4","Kuitaat hep enrollañ");
+define("LANGTPROBL5","Displegit ho kudenn dezhomp");
+define("LANGTPROBL6","Skol*: ");
+define("LANGTPROBL7","Postel : ");
+define("LANGTPROBL8","Kemenadenn : ");
+define("LANGTPROBL9","(* parkoù ret)");
+define("LANGTPROBL10","Enrollañ ar gudenn");
+define("LANGTPROBL11","Trugarez evit ho koulenn -- Skipailh Triade");
+define("LANGTPROBL12","Klasket e vo renkañ ho kudenn an abretañ ar gwellañ --  Skipailh Triade ");
+
+define("LANGELEV1","Notennoù skol");
+
+define("LANGFORUM1","Forum - Listenn ar c'hemennadennoù");
+define("LANGFORUM2","N'eus kemennadenn ebet bet postet war ar forum-mañ");
+define("LANGFORUM3","Gallout a rit ");
+define("LANGFORUM3bis"," postañ ");
+define("LANGFORUM3ter"," ur gemennadenn gentañ m'oc'h eus c'hoant ");
+define("LANGFORUM4","Postañ ur gemennadenn nevez");
+define("LANGFORUM5","Forum - Postañ ur gemennadenn");
+define("LANGFORUM6","Karta da vezañ doujet");
+define("LANGFORUM7","Mankadenn : n'eus ket eus ar gemennadenn a-gevret-mañ.");
+define("LANGFORUM8","Distro da listenn ar c'hemennadennoù postet");
+define("LANGFORUM9","--- Kemennadenn orin ---");
+define("LANGFORUM10","Hoc'h anv ");
+define("LANGFORUM11","Ho postel ");
+define("LANGFORUM12","Sujed ");
+define("LANGFORUM13","Kas"); // --> bouton envoyer
+define("LANGFORUM14","Distro da listenn ar c'hemennadennoù postet");
+define("LANGFORUM15","Forum - kas ur gemennadenn");
+define("LANGFORUM16","<b>Mankadenn</b> : ar bajennad-mañ n'hall ket bezañ goulet<br> war-bouez d'ar gemennadenn-mañ bezañ ");
+define("LANGFORUM16bis"," kaset ");
+define("LANGFORUM17","<b>Mankadenn</b> : testenn ebet en ho kemennadenn.<br>");
+define("LANGFORUM18","<b>Mankadenn</b> : n'oc'h eus ket lakaet hoc'h anv.<br>");
+define("LANGFORUM19","Mankadenn ! N'eo ket bet postet ho kemennadenn. ");
+define("LANGFORUM20","<b>Mankadenn</b> : dibosupl da nevesiñ ar fichennaoueg index. <br>");
+define("LANGFORUM21","N'eo ket bet postet ho kemennadenn.");
+define("LANGFORUM22","Postet mat eo bet ho kemennadenn.<br>Trugarez evit ho kemer perzh.");
+define("LANGFORUM23","Distro da listenn ar c'hemennadennoù postet");
+define("LANGFORUM24","Forum - lenn ur gemennadenn");
+define("LANGFORUM25","N'eus kemenadenn ebet bet postet war ar forum-mañ.");
+define("LANGFORUM26","Gallout a rit ");
+define("LANGFORUM26bis","postañ");
+define("LANGFORUM26ter","ur gemennadenn gentañ m'oc'h eus c'hoant.");
+define("LANGFORUM27","N'eus ket eus ar gemenadenn-mañ pe diverket eo bet gant melestrour ar forum.<br>");
+define("LANGFORUM28","Distro da listenn ar c'hemennadennoù postet");
+define("LANGFORUM30","Aozer");
+define("LANGFORUM31","Deiziad");
+define("LANGFORUM32","Postañ ur respont");
+define("LANGFORUM33","Kemennadennoù kent (da heul poell ar gaoz)");
+define("LANGFORUM34","Kemennadennoù da heul (da heul poell ar gaoz)");
+
+define("LANGPROFH","Labour skol d'ober en ");
+define("LANGPROFI","Enrollañ al labour d'ober ");
+define("LANGPROFJ","Labour d'ober ");
+define("LANGPROFK","lakaet&nbsp;d'a_&nbsp;");
+define("LANGPROFL","Kadarnaat an deiziad");
+define("LANGPROFM","Evit a_ ");
+define("LANGPROFN","Labour eus ");
+define("LANGPROFO","Labour skol ");
+define("LANGPROFP","Lakaat ar benngelennerien");
+define("LANGPROFQ","A-benn arc'hoazh");
+define("LANGPROFR","Evit dec'h");
+define("LANGPROFS","Danvez pe Sujed");
+define("LANGPROFT","Kadarnaat ar goulenn prouad");
+define("LANGPROFU","Goulenn kaset -- Skipailh Triade");
+
+
+define("LANGPROJ17","Niver a ezvezañsoù");
+define("LANGPROJ18","devezh");
+
+define("LANGCALEN10","Deiziataer ar prouadoù");
+
+define("LANGPARENT6","Listenn an daleoù");
+define("LANGPARENT7","Listenn an ezvezañsoù");
+define("LANGPARENT8","Ezvezañt a_ ");
+define("LANGPARENT9","Listenn an diskargoù");
+define("LANGPARENT10","Prantad a_ ");
+define("LANGPARENT11","Da"); // indique une date (heure)
+define("LANGPARENT12","D'a_"); // indique une date jour
+define("LANGPARENT13","Testeni");
+define("LANGPARENT14","Pinijenn");
+define("LANGPARENT15","Pinijenn");
+define("LANGPARENT16","Dalc'het");
+define("LANGPARENT17","da");  // indique une heure
+define("LANGPARENT18","Dalc'h graet");
+define("LANGPARENT19","Listenn ar c'helc'hlizherioù melestradur");
+define("LANGPARENT20","Tizhout Fichennaoueg");
+define("LANGPARENT21","Gweladus gant ");
+define("LANGPARENT22","Deiziataer an darvoudoù ");
+define("LANGPARENT23","Deiziataer ar prouadoù ");
+define("LANGPARENT24","Goulenn ur prouad ");
+
+
+define("LANGAUDIO1","Kemennadenn Audio");
+define("LANGAUDIO2","D'a_ "); // indique une date
+define("LANGAUDIO3","K"); // premiere lettre
+define("LANGAUDIO3bis","emennadenn audio <br />stumm <b>mp3</b><br>Ment brasañ ar fichennaoueg : ");
+define("LANGAUDIO4","Enrollañ ar gemennadenn");
+define("LANGAUDIO5","Gortozit 2 pe 3 munutenn goude bezañ kaset ar fichennaoueg son.");
+define("LANGAUDIO6","Diverkañ ar gemennadenn audio");
+
+
+// non ajouté dans le fichier 06/09
+
+define("LANGOK","Ok");
+define("LANGCLICK","Klikit amañ");
+define("LANGPRECE","Kent");
+define("LANGERROR1","Titouroù digavadus");
+define("LANGERROR2","titour ebet");
+
+
+define("LANGPROF1","Menegiñ an danvez");
+define("LANGPROF2","Niver a notennoù");
+define("LANGPROF3","Sellout ouzh an notennoù");
+define("LANGPROF4","strollad");
+define("LANGPROF5","Dibab an trimiziad");
+define("LANGPROF6","Sujed "); // sujet du devoir
+define("LANGPROF7","Anv ar sujed "); // sujet du devoir
+define("LANGPROF8","Notenn"); //note d'un devoir
+define("LANGPROF9","Labour skol d'ober er ger");
+define("LANGPROF10","Cheñch un notenn");
+define("LANGPROF11","Diverkañ ur prouad"); // devoir --> interrogation
+define("LANGPROF12","Penngelenner");
+define("LANGPROF13","Fichenn Skoliad");
+define("LANGPROF14","Ouzhpennañ notennoù en ");
+define("LANGPROF15","Cheñch un notenn en");
+define("LANGPROF16","Anv ar prouad");
+define("LANGPROF17","Deiziad&nbsp;ar&nbsp;prouad"); // &nbsp; --> egal un blanc
+define("LANGPROF18","Gortozit");
+define("LANGPROF19","Kadarnaat ar cheñchamantoù");
+define("LANGPROF20","Enrollañ ar cheñchamantoù");
+define("LANGPROF21","Cheñch notenn en");
+define("LANGPROF22","Sellout ouzh an notennoù en");
+define("LANGPROF23","Diverkañ ur prouad en");
+define("LANGPROF24","Prouad a_ "); // interrogation du
+define("LANGPROF25","a zo bet diverket");
+define("LANGPROF26","Titouroù diwar-benn ar skoliad");
+define("LANGPROF27","Titouroù melestradurel");
+define("LANGPROF28","Titouroù war ar vuhez skol");
+define("LANGPROF29","Titouroù medisinerezh");
+define("LANGPROF30","Titour a_");
+define("LANGPROF31","Eus"); // indiquant une personne
+
+
+define("LANGEL1","Anv");
+define("LANGEL2","Raganv");
+define("LANGEL3","Klas ");
+define("LANGEL4","Yezh1");
+define("LANGEL5","Yezh2");
+define("LANGEL6","Latin");
+define("LANGEL7","Bod ha boued");
+define("LANGEL8","Deiz ganidigezh");
+define("LANGEL9","Broadelezh");
+define("LANGEL10","Ger kuzh");
+define("LANGEL11","Anv Familh");
+define("LANGEL12","Raganv");
+define("LANGEL13","straed");
+define("LANGEL14","Chomlec'h 1");
+define("LANGEL15","Kod post");
+define("LANGEL16","Kêr");
+define("LANGEL17","straed");
+define("LANGEL18","Chomlec'h 2");
+define("LANGEL19","Kod post");
+define("LANGEL20","Kêr");
+define("LANGEL21","Pellgomz");
+define("LANGEL22","Micher an tad");
+define("LANGEL23","Pellgomz an tad");
+define("LANGEL24","Micher ar vamm");
+define("LANGEL25","Pellgomz ar vamm");
+define("LANGEL26","Skol");
+define("LANGEL27","Kod ar skol");
+define("LANGEL28","Kod post");
+define("LANGEL29","Kêr");
+define("LANGEL30","Niverenn vroadel");
+
+
+define("LANGPROF32","Titouroù skol");
+define("LANGPROF33","Labour er ger");
+define("LANGPROF34","Sellout e-krezh ar sizhun");
+define("LANGPROF35","Sizhun dremenet");
+define("LANGPROF36","Sizhun a zeu");
+define("LANGTP23"," DIWALL - Goulenn mirout sal pe dafar  - RANN");
+define("LANGRESA61","Anv an dafar");
+
+
+// non transmis (4) 27/09/2005
+
+define("LANGIMP46","Raganv");
+define("LANGIMP47","Anvadenn (Ao. pe It. pe Dmz) ");
+define("LANGIMP48","Anv");
+define("LANGIMP49","* titour ret");
+define("LANGIMP50","Ar fichennaoueg da gas <FONT color=RED><B>A RANK</B></FONT> kaout <FONT COLOR=red><B>3</B></FONT> fark <I>(nann goulo)</I> dispartiet gant \"<FONT color=red><B>;</B></font>\" <I>Da lavaret eo 2 wech \"<FONT color=red><B>;</B></font>\"</I>");
+define("LANGIMP51","ger kuzh kerent");
+define("LANGIMP52","ger kuzh skoliad");
+
+define("LANGELE244","Postel");
+
+define("LANGTP12","Kadarnit ho kont");
+
+define("LANGacce_dep1","Fazi lugañ");
+define("LANGacce_dep2","Gwiriekit hoc'h identelez,<br> ma chom ar gudenn kelaouit <br>ho melestrour Triade gant <br>al liamm 'Kudenn mont e-barzh' er <br>roll kleiz");
+
+define("LANGacce_ref1","Mankadenn a-rummad : Mont e-barzh diaotreet");
+define("LANGacce_ref11","Gwelladennet d'a ");
+define("LANGacce_ref12","gant ");
+define("LANGacce_ref13","gant  ");
+define("LANGacce_ref2","MONED DIAOTREET");
+define("LANGacce_ref3","A-benn mont war ho kont e ranker lugañ.");
+define("LANGacce1","Ar skoliad(ez) ");
+define("LANGacce12","en (he) deus ur binijenn da rentañ, <br> diwar ar rann : ");
+define("LANGacce13","evit an abeg ");
+define("LANGacce14","An dever-mañ a zo d'ober : ");
+define("LANGacce2","Diverkañ ar gemennadenn-mañ : ");
+define("LANGacce21","Diverkañ");
+define("LANGacce3","Ar skoliad(ez) ");
+define("LANacce31","n'eo ket bet gwelet</b></font> gant ar penngasour(ez), <b>evit an dalc'h</b>,  diwar ar rann :");
+define("LANacce32","evit an abeg : ");
+define("LANGacce4","An dever-mañ a zo d'ober :");
+define("LANGacce5","diverkañ");
+define("LANGacce6","Merañ an emzalc'h");
+define("LANGaccrob11","Pellgargañ ar poellad Adobe Acrobat Reader 8.1.0 fr");
+define("LANGaccrob2","23,4 Mo  evit Windows 2000/XP/2003/Vista");
+define("LANGaccrob3","Amzer pellgargañ :");
+define("LANGaccrob4","e 56 K : 57 mun ha 53.4 s.");
+define("LANGaccrob5","e 512 K : 6 mun ha 31.2 s.");
+define("LANGaccrob6","e 5 M : 0 mun ha 37 s.");
+define("LANGaccrob7","Pellgargañ ar poellad Adobe Acrobat Reader 6.O.1 fr");
+define("LANGaccrob8","Pouez : ");
+define("LANGaccrob9","0.40916 Mo evit NT/95/98/2000/ME/XP");
+define("LANGaccrob10","e 56 K :0 mun ha 58.2 s");
+define("LANGaccrob11bis","e 512 K : 0 mun ha 6.6 s ");
+define("LANGaffec_cre21","Krouiñ kefridioù evit ar c'hlas ");
+define("LANGaffec_cre22","Kefredioù war staliañ");
+define("LANGaffec_cre23","Emañ ar poellad kefrediañ o tigeriñ<br>Klikañ ma ne weler ket ar bajennad ");
+define("LANGaffec_cre24","Triade - Kont ");
+define("LANGaffec_cre31","KROUIDIGEZH - KEFREDIADUR");
+define("LANGaffec_cre41","Moullañ");
+define("LANGaffec_mod_key1","Dasparzh ar c'hlasadoù");
+define("LANGaffec_mod_key2","Bloc'had ar c'hemm kefridioù ar c'hlasadoù.");
+define("LANGaffec_mod_key3","DIWALL ar vodulenn-mañ a zo da implijout pa vez kemmet kefredioù,<br> diverkañ a ra holl notennoù bugale ar c'hlasoù cheñchet. ");
+define("LANGaffec_mod_key4","DIWALL, notennoù ar c'hlasadoù diuzet a vo diverket. \\n Ha kendalc'het 'vo ? \\n\\n Skipailh Triade");
+define("LANGattente1","Gortozit - Triade");
+define("LANGattente2","Gortozit marplij ....");
+define("LANGattente3","Skipailh Triade.");
+define("LANGatte_mess1","TRIADE - Gortoz - Posteloù");
+define("LANGatte_mess2","Gortozit marplij ....");
+define("LANGatte_mess3","servij TRIADE");
+define("LANGbasededon20","Kas ar fichennaoueg");
+define("LANGbasededon201","mann ebet");
+define("LANGbasededon2011","Embarzhañ fichennaouegoù GEP");
+define("LANGbasededon202","Fichennaoueg kaset -- Skipailh Triade");
+define("LANGbasededon203","Fichennaoueg nann enrollet");
+define("LANGbasededon31","Menegiñ ar c'hlasad a zere gant kement dave 'zo");
+define("LANGbasededon32","Dibab ...");
+define("LANGbasededon33","hini ebet");
+define("LANGbasededon34","Kas ar fichennaoueg a c'hall padout <b>2 pe 4 munutenn</b> diouzh niver ar skolidi.");
+define("LANGbasededon35","Rankout a ra ar fichennaoueg bezañ dindan stumm <b>dbf</b> ha bezañ galvet <b>F_ele.dbf</b>");
+define("LANGbasededon41","Mank gant an niver a glasoù !!! - Kelaouit skipailh Triade <br /><br /> maintenance@triade.ht.st</center>");
+define("LANGbasededon42","Mankadenn bizskrivañ er c'hlasoù, ur c'hlas a zo bet bizskrivet meur a wech -- Skipailh Triade");
+define("LANGbasededon43","Kemennadenn a_ : ");
+define("LANGbasededon44","Eus");
+define("LANGbasededon45","Ezel :");
+define("LANGbasededon46","Kemennadenn :");
+define("LANGbasededon47","DIAZ NEVEZ:");
+define("LANGbasededon48","- gant GEP");
+define("LANGbasededon49"," Skolaj :");
+define("LANGbasededoni11","'Diwall','./image/commun/warning.jpg','<font face=Verdana size=1><font color=red>A</font>r bloc'had <b>dbase</b> n\'eo ket <br> karget !! <i>Ret evit embarzhañ <br> un diaz GEP.");
+define("LANGbasededoni21","DIWALL, distrujet e vo an diaz kozh. \\n C'hoant hoc'h eus da genderc'hel ? \\n\\n Skipailh Triade");
+define("LANGbasededoni31","Evit peseurt rann eo ar fichennaoueg ");
+define("LANGbasededoni32","Sellout a ra ar fichennaoueg ouzh : ");
+define("LANGbasededoni33","Enporzhiañ skolidi : ");
+define("LANGbasededoni34","Enporzhiañ kelennerien :");
+define("LANGbasededoni35","Enporzhiañ tud ar vuhez skol : ");
+define("LANGbasededoni36","Enporzhiañ tud ar velestradurezh : ");
+define("LANGbasededoni41","Klas kent");
+define("LANGbasededoni42","Bloavezh kent");
+define("LANGbasededoni51","Evit an anvadenn");
+define("LANGbasededoni52","talvoudegezh : <b>0</b> evit Aot.<br>");
+define("LANGbasededoni53","talvoudegezh : <b>1</b> evit Itr.<br>");
+define("LANGbasededoni54","talvoudegezh : <b>2</b> evit Dmz.<br>");
+define("LANGbasededoni61","mank");
+define("LANGbasededoni71","Enporzhiañ ar fichennaoueg ASCII");
+define("LANGbasededoni72","Kemennadenn a_ : ");
+define("LANGbasededoni721","Eus");
+define("LANGbasededoni722","Ezel :");
+define("LANGbasededoni723","Kemennadenn :");
+define("LANGbasededoni724","DIAZ NEVEZ:");
+define("LANGbasededoni725","- gant ASCII");
+define("LANGbasededoni726"," Skolaj :");
+define("LANGbasededoni73","Hollad enrolladennoù en diaz ");
+define("LANGbasededoni91","Enporzhiañ ar fichennaoueg ASCII");
+define("LANGbasededoni92","Mank gant an niver a glasoù !!! - Kelaouit skipailh Triade <br />");
+define("LANGbasededoni93","Mankadenn bizskrivañ er c'hlasoù, ur c'hlas a zo bet bizskrivet meur a wech -- Skipailh Triade");
+define("LANGbasededoni94","Roadenn tretet eus an diaz -- Skipailh Triade<br />");
+define("LANGbasededoni95","Hollad skolidi enrollet en diaz : ");
+define("LANGPIEDPAGE","<p> La <b>T</b>ransparence et la <b>R</b>apidité de l'<b>I</b>nformatique <b>A</b>u service <b>D</b>e l'<b>E</b>nseignement<br>A-benn gwelet al lec'hienn-mañ ar gwellañ ma c'haller : spister izelañ : 800x600 <br>  © 2000/2006 Triade - Holl wirioù miret");
+
+define("LANGAPROPOS1","Neuz (Version)");
+define("LANGAPROPOS2","Holl wirioù miret");
+define("LANGAPROPOS3","Aotre implijout");
+define("LANGAPROPOS4","Product ID");
+
+define("LANGTELECHARGER","Pellgargañ");
+define("LANGAJOUT1","Evit ar Bod ha Boued : dibaboù posupl (<b>INT</b> (Diabarzhad),<b>EXT</b> (Diavaezad), <b>DP</b> (Hanter diabarzhad)<br>
+Evit al Latin  : dibaboù posupl (<b>LATIN</b> pe mann ebet)<br><br>");
+define("LANGIMP44","Ar fichenn na glot ket.");
+define("LANGBASE16"," Diskouezet eo ar bannoù dindan ar stumm : <b>anv lugañ ; raganv lugañ; ger-kuzh Kerent ; ger-kuzh Skoliad e sklaer</b>");
+
+
+define("LANGSUPP0","Diverkañ ur gont Erlec'hier");
+define("LANGSUPP1","Bloc'had Diverkañ");
+define("LANGSUPP2","Diverkañ ar gont");
+define("LANGSUPP3","C'hoant hoc'h eus diverkañ eus listenn an erlec'hierien");
+define("LANGSUPP3bis","erlec'hier");
+define("LANGSUPP4","Kadarnaat an diverkañ");
+define("LANGSUPP5","Dibosupl diverkañ ar gont-mañ. \\n\\n Kont lakaet d'ur c'hlas.  \\n\\n  Skipailh Triade");
+define("LANGSUPP6","Kont diverket - Skipailh Triade");
+define("LANGSUPP7","Diverkañ ur strollad");
+define("LANGSUPP8","Diverkañ ar strollad");
+define("LANGSUPP9","Diverkañ ur gont ");
+define("LANGSUPP10","Diverkañ ar gont");
+define("LANGSUPP11","un ezel eus ar vuhez skol");
+define("LANGSUPP12","ur melestrour");
+define("LANGSUPP13","ar c'helenner");
+define("LANGSUPP14","Diverkañ ur skoliad er c'hlas");
+define("LANGSUPP15","Klikit war ar skolaid da dennañ");
+define("LANGSUPP16","Diverkañ ur skoliad");
+define("LANGSUPP17","a zo o vont da vezañ tennet eus an diaz");
+define("LANGSUPP18","An holl ditouroù diwar-benn ar skoliad-mañ a zo o vont da vezañ diverket, da lavaret eo : <br> (notennoù, ezvezañsoù, daleoù, diskargoù, pinijennoù, keleier, posteloù)");
+define("LANGSUPP19","Nullañ an diverkañ");
+define("LANGSUPP20","a zo tennet eus an diaz");
+define("LANGSUPP21","Diverkañ ur c'hlas");
+define("LANGSUPP22","Diverkañ ur c'hlas");
+define("LANGSUPP23","Diverkañ un danvez pe un rann-danvez");
+define("LANGSUPP24","Diverkañ an danvez");
+define("LANGSUPP25","Klas diverket --  Servij Triade");
+define("LANGSUPP26","Danvez diverket --  Servij Triade");
+define("LANGSUPP27","Krouidigezh an danvez");
+define("LANGSUPP28","Rann-danvez enrollet");
+
+define("LANGADMIN","Melestrour");
+define("LANGPROF","Kelenner");
+define("LANGSCOLAIRE","ar Vuhez Skol");
+define("LANGCLASSE","ur c'hlas");
+
+
+define("LANGGRP11","Anv ar strollad");
+define("LANGGRP12","Klasad(où) orin");
+define("LANGGRP13","Listenn ar Skolidi");
+define("LANGGRP14","Listenn ar strolladoù");
+define("LANGGRP15","Krouidigezh ur strollad");
+define("LANGGRP16","Menegit skolidi ar strollad");
+define("LANGGRP17","Dibab");
+define("LANGGRP18","Enrollañ ar strollad");
+define("LANGGRP19","Strollad krouet");
+define("LANGGRP20","Strollad all");
+define("LANGGRP21","Listenn ar strolladoù");
+define("LANGGRP22","Menegiñ ur c'hlas evit krouiñ ar strollad marplij \\n\\n Skipailh Triade");
+define("LANGGRP23","Listenn ar skolidi er strollad");
+define("LANGGRP24","Listenn ar c'hlasoù");
+define("LANGGRP25","Listenn an danvezioù");
+
+
+
+//----------------//
+define("LANGDONNEENR","<font class=T2>Titour(où) enrollet.</font>");
+
+define("LANGABS47","Ouzhpennañ ur c'hastiz");
+define("LANGABS48"," en (he) deus tizhet ");
+define("LANGABS48bis","gwech ar rann");
+define("LANGABS49","padelezh");
+define("LANGABS50"," Dalc'h a_ ");
+define("LANGABS51","Pgz Mich Tad ");
+define("LANGABS52","Pgz Mich Mamm ");
+define("LANGABS53","Dale pe ezvezañs ebet sinet");
+
+define("LANGCALRET1","Deiziadur &nbsp; an &nbsp; Dalc'hoù");
+
+define("LANGHISTO1","Istor an oberiadennoù");
+
+define("LANGDST9","Ouzhpennañ un enmont");
+define("LANGDST10","Diverkañ uin enmont");
+define("LANGDST11","e klas");
+
+define("LANGDISP11","Skritelliñ <b>an holl</B> zispañsoù");
+
+define("LANGEN","E");
+
+define("LANGAFF4","Embann klasad");
+define("LANGAFF5","An holl glasoù");
+define("LANGAFF6","Sellout ouzh ar c'hlasad-mañ");
+
+define("LANGCHER1","Enklask donn");
+define("LANGCHER2","Menegiñ stumm ar fichenn da grouiñ");
+define("LANGCHER3","Menegiñ an disranner maeziennoù");
+define("LANGCHER4","Klask ur skoliad diwar an anv : <b>klikit amañ</b>");
+define("LANGCHER5","Ouzhpennañ");
+define("LANGCHER6","Tennañ");
+define("LANGCHER7","Pignat");
+define("LANGCHER8","Diskenn");
+define("LANGCHER9","Heul");
+define("LANGCHER10","Elfenn klasket");
+define("LANGCHER11","Niver a zezverkoù enklask");
+define("LANGCHER12","Adalek");
+
+define("LANGCHER13","gant an dalvoudegezh");
+define("LANGCHER14","Enklask wel-wazh");
+define("LANGCHER15","Enklask resis");
+define("LANGCHER16","Kregiñ an enklask");
+define("LANGCHER17","Diwall ! chom a ra un elfenn nann dibabet !! -- Skipailh Triade ");
+
+define("LANGCHER18","gant an dalvoudegezh");
+
+define("LANGTITRE34","Kefluniañ ul lizher evit an daleoù");
+define("LANGTITRE35","Kefluniañ ul lizher evit an ezvezañsoù");
+
+define("LANGCONFIG1","Kefluniadur enrollet.");
+define("LANGCONFIG2","Setu ho testenn ");
+
+define("LANGCONFIG3","Menegiñ listenn ar gerent a resevo ul lizher");
+
+define("LANGERROR01","Mankadenn moned d'an diaz");
+define("LANGERROR02","DIWALL ! Dibosupl ! <br><br>Ar gudenn a c'hall dont eus an titouroù embarzhet <br>(Gwiriekaat ar maeziennoù disheñvel a-raok kadarnaat).<BR>  <BR>PE ez eo enrollet dija an titour PE n'hall ket bezañ tizhet.");
+define("LANGERROR03","Dibosupl moned d'an diaz evit an oberiadenn-mañ. <BR><BR>Kaset ez eus bet ur postel war-eeun da emskoazell TRIADE.");
+
+define("LANGABS54","a zo skrivet dija ezvezant d'an devezh-se");
+define("LANGABS55","a zo skrivet dija diwezhat d'an devezh-se");
+define("LANGPARAM4","Enrollet eo an testeni.");
+define("LANGPARAM5","Testeni skol skolidi ar c'hlasad ");
+define("LANGPARAM5bis","a zo prest, e stumm PDF");
+define("LANGPARAM6","Arventennañ endalc'had ar follennoù trimiziad pe lazhiadek");
+
+define("LANGPARAM7","Anv rener ar c'helenndi");
+define("LANGPARAM8","Anv ar c'helenndi");
+define("LANGPARAM9","Chomlec'h");
+define("LANGPARAM10","Kod post");
+define("LANGPARAM11","Ker");
+define("LANGPARAM12","Pellgomz");
+define("LANGPARAM13","Postel");
+define("LANGPARAM14","Siell ar c'helenndi");
+define("LANGPARAM15","Enrollañ an arventennoù");
+define("LANGPARAM16","Enrolladenn graet -- Skipailh Triade");
+
+define("LANGCERTIF1","Testeni skol ");
+define("LANGCERTIF1bis","a zo prest, e stumm PDF");
+
+
+define("LANGRECHE1","Titouroù diwar-benn ar skoliad");
+
+define("LANGBT52","Kemm ar roadennoù");
+
+define("LANGEDIT1","Roadennoù aet diwan-wel");
+
+define("LANGMODIF1","Nevesadenn kont ur skoliad");
+define("LANGMODIF2","Titouroù war ar skoliad");
+define("LANGMODIF3","Titouroù war ar familh");
+
+define("LANGALERT1","Roadennoù nevesaet -- Skipailh Triade");
+define("LANGALERT2","Diwall, n'eo glot ket ar fichenn dre he stumm pe he ment");
+define("LANGALERT3","Diwall, n'eo glot ket ar fichenn dre he stumm pe he ment");
+
+define("LANGLOGO1","Siell da gas");
+define("LANGLOGO2","Enrollañ ar siell");
+define("LANGLOGO3","Ar siell <b>a rank bezañ e stumm jpg</b> ha gant ar ment 96px war 96px.");
+
+define("LANGPARAM17","Bevenniñ an trimiziadoù pe ar c'hwec'hmiziadoù");
+define("LANGPARAM18","Trimiziad pe C'hwec'hmiziad");
+define("LANGPARAM19","Deiziad kregiñ");
+define("LANGPARAM20","Deiziad echuiñ");
+define("LANGPARAM21","Kentañ");
+define("LANGPARAM22","Eil");
+define("LANGPARAM23","Trede");
+define("LANGPARAM24","Enrollañ deiziadoù an trimiziadoù");
+define("LANGPARAM25","Roadenn dalc'het en kont, m'emañ an enrolladenn e stumm c'hwec'hmiziad");
+define("LANGPARAM26","Deiziad direizh -- Skipailh Triade");
+define("LANGPARAM27","Titouroù enrollet -- Skipailh Triade");
+define("LANGPARAM28","trimiziad");
+define("LANGPARAM29","c'hwec'hmiziad");
+define("LANGPARAM30","Follenn");
+
+
+define("LANGBULL5","Moullañ ar follenn");
+define("LANGBULL6","Kenderc'hel an dreterezh");
+define("LANGBULL7","Moullañ ar prantad");
+define("LANGBULL8","Menegiñ penn-kentañ ar prantad");
+define("LANGBULL9","Menegiñ fin ar prantad");
+define("LANGBULL10","Menegiñ niverenn ar prantad");
+define("LANGBULL11","Menegiñ ar rann");
+define("LANGBULL12","Moullañ ar prantad");
+define("LANGBULL13","Istorel");
+define("LANGBULL14","<FONT COLOR='red'>DIWALL</FONT></B> Ezhomm a zo <B>Adobe Acrobat Reader</B>.  Poellad ha pellgargañ digoust ");
+define("LANGBULL14bis","Pellgargañ");
+define("LANGBULL15","Sellout / Diverkañ");
+define("LANGBULL16","Anv ar skoliad");
+define("LANGBULL17","Kelenner");
+define("LANGBULL18","Munud an notennoù");
+define("LANGBULL19","Evezhiadennoù ar penngelenner");
+define("LANGBULL20","FOLLENN NOTENNOU");
+define("LANGBULL21","prantad");
+
+define("LANGBULL22","trimiziad kentañ");
+define("LANGBULL23","eil trimiziad");
+define("LANGBULL24","trede trimiziad");
+
+define("LANGBULL25","kentañ c'hwec'hmiziad");
+define("LANGBULL26","eil c'hwec'hmiziad");
+
+define("LANGBULL27","Follenn an ");
+define("LANGBULL28","Rann");
+define("LANGBULL29","Bloavezh Skol");
+
+define("LANGBULL30","FOLLENN");
+
+define("LANGBULL31","Skoliad(ez)");
+define("LANGBULL32","Danvezioù");
+define("LANGBULL33","Klas");
+define("LANGBULL34","Evezhiadennoù");
+
+define("LANGBULL35","Kenef");
+define("LANGBULL36","Keid");
+define("LANGBULL37","Izel");
+define("LANGBULL38","Uhel");
+define("LANGBULL39","Aked hag emzalc'h : ");
+define("LANGBULL40","Evezhiadenn hollek ar skipailh : ");
+define("LANGBULL41","Eilenn ebet na vo roet");
+define("LANGBULL42","Sinadur ar rener / Renerezh ar studioù");
+define("LANGBULL43","BLOAVEZH SKOL");
+define("LANGBULL44","Aot. & Itr.");
+define("LANGOU","pe"); // le ou de ou bien
+
+
+define("LANGPROJ19","C'hwec'hmiziad 1");
+define("LANGPROJ20","C'hwec'hmiziad 2");
+
+define("LANGDISC1","Dalc'h  a_ ");
+define("LANGDISC2","Moullañ dalc'hoù an devezh");
+
+
+define("LANGDISC3","Pgz Ker ");
+define("LANGDISC4","Pgz Mich Tad ");
+define("LANGDISC5","Pgz Mich Mamm ");
+define("LANGDISC6","Lakaat ur c'hastiz e klas ");
+define("LANGDISC7","Titl ar rann ");
+define("LANGDISC8","Titl ar c'hastiz ");
+define("LANGDISC9","Lakaet gant ");
+define("LANGDISC10","Abeg, titouroù, labour d'ober ");
+define("LANGDISC11","Dalc'h");
+define("LANGDISC11bis","A_");  // Le pour indiquer une date
+define("LANGDISC11Ter","Da");  // A pour indiquer une heure
+define("LANGDISC12","padelezh");
+define("LANGDISC13","<font color=red>G</font></B>evaskit al log ma \'z eo <br>dalc'het pe kastizet ar skoliad.");
+define("LANGDISC14","Ouzhpennañ ur c'hastiz");
+define("LANGDISC15","<B>*<I> D</B>: Pellgomz er ger, <B>P</B>: Pellgomz micherel an tad, <B>M</B>: Pellgomz micherel ar vamm</I>");
+define("LANGDISC16","Seveniñ");
+define("LANGDISC17","Pgz");
+define("LANGDISC18","Gwelet ar c'hastizoù");
+define("LANGDISC19","Gwelet ar <b>5</B> kastiz diwezhañ");
+define("LANGDISC20","Rann");
+define("LANGDISC21","Listenn glok ");
+define("LANGDISC22","Gwelet dalc'hoù ");
+define("LANGDISC23","Skritelliñ an dalc'hoù");
+define("LANGDISC24","Diskwel  <b>klok</B> an dalc'hoù");
+define("LANGDISC25","Dalc'het");
+define("LANGDISC26","Dalc'h nann sevenet");
+define("LANGDISC27","Sevel roll kastizoù ");
+define("LANGDISC28","Diskwel ar c'hastizoù");
+define("LANGDISC29","Diskwel <b>klok</B> ar c'hastizoù");
+define("LANGDISC30","Lakaet&nbsp;d'a_");
+define("LANGDISC31","Sevel roll kastizoù ");
+define("LANGDISC32","Dalc'h nann deverket d'ur skoliad ");
+define("LANGDISC33","DIWALL ! ar skoliad ");
+define("LANGDISC33bis"," a zo dalc'het dija d'an deiz ha d'an eur meneget. ");
+define("LANGDISC34","en (he) deus");
+define("LANGDISC34bis","(g)wech ar rann");
+define("LANGDISC35","Tennañ Kastiz");
+define("LANGDISC36","Tennañ Dalc'h");
+
+define("LANGattente222","Gortozit");
+
+
+
+define("LANGSUPP","Diverk."); // abreviation de Diverkañ
+
+
+
+define("LANGCIRCU1","Merañ ar C'helc'hlizheroù");
+define("LANGCIRCU2","Ouzhpennañ ur c'helc'hlizher");
+define("LANGCIRCU3","Renabliñ kelc'hlizheroù");
+define("LANGCIRCU4","Diverkañ ur c'helc'hlizher");
+define("LANGCIRCU5","Ouzhpennañ kelc'hlizheroù");
+define("LANGCIRCU6","Pal");
+define("LANGCIRCU7","Dave");
+define("LANGCIRCU8","Kelc'hlizher");
+define("LANGCIRCU9","Kelennerien");
+define("LANGCIRCU10","Er c'hlas(où)");
+define("LANGCIRCU11","<font face=Verdana size=1><B><font color=red>K</font></B>elc'hlizher <br />e stumm<b> doc</b>,<b>pdf</b>,<b>txt</b>.</FONT>");
+define("LANGCIRCU12","<font face=Verdana size=1><B><font color=red>K</font></B>elc'hlizher gweladus gant ar<br> gelennerien.</FONT>");
+define("LANGCIRCU13","Holl glasoù");
+define("LANGCIRCU14","Distreiñ d'ar roll");
+define("LANGCIRCU15","Enrollañ ar c'helc'hlizher");
+define("LANGCIRCU16","Kelc'hlizher nann enrollet");
+define("LANGCIRCU17","Rankout a ra ar fichenn bezañ e stumm <b>txt pe doc pe pdf</b> ha skañvoc'h eget 2 Mo ");
+define("LANGCIRCU18","<font class=T2>Kelc'hlizher enrollet</font>");
+define("LANGCIRCU19","Diverkañ Kelc'hlizheroù");
+define("LANGCIRCU20","Moned fichenn");
+define("LANGCIRCU21","<font color=red><b>D</b></font><font color=#000000>ave");
+
+define("LANGCODEBAR1","Merañ ar c'hodoù-barr");
+define("LANGCODEBAR2","N'ez a ket en-dro ar bloc'had-mañ gant ho servijer. <br> Ret eo deoc'h kaout PHP 5 pe muioc'h.");
+define("LANGCODEBAR3","Setu roll kodoù-barr a c'haller kaout dre Triade");
+define("LANGCODEBAR4","Ar c'hod-barr implijet dre ziouer a zo ");
+define("LANGCODEBAR5","Listenn");
+
+
+define("LANGPUB1","Ouzhpennañ ur banniel bruderezh");
+define("LANGPUB2","C'hoant hoc'h eus da embann war lec'hienn TRIADE");
+define("LANGPUB3","Ober ul lazhiad brudañ");
+define("LANGPUB4","Evit se  ");
+define("LANGPUB5","Kemenner oc'h dija war Triade ");
+
+define("LANGPROFB1","Evezhiadennoù evit al follennoù notennoù");
+define("LANGPROFB2","Arventennañ hoc'h evezhiadennoù");
+define("LANGPROFB3","Arventennañ");
+define("LANGPROFB4","Kefluniañ Evezhiadennoù Follennoù Notennoù");
+define("LANGPROFB5","Enrollañ an evezhiadennoù");
+define("LANGPROFB6","Evezhiadenn");
+define("LANGPROFB7","Listenn");
+
+
+define("LANGPROFC1","Deiziadur Implij Dafar");
+define("LANGPROFC2","Deiziadur Implij Salioù");
+
+
+define("LANGPARAM31","Gwelet e stumm U.S.A");
+define("LANGPARAM32","Aked hag emzalc'h er c'helenndi : ");
+define("LANGPARAM33","Adpakañ ar fichenn PDF");
+
+define("LANGDISC37","Ouzhpennañ ur c'hastiz");
+
+define("LANGPROFP4","<b>Penngelenner</b> e ");
+define("LANGPROFP5","Titouroù war ar skoliad");
+define("LANGPROFP6","Keleier a_ ");
+define("LANGPROFP7","betek a_ ");
+
+define("LANGPROFP8","Hollad an daleoù");
+define("LANGPROFP9","Niver a zaleoù en trimiziad-mañ");
+define("LANGPROFP10","Hollad an ezvezañsoù");
+define("LANGPROFP11","Niver a ezvezañsoù en trimiziad-mañ");
+
+define("LANGPROFP12","Merañ ar gannaded");
+define("LANGPROFP13"," e klas ");
+define("LANGPROFP14","Kannad tud ar vugale");
+define("LANGPROFP15","Chomlec'h");
+define("LANGPROFP16","Kannad skolidi");
+define("LANGPROFP17","Kannad(ed) tud ar vugale");
+define("LANGPROFP18","Kannad(ed) skolidi");
+define("LANGPROFP19","Pgz"); // pour téléphone
+define("LANGPROFP20","Postel");
+define("LANGPROFP21","Titouroù yec'hed ouzhpenn ar skoliad");
+
+define("LANGETUDE1","Merañ ar prantadoù-studi");
+define("LANGETUDE2","Lec'hiañ ar skolidi er prantadoù-studi");
+define("LANGETUDE3","Gwelet roll al lec'hiañ prantadoù-studi");
+define("LANGETUDE4","Ouzhpennañ ur prantad-studi");
+define("LANGETUDE5","Kemm ur prantad-studi");
+define("LANGETUDE6","Diverkañ ur prantad-studi");
+define("LANGETUDE7","Gwelet ur prantad-studi");
+define("LANGETUDE8","Lec'hiañ ur skoliad en ur prantad-studi");
+define("LANGETUDE9","Kemmañ ur skoliad en ur prantad-studi");
+define("LANGETUDE10","Diverkañ ur skoliad en ur prantad-studi");
+define("LANGETUDE11","Roll ar prantadoù-studi");
+
+define("LANGETUDE12","Kasour");
+define("LANGETUDE13","Studi");
+define("LANGETUDE14","E sal");
+define("LANGETUDE15","Sizhun");
+define("LANGETUDE16","A_");  		// Le indique une date
+define("LANGETUDE17","da");  		// à indique une heure
+define("LANGETUDE18","e-pad");  	//indique une durée
+define("LANGETUDE19","Krouiñ ur prantad-studi");
+define("LANGETUDE20","Anv ar prantad-studi");
+define("LANGETUDE21","Devezh ar sizhun");
+define("LANGETUDE22","Eur ar prantad-studi");
+define("LANGETUDE23","Padelezh ar prantad-studi");
+define("LANGETUDE24","ee:mm");
+define("LANGETUDE25","Sal studi");
+define("LANGETUDE26","Kasour ar prantad-studi-mañ");
+define("LANGETUDE27","Enrollet eo ar prantad-studi");
+define("LANGETUDE28","Roll ar prantadoù-studi");
+define("LANGETUDE29","Kemmañ ur prantad-studi");
+define("LANGETUDE30","Skolidi a zo er prantad-studi-se. Diverkañ da gentañ roll ar skolidi a-raok diverkañ ar prantad-studi e-unan.");
+define("LANGETUDE31","Roll skoliad");
+define("LANGETUDE32","Roll ar skolidi");
+define("LANGETUDE33","Lec'hiañ ur skoliad en ur prantad-studi");
+define("LANGETUDE34","Dibab ar prantad-studi");
+define("LANGETUDE35","Resisaat ar c'hlasadoù a-benn lec'hiañ ar skolidi er prantad-studi-mañ.");
+define("LANGETUDE36","Anv ar prantad-studi");
+define("LANGETUDE37","Resisaat ar skolidi er prantad-studi-mañ.");
+define("LANGETUDE38","aotret da guitaat");
+define("LANGETUDE39","Enrollañ ar prantad-studi");
+define("LANGETUDE40","Prantad-studi all");
+define("LANGETUDE41","Kemmañ prantad-studi ur skoliad");
+define("LANGETUDE42","Skoliad war ur prantad-studi");
+define("LANGETUDE43","Enrollañ ar c'hemmoù");
+define("LANGETUDE44","Aotreet da mont e-maez");
+define("LANGETUDE45","Diverkañ prantad-studi ur skoliad");
+
+define("LANGLIST1","Embann ur c'hlas");
+define("LANGLIST2","Listenn kelennerien ar c'hlas");
+define("LANGLIST3","Penngelenner");
+define("LANGLIST4","Deiziad");
+define("LANGLIST5","Liste compléte au format PDF");
+define("LANGLIST6","Penngelenner");
+
+
+define("LANGPASS1","Nouveau mot de passe");
+
+define("LANGTRONBI1","Visualisation Tronbinoscope");
+define("LANGTRONBI2","Modifier Tronbinoscope");
+define("LANGTRONBI3","Diwall format du fichier non conforme");
+define("LANGTRONBI4","Impossible photo de taille non conforme");
+define("LANGTRONBI5","Nom élève");
+define("LANGTRONBI6","Préanv élève");
+define("LANGTRONBI7","la photo");
+define("LANGTRONBI8","ajouter photo");
+
+
+define("LANGBASE19","Le fichier sélectionné n'est pas valide");
+define("LANGBASE20","Elève sans classe");
+define("LANGBASE21","Nombre d'élèves sans classe");
+define("LANGBASE22","Affichage des 30 premiers");
+define("LANGBASE23","Changement de classe pour les élèves");
+define("LANGBASE24","Changement Terminé");
+define("LANGBASE25","AVANT TOUTES MODIFICATIONS CONSULTER NOTRE AIDE");
+define("LANGBASE26","Changement de classe pour les élèves de la classe");
+define("LANGBASE27","Information sur le changement de classe d'un élève");
+define("LANGBASE28","<b>Pas de changement.</b> <i>(Avec l'option 'choix ...')</i>");
+define("LANGBASE29","Aucune suppression d'information de l'élève n'est réalisée.");
+define("LANGBASE30","<b>Le changement de classe.</b> <i>(Avec indication d'une classe)</i>");
+define("LANGBASE31","Suppression notes, abs, retards, disciplines, dispences  de l'élève.");
+define("LANGBASE32","<b>Quitte l'école.</b>  <i>(Avec l'option 'Quitte l'école')</i>");
+define("LANGBASE33","Suppression de l'élèves dans la base.");
+define("LANGBASE34","Suppression notes, abs, retards, disciplines, dispenses de l'élève.");
+define("LANGBASE35","Suppression messages internes de la famille.");
+define("LANGBASE36","Va en classe de");
+define("LANGBASE37","Quitte l'école");
+define("LANGBASE38","Valider le(s) changement(s)");
+define("LANGBASE39","Choisissez un élèment");
+
+
+// new
+define("LANGBASE40","Choix du ");
+
+define("LANGAGENDA1","Diwall!!!\nLa note que vous venez de créer ou modifier se superpose\navec une autre note pour les utilisateurs suivants");
+define("LANGAGENDA2","Voulez vous supprimer cette note qui vous a été affectée ?");
+define("LANGAGENDA3","Suppression d'une note, rappel :\\n\\n - Toutes les occurences découlant de cette note seront également effacées\\n - Pour supprimer juste une occurence, cliquez sur l'image correspondante à droite de la note dans les planning\\n\\nVoulez vous supprimer cette note ?");
+define("LANGAGENDA4","Suppression d'une occurence, rappel :\\n\\n - Seule cette occurence sera supprimée\\n - Pour supprimer une note récurrente et toutes ses occurences, cliquez sur la croix à droite de la note dans les planning ou éditez la note et cliquez sur le bouton [Diverkañ]\\n\\nVoulez vous supprimer cette occurence ?");
+define("LANGAGENDA5","Note avec rappel");
+define("LANGAGENDA6","Diverkañ une occurence");
+define("LANGAGENDA7","Diverkañ une note");
+define("LANGAGENDA8","S'approprier une note");
+define("LANGAGENDA9","Afficher le d&eacute;tail");
+define("LANGAGENDA10","Note personnelle");
+define("LANGAGENDA11","Note affect&eacute;e");
+define("LANGAGENDA12","Note Active");
+define("LANGAGENDA13","Note Termin&eacute;e");
+define("LANGAGENDA14","Jour courant");
+define("LANGAGENDA15","Jour f&eacute;ri&eacute;");
+define("LANGAGENDA16","Cr&eacute;er une note");
+define("LANGAGENDA17","clic pour changer");
+define("LANGAGENDA18","Enregistrer une date d'anniversaire");
+define("LANGAGENDA19","Modification d'une date d'anniversaire");
+define("LANGAGENDA20","Veuillez saisir le anv de la personne");
+define("LANGAGENDA21","Veuillez saisir la date de naissance de la personne");
+define("LANGAGENDA22","Anniversaire de");
+define("LANGAGENDA23","Date de naissance");
+define("LANGAGENDA24","Format jj/mm/aaaa");
+define("LANGAGENDA25","Diverkañ cet anniversaire ?");
+define("LANGAGENDA26","Diverkañ");
+define("LANGAGENDA27","Annuler");
+define("LANGAGENDA28","Enregistrer");
+define("LANGAGENDA29","Etes-vous sur de vouloir effacer cet anniversaire ?");
+define("LANGAGENDA30","Modifier");
+define("LANGAGENDA31","Année préc.");
+define("LANGAGENDA32","Mois préc.");
+define("LANGAGENDA33","Atteindre la date du jour");
+define("LANGAGENDA34","maintenir pour menu");
+define("LANGAGENDA35","Mois suiv.");
+define("LANGAGENDA36","Année suiv.");
+define("LANGAGENDA37","Sélectionner une date");
+define("LANGAGENDA38","Déplacer");
+define("LANGAGENDA39","Aujourd'hui");
+define("LANGAGENDA40","A propos du calendrier");
+define("LANGAGENDA41","Afficher %s en premier");
+define("LANGAGENDA42","Fermer");
+define("LANGAGENDA43","Clic ou glisser pour modifier la valeur");
+define("LANGAGENDA44","Utilisateur inconnu");
+define("LANGAGENDA45","Votre session a expir&eacute; !");
+define("LANGAGENDA46","Ce login est d&eacute;j&agrave; utilis&eacute;");
+define("LANGAGENDA47","Ancien mot de passe erron&eacute;");
+define("LANGAGENDA48","Veuillez vous identifier pour utiliser Phenix");
+define("LANGAGENDA49","La connexion au serveur SQL a &eacute;chou&eacute;");
+define("LANGAGENDA50","Profil modifi&eacute;");
+define("LANGAGENDA51","Note enregistr&eacute;e");
+define("LANGAGENDA52","Note mise &agrave; jour");
+define("LANGAGENDA53","Note supprim&eacute;e");
+define("LANGAGENDA54","Occurence de la note supprim&eacute;e");
+define("LANGAGENDA55","Anniversaire enregistr&eacute;");
+define("LANGAGENDA56","Anniversaire mis &agrave; jour");
+define("LANGAGENDA57","Anniversaire supprim&eacute;");
+define("LANGAGENDA58","Compte cr&eacute;&eacute;, vous pouvez vous connecter");
+define("LANGAGENDA59","L'enregistrement a &eacute;chou&eacute;");
+define("LANGAGENDA60","Tous les champs");
+define("LANGAGENDA61","Soci&eacute;t&eacute;");
+define("LANGAGENDA62","Nom + Pr&eacute;anv");
+define("LANGAGENDA63","Adresse");
+define("LANGAGENDA64","Num&eacute;ro de t&eacute;l&eacute;phone");
+define("LANGAGENDA65","Adresse Email");
+define("LANGAGENDA66","Commentaires");
+define("LANGAGENDA67","Lancer la recherche");
+define("LANGAGENDA68","Soci&eacute;t&eacute;");
+define("LANGAGENDA69","Nom");
+define("LANGAGENDA70","Pr&eacute;anv");
+define("LANGAGENDA71","Adresse");
+define("LANGAGENDA72","Ville");
+define("LANGAGENDA73","Pays");
+define("LANGAGENDA74","T&eacute;l. Domicile");
+define("LANGAGENDA75","T&eacute;l. Travail");
+define("LANGAGENDA76","T&eacute;l. Portable");
+define("LANGAGENDA77","Fax");
+define("LANGAGENDA78","Email");
+define("LANGAGENDA79","Email Pro");
+define("LANGAGENDA80","Note / Divers");
+define("LANGAGENDA81","Groupe");
+define("LANGAGENDA82","Partage");
+define("LANGAGENDA83","CP");
+define("LANGAGENDA84","Date de naissance");
+define("LANGAGENDA85","Recommencer");
+define("LANGAGENDA86","Importer");
+define("LANGAGENDA87","Import termin&eacute;");
+define("LANGAGENDA88","contact(s) ajout&eacute;(s)");
+define("LANGAGENDA89","Pas de contact disponible !");
+define("LANGAGENDA90","<LI>Dans Outlook, faire <I>Fichier</I>-&gt;<I>Exporter</I>-&gt;<I>Autre carnet d'chomlec'hs...</I></LI>");
+define("LANGAGENDA91","<LI>Choisir <I>Fichier texte (valeurs s&eacute;par&eacute;es par des virgules)</I> puis <I>Exporter</I></LI>");
+define("LANGAGENDA92","<LI>Choisir l'endroit o&ugrave; le fichier sera sauvegard&eacute; puis <I>Suivant</I></LI>");
+define("LANGAGENDA93","<LI>Dans la liste des champs &agrave; exporter, s&eacute;lectionner :<BR>");
+define("LANGAGENDA94","<I>Pr&eacute;anv, Nom, Adresse de messagerie, Rue (domicile), Ville (domicile), Code Postal (domicile), Pays/r&eacute;gion (domicile), T&eacute;l&eacute;phone personnel, T&eacute;l&eacute;phone mobile, T&eacute;l&eacute;phone professionnel, T&eacute;l&eacute;copie professionnelle, Soci&eacute;t&eacute;</I> puis cliquer sur <I>Terminer</I></LI>");
+define("LANGAGENDA95","<LI>R&eacute;cup&eacute;rer le fichier ainsi cr&eacute;&eacute; dans le formulaire ci-dessous et cliquer sur <I>Importer</I></LI>");
+define("LANGAGENDA96","Veuillez entrer une soci&eacute;t&eacute; pour la recherche");
+define("LANGAGENDA97","Veuillez entrer un anv ou un pr&eacute;anv pour la recherche");
+define("LANGAGENDA98","Veuillez entrer une chomlec'h pour la recherche");
+define("LANGAGENDA99","Veuillez entrer un num&eacute;ro de t&eacute;l&eacute;phone pour la recherche");
+define("LANGAGENDA100","Veuillez entrer une chomlec'h Email pour la recherche");
+define("LANGAGENDA101","Veuillez saisir une bribe de commentaire pour la recherche");
+define("LANGAGENDA102","Veuillez entrer au moins un crit&egrave;re pour la recherche");
+define("LANGAGENDA103","Etes-vous sur de vouloir effacer ce contact ?");
+define("LANGAGENDA104","Ann&eacute;e");
+define("LANGAGENDA105","Pas de p&egrave;re");
+define("LANGAGENDA106","Liste des personnes<BR>&agrave; qui vous pouvez<BR>affecter une note");
+define("LANGAGENDA107","Personne(s) possible(s)");
+define("LANGAGENDA108","Personne(s) s&eacute;lectionn&eacute;e(s)");
+define("LANGAGENDA109","Pr&eacute;cision d'affichage");
+define("LANGAGENDA110","Tranche de 30mn");
+define("LANGAGENDA111","Tranche de 15mn");
+define("LANGAGENDA112","Heure de d&eacute;but");
+define("LANGAGENDA113","Heure de fin");
+define("LANGAGENDA114","Occup&eacute;");
+define("LANGAGENDA115","Partiel");
+define("LANGAGENDA116","Libre");
+define("LANGAGENDA117","Cr&eacute;er une note entre ");
+define("LANGAGENDA118","D&eacute;tail par utilisateur de cette journ&eacute;e");
+define("LANGAGENDA119","Afficher");
+define("LANGAGENDA120","Veuillez sélectionner une personne");
+define("LANGAGENDA121","Veuillez sélectionner une heure de fin postérieure à l'heure de début");
+define("LANGAGENDA122","Semaine du ");
+define("LANGAGENDA123","au");
+define("LANGAGENDA124","Semaine suivante");
+define("LANGAGENDA125","Enlever");
+define("LANGAGENDA126","Disponibilit&eacute;s de vos contacts pour le ");
+define("LANGAGENDA127","Ajouter");
+define("LANGAGENDA128","Hors Profil");
+define("LANGAGENDA129","Veuillez sélectionner une heure de fin postérieure à l'heure de début");
+define("LANGAGENDA130","Pr&eacute;cision d'affichage");
+define("LANGAGENDA131","Veuillez saisir un anv");
+define("LANGAGENDA132","Veuillez saisir une URL");
+define("LANGAGENDA133","Ajouter un favori");
+define("LANGAGENDA134","Impression en mode paysage conseill&eacute;e");
+define("LANGAGENDA135","Semaine pr&eacute;c&eacute;dente ");
+define("LANGAGENDA136","Semaine ");
+define("LANGAGENDA137","du");
+define("LANGAGENDA138","Anniversaire");
+define("LANGAGENDA139","Rappel par défaut à la création d'une note");
+define("LANGAGENDA140","Pas de rappel");
+define("LANGAGENDA141","Rappel");
+define("LANGAGENDA142","copie par mail");
+define("LANGAGENDA143","minute(s)");
+define("LANGAGENDA144","heure(s)");
+define("LANGAGENDA145","jour(s)");
+define("LANGAGENDA146","Journ&eacute;e type");
+define("LANGAGENDA147","Termine &agrave;");
+define("LANGAGENDA148","T&eacute;l&eacute;phone VF");
+define("LANGAGENDA149","Interface");
+define("LANGAGENDA150","Planning par d&eacute;faut");
+define("LANGAGENDA151","Quotidien");
+define("LANGAGENDA152","Hebdomadaire");
+define("LANGAGENDA153","Mensuel");
+define("LANGAGENDA154","30 minutes");
+define("LANGAGENDA155","15 minutes");
+define("LANGAGENDA156","45 minutes");
+define("LANGAGENDA157","1 heure");
+define("LANGAGENDA158","S&eacute;lection automatique de l'heure de fin d'une note");
+define("LANGAGENDA159","Partage du planning<BR>en consultation");
+define("LANGAGENDA160","Personnes autoris&eacute;es à consulter mon planning");
+define("LANGAGENDA161","Non partag&eacute;");
+define("LANGAGENDA162","Au choix");
+define("LANGAGENDA163","Tout le monde");
+define("LANGAGENDA164","Partage du planning<BR>en modification");
+define("LANGAGENDA165","Personne(s) pouvant m'affecter une note");
+define("LANGAGENDA166","M'informer par mail lorsqu'une note m'est affect&eacute;e");
+define("LANGAGENDA167","Diverkañ cette note que j'ai cr&eacute;&eacute;e");
+define("LANGAGENDA168","Diverkañ cette note que l'on m'a affect&eacute;e");
+define("LANGAGENDA169","M'approprier cette note qui m'a &eacute;t&eacute; affect&eacute;e");
+define("LANGAGENDA170","Toute la journ&eacute;e");
+define("LANGAGENDA171","Choix du libell&eacute;");
+define("LANGAGENDA172","Nouveau libell&eacute;");
+define("LANGAGENDA173","Intitul&eacute;");
+define("LANGAGENDA174","Dur&eacute;e moyenne");
+define("LANGAGENDA175","Couleur");
+define("LANGAGENDA176","Apparence de la note");
+define("LANGAGENDA177","Diverkañ ce libellé ?");
+define("LANGAGENDA178","Enregistrer un mémo");
+define("LANGAGENDA179","Veuillez saisir un titre");
+define("LANGAGENDA180","Titre");
+define("LANGAGENDA181","Contenu");
+define("LANGAGENDA182","Etes-vous sur de vouloir effacer ce mémo ?");
+define("LANGAGENDA183","Enregistrer une note");
+define("LANGAGENDA184","La note que vous souhaitez modifier appartient &agrave; une série r&eacute;currente");
+define("LANGAGENDA185","Souhaitez-vous modifier toute la s&eacute;rie ou uniquement cette occurence ?");
+define("LANGAGENDA186","Toute la s&eacute;rie");
+define("LANGAGENDA187","Uniquement cette occurence");
+define("LANGAGENDA188","Note couvrant toute la journ&eacute;e");
+define("LANGAGENDA189","Afficher le calendrier");
+define("LANGAGENDA190","Toute la journ&eacute;e");
+define("LANGAGENDA191","D&eacute;bute &agrave;");  // Début à
+define("LANGAGENDA192","Personne<BR>concern&eacute;e");
+define("LANGAGENDA193","Apparence de la note");
+define("LANGAGENDA194","Note publique");
+define("LANGAGENDA195","note détaill&eacute;e dans le partage de planning");
+define("LANGAGENDA196","mention \"Occup&eacute;\" dans le partage de planning");
+define("LANGAGENDA197","Note priv&eacute;e");
+define("LANGAGENDA198","Occup&eacute;(e)");
+define("LANGAGENDA199","consid&eacute;rer comme <B>non disponible</B> dans le module des disponibilit&eacute;s");
+define("LANGAGENDA200","Libre");
+define("LANGAGENDA201","consid&eacute;rer comme <B>libre</B> dans le module des disponibilit&eacute;s");
+define("LANGAGENDA202","Couleur");
+define("LANGAGENDA203","Partage");
+define("LANGAGENDA204","Disponibilité");
+define("LANGAGENDA205","Rappel");
+define("LANGAGENDA206","Pas de rappel");
+define("LANGAGENDA207","copie par mail");
+define("LANGAGENDA208","&agrave; l'avance");  // à l'avance
+define("LANGAGENDA209","P&eacute;riodicit&eacute;");
+define("LANGAGENDA210","Aucune");
+define("LANGAGENDA211","Quotidienne");
+define("LANGAGENDA212","Hebdomadaire");
+define("LANGAGENDA213","Mensuelle");
+define("LANGAGENDA214","Annuelle");
+define("LANGAGENDA215","Tous les ");
+define("LANGAGENDA215bis","jours");
+define("LANGAGENDA216","Tous les jours ouvrables (Lundi au Vendredi)");
+define("LANGAGENDA217","Tous les jours de ma semaine type");
+define("LANGAGENDA218","Les informations saisies ou modifiées ne seront pas enregistrées\\nEtes-vous sûr de vouloir continuer ?");
+define("LANGAGENDA219","profil");
+define("LANGAGENDA220","Tous les ");
+define("LANGAGENDA221","Toutes les ");
+define("LANGAGENDA221bis","semaines");
+define("LANGAGENDA222","de chaque mois");
+define("LANGAGENDA223","premier");
+define("LANGAGENDA224","deuxi&egrave;me");
+define("LANGAGENDA225","troisi&egrave;me");
+define("LANGAGENDA226","quatri&egrave;me");
+define("LANGAGENDA227","dernier");
+define("LANGAGENDA228","du mois");
+define("LANGAGENDA229","Le ");
+define("LANGAGENDA230","Définir la date de fin");
+define("LANGAGENDA231","Fin apr&egrave;s"); // Fin après
+define("LANGAGENDA232","Fin le");
+define("LANGAGENDA233","occurence(s)");
+define("LANGAGENDA234","Veuillez saisir un libellé");
+define("LANGAGENDA235","Veuillez saisir une date");
+define("LANGAGENDA236","Veuillez sélectionner une heure de fin\\npostérieure à l'heure de début");  // \\n signifie un retour chariot
+define("LANGAGENDA237","Veuillez sélectionner une personne");
+define("LANGAGENDA238","Veuillez saisir un anvbre de jours\\nsupérieur ou égal à 1");
+define("LANGAGENDA239","Veuillez saisir un anvbre d'occurences\\nsupérieur ou égal à 1");
+define("LANGAGENDA240","R&eacute;p&eacute;tition"); // répétition
+define("LANGAGENDA241","Veuillez saisir votre anv et votre préanv au préalable");
+define("LANGAGENDA242","Veuillez saisir votre Préanv");
+define("LANGAGENDA243","Vous devez saisir votre login");
+define("LANGAGENDA244","Veuillez saisir votre ancien mot de passe");
+define("LANGAGENDA245","Mots de passe différents");
+define("LANGAGENDA246","Un mot de passe est obligatoire");
+define("LANGAGENDA247","Veuillez sélectionner une heure de fin\\npostérieure à l'heure de début");
+define("LANGAGENDA248","Diverkañ cette occurence");
+define("LANGAGENDA249","Note r&eacute;curente");
+define("LANGAGENDA250","Diverkañ cette note que j'ai cr&eacute;&eacute;e");
+define("LANGAGENDA251","M'approprier cette note qui m'a &eacute;t&eacute; affect&eacute;e");
+define("LANGAGENDA252","Filtrer");
+define("LANGAGENDA253","Imprimer ce planning");
+define("LANGAGENDA254","Impression en mode paysage conseill&eacute;e");
+define("LANGAGENDA255","Note cr&eacute;&eacute;e par ");
+define("LANGAGENDA256","Changer le statut");
+define("LANGAGENDA257","Diverkañ cette occurence");
+define("LANGAGENDA258","Diverkañ cette note que j'ai cr&eacute;&eacute;e");
+define("LANGAGENDA259","Diverkañ cette note que l'on m'a affect&eacute;e");
+define("LANGAGENDA260","une note");
+define("LANGAGENDA261","un anniversaire");
+define("LANGAGENDA262","un contact");
+define("LANGAGENDA263","A l'utilisateur sélectionn&eacute; ci-dessous");
+define("LANGAGENDA264","Ajouter une note");
+define("LANGAGENDA265","Recherche");
+define("LANGAGENDA266","Disponibilit&eacute;s");
+define("LANGAGENDA267","Contacts");
+define("LANGAGENDA268","M&eacute;mo");
+define("LANGAGENDA269","Libell&eacute;s");
+define("LANGAGENDA270","Favoris");
+define("LANGAGENDA271","Profil");
+define("LANGAGENDA272","Echec création export");
+define("LANGAGENDA273","Agenda de ");
+
+
+define("LANGL","L");  // L de lundi
+define("LANGM","M");  // M de mardi
+define("LANGME","M");  // M de mercredi
+define("LANGJ","Y");  // J de jeudi
+define("LANGV","G");  // V de vendredi
+define("LANGS","S");  // S de samedi
+define("LANGD","S");  // D de dimanche
+
+define("LANGL1","Lun"); // Jours sur 3 lettres
+define("LANGM1","Mzh");	// Jours sur 3 lettres
+define("LANGME1","Mer"); // Jours sur 3 lettres
+define("LANGJ1","Yao");	// Jours sur 3 lettres
+define("LANGV1","Gwe");	// Jours sur 3 lettres
+define("LANGS1","Sad");	// Jours sur 3 lettres
+define("LANGD1","Sul");	// Jours sur 3 lettres
+
+define("LANGMOIS21","Genv");			// mois abregé
+define("LANGMOIS22","C'hw"); 		// mois abregé
+define("LANGMOIS23","Mrzh");			// mois abregé
+define("LANGMOIS24","Ebr");				// mois abregé
+define("LANGMOIS25","Mae");				// mois abregé
+define("LANGMOIS26","Mezh");			// mois abregé
+define("LANGMOIS27","Goue");			// mois abregé
+define("LANGMOIS28","Eost");		// mois abregé
+define("LANGMOIS29","Gwen");			// mois abregé
+define("LANGMOIS210","Here");			// mois abregé
+define("LANGMOIS211","Du"); 			// mois abregé
+define("LANGMOIS212","Krzu"); 	// mois abregé
+
+
+
+define("LANGPROFP22","Cet enseignant est déjà assigné comme professeur principal. \\n\\n L'Skipailh Triade");
+
+
+
+define("LANGSTAGE23","Nom de l'activité");
+define("LANGSTAGE24","Enregistrer une nouvelle entreprise");
+define("LANGSTAGE25","Le anv de cette entreprise est déjà enregistré");
+define("LANGSTAGE26","Nom de l'entreprise");
+define("LANGSTAGE27","Contact");
+define("LANGSTAGE28","Adresse");
+define("LANGSTAGE29","Code Postal");
+define("LANGSTAGE30","Ville");
+define("LANGSTAGE31","Secteur Activité");
+define("LANGSTAGE32","ajouté activité");
+define("LANGSTAGE33","Activité principale");
+define("LANGSTAGE34","Téléphone");
+define("LANGSTAGE35","Fax");
+define("LANGSTAGE36","Email");
+define("LANGSTAGE37","Information");
+define("LANGSTAGE38","Consultation des entreprises");
+define("LANGSTAGE39","Société");
+define("LANGSTAGE40","Activité principale");
+define("LANGSTAGE41","autre recherche");
+define("LANGSTAGE42","Tel / Fax");
+define("LANGSTAGE43","aucune entreprise pour ce anv");
+define("LANGSTAGE44","Planification des stages");
+define("LANGSTAGE45","Date de début de stage");
+define("LANGSTAGE46","Date de fin de stage");
+define("LANGSTAGE47","Enregistrer le stage");
+define("LANGSTAGE48","Numéro du stage");
+define("LANGSTAGE49","Modification des dates de stage");
+define("LANGSTAGE50","Stage");
+define("LANGSTAGE51","Date du stage");
+define("LANGSTAGE52","Erreur de saisie");
+define("LANGSTAGE53","Stage mise à jour");
+define("LANGSTAGE54","Le stage du ");
+define("LANGSTAGE55","pour la classe de");
+define("LANGSTAGE56","est enregistré");
+define("LANGSTAGE57","Date de stage, supprimé \\n\\n L'Skipailh Triade");
+define("LANGSTAGE58","Entreprise enregistré \\n\\n L'Skipailh Triade");
+define("LANGSTAGE59","Modification d'entreprise");
+define("LANGSTAGE60","Consulter les entreprises par activité");
+define("LANGSTAGE61","Recherche d'entreprises");
+define("LANGSTAGE62","Info");
+define("LANGSTAGE63","Liste complète");
+define("LANGSTAGE64","Visualisation des dates de stage");
+define("LANGSTAGE65","Suppression d'entreprise");
+define("LANGSTAGE66","Entreprise Supprimé \\n\\n L'Skipailh Triade");
+define("LANGSTAGE67","Consulter les entreprises par activité");
+define("LANGSTAGE68","aucune entreprise pour ce anv");
+define("LANGSTAGE69","Visualisation d'un élève à un stage");
+define("LANGSTAGE70","Imprimer le stage numéro");
+define("LANGSTAGE71","Visualisation d'un élève aux stages");
+define("LANGSTAGE72","&nbsp;Date&nbsp;du&nbsp;Stage&nbsp;"); // respecter les &nbsp;
+define("LANGSTAGE73","Retour");
+define("LANGSTAGE74","Entreprise");
+define("LANGSTAGE75","Affectation d'un élève à un stage");
+define("LANGSTAGE76","Lieu du stage");
+define("LANGSTAGE77","Responsable");
+define("LANGSTAGE78","Kelenner Visiteur");
+define("LANGSTAGE79","Logé");
+define("LANGSTAGE80","Nourri");
+define("LANGSTAGE81","Passage dans plusieurs service");
+define("LANGSTAGE82","Raison du changement de service");
+define("LANGSTAGE83","Information complémenter");
+define("LANGSTAGE84","Création enregistré \\n \\n L'Skipailh Triade");
+define("LANGSTAGE85","Date de la visite");
+define("LANGSTAGE86","Modification d'un élève à un stage");
+define("LANGSTAGE87","Informations enregistrées");
+define("LANGSTAGE88","Suppression d'un élève à un stage");
+
+
+define("LANGRESA62","Libellé");
+define("LANGRESA63","Refuser");
+define("LANGRESA64","Ajouter une demande");
+define("LANGRESA65","&nbsp;De&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;à");
+define("LANGRESA66","Réservé");
+define("LANGRESA66bis","par");  // suite réservé par
+define("LANGRESA67","Non confirmé");
+define("LANGRESA68","Confirmé");
+define("LANGRESA69","Enregistrement terminé");
+define("LANGRESA70","réservation pour le ");
+
+
+
+
+
+
+define("LANGNOTEUSA1","Configuration des attributions des notes pour le mode USA");
+define("LANGNOTEUSA2","Ce module vous permet de positionner les lettres en fonction du pourcentage à attribuer à chaque note (lettre).");
+define("LANGNOTEUSA3","Exemple : de 95 à 100 --> A+ , de 87 à 94  --> A, etc...");
+define("LANGNOTEUSA4","De");
+define("LANGNOTEUSA4bis","à");
+define("LANGNOTEUSA4ter","équivaut à");   //  ex : De  10 à 20 équivaut à B
+define("LANGNOTEUSA5","Entre la note");
+define("LANGNOTEUSA5bis","et la note");
+define("LANGNOTEUSA5ter","cela équivaut à");
+
+
+
+define("LANGABS56","Liste des absences non justifiées");
+define("LANGABS57","Mise à jour réalisée pour cette liste d'élèves");
+
+
+
+
+define("LANGSANC1","Sanction crée -- L'Skipailh Triade");
+define("LANGSANC2","Catégorie non supprimée. Cette catégorie est déjà affectée à une sanction ou un élève -- Skipailh Triade");
+define("LANGSANC3","Configuration Discipline");
+define("LANGSANC4","Enregistrement des catégories.");
+define("LANGSANC5","Intitule de la catégorie");
+define("LANGSANC6","Enregistrement des anvs des sanctions par catégorie.");
+define("LANGSANC7","Intitule de la sanction");
+define("LANGSANC8","Configuration retenue");
+define("LANGSANC9","Avertissement d'un message  lorsque l'élève  a atteint la limite autorisé.");
+define("LANGSANC10","Pour  la catégorie");
+define("LANGSANC11","Avertissement d'un message au bout de");
+define("LANGSANC12","Nb de fois");
+define("LANGSANC13","Créé par");
+define("LANGSANC14","Date de saisie");
+
+define("LANGMODIF4","Modification d'un compte");
+define("LANGMODIF5","Information de connexion");
+define("LANGMODIF6","Photo d'identité");
+define("LANGMODIF7","Cordonnée du compte");
+define("LANGMODIF8","Adresse");
+define("LANGMODIF9","Code Postal");
+define("LANGMODIF10","Commune");
+define("LANGMODIF11","Tel");
+define("LANGMODIF12","Email");
+define("LANGMODIF13","Modifier le compte");
+define("LANGMODIF14","Compte modifié -- Skipailh Triade");
+define("LANGMODIF15","Le mot de passe de ");
+define("LANGMODIF15bis"," a été modifié.");
+define("LANGMODIF16","Modification du mot de passe");
+define("LANGMODIF17","Impossible photo de taille non conforme");
+define("LANGMODIF18","Réactualiser cette photo");
+define("LANGMODIF19","Ajouter la photo");
+define("LANGMODIF20","Modifier la photo");
+
+define("LANGGRP25","Gestion des strollads");
+define("LANGGRP26","Liste des strollads");
+define("LANGGRP27","Ajouter un élève dans un strollad");
+define("LANGGRP28","Diverkañ un élève d'un strollad");
+define("LANGGRP29","Nom du Groupe");
+define("LANGGRP30","Classe(s) concernée(s)");
+define("LANGGRP31","Modifier liste");
+define("LANGGRP32","Ajouter des élèves dans le strollad");
+define("LANGGRP33","Ajouter un élève dans ce strollad");
+define("LANGGRP34","Elève en classe de ");
+define("LANGGRP35","Elève dans le strollad");
+define("LANGGRP36","Valider le strollad");
+define("LANGGRP37","Groupe modifié -- Skipailh Triade ");
+define("LANGGRP38","Liste des élèves du strollad ");
+define("LANGGRP39","Aucun élève dans ce strollad");
+
+define("LANGCARNET1","Carnet de note");
+define("LANGCARNET2","Indiquer la classe de l'élève");
+define("LANGCARNET3","Cliquez sur le <b>anv</b> de l'élève");
+
+define("LANGPASSG1","Le mot de passe doit être de <br><b>8 caracteres</b> minimum,<br> <b>alphanumérique</b> et <br> utilisant <b>majuscule et<br> minuscule</b>.");
+define("LANGPASSG2","Le mot de passe n'est pas correct. \\n Le mot de passe doit comporter : \\n\\n -> 8 caracteres minimum, \\n --> alphanumerique, \\n --> majuscule et minuscule \\n\\n L\\'Skipailh Triade");
+define("LANGPASSG3","Echec de la création");
+
+
+
+define("LANGDISC38","Ajouter Sanction");
+define("LANGDISC39","Gestion des disciplines");
+define("LANGDISC40","Retenue non effectuée.");
+define("LANGDISC41","Planning Retenue.");
+define("LANGDISC42","Retenue non affecté à un éléve.");
+define("LANGDISC43","Configuration.");
+define("LANGDISC44","Diverkañ Retenues et sanctions");
+define("LANGDISC45","Diverkañ Retenues et sanctions");
+define("LANGDISC46","Liste des absences et des retards d'une classe");
+define("LANGDISC47","Indiquez le début de la période");
+define("LANGDISC48","Indiquez la fin de la période");
+define("LANGDISC49","Indiquez la section");
+define("LANGDISC50","<br><ul>Suppression des retenues et des sanctions en <br>fonction de l'intervalle de date.</ul>");
+define("LANGDISC51","Toutes les classes");
+define("LANGDISC52","Retenues et sanctions supprimées");
+define("LANGDISC53","Erreur ! Retenues et sanctions non supprimées");
+
+define("LANGIMP53","Fichier ASCII via SQL ");
+
+
+// autre new
+
+define("LANGSTAGE31bis","2ieme Secteur Activité");
+define("LANGSTAGE31ter","3ieme Secteur Activité");
+define("LANGMEDIC1","Dossier médical d'un élève");
+define("LANGMEDIC2","Envoyer la cherche");
+define("LANGMEDIC3","Information / Modification");
+
+
+define("LANGDISC54","Visualiser les disciplines d'un éléve");
+define("LANGDISC55","Diverkañ une Sanction");
+define("LANGDISC56","Diverkañ Sanction");
+
+define("LANGBASE6bis","Total d'élèves dans le fichier ");
+
+define("LANGMODIF21","Le mot de passe doit avoir : \\n\\n - 8 caracteres minimum \\n - Alphanumeric \\n - MAJUSCULE et minuscule.\\n\\n Skipailh Triade");
+
+define("LANGMODIF22","Mot de passe : 8 caractères - Alphanumérique - Majuscule et minuscule");
+define("LANGPASS1bis","Confirmer mot de passe");
+
+define("LANGMODIF23","Vous pouvez changer votre mot de passe pour votre compte Triade");
+define("LANGMODIF24","Le compte ");
+define("LANGMODIF24bis","est en cours de validation..");
+define("LANGMODIF24ter","est maintenant opérationnel");
+define("LANGMODIF25","Mot de passe non identique. \\n\\n Skipailh Triade");
+
+define("LANGABS58","Visualisation / Suppression  Absence - Retard");
+define("LANGABS59","Affichage complet des retards");
+define("LANGABS60","Pendant");  	// une durée pendant temps de temps
+define("LANGABS61","Visualisation / Modification d'une  Absence - Retard");
+define("LANGABS62","Affichage <b>complet</B> des rtds et abs");
+define("LANGABS63","Saisie le");
+define("LANGABS64","Affichage des <b>5</B> derniers rtd et abs");
+define("LANGABS65","Affichage complet des absences");
+define("LANGABS66","Mise à jour effectuée pour cette liste d'élèves");
+define("LANGABS6bis","Liste des retards non justifiés");
+define("LANGABS4bis","Lister les absences ou retards");
+define("LANGABS67","<font class=T2>aucun éléve dans cette classe</font>");
+define("LANGABS68","Liste des abs/rtds d'une classe");
+define("LANGABS69","Cumul des abs/rtds d'un élève");
+define("LANGABS70","Configuration des motifs");
+define("LANGABS71","Nombre d'absence / Cumul");
+define("LANGABS72","Nombre de Retard / Cumul");
+define("LANGABS73","Absence - Retard -  de la classe ");
+define("LANGABS74","Nevesaat");
+define("LANGABS75","Aucun absent ou de retard");
+define("LANGABS76","relevé à ");
+
+define("LANGDEPART3","Suite à un problème technique.");
+define("LANGDEPART4","L'accès au serveur est indisponible. Skipailh Triade intervient actuellement sur le serveur.");
+
+define("LANGBASE3_2","Voici la liste des fichiers pouvant être importé.");
+define("LANGbasededoni21_2","Souhaitez vous continuer ? \\n\\n L\'Skipailh Triade");
+define("LANGbasededon21","L'envoi du fichier peut durer de <b>2 à 4 mn</b> en fonction du anvbre d'élèments.");
+define("LANGbasededon31_2","Indiquer les matières que vous souhaitez importer.");
+
+
+
+
+// ----------------------------------------------- //
+define("LANGBASE10_2","Indiquez les enseignants à ajouter.");
+
+define("LANGBASE16_2"," Les colonnes sont représentées sous la forme : <b>nom de login ; prénom de login ; mot de passe en clair</b>");
+define("LANGIMP25_2","nom établissement");
+// ----------------------------- //
+define("LANGABS77","Signalé le");
+define("LANGSTAGE89","Etablir la convention de stage");
+define("LANGSTAGE90","Sortir les conventions de stage");
+define("LANGSTAFE91","Liste des élèves en entreprise");
+define("LANGSTAGE92","Liste des élèves en entreprise");
+define("LANGPASSG4","Le mot de passe doit être de <b>8 caractères</b> minimum <br /><b>alphanumérique</b>.");
+define("LANGPASSG5","Le mot de passe doit être de <b>4 caractères</b> minimum.");
+define("LANGPASSG6","Le mot de passe n'est pas correct. \\n Le mot de passe doit comporter : \\n\\n -> 8 caractères minimum, \\n -> alphanumérique \\n\\n L\\'Equipe TRIADE");
+define("LANGPASSG7","Le mot de passe n'est pas correct. \\n Le mot de passe doit comporter : \\n\\n -> 4 caractères minimum. \\n\\n L\\'Equipe TRIADE");
+
+define("LANGMODIF22_1","Mot de passe : 4 caractères");
+define("LANGMODIF22_2","Mot de passe : 8 caractères - Alphanumérique ");
+define("LANGMODIF22_3","Mot de passe : 8 caractères - Alphanumérique - Majuscules et minuscules");
+define("LANGDEPART2","<font color=red  class=T2>ATTENTION, pour utiliser TRIADE, la variable php '<strong>register_globals</strong>' doit être sur <u>Off</u>.</font><br />");
+
+
+define("LANGacce15","Devoir à remettre pour le ");
+define("LANGacce16","Devoir à rendre aujourd'hui !");
+define("LANGacce17","Ajout d'une sanction disciplinaire");
+
+define("LANGBASE41","Supprimer tous les élèves avant l'import");
+define("LANGBASE7bis","Elève déjà affecté");
+define("LANGBASE8bis","pour les élèves <u>affectés</u> et <u>sans classe</u>");
+
+define("LANGPER21bis","Langue&nbsp;/&nbsp;option");
+
+define("LANGASS6ter","Elève");
+define("LANGASS41","Stockage");
+define("LANGASS42","Paramétrage");
+
+define("LANGIMP46bis","Mot de passe");
+
+define("LANGIMP54","N° rue");
+define("LANGIMP55","adresse");
+define("LANGIMP56","code postal");
+define("LANGIMP57","téléphone");
+define("LANGIMP58","email");
+define("LANGIMP59","commune");
+
+define("LANGBULL1pp","Imression bulletin trimestriel ou semestriel");
+define("LANGBT43pp","Imprimer Tableau");
+
+
+define("LANGMESS38","Message lu.");
+define("LANGMESS39","Message non lu.");
+
+
+define("LANGDISC57","Motif&nbsp;/&nbsp;Sanction");
+
+define("CUMUL01","Cumul des absences et retards d'une classe par élève");
+define("CUMUL02","Cumul des sanctions d'une classe par élève");
+define("CUMUL03","Cumul des sanctions d'un élève");
+define("LANGPROJ18bis","heure(s)");
+define("LANGCREAT1","Compte déjà existant.");
+define("ERREUR1","Réseau Internet non disponible pour ce module.");
+define("ERREUR2","Consulter le module Configuration pour activer le réseau.");
+
+
+define("PASSG8","Modification du mot de passe");
+define("PASSG9","Le mot de passe de l'élève ");
+define("PASSG9bis"," a été modifié.");
+
+
+define("LANGPARAM34","Site Web de l'établissement");
+define("LANGLOGO3bis","Le logo <b>doit être au format jpg</b>");
+
+
+define("LANGMAT1","Enregistrer matière");
+define("LANGMAT2","Liste / Modification d'une matière");
+define("LANGMAT3","Supprimer matière");
+define("LANGMAT4","Valider la modification");
+define("LANGMAT5","Matière modifiée");
+define("LANGMAT6","Matière déjà affectée");
+define("LANGCLAS1","Liste / Modifier classe");
+define("LANGCLAS2","Classe modifiée");
+define("LANGCLAS3","Classe déjà affectée");
+
+define("LANGDEVOIR1","pour le  groupe");
+define("LANGDEVOIR2","pour la  classe");
+define("LANGDEVOIR3","Enregistrer un devoir scolaire");
+define("LANGCIRCU111","<font face=Verdana size=1><B><font color=red>D</font></B>ocument au format : <b> doc</b>, <b>pdf</b>, <b>txt</b>.</FONT>");
+
+define("LANGAFF7","Module de suppression d'affectation des classes.");
+define("LANGAFF8","ATTENTION ce module est à utiliser lors de la suppression d'affectation,<br> il détruit toutes les notes des élèves  des classes supprimées.");
+define("LANGAFF9","ATTENTION, les notes des classes sélectionnées  seront supprimées. \\n Souhaitez vous continuer ? \\n\\n Equipe TRIADE");
+define("LANGCREAT2","Supprimer un compte");
+
+
+define("LANGPROF37","Cahier de texte.");
+
+// news
+
+define("LANGPARAM35","Choix du bulletin");
+define("LANGPROBLE1","réponse par email");
+define("LANGPROBLE2","Tous les champs doivent être renseignés");
+define("LANGMESS37","Ce module n'a pas été validé par l'administrateur TRIADE.<br><br> L'Equipe TRIADE");
+
+define("LANGPROFP23","Notes scolaires de ");
+define("LANGPROFP24","du  mois de");
+define("LANGPROFP25","Trombinoscope");
+define("LANGPROFP26","Suivi d'un élève");
+define("LANGPROFP27","Informations sur les délégués");
+define("LANGPROFP28","Message pour la classe");
+define("LANGPROFP29","Circulaire pour la classe");
+define("LANGPROFP30","Gestion de stage professionnel");
+define("LANGPROFP31","Tableau des moyennes des élèves");
+define("LANGPROFP32","Bulletins graphiques des élèves");
+
+
+define("LANGLETTRELUNDI","L");	  // Lundi
+define("LANGLETTREMARDI","M");    // Mardi
+define("LANGLETTREMERCREDI","M"); // Mercredi
+define("LANGLETTREJEUDI","Y");    // Jeudi
+define("LANGLETTREVENDREDI","G"); // Vendredi
+define("LANGLETTRESAMEDI","S");   // Samedi
+define("LANGLETTREDIMANCHE","S"); // Dimanche
+
+
+
+define("LANGRESA71","réservation pour le");
+define("LANGRESA72","de");
+define("LANGRESA73","à");
+define("LANGRESA74","Informations complémentaires");
+
+define("LANGbasededoni52","valeur acceptée : <b>0</b> ou M.<br>");
+define("LANGbasededoni53","valeur acceptée : <b>1</b> ou Mme.<br>");
+define("LANGbasededoni54","valeur acceptée : <b>2</b> ou Mlle.<br>");
+define("LANGbasededoni54_2","valeur acceptée : <b>3</b> ou Ms <br>");
+define("LANGbasededoni54_3","valeur acceptée : <b>4</b> ou Mr <br>");
+define("LANGbasededoni54_4","valeur acceptée : <b>5</b> ou Mrs <br>");
+
+
+define("LANGacce_dep2bis","<br><b>ATTENTION !!  Vérifiez bien votre mode d'accès,<br> choisissez votre compte correspondant.</b>");
+
+define("LANGNA3bis","Mot de passe parent "); //
+define("LANGNA3ter","Mot de passe élève "); //
+
+define("LANGELE244","Email");
+
+define("LANGTP12","Veuillez valider votre compte");
+
+define("LANGMESS40","Vous avez <strong> ");
+define("LANGMESS40bis"," </strong> flux RSS enregistré(s).");  // ajouter "\" devant les quotes
+define("LANGMESS41","Compte ");  // Compte comme "compte utilisateur".
+define("LANGMESS42","Deuxième connexion");
+define("LANGMESS43","Dernière connexion le");
+
+define("LANGALERT4","ATTENTION, choisissez des noms de sujet différent.");
+
+define("LANGMODIF26","Modifier sous-matière");
+define("LANGPROF38","Notes Trimestrielles");
+define("LANGPROF39","Complément d'information");
+
+define("LANGCIRCU21","Disp. pour"); // abréviation de "Disponible pour" 
+
+define("LANGTELECHARGE","Pellgargañ"); //  downloader
+
+define("LANGPARENT15bis","Sanction du");
+define("LANGDISC2bis","Imprimer les sanctions du jour");
+
+define("LANGRECH5","Indiquer l'élément ou les éléments  à  rechercher");
+define("LANGRECH6","Trier par ordre");
+
+define("LANGPROFP33","Remplir les bulletins");
+define("LANGPROFP34","Vérifier bulletin");
+define("LANGPROFP35","Consulter ou modifier les commentaires des bulletins");
+
+
+define("LANGPROFP36","Aucune date trimestrielle <br /><br /> affectée pour <u>cette année scolaire</u>");
+define("LANGPROFP37","Enregistrer les commentaires");
+
+define("LANGGRP40","Groupe créé");
+define("LANGGRP41","Voici la liste des élèves non enregistrés");
+define("LANGGRP42","Ce groupe existe déjà");
+define("LANGGRP43","Erreur de fichier");
+define("LANGGRP44","Supprimer un groupe");
+define("LANGGRP45","Importer fichier");
+define("LANGGRP46","Nom de groupe existant -- Service TRIADE");
+
+define("LANGPARAM37","Académie");
+
+
+define("LANGAGENDA274","Gouel an deiz ");
+define("LANGPARAM38","Deiz-ha-bloaz ");
+
+define("LANGEDT1","F"); // première lettre
+define("LANGEDT1bis","ichier au format <b>xml</b> ou <b>zip</b> <br>Taille maximum du fichier : ");
+define("ERREUR3","Contacter l'administrateur TRIADE pour activer le réseau.");
+
+define("LANGELE30","Changer le mot de passe");
+define("LANGMESS44","Envoyer un message à un élève en ");
+define("LANGMESS5","Envoyer un message à un parent en : ");
+
+
+define("LANGMESS45","Envoyer un message vers un email : ");
+define("LANGMESS2","Envoyer un message à la direction : ");
+define("LANGTRONBI9","des élèves");
+define("LANGTRONBI10","du personnel");
+define("LANGTRONBI11","Trombinoscope du personnel");
+define("LANGTITRE15","Mise en place des professeurs principaux ou des instituteurs");
+define("LANGPER7","affecté en classe "); //
+
+define("LANGPROF40","Renseignements complémentaires");
+define("LANGPROFP38","Remplir ou consulter le Carnet de Suivi");
+
+define("LANGEDIT2","Tél. Portable 1");
+define("LANGEDIT3","Civilité ");
+define("LANGEDIT4","Nom Resp. 2");
+define("LANGEDIT5","Prénom Resp. 2");
+define("LANGEDIT6","Lieu de naissance");
+define("LANGEDIT7","Civilité ");
+define("LANGEDIT8","Nom Resp. 1");
+define("LANGEDIT9","Tél. Portable 2");
+define("LANGEDIT10"," Parent");
+define("LANGEDIT11","E-mail Elève");
+define("LANGEDIT12","Tél. élève");
+define("LANGEDIT13","E-mail Tuteur 2");
+
+define("LANGEDIT14","d'aujourd'hui");
+define("LANGEDIT15","Depuis 1 jour");
+define("LANGEDIT16","Depuis 2 jours");
+define("LANGEDIT17","Depuis 3 jours");
+define("LANGEDIT18","Depuis 4 jours");
+define("LANGEDIT19","Retard(s) non justifié(s)");
+define("LANGEDIT20","Tél. Portable ");
+
+define("LANGSMS1","Envoi SMS pour les retards depuis ");
+define("LANGSMS2","Non indiqué");
+
+define("LANGSUPPLE","Liste des suppléants");
+define("LANGSUPPLE1","En remplacement de ");
+define("LANGTITRE2","Actualités de l'établissement");
+define("LANGTITRE1","Evénements");
+
+
+define("LANGDISC58","Ajouter une discipline à un élève");
+define("LANGDISC59","Saisie en mode U.S.A.");
+define("LANGDISC60","Examen ");
+
+define("LANGBT8","Liste / Modification des Directeurs");
+define("LANGBT9","Liste / Modification de la Vie Scolaire");
+define("LANGBT10","Liste / Modification des Enseignants");
+define("LANGDIRECTION","Direction");
+
+define("LANGTITRE36","Gestion des membres de la Direction");
+define("LANGTITRE37","Gestion des membres de la Vie Scolaire");
+define("LANGTITRE38","Gestion des Enseignants");
+define("LANGTITRE39","Gestion des Suppléants");
+define("LANGTITRE40","élève");
+define("LANGTITRE41","resp."); // pour l'abréviation de "responsable"
+define("LANGTITRE42","tuteur"); // dans le cadre familial
+define("LANGTITRE43","Gestion d'un élève");
+define("LANGTITRE44","Importer une liste d'élèves");
+define("LANGTITRE45","Rechercher un élève");
+define("LANGCHERCH1","En fonction du critère de recherche");
+define("LANGCHERCH2","Fin de la recherche");
+define("LANGCHERCH3","Nombre d'éléments trouvés");
+define("LANGPROF3bis","Visualiser les devoirs, interrogations et contrôles");
+define("LANGTROMBI","Exporter les listes d'élèves vers WellPhoto");
+define("LANGPURG1","Suppression des informations");
+define("LANGPUR2","Suppression des informations");
+define("LANGPROFP39","Tableau des moyennes annuelles :");
+define("LANGBLK1","Votre compte est désactivé.<br /><br />Vous avez tenté un accès sur une page non autorisée.<br /><br />Pour réactiver votre compte, veuillez contacter votre établissement scolaire.<br /><br />L'Equipe TRIADE.");
+define("LANGCARNET4","accéder");
+define("LANGFORUM10bis","Votre prénom ");
+define("LANGTPROBL11","Nous nous chargeons de vous répondre dans les plus brefs délais. \\n\\n  L'Equipe TRIADE ");
+define("LANGTRAD1","Liste des opérations effectuées");
+define("LANGPARAM39","Certificat enregistré");
+define("LANGPARAM40","Certificat non enregistré");
+define("LANGPARAM41","Le fichier doit être au format <b>rtf</b> et inférieur à 2Mo");
+define("LANGBASE42","Importation du fichier");
+define("ACCEPTER","Accepter");
+define("LANGCONDITION","J'accepte les Conditions");
+define("LANGPARAM42","Liste des retards ou absences");
+define("LANGCARNET5","Consulter le Carnet de Suivi");
+define("LANGCARNET6","Remplir le Carnet de Suivi");
+define("LANGCARNET7","Remplir");
+define("LANGCARNET8","Carnet de Suivi");
+define("LANGCARNET9","Créer un Carnet de Suivi");
+define("LANGCARNET10","Modifier un Carnet de Suivi");
+define("LANGCARNET11","Supprimer un Carnet de Suivi");
+define("LANGCARNET12","Consulter un Carnet de Suivi");
+define("LANGCARNET13","Exporter un Carnet de Suivi");
+define("LANGCARNET14","Importer un Carnet de Suivi");
+define("LANGCARNET15","Importer");
+define("LANGCARNET16","Exporter");
+define("LANGCARNET17","Menu Carnet de Suivi");
+define("LANGCARNET18","Nom du Carnet de Suivi");
+define("LANGCONTINUER","Continuer --->");
+define("LANGCARNET19","Création d'un Carnet de Suivi");
+define("LANGCARNET20","Codes d'appréciation pouvant être choisis par les enseignants");
+define("LANGCARNET21","Lettres");
+define("LANGCARNET22","Chiffres");
+define("LANGCARNET23","Couleurs");
+define("LANGCARNET24","Notes");
+define("LANGCARNET25","(0 à 10 ou 0 à 20)");
+define("LANGCARNET26","Correspondance");
+define("LANGCARNET27","acquis");
+define("LANGCARNET28","à&nbsp;confirmer");
+define("LANGCARNET29","non&nbsp;acquis");
+define("LANGCARNET30","en&nbsp;cours&nbsp;d'acquisition");
+define("LANGCARNET31","non&nbsp;évalué");
+define("LANGCARNET32","Vert");
+define("LANGCARNET33","Bleu");
+define("LANGCARNET34","Orange");
+define("LANGCARNET35","Rouge");
+define("LANGCARNET36","période");
+define("LANGCARNET37","périodes");
+define("LANGCARNET38","Gestion du Carnet de Suivi");
+define("LANGCARNET39","Nombre(s) de période(s) imposant la signature des parents, de l'enseignant et de la Direction ");
+define("LANGCARNET40","Nombre(s) ");
+define("LANGCARNET41","Sections associées à ce Carnet de Suivi");
+define("LANGCARNET42","Sections");
+define("LANGCARNET43","Maximum 4 choix possibles (les 4 premiers seront conservés)");
+define("LANGCARNET44","Carnet de Suivi créé. Vous pouvez maintenant ajouter les compétences associées à ce Carnet.");
+define("LANGCARNET45","Ajout d'un domaine de compétences ");
+define("LANGCARNET46","Intitulé du domaine de compétences ");
+define("LANGCARNET47","Cet intitulé correspond-il à une rubrique de compétences ?  ");
+define("LANGCARNET48","Intitulé");
+define("LANGCARNET49","Ajout d'une compétence ");
+define("LANGCARNET50","Modifier les caractéristiques générales du Carnet ");
+define("LANGCARNET51","Ajouter un domaine de compétences ");
+define("LANGCARNET52","Modifier un domaine de compétences ");
+define("LANGCARNET53","Indiquez le Carnet de Suivi");
+define("LANGCARNET54","Carnet de Suivi non existant ");
+define("LANGCARNET55","Consultation d'un Carnet de Suivi");
+define("LANGCARNET56","Un Carnet de Suivi");
+define("LANGCARNET57","Récupération du Carnet de Suivi au format PDF");
+define("LANGCARNET58","Exportation d'un Carnet de Suivi");
+define("LANGCARNET59","Pour récupérer ce Carnet de Suivi");
+define("LANGCARNET60","Modification d'un Carnet de Suivi");
+define("LANGCARNET61","Suppression d'un Carnet de Suivi");
+define("LANGCARNET63","Importation d'un Carnet de Suivi");
+define("LANGCARNET64","Fichier à importer");
+define("LANGCARNET65","Supprimer tout l'emploi du temps avant l'import ?");
+define("LANGCARNET66","Importation annulée. <br><br>Ce nom de Carnet existe déjà ! <br />Veuillez supprimer ce Carnet avant d'effectuer l'importation.");
+define("LANGCARNET62","ATTENTION !!! Toutes les notes assujetties au Carnet de Suivi seront effacées!");
+define("LANGEDT2","Import Emploi du temps Visual Timetabling");
+define("LANGEDT3","Import Visual Timetabling terminé");
+define("LANGEDT4","Affichage / Gestion de l'Emploi du Temps");
+define("LANGEDT5","Importer Emploi du temps Visual Timetabling");
+define("LANGEDT6","Exporter Triade vers Visual Timetabling");
+define("LANGEDT7","Affichage / Gestion de l'Emploi du Temps");
+define("LANGEDT8","Administrer");
+define("LANGEDT9","Mise en place de l'Emploi du Temps");
+define("LANGEDT10","Module SQLite non supporté. Veuillez valider votre serveur pour la prise en charge du support SQLite.");
+define("LANGGRP47","Rechercher les groupes");
+define("LANGGRP48","Liste des groupes d'un élève");
+define("LANGGRP49","Liste des groupes");
+define("LANGDISP21","Configuration Motif abs / rtds");
+define("LANGDISP22","Enregistrement des motifs ");
+define("LANGDISP23","Intitulé du motif ");
+define("LANGDISP24","Liste des motifs ");
+define("LANGDISP25","Nombre d'élèves mis à jour");
+define("LANGDISP26","Le fichier doit être au format xls");
+define("LANGCARNET63","Import Carnet de Suivi terminé");
+define("LANGCARNET64","Liste des sanctions");
+// News 2
+define("LANGCARNET67","Ajout d'une sanction disciplinaire");
+define("LANGCARNET68","Horaire");
+define("LANGVIES1","Nom de la personne rattachée au bulletin");
+define("LANGVIES2","Coefficient de la note Vie Scolaire sur le bulletin");
+define("LANGVIES3","Coefficient Enseignant");
+define("LANGVIES4","Coefficient Vie scolaire");
+define("LANGVIES5","Liste des Enseignants");
+define("LANGVIES6","Informations Scolaires Complémentaires");
+
+
+define("LANGVIES7","Enregistrer les notes et commentaires");
+define("LANGVIES8","Impression des absences d'une classe");
+define("LANGVIES9","Indiquez le mois");
+define("LANGVIES10","Indiquez une classe ");
+
+define("LANGPDF1","Un fichier PDF pour l'ensemble");
+define("LANGPDF2","Un fichier PDF par élève");
+
+define("LANGEDIT5bis","Prénom Resp. 1");
+
+define("LANGGRP50","Modifier le nom d'un groupe");
+define("LANGGRP51","Nom du groupe");
+define("LANGGRP52","Module Modification");
+define("LANGGRP53","Nouveau nom de groupe");
+define("LANGGRP54","ou relevé de notes");
+define("LANGGRP55","examen");
+
+define("LANG1ER","1añ");
+define("LANG2EME","2l");
+define("LANG3EME","3de");
+define("LANG4EME","4re");
+define("LANG5EME","5vet");
+define("LANG6EME","6vet");
+define("LANG7EME","7vet");
+define("LANG8EME","8vet");
+define("LANG9EME","9vet");
+
+
+define("LANGGRP56","Notation sur");
+define("LANGGRP57","Garder");
+define("LANGGRP58","Attention, les notes des élèves sélectionnés à la suppression <br /> seront supprimées dans toutes les classes !!!");
+define("LANGGRP59","Décocher le(s) élève(s) n'appartenant plus au groupe");
+define("LANGGRP60","Modifier la liste");
+
+
+define("LANGEDIT20bis","Supp");  // abréviation de Supprimer  sur 3 lettres seulement
+
+define("LANGGRP61","Retour à la mise à jour");
+define("LANGRTDJUS","Justifié"); // pour un retard
+define("LANGABSJUS","Justifiée"); // pour une abs
+define("LANGPARAM2","<font class=T1>Composez votre texte pour le contenu du message de retard à envoyer aux parents. Vous pouvez préciser les informations suivantes : Nom de l'élève : <b>NomEleve</b> - Prénom de l'élève : <b>PrenomEleve</b> - Adresse : <b>AdresseEleve</b> - Code postal : <b>CodePostalEleve</b> - Ville : <b>VilleEleve</b> - Classe de l'élève : <b>ClasseEleve</b> - Date du retard : <b>RTDDATE</b> - Heure du retard : <b>RTDHEURE</b> - Durée : <b>RTDDUREE</b>  - Cumul absence : <b>CumulABS</b> </font><br><br>");
+
+define("LANGPARAM1","<font class=T1>Composez votre texte pour le contenu du message de l'absence à envoyer aux parents. Vous pouvez préciser les informations suivantes : Nom de l'élève : <b>NomEleve</b> - Prénom de l'élève : <b>PrenomEleve</b> - Adresse : <b>AdresseEleve</b> - Code postal : <b>CodePostalEleve</b> - Ville : <b>VilleEleve</b> - Classe de l'élève : <b>ClasseEleve</b> - Date de début d'absence :  <b>ABSDEBUT</b> - Date de fin d'absence : <b>ABSFIN</b> - Durée : <b>ABSDUREE</b> - Nom du responsable 1 : <b>NomResponsable1</b> - Adresse responsable 1 : <b>AdresseResponsable1</b> - Ville responsable 1 : <b>VilleResponsable1</b> - Cumul absence : <b>CumulABS</b> </font><br><br>");
+
+define("LANGGRP62","étude");
+define("LANGGRP63","Courrier");
+// FAUTES CORRIGEES ---> 01/09/2007
+
+define("LANGDELEGUE1","délégué");
+define("LANGEDT10bis","Module SimpleXML non supporté. Veuillez valider votre serveur pour la prise en charge de l'extension SimpleXML.");
+
+
+define("LANGBULL45","Envoyer un message à tous les enseignants cochés pour les prevenir de remplir leurs bulletins.");
+define("LANGBULL46","Nombre de bulletins rempli dans la classe");
+
+define("LANGMESS46","Visualiser dans");
+define("LANGMESS47","Supprimer une retenue ou une sanction");
+
+
+define("LANGCOUR","Courrier Terminé");
+define("LANGCOUR1","Liste des retenues non effectuées");
+define("LANGCOUR2","Configuration du courrier de retenu");
+
+
+define("RESA75","Information complémentaire");
+define("LANGCOM","Enregistrer tous vos commentaires dans votre bibliothèque.");
+define("LANGCOM1","La valeur max doit être plus grande que la valeur min.");
+define("LANGCOM2","Tous les champs doivent être indiqués correctement.");
+define("LANGCOM3","Nombre d'élève : ");
+define("LANGSTAGE91","Nom du responsable");
+define("LANGSTAGE93","Fonction du resp.");
+define("LANGSTAGE94","de l'entreprise");
+define("LANGSTAGE95","entreprise");
+define("LANGSTAGE96","Nombre d'élèment trouvé");
+define("LANGSTAGE97","Indiquer une valeur numerique, S.V.P.");
+define("LANGSTAGE98","Indiquez la date du début de stage, S.V.P.");
+define("LANGSTAGE99","Indiquez la date de fin de stage, S.V.P.");
+
+define("LANGPATIENTE","Veuillez Patientez");
+define("LANGSMS3","Numéro de Téléphone Portable");
+define("LANGSMS4","150 caractères maximum");
+define("LANGSMS5","Message");
+define("LANGSMS6","L'envoi du message SMS est conservé et disponible par la direction");
+define("LANGSMS7","Envoi message SMS");
+define("LANGSMS8","Envoyer un message SMS");
+define("LANGSMS9","Téléphone disponible des parents <br> de ");
+define("LANGSMS10","Envoyer un sms à toute une classe");
+define("LANGSMS11","Envoyer un sms à un parent d'élève via son nom");
+define("LANGSMS12","Envoyer un sms à une personne via son nom");
+define("LANGSMS13","Envoyer un sms à une personne via son numéro");
+define("LANGSMS14","Numéro");
+define("LANGbasededoni54_5","valeur acceptée : <b>7</b> ou P <br>");
+define("LANGbasededoni54_6","valeur acceptée : <b>8</b> ou Sr <br>");
+
+define("LANGGRP27bis","Ajouter un élève dans plusieurs groupes");
+define("LANGGRP28bis","Ajout élève dans groupe");
+define("LANGGRP29bis","Saisie&nbsp;/&nbsp;Modif");
+define("LANGNOTEUSA6","Correspondance des notes pour la notation en mode USA");
+define("LANGNOTE1","Intitulé de l'examen");
+define("LANGPARAM44","Recevoir un message lorsque vous recevez une information de type");
+define("LANGMESS17bis","Config.");
+define("LANGNNOTE2","Trier par classe");
+define("LANGNNOTE3","Trier par nom");
+define("LANGNNOTE4","Indiquer le Titre du document");
+define("LANGBULL47","Bulletin sans sous-matière");
+define("LANGBULL48","Bulletin avec sous-matière");
+define("LANGBULL49","Bulletin examen blanc");
+
+define("LANGMESS48","Boite de Suppression");
+define("LANGMESS49","Aucun élève n'a d'entreprise affecté.");
+define("LANGMESS50","Plan de la classe");
+define("LANGPARAM43","<font class=T1>Composez votre texte pour le contenu du message de la retenu pour l'envoi du courrier aux parents d'élève. Vous pouvez préciser les informations suivantes : Nom de l'élève : <b>NomEleve</b> - Prénom de l'élève : <b>PrenomEleve</b> - adresse : <b>AdresseEleve</b> - code postal : <b>CodePostalEleve</b> - Ville : <b>VilleEleve</b> - Classe de l'élève : <b>ClasseEleve</b> - la date de la retenu : <b>DATERETENU</b> - l'heure de la retenu : <b>HEURERETENU</b> - la durée : <b>RETENUDUREE</b> - le motif : <b>RETENUMOTIF</b> -  la catégorie : <b>RETENUCATEGORY</b> - Attribué par : <b>ATTRIBUEPAR</b> - Devoir à faire : <b>DEVOIRAFAIRE</b> - Les faits : <b>FAITS</b>  - Civilité tuteur 1 : <b>CIVILITETUTEUR1</b> - Nom du responsable 1 : <b>NOMRESP1</b> Prénom du responsable 1 : <b>PRENOMRESP1</b> - Date du jour : <b>DATEDUJOUR</b> </font><br><br>");
+define("LANGMESS51","Indiquer les matières falcutatives");
+define("LANGMESS52","(Notes comptabilisées dans la moyenne générale, si elle est au dessus de 10/20)");
+define("LANGMESS53","Semaine précédente");
+define("LANGMESS54","Semaine suivante");
+define("LANGMESS55","Emploi du temps de la classe ");
+define("LANGMESS56","aucun élève");
+
+define("LANGMESS57","Identifiant");
+define("LANGMESS58","Ce compte ne possede aucun numéro.");
+define("LANGMESS59","Modifier aussi les abs/rtd justifiées");
+define("LANGMESS60","A");
+define("LANGMESS60bis","bsent");
+define("LANGMESS61","des enseignants");
+define("LANGMESS62","Parent de ");
+define("LANGMESS63","aujourd\'hui");  // mettre une \' 
+define("LANGBT27bis","Enregistrer abs/rtd"); 
+define("LANGDEPART3bis","Accès interrompu ! ");
+define("LANGDEPART4bis","L'accès à votre Triade est actuellement interrompu, merci de contacter votre établissement scolaire pour de plus amples informations.");
+define("LANGAIDE","Aide en ligne");
+define("LANGAIDE1","Indiquer les correspondances entre vos matiéres enregistrées dans TRIADE et les matières renseignées pour le brevet des collèges. Pour cela effectuer un drag&drop (glisser&relacher) entre les matières de gauche à droite.");
+define("LANGAIDE2","Composer votre texte pour le contenu de la convention de stage. Pour une prise en compte d'élément tel que le nom, prénom, adresse etc... veuillez présiser la chaîne suivante en fonction de vos besoins :");
+
+define("LANGBREVET1","Accèder");
+
+define("LANGPARAM3","<font class=T1>Composez votre texte pour le contenu du certificat de scolarité.  Pour une prise en compte du nom, du prénom et de l'adresse de l'élève automatiquement dans chaque document, veuillez présiser la chaîne <b>NomEleve</b>, <b>PrenomEleve</b>, <b>AdresseEleve</b>, <b>CodePostalEleve</b> et <b>VilleEleve</b> à l'emplacement désiré. De même, possibilité d'indiquer la classe avec le mot clef <b>ClasseEleve</b> ou <b>ClasseEleveLong</b>, la date de naissance avec <b>DateNaissanceEleve</b>, lieu de naissance via <b>LieuDeNaissance</b>, la date du jour via <b>DateDuJour</b>, l'année scolaire via <b>AnneeScolaire</b>.</font><br><br>");
+define("LANGCONFIG4","Etre averti d'un message lorsque");
+define("LANGCONFIG5","Le nbr d'absences non justifiées d'un élève a dépassé ");
+define("LANGCONFIG6","Le nbr de retards non justifiés d'un élève a dépassé ");
+define("LANGCONFIG7","fois");
+define("LANGCONFIG8","Liste des utilisateurs avertis");
+
+define("LANGMESS64","Personnes ayant reçu ce message");
+define("LANGMESS65","Liste des règlements interne");
+define("LANGMESS66","Le directeur");
+define("LANGMESS67","J'ai pris connaissance des différents documents ci-dessus");
+define("LANGMESS68","J'accepte le ou les règlement(s) intèrieur(s)");
+define("LANGMESS69","J'accepte les conditions générales d'enseignement");
+define("LANGMESS70","Règlement accessible par les enseignants");
+define("LANGMESS71","Consulter Fiche d'état des réglements");
+define("LANGMESS72","Imprimer Fiche d'état des réglements");
+define("LANGMESS73","Liste des impayés ou paiement incomplet");
+define("LANGMESS74","Fiche d'état des réglements");
+define("LANGacce_dep2ter","<br><b>ATTENTION !!  Vérifiez bien votre mode d'accès, choisissez votre compte correspondant.</b>");
+?>

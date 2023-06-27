@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<currencies>
+    <currency>
+        <ISO>DZD</ISO>
+        <Arabic>دينار جزائري</Arabic>
+        <English>Algerian dinar</English>
+    </currency>
+    <currency>
+        <ISO>BHD</ISO>
+        <Arabic>دينار بحريني</Arabic>
+        <English>Bahraini dinar</English>
+    </currency>
+    <currency>
+        <ISO>DJF</ISO>
+        <Arabic>فرنك جيبوتي</Arabic>
+        <English>Djiboutian franc</English>
+    </currency>
+    <currency>
+        <ISO>EGP</ISO>
+        <Arabic>جنيه مصري</Arabic>
+        <English>Egyptian pound</English>
+    </currency>
+    <currency>
+        <ISO>IQD</ISO>
+        <Arabic>دينار عراقي</Arabic>
+        <English>Iraqi dinar</English>
+    </currency>
+    <currency>
+        <ISO>JOD</ISO>
+        <Arabic>دينار أردني</Arabic>
+        <English>Jordanian dinar</English>
+    </currency>
+    <currency>
+        <ISO>KWD</ISO>
+        <Arabic>دينار كويتي</Arabic>
+        <English>Kuwaiti dinar</English>
+    </currency>
+    <currency>
+        <ISO>LBP</ISO>
+        <Arabic>ليرة لبنانية</Arabic>
+        <English>Lebanese lira</English>
+    </currency>
+    <currency>
+        <ISO>LYD</ISO>
+        <Arabic>دينار ليبي</Arabic>
+        <English>Libyan dinar</English>
+    </currency>
+    <currency>
+        <ISO>MRO</ISO>
+        <Arabic>أوقية موريتانية</Arabic>
+        <English>Mauritanian ouguiya</English>
+    </currency>
+    <currency>
+        <ISO>MAD</ISO>
+        <Arabic>درهم مغربي</Arabic>
+        <English>Moroccan dirham</English>
+    </currency>
+    <currency>
+        <ISO>OMR</ISO>
+        <Arabic>ريال عماني</Arabic>
+        <English>Omani rial</English>
+    </currency>
+    <currency>
+        <ISO>QAR</ISO>
+        <Arabic>ريال قطري</Arabic>
+        <English>Qatari riyal</English>
+    </currency>
+    <currency>
+        <ISO>SAR</ISO>
+        <Arabic>ريال سعودي</Arabic>
+        <English>Saudi riyal</English>
+    </currency>
+    <currency>
+        <ISO>SOS</ISO>
+        <Arabic>شلن صومالي</Arabic>
+        <English>Somali shilling</English>
+    </currency>
+    <currency>
+        <ISO>SDG</ISO>
+        <Arabic>جنيه سوداني</Arabic>
+        <English>Sudanese pound</English>
+    </currency>
+    <currency>
+        <ISO>SYP</ISO>
+        <Arabic>ليرة سورية</Arabic>
+        <English>Syrian pound</English>
+    </currency>
+    <currency>
+        <ISO>TND</ISO>
+        <Arabic>دينار تونسي</Arabic>
+        <English>Tunisian dinar</English>
+    </currency>
+    <currency>
+        <ISO>AED</ISO>
+        <Arabic>درهم إماراتي</Arabic>
+        <English>United Arab Emirates dirham</English>
+    </currency>
+    <currency>
+        <ISO>YER</ISO>
+        <Arabic>ريال يمني</Arabic>
+        <English>Yemeni rial</English>
+    </currency>
+</currencies>

@@ -1,0 +1,30 @@
+<Files "fic_news_defil_menuscolaire.txt">
+Order Deny,Allow
+Deny from all
+</Files>
+
+<Files "fic_news_defil_menuadmin.txt">
+Order Deny,Allow
+Deny from all
+</Files>
+
+<Files "error.log">
+Order Deny,Allow
+Deny from all
+</Files>
+
+<Files "fic_probleme.txt">
+Order Deny,Allow
+Deny from all
+</Files>
+
+<Files "fic_question_faq.txt">
+Order Deny,Allow
+Deny from all
+</Files>
+
+<Files "fic_opinion.txt">
+Order Deny,Allow
+Deny from all
+</Files>
+

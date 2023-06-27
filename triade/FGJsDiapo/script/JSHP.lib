@@ -1,0 +1,92 @@
+/* 
+################################################################
+###                 	JSHP.js		          	             ###
+############################################# Version 1.1 ######
+################################################################
+
+Auteur : fg
+Site : http://fg.logiciel.free.fr
+E-mail : fg.logiciel@free.fr
+FREEWARE
+*/
+
+//Vous pouvez ajouter des fonctions ici :
+if(location.search.substring(1))
+{
+//On récupère le nombre d'argument et on coupe les différents arguments dans un tableau
+jshp_arg = location.search.substring(1).split('&');
+
+//On recherche la longueur du tableau
+jshp_nbrarg = jshp_arg.length;
+
+//On créé le tableau get qui permettra de récupérer les variables
+jshp = new Array();
+
+	for(i=0;i < jshp_nbrarg;i++)
+	{
+		//Recherche du signe egal
+		jshp_tpeg = (jshp_arg[i].indexOf("=",0));
+		
+		//Récupératon du nom de la variable
+		jshp_tpname = jshp_arg[i].substring(0,jshp_tpeg);
+		
+		//Récupération de la valeur de la variable
+		jshp_tpvar = jshp_arg[i].substring(jshp_tpeg+1,jshp_arg[i].length);
+		
+		//Stockage dans le tableau final
+		jshp[jshp_tpname] = jshp_tpvar;
+	}
+}
+
+
+function jshp_get_var(varname)
+{
+	if(location.search.substring(1))
+	{
+		varname = jshp[varname];
+		return varname;
+	}
+	else
+	{
+		varname = "";
+		return false;
+	}
+	
+	if(varname=="undefined")
+	{
+		varname = "";
+		return false;
+	}
+	
+}
+
+function other_var_than(v)
+{
+tmpv = "";
+		if(location.search.substring(1))
+		{
+		jshp_arg = location.search.substring(1).split('&');	
+		jshp_nbrarg = jshp_arg.length;
+	
+		if(jshp_nbrarg >= 1)
+		{
+			for(i=0;i<jshp_nbrarg;i++)
+			{
+				//Recherche du signe egal
+				jshp_tpeg = (jshp_arg[i].indexOf("=",0));
+				//Récupératon du nom de la variable
+				jshp_tpname = jshp_arg[i].substring(0,jshp_tpeg);
+				
+					if(jshp_tpname != v)
+					{
+						//Récupération de la valeur de la variable
+						jshp_tpvar = jshp_arg[i].substring(jshp_tpeg+1,jshp_arg[i].length);
+						
+						//Stockage dans le tableau final
+						tmpv += "&" + jshp_tpname + "=" + jshp_tpvar;
+					}
+			}
+		}
+	}
+return tmpv;
+}

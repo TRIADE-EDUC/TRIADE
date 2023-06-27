@@ -1,0 +1,55 @@
+/***************************************************************************
+ *                              T.R.I.A.D.E
+ *                            ---------------
+ *
+ *   begin                : Janvier 2000
+ *   copyright            : (C) 2000 E. TAESCH - T. TRACHET 
+ *   Site                 : http://www.triade-educ.com
+ *
+ *
+ ***************************************************************************/
+/***************************************************************************
+ *
+ *   This program is free software; you can redistribute it and/or modify
+ *   it under the terms of the GNU General Public License as published by
+ *   the Free Software Foundation; either version 2 of the License, or
+ *   (at your option) any later version.
+ *
+ ***************************************************************************/
+_____________________________________________________________________________
+
+
+	Copyright (c) 2000-2012 T.R.I.A.D.E. 
+	Eric TAESCH, Thomas TRACHET 
+	All rights reserved.
+
+
+	Pré-requis soft
+	---------------
+
+
+    - Linux ou Windows (testé sous WampServer)
+    - Apache
+    - Mysql 5  
+    - Php 5.3  
+
+-------------------------------------------------------------------------------
+	
+	1) Pré-requis Hard du serveur
+	------------------------------
+
+	- 2 Go Ram 
+    	- 1 Go Data
+	
+
+	2) Lancement
+	-------------
+	
+	- http://votre_domaine/triadev1/
+
+
+	3) DROIT D'UTILISATION
+	-----------------------
+
+	- Consulter le fichier Licence-GPL.txt
+_____________________________________________________________________________________

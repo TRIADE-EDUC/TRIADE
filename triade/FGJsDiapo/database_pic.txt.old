@@ -1,0 +1,8 @@
+jsdiapo_images = ["./image/commun/nav_about.png","./image/commun/nav_back.png","./image/commun/nav_next.png","./image/commun/nav_options.png"];
+
+
+/* Modifiez la ligne ci-dessous pour ajouter des commentaires*/
+jsdiapo_images_comm = ["Commentaire pour l'image 1","Commentaire pour l'image 2","Commentaire pour l'image 3","Commentaire pour l'image 4"];
+
+/* Ne pas modifier le contenu ci-dessous */
+var database_pic_version = "1.1";

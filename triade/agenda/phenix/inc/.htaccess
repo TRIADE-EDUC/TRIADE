@@ -1,0 +1,4 @@
+<files conf.inc.php>
+  Order Deny,Allow
+  Deny From All
+</files>

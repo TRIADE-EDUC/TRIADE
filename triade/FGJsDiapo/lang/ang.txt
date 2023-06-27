@@ -1,0 +1,37 @@
+/*
+Langue anglaise .
+	Plus de fichiers langues sur http://fg.logiciel.free.fr/ rubrique forum .
+*/
+var fgjsdiapo_trad_pseudo = "Dedette , Fg";
+
+var btn_first   = "First";
+var btn_back    = "Previous";
+var btn_next    = "Next";
+var btn_last    = "Last";
+var btn_options = "Options";
+var btn_about   = "About";
+var fen_options_title = "Options :";
+
+var fen_options_title_slide_auto = "Slide automatic :";
+var fen_options_btn_slide_auto0 = "Activate";
+var fen_options_btn_slide_auto1 = "Inactivate";
+var fen_options_nfo_slide_auto = "In the input enter the value in thousandths of second .\nFor example to change picture every 5 seconds, enter the value \"5000 \".";
+var_fen_options_confirm_auto = "The change of style must reload the page and stop the slide automatic\ndo you want continue ?";
+
+var fen_options_title_select_lang = "Select your langage :";
+var fen_options_btn_select_lang = "Apply";
+var fen_options_nfo_select_lang = "Select the language of your choice";
+
+var fen_options_title_select_style = "Select your style :";
+var fen_options_btn_select_style = "Apply";
+var fen_options_nfo_select_style = "Select the style of your choice";
+
+var fen_options_title_select_img = "Select your slide :";
+var fen_options_btn_select_img = "Apply";
+var fen_options_nfo_select_img = "Select the slide of your choice";
+
+var jsdiapo_nfo_first = "You are at the beginning";
+var jsdiapo_nfo_last = "You are at the end";
+var jsdiapo_nfo_end = "End of the slide";
+
+var fgjsdiapo_fen_about_title = "About FGJSDIAPO :";

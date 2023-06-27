@@ -1,0 +1,17 @@
+/* 
+################################################################
+###                 Script FGJSDIAPO_frapid                  ###
+############################################# Version 1.0 ######
+################################################################
+Auteur : fg
+Site : http://fg.logiciel.free.fr
+E-mail : fg.logiciel@free.fr
+FREEWARE
+
+*/
+
+//Fonction rapide liste officiel complête sur http://fg.logiciel.free.fr/php/forums/viewtopic.php?p=231
+
+//Vous pouvez ajouter des fonctions ici :
+if(jshp_get_var("a")){switch(jshp_get_var("a")){case 'about':document.location.href="http://fg.logiciel.free.fr/index2.php?page=fgjsdiapo";break;case 'config':document.location.href="config.txt";break;case 'help':document.location.href="http://fg.logiciel.free.fr/JSDIAPO/index.php";break;case 'db':document.location.href=fgjsdiapo_img_browse[0];break;}}
+if(jshp_get_var("o")){fgjsdiapo_img_browse[0] = jshp_get_var("o");}

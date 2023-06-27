@@ -1,0 +1,39 @@
+/*
+Langue française .
+	Plus de fichiers langues sur http://fg.logiciel.free.fr/ rubrique forum .
+*/
+var fgjsdiapo_trad_pseudo = "fg";
+
+var btn_first = "Premiere diapo";
+var btn_back = "Precedent";
+var btn_next = "Suivant";
+var btn_last = "Derniere diapo";
+var btn_options = "Options";
+var btn_about = "A propos";
+
+var fen_options_title = "Options :";
+
+var fen_options_title_slide_auto = "Diaporama automatique :";
+var fen_options_btn_slide_auto0 = "Activer";
+var fen_options_btn_slide_auto1 = "Desactiver";
+var fen_options_nfo_slide_auto = "Dans la zone de texte entrez la valeur en millieme de seconde .\nPar exemple pour changer de photo toutes les 5 secondes entrer la valeur \"5000\".";
+var_fen_options_confirm_auto = "Le changement de style va recharger la page et donc arreter le diaporama automatique\nvoulez-vous continuer ? ";
+
+
+var fen_options_title_select_lang = "Selection de la langue :";
+var fen_options_btn_select_lang = "Appliquer";
+var fen_options_nfo_select_lang = "Selectionnez la langue de votre choix";
+
+var fen_options_title_select_style = "Selection du style :";
+var fen_options_btn_select_style = "Appliquer";
+var fen_options_nfo_select_style = "Selectionnez le style de votre choix";
+
+var fen_options_title_select_img = "Selection du diaporama :";
+var fen_options_btn_select_img = "Appliquer";
+var fen_options_nfo_select_img = "Selectionnez le diaporama de votre choix";
+
+var jsdiapo_nfo_first = "Vous etes au début";
+var jsdiapo_nfo_last = "Vous etes à la fin";
+var jsdiapo_nfo_end = "Fin du diaporama";
+
+var fgjsdiapo_fen_about_title = "A propos de FGJSDIAPO :";
