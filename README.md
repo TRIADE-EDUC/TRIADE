@@ -17,6 +17,12 @@ Grâce à notre plateforme en ligne, accédez facilement et instantanément à t
 
 * Parfait pour les CFA et les établissements professionnalisants : Gérez facilement les dossiers d'entreprise, le recrutement et le placement en entreprise, la gestion des contrats, la rémunération et le remboursement des frais, tout en assurant un suivi pédagogique de l'apprenti en centre et en entreprise grâce à un carnet de liaison.
 
-TRIADE vous offre une solution **clé en main**, entièrement personnalisable selon les besoins spécifiques de votre établissement scolaire. Profitez d'un outil convivial, intuitif et sécurisé qui vous permettra de gagner du temps, de renforcer la collaboration et d'optimiser les performances de votre équipe pédagogique.
+**TRIADE vous offre une solution clé en main**, entièrement personnalisable selon les besoins spécifiques de votre établissement scolaire. Profitez d'un outil convivial, intuitif et sécurisé qui vous permettra de gagner du temps, de renforcer la collaboration et d'optimiser les performances de votre équipe pédagogique.
 
 Rejoignez dès maintenant notre communauté d'établissements scolaires satisfaits en choisissant TRIADE, la référence en matière de logiciel de vie scolaire. Essayez-le dès maintenant et découvrez comment TRIADE peut révolutionner votre établissement !
+
+## Triade sur GitHub
+
+Pour faciliter l'accès du code source aux développeurs, Triade met à votre disposition un repository GitHub actualisé à chaque version, les anciennes versions seront archivés dans des branches dédiées du repository (la branche master acueillant la dernière version de Triade)
+
+Pour installer Triade pour votre établissement scolaire, **nous vous conseillons vivement de passer par notre site officiel** : [https://triade-educ.org/accueil/telecharger.php](https://triade-educ.org/accueil/telecharger.php)
