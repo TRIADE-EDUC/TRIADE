@@ -1,0 +1,183 @@
+/***************************************************************************
+*                              T.R.I.A.D.E
+*                            ---------------
+*
+*   begin                : Janvier 2000
+*   copyright            : (C) 2000 E. TAESCH - T. TRACHET
+*   Site                 : http://www.triade-educ.com
+*
+*
+***************************************************************************
+***************************************************************************
+*
+*   This program is free software; you can redistribute it and/or modify
+*   it under the terms of the GNU General Public License as published by
+*   the Free Software Foundation; either version 2 of the License, or
+*   (at your option) any later version.
+*
+***************************************************************************/
+function getRequete() {
+	if (window.XMLHttpRequest) { 
+        	result = new XMLHttpRequest();     // Firefox, Safari, ...
+	}else { 
+	      if (window.ActiveXObject)  {
+	      result = new ActiveXObject("Microsoft.XMLHTTP");    // Internet Explorer 
+	      }
+       	}
+	return result;
+}
+
+
+function verifActivite() {
+
+	var requete = getRequete();
+	var corps="";
+
+	if (requete != null) {
+		requete.open("POST","verifActiviteStage.php",true);
+		requete.onreadystatechange = function() { 
+	    		if(requete.readyState == 4) {
+	       			if(requete.status == 200) {
+					resultat=requete.responseText;
+					var reg=new RegExp("#","g");
+					var tableau=resultat.split(reg);
+
+					for (var i=1; i<=document.formulaire.activite.options.length;i++) {				
+						document.formulaire.activite.options[i]=null;
+						document.formulaire.activite2.options[i]=null;
+						document.formulaire.activite3.options[i]=null;
+					}
+					
+					
+					for (var i=0; i<tableau.length;i++) {
+						document.formulaire.activite.options[i] = new Option(tableau[i],tableau[i]);
+						document.formulaire.activite2.options[i] = new Option(tableau[i],tableau[i]);	
+						document.formulaire.activite3.options[i] = new Option(tableau[i],tableau[i]);					     				     }
+					var j=i++;
+					document.formulaire.activite.options[j]=new Option("inconnu","inconnu",true,true);	
+					document.formulaire.activite2.options[j]=new Option("","",true,true);	
+					document.formulaire.activite3.options[j]=new Option("","",true,true);	
+				}
+  			};
+		} 
+		requete.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+  		requete.send(corps); 
+	}
+}
+
+function verifActivite2() {
+	var requete = getRequete();
+	var corps="";
+
+	if (requete != null) {
+		requete.open("POST","verifActiviteStage.php",true);
+		requete.onreadystatechange = function() { 
+	    		if(requete.readyState == 4) {
+	       			if(requete.status == 200) {
+					resultat=requete.responseText;
+					var reg=new RegExp("#","g");
+					var tableau=resultat.split(reg);
+
+					for (var i=1; i<=document.formulaire.activite.options.length;i++) {				
+						document.formulaire.activite2.options[i]=null;
+					}
+					
+					
+					for (var i=0; i<tableau.length;i++) {
+						document.formulaire.activite2.options[i] = new Option(tableau[i],tableau[i]);					     				     }
+					var j=i++;
+					document.formulaire.activite2.options[j]=new Option("","",true,true);	
+				}
+  			};
+		} 
+		requete.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+  		requete.send(corps); 
+	}
+}
+
+
+function verifActivite3() {
+
+	var requete = getRequete();
+	var corps="";
+
+	if (requete != null) {
+		requete.open("POST","verifActiviteStage.php",true);
+		requete.onreadystatechange = function() { 
+	    		if(requete.readyState == 4) {
+	       			if(requete.status == 200) {
+					resultat=requete.responseText;
+					var reg=new RegExp("#","g");
+					var tableau=resultat.split(reg);
+
+					for (var i=1; i<=document.formulaire.activite.options.length;i++) {				
+						document.formulaire.activite3.options[i]=null;
+					}
+					
+					
+					for (var i=0; i<tableau.length;i++) {
+						document.formulaire.activite3.options[i] = new Option(tableau[i],tableau[i]);					     				     }
+					var j=i++;
+					document.formulaire.activite3.options[j]=new Option("","",true,true);	
+				}
+  			};
+		} 
+		requete.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+  		requete.send(corps); 
+	}
+}
+
+
+function verifActivite4() {
+
+	var requete = getRequete();
+	var corps="";
+
+	if (requete != null) {
+		requete.open("POST","verifActiviteStage.php",true);
+		requete.onreadystatechange = function() { 
+	    		if(requete.readyState == 4) {
+	       			if(requete.status == 200) {
+					resultat=requete.responseText;
+					var reg=new RegExp("#","g");
+					var tableau=resultat.split(reg);
+
+					for (var i=1; i<=document.formulaire.activite.options.length;i++) {				
+						document.formulaire.activite4.options[i]=null;
+					}
+					
+					
+					for (var i=0; i<tableau.length;i++) {
+						document.formulaire.activite4.options[i] = new Option(tableau[i],tableau[i]);					     				     }
+					var j=i++;
+					document.formulaire.activite4.options[j]=new Option("","",true,true);	
+				}
+  			};
+		} 
+		requete.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+  		requete.send(corps); 
+	}
+}
+
+
+function verifentreprise(nomEntreprise) {
+	var requete = getRequete();
+	var corps="nomEntreprise="+encodeURIComponent(nomEntreprise);
+//var corps="sujet="+encodeURIComponent(item)+"&date="+encodeURIComponent(date)+"&idg="+encodeURIComponent(idclasse)+"&idc="+encodeURIComponent(idgroupe)+"&idm="+encodeURIComponent(idmatiere);
+	if (requete != null) {
+		requete.open("POST","verifEntrepriseStage.php",true);
+		requete.onreadystatechange = function() { 
+	    		if(requete.readyState == 4) {
+	       			if(requete.status == 200) {
+					resultat=requete.responseText;
+					document.getElementById('verifent').innerHTML=resultat;
+				}else{
+					document.getElementById('verfient').innerHTML="";
+				}
+  			};
+		} 
+		requete.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+  		requete.send(corps); 
+	}
+
+}

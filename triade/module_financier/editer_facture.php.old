@@ -1,0 +1,268 @@
+<?php
+session_start();
+/***************************************************************************
+ *                              T.R.I.A.D.E
+ *                            ---------------
+ *
+ *   begin                : Janvier 2000
+ *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   Site                 : http://www.triade-educ.com
+ *
+ *
+ ***************************************************************************/
+/***************************************************************************
+ *
+ *   This program is free software; you can redistribute it and/or modify
+ *   it under the terms of the GNU General Public License as published by
+ *   the Free Software Foundation; either version 2 of the License, or
+ *   (at your option) any later version.
+ *
+ ***************************************************************************/
+
+// Inclure la librairie d'initialisation du module
+include("./librairie_php/lib_init_module.inc.php");
+// Verification autorisations acces au module
+if(autorisation_module()) {
+	$date = lire_parametre('date', '', 'POST');
+	$montant = lire_parametre('montant', '', 'POST');
+	$type = lire_parametre('type', '', 'POST');
+	$echeancier_id = lire_parametre('echeancier_id', '', 'POST');
+	
+	$sql ="SELECT echeancier_id, inscription_id, date_echeance, montant, impaye, type_reglement_id ";
+	$sql.="FROM ".FIN_TAB_ECHEANCIER." ";
+	$sql.="WHERE echeancier_id = $echeancier_id ";
+	//echo $sql;
+	$echeance=execSql($sql);
+	
+	if($echeance->numRows() > 0) {
+		// Recuperer les infos de l'echeance
+		$infos_echeance = $echeance->fetchRow();
+		
+		// Rechercher le type de reglement
+		$sql ="SELECT type_reglement_id, libelle ";
+		$sql.="FROM ".FIN_TAB_TYPE_REGLEMENT." ";
+		$sql.="WHERE type_reglement_id = " . $infos_echeance[5];
+		//echo $sql;
+		$type_reglement=execSql($sql);
+		
+		if($type_reglement->numRows() > 0) {
+			// Recuperer les infos du type de reglement
+			$infos_type_reglement = $type_reglement->fetchRow();
+
+			// Rechercher les reglements
+			$sql ="SELECT reglement_id, echeancier_id, libelle, date_reglement, montant, type_reglement_id, realise, commentaire, date_enregistrement, numero_cheque, numero_bordereau ";
+			$sql.="FROM ".FIN_TAB_REGLEMENT." ";
+			$sql.="WHERE echeancier_id = $echeancier_id ";
+			$sql.="ORDER BY date_reglement ";
+			//echo $sql;
+			$reglements=execSql($sql);
+			
+			// Rechercher les type de reglements
+			$sql  = "SELECT type_reglement_id, libelle ";
+			$sql .= "FROM ".FIN_TAB_TYPE_REGLEMENT." e ";
+			$sql .= "ORDER BY libelle ASC";
+			//echo $sql;
+			$types_reglement=execSql($sql);
+			
+		}
+
+	}
+}else {
+	// Fermeture connexion bddd
+	Pgclose();
+	// Redirection vers script d'erreur
+	header('Location: ../' . FIN_SCRIPT_PAS_AUTORISATION) ;
+	exit();
+}
+
+?>
+<html>
+	<head>
+		<meta http-equiv="CacheControl" content = "no-cache">
+		<meta http-equiv="pragma" content = "no-cache">
+		<meta http-equiv="expires" content = -1>
+		<meta name="Copyright" content="Triade©, 2001">
+		<base href="<?php echo site_url_racine(FIN_REP_MODULE); ?>">
+		<link title="style" type="text/CSS" rel="stylesheet" href="./librairie_css/css.css">
+		<script language="javascript" src="./librairie_js/clickdroit2.js"></script>
+		<script language="javascript" src="./librairie_js/function.js"></script>
+		<script language="javascript" src="./librairie_js/lib_css.js"></script>
+		<script language="javascript" src="./librairie_js/verif_creat.js"></script>
+		<link title="style" type="text/CSS" rel="stylesheet" href="./<?php echo $g_chemin_relatif_module; ?>librairie_css/css.css">
+		<?php
+		// Inclure les scripts Javascript
+		inclure_scripts_js_toutes_pages();
+		?>
+		<title>Triade - Compte de <?php print "$_SESSION[nom] $_SESSION[prenom] "?></title>
+		</head>
+		<body id="bodyfond2" marginheight="0" marginwidth="0" leftmargin="0" topmargin="0">		
+		<?php
+		//Verification droits acces application et generation menus
+		include("./librairie_php/lib_licence.php");
+		// Verification droits acces groupe
+		validerequete("2");
+		?>
+		<?php
+		// Verification autorisations acces au module
+		if(autorisation_module()) {
+		?>
+		
+		<table border="0" cellpadding="0" cellspacing="0" width="90%" align="center">
+			<tr>
+				<td align="center">&nbsp;</td>
+			</tr>
+			<tr>
+				<td align="center">
+					<b><font class="T2"><?php echo LANG_FIN_FACT_001; ?></font></b>
+				</td>
+			</tr>
+			
+			<tr>
+				<td valign="top" align="center">
+					<form name="formulaire" id="formulaire" method="get" action="<?php echo url_script(); ?>" onSubmit="">
+						<br>
+						<table width="100%" border="0" cellpadding="0" cellspacing="0" align="center">
+						
+							<?php //********** AFFICHAGE DES DONNEES ********** ?>
+							<ul><font class="T2">
+								  <?php print LANG_FIN_GENE_030?> : <?php print $date?><br> <br>
+								  <?php print LANG_FIN_GENE_013?> : <?php print $montant?> €<br> <br>
+								  <?php print LANG_FIN_TREG_015?> : <?php print $type?><br> <br>
+								</font>
+							</ul>
+							<?php
+							define('FPDF_FONTPATH','./librairie_pdf/fpdf/font/');
+							include_once('./librairie_pdf/fpdf/fpdf.php');
+							include_once('./librairie_pdf/html2pdf.php');
+							
+							$pdf=new PDF(); 
+							
+							
+							$pdf->AddPage();
+							$pdf->SetTitle("Facture echeance : ");
+							$pdf->SetCreator("T.R.I.A.D.E.");
+							$pdf->SetSubject("Facture"); 
+							$pdf->SetAuthor("T.R.I.A.D.E. - www.triade-educ.com"); 
+							
+							// Debut création PDF
+							
+							// mise en place des coordonnées
+							$pdf->SetFont('Arial','',12);
+							$pdf->SetXY($xcoor0,$ycoor0);
+							$pdf->WriteHTML($coordonne0);
+							$pdf->SetFont('Arial','',8);
+							$pdf->SetXY($xcoor0,$ycoor0+5);
+							$pdf->WriteHTML($coordonne1);
+							$pdf->SetXY($xcoor0,$ycoor0+10);
+							$pdf->WriteHTML($coordonne2);
+							$pdf->SetXY($xcoor0,$ycoor0+15);
+							$pdf->WriteHTML($coordonne3);
+							$pdf->SetXY($xcoor0,$ycoor0+20);
+							$pdf->WriteHTML($coordonne4);
+							//fin coordonnees
+														
+							
+							// insertion de la date
+							$date=date("d/m/Y");
+							$Pdate="Date: ".$date;
+							$pdf->SetFont('Courier','',10);
+							$pdf->SetXY(150,3);
+							$pdf->WriteHTML($Pdate);
+							// fin d'insertion
+							
+							
+							// Titre
+							$titre = "Facture echeance n°$echeancier_id";
+							$pdf->SetXY(80,20);
+							$pdf->SetFont('Arial','',18);
+							$pdf->WriteHTML($titre);
+							// fin titre
+
+							// cadre du haut
+							$pdf->SetFont('Arial','',11);
+							$pdf->SetFillColor(220);
+							$pdf->SetXY(15,35); 
+							$pdf->MultiCell(184,20,'',1,'L',1);
+
+							$fichier="./data/pdf_bull/periode.pdf";
+							@unlink($fichier); // destruction avant creation
+							$pdf->output($fichier);
+						
+						
+							?>
+							
+							<?php if($momo->numRows() > 0) {}?>
+							<?php //********** MESSAGES UTILISATEUR ********** ?>
+							
+							<tr>
+								<td align="center">&nbsp;</td>
+							</tr>
+							<tr>
+								<td align="center">
+									<a name="MESSAGE"></a>
+									<?php 
+									msg_util_afficher();
+									msg_util_attente_init(); 
+									?>
+									</td>
+							</tr>		
+						</table>
+					</form>
+
+					<?php //********** GESTION NAVIGATION ********** ?>
+					
+					<script language="javascript">
+						var fenetre = null;
+						var liste_fenetre = new Array();
+						
+					</script>
+				</td>
+			</tr>
+		</table>
+
+
+		<?php //********** GENERATION DES MENUS ADMINISTRATEUR ********** ?>
+		<script language="javascript" <?php print "src='./librairie_js/".$_SESSION[membre]."2.js'>" ?></script>
+		
+
+		<?php //********** INITIALISATION DES BULLES D'AIDE ********** ?>
+		<script language="javascript">InitBulle("#000000","#FCE4BA","red",1);</script>
+
+
+		<?php //********** TRAITEMENT A EFFECTUER APRES LE CHARGEMENT DE LA PAGE ********** ?>
+		<script language="javascript" type="text/javascript">
+		
+			// Traitement a effectuer apres le chargement de la page
+			function initialisation_page() {
+				// Preparer la liste des liens a remplacer
+				var liens_a_remplacer = new Array();
+				liens_a_remplacer[0] = 	{
+											"lien_avec" : '<?php echo site_url_racine(FIN_REP_MODULE); ?>#',
+											"remplacer_par" : 'javascript:;'
+										};
+				// Traitements a effectuer sur toutes les pages
+				initialisation_page_global(liens_a_remplacer);
+				
+				onchange_code_class_copier();
+			}
+			
+			// Executer initialisation_page() au chargement de la page
+			if (window.addEventListener) {
+				window.addEventListener("load",initialisation_page,false);
+			} else if (window.attachEvent) { 
+				window.attachEvent("onload",initialisation_page);
+			}	
+					
+		</script>
+		
+		
+		<?php
+		}
+		?>
+		
+	</body>
+</html>
+<?php
+// Fermeture connexion bddd
+Pgclose();
+?>

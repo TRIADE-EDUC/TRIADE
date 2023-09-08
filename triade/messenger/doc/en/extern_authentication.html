@@ -1,0 +1,226 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<!--
+/*******************************************************
+ **                  IntraMessenger - server          **
+ **                                                   **
+ **  Copyright:      (C) 2006 - 2013 THeUDS           **
+ **  Web:            http://www.theuds.com            **
+ **                  http://www.intramessenger.net    **
+ **  Licence :       GPL (GNU Public License)         **
+ **  http://opensource.org/licenses/gpl-license.php   **
+ *******************************************************/
+
+/*******************************************************
+ **       This file is part of IntraMessenger-server  **
+ **                                                   **
+ **  IntraMessenger is a free software.               **
+ **  IntraMessenger is distributed in the hope that   **
+ **  it will be useful, but WITHOUT ANY WARRANTY.     **
+ *******************************************************/
+ -->
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="fr" xml:lang="fr">
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
+    <meta http-equiv="content-language" content="fr" />
+    <meta name="description" content="How to setup external authentication for IntraMessenger (server)" />
+    <meta http-equiv="content-style-type" content="text/css" />
+    <META NAME="Author" CONTENT="THeUDS.com">
+    <META NAME="copyright" content="THeUDS.com">
+    <LINK REL="SHORTCUT ICON" HREF="../../images/favicon.ico">
+    <title>Setup external authentication for IntraMessenger (server)</title>
+    <base href="./" target="_blank" />
+    <style type="text/css" >
+      <!--
+      body {
+        font-family:"Trebuchet MS", Arial, Sans-Serif;
+        color:#444;
+        font-size:.9em;
+        background-color:#FFF;
+        margin:0;
+      }
+
+      #header {
+        background-color:#A5C2E0;
+        font-family:Georgia, serif;
+        font-size:1.5em;
+        border-bottom:1px solid #650;
+        color:#FFF;
+        padding:2px 6% 12px;
+      }
+
+      #content {
+        margin:20px 6%;
+      }
+
+      .panel {
+        border:1px solid #D8D8D8;
+        background-color:#EFEFEF;
+        margin:1em 0;
+        padding:1.2ex;
+      }
+
+      .panel h2 {
+        border-bottom:1px dashed #2181B0;
+        font-size:1.6em;
+        font-weight:400;
+        color:#2181B0;
+        margin:0 0 0.5em;
+      }
+
+      .notice {
+        background:#FFFED1;
+        border:1px solid #E5E4A0;
+        color:#4B4000;
+        margin:0 0 15px;
+        padding:10px;
+      }
+
+      ul,ol {
+        list-style:square;
+       line-height:130%;
+        text-align:justify;
+        margin:10px 8px;
+      }
+      A.Code {
+        font-size : 11px;
+        font-weight : bold;
+        color : #990000;
+      }
+      -->
+    </style>
+  </head>
+  <body>
+    <div id="header">
+      <div>
+        <h1>How to</h1>
+        <ul>
+        <li>setup external authentication for IntraMessenger (server)</li>
+        </ul>
+      </div>
+    </div>
+    <div id="content">
+    
+      <div class="panel">
+        <h2>Foreword</h2>
+        <p>
+        You can choose to do authentication (check login and password) from another extern source.<BR/>
+        <UL>
+          <LI>
+          If You have already a forum/CMS (or other), example : <B>http://yourdomain/forum/</B><BR/>
+          you can install <I>IntraMessenger</I> at same level : <B>http://yourdomain/intramessenger/</B> <BR/>
+          or inside : <B>http://yourdomain/forum/intramessenger/</B><BR/>
+          </LI>
+          <LI>
+          So you will allow access to <I>IntraMessenger</I> only for forum registered users.<BR/>
+          You just have to change parameters in <I>IntraMessenger</I> (nothing to do in the forum).<BR/>
+          <I>IntraMessenger</I> will just check logins and passwords (users can be connected or not to the forum).<BR/>
+          </LI>
+        </UL>
+        </p>
+      </div>
+      
+      <div class="panel">
+        <h2>On setup</h2>
+          <UL>
+            <A HREF='images/im_setup_step_3_EN.png' target='_blank'><IMG SRC="images/im_setup_step_3_TN.png" BORDER='0'/></A>
+            <LI>Choose installation type: <b>mod/AddOn/plugin</b>.
+            </LI>
+            <LI>Select authentication (your application).
+            </LI>
+            <LI>Specify the location (of your application).
+            </LI>
+          </UL>
+      </div>
+
+      <div class="panel">
+        <h2>After install, updates to all external authentication types</h2>
+          <UL>
+            <LI>Modify options (can edit file <I>/common/config/config.inc.php</I>):
+            </LI>
+            <UL>
+              <LI><A HREF='http://www.intramessenger.net/doc/im_select_extern_auth_EN.png' target='_blank'>Select option</A> (<SMALL><I>_EXTERNAL_AUTHENTICATION</I></SMALL>):<BR/>
+              <A HREF='images/im_select_extern_auth_EN.png' target='_blank'><IMG SRC="images/im_select_extern_auth_TN.png" BORDER='0'/></A><BR/>
+              </LI>
+              <LI>eventually : <A HREF='http://www.intramessenger.net/doc/im_select_extern_auth2_EN.png' target='_blank'>determine prefix</A> <BR/>
+              and c<A HREF='http://www.intramessenger.net/doc/im_select_extern_auth2_EN.png' target='_blank'>onnection paremeters</A> (if one different from IntraMessenger, write them all):<BR/>
+              <A HREF='images/im_select_extern_auth2_EN.png' target='_blank'><IMG SRC="images/im_select_extern_auth2_TN.png" BORDER='0'/></A><BR/>
+              </LI>
+              <LI>determine url (address) to register (<SMALL><I>_EXTERN_URL_TO_REGISTER</I></SMALL>)<BR/>
+              (example: <I>http://www.intramessenger.net/phpbb2/profile.php?mode=register&</I>).<BR/>
+              <IMG SRC="images/im_select_extern_auth3_EN.png" BORDER='0'/><BR/>
+              </LI>
+              <LI>determine url (address) to get back forgotten password (<SMALL><I>_EXTERN_URL_FORGET_PASSWORD</I></SMALL>)<BR/>
+              (example: <I>http://www.intramessenger.net/phpbb2/profile.php?mode=sendpassword&</I>).<BR/>
+              </LI>
+            </UL>
+            <LI>See specific parameters below
+            </LI>
+            <LI>Check on page : <B>/admin/list_options_auth_test.php</B><BR/>
+            </LI>
+            <LI>Following options will automatically been updated:<BR/>
+            <UL>
+              <LI><A class="Code">_USER_NEED_PASSWORD</A> : enable<BR/>
+              </LI>
+              <LI><A class="Code">_ALLOW_AUTO_ADD_NEW_USER_ON_SERVER</A> : enable<BR/>
+              </LI>
+              <LI><A class="Code">_PENDING_NEW_AUTO_ADDED_USER</A> : disable<BR/>
+              </LI>
+              <LI><A class="Code">_NEED_QUICK_REGISTER_TO_AUTO_ADD_NEW_USER</A> : disable<BR/>
+              </LI>
+            </UL>
+          </UL>
+      </div>
+
+      <div class="panel">
+        <h2>Specific parameters for <I>activeCollab</I> authentication</h2>
+          File <I>/common/config/extern.config.inc.php</I> : write license number in <A class="Code">LICENSE_KEY</A> (you can find it in <I>config/licence.php</I> in activeCollab).<BR/>
+      </div>
+
+      <div class="panel">
+        <h2>Specific parameters for <I>Prestashop</I> authentication</h2>
+        File <I>/common/config/extern.config.inc.php</I> : write code number in <A class="Code">_COOKIE_KEY_</A> (you can find it in <I>config/settings.inc.php</I> in Prestashop).<BR/>
+      </div>
+
+      <div class="panel">
+        <h2>Specific parameters for <I>ImpressCMS</I> authentication</h2>
+          File <I>/common/config/extern.config.inc.php</I>:<BR/>
+          <UL>
+            <LI>value <A class="Code">SDATA_DB_SALT</A> : inside ImpressCMS, open file /mainfile.php row 30 (XOOPS_TRUST_PATH) : the path, and row 32 : the file to open.<BR/>
+            </LI>
+            <LI><A class="Code">$extern_prefix</A> : see <A class="Code">SDATA_DB_PREFIX</A><BR/>
+            </LI>
+          </UL>
+      </div>
+      
+      <div class="panel">
+        <h2>Specific parameters for <I>Kimai</I> authentication</h2>
+        File <I>/common/config/extern.config.inc.php</I> : write code number <A class="Code">$password_salt</A> (you can find it in <I>kimai/includes/autoconf.php</I> in Kimai).<BR/>
+      </div>
+      
+      <div class="panel">
+        <h2>Specific parameters for <I>Oxwall</I> authentication</h2>
+        File <I>/common/config/extern.config.inc.php</I> : write code number <A class="Code">OW_PASSWORD_SALT</A> (you can find it in <I>oxwall/ow_includes/config.php</I> in Oxwall).<BR/>
+      </div>
+
+<!--
+      <div class="panel">
+        <h2>*****</h2>
+          <UL>
+            <LI>
+            </LI>
+            <LI>
+            </LI>
+          </UL>
+      </div>
+-->
+
+      <div class="panel">
+        <A HREF='http://www.theuds.com' target='_blank'>THeUDS</A> © 2006 - 2013
+      </div>
+
+    </div>
+  </body>
+</html>

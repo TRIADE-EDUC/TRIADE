@@ -1,0 +1,101 @@
+/* 
+################################################################
+###         Fichier de configuration FGJSDIAPO               ###
+############################################# Version 1.4 ######
+################################################################
+
+Auteur : fg
+Site : http://fg.logiciel.free.fr
+E-mail : fg.logiciel@free.fr
+*/
+
+//[ INSERER CI-DESSOUS LE TITRE DE LA PAGE ]
+var fgjsdiapo_fen_title = "Triade - Diaporama";
+
+//[ INSERER CI-DESSOUS LE TEXTE DE LA BARRE DE STATUS ]
+var fgjsdiapo_fen_status = "Triade - Diaporama";
+
+//[ INSERER CI-DESSOUS LE TEXTE DU MESSAGE DEFILANT ]
+var fgjsdiapo_fen_marquee = "";
+
+//[ INSERER CI-DESSOUS LE TEXTE DE LA BULLE DES PREVIEWS ]
+var fgjsdiapo_fen_img = "FGJSDIAPO images ::";
+
+
+/****************************************/
+/*    LA SUITE EST POUR LES CONFIRMES   */
+/****************************************/
+
+//[ GESTION DES COMMENTAIRES DES IMAGES ]
+//Entrez 0 pour non ou 1 pour oui pour afficher les commentaires de chaque image
+var fgjsdiapo_img_comm = 1;
+
+	//[ EN CAS DE FICHIER DATABASE_PIC.TXT NON CONFORME ]
+	//Si le database_pic.txt ne contient pas la variable fgjsdiapo_img_comm_error :
+	//Entrez 0 : pour ne rien afficher et cacher la zone d'affichage de commentaire.
+	//Entrez 1 : pour laisser le navigateur gérer l'erreur
+	var fgjsdiapo_img_comm_error = 0;
+
+//[ GESTION DES PREVIEWS DES IMAGES ]
+//Entrez 0 pour non ou 1 pour oui pour afficher la sélection des images par aperçut .
+var fgjsdiapo_fen_preview = 1;
+
+	//[ ORIENTATION DES PREVIEWS DES IMAGES ]
+	//Entrez (pour la sélection des images d'aperçut) son emplacement (Horizontal ou Vertical) 
+	//Horizontal=0 | Vertical=1
+	var fgjsdiapo_fen_preview_dir = 1;
+	
+	//[ TAILLE DES PREVIEWS DES IMAGES]
+	//La modification de la taille des images d'aperçut est modifiable à partir des fichiers styles .
+
+//[ LE CHEMIN DES FICHIERS LANG.TXT ]
+var fgjsdiapo_lang_browse = ["./FGJsDiapo/lang/fra.txt","./FGJsDiapo/lang/ang.txt"];
+
+//[ LE CHEMIN DES FICHIERS STYLE.CSS ]
+var fgjsdiapo_style_browse = ["./FGJsDiapo/style/winxp.css"];
+
+//[ LE CHEMINS DES SOURCES POUR IMAGES ]
+//Pour un diaporama avec plusieurs sources voici un exemple : 
+// var fgjsdiapo_img_browse = ["","database_exemple01.txt","database_exemple02.txt"];
+//Veuillez laisser le 1er espace vide par exemple : var fgjsdiapo_img_browse = ["","./FGJsDiapo/Diaporama exemple 2"];
+var fgjsdiapo_img_browse = ["","./FGJsDiapo/database_pic.txt"];
+
+	//[ SI VOUS AVEZ ENTRE PLUSIEURS FICHIERS SOURCES VEUILLEZ ENTRER UN NOM POUR CES FICHIERS ]
+	//Pour un diaporama avec plusieurs sources voici un exemple : var fgjsdiapo_img_name = ["Titre diaporama 1","Titre diaporama 2"];
+	//Veuillez laisser le 1er espace vide...
+	var fgjsdiapo_img_name = ["","Diapo 1"];
+	
+//[ LE CHEMIN DES ADD-ONS ]
+//Attention pour information les add-ons sont chargés au démarrage de FGJSDIAPO et peuvent donc ralentir le chargement de la page.
+//Plusieurs add-ons sont déjà disponible sur le forum.
+//par exemple : var fgjsdiapo_addon_browse = ["./FGJsDiapo/script/addons1.js","./FGJsDiapo/script/addons2.js"]; etc...
+var fgjsdiapo_addon_browse = [];
+
+//[ LES EFFETS DE TRANSITION SOUS IE ]
+//Entrez 0 pour désactiver ou 1 pour activer les transitions .
+var effect_config = "1";
+
+//[ GESTION DES ERREURS SOUS JSDIAPO ]
+//Entrez 0 pour laisser le navigateur choisir quoi faire en cas d'erreur
+//Entrez 1 pour que JSDIAPO en cas d'erreur ne renvoie rien (aucun message côté navigateur)
+//Entrez 2 pour que JSDIAPO en cas d'erreur renvoie si possible la cause de l'erreur (sans aucun message côté navigateur)
+var jsdiapo_error_report_active = "1";
+
+//[ GESTION DU CLAVIER ]
+//Grâce à JSDIAPO 0.3 nous intégrons maintenant la gestion du clavier
+//Pour activer la gestion du clavier.Entrez ci-dessous Non=0 et Oui=1
+var jsdiapo_move_key = "1";
+	
+	//[ GESTION DES RACCOURCIS CLAVIER ]
+	//Pour plus d'information sur les variables ci-dessous veuillez vous renseignez sur l'aide en ligne ici :http://fg.logiciel.free.fr/JSDIAPO/index.php
+	var jsdiapo_move_key_first = "1";
+	var jsdiapo_move_key_back = "4";
+	var jsdiapo_move_key_next = "6";
+	var jsdiapo_move_key_last = "3";
+	var jsdiapo_move_key_auto = "o";
+
+/*
+Pour plus d'options veuillez m'envoyer un mail à fg.logiciel@free.fr
+Si je trouve l'option intéressante (et elle le sera ;-) , je l'incluerait
+dans la prochaine version de FGJSDIAPO.
+*/

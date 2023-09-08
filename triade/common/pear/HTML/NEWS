@@ -1,0 +1,251 @@
+Changes since version 2.2.0 (2007-01-03)
+
+  | 2007-02-12 Laurent Laville <pear@laurent-laville.org>
+  |
+  |     * file upload support with HTML_AJAX and multiple backend
+  |      (PHP5 and APC, PHP5 and uploadprogress extension, PHP 4 patch)
+
+  | 2007-01-31 Laurent Laville <pear@laurent-laville.org>
+  |
+  |     * Add file upload support for both PHP4 and PHP5 users
+  |       with AFLAX and Adobe Flash platform (require at least version 8)
+  |     * HTML_Progress2::toArray()   'aflax' key
+  |       return now settings on AFLAX client/server
+
+  | 2007-01-26 Laurent Laville <pear@laurent-laville.org>
+  |
+  |     * HTML_Progress2::toArray() 'script' key
+  |       return false or the name of resource that handle JS backend
+  |     * HTML_Progress2::toArray()   'ajax' key
+  |       return now settings on AJAX client/server
+
+  | 2007-01-22 Laurent Laville <pear@laurent-laville.org>
+  |
+  |     * second alpha version of version 2.3.0 used HTML_AJAX package rather
+  |       than owner solution to implement the AJAX progress bar support
+  |     * 5 new examples: 3 basic, and 2 with scriptaculous
+  |     * getScript() function can use both PEAR/data dir or custom dir to
+  |       retreive JavaScript handler source code (idea from HTML_AJAX package)
+
+  | 2007-01-16 Laurent Laville <pear@laurent-laville.org>
+  |
+  |     * add two ajax progress bar examples
+  |     * add only for alpha releases of version 2.3.0 a mini guide
+  |       to explain how to use an ajax progress bar
+
+  | 2007-01-12 Laurent Laville <pear@laurent-laville.org>
+  |
+  |     * first alpha version of version 2.3.0 with AJAX progress bar support
+  |     * code clean-up and drop support of cell identifier mask; see HTML_Progress2::setCellAttributes
+
+Changes since version 2.1.1 (2006-12-22)
+
+  | 2007-01-03 Laurent Laville <pear@laurent-laville.org>
+  |
+  |     * include a new fresh version of user guide (TDG) that explain
+  |       usage of new function importStyle().
+  |       See Whats news and Migration Guide chapters, section Reuse CSS.
+
+  | 2007-01-02 Laurent Laville <pear@laurent-laville.org>
+  |
+  |     * add new function importStyle() to give ability to import an existing stylesheet
+  |       and separate PHP code from HTML layout (with CSS)
+
+Changes since version 2.1.0 (2006-08-12)
+
+  | 2006-12-21 Laurent Laville <pear@laurent-laville.org>
+  |
+  |     *  Drop support of package xml 1.0
+  |        You need now to have at least PEAR 1.4.3 installed
+  |     *  Reduced div tags count to build a progress bar (only 10 rather than 20 )
+  |        and used "className" property rather than "visibility" to switch
+  |        between inactive and active cells
+  |
+  | 2006-12-20 Laurent Laville <pear@laurent-laville.org>
+  |
+  |     * fixed bug #8684 : Problem with generated JavaScript
+  |     * fixed "examples/generatorcus.php" to use new architecture with
+  |       external stylesheet introduced on August 11, 2006.
+
+Changes since version 2.0.1 (2006-05-24)
+
+  | 2006-08-12 Laurent Laville <pear@laurent-laville.org>
+  |
+  |     * The Definitive Guide has a new FAQ up-to-date, new examples (see
+  |       Appendixes section) and finally a guide for HTML_Progress2_Generator
+  |
+  | 2006-08-09 Laurent Laville <pear@laurent-laville.org>
+  |
+  |     * new interactive debugging tools for Progress2 Generator (Progress2/Dump.php)
+  |     * new QF tableless renderer for Progress2 Generator (Progress2/Tableless.php),
+  |       with its default stylesheet (tableless.css in PEAR data package directory)
+  |     * improve QF default renderer for Progress2 Generator (Progress2/Default.php),
+  |       with its default stylesheet (default.css in PEAR data package directory)
+  |       that can now accept an external css file to change easily the frontend render.
+  |     * new example that demonstrate the new Progress2 Generator architecture
+  |       (examples/generatorcus2.php).
+  |
+  | 2006-07-22 Laurent Laville <pear@laurent-laville.org>
+  |
+  |     * fixes Bug #8265 : HTML_Page2 wrong dependency
+  |     * removed dupplicates entries in package xml 1.0
+  |
+  | 2006-06-04 Laurent Laville <pear@laurent-laville.org>
+  |
+  |     * updates copyright dates
+  |     * Adds notification name serves as a filter
+  |       for addListener() and removeListener(). API signature changed.
+
+Changes since version 2.0.0 (2005-10-01)
+
+  | 2006-05-24 Laurent Laville <pear@laurent-laville.org>
+  |
+  |     * fixes Bug #7437 : wrong text in Doc
+  |       (thanks to Stefan Valouch for reading it carefully)
+  |     * The Definitive Guide revision number will now follow the package release version.
+
+Changes to examples/*/*.php, Progress2.php
+
+  | 2006-05-24 Laurent Laville <pear@laurent-laville.org>
+  |
+  |     * fixes closing html style tag to avoid javascript error.
+
+Changes to Progress2.php, Progress2/*.php
+
+  | 2006-05-16 Laurent Laville <pear@laurent-laville.org>
+  |
+  |     * updates headers comment block for quality assurance :
+  |       - add @since phpdoc tag
+  |       - upgrade license from PHP 3.0 to 3.01
+  |       - upgrade copyright until 2006
+
+
+Changes since version 2.0.0RC2 (2005-08-01)
+
+  |     * Added ChangeLog, and NEWS files
+
+Changes to Progress2_Lite.php
+
+  | 2005-09-13 Laurent Laville <pear@laurent-laville.org>
+  |
+  |     * updates headers comment block
+  |
+  | 2005-08-25 Laurent Laville <pear@laurent-laville.org>
+  |
+  |    * frame attribute border renamed to border-width
+  |      to keep a unified attribute names (follow CSS standard)
+  |
+  |    * add font-style attribute for all label categories
+  |      (allow to use italic for percent and text labels)
+  |
+  |    * background-color has transparent rather than null string
+  |      by default (CSS standard)
+  |
+  |    * fixed my first bug in setLabelAttributes method
+  |      related to font group attributes
+
+Changes to examples/*/*.php
+
+  | 2005-08-18 Laurent Laville <pear@laurent-laville.org>
+  |
+  |     * Added @example tag to have ability to display (highlight) source code
+  |
+  |     * Added @link tag to have ability to display a screenshot (PNG image)
+  |
+
+Changes to examples/lite/lite*.php, examples/lite/windowstyle2.php
+
+  | 2005-08-18 Laurent Laville <pear@laurent-laville.org>
+  |
+  |     * Changed comment shape to prevent phpDocumentor 1.2.3
+  |       wrong file assigning
+  |
+
+Changes to examples/preload/swf.php
+
+  | 2005-08-18 Laurent Laville <pear@laurent-laville.org>
+  |
+  |     * Added @ignore tag to prevent includes in API docs
+  |
+
+Changes to examples/monitor/monitordyn.php
+
+  | 2005-08-18 Laurent Laville <pear@laurent-laville.org>
+  |
+  |     * Added @ignore tag to prevent includes in API docs
+  |
+
+Changes to examples/generator/generatorcus.php
+
+  | 2005-08-18 Laurent Laville <pear@laurent-laville.org>
+  |
+  |     * Added @ignore tag to prevent includes in API docs
+  |
+
+Changes to examples/errorhandling/errorstack*.php
+
+  | 2005-08-18 Laurent Laville <pear@laurent-laville.org>
+  |
+  |     * Added @ignore tag to prevent includes in API docs
+  |
+
+Changes to tests/*.php
+
+  | 2005-08-18 Laurent Laville <pear@laurent-laville.org>
+  |
+  |     * Added @ignore tag to prevent includes in API docs
+  |
+
+Changes to Progress2.php
+
+  | 2005-09-22 Laurent Laville <pear@laurent-laville.org>
+  |
+  |     * standardized observer notify interface
+  |       with onSubmit and onLoad events.
+  |
+  | 2005-09-20 Laurent Laville <pear@laurent-laville.org>
+  |
+  |     * auto-size progress meter attribute was removed
+  |
+  |     * active cell, and background progress meter support now
+  |       background-image, background-repeat, background-position attributes
+  |
+  | 2005-09-14 Laurent Laville <pear@laurent-laville.org>
+  |
+  |     * bugs fixes:
+  |       setBorderPainted(false) inefficient with setBorderAttributes()
+  |       and a positive width attribute value. Always show a border
+  |       arround the progress bar.
+  |
+  | 2005-09-13 Laurent Laville <pear@laurent-laville.org>
+  |
+  |     * updates headers comment block (package and methods)
+  |
+  |     * follows w3 / css standard
+  |       - frame border attribute is renamed to border-width
+  |       - all labels background-color attribute have default transparent value rather than empty
+  |
+  | 2005-09-02 Laurent Laville <pear@laurent-laville.org>
+  |
+  |     * Fixed bug in moveNext() method: avoid exceed max limit
+  |
+  | 2005-08-18 Laurent Laville <pear@laurent-laville.org>
+  |
+  |     * Removed all @tutorial tags
+  |
+
+Changes to Progress2/Monitor.php
+
+  | 2005-09-22 Laurent Laville <pear@laurent-laville.org>
+  |
+  |     * updates headers comment block (package and methods)
+  |
+  |     * fixes problem with onCancel notification
+  |
+  |     * standardized notification interface
+  |
+  | 2005-08-18 Laurent Laville <pear@laurent-laville.org>
+  |
+  |     * Removed all @tutorial tags
+  |
+

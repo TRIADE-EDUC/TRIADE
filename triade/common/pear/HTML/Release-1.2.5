@@ -1,0 +1,172 @@
+$Id: Release-1.2.5,v 1.1 2005/11/01 09:47:13 farell Exp $
+
+HTML_Progress Version 1.2.5
+********************************************************************************
+http://pear.laurent-laville.org
+Laurent Laville <pear@laurent-laville.org>
+********************************************************************************
+********************************************************************************
+
+Here is the lastest release of branch 1.x of HTML_Progress.
+
+This is a bug fix release that make HTML_Progress PHP 4.4.x compatible
+- fixed bug#5654 (http://pear.php.net/bugs/bug.php?id=5654)
+
+
+----------
+IMPORTANT:
+
+HTML_Progress 1.2.5 requires PHP version 4.2.0 and PEAR 1.3.5 or greater.
+
+There are also some mandatory dependencies with others PEAR packages :
+- HTML_Common 1.2.1 or greater                 http://pear.php.net/HTML_Common
+
+There are also some optional dependencies with others PEAR packages :
+- HTML_QuickForm 3.2.4 or greater              http://pear.php.net/HTML_QuickForm
+- HTML_QuickForm_Controller 1.0.4 or greater   http://pear.php.net/HTML_QuickForm_Controller
+- HTML_Page 2.0.0RC2 or greater                http://pear.php.net/HTML_Page
+- Config 1.10 or greater                       http://pear.php.net/Config
+- Log 1.8.7 or greater                         http://pear.php.net/Log
+----------
+
+A full listing of all closed bugs and feature requests can be found in the
+next section of the notes
+
+HTML_Progress 1.2.5 is ready for production, download it and try
+the most advanced solution for PHP loading bar.
+
+
+********************************************************************************
+Bugs found on version 0.6.0
+
+- fixes javascript errors with IE4 and NS4 browsers (Thanks to Christian Wenz)
+
+
+Bugs found on version 0.6.2
+
+- fixes PEAR-BUG#28 http://pear.php.net/bugs/bug.php?id=28
+- fixes PEAR-BUG#29 http://pear.php.net/bugs/bug.php?id=29
+- fixes JavaScript into progress3.js to works with IE4 and NS4
+
+
+Bugs found on version 1.0
+
+- fixes PEAR-BUG#342 http://pear.php.net/bugs/bug.php?id=342
+
+
+Bugs found on version 1.2.0RC1
+
+- a wrong css definition make a square background shadow when using circle shapes family
+
+
+Bugs found on version 1.2.0RC2
+
+- preload circle segments pictures to avoid some browser to show an empty img
+- an ident class style was missing with class style .progressBar
+
+
+Bugs found on version 1.2.0RC3
+
+- missing ident class in stylesheet production in HTML_Progress::getStyle()
+- sometimes circle, ellipse segments pictures were generated with horiz. bottom line
+
+
+Bugs found on version 1.2.1
+
+- fixed gd dependency check in pear install procedure
+  explains are behind  http://marc.theaimsgroup.com/?l=pear-dev&amp;m=110924162309851&amp;w=2
+- fixed bug#2577 Call time pass by reference error
+
+
+Bugs found on version 1.2.2
+
+- fixed setMaximum with value higher than 200 when using a progress monitor (bug #4885)
+- fixed Call time pass by reference error in progress monitor
+
+
+Bugs found on version 1.2.3
+
+- setBorderPainted(false) inefficient with setBorderAttributes()
+
+
+Bugs found on version 1.2.4
+
+- 'Passing by reference' notice error under PHP 4.4.0 (bug #5654)
+
+********************************************************************************
+Changes in version 0.6.1
+
+- add ProgressMaker a dynamic tools to build and test all functionalities
+
+
+Changes in version 0.6.2
+
+- ProgressMaker got a new skin, and allows to keep previous settings
+- Allows use of iframes solution to display 2 progress bar on same page
+
+
+Changes in version 1.0
+
+- Errors are managed by Error_Raise package (by Greg Beaver).
+- ProgressMaker got some pre-sets UI models as example.
+- better compatibility with older PHP versions; requires PHP 4.1.0 or better.
+- HTML_Page package is now only necessary for some examples.
+- HTML_CSS package is optional. Easy way to generate a progress stylesheet.
+- CSS id and class selectors are customizable.
+- phpUnits test were added for API.
+
+Feature additions in version 1.0
+
+- HTML_Progress now implements a Observer design pattern. It is possible to add Listeners.
+- HTML_Progress now adds a customizable UI monitor pattern to display a progress bar.
+  User-end can abort progress at any time.
+- Look and feel can be sets by internal API or an external config file.
+- Allows many progress bar on same page without uses of iframe solution.
+
+
+Changes in version 1.1
+
+- setAnimSpeed() method replaced the sleep(1) instruction in core display() method.
+- QuickForm renderer support solution for Progress_Monitor, Progress_Uploader
+  and also Progress_Generator (the next generation of old ProgressMaker).
+
+Feature additions in version 1.1
+
+- A ftp upload files solution with a progress bar dialog box.
+
+
+Changes in version 1.2.0
+
+- getAnimSpeed() method to read the delay progress bar execution
+- drawCircleSegments() to build circle pictures collection
+- setCellCoordinates() and getCellCoordinates() methods to manage polygonal
+  cells coordinates.
+- HTML_Progress_Monitor::setAnimSpeed() is now deprecated and will be remove
+  in future versions.
+- HTML_Progress_Uploader was removed
+- PEAR_ErrorStack replaced Error_Raise packages by Greg Beaver to manage
+  all internal HTML_Progress errors.
+- 2 new methods to manage API errors: hasErrors(), getError()
+- 2 new methods to simplify your job: sleep(), run()
+
+
+Feature additions in version 1.2.0
+
+- new shapes: circle, ellipse, square, rectangle are now allowed
+- introduce user-callback with new methods: process(), setProgressHandler()
+- new API to detect and get errors: hasErrors(), getError()
+- may hide a progress meter with a new API
+
+********************************************************************************
+
+The API documentation can be found at
+http://pear.laurent-laville.org/HTML_Progress/docs/API/
+
+The user-end documentation can be found at
+http://pear.laurent-laville.org/HTML_Progress/docs/TDG/
+
+The changelog is available in the tarball, or online at
+http://pear.laurent-laville.org/HTML_Progress/Changelog
+
+Enjoy !
+-Laurent Laville <pear@laurent-laville.org>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<assembly xmlns="urn:schemas-microsoft-com:asm.v1" manifestVersion="1.0">
+  <assemblyIdentity name="UDS-Update.exe" 
+                    version="1.0.5.10" 
+                    processorArchitecture="X86" 
+                   type="win32"/>
+  <description>Internet Update software from wwww.theuds.com</description> 
+  <file name="UDS-Update.exe"/>
+  <!-- Identify the app's security requirements. -->
+  <trustInfo xmlns="urn:schemas-microsoft-com:asm.v3">
+    <security>
+      <requestedPrivileges>
+        <requestedExecutionLevel level="requireAdministrator" />
+      </requestedPrivileges>
+    </security>
+  </trustInfo>
+</assembly>

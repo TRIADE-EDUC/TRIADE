@@ -1,0 +1,836 @@
+<!--
+/*******************************************************
+ **                   IntraMessenger                  **
+ **                                                   **
+ **  Copyright:      (C) 2006 - 2011 THeUDS           **
+ **  Web:            http://www.theuds.com            **
+ **                  http://www.intramessenger.net    **
+ *******************************************************/
+
+/*******************************************************
+ **       This file is part of IntraMessenger.        **
+ **                                                   **
+ **  IntraMessenger is free software.  	              **
+ **  IntraMessenger is distributed in the hope that   **
+ **  it will be useful, but WITHOUT ANY WARRANTY.     **
+ *******************************************************/
+ -->
+<HTML>
+<HEAD>
+  <TITLE>Storico delle versioni di IntraMessenger</TITLE>
+<META NAME="Author" CONTENT="THeUDS.com">
+<META NAME="copyright" content="THeUDS.com">
+<LINK REL="SHORTCUT ICON" HREF="../../images/favicon.ico">
+<meta http-equiv="Content-Type" content="text/html;charset=iso-8859-1" />
+</HEAD>
+<STYLE type="text/css">
+<!--
+Body {
+  font-family: Verdana, Arial, Tahoma;
+  font-size : 12px;
+  background-color : #FFFFFF;
+  color : #000000;
+  text-align : justify;
+  margin-left : 20px;
+  margin-right : 20px;
+}
+A,A:link,A:visited {
+  COLOR: #3333FF;
+  TEXT-DECORATION: none;
+}
+A:hover {
+  COLOR: #3333FF;
+  TEXT-DECORATION: underline;
+}
+A.Code {
+	font-size : 11px;
+	font-weight : bold;
+  color : #990000;
+}
+P.Titre {
+  text-decoration : underline;
+  font-weight : bold;
+  font-size : 18px;
+  text-align : center;
+}
+P.Chapitre {
+  background-color : #E1FFFF;
+  border : 1px solid #000000;
+  font-weight : bold;
+  font-size : 13px;
+  padding-left : 5px;
+  padding-bottom : 2px;
+  padding-top : 2px;
+  margin-top : 25px;
+}
+P.Copyright {
+  color : #808080;
+  font-size : 11px;
+  text-align : right;
+}
+-->
+</STYLE>
+<BODY>
+<P class="Titre">Storico delle versioni di <I>IntraMessenger</I></P>
+
+<P>
+Leggere attentamente il file <A href="install.html"><B>install.html</B></A> per installare <I>IntraMessenger</I> per la prima volta <B>e anche PRIMA di fare aggiornamenti (upgrade)</B>.<BR/>
+Consultare anche la  <A href="http://www.intramessenger.com/forum/viewtopic.php?t=13&start=41&" target="_blank">lista delle novit&agrave;</A> (francese) nel sito internet (in ultima pagina).<BR/>
+Read the <A href="http://www.intramessenger.com/forum/viewtopic.php?t=390&start=0&" target="_blank">news list</A> on internet.<BR/>
+</P>
+
+<!--
+<P class="Chapitre">[] <I>IntraMessenger</I> </P>
+<OL>
+  <LI>Nouvelle possibilité : authentification via <A HREF='' target='_blank'>XXX</A> !<BR/>
+    <I>/common/config/config/config.inc.php</I> : option (ligne) ajoutée : <A class="Code">_AUTHENTICATION_ON_XXXXX</A><BR/>
+  </LI>
+  <LI>
+  </LI>
+  <LI>Nuove possibilit&agrave; di autenticazione  esterna, via <A HREF='Xxxxxxxxx' target='_blank'>xxxxx</A>, <A HREF='xxxxxx' target='_blank'>xxxxxx</A>, 
+  <A HREF='xxxxxx' target='_blank'>xxxxxx</A>, <A HREF='Xxxxxxxxx' target='_blank'>xxxxx</A>, <A HREF='Xxxxxxxxx' target='_blank'>xxxxx</A>.<BR/>
+      <I>/common/config/config.inc.php</I> : opzioni (righe) aggiunte : <BR/>
+      <A class="Code">_AUTHENTICATION_ON_XXXXXX</A>, <A class="Code">_AUTHENTICATION_ON_XXXXXX</A>, <A class="Code">_AUTHENTICATION_ON_XXXXXX</A>, 
+      <A class="Code">_AUTHENTICATION_ON_XXXXXX</A>, <A class="Code">_AUTHENTICATION_ON_XXXXXX</A>.<BR/>
+  </LI>
+</OL>
+-->
+
+
+<P class="Chapitre">[October 2010] <I>IntraMessenger</I> 2.0.2.218</P>
+<OL>
+  <LI>Users list : last password changing date.
+  </LI>
+  <LI>Users list and sessions liste : last activity date.
+  </LI>
+  <LI>Spanish translation (thanks to Jose Carlos Castelo Rojano).
+  </LI>
+  <LI>With fix en top menu (following language).
+  </LI>
+  <LI>Fix "Connections (days)" : different days number (not opened sessions).
+  </LI>
+  <LI>Password date on account create (if not empty) instead of date last changed (empty if never changed).
+  </LI>
+  <LI>ShoutBox : Weekly messages quota per user : need MySQL <U>5</U>.
+  </LI>
+</OL>
+
+
+
+<P class="Chapitre">[September 2010] <I>IntraMessenger</I> 2.0.2</P>
+<OL>
+  <LI>Tables structure update : see /admin/check.php (<B>or</B> execute : <B>db_upgrade_18.sql</B> and <B>db_upgrade_18.sql</B> in <I>PHPMyAdmin</I>).<BR/>
+  </LI>
+  <LI>Options <A class="Code">_SHOUTBOX</A> &nbsp;-&nbsp; <A class="Code">_SHOUTBOX_NEED_APPROVAL</A> &nbsp;-&nbsp; <A class="Code">_SHOUTBOX_VOTE</A> <BR/>
+  Respective sub-options : <BR/>
+  <A class="Code">_SHOUTBOX_REFRESH_DELAY</A> - <A class="Code">_SHOUTBOX_STORE_DAYS</A> - <A class="Code">_SHOUTBOX_STORE_MAX</A> - <A class="Code">_SHOUTBOX_QUOTA_USER_DAY</A> - <A class="Code">_SHOUTBOX_QUOTA_USER_WEEK</A> <BR/>
+  <A class="Code">_SHOUTBOX_APPROVAL_QUEUE_USER</A> - <A class="Code">_SHOUTBOX_APPROVAL_QUEUE</A> - <A class="Code">_SHOUTBOX_LOCK_USER_APPROVAL</A> <BR/>
+  <A class="Code">_SHOUTBOX_MAX_NOTES_USER_DAY</A> - <A class="Code">_SHOUTBOX_MAX_NOTES_USER_WEEK</A> - <A class="Code">_SHOUTBOX_REMOVE_MESSAGE_VOTES</A> - <A class="Code">_SHOUTBOX_LOCK_USER_VOTES</A> <BR/>
+  </LI>
+  <LI><A HREF='http://www.intramessenger.com/forum/viewtopic.php?p=2730#p2730'>Servers status</A> (option <A class="Code">_SERVERS_STATUS</A>).
+  </LI>
+  <LI>Select style (in <acronym title='Admin Control Panel'>ACP</acronym>) : <A HREF='http://www.theuds.com/intramessenger/admin_demo/display_updating.php?lang=EN&'>demo</A>.
+  </LI>
+  <LI><A class="Code">_GROUP_FOR_ADMIN_MESSAGES</A> renowned <A class="Code">_GROUP_FOR_SBX_AND_ADMIN_MSG</A> ! Allow use groups for Shoutbox to.<BR/>
+  Active this option, add 3 level groups : publics - officials - privates.<BR/>
+  Users can register to publics and groups, and request to register on officials groups.<BR/>
+  </LI>
+  <LI>Option <A class="Code">_GROUP_USER_CAN_JOIN</A> : users can register to public groups.<BR/>
+  </LI>
+  <LI>New extern authentication possibility :<BR/>
+    <A HREF='http://vanillaforums.org/' target='_blank'>Vanilla</A>, <A HREF='http://www.osticket.com/' target='_blank'>osTicket</A>, 
+    <A HREF='http://www.oneorzero.com/index.php?controller=main_general&' target='_blank'>OneOrZero AIMS</A>, <A HREF='http://www.mantisbt.org/' target='_blank'>MantisBT</A>, 
+    <A HREF='http://www.lodel.org/' target='_blank'>Lodel</A>, <A HREF='http://www.kubelabs.com/phpdug/' target='_blank'>PHPDug</A>, 
+    <A HREF='http://b2evolution.net/' target='_blank'>b2evolution</A>, <A HREF='http://www.artiphp.com/' target='_blank'>Artiphp</A>, 
+    <A HREF='http://www.web2project.net/' target='_blank'>web2Project</A>, <A HREF='http://www.socialengine.net/' target='_blank'>SocialEngine</A>, 
+    <A HREF='http://www.nuked-klan.org/' target='_blank'>Nuked-Klan</A>, <A HREF='http://www.docebo.org/doceboCms/' target='_blank'>Docebo</A>, 
+    <A HREF='http://www.websitebaker2.org/' target='_blank'>WebsiteBaker</A>, <A HREF='http://www.cs-cart.com/' target='_blank'>CS-Cart</A>, 
+    <A HREF='http://livecart.com/' target='_blank'>LiveCart</A>, <A HREF='http://www.zen-cart.com/' target='_blank'>ZenCart</A>, 
+    <A HREF='http://www.tomatocart.com/' target='_blank'>TomatoCart</A>, <A HREF='http://www.magentocommerce.com/' target='_blank'>Magento</A>, 
+    <A HREF='http://frontaccounting.net/' target='_blank'>FrontAccounting</A>, <A HREF='http://www.contao.org/' target='_blank'>Contao</A>, 
+    <A HREF='http://www.geeklog.net/' target='_blank'>Geeklog</A>, <A HREF='http://www.thebuggenie.com/' target='_blank'>The Bug Genie</A>,
+    <A HREF='http://www.epesibim.com/' target='_blank'>epesi-BIM</A>, <A HREF='http://www.openfreeway.org/' target='_blank'>Freeway</A>, 
+    <A HREF='http://www.boonex.com/' target='_blank'>Dolphin</A>, <A HREF='http://webissues.mimec.org/' target='_blank'>WebIssues</A>, 
+    <A HREF='http://www.projelead.fr/' target='_blank'>ProjeLead</A>, <A HREF='http://status.net/' target='_blank'>StatusNet</A>
+    <A HREF='' target='_blank'></A>
+  <LI>Option <A class="Code">_PWD_NEED_DIGIT_LETTER</A> : password must contain : letters AND digits (at least one of each).
+  </LI>
+  <LI>Option <A class="Code">_PWD_NEED_UPPER_LOWER</A> : password must contain : uppercase and lowercase letters (at least one of each).
+  </LI>
+  <LI>Option <A class="Code">_PWD_NEED_SPECIAL_CHARACTER</A> : password must contain : special characters (at least one).
+  </LI>
+  <LI>Option <A class="Code">_CENSOR_MESSAGES</A> to active (or not) message censoring (if option crypt not activated).
+  </LI>
+  <LI>Option <A class="Code">_CHECK_VERSION_INTERNET</A> to check (on internet) for new server version.
+  </LI>
+  <LI>Folder /distant/ no longer contains the old files php (for client version < 1.02) <SMALL>(replaced by the sub-folder /distant/include/)</SMALL>.
+  </LI>
+  <LI>Integrating SypexDumper (in \common\library\sypex_dumper\) for backups / restores.
+  </LI>
+  <LI>Bug fix : reboot IM at midnight (premature end sessions).
+  </LI>
+  <LI>Date last password change.
+  </LI>
+  <LI>Date last activity (last send/received message, add/remove contact).
+  </LI>
+  <LI>External auth with Joomla : notify private message arrival.
+  </LI>
+  <LI>Preventing duplicate messages pending consultation admin (on logon).
+  </LI>
+  <LI>Preventing duplicate messages admin (to admin).
+  </LI>
+  <LI>Session list : legend : second column (total all pages).
+  </LI>
+  <LI>Options list : small symbol to indicate the options bad parameterized to internet IM server book address.
+  </LI>
+  <LI>Register to <A HREF='http://www.intramessenger.net/list/servers/'>internet IM server book address</A> from <acronym title='Admin Control Panel'>ACP</acronym>.
+  </LI>
+  <LI>Move GEOIP : /common/geoip/    ->    /common/library/geoip/
+  </LI>
+  <LI>Updates on group managing area (groups publics or not, ShoutBox or not...).
+  </LI>
+  <LI>Proposal avatar : filename length check before transferring.
+  </LI>
+</OL>
+
+
+
+<P class="Chapitre">[March 2010] <I>IntraMessenger</I> 2.0.1</P>
+<OL>
+  <LI><font color='red'>Tables structure update</font> : see /admin/check.php (<B>or</B> execute : <B>db_upgrade_17.sql</B> in <I>PHPMyAdmin</I> BEFORE update scripts).<BR/>
+  </LI>
+  <LI>
+    <A HREF='http://www.intramessenger.net/doc/im_select_extern_auth_EN.png' target='_blank'>Direct select external authentication</A> <font color='red'>(options <A class="Code">_AUTHENTICATION_ON_....</A> replaced by a single : <A class="Code">_EXTERNAL_AUTHENTICATION</A>).</font><BR/>
+  </LI>
+  <LI><A HREF='http://www.intramessenger.net/doc/im_select_extern_auth2_EN.png'>Direct external authentication parameter</A> (dont need to edit file /common/config/extern.config.inc.php).
+  </LI>
+  <LI>New extern authentication possibility :<BR/>
+    <A HREF='http://www.prestashop.com/' target='_blank'>Prestashop</A>, <A HREF='http://www.oscommerce.com/' target='_blank'>osCommerce</A>, 
+    <A HREF='http://www.hesk.com/' target='_blank'>HESK</A>, <A HREF='http://www.tine20.org/' target='_blank'>Tine</A>, 
+    <A HREF='http://sitracker.org/' target='_blank'>SiT!</A>, <A HREF='http://www.spip.net/' target='_blank'>SPIP</A>, 
+    <A HREF='http://www.phpmyfaq.de/' target='_blank'>phpMyFAQ</A>, <A HREF='http://68kb.com/' target='_blank'>68KB</A>, 
+    <A HREF='http://www.admidio.org/' target='_blank'>Admidio</A>, <A HREF='http://fengoffice.com/' target='_blank'>Feng Office</A>, 
+    <A HREF='http://www.adheo-solution.fr/' target='_blank'>Adheo</A>, 
+    <A HREF='http://www.phpfox.com/' target='_blank'>phpFoX</A>, 
+    <A HREF='http://www.weberp.org/' target='_blank'>webERP</A>, 
+    <A HREF='http://www.todoyu.com/' target='_blank'>todoyu</A>,
+    <A HREF='http://thelia.fr/' target='_blank'>Thelia</A>,
+    <A HREF='http://sharetronix.com/' target='_blank'>Sharetronix</A>, 
+    <A HREF='http://www.npds.org/' target='_blank'>NPDS</A>.<BR/>
+  </LI>
+  <LI>Update <A HREF='http://www.theuds.com/images/IntraMessenger_4_EN.png'>options in 4 sheets</A>. 
+  </LI>
+  <LI>Statistics: <A HREF='http://www.intramessenger.com/forum/pictures/im_stats_with_zoom.png'>graphics</A> recast (included a view of only 30-60-90 days, and an average weekday). 
+  </LI>
+  <LI>Charts (javascript) in the dashboard (<A HREF='http://www.intramessenger.com/forum/pictures/im_dashboard_graph_country_can_hide.png'>can disable one by one</A>).
+  </LI>
+  <LI>Options : <I>maintenance mode</I> and <I>enterprise server mode</I> : directly updateable.
+  </LI>
+  <LI>Options : <A HREF='http://www.intramessenger.net/doc/im_select_special_mode.png'>direct update mode</A> (normal, or _SPECIAL_MODE_GROUP_COMMUNITY, or  _SPECIAL_MODE_OPEN_COMMUNITY).
+  </LI>
+  <LI>Option (_ALLOW_UPPERCASE_SPACE_USERNAME) to allow uppercase and space in nickname (col USR_NICKNAME added). 
+  </LI>
+  <LI>Option (_NEED_QUICK_REGISTER_TO_AUTO_ADD_NEW_USER) to require a quick registration to create account from the client (not for external authentication).
+  </LI>
+  <LI>Option (_SITE_TITLE) website title for extern authentication (title for link EXTERN_URL).
+  </LI>
+  <LI>More event logs (user create, password deleting of the by admin, rejected connections ...).
+  </LI>
+  <LI>Event logs : clearer display (with a logo indicating the type of content).
+  </LI>
+  <LI>Look for user, by IP address.
+  </LI>
+  <LI>Users detail : option to hide the other (not visible to potential contacts): Deletes the function / name.
+  </LI>
+  <LI>Portuguese translation (have brazilian already).
+  </LI>
+  <LI>German translation.
+  </LI>
+</OL>
+
+
+
+<P class="Chapitre">[November 2009] <I>IntraMessenger</I> 2.0</P>
+<OL>
+  <LI><font color='red'>Extern authentication options files <B>moved</B> from /common/config/extern/*.* <B>in a single file</B> <I>/common/config/extern.config.inc.php</I>.<BR/>
+  If you use extern authentication, you must rename the file (e.g.: phpbb2.config.inc.php) and move it in folder /common/config/<BR/>
+  and <B>rename options <A class="Code">$table_prefix</A> and <A class="Code">$extern_prefix</A> !</B></font>
+  </LI>
+  <LI><font color='red'>Tables structure update</font> : see /admin/check.php (<B>or</B> execute : <B>db_upgrade_16.sql</B> in <I>PHPMyAdmin</I> BEFORE update scripts).<BR/>
+  </LI>
+  <LI><A HREF='http://www.theuds.com/intramessenger/admin_demo/list_options_updating.php?lang=EN&' target='_blank'>Direct update options</A> on admin area <SMALL>(need enough rights on file)</SMALL>
+  </LI>
+  <LI>Summary page become a real <A HREF='http://www.theuds.com/intramessenger/admin_demo/?lang=EN&' target='_blank'>dashboard</A> <SMALL>(rate by OS, version, gender, time zone...)</SMALL>
+  </LI>
+  <LI>Can choose menu position du menu : normal (on left) or <A HREF='http://www.intramessenger.com/forum/pictures/im_menu_top.png' target='_blank'>horizontal</A> (on top) to get larger.
+  </LI>
+  <LI>Direct database backups.
+  </LI>
+  <LI>Option <A class="Code">_SERVER_ENTERPRISE</A> : enterprise mode :</BR>
+  a) Main software used  <A HREF='http://www.intramessenger.net/images/IntraMessenger_9.png' target='_blank'>versions number</A> centralisation  (web browser, email...) : help to manage and computer inventory.<BR/>
+  b) possibility to send (same admin messages) <A HREF='http://www.intramessenger.com/forum/pictures/IntraMessenger_5b.png' target='_blank'>an order</A> : stop/reboot IM or computer.<BR/>
+  </LI>
+  <LI>Securing and optimizing scripts with the complete overhaul of the "engine" (folder /distant/ moved in /distant/include/) .
+  </LI>
+  <LI>Nuove possibilit&agrave; di autenticazione  esterna :<BR/>
+<A HREF='http://www.woltlab.com/products/burning_board_lite/' target='_blank'>Burning Board</A>, 
+<A HREF='http://www.claroline.net/' target='_blank'>Claroline</A>, 
+<A HREF='http://www.cmsmadesimple.org/' target='_blank'>CMS-Made-Simple</A>, 
+<A HREF='http://www.cmsmadesimple.fr/' target='_blank'>CMS-Made-Simple</A>, 
+<A HREF='http://www.connectix-boards.org/' target='_blank'>Connectix-Boards</A>, 
+<A HREF='http://www.dokeos.com/fr/' target='_blank'>Dokeos</A>, 
+<A HREF='http://e107.org/' target='_blank'>e107</A>, <BR/>
+<A HREF='http://fluxbb.org/' target='_blank'>FluxBB</A>, 
+<A HREF='http://gepi.mutualibre.org/fr/' target='_blank'>GEPI</A>, 
+<A HREF='http://www.impresscms.org/' target='_blank'>ImpressCMS</A>, 
+<A HREF='http://www.malleo-cms.com/' target='_blank'>Malleo</A>, 
+<A HREF='http://moodle.org/' target='_blank'>Moodle</A>, 
+<A HREF='http://www.pms-solution.fr/' target='_blank'>PMS</A>, 
+<A HREF='http://www.phpbms.org/' target='_blank'>phpBMS</A>, 
+<A HREF='http://www.phpizabi.net/' target='_blank'>PHPizabi</A>, 
+<A HREF='http://www.pligg.com/' target='_blank'>Pligg</A>, 
+<A HREF='http://promethee.eu.org/' target='_blank'>Prométhée</A>, 
+<A HREF='http://www.xmbforum.com/' target='_blank'>XMB-Forum</A>.
+<BR/>
+    <I>/common/config/config.inc.php</I> : opzioni (righe) aggiunte : <BR/>
+    <A class="Code">_AUTHENTICATION_ON_CLAROLINE</A>, <A class="Code">_AUTHENTICATION_ON_CMSMADESIMPLE</A>, <A class="Code">_AUTHENTICATION_ON_CONNECTIXBOARDS</A>,<BR/>
+    <A class="Code">_AUTHENTICATION_ON_DOKEOS</A>, <A class="Code">_AUTHENTICATION_ON_E107</A>, <A class="Code">_AUTHENTICATION_ON_FLUXBB</A>,<BR/>
+    <A class="Code">_AUTHENTICATION_ON_GEPI</A>, <A class="Code">_AUTHENTICATION_ON_IMPRESSCMS</A>, <A class="Code">_AUTHENTICATION_ON_MALLEO</A>,<BR/>
+    <A class="Code">_AUTHENTICATION_ON_MOODLE</A>, <A class="Code">_AUTHENTICATION_ON_PLIGG</A>, <A class="Code">_AUTHENTICATION_ON_PMS</A>,<BR/>
+    <A class="Code">_AUTHENTICATION_ON_PHPBMS</A>, <A class="Code">_AUTHENTICATION_ON_PHPIZABI</A>, <A class="Code">_AUTHENTICATION_ON_PROMETHEE</A>,<BR/>
+    <A class="Code">_AUTHENTICATION_ON_WBBLITE</A>, <A class="Code">_AUTHENTICATION_ON_XMB</A>.<BR/>
+  </LI>
+  <LI>Setup Wizard.
+  </LI>
+  <LI>Possibility to <A HREF='http://www.intramessenger.net/custom-version.php' target='_blank'>customize client</A> (from server) : replace title (IntraMessenger), 'about' le menu...
+  </LI>
+  <LI>Manage <A HREF='http://www.theuds.com/intramessenger/admin_demo/list_ban.php?ban=ip&lang=EN&' target='_blank'>IP/PC address ban </A> : direct add/delete in admin area <SMALL>(finish to edit text files)</SMALL>. 
+  </LI>
+  <LI>"<A HREF='http://www.intramessenger.com/forum/pictures/im_srv_detail_user.png' target='_blank'>user details</A>" more detailed/depth, with possibility to direct ban, switch off... (if options...)
+  </LI>
+  <LI>Improving the usability of the management groups interface. 
+  </LI>
+  <LI>Option <A class="Code">_GROUP_FOR_ADMIN_MESSAGES</A> : possibility to use group manage <SMALL>(without option _SPECIAL_MODE_GROUP_COMMUNITY)</SMALL> only to send admin messages to user's group. 
+  </LI>
+  <LI>Possibility to send <A HREF='http://www.intramessenger.com/forum/pictures/IntraMessenger_5b.png' target='_blank'>admin messages</A> only to group members (if option _SPECIAL_MODE_GROUP_COMMUNITY or _GROUP_FOR_ADMIN_MESSAGES activated).
+  </LI>
+  <LI>Option <A class="Code">_ALLOW_USER_RATING</A> to allow users to rate theirs contacts. Possibility to allow access to average (set option to 'PUBLIC').
+  </LI>
+  <LI>Option <A class="Code">_ALLOW_EMAIL_NOTIFIER</A> to allow using integrated email notifier.
+  </LI>
+  <LI>Option <A class="Code">_INCOMING_EMAIL_SERVER_ADDRESS</A> to force incoming server address (for email notifier). 
+  </LI>
+  <LI>Options to force proxy server address <A class="Code">_PROXY_ADDRESS</A> and/or port number <A class="Code">_PROXY_PORT_NUMBER</A>. 
+  </LI>
+  <LI>Option <A class="Code">_FORCE_UPDATE_BY_INTERNET</A> to force (client) update by the official internet server. 
+  </LI>
+  <LI>Option <A class="Code">_MAX_NB_IP</A> to allow only a few simultaneously same IP address (zero : unlimited).
+  </LI>
+  <LI>Option <A class="Code">_PUBLIC_OPTIONS_LIST</A> choose if everybody can see options.
+  </LI>
+  <LI>Option <A class="Code">_PUBLIC_USERS_LIST</A> choose if everybody can see users list : display or <font color='red'>hide combo list on client contacts manage</font>.
+  </LI>
+  <LI>Option <A class="Code">_PUBLIC_POST_AVATAR</A> allow submit new avatars.
+  </LI>
+  <LI>Option <A class="Code">_PUBLIC_FOLDER</A> choose /public/ folder name (only if changed).
+  </LI>
+  <LI>Option <A class="Code">_EXTERN_URL_CHANGE_PASSWORD</A> (url) if exist, redirects user to change password (only on extern authentication).
+  </LI>
+  <LI>Option <A class="Code">_SCROLL_TEXT</A> : allow to display <SMALL>(scrolling horizontal)</SMALL> an information <b>temporary</B> small message on client main screen title <SMALL>(e.g.: prevent a future maintenance)</SMALL>. 
+  </LI>
+  <LI>Option <A class="Code">_FULL_CHECK</A> : if empty, will check for waiting contacts adding only every 3 minutes.
+  </LI>
+  <LI>Log nickname and IP rejected (user attempts).
+  </LI>
+  <LI>Log (main) admin actions (adding/validating/delete/ban/... users). 
+  </LI>
+  <LI>Log : display date and file size, and possibility to empty file . 
+  </LI>
+  <LI>Help to manage and computer inventory (enterprise mode) : computer list : display states : switch on, switch on, sleeping (in first col).
+  </LI>
+  <LI>Display hierarchical level in a separate col.
+  </LI>
+  <LI>Duplicates listes : computer and IP address : display contacts number (in parentheses after nickname), same users list.
+  </LI>
+  <LI>Users and current sessions lists : display a flag on user can receive admin alert. 
+  </LI>
+  <LI>User list : display caption only when needed. 
+  </LI>
+  <LI>Menu : possibility to display full menu, or just useful (not disabled by an option). 
+  </LI>
+  <LI>Direct link to <I>PHPinfo</I> in <I>check config</I>. 
+  </LI>
+  <LI>Default value for $PREFIX_IM_TABLE is now "<I>IM_</I>" (instead of "<I>T_</I>") : for new install.
+  </LI>
+</OL>
+
+
+
+<P class="Chapitre">[June 2009] <I>IntraMessenger</I> 1.4.2.181</P>
+<OL>
+  <LI>Translation in romana.
+  </LI>
+  <LI>Download link more <I>effective</I> (http instead of ftp).
+  </LI>
+  <LI>Nuove possibilit&agrave; di autenticazione  esterna, via <A HREF='http://www.opengoo.org/' target='_blank'>OpenGoo</A>,   <A HREF='http://www.accord5.com/trellis/' target='_blank'>Trellis Desk</A>,
+  <A HREF='http://www.phpboost.com/' target='_blank'>PHPBoost</A>, <A HREF='http://www.obm.org/' target='_blank'>OBM</A> <BR/>
+  <I>/common/config/config.inc.php</I> : opzioni (righe) aggiunte : <BR/>
+      <A class="Code">_AUTHENTICATION_ON_OPENGOO</A>, <A class="Code">_AUTHENTICATION_ON_TRELLISDESK</A>, <A class="Code">_AUTHENTICATION_ON_PHPBOOST</A>, <A class="Code">_AUTHENTICATION_ON_OBM</A>
+  </LI>
+</OL>
+
+
+
+<P class="Chapitre">[January 2009] <I>IntraMessenger</I> 1.4.2</P>
+<OL>
+  <LI>Nuove possibilit&agrave; di autenticazione  esterna, via <A HREF='http://www.elgg.org/' target='_blank'>Elgg</A>, <A HREF='http://www.yetanothercommunitysystem.com/' target='_blank'>YACS</A>, 
+  <A HREF='http://www.typolight.org/' target='_blank'>TYPOlight</A>, <A HREF='http://www.triade-educ.com/' target='_blank'>Triade</A>, <A HREF='http://www.php-collab.com/' target='_blank'>phpCollab</A>.<BR/>
+      <I>/common/config/config.inc.php</I> : opzioni (righe) aggiunte : <BR/>
+      <A class="Code">_AUTHENTICATION_ON_ELGG</A>, <A class="Code">_AUTHENTICATION_ON_YACS</A>, <A class="Code">_AUTHENTICATION_ON_TYPOLIGHT</A>, <BR/>
+      <A class="Code">_AUTHENTICATION_ON_TRIADE</A>, <A class="Code">_AUTHENTICATION_ON_PHPCOLLAB</A>.<BR/>
+  </LI>
+  <LI>New option : (on extern authentication) can write URL (address) to get back forgotten password.<BR/>
+    <I>/common/config/config.inc.php</I> : option (row) added : <A class="Code">_EXTERN_URL_FORGET_PASSWORD</A><BR/>
+  </LI>
+  <LI>List accounts with same IP address, and accounts from same computer (<A HREF='http://www.theuds.com/intramessenger/admin_demo/list_users_double.php?lang=IT&' target='_blank'>esempio</A>).<BR/>
+  </LI>
+  <LI>Users by country (need option <A class="Code">_DISPLAY_USER_FLAG_COUNTRY</A> to be activated) (<A HREF='http://www.theuds.com/intramessenger/admin_demo/list_country.php?lang=IT&' target='_blank'>esempio</A>)
+  and users by language (<A HREF='http://www.theuds.com/intramessenger/admin_demo/?lang=IT&' target='_blank'>esempio</A>).
+  </LI>
+  <LI>Help to create file <I>im_setup.reg</I> for easy client setup.
+  </LI>
+  <LI>Direct read/see logs.
+  </LI>
+  <LI>Possibility to ban IP address (file <I>/common/config/ban_ip.txt</I>).
+  </LI>
+  <LI>Leave 'LEAVE SERVER' when user comme back.
+  </LI>
+  <LI>In _SPECIAL_MODE_GROUP_COMMUNITY, can send a message to a group to.
+  </LI>
+  <LI>No add contact (admin) if _SPECIAL_MODE_OPEN_COMMUNITY (or si _LOCK_USER_CONTACT_LIST).
+  </LI>
+  <LI>Update for extern authentication. 
+  </LI>
+</OL>
+
+
+
+<P class="Chapitre">[October 2008] <I>IntraMessenger</I> 1.4.1</P>
+<OL>
+  <LI> <font color='red'>Modifica della struttura delle tabelle</font> : eseguire lo script : <B>db_upgrade_15.sql</B> con <I>PHPMyAdmin</I> PRIMA di aggiornare gli scripts, or use /admin/check.php.<BR/>
+  </LI>
+  <LI>Nuove possibilit&agrave; di autenticazione  esterna, via <A HREF='http://www.bitweaver.org/' target='_blank'>Bitweaver</A>, <A HREF='http://wordpress.org/' target='_blank'>WordPress</A>, 
+  <A HREF='http://www.ultraapps.com/app_overview.php?app_id=20&' target='_blank'>IssueManager</A>, <A HREF='http://www.textcube.org/' target='_blank'>Textcube</A>, <A HREF='http://www.activecollab.com/' target='_blank'>activeCollab</A>, <A HREF='http://ez.no/ezpublish/' target='_blank'>eZ Publish</A>.<BR/>
+      <I>/common/config/config.inc.php</I> : opzioni (righe) aggiunte : <BR/>
+      <A class="Code">_AUTHENTICATION_ON_BITWEAVER</A>, <A class="Code">_AUTHENTICATION_ON_WORDPRESS</A>, <A class="Code">_AUTHENTICATION_ON_ISSUEMANAGER</A>,<BR/>
+      <A class="Code">_AUTHENTICATION_ON_TEXTCUBE</A>, <A class="Code">_AUTHENTICATION_ON_ACTIVECOLLAB</A>, <A class="Code">_AUTHENTICATION_ON_EZPUBLISH</A>.<BR/>
+  </LI>
+  <LI>Nuova opzione : allow user to change his avatar (picture).<BR/>
+      <I>/common/config/config.inc.php</I> : opzione (riga) aggiunta : <A class="Code">_ALLOW_CHANGE_AVATAR</A><BR/>
+  </LI>
+  <LI>Nuova opzione : allow user to use proxy server.<BR/>
+      <I>/common/config/config.inc.php</I> : opzione (riga) aggiunta : <A class="Code">_ALLOW_USE_PROXY</A><BR/>
+  </LI>
+  <LI>New option : send admin alert to admin users (change user profile to).<BR/>
+    <I>/common/config/config.inc.php</I> : opzione (riga) aggiunta : <A class="Code">_SEND_ADMIN_ALERT</A><BR/>
+  </LI>
+  <LI>New option : can force (send) status list (Away, busy...) from server (in server language).<BR/>
+      <I>/common/config/config.inc.php</I> : opzione (riga) aggiunta : <A class="Code">_FORCE_STATUS_LIST_FROM_SERVER</A><BR/>
+  </LI>
+  <LI>New option : can add on "away" status, a list to select reason (example : On phone;Meeting;Not in front of screen;Back in 5 minutes;Eating).<BR/>
+      <I>/common/config/config.inc.php</I> : opzione (riga) aggiunta : <A class="Code">_AWAY_REASONS_LIST</A><BR/>
+  </LI>
+  <LI>Conferma prima di eliminare/disattivare un utente.
+  </LI>
+  <LI>Gli utenti possono proporre degli avatars (<A HREF='http://www.theuds.com/intramessenger/public/avatar.php?lang=IT&' target='_blank'>esempio</A>). 
+  </LI>
+  <LI>Accesso alla lista pubblica degli utenti (<A HREF='http://www.theuds.com/intramessenger/public/users.php?lang=IT&' target='_blank'>esempio</A>). 
+  </LI>
+  <LI>Possibilità di inviare un messaggio a tutto un gruppo.
+  </LI>
+  <LI>Choise rows number per page (in cookies) on bottom, delete option _NB_ROWS_PER_PAGE.
+  </LI>
+  <LI>Menu to direct list avatars (<A HREF='http://www.theuds.com/intramessenger/admin_demo/avatar_changing.php?lang=IT&' target='_blank'>esempio</A>). 
+  </LI>
+  <LI>Nuova folder : /public/ to replace /options_public/.
+  </LI>
+</OL>
+
+
+
+
+<P class="Chapitre">[Agosto 2008] <I>IntraMessenger</I> 1.4</P>
+<OL>
+  <LI> La versione <BIG><B>1.4</B></BIG> apporta numerosi cambiamenti, fra cui la <font color='red'>modifica completa dei nomi delle opzioni</font>, la cui lista &egrave; consultabile alla pagina <A HREF='cambiamenti_alle_opzioni_version_1.4.html'>cambiamenti_alle_opzioni_version_1.4.html</A>.<BR/>
+    E' preferibile  rimpiazzare il file <I>/common/config/config.inc.php</I> con il nuovo e poi  modificare le opzioni.<BR/>
+  </LI>
+  <LI> <font color='red'>Modifica della struttura delle tabelle</font> : eseguire lo script : <B>db_upgrade_14.sql</B> con <I>PHPMyAdmin</I> <font color='red'><B>PRIMA </B></font> di fare gli aggiornamenti 1.4.<BR/>
+  </LI>
+  <LI>Nuova opzione : modo manutenzione : permette di disattivare IntraMessenger per il tempo necessario a fare gli aggiornamenti del server senza disconnettere gli utenti.<BR/>
+      <I>/common/config/config.inc.php</I> : opzione (riga) aggiunta : <A class="Code">_MAINTENANCE_MODE</A><BR/>
+  </LI>
+  <LI>Nuova opzione : blocca automaticamente l'utente che commette  x errori consecutivi di password.<BR/>
+      <I>/common/config/config.inc.php</I> : opzione (riga) aggiunta : <A class="Code">_MAX_PASSWORD_ERRORS_BEFORE_LOCK_USER</A><BR/>
+  </LI>
+  <LI>Nuova opzione : autorizza l'invio  di smile (emoticon) che saranno mostrati come immagini.<BR/>
+      <I>/common/config/config.inc.php</I> : opzione (riga) aggiunta : <A class="Code">_ALLOW_SMILEYS</A><BR/>
+  </LI>
+  <LI>Nuove possibilit&agrave; di autenticazione  esterna, via <A HREF='http://www.concrete5.org/' target='_blank'>Concrete5</A>, <A HREF='http://www.dotclear.net/' target='_blank'>Dotclear</A>, 
+  <A HREF='http://www.projectpier.org/' target='_blank'>ProjectPier</A>, <A HREF='http://info.tikiwiki.org/' target='_blank'>TikiWiki 2</A>, <A HREF='http://forums.phpbb-fr.com/' target='_blank'>phpBB 3</A>.<BR/>
+      <I>/common/config.inc.php</I> : opzioni (righe) aggiunte : <BR/>
+      <A class="Code">_AUTHENTICATION_ON_PHPBB_3</A>, <A class="Code">_AUTHENTICATION_ON_CONCRETE5</A>, <A class="Code">_AUTHENTICATION_ON_DOTCLEAR</A>, <BR/>
+    <A class="Code">_AUTHENTICATION_ON_PROJECTPIER</A></LI>
+  <LI>Memorizzazione (nei cookies) delle opzioni per display (colonne   mostrate/nascoste). </LI>
+  <LI>La scheda dettagli (clic su utente) mostra   tutte le sue informazioni (fra cui il genere, telefono e email), e   raggruppa le varie azioni possibili (bloccaggio,   soppressione...). </LI>
+  <LI>Connessione dei client resa impossibile fintanto che la cartella  /admin/ non sia   rinominata (come misura di sicurezza). </LI>
+  <LI>Assistente per la  creazione del file .htaccess (serve a  proteggere la cartella    /admin/). </LI>
+  <LI>Assistente per la  creazione delle  tabelle, alla installazione (serve sufficente autorizzazione per database,   phpMyAdmin non &egrave; pi&ugrave; necessario). </LI>
+  <LI>Assistente per l'aggiornamento  della struttura  delle tabelle (avendo  sufficente autorizzazione, phpMyAdmin    non &egrave; pi&ugrave; necessario). </LI>
+  <LI>Possibilit&agrave; di eliminare  tutti i  messaggi in attesa per l'amministratore, con un solo clic   (es: errori d'invio). </LI>
+  <LI>Memorizzazione del'ultimo indirizzo IP dell'utente (e non pi&ugrave; soltanto   quello della sessione in corso). </LI>
+  <LI>Memorizzazione della versione Windows usata da ogni utente. </LI>
+  <LI>Passwords  memorizzate in modo criptato sha1 (non reversibile) invece che nel modo md5   parziale (le password sono criptate prima di essere transmesse al server   per subire qusta seconda cifratura. </LI>
+  <LI>Possibilit&agrave; di  transferire i  nomi dello stato (connesso, occupato...) dal serveur (spostamento) verso il client (riga 25 di get_options_2.php :togliere il  #). </LI>
+  <LI>Correzione per l'ora legale, per le scadenze di 'Phenix Agenda'</LI>
+</OL>
+
+
+<P class="Chapitre">[Luglio 2008] <I>IntraMessenger</I> 1.3.11</P>
+<OL>
+  <LI><font color='red'>File  di configurazione per l'autenticazione esterna spostato in /common/config/extern/.</font> (es: <I>joomla.config.inc.php</I>)<BR/>
+  </LI>
+  <LI>Nuove possibilit&agrave; di autenticazione esterna, via : <A HREF='http://www.agora-project.net/' target='_blank'>Agora-Project</A>, 
+  <A HREF='http://www.comsenz.com/' target='_blank'>UCenter</A> (Discuz!), <A HREF='http://www.collabtive.o-dyn.de/?lang=fr&' target='_blank'>Collabtive</A>,  
+  <A HREF='http://sourceforge.net/projects/group-office/' target='_blank'>Group-Office</A>, <A HREF='http://www.cuteflow.org/' target='_blank'>CuteFlow</A>,<BR/> 
+  <A HREF='http://punbb.informer.com/' target='_blank'>PunBB</A>, <A HREF='http://fudforum.org/' target='_blank'>FUDforum</A>, 
+  <A HREF='http://www.anelectron.com/' target='_blank'>AEF Board</A>, <A HREF='http://www.minibb.com/' target='_blank'>miniBB</A>, 
+  <A HREF='http://owl.sourceforge.net/' target='_blank'>Owl</A>, <A HREF='http://www.ultraapps.com/app_overview.php?app_id=19&' target='_blank'>VCalendar</A>,
+  <A HREF='http://www.k5n.us/webcalendar.php' target='_blank'>WebCalendar</A> !<BR/>
+    <I>/common/config/config.inc.php</I> : opzioni (righe) aggiunte : <BR/>
+    <A class="Code">_AUTHENTICATION_ON_AGORAPROJECT</A> &nbsp; <A class="Code">_AUTHENTICATION_ON_UCENTER</A> &nbsp; <A class="Code">_AUTHENTICATION_ON_COLLABTIVE</A> <BR/>
+    <A class="Code">_AUTHENTICATION_ON_GROUPOFFICE</A> &nbsp; <A class="Code">_AUTHENTICATION_ON_CUTEFLOW</A> &nbsp; <A class="Code">_AUTHENTICATION_ON_PUNBB</A> &nbsp; <BR/>
+    <A class="Code">_AUTHENTICATION_ON_FUDFORUM</A> &nbsp; <A class="Code">_AUTHENTICATION_ON_AEF</A> &nbsp; <A class="Code">_AUTHENTICATION_ON_MINIBB</A><BR/>
+    <A class="Code">_AUTHENTICATION_ON_OWL</A> &nbsp; <A class="Code">_AUTHENTICATION_ON_VCALENDAR</A>  &nbsp; <A class="Code">_AUTHENTICATION_ON_WEBCALENDAR</A>
+  </LI>
+</OL>
+
+
+
+<P class="Chapitre">[Giugno 2008] <I>IntraMessenger</I> 1.3.10</P>
+<OL>
+  <LI>L'amministratore pu&ograve; aggiungere degli avatars/foto tramite  l'interfaccia admin.<BR/>
+  </LI>
+  <LI>File per autenticazione esterna spostato in /common/extern/.<BR/>
+  </LI>
+  <LI>
+    <I>/common/config/<b>mysql</b>.config.inc.php</I> : l'opzione <A class="Code">$PREFIX_IM_TABLE</A> permette di cambiare il prefisso delle tabelle database IntraMessenger.<BR/>
+  </LI>
+  <LI>Documentazioni (installazione e schéma di funzionamento) in  formato <I>pdf</I>.<BR/>
+  </LI>
+  <LI>Nuove possibilit&agrave; di autenticazione esterna, via : <A HREF='http://www.mamboserver.com/' target='_blank'>Mambo</A>, 
+  <A HREF='http://nucleuscms.org/' target='_blank'>Nucleus</A>, <A HREF='http://modxcms.com/' target='_blank'>MODx</A>, 
+  <A HREF='http://www.streber-pm.org/' target='_blank'>Streber</A>, <A HREF='http://info.tikiwiki.org/' target='_blank'>TikiWiki</A>, 
+  <A HREF='http://www.phprojekt.com/' target='_blank'>PHProjekt</A>, <A HREF='http://www.toutateam.com/' target='_blank'>Toutateam</A>, 
+  <A HREF='http://www.crm-france.com/' target='_blank'>SugarCRM</A>,<BR/> <A HREF='http://phpgroupware.org/' target='_blank'>phpGroupWare</A>,
+  <A HREF='http://www.mybb.fr/' target='_blank'>MyBB</A>, <A HREF='http://www.frxoops.org/' target='_blank'>Xoops</A>,
+  <A HREF='http://www.php-fusion.co.uk/' target='_blank'>PHP-Fusion</A>, <A HREF='http://webcollab.sourceforge.net/' target='_blank'>WebCollab</A>,
+  <A HREF='http://www.taskfreak.com/' target='_blank'>TaskFreak</A>, <A HREF='http://www.invisionpower.com/community/board/' target='_blank'>IP-Board</A>,
+  <A HREF='http://www.simplemachines.org/' target='_blank'>SMF</A>, <A HREF='http://www.achievo.org/' target='_blank'>Achievo</A>,
+  <A HREF='http://www.egroupware.org/' target='_blank'>eGroupWare</A>, <A HREF='http://www.dotproject.net/' target='_blank'>dotProject</A>,
+  <A HREF='http://www.ovidentia.org/' target='_blank'>Ovidentia</A> !<BR/>
+    <I>/common/config/config.inc.php</I> : opzioni (righe) aggiunte :<BR/>
+    <A class="Code">_AUTHENTICATION_ON_MAMBO</A> &nbsp; <A class="Code">_AUTHENTICATION_ON_NUCLEUS</A> &nbsp; <A class="Code">_AUTHENTICATION_ON_MODX</A><BR/>
+    <A class="Code">_AUTHENTICATION_ON_STREBER</A> &nbsp; <A class="Code">_AUTHENTICATION_ON_TIKIWIKI</A> &nbsp; <A class="Code">_AUTHENTICATION_ON_PHPROJECKT</A><BR/>
+    <A class="Code">_AUTHENTICATION_ON_TOUTATEAM</A> &nbsp; <A class="Code">_AUTHENTICATION_ON_SUGARCRM</A> &nbsp; <A class="Code">_AUTHENTICATION_ON_PHPGROUPWARE</A><BR/>
+    <A class="Code">_AUTHENTICATION_ON_MYBB</A> &nbsp; <A class="Code">_AUTHENTICATION_ON_XOOPS</A> &nbsp; <A class="Code">_AUTHENTICATION_ON_PHPFUSION</A><BR/>
+    <A class="Code">_AUTHENTICATION_ON_WEBCOLLAB</A> &nbsp; <A class="Code">_AUTHENTICATION_ON_TASKFREAK</A> &nbsp; <A class="Code">_AUTHENTICATION_ON_IPBOARD</A><BR/>
+    <A class="Code">_AUTHENTIFICATION_ON_SMF</A> &nbsp; <A class="Code">_AUTHENTIFICATION_ON_ACHIEVO</A> &nbsp; <A class="Code">_AUTHENTIFICATION_ON_EGROUPWARE</A><BR/>
+    <A class="Code">_AUTHENTIFICATION_ON_DOTPROJECT</A> &nbsp; <A class="Code">_AUTHENTIFICATION_ON_OVIDENTIA</A><BR/>
+  </LI>
+</OL>
+
+
+<P class="Chapitre">[Maggio 2008] <I>IntraMessenger</I> 1.3.5</P>
+<OL>
+  <LI>Piazzare le foto degli utenti nella cartella <I>/distant/avatar/</I>, usando  come nome  : <I>nicknameutente</I><B>.jpg</B><BR/>
+   (l'amministratore pu&ograve; rimpiazzare gli  avatars).<BR/>
+  </LI>
+  <LI>Nuova  opzione : indirizzo email dell'amministratore (mostrato nella schermata "A proposito" degli utilizattori).<BR/>
+    <I>/common/config.inc.php</I> : opzioni (righe) aggiunte : <A class="Code">_ADMIN_EMAIL</A><BR/>
+  </LI>
+  <LI>Nuove opzioni : numero di telefono dell'amministratore (mostrato nella schermata "A proposito" degli utilizzatori).<BR/>
+    <I>/common/config.inc.php</I> : opzioni (righe) aggiunte : <A class="Code">_ADMIN_PHONE</A><BR/>
+  </LI>
+  <LI>Statistiche per settimana/mese/anno.<BR/>
+  </LI>
+  <LI>
+  Calcolo per correggere la  differenze di fuso orario (connessione/inizio vicino a mezzanotte).<BR/>
+  </LI>
+  <LI>Soppressione della opzione <I>c_option_log_messages_filename</I>.<BR/>
+  </LI>
+  <LI>Cambiamenti in <I>/common/config.inc.php</I> per preparare il <font color='red'>cambiamento di nome  delle opzioni</font> (per la versione 1.4.0.x).<BR/>
+  I futuri nomi sono sulle righe commentate (disattivate) con il doppio slash // .<BR/>
+  </LI>
+  <LI>Per aumentare la leggibilit&agrave; i  commenti tradotti nel file <I>/common/config.inc.php</I> sono stati separati in due versioni :<BR/>
+  I (nuovi utilizzatori) francofoni rinomineranno <I>/common/config.inc.<B>FR</B>.php</I> in <I>/common/config.inc.php</I>,<BR/>
+  il file <I>/common/config.inc.php</I> originale conteneva solo i commenti in Inglese.<BR/>
+  </LI>
+</OL>
+
+
+<P class="Chapitre">[Aprilel 2008] <I>IntraMessenger</I> 1.3.4</P>
+<OL>
+  <LI>
+  <font color='red'>Modifica della struttura delle tabelle</font> : si deve eseguire : <B>db_upgrade_11.sql</B> e <B>db_upgrade_12.sql</B> col <I>PHPMyAdmin</I> <font color='red'><B>PRIMA</B></font> di aggiornare gli  scripts.<BR/>
+  </LI>
+  <LI>
+  Manifestare  l'orario  locale dell'utilizzatore.<BR/>
+  </LI>
+  <LI>
+  Mostra della bandiera della lingua (scelta dell'utente nella prima finestra del programma client).<BR/>
+  </LI>
+  <LI>
+    Numero di contatti per  utente (nell'interfaccia amministratore delle sessioni in corso).<BR/>
+  </LI>
+  <LI>
+    Mostra della bandiera del paese (dal indirizzo IP) nei programmi client  (lista dei contatti online/offline).<BR/>
+  </LI>
+  <LI>
+    Nuovo linguaggio per il server : Portoghese (grazie a Maicon Fernando Abreu).<BR/>
+  </LI>
+  <LI>
+  Possibilit&agrave; di tradurre certe parole/espressioni in chtimi (Ch'ti), vedere la <A href='traduzione_chti.html'>documentazione</a>.<BR/>
+  </LI>
+</OL>
+
+
+<P class="Chapitre">[February 2008] <I>IntraMessenger</I> 1.3.2</P>
+<OL>
+  <LI><font color='red'><B>Configuration files moved to <I>/common/config/</I> !</B></font> (from <I>/common/</I>) 
+  </LI>
+  <LI><font color='red'><I>config.mysql.inc</I> change name to : <B><I>mysql.config.inc</I> !</B></font>
+  </LI>
+  <LI>New possibility : authentication by <A HREF='http://www.phpnuke.org/' target='_blank'>PHP-Nuke</A>, <A HREF='http://www.phorum.org/' target='_blank'>Phorum</A>, <A HREF='http://www.vbulletin.com/' target='_blank'>vBulletin</A>, <A HREF='http://www.joomla.org/' target='_blank'>Joomla</A>, 
+  <A HREF='http://www.phpbb.com/' target='_blank'>phpBB 2</A>,  <A HREF='http://www.dolibarr.org/' target='_blank'>Dolibarr</A>, <A HREF='http://www.phenix.gapi.fr/' target='_blank'>Phenix-Agenda</A> !<BR/>
+  <I>/common/config/config.inc.php</I> : options (rows) added : <A class="Code">$c_autentification_on_phpnuke</A>, <A class="Code">$c_autentification_on_phorum</A>, <A class="Code">$c_autentification_on_vBulletin</A>, <A class="Code">$c_autentification_on_joomla</A>,<BR/> 
+    <A class="Code">$c_autentification_on_phpBB_2</A>, <A class="Code">$c_autentification_on_dolibarr</A>, <A class="Code">$c_autentification_on_phenix_agenda</A><BR/>
+  </LI>
+  <LI>Adress to register (phpBB, VBulletin, Joomla, Phenix Agenda, Dolibarr...) :<BR/>
+    <I>/common/config/config.inc.php</I> : option (row) added : <A class="Code">_EXTERN_URL_TO_REGISTER</A><BR/>
+  </LI>
+  <LI>New possibility : can force client update by server (not by internet).<BR/>
+    <I>/common/config/config.inc.php</I> : option (row) added : <A class="Code">_FORCE_UPDATE_BY_SERVER</A><BR/>
+  </LI>
+  <LI>New possibility : can search users (in admin area).<BR/>
+  </LI>
+  <LI>/<B>admin_public</B>/ change to /<B>options_public</B>/<BR/>
+  </LI>
+  <LI>Contact numbers in admin user list.<BR/>
+  </LI>
+  <LI>Can change (redirect to another) server :<BR/>
+    <I>/common/config/config.inc.php</I> : option (row) added : <A class="Code">_STOP_USE_THIS_SERVER_ADRESS_NOW_USE_THIS_URL</A><BR/>
+  </LI>
+  <LI>Can remind notes from <A HREF='http://www.phenix.gapi.fr/' target='_blank'>Phenix-Agenda</A> (dont need to keep web browser open to get reminder popup).<BR/>
+  </LI>
+  <LI>Users can direct change server and see country code.<BR/>
+  </LI>
+</OL>
+
+
+<P class="Chapitre">[December 2007] <I>IntraMessenger</I> 1.3.0</P>
+<OL>
+  <LI>New option : allow users to create conferences.<BR/>
+    <I>/common/config.inc.php</I> : option (row) added : <A class="Code">$c_option_allow_conference</A><BR/>
+  </LI>
+  <LI>
+  Tables structure update : you have to execute : <B>db_upgrade_10.sql</B> in <I>PHPMyAdmin</I>.<BR/>
+  </LI>
+  <LI>New option : minimum length of the username (nickname).<BR/>
+    <I>/common/config.inc.php</I> : option (row) added : <A class="Code">$c_minimum_length_of_username</A><BR/>
+  </LI>
+  <LI>New option : minimum length of the password for users.<BR/>
+    <I>/common/config.inc.php</I> : option (row) added : <A class="Code">$c_minimum_length_of_password</A><BR/>
+  </LI>
+  <LI>New option : lock users to history (log/save) messages.<BR/>
+    <I>/common/config.inc.php</I> : option (row) added : <A class="Code">$c_user_cannot_history_messages</A><BR/>
+  </LI>
+</OL>
+
+
+<P class="Chapitre">[September 2007] <I>IntraMessenger</I> 1.2.2</P>
+<OL>
+  <LI>
+  Tables structure update : you have to execute : <B>db_upgrade_08.sql</B> and <B>db_upgrade_09.sql</B> in <I>PHPMyAdmin</I>.<BR/>
+  </LI>
+  <LI>New statistics : users numbers by day.<BR/>
+  </LI>
+  <LI>
+  Display start date if startup isn't today.<BR/>
+  </LI>
+  <LI>New menus in administration area.<BR/>
+  </LI>
+  <LI>New option : rows per page (administration interface).<BR/>
+    <I>/common/config.inc.php</I> : option (row) added : <A class="Code">$c_option_nb_row_by_page</A><BR/>
+  </LI>
+  <LI>New option : the clients check for new message every ... seconds (10 to 60).<BR/>
+    <I>/common/config.inc.php</I> : option (row) added : <A class="Code">$c_option_check_new_msg_every</A><BR/>
+  </LI>
+  <LI>Display messages local time (not server time), if not on same time zone.<BR/>
+  </LI>
+  <LI>User can choose date format (MM-DD-YYYY or DD/MM/YYYY).
+  </LI>
+</OL>
+
+<P class="Chapitre">[August 2007] <I>IntraMessenger</I> 1.1.10</P>
+<OL>
+  <LI>Using statistics :<BR/>
+    Tables structure update : you have to execute : <B>db_upgrade_07.sql</B> in <I>PHPMyAdmin</I>.<BR/>
+    <I>/common/config.inc.php</I> : option (row) added : <A class="Code">$c_statistics</A><BR/>
+  </LI>
+  <LI>
+  Tables structure update : you have to execute : <B>db_upgrade_06.sql</B> in <I>PHPMyAdmin</I>.<BR/>
+  </LI>
+  <LI>New <I>special</I> option : can use <I>group only</I> mod.<BR/>
+    <I>/common/config.inc.php</I> : option (row) added : <A class="Code">$c_option_groupcommunity</A><BR/>
+  User stop use contacts list, but the administrator add him/her in one or more groups.<BR/>
+  User see (only) all users from them group(s) him/her.<BR/>
+  </LI>
+  <LI>Directory : <A HREF='http://www.intramessenger.net/list/servers/' target='blank'>internet publics servers</A><BR/>
+    <I>/common/config.inc.php</I> : option (row) added : <A class="Code">$c_pass_im_book</A><BR/>
+  </LI>
+  <LI>Users can see option : /<B>admin_public</B>/ directory (can be deleted).
+  </LI>
+  <LI>Better display admin interface and update translations.
+  </LI>
+</OL>
+
+
+<P class="Chapitre">[July 2007] <I>IntraMessenger</I> 1.1.7</P>
+<OL>
+  <LI>Capacity to group contacts users (clients).
+  </LI>
+  <LI>Style subSilverPlus added (can choose style in file <I>/common/style.css.inc.php</I>).
+  </LI>
+  <LI>Direct order by on column title (session and users lists).
+  </LI>
+  <LI>Admin menu : interface change, and better display with <I>Opera</I>.
+  </LI>
+</OL>
+
+
+<P class="Chapitre">[June 2007] <I>IntraMessenger</I> 1.1.5</P>
+<OL type="1">
+  <LI>Can be open community : everybody see everybody, dont need to add to contact for chat.<BR/>
+	(just add to contact list for hide...).<BR/>
+	<I>/common/config.inc.php</I> : option (row) added : <A class="Code">$c_option_opencommunity</A><BR/>
+  </LI>
+  <LI>Can send image by admin messenger.</LI>
+  <LI>Save country flag in USERS table (if <I>$c_option_flag_country</I> activated) to display in admin users and sessions lists.<BR/>
+	Tables structure update : you have to execute : <B>db_upgrade_05.sql</B> in <I>PHPMyAdmin</I>.<BR/>
+  </LI>
+  <LI>Dynamic display country flag of IP adress (internet usage) in session list.<BR/>
+	<I>/common/config.inc.php</I> : option (row) added : <A class="Code">$c_option_flag_country</A>
+  </LI>
+  <LI>Filter by number in legend.
+  </LI>
+  <LI>Can change read language in admin area.
+  </LI>
+  <LI>Can hide col level<BR/>
+	<I>/common/config.inc.php</I> : option (row) added : <A class="Code">$c_option_col_level_hide</A>
+  </LI>
+</OL>
+
+
+<P class="Chapitre">[May 2007] <I>IntraMessenger</I> 1.1.0</P>
+<OL>
+  <LI>
+  Tables structure update : you have to execute : <B>db_upgrade_04.sql</B> in <I>PHPMyAdmin</I>.<BR/>
+  </LI>
+  <LI>Hiearchic management of the users (can add to contact, only user of lower or equal level).<BR/>
+  </LI>
+  <LI>Cannot have all contacts in VIP (what VIP they are, if all ?).
+  </LI>
+  <LI>Can read admin messages not read yet (in admin aread).
+  </LI>
+  <LI>Style admin interface (PhpBB style).
+  </LI>
+  <LI>Server translate in english (and ready for other languages)<BR/>
+	<I>/common/config.inc.php</I> : option (row) added : <A class="Code">$c_lang</A>
+  </LI>
+<BR/>
+<U>For school or internet cafe</U> :
+  <LI>Can lock access to option screen (clients).<BR/>
+	<I>/common/config.inc.php</I> : option (row) added : <A class="Code">$c_option_lock_options</A>
+  </LI>
+  <LI>Can lock access to contacts lists, only admin can do it.<BR/>
+	<I>/common/config.inc.php</I> : option (row) added : <A class="Code">$c_option_lock_contact_list</A>
+  </LI>
+  <LI>Can archive on serveur all exchanged messages.<BR/>
+	<I>/common/config.inc.php</I> : option (row) added : <A class="Code">$c_option_log_messages</A> et <A class="Code">$c_option_log_messages_filename</A>
+  </LI>
+</OL>
+
+
+<P class="Chapitre">[March 2007] <I>IntraMessenger</I> 1.0.5</P>
+<OL>
+  <LI>Manage prohibited nicknames.<BR/>
+	File added : <I>/common/ban_nickname.txt</I>
+  </LI>
+  <LI>Manage messages censure (replace bad words by "..."). <BR/>
+	File added : <I>/common/censure.txt</I>
+  </LI>
+  <LI>Can rename a nickname in contact list.<BR/>
+	<I>/common/config.inc.php</I> : option (row) added : <A class="Code">$c_option_can_change_contact_nickname</A><BR/>
+  </LI>
+  <LI>
+  Tables structure update : you have to execute : <B>db_upgrade_03.sql</B> in <I>PHPMyAdmin</I>.<BR/>
+  </LI>
+</OL>
+
+
+<P class="Chapitre">[February 2007] <I>IntraMessenger</I> 1.0.4</P>
+<OL>
+  <LI>Can send message to offline recipient<BR/>
+	<I>/common/config.inc.php</I> : option (row) added : <A class="Code">$c_option_send_offline</A><BR/>
+  </LI>
+  <LI>If message from another day, display date (not time).<BR/>
+  </LI>
+  <LI>
+  Tables structure update : you have to execute : <B>db_upgrade_02.sql</B> in <I>PHPMyAdmin</I>.<BR/>
+  </LI>
+  <LI>Administrator can send message to users (tip balloon).
+  </LI>
+  <LI>
+  Tables structure update : you have to execute : <B>db_upgrade_01.sql</B> in <I>PHPMyAdmin</I>.<BR/>
+  </LI>
+</OL>
+
+
+<P class="Chapitre">[25/02/2006] <I>IntraMessenger</I> 1.0.0</P>
+<OL>
+  <LI>Pima versione distribuita.  </LI>
+</OL>
+
+
+<P class="Chapitre">Commenti</P>
+
+Forum dedicato a questa applicazione sw : <A HREF='http://www.intramessenger.com/forum/' target='_blank'>http://www.intramessenger.com/forum/</A><BR/>
+Non esitare a proporre dei miglioramenti e delle traduzioni.<BR/>
+<BR/>
+Supporto : <A HREF='http://www.theuds.com/contact.php?lang=IT&' target='_blank'>http://www.theuds.com/contact.php?lang=IT&</A><BR/>
+
+
+<BR/>
+<HR>
+<FORM action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank" style="padding:0px; marging:0px;">
+<TABLE width="100%" border="0" cellspacing="0" cellpadding="0">
+<TR>
+  <TD width="100%" nowrap ALIGN=RIGHT><P class="Copyright">Powered by <A HREF='http://www.theuds.com' target='_blank'>THeUDS</A> © 2006 - 2008</P>
+  </TD>
+  <TD align="center" valign="middle">
+  </TD>
+</TR>
+</TABLE>
+</FORM>
+</BODY>
+</HTML>

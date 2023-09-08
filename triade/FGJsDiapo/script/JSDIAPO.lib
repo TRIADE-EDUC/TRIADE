@@ -1,0 +1,202 @@
+/* 
+################################################################
+###                 Librairie JSDIAPO                        ###
+########################################## Version bêta 0.4 ####
+Auteur : fg
+Site : http://fg.logiciel.free.fr (Aide en ligne)
+E-mail : fg.logiciel@free.fr
+FREEWARE
+!!!Vous avez le droit de copiez/distribuez/modifiez le script!!!
+
+Seulement je vous demanderai si vous le modifiez de bien vouloir
+ m'envoyer une copie de votre script pour que je puisse
+  l'améliorer 
+								Merci
+*/
+
+var jsdiapo_error_report = "0";
+var jsdiapo_error_report_active = "0";
+var jsdiapo_images_now = "0";
+var jsdiapo_images_auto = "0";
+	var jsdiapo_images_auto_msec = "5000";
+
+var jsdiapo_images_max = jsdiapo_images.length;
+
+var jsdiapo_move_nfo_exec = "1";
+var jsdiapo_lib_version = "beta 0.4";
+
+/* Les variables de gestion du clavier sont dans config.txt */
+
+function jsdiapo_init()
+{
+	jsdiapo_move_nfo();
+	if(jsdiapo_error_report_active > 0)
+	{
+	window.onerror = jsdiapo_error;
+	}
+	jsdiapo_move('first');
+	if(jsdiapo_move_key==1){document.onkeypress=jsdiapo_key_analyse;window.focus();}
+}
+
+function jsdiapo_move(choix)
+{
+
+	if((jsdiapo_images.length-1>jsdiapo_images_max||jsdiapo_images_max==0) && jsdiapo_error_report_active == 2)
+	{
+		alert('JSDIAPO\nErreur 002 : La variable/tableau "jsdiapo_images" est mal configurer ou ne contient qui seul element .');
+	}
+		
+	if(jsdiapo_error_report_active > 0)
+	{
+	window.onerror = jsdiapo_error;
+	}
+	
+	switch(choix)
+	{
+	case 'first':
+		jsdiapo_open(jsdiapo_images[0]);
+		jsdiapo_images_now="0";
+	break;
+	
+	case 'back':
+		if(jsdiapo_images_now==0)
+		{
+		alert('Vous etes au debut');
+		}
+		else
+		{
+		jsdiapo_images_now--;
+		jsdiapo_open(jsdiapo_images[jsdiapo_images_now]);
+		}
+	break;
+	
+	case 'next':
+		if(jsdiapo_images_now==jsdiapo_images.length-1)
+		{
+		alert('Vous etes a la fin');
+		if(jsdiapo_images_auto!=0){jsdiapo_lanceauto('');}
+		}
+		else
+		{
+		jsdiapo_images_now++;
+		jsdiapo_open(jsdiapo_images[jsdiapo_images_now]);
+		}
+	break;
+	
+	case 'last':
+		jsdiapo_images_now=jsdiapo_images.length-1;
+		jsdiapo_open(jsdiapo_images[jsdiapo_images_now]);
+	break;
+	
+	default:alert('JSDIAPO\nErreur 001 : Erreur d\'utilisation de la fonction "jsdiapo_move(choix)"');
+	break;
+	}
+    
+jsdiapo_comm_update();//support commentaire
+jsdiapo_move_nfo();
+}
+
+
+function jsdiapo_open(whatsrc)
+{
+//Implémentation en natif des effets sous IE
+if(compatible == 0 && firstopen != 0 && effect_config != 0)
+{
+filterdiapoid = Math.floor(Math.random() * filterdiapo.length);
+document.getElementById("jsdiapo_images_img").style.filter=filterdiapo[filterdiapoid];
+document.getElementById("jsdiapo_images_img").filters[0].apply();
+document.getElementById("jsdiapo_images_img").filters[0].play();
+}
+else
+{
+firstopen = 1;
+}
+
+document.getElementById('jsdiapo_images_img').src=whatsrc;
+
+}
+
+function jsdiapo_move_nfo()
+{
+	if(jsdiapo_move_nfo_exec!=0)
+	{
+    jsdiapo_actual_img = parseInt(jsdiapo_images_now) + 1;
+	document.getElementById('jsdiapo_move_nfo').innerHTML = jsdiapo_actual_img  +" | "+ jsdiapo_images_max;
+	}
+}
+
+function jsdiapo_key_analyse(keyStroke)
+{
+isNetscape =(document.getElementById && !document.all);
+eventChooser = (isNetscape) ? keyStroke.which : event.keyCode;
+touche = String.fromCharCode(eventChooser).toLowerCase();
+
+	if(touche==jsdiapo_move_key_back)
+	{
+	jsdiapo_move('back');
+	}
+
+	if(touche==jsdiapo_move_key_next)
+	{
+	jsdiapo_move('next');
+	}
+	
+	if(touche==jsdiapo_move_key_first)
+	{
+	jsdiapo_move('first');
+	}
+	
+	if(touche==jsdiapo_move_key_last)
+	{
+	jsdiapo_move('last');
+	}
+	
+	if(touche==jsdiapo_move_key_auto)
+	{
+	jsdiapo_lanceauto(jsdiapo_images_auto_msec);
+	}
+	
+if(jsdiapo_error_report_active > 0)
+{
+	window.onerror = jsdiapo_error;
+}
+window.focus();
+}
+
+function jsdiapo_error()
+{
+	if(jsdiapo_error_report_active == "1")
+	{
+		return true;
+	}
+	else if(jsdiapo_error_report_active == "2")
+	{
+		jsdiapo_error_report++;
+		alert('JSDIAPO\nA detecte : '+jsdiapo_error_report+' erreur(s) .\nJSDIAPO n\'a pas put detecter la source .');
+		return true;
+	}
+}
+
+function jsdiapo_lanceauto(timeauto)
+{
+ if(jsdiapo_images_auto == "0")
+ {
+     jsdiapo_images_auto = "1";
+     jsdiapo_move('first');
+     jsdiapo_images_interval = setInterval("jsdiapo_auto()",timeauto);
+     jsdiapo_auto();
+ }
+ else
+ {
+     jsdiapo_images_auto = "0";
+     clearInterval(jsdiapo_images_interval);
+ }
+}
+
+function jsdiapo_auto(){jsdiapo_move('next');}
+
+if(jsdiapo_error_report_active > 0)
+{
+	window.onerror = jsdiapo_error;
+}
+jsdiapo_init();

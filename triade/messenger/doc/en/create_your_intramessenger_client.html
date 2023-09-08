@@ -1,0 +1,847 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<!--
+/*******************************************************
+ **                  IntraMessenger - server          **
+ **                                                   **
+ **  Copyright:      (C) 2006 - 2012 THeUDS           **
+ **  Web:            http://www.theuds.com            **
+ **                  http://www.intramessenger.net    **
+ **  Licence :       GPL (GNU Public License)         **
+ **  http://opensource.org/licenses/gpl-license.php   **
+ *******************************************************/
+
+/*******************************************************
+ **       This file is part of IntraMessenger-server  **
+ **                                                   **
+ **  IntraMessenger is a free software.               **
+ **  IntraMessenger is distributed in the hope that   **
+ **  it will be useful, but WITHOUT ANY WARRANTY.     **
+ *******************************************************/
+ -->
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="fr" xml:lang="fr">
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
+    <meta http-equiv="content-language" content="fr" />
+    <meta name="description" content="Instructions to install IntraMessenger" />
+    <meta http-equiv="content-style-type" content="text/css" />
+    <META NAME="Author" CONTENT="THeUDS.com">
+    <META NAME="copyright" content="THeUDS.com">
+    <LINK REL="SHORTCUT ICON" HREF="../../images/favicon.ico">
+    <title>Create your own client for IntraMessenger server</title>
+    <base href="./" target="_blank" />
+    <style type="text/css" >
+      <!--
+      body {
+        font-family:"Trebuchet MS", Arial, Sans-Serif;
+        color:#444;
+        font-size:.9em;
+        background-color:#FFF;
+        margin:0;
+      }
+
+      #header {
+        background-color:#A5C2E0;
+        font-family:Georgia, serif;
+        font-size:1.5em;
+        border-bottom:1px solid #650;
+        color:#FFF;
+        padding:2px 6% 12px;
+      }
+
+      #content {
+        margin:20px 6%;
+      }
+
+      .panel {
+        border:1px solid #D8D8D8;
+        background-color:#EFEFEF;
+        margin:1em 0;
+        padding:1.2ex;
+      }
+
+      .panel h2 {
+        border-bottom:1px dashed #2181B0;
+        font-size:1.6em;
+        font-weight:400;
+        color:#2181B0;
+        margin:0 0 0.5em;
+      }
+
+      .notice {
+        background:#FFFED1;
+        border:1px solid #E5E4A0;
+        color:#4B4000;
+        margin:0 0 15px;
+        padding:10px;
+      }
+
+      ul,ol {
+        list-style:square;
+       line-height:130%;
+        text-align:justify;
+        margin:10px 8px;
+      }
+      A.Code {
+        font-size : 11px;
+        font-weight : bold;
+        color : #990000;
+      }
+      -->
+    </style>
+  </head>
+  <body>
+    <div id="header">
+      <div>
+        <h2>Create your own client for <A href="http://www.intramessenger.net/" target="_blank">IntraMessenger server</A></h2>
+      </div>
+    </div>
+    <div id="content">
+    
+      <div class="panel">
+        <h2>System Requirements</h2>
+          Need IntraMessenger server (on local network or on internet).<BR/>
+        </ul>
+      </div>
+
+      <div class="panel">
+        <h2>Syntax and writing conventions</h2>
+        <p class="notice">
+        The called server script serveur will be: <b>/distant/actions.php</b> <br/>
+        </P>
+        If address (url) of your IntraMessenger server is <font face='Arial' color='red'>http://your-server/im/</font> <br/>
+        Query will use this form: <br/>
+        <strong><font face='Arial'><font color='red'>http://your-server/im/</font><font color='green'>distant/actions.php</font><font color='blue'>?parameter1=value1&parameter2=value2&parameter3=value3&</font></font></strong><br/>
+        <br/>
+        For easy reading, url will be displayed (shortly) to only parameters, like this: <br/>
+        <font face='Arial' color='blue'>?parameter<b>1</b>=value<b>1</b>&parameter<b>2</b>=value<b>2</b>&parameter<b>3</b>=value<b>3</b>&</font><br/>
+        <br/>
+        <!--
+        Le premier couple paramètre+value envoyé (<font face='Arial' color='blue'>?a=1&</font>) est le numéro d'action demandée.<br/>
+        L'action 1 va utiliser le script <b><font color='green'>/distant/include/sql_test.inc.php</font></b> (voir fichier <i>/distant/actions.php</i>).<br/>
+        <br/>
+        -->
+        To nota: the first parameter sending is preceded by a question mark, he following are separated by a ampersand.<br/>
+        Parameters are always written in lower case.<br/>
+        The addresses (url) do not contain any spaces.<br/>
+        <br/>
+        If texts are sent, they are then encoded in <A HREF='http://en.wikipedia.org/wiki/Base64' target='_blank'>base 64</A>.<br/>
+        This format ensures the integrity of texts sent as parameters (spaces are forbidden, it circumvents these problems).<br/>
+        
+        <br/>
+        <h2>Server returned values</h2>
+        <strong><font face='Arial' color='fuchsia'> >F00#value1#value2#value3#</font></strong><br/>
+        4 first characteres (<font face='Arial' color='fuchsia'> ><b>F</b>00 </font>) indicates the returned <b>function</b> number (see <b>/doc/fr/tech/liste_fonctions.txt</b>).<br/>
+        The values are shown just after, separated by pound.<br/>
+        If texts are received, they are then encoded in <A HREF='http://en.wikipedia.org/wiki/Base64' target='_blank'>base 64</A>.<br/>
+        Unlike sending a request to the server, the receipt parameters order is important.<br/>
+      </div>
+
+      <div class="panel">
+        <h2>Tester la présence et le bon fonctionnement du serveur</h2>
+          Requête envoyée au serveur :<br/> 
+          <font face='Arial' color='blue'>?<b>a</b>=<b>1</b>&ip=MTkyLjE2OC4wLjEw&v=32&</font><br/>
+          <UL>
+            <LI>Le 1er paramètre (<font color='blue'><b>a</b></font>) est le numéro de <b>l'action demandée</b> (<font color='blue'><b>1</b></font>) : test du serveur.<br/>
+            Exécution du script <b><font color='green'>/distant/include/sql_test.inc.php</font></b> (voir fichier <i>/distant/actions.php</i>).<br/>
+            </LI>
+            <LI>Le 2ème paramètre (<font color='blue'>ip</font>) est votre address IP encodée en base 64</A>.
+            </LI>
+            <!--
+            <LI>Le 3ème paramètre (<font color='blue'>v</font>) est le numéro de version du client (permet au serveur de savoir quels options vous prenez en charge).
+            </LI>
+            -->
+          </UL>
+          Réponse du serveur <small>(exemple)</small> :<br/> 
+          <font face='Arial' color='fuchsia'> >F<b>02</b>#OK####</font><br/>
+          <UL>
+            <LI>La fonction retournée (<font color='fuchsia'><b>2</b></font>) est donc bien le test de connexion au serveur (avec vérification que la base de données fonctionne).
+            </LI>
+            <LI>La 1ère value renvoyée (<font color='fuchsia'>OK</font>) confirme que le serveur fonctionne correctement,<br/> dans le cas contraire elle aurait contenu <b><font color='fuchsia'>KO</font></b>.
+            </LI>
+            <LI>La 2ème value est vide, mais elle aurait pu contenir (si 1ère value à KO) :<br/>
+            - <font color='fuchsia'>MAINTENANCE</font> : si le serveur est en mode maintenance (<font color='fuchsia'> >F02#KO#MAINTENANCE#</font> ).<br/>
+            - <font color='fuchsia'>MAX</font> : si le serveur a atteint le nombre maxium d'utilisateurs simultanés autorisés 
+            <font color='green'>(voir options serveur <A HREF='liste_options.html#_MAX_NB_USER' target='_blank'>_MAX_NB_USER</a> et <A HREF='liste_options.html#_MAX_NB_SESSION' target='_blank'>_MAX_NB_SESSION</a>).</font><br/>
+            </LI>
+          </UL>
+      </div>
+
+      <div class="panel">
+        <h2>Récupération des options (étape 1/2)</h2>
+         Requête envoyée au serveur :<br/> 
+         <font face='Arial' color='blue'>?a=<b>2</b>&v=32&ip=MTkyLjE2OC4wLjEw&x=&</font><br/>
+          <UL>
+            <LI>Le paramètre <font color='blue'><b>a</b></font> est le numéro de l'action <font color='blue'><b>2</b></font> : récupération des options courtes.<br/>
+            Exécution du script <b><font color='green'>/distant/include/get_options_1.inc.php</font></b>.<br/>
+            </LI>
+            <LI>Le paramètre <font color='blue'>ip</font> est votre address IP (encodée en base 64).
+            </LI>
+          </UL>
+          Réponse du serveur <small>(exemple)</small> :<br/> 
+          <font face='Arial' color='fuchsia'> >F<b>01</b>##X#23##1#X####X#X#X######DOL3#20#2#5##X###X#X##2.0.3.225#</font>...<br/>
+          <UL>
+            <LI>La fonction retournée (<font color='fuchsia'><b>1</b></font>) est donc la récupération des options courtes.
+            </LI>
+            <LI>La 1ère value renvoyée est vide, indiquant que l'utilisateur peux choisir son login/pseudo <small>(sinon force le pseudo au nom de session Windows)</small>
+            <font color='green'>(option serveur <A HREF='liste_options.html#_FORCE_USERNAME_TO_PC_SESSION_NAME' target='_blank'>_FORCE_USERNAME_TO_PC_SESSION_NAME</a> ).</font><br/>
+            </LI>
+            <LI>La 2ème value n'est pas vide, l'utilisateur doit utiliser un mot de passe pour s'authentifier
+            <font color='green'>(option serveur <A HREF='liste_options.html#_USER_NEED_PASSWORD' target='_blank'>_USER_NEED_PASSWORD</a>).</font><br/>
+            <LI>La 4ème value est vide, les messages échangés ne sont pas chiffrés 
+            <font color='green'>(option serveur <A HREF='liste_options.html#_CRYPT_MESSAGES' target='_blank'>_CRYPT_MESSAGES</a>).</font><br/>
+            </LI>
+            <LI>La 6ème value est <font color='green'>l'option serveur <A HREF='liste_options.html#_FORCE_AWAY_ON_SCREENSAVER' target='_blank'>_FORCE_AWAY_ON_SCREENSAVER</a>.</font><br/>
+            </LI>
+            <LI>La 7ème value est <font color='green'>l'option serveur <A HREF='liste_options.html#_HIDE_COL_FUNCTION_NAME' target='_blank'>_HIDE_COL_FUNCTION_NAME</a>.</font><br/>
+            </LI>
+            <LI>La 9ème value indique si le serveur est privé ou public (vide) (voir <font color='green'>l'option serveur <A HREF='liste_options.html#_PASSWORD_FOR_PRIVATE_SERVER' target='_blank'>_PASSWORD_FOR_PRIVATE_SERVER</a>).</font><br/>
+            </LI>
+            <LI>La 10ème value est <font color='green'>l'option serveur <A HREF='liste_options.html#_ALLOW_INVISIBLE' target='_blank'>_ALLOW_INVISIBLE</a>.</font><br/>
+            </LI>
+            <LI>La 11ème value est <font color='green'>l'option serveur <A HREF='liste_options.html#_ALLOW_SEND_TO_OFFLINE_USER' target='_blank'>_ALLOW_SEND_TO_OFFLINE_USER</a>.</font><br/>
+            </LI>
+            <LI>La 12ème value est <font color='green'>l'option serveur <A HREF='liste_options.html#_ALLOW_CHANGE_CONTACT_NICKNAME' target='_blank'>_ALLOW_CHANGE_CONTACT_NICKNAME</a>.</font><br/>
+            </LI>
+            <LI>La 13ème value est <font color='green'>l'option serveur <A HREF='liste_options.html#_LOCK_USER_CONTACT_LIST' target='_blank'>_LOCK_USER_CONTACT_LIST</a>.</font><br/>
+            </LI>
+            <LI>La 14ème value est <font color='green'>l'option serveur <A HREF='liste_options.html#_LOG_MESSAGES' target='_blank'>_LOG_MESSAGES</a>.</font><br/>
+            </LI>
+            <LI>La 15ème value est <font color='green'>l'option serveur <A HREF='liste_options.html#_LOCK_USER_OPTIONS' target='_blank'>_LOCK_USER_OPTIONS</a>.</font><br/>
+            </LI>
+            <LI>La 16ème value est <font color='green'>l'option serveur <A HREF='liste_options.html#_SPECIAL_MODE_OPEN_COMMUNITY' target='_blank'>_SPECIAL_MODE_OPEN_COMMUNITY</a>.</font><br/>
+            </LI>
+            <LI>La 17ème value est <font color='green'>l'option serveur <A HREF='liste_options.html#_SPECIAL_MODE_GROUP_COMMUNITY' target='_blank'>_SPECIAL_MODE_GROUP_COMMUNITY</a>.</font><br/>
+            </LI>
+            <LI>La 18ème value indique si la liste des options est publique (voir <font color='green'>l'option serveur <A HREF='liste_options.html#_PUBLIC_OPTIONS_LIST' target='_blank'>_PUBLIC_OPTIONS_LIST</a>).</font><br/>
+            </LI>
+            <LI>La 19ème value est <font color='green'>l'option serveur <A HREF='liste_options.html#_CHECK_NEW_MSG_EVERY' target='_blank'>_CHECK_NEW_MSG_EVERY</a>.</font><br/>
+            </LI>
+            <LI>La 20ème value est <font color='green'>l'option serveur <A HREF='liste_options.html#_MINIMUM_USERNAME_LENGTH' target='_blank'>_MINIMUM_USERNAME_LENGTH</a>.</font><br/>
+            </LI>
+            <LI>La 21ème value est <font color='green'>l'option serveur <A HREF='liste_options.html#_MINIMUM_PASSWORD_LENGTH' target='_blank'>_MINIMUM_PASSWORD_LENGTH</a>.</font><br/>
+            </LI>
+            <LI>La 22ème value est <font color='green'>l'option serveur <A HREF='liste_options.html#_ALLOW_USER_TO_HISTORY_MESSAGES' target='_blank'>_ALLOW_USER_TO_HISTORY_MESSAGES</a> (contenu inversé).</font><br/>
+            </LI>
+            <LI>La 23ème value est <font color='green'>l'option serveur <A HREF='liste_options.html#_ALLOW_CONFERENCE' target='_blank'>_ALLOW_CONFERENCE</a>.</font><br/>
+            </LI>
+            <LI>La 24ème value est le type d'authentification externe (voir l'<font color='green'>l'option serveur <A HREF='liste_options.html#_EXTERNAL_AUTHENTICATION' target='_blank'>_EXTERNAL_AUTHENTICATION</a>).</font><br/>
+            </LI>
+            <LI>La 25ème value est le titre de l'authentification externe (voir aussi <font color='green'>l'option serveur <A HREF='liste_options.html#_SITE_TITLE' target='_blank'>_SITE_TITLE</a>).</font><br/>
+            </LI>
+            <LI>La 26ème value si non vide indique que la mise à jour du client via votre serveur est possible.<br/>
+            </LI>
+            <LI>Si la mise à jour du client via votre serveur est possible, la 27ème value est <font color='green'>l'option serveur <A HREF='liste_options.html#_FORCE_UPDATE_BY_SERVER' target='_blank'>_FORCE_UPDATE_BY_SERVER</a>.</font><br/>
+            </LI>
+            <LI>La 28ème value est le numéro de version du serveur.<br/>
+            </LI>
+            <LI>La 29ème value est <font color='green'>l'option serveur <A HREF='liste_options.html#_ALLOW_CHANGE_EMAIL_PHONE' target='_blank'>_ALLOW_CHANGE_EMAIL_PHONE</a>.</font><br/>
+            </LI>
+            <LI>La 30ème value est <font color='green'>l'option serveur <A HREF='liste_options.html#_ALLOW_CHANGE_FUNCTION_NAME' target='_blank'>_ALLOW_CHANGE_FUNCTION_NAME</a>.</font><br/>
+            </LI>
+            <LI>La 31ème value est <font color='green'>l'option serveur <A HREF='liste_options.html#_ALLOW_SMILEYS' target='_blank'>_ALLOW_SMILEYS</a>.</font><br/>
+            </LI>
+            <LI>La 32ème value est <font color='green'>l'option serveur <A HREF='liste_options.html#_ALLOW_CHANGE_AVATAR' target='_blank'>_ALLOW_CHANGE_AVATAR</a>.</font><br/>
+            </LI>
+            <LI>La 33ème value est <font color='green'>l'option serveur <A HREF='liste_options.html#_ALLOW_USE_PROXY' target='_blank'>_ALLOW_USE_PROXY</a>.</font><br/>
+            </LI>
+            <LI>La 34ème value est <font color='green'>l'option serveur <A HREF='liste_options.html#_MAX_NB_CONTACT_BY_USER' target='_blank'>_MAX_NB_CONTACT_BY_USER</a>.</font><br/>
+            </LI>
+            <LI>La 35ème value est <font color='green'>l'option serveur <A HREF='liste_options.html#_ALLOW_UPPERCASE_SPACE_USERNAME' target='_blank'>_ALLOW_UPPERCASE_SPACE_USERNAME</a>.</font><br/>
+            </LI>
+            <LI>La 36ème value est <font color='green'>l'option serveur <A HREF='liste_options.html#_NEED_QUICK_REGISTER_TO_AUTO_ADD_NEW_USER' target='_blank'>_NEED_QUICK_REGISTER_TO_AUTO_ADD_NEW_USER</a>.</font><br/>
+            </LI>
+            <LI>La 37ème value est <font color='green'>l'option serveur <A HREF='liste_options.html#_PWD_NEED_DIGIT_LETTER' target='_blank'>_PWD_NEED_DIGIT_LETTER</a>.</font><br/>
+            </LI>
+            <LI>La 38ème value est <font color='green'>l'option serveur <A HREF='liste_options.html#_PWD_NEED_UPPER_LOWER' target='_blank'>_PWD_NEED_UPPER_LOWER</a>  .</font><br/>
+            </LI>
+            <LI>La 39ème value est <font color='green'>l'option serveur <A HREF='liste_options.html#_PWD_NEED_SPECIAL_CHARACTER' target='_blank'>_PWD_NEED_SPECIAL_CHARACTER</a>.</font><br/>
+            </LI>
+            <!--
+            <LI>La 40ème value est <font color='green'>l'option serveur <A HREF='liste_options.html#_XXXXXXXXXXXXX' target='_blank'>_XXXXXXXXXXXXX</a>.</font><br/>
+            </LI>
+            -->
+            <LI>La 41ème value est <font color='green'>l'option serveur <A HREF='liste_options.html#_SHOUTBOX' target='_blank'>_SHOUTBOX</a>.</font><br/>
+            </LI>
+            <LI>La ème value est <font color='green'>l'option serveur <A HREF='liste_options.html#_SHOUTBOX_VOTE' target='_blank'>_SHOUTBOX_VOTE</a>.</font><br/>
+            </LI>
+            <LI>La ème value est <font color='green'>l'option serveur <A HREF='liste_options.html#_GROUP_FOR_SBX_AND_ADMIN_MSG' target='_blank'>_GROUP_FOR_SBX_AND_ADMIN_MSG</a>.</font><br/>
+            </LI>
+            <LI>La ème value est <font color='green'>l'option serveur <A HREF='liste_options.html#_GROUP_USER_CAN_JOIN' target='_blank'>_GROUP_USER_CAN_JOIN</a>.</font><br/>
+            </LI>
+            <LI>La ème value est <font color='green'>l'option serveur <A HREF='liste_options.html#_SHOUTBOX_REFRESH_DELAY' target='_blank'>_SHOUTBOX_REFRESH_DELAY</a>.</font><br/>
+            </LI>
+            <LI>La ème value est <font color='green'>l'option serveur <A HREF='liste_options.html#_SERVERS_STATUS' target='_blank'>_SERVERS_STATUS</a>.</font><br/>
+            </LI>
+            <LI>La ème value est <font color='green'>l'option serveur <A HREF='liste_options.html#_SHOUTBOX_NEED_APPROVAL' target='_blank'>_SHOUTBOX_NEED_APPROVAL</a>.</font><br/>
+            </LI>
+            <LI>La ème value est <font color='green'>l'option serveur <A HREF='liste_options.html#_BOOKMARKS' target='_blank'>_BOOKMARKS</a>.</font><br/>
+            </LI>
+            <LI>La ème value est <font color='green'>l'option serveur <A HREF='liste_options.html#_BOOKMARKS_VOTE' target='_blank'>_BOOKMARKS_VOTE</a>.</font><br/>
+            </LI>
+            <LI>La ème value est <font color='green'>l'option serveur <A HREF='liste_options.html#_BOOKMARKS_NEED_APPROVAL' target='_blank'>_BOOKMARKS_NEED_APPROVAL</a>.</font><br/>
+            </LI>
+            <LI>La ème value est <font color='green'>l'option serveur <A HREF='liste_options.html#_BOOKMARKS_PUBLIC' target='_blank'>_BOOKMARKS_PUBLIC</a>.</font><br/>
+            </LI>
+            <LI>La ème value est <font color='green'>l'option serveur <A HREF='liste_options.html#_LOCK_USER_PROFILE' target='_blank'>_LOCK_USER_PROFILE</a>.</font><br/>
+            </LI>
+            <LI>La ème value est <font color='green'>l'option serveur <A HREF='liste_options.html#_ROLES_TO_OVERRIDE_PERMISSIONS' target='_blank'>_ROLES_TO_OVERRIDE_PERMISSIONS</a>.</font><br/>
+            </LI>
+            <!--
+            <LI>La ème value est <font color='green'>l'option serveur <A HREF='liste_options.html#_XXXXXXXXXXXXX' target='_blank'>_XXXXXXXXXXXXX</a>.</font><br/>
+            </LI>
+            <LI>La ème value est <font color='green'>l'option serveur <A HREF='liste_options.html#_XXXXXXXXXXXXX' target='_blank'>_XXXXXXXXXXXXX</a>.</font><br/>
+            </LI>
+            <LI>La ème value est <font color='green'>l'option serveur <A HREF='liste_options.html#_XXXXXXXXXXXXX' target='_blank'>_XXXXXXXXXXXXX</a>.</font><br/>
+            </LI>
+            -->
+          </UL>
+      </div>
+
+      <div class="panel">
+        <h2>Récupération des options (étape 2/2)</h2>
+          Requête envoyée au serveur :<br/> 
+          <font face='Arial' color='blue'>?a=3&v=32&ip=MTkyLjE2OC4wLjEw&x=&</font><br/>
+          <UL>
+            <LI>Le paramètre <font color='blue'>a</font> est le numéro de l'action <font color='blue'>3</font> : récupération des options longues.<br/>
+            Exécution du script <b><font color='green'>/distant/include/get_options_2.inc.php</font></b><br/>
+            </LI>
+            <!--
+            <LI>Le paramètre <font color='blue'>ip</font> est votre address IP (en base 64).
+            </LI>
+            -->
+          </UL>
+          Réponse du serveur (exemple) :<br/>
+          <font face='Arial' color='fuchsia'> >F<b>09</b>####dG90b0B0aXRpLmZy#MzYxNQ##</font>...<br/>
+          <UL>
+            <LI>La fonction retournée (<font color='fuchsia'><b>9</b></font>) est bien la récupération des options longues (encodées en base 64).
+            </LI>
+            <LI>La 1ère value est <font color='green'>l'option serveur <A HREF='liste_options.html#_SITE_URL_TO_SHOW' target='_blank'>_SITE_URL_TO_SHOW</a>.</font><br/>
+            </LI>
+            <LI>La 2ème value est <font color='green'>l'option serveur <A HREF='liste_options.html#_SITE_TITLE_TO_SHOW' target='_blank'>_SITE_TITLE_TO_SHOW</a>.</font><br/>
+            </LI>
+            <LI>La 3ème value est <font color='green'>l'option serveur <A HREF='liste_options.html#_EXTERN_URL_TO_REGISTER' target='_blank'>_EXTERN_URL_TO_REGISTER</a>.</font><br/>
+            </LI>
+            <LI>La 4ème value est <font color='green'>l'option serveur <A HREF='liste_options.html#_ADMIN_EMAIL' target='_blank'>_ADMIN_EMAIL</a>.</font><br/>
+            </LI>
+            <LI>La 5ème value est <font color='green'>l'option serveur <A HREF='liste_options.html#_ADMIN_PHONE' target='_blank'>_ADMIN_PHONE</a>.</font><br/>
+            </LI>
+            <LI>La 6ème value contient la liste des status <font color='green'>(si l'option serveur <A HREF='liste_options.html#_FORCE_STATUS_LIST_FROM_SERVER' target='_blank'>_FORCE_STATUS_LIST_FROM_SERVER</a> est activée).</font><br/>
+            </LI>
+            <LI>La 7ème value est <font color='green'>l'option serveur <A HREF='liste_options.html#_AWAY_REASONS_LIST' target='_blank'>_AWAY_REASONS_LIST</a>.</font><br/>
+            </LI>
+            <LI>La 8ème value est <font color='green'>l'option serveur <A HREF='liste_options.html#_EXTERN_URL_FORGET_PASSWORD' target='_blank'>_EXTERN_URL_FORGET_PASSWORD</a>.</font><br/>
+            </LI>
+            <LI>La 9ème value est <font color='green'>l'option serveur <A HREF='liste_options.html#_SCROLL_TEXT' target='_blank'>_SCROLL_TEXT</a>.</font><br/>
+            </LI>
+            <LI>La 10ème value est <font color='green'>l'option serveur <A HREF='liste_options.html#_INCOMING_EMAIL_SERVER_ADDRESS' target='_blank'>_INCOMING_EMAIL_SERVER_ADDRESS</a>.</font><br/>
+            </LI>
+            <LI>La 11ème value est <font color='green'>l'option serveur <A HREF='liste_options.html#_EXTERN_URL_CHANGE_PASSWORD' target='_blank'>_EXTERN_URL_CHANGE_PASSWORD</a>.</font><br/>
+            </LI>
+            <LI>La 12ème à 15ème values contiennent le paramètrage des <A href="http://www.intramessenger.net/custom-version.php" target="_blank">versions personnalisées</A>.</font><br/>
+            </LI>
+            <LI>La 16ème value est <font color='green'>l'option serveur <A HREF='liste_options.html#_PUBLIC_FOLDER' target='_blank'>_PUBLIC_FOLDER</a>.</font><br/>
+            </LI>
+            <LI>La 17ème value est <font color='green'>l'option serveur <A HREF='liste_options.html#_ONLINE_REASONS_LIST' target='_blank'>_ONLINE_REASONS_LIST</a>.</font><br/>
+            </LI>
+            <LI>La 18ème value est <font color='green'>l'option serveur <A HREF='liste_options.html#_BUSY_REASONS_LIST' target='_blank'>_BUSY_REASONS_LIST</a>.</font><br/>
+            </LI>
+            <LI>La 19ème value est <font color='green'>l'option serveur <A HREF='liste_options.html#_DONOTDISTURB_REASONS_LIST' target='_blank'>_DONOTDISTURB_REASONS_LIST</a>.</font><br/>
+            </LI>
+          </UL>
+      </div>
+
+
+
+
+      <div class="panel">
+        <h2>Démarrage : ouverture de la session</h2>
+          Requête envoyée au serveur :<br/> 
+         <font face='Arial' color='blue'>?a=4&un=VEhl&v=1.23A&ip=MTkyLjE2OC4wLjEw&c=UTRFVUZu&p=anZPa3&v_n=32&ln=FR&hr=&mn=&dt_j=&dt_m=&os=&pc=&rs=&br=&ml=&mc=&oo=&</font><br/>
+          <UL>
+            <LI>Le paramètre <font color='blue'>a</font> est le numéro de l'action <font color='blue'>4</font> : demande d'ouverture d'une session.<br/>
+            Exécution du script <b><font color='green'>/distant/include/start.inc.php</font></b>.<br/>
+            </LI>
+            <LI>Le paramètre <font color='blue'>un</font> est le pseudo (en base 64).
+            </LI>
+            <LI>Le paramètre <font color='blue'>v</font> est le numéro de version client.
+            </LI>
+            <!--
+            <LI>Le paramètre <font color='blue'>ip</font> est votre address IP (en base 64).
+            </LI>
+            -->
+            <LI>Le paramètre <font color='blue'>c</font> est l'identifiant unique du PC (par rapport au matériel).
+            </LI>
+            <LI>Le paramètre <font color='blue'>p</font> est le mot de passe chiffré.
+            </LI>
+            <LI>Le paramètre <font color='blue'>ln</font> est la langue utilisée (FR, EN...).
+            </LI>
+            <LI>Les paramètres <font color='blue'>hr</font> et <font color='blue'>mn</font> sont l'heure du poste client (afin de calculer le décalage horaire).
+            </LI>
+            <LI>Les paramètres <font color='blue'>dt_j</font> <font color='blue'>dt_m</font> sont la date du poste client (afin de calculer le décalage horaire).
+            </LI>
+            <LI>Le paramètre <font color='blue'>os</font> est l'abréviation du système d'exploitation du PC (XP, 7...).
+            </LI>
+            <br/>
+            En mode entreprise (<font color='green'>option serveur <A HREF='liste_options.html#_ENTERPRISE_SERVER' target='_blank'>_ENTERPRISE_SERVER</a></font>) :<br/>
+            <LI>Le paramètre <font color='blue'>pc</font> est le nom de l'ordinateur.
+            </LI>
+            <LI>Le paramètre <font color='blue'>rs</font> est la résolution d'écran.
+            </LI>
+            <LI>Le paramètre <font color='blue'>br</font> est le nom du navigateur par défaut.
+            </LI>
+            <LI>Le paramètre <font color='blue'>ml</font> est le nom du logiciel de courrié par défaut.
+            </LI>
+            <LI>Le paramètre <font color='blue'>mc</font> est l'address MAC.
+            </LI>
+            <LI>Le paramètre <font color='blue'>oo</font> est la version d'Open-Office installée.
+            </LI>
+          </UL>
+          Réponse du serveur (exemple) :<br/>
+          <font face='Arial' color='fuchsia'> >F<b>05</b>#NDAz#NDg0OA##31###########</font><br/>
+          <UL>
+            <LI>La fonction retournée (<font color='fuchsia'><b>5</b></font>) est donc l'ouverture de session.
+            </LI>
+            <LI>La 1ère value est différente de <font color='fuchsia'>KO</font>, l'ouverture de session est confirmée : c'est le <b>numéro de session</b> (en base 64).<br/>
+            </LI>
+            <LI>La 2ème value est votre <b>identifiant numérique</b> (en base 64).<br/>
+            </LI>
+            <LI>La 3ème value si indiquée, précise la différence horaire avec le serveur.<br/>
+            </LI>
+            <LI>La 4ème value est le numéro de jour de la date.<br/>
+            </LI>
+            <LI>La 5ème value est le numéro du dernier post dans la ShoutBox.<br/>
+            </LI>
+            <LI>La 6ème value si indiquée, peut contenir 2 values :<br/>
+            - <font color='fuchsia'>A</font> : vous recevez les alertes administrateur.<br/>
+            - <font color='fuchsia'>N</font> : c'est un nouveau compte, suivants options vous allez devoir renseigner votre profil.<br/>
+            </LI>
+          </UL>
+      </div>
+
+      <div class="panel">
+        <h2>Récupérer la liste de vos contacts</h2>
+          Requête envoyée au serveur :<br/> 
+          <font face='Arial' color='blue'>?a=12&iu=NDg2MA&is=NDAz&v=32&ip=MTkyLjE2OC4wLjEw&</font><br/>
+          <UL>
+            <LI>Le paramètre <font color='blue'>a</font> est le numéro de l'action <font color='blue'>12</font> : récupération de votre liste de contacts.<br/>
+            Exécution du script <b><font color='green'>/distant/include/list_all_contacts.inc.php</font></b>.<br/>
+            </LI>
+            <LI>Le paramètre <font color='blue'>iu</font> est identifiant numérique (identifiant utilisateur) en base 64 (augmenté de la value de la fonction).
+            </LI>
+            <LI>Le paramètre <font color='blue'>is</font> est votre numéro de session (en base 64).
+            </LI>
+            <!--
+            <LI>Le paramètre <font color='blue'>ip</font> est votre address IP (en base 64).
+            </LI>
+            -->
+          </UL>
+          Réponse du serveur (exemple) :<br/>
+          <font face='Arial' color='fuchsia'> >F<b>19</b>#OK####|MzA2MTk1MTQ3MTc4MjE3MzQ</font>...<br/>
+          <UL>
+            <LI>La fonction retournée (<font color='fuchsia'><b>19</b></font>) est donc la liste des contacts.
+            </LI>
+            <LI>La 1ère value est <font color='fuchsia'>OK</font> confirmant le succès de la requête.<br/>
+            </LI>
+            <LI>La 4ème value est la liste des contacts (en base 64) séparés par le caractères "pipe" (très vertical). 
+            Elle est décomposée : <br/>
+            - Pseudo;<br/>
+            - Identifiant numérique;<br/>
+            - Nom/fonction;<br/>
+            - Langue utilisée;<br/>
+            - Nom de l'avatar;<br/>
+            - Différence de temps (par rapport au serveur)<br/>
+            - address email;<br/>
+            - Numéro de téléphone;<br/>
+            - Genre:<br/>
+            - Code pays;<br/>
+            - Niveau hiérarchique (si option serveur activée);<br/>
+            - Note moyenne;<br/>
+            - Identifiant numérique dans votre liste de contacts;<br/>
+            - Etat du contact (validé, caché, VIP...);<br/>
+            - Nouveau nom (si renommé);<br/>
+            - Groupe;<br/>
+            </LI>
+          </UL>
+      </div>
+
+      <div class="panel">
+        <h2>Récupérer la liste des utilisateurs (contacts) connectés</h2>
+          Requête envoyée au serveur :<br/> 
+         <font face='Arial' color='blue'>?a=20&iu=NDg3Mg&is=NDAz&v=32&bi=MTE3&ip=MTkyLjE2OC4wLjEw&</font><br/>
+          <UL>
+            <LI>Le paramètre <font color='blue'>a</font> est le numéro de l'action <font color='blue'>20</font> (avec aussi les contacts offline) ou <font color='blue'>22</font> : récupération des utilisateurs en ligne.<br/>
+            Exécution du script <b><font color='green'>/distant/include/list_contact_online_offline.inc.php</font></b>.<br/>
+            </LI>
+            <LI>Le paramètre <font color='blue'>bi</font> est l'identifiant (en base 64) du dernier message lu de la ShoutBox.
+            </LI>
+          </UL>
+          Réponse du serveur (exemple) :<br/>
+          <font face='Arial' color='fuchsia'> >F<b>16</b>#-1#0#0##0#0#NyUyJTIlMiUyJTIlMiUyJQ##|>F16#ODEjIzQ3NTYjIyM|>F16#ODIjMCM0ODQ4IzAjIw|</font>...<br/>
+          <UL>
+            <LI>La fonction retournée (<font color='fuchsia'><b>16</b></font>) est donc la liste des utilisateurs en ligne.
+            </LI>
+            <LI>La 1ère value est le nombre de messages privés en attente (en authentification externe, donc à consulter sur le forum, blog...).<br/>
+            </LI>
+            <LI>La 2ème value est le nombre de demandes de contacts en attente de validation.<br/>
+            </LI>
+            <LI>La 3ème value est le nombre de nouveaux messages non lus.<br/>
+            </LI>
+            <LI>La 5ème value contient l'indication si vous êtes invité à rejoindre une conférence, avec son identifiant ainsi que celui de celui qui vous invite.<br/>
+            </LI>
+            <LI>La 6ème value est l'identifiant du dernier message de la ShoutBox.<br/>
+            </LI>
+            <LI>La 7ème value est le numéro de groupe du dernier message de la ShoutBox.<br/>
+            </LI>
+            <LI>La 8ème value est la liste des états des serveurs/services (si option serveur <A HREF='liste_options.html#_SERVERS_STATUS' target='_blank'>_SERVERS_STATUS</a> activée).<br/>
+            </LI>
+            <LI>Les values suivantes étant les utilisateurs en ligne (en base 64, précédés par l'entête >F16#), contenant pour chacun :<br/>
+            - Identifiant numérique dans votre liste de contacts;<br/>
+            - Numéro d'état (1 : en ligne, 2 : absent, ...);<br/>
+            - Identifiant numérique;<br/>
+            - Motif d'état (si option serveur activée);<br/>
+            - Groupe;<br/>
+            </LI>
+          </UL>
+      </div>
+      
+      <div class="panel">
+        <h2>Récupérer la liste des demandes d'ajouts aux contacts en attente de confirmation</h2>
+          Requête envoyée au serveur :<br/> 
+         <font face='Arial' color='blue'>?a=25&iu=NDg3Nw&is=NDA2&st=1&v=32&bi=MTE3&bm=MTA&ip=MTkyLjE2OC4wLjEw&</font><br/>
+          <UL>
+            <LI>Le paramètre <font color='blue'>a</font> est le numéro de l'action <font color='blue'>25</font> : récupération ....................<br/>
+            Exécution du script <b><font color='green'>/distant/include/list_contact_to_confirm.inc.php</font></b>.<br/>
+            </LI>
+            <LI>Le paramètre <font color='blue'>iu</font> est l'identifiant utilisateur (en base 64, augmenté de la value de la fonction).
+            </LI>
+            <LI>Le paramètre <font color='blue'>is</font> est votre numéro de session (en base 64).
+            </LI>
+            <LI>Le paramètre <font color='blue'>st</font> est votre numéro d'état (1 : online, 2 : away...).
+            </LI>
+            <LI>Le paramètre <font color='blue'>bi</font> est le dernier numéro de message reçu de la ShoutBox non encore lu.
+            </LI>
+            <LI>Le paramètre <font color='blue'>bm</font> eest l'identifiant du dernier marque page non encore lu.<br/>
+            </LI>
+          </UL>
+          Réponse du serveur (exemple) :<br/>
+          <font face='Arial' color='fuchsia'> >F<b>12</b>#-1#-1#0##0###|>F12#0#-#0#</font><br/>
+          <UL>
+            <LI>La fonction retournée (<font color='fuchsia'><b></b></font>) est donc la liste des contacts en attente de validation.
+            </LI>
+            <LI>La 1ère value est <font color='fuchsia'>OK</font> confirmant le succès de la requête.<br/>
+            </LI>
+            <LI>La 2ème value est le nombre de messages privés en attente (en authentification externe, donc à consulter sur le forum, blog...).<br/>
+            </LI>
+            <LI>La 3ème value est l'identifiant du dernier message de la ShoutBox non encore lu.<br/>
+            </LI>
+            <LI>La 4ème value est le numéro de groupe du dernier message de la ShoutBox.<br/>
+            </LI>
+            <LI>La 5ème value est la liste des états des serveurs/services (si option serveur <A HREF='liste_options.html#_SERVERS_STATUS' target='_blank'>_SERVERS_STATUS</a> activée).<br/>
+            </LI>
+            <LI>La 6ème value est l'identifiant du dernier marque page non encore lu.<br/>
+            </LI>
+            <LI>Les values suivantes étant les contacts en attente de validation en ligne (en base 64, précédés par l'entête >F12#), contenant pour chacun :<br/>
+            - Identifiant numérique dans votre liste de contacts;<br/>
+            - Pseudo;<br/>
+            - Nom/fonction;<br/>
+            - Identifiant numérique;<br/>
+            - Code pays;<br/>
+            - Commentaire de proposation d'ajout de contact;<br/>
+          </UL>
+      </div>
+      
+      <div class="panel">
+        <h2>Envoyer un message</h2>
+          Requête envoyée au serveur :<br/> 
+         <font face='Arial' color='blue'>?a=50&u1=NDkwMg&u2=NDg0OA&s=NDA1&cr=64&m=Y291Y291&v=32&ip=MTkyLjE2OC4wLjEw&</font><br/>
+          <UL>
+            <LI>Le paramètre <font color='blue'>a</font> est le numéro de l'action <font color='blue'>50</font> : envoyer un message.<br/>
+            Exécution du script <b><font color='green'>/distant/include/message_send.inc.php</font></b>.<br/>
+            </LI>
+            <LI>Le paramètre <font color='blue'>s</font> est votre numéro de session.
+            </LI>
+            <LI>Le paramètre <font color='blue'>u1</font> est l'identifiant utilisateur expéditeur (en base 64, augmenté de la value de la fonction).
+            </LI>
+            <LI>Le paramètre <font color='blue'>u2</font> est l'identifiant utilisateur destinataire (en base 64).
+            </LI>
+            <LI>Le paramètre <font color='blue'>cr</font> indique que le message est juste chiffré en base 64 (option serveur _CRYPT_MESSAGES non activée).
+            </LI>
+            <LI>Le paramètre <font color='blue'>m</font> est le message encodé.
+            </LI>
+          </UL>
+          Réponse du serveur (exemple) :<br/>
+          <font face='Arial' color='fuchsia'> >F<b>40</b>#OK#15:32:14######</font><br/>
+          <UL>
+            <LI>La fonction retournée (<font color='fuchsia'><b>40</b></font>) est donc l'envoi d'un message.
+            </LI>
+            <LI>La 1ère value est <font color='fuchsia'>OK</font> confirmant le succès de la requête.<br/>
+            </LI>
+            <LI>La 2ème value est l'heure d'expédition.<br/>
+            </LI>
+          </UL>
+      </div>
+      
+      <div class="panel">
+        <h2>Recevoir un message</h2>
+          Requête envoyée au serveur :<br/> 
+         <font face='Arial' color='blue'>?a=51&u1=NDkwMw&u2=NDg0OA&s=NDA2&c=NEVVRm&v=32&ip=MTkyLjE2OC4wLjEw&dt_f=EN&</font><br/>
+          <UL>
+            <LI>Le paramètre <font color='blue'>a</font> est le numéro de l'action (<font color='blue'>51</font>) : récupération d'un message.<br/>
+            Exécution du script <b><font color='green'>/distant/include/message_get.inc.php</font></b>.<br/>
+            </LI>
+            <LI>Le paramètre <font color='blue'>u1</font> est l'identifiant utilisateur expéditeur (en base 64, augmenté de la value de la fonction).
+            </LI>
+            <LI>Le paramètre <font color='blue'>u2</font> est l'identifiant utilisateur destinataire (en base 64).
+            </LI>
+            <LI>Le paramètre <font color='blue'>c</font> est l'identifiant unique du PC.
+            </LI>
+            <LI>Le paramètre <font color='blue'>dt_f</font> est le format date (<i>EN</i> ou vide).
+            </LI>
+          </UL>
+          Réponse du serveur (exemple) avec message :<br/>
+          <font face='Arial' color='fuchsia'> >F<b>42</b>#OK#dGVzdA#15:44:35##64##</font><br/>
+          <UL>
+            <LI>La fonction retournée (<font color='fuchsia'><b>42</b></font>) est donc la réception d'un message.
+            </LI>
+            <LI>La 1ère value est <font color='fuchsia'>OK</font> confirmant le succès de la requête.<br/>
+            </LI>
+            <LI>La 2ème value est le message (encodé).<br/>
+            </LI>
+            <LI>La 3ème value est son heure d'expédition.<br/>
+            </LI>
+            <LI>La 5ème value est le type d'encodage utilisé.<br/>
+            </LI>
+          </UL>
+          Réponse du serveur (exemple) sans message :<br/>
+          <font face='Arial' color='fuchsia'> >F<b>42</b>#OK##h#2#0####</font> si aucun message.<br/>
+          <UL>
+            <LI>La fonction retournée (<font color='fuchsia'><b>42</b></font>) est donc la réception d'un message.
+            </LI>
+            <LI>La 1ère value est <font color='fuchsia'>OK</font> confirmant le succès de la requête.<br/>
+            </LI>
+            <LI>La 2ème value est vide, aucun message.<br/>
+            </LI>
+            <LI>La 4ème value est le numéro d'état du contact distant (1 : online, 2 : away...).<br/>
+            </LI>
+            <LI>La 5ème value est l'éventuel motif lié à l'état.<br/>
+            </LI>
+          </UL>
+      </div>
+      
+<!--
+      <div class="panel">
+        <h2>Titre</h2>
+          Requête envoyée au serveur :<br/> 
+         <font face='Arial' color='blue'>?*************&</font><br/>
+          <UL>
+            <LI>Le paramètre <font color='blue'>a</font> est le numéro de l'action (<font color='blue'></font>) : récupération ................<br/>
+            Exécution du script <b><font color='green'>/distant/include/xxxxxxxxxxxxxxx.inc.php</font></b>.<br/>
+            </LI>
+            <LI>Le paramètre <font color='blue'></font> est 
+            </LI>
+            <LI>Le paramètre <font color='blue'></font> est 
+            </LI>
+            <LI>Le paramètre <font color='blue'></font> est 
+            </LI>
+            <LI>Le paramètre <font color='blue'></font> est 
+            </LI>
+            <LI>Le paramètre <font color='blue'></font> est 
+            </LI>
+          </UL>
+          Réponse du serveur (exemple) :<br/>
+          <font face='Arial' color='fuchsia'> >F<b>00</b>######</font>...<br/>
+          <UL>
+            <LI>La fonction retournée (<font color='fuchsia'><b></b></font>) est donc  ......
+            </LI>
+            <LI>La 1ère value est <br/>
+            </LI>
+            <LI>La 2ème value est <br/>
+            </LI>
+            <LI>La 3ème value est <br/>
+            </LI>
+            <LI>La 4ème value est <br/>
+            </LI>
+          </UL>
+      </div>
+      
+      <div class="panel">
+        <h2>Titre</h2>
+          Requête envoyée au serveur :<br/> 
+         <font face='Arial' color='blue'>?*************&</font><br/>
+          <UL>
+            <LI>Le paramètre <font color='blue'>a</font> est le numéro de l'action (<font color='blue'></font>) : récupération ..................<br/>
+            Exécution du script <b><font color='green'>/distant/include/xxxxxxxxxxxxxxx.inc.php</font></b>.<br/>
+            </LI>
+            <LI>Le paramètre <font color='blue'></font> est 
+            </LI>
+            <LI>Le paramètre <font color='blue'></font> est 
+            </LI>
+            <LI>Le paramètre <font color='blue'></font> est 
+            </LI>
+            <LI>Le paramètre <font color='blue'></font> est 
+            </LI>
+            <LI>Le paramètre <font color='blue'></font> est 
+            </LI>
+          </UL>
+          Réponse du serveur (exemple) :<br/>
+          <font face='Arial' color='fuchsia'> >F<b>00</b>######</font>...<br/>
+          <UL>
+            <LI>La fonction retournée (<font color='fuchsia'><b></b></font>) est donc  ......
+            </LI>
+            <LI>La 1ère value est <br/>
+            </LI>
+            <LI>La 2ème value est <br/>
+            </LI>
+            <LI>La 3ème value est <br/>
+            </LI>
+            <LI>La 4ème value est <br/>
+            </LI>
+          </UL>
+      </div>
+      
+      <div class="panel">
+        <h2>Titre</h2>
+          Requête envoyée au serveur :<br/> 
+         <font face='Arial' color='blue'>?*************&</font><br/>
+          <UL>
+            <LI>Le paramètre <font color='blue'>a</font> est le numéro de l'action (<font color='blue'></font>) : récupération ..................<br/>
+            Exécution du script <b><font color='green'>/distant/include/xxxxxxxxxxxxxxx.inc.php</font></b>.<br/>
+            </LI>
+            <LI>Le paramètre <font color='blue'></font> est 
+            </LI>
+            <LI>Le paramètre <font color='blue'></font> est 
+            </LI>
+            <LI>Le paramètre <font color='blue'></font> est 
+            </LI>
+            <LI>Le paramètre <font color='blue'></font> est 
+            </LI>
+            <LI>Le paramètre <font color='blue'></font> est 
+            </LI>
+          </UL>
+          Réponse du serveur (exemple) :<br/>
+          <font face='Arial' color='fuchsia'> >F<b>00</b>######</font>...<br/>
+          <UL>
+            <LI>La fonction retournée (<font color='fuchsia'><b></b></font>) est donc  ......
+            </LI>
+            <LI>La 1ère value est <br/>
+            </LI>
+            <LI>La 2ème value est <br/>
+            </LI>
+            <LI>La 3ème value est <br/>
+            </LI>
+            <LI>La 4ème value est <br/>
+            </LI>
+          </UL>
+      </div>
+      
+      <div class="panel">
+        <h2>Titre</h2>
+          Requête envoyée au serveur :<br/> 
+         <font face='Arial' color='blue'>?*************&</font><br/>
+          <UL>
+            <LI>Le 1er paramètre (<font color='blue'>a</font>) est le numéro de l'action (<font color='blue'></font>) : récupération ..................<br/>
+            Exécution du script <b><font color='green'>/distant/include/xxxxxxxxxxxxxxx.inc.php</font></b>.<br/>
+            </LI>
+            <LI>Le 2ème paramètre (<font color='blue'></font>) est 
+            </LI>
+            <LI>Le 3ème paramètre (<font color='blue'></font>) est 
+            </LI>
+            <LI>Le 4ème paramètre (<font color='blue'></font>) est 
+            </LI>
+            <LI>Le 5ème paramètre (<font color='blue'></font>) est 
+            </LI>
+            <LI>Le 6ème paramètre (<font color='blue'></font>) est 
+            </LI>
+          </UL>
+          Réponse du serveur (exemple) :<br/>
+          <font face='Arial' color='fuchsia'> >F<b>00</b>######</font>...<br/>
+          <UL>
+            <LI>La 1ère value est <br/>
+            </LI>
+            <LI>La 2ème value est <br/>
+            </LI>
+            <LI>La 3ème value est <br/>
+            </LI>
+            <LI>La 4ème value est <br/>
+            </LI>
+          </UL>
+      </div>
+      
+      <div class="panel">
+        <h2>Titre</h2>
+          Requête envoyée au serveur :<br/> 
+         <font face='Arial' color='blue'>?*************&</font><br/>
+          <UL>
+            <LI>Le 1er paramètre (<font color='blue'>a</font>) est le numéro de l'action (<font color='blue'></font>) : récupération ..................<br/>
+            Exécution du script <b><font color='green'>/distant/include/xxxxxxxxxxxxxxx.inc.php</font></b>.<br/>
+            </LI>
+            <LI>Le 2ème paramètre (<font color='blue'></font>) est 
+            </LI>
+            <LI>Le 3ème paramètre (<font color='blue'></font>) est 
+            </LI>
+            <LI>Le 4ème paramètre (<font color='blue'></font>) est 
+            </LI>
+            <LI>Le 5ème paramètre (<font color='blue'></font>) est 
+            </LI>
+            <LI>Le 6ème paramètre (<font color='blue'></font>) est 
+            </LI>
+          </UL>
+          Réponse du serveur (exemple) :<br/>
+          <font face='Arial' color='fuchsia'> >F<b>00</b>######</font>...<br/>
+          <UL>
+            <LI>La 1ère value est <br/>
+            </LI>
+            <LI>La 2ème value est <br/>
+            </LI>
+            <LI>La 3ème value est <br/>
+            </LI>
+            <LI>La 4ème value est <br/>
+            </LI>
+          </UL>
+      </div>
+-->      
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      <div class="panel">
+        <h2>Informations</h2>
+          <UL>
+            <LI>
+              Forum officiel : <A HREF='http://www.intramessenger.com/forum/' target='_blank'>http://www.intramessenger.com/forum/</A><BR/>
+              N'hésitez pas à venir y proposer vos améliorations et suggestions ainsi que vos traductions.<BR/>
+            </LI>
+            <LI>
+              Support : <A HREF='http://www.intramessenger.net/contact.php?lang=FR&' target='_blank'>http://www.intramessenger.net/contact.php?lang=FR&</A><BR/>
+            </LI>
+            <LI>
+              Les mises à jours (nouvelles versions) du serveur ont lieu deux fois par an (vers septembre et janvier environ).
+            </LI>
+          </UL>
+            <p class="notice">
+            Consulter la <A href="http://www.intramessenger.com/forum/viewforum.php?f=12&" target="_blank">liste des nouveautés</A> ainsi que 
+            la <A href="http://www.intramessenger.com/forum/viewtopic.php?t=341&" target="_blank">liste des prochaines améliorations</A> (sur internet).
+            </P>
+      </div>
+
+      <div class="panel">
+        <A HREF='http://www.theuds.com' target='_blank'>THeUDS</A> © 2006 - 2012
+      </div>
+
+    </div>
+  </body>
+</html>

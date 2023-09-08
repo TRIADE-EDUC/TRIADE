@@ -1,0 +1,482 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<!--
+/*******************************************************
+ **                  IntraMessenger - server          **
+ **                                                   **
+ **  Copyright:      (C) 2006 - 2016 THeUDS           **
+ **  Web:            http://www.theuds.com            **
+ **                  http://www.intramessenger.net    **
+ **  Licence :       GPL (GNU Public License)         **
+ **  http://opensource.org/licenses/gpl-license.php   **
+ *******************************************************/
+
+/*******************************************************
+ **       This file is part of IntraMessenger-server  **
+ **                                                   **
+ **  IntraMessenger is a free software.               **
+ **  IntraMessenger is distributed in the hope that   **
+ **  it will be useful, but WITHOUT ANY WARRANTY.     **
+ *******************************************************/
+ -->
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="fr" xml:lang="fr">
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
+    <meta http-equiv="content-language" content="fr" />
+    <meta name="description" content="Instructions to install IntraMessenger" />
+    <meta http-equiv="content-style-type" content="text/css" />
+    <META NAME="Author" CONTENT="THeUDS.com">
+    <META NAME="copyright" content="THeUDS.com">
+    <LINK REL="SHORTCUT ICON" HREF="../../images/favicon.ico">
+    <title>[IntraMessenger] Installation</title>
+    <base href="./" target="_blank" />
+    <style type="text/css" >
+      <!--
+      body {
+        font-family:"Trebuchet MS", Arial, Sans-Serif;
+        color:#444;
+        font-size:.9em;
+        background-color:#FFF;
+        margin:0;
+      }
+
+      #header {
+        background-color:#A5C2E0;
+        font-family:Georgia, serif;
+        font-size:1.5em;
+        border-bottom:1px solid #650;
+        color:#FFF;
+        padding:2px 6% 12px;
+      }
+
+      #content {
+        margin:20px 6%;
+      }
+
+      .panel {
+        border:1px solid #D8D8D8;
+        background-color:#EFEFEF;
+        margin:1em 0;
+        padding:1.2ex;
+      }
+
+      .panel h2 {
+        border-bottom:1px dashed #2181B0;
+        font-size:1.6em;
+        font-weight:400;
+        color:#2181B0;
+        margin:0 0 0.5em;
+      }
+
+      .notice {
+        background:#FFFED1;
+        border:1px solid #E5E4A0;
+        color:#4B4000;
+        margin:0 0 15px;
+        padding:10px;
+      }
+
+      ul,ol {
+        list-style:square;
+       line-height:130%;
+        text-align:justify;
+        margin:10px 8px;
+      }
+      A.Code {
+        font-size : 11px;
+        font-weight : bold;
+        color : #990000;
+      }
+      -->
+    </style>
+  </head>
+  <body>
+    <div id="header">
+      <div>
+        <h1>Instructions</h1>
+        <ul>
+        <li>1°) Pour la mise &agrave; jour de toutes les versions d'IntraMessenger</li>
+        <li>2°) Pour une nouvelle installation d'IntraMessenger</li>
+        </ul>
+      </div>
+    </div>
+    <div id="content">
+    
+      <div class="panel">
+        <h2>Avant propos</h2>
+        <p>
+          Tout d'abord merci de votre int&eacute;r&ecirc;t pour IntraMessenger.
+          <br />
+          Pour plus d'informations sur <A href="http://www.intramessenger.net/doc/liste_options.html" target="_blank">les options serveur</A>, consultez aussi <A href="../intramessenger_options.pdf" target="_blank">l'impact visuel sur les postes clients</A>.<BR/>
+        </p>
+
+        <h2>Syst&egrave;me requis</h2>
+          Il faut disposer d'un serveur web (mutualisé ou dédié) équipé de PHP et MySQL <small>(serveur dit LAMP ou WAMP)</small>.<BR/>
+          Exemple pour Windows : installer <A HREF='http://www.wampserver.com/' target='_blank'>WampServer</A> ou <A HREF='http://www.easyphp.org/' target='_blank'>EasyPhp</A> ou <A HREF='http://www.apachefriends.org/fr/xampp.html' target='_blank'>Xampp</A> 
+          (voir la <A HREF='http://www.intramessenger.net/doc/installation_im_serveur_debutant.pdf' target='_blank'>doc au format pdf</A> <font color='green'>fournie dans /doc/fr/</font>).<BR/>
+        </ul>
+      </div>
+      
+      <div class="panel">
+        <h2><strong>1. Mettre &agrave; jour</strong> une version ant&eacute;rieure d'<I>IntraMessenger</I></h2>
+          L'historique des modifications est disponible dans le fichier <I>/doc/fr/<A href="versions.html" target="_blank">versions.html</A></I> et 
+          plus détaillée <A href="http://www.intramessenger.com/forum/viewforum.php?f=12&" target="_blank">sur le forum officiel</A> 
+          (ou sur <A href="http://twitter.com/intramessenger" target="_blank">twitter</A>).<BR/>
+          <UL>
+            <LI>Activer le mode maintenance (cocher et enregistrer, ou option <A class="Code">_MAINTENANCE_MODE</A> non vide : dans le fichier des options).<BR/>
+            </LI>
+            <LI>Attendre 5 minutes.<BR/>
+            </LI>
+            <LI>Effectuer une sauvegarde de la base de donn&eacute;es via <A href="http://www.phpmyadmin.net/" target="_blank">phpMyAdmin</A> (ou équivalent).<BR/>
+            </LI>
+            <LI> Répertoires à sauvegarder :<br/>
+            - <SPAN style="BACKGROUND-COLOR: #ffff88"><I><B>/common/config/</B></I></SPAN> : configuration actuelle <small>(options et paramètres de connexion à MySQL)</small><br/>
+            - <I>/distant/avatar/</I> : les avatars<BR/>
+            - <I>/distant/log/</I> : journaux d'événements utilisateurs<BR/>
+            - <I>/admin/log/</I> : journaux d'événements de l'administrateur<BR/>
+            </LI>
+            <LI>Renommer le r&eacute;pertoire actuel d'<I>IntraMessenger</I> pour sauvegarder temporairement les fichiers (ex: <I>/intramessenger<B>.sav</B>/</I>).<BR/>
+            </LI>
+            <LI>D&eacute;zipper l'archive <B>intramessenger.zip</B>, 
+            <A HREF='http://www.intramessenger.net/download.php' target='_blank'>t&eacute;l&eacute;charg&eacute;e sur depuis le site officiel</A> 
+            </LI>
+            <LI>
+            Transférer son contenu (ex: via FTP) dans le répertoire du serveur web (http) contenant <I>IntraMessenger</I>.
+            </LI>
+            <LI> Restaurer les répertoires :<br/>
+            - <I><B>/common/config/</B></I><br/>
+            - <I>/distant/avatar/</I><BR/>
+            - <I>/distant/log/</I><BR/>
+            - <I>/admin/log/</I><BR/>
+            </LI>
+            <LI> Renommer le répertoire /<B>admin</B>/</LI>
+            <LI><DIV style="color:white; background-color:red;">&nbsp; Important !</DIV>
+              <p class="notice">
+              Aller à la page <A HREF='../../admin/check.php'>/admin/check.php</A> (via le navigateur) et vérifier que tous les paramètres sont corrects (verts), dont :<BR/>
+               &nbsp; - les nouvelles options sont présentes.<BR/>
+               &nbsp; - la modification de la structure des tables.<BR/>
+              </p>
+            </LI>
+            <LI><SPAN style="BACKGROUND-COLOR: #ffff88">Enregistrer les options.</SPAN>
+            </LI>
+            <LI>Supprimer le répertoire /<B>install</B>/</LI>
+            </LI>
+            <LI><A HREF='http://www.intramessenger.com/forum/viewtopic.php?f=17&t=1420&' target='_blank'>Désactiver le mode maintenance</A> (décocher ou vider l'option <A class="Code">_MAINTENANCE_MODE</A>).<BR/>
+            </LI>
+            <LI>
+            Une fois l'installation termin&eacute;e et apr&egrave;s s'&ecirc;tre assur&eacute; que la nouvelle version fonctionne correctement, 
+            supprimer le r&eacute;pertoire <I>/intramessenger.sav/</I>.<BR/>
+            </LI>
+          </UL>
+      </div>
+
+      <div class="panel" id="install">
+        <h2><strong>2. Installer</strong> <I>IntraMessenger</I> pour la premi&egrave;re fois</h2>
+          Les débutants consulteront la<SPAN style='BACKGROUND-COLOR: #ffff88'>  documentation d'installation </SPAN>(au format pdf) : <A HREF='http://www.intramessenger.net/doc/installation_im_serveur_debutant.pdf' target='_blank'>installation_im_serveur_debutant.pdf</A>.<BR/>
+          <UL>
+
+            <LI>D&eacute;zipper l'archive <B>intramessenger.zip</B>, <A HREF='http://www.intramessenger.net/download.php?lang=FR&' target='_blank'>t&eacute;l&eacute;charg&eacute;e depuis le site officiel</A>, 
+            dans le r&eacute;pertoire racine (/www/ ou autre) du serveur web (HTTP).
+            </LI>
+            <LI>Si possible, créer une base de données dédiée (ex: 'IntraMessenger').
+            </LI>
+            <LI><STRONG>Commencer l'installation en allant à la page <A HREF='../../install/install.php' target='_blank'>/install/install.php</A></STRONG> (via le navigateur web) <STRONG>et suivre les instructions</STRONG>.
+            </LI>
+            <!--
+            <LI>Aller au panneau d'adminstration (<acronym title='Admin Control Panel'>ACP</acronym>) y définir les options <A HREF='../../admin/list_options_updating.php' target='_blank'>/admin/list_options_updating.php</A> via le navigateur<br/> 
+            (ou modifier manuellement le fichier <I>/common/config/<B>config.inc.php</B></I>)<br/>
+            </LI>
+            -->
+            <LI>Renommer ou supprimer le répertoire /<B>install</B>/.
+            </LI>
+            <LI>Renommer le répertoire /<B>admin</B>/ (sinon, par mesure de sécurité, <BLINK>le serveur sera considéré en mode maintenance</BLINK>).
+            </LI>
+            <LI>Vérifier que les permissions (chmod) sont suffisantes sur les répertoires : <B>/distant/log/ - /distant/avatar/ - /public/log/ - /public/upload/ !</B>
+            </LI>
+            <!--
+            <LI>Modifier le fichier <I>/common/config/auth.inc.php</I> afin d'y indiquer une valeur à <A class="Code">$password_pepper</A> (pour une meilleure sécurité des mots de passe) (si <A class="Code">_USER_NEED_PASSWORD</A> activée).
+            </LI>
+            -->
+            <LI>Pour finir l'installation : <A HREF='http://www.intramessenger.com/forum/viewtopic.php?f=17&t=1420&' target='_blank'>désactiver le mode maintenance</A> (vider l'option <A class="Code">_MAINTENANCE_MODE</A>).<BR/>
+            </LI>
+            <!--
+            <LI>Verrouiller l'accès au répertoire /<B>admin</B>/ par mot de passe (via <A HREF='http://fr.wikipedia.org/wiki/Htaccess'>htaccess</A>) : voir la page <A HREF='../../admin/htaccess.php' target='_blank'>/admin/htaccess.php</A> (lire <A HREF='http://web-infoservice.com/section-blog/27-tutoriels/70-configuration-apache-htaccess.html?start=4' target='_blank'>ici</A> aussi).
+            </LI>
+            -->
+          </UL>
+      </div>
+
+      <div class="panel">
+        <h2>Informations complémentaires et conseils</h2>
+          <UL>
+            <p class="notice">
+              En cas de lenteurs depuis les postes clients <A HREF='http://www.intramessenger.com/forum/viewtopic.php?t=370&' target='_blank'>lire ici</A> (FAQ).
+            </P>
+            <LI>En intranet (principalement et sauf DHCP ou proxy) : renommer <I>/common/acces.inc.chekip.php</I> en <I>/common/acces.inc.php</I> <BR/>
+            afin que l'adresse IP de chaque utilisateur soit systématiquement vérifiée  (meilleure sécurité).<BR/>
+            </LI>
+            <LI>Gestion de la censure des messages (liste de mots (gros mots) remplacés par "...") dans le fichier : <I>/common/config/censure.txt</I><BR/>
+            (uniquement si option _CRYPT_MESSAGES non activée).<BR/>
+            </LI>
+            <LI>Si vous n'arrivez pas à configurer votre serveur, vous pouvez toujours faire des essais du logiciel "client" en utilisant comme url (paramètre demandé au démarrage) : 
+            http://www.theuds.com/intramessenger/ (serveur de tests).<BR/>
+            Si vous ne voulez pas installer de serveur, vous pouvez utiliser l'url (adresse) : http://www.intramessenger.com/demo/<BR/>
+            </LI>
+         </UL>
+      </div>
+
+      <div class="panel">
+        <h2>Mise à jour automatique des postes clients</h2>
+          Voir /doc/fr/<A HREF='comment_mettre_a_jour_les_postes.html'>comment_mettre_a_jour_les_postes.html</A>.<BR/>
+      </div>
+
+      <div class="panel">
+        <h2>Authentification externe/tierce</h2>
+          Il est tout à fait possible d'effectuer l'authentification via un serveur (base de données MySQL) :
+          <UL>
+            <A HREF='http://forums.phpbb-fr.com/' target='_blank'>phpBB</A>, 
+            <A HREF='http://www.vbulletin-ressources.com/' target='_blank'>vBulletin</A>, 
+            <A HREF='http://www.phorum.org/' target='_blank'>Phorum</A>, 
+            <A HREF='http://www.joomla.fr/' target='_blank'>Joomla</A>, 
+            <A HREF='http://www.phpnuke.org/' target='_blank'>PHP-Nuke</A>, 
+            <A HREF='http://www.egroupware.org/' target='_blank'>eGroupWare</A>, 
+            <A HREF='http://www.dotproject.net/' target='_blank'>dotProject</A>, 
+            <A HREF='http://fr.ovidentia.org/' target='_blank'>Ovidentia</A>, 
+            <A HREF='http://www.dolibarr.fr/' target='_blank'>Dolibarr</A>, 
+            <A HREF='http://www.phenix.gapi.fr/' target='_blank'>Phenix-Agenda</A>, 
+            <A HREF='http://www.simplemachines.org/' target='_blank'>SMF</A>, 
+            <A HREF='http://www.achievo.org/' target='_blank'>Achievo</A>, 
+            <A HREF='http://www.taskfreak.com/' target='_blank'>TaskFreak</A>, 
+            <A HREF='http://www.invisionpower.com/community/board/' target='_blank'>IP-Board</A>,
+            <A HREF='http://webcollab.sourceforge.net/' target='_blank'>WebCollab</A>, 
+            <A HREF='http://www.php-fusion.co.uk/' target='_blank'>PHP-Fusion</A>, 
+            <A HREF='http://www.frxoops.org/' target='_blank'>Xoops</A>, 
+            <A HREF='http://www.mybb.fr/' target='_blank'>MyBB</A>, 
+            <A HREF='http://phpgroupware.org/' target='_blank'>phpGroupWare</A>, 
+            <A HREF='http://www.crm-france.com/' target='_blank'>SugarCRM</A>, 
+            <A HREF='http://www.french-vtiger.fr/' target='_blank'>vtigerCRM</A>, 
+            <A HREF='http://drupalfr.org/' target='_blank'>Drupal</A>, 
+            <A HREF='http://www.typo3.fr/' target='_blank'>Typo3</A>, 
+            <A HREF='http://www.mamboserver.com/' target='_blank'>Mambo</A>, 
+            <A HREF='http://nucleuscms.org/' target='_blank'>Nucleus</A>, 
+            <A HREF='http://modxcms.com/' target='_blank'>MODx</A>, 
+            <A HREF='http://www.streber-pm.org/' target='_blank'>Streber</A>, 
+            <A HREF='http://info.tikiwiki.org/' target='_blank'>TikiWiki</A>, 
+            <A HREF='http://www.phprojekt.com/' target='_blank'>PHProjekt</A>, 
+            <A HREF='http://www.toutateam.com/' target='_blank'>Toutateam</A>,
+            <A HREF='http://www.anelectron.com/' target='_blank'>AEF Board</A>, 
+            <A HREF='http://fudforum.org/' target='_blank'>FUDforum</A>, 
+            <A HREF='http://www.minibb.com/' target='_blank'>miniBB</A>, 
+            <A HREF='http://owl.sourceforge.net/' target='_blank'>Owl</A>, 
+            <A HREF='http://punbb.informer.com/' target='_blank'>PunBB</A>, 
+            <A HREF='http://www.ultraapps.com/app_overview.php?app_id=19&' target='_blank'>VCalendar</A>, 
+            <A HREF='http://www.k5n.us/webcalendar.php' target='_blank'>WebCalendar</A>, 
+            <A HREF='http://www.comsenz.com/' target='_blank'>UCenter</A> (Discuz!), 
+            <A HREF='http://www.agora-project.net/' target='_blank'>Agora-Project</A>, 
+            <A HREF='http://www.collabtive.o-dyn.de/?lang=fr&' target='_blank'>Collabtive</A>, 
+            <A HREF='http://sourceforge.net/projects/group-office/' target='_blank'>Group-Office</A>, 
+            <A HREF='http://www.cuteflow.org/' target='_blank'>CuteFlow</A>, 
+            <A HREF='http://www.concrete5.org/' target='_blank'>Concrete5</A>, 
+            <A HREF='http://www.dotclear.net/' target='_blank'>Dotclear</A>, 
+            <A HREF='http://www.projectpier.org/' target='_blank'>ProjectPier</A>, 
+            <A HREF='http://www.bitweaver.org/' target='_blank'>Bitweaver</A>, 
+            <A HREF='http://wordpress.org/' target='_blank'>WordPress</A>, 
+            <A HREF='http://www.ultraapps.com/app_overview.php?app_id=20&' target='_blank'>IssueManager</A>, 
+            <A HREF='http://www.activecollab.com/' target='_blank'>activeCollab</A>, 
+            <A HREF='http://ez.no/ezpublish/' target='_blank'>eZ Publish</A>,
+            <A HREF='http://www.elgg.org/'>Elgg</A>, 
+            <A HREF='http://www.yetanothercommunitysystem.com/'>YACS</A>, 
+            <A HREF='http://www.contao.org/'>Contao</A>, 
+            <A HREF='http://www.triade-educ.com/'>Triade</A>, 
+            <A HREF='http://www.php-collab.com/'>phpCollab</A>, 
+            <A HREF='http://www.fengoffice.com/'>Feng Office</A>, 
+            <A HREF='http://www.accord5.com/trellis/'>Trellis Desk</A>, 
+            <A HREF='http://www.phpboost.com/' target='_blank'>PHPBoost</A>, 
+            <A HREF='http://www.obm.org/' target='_blank'>OBM</A>, 
+            <A HREF='http://www.woltlab.com/products/burning_board_lite/' target='_blank'>Burning Board</A>, 
+            <A HREF='http://www.claroline.net/' target='_blank'>Claroline</A>, 
+            <A HREF='http://www.cmsmadesimple.org/' target='_blank'>CMS-Made-Simple</A>, 
+            <A HREF='http://www.cmsmadesimple.fr/' target='_blank'>CMS-Made-Simple</A>, 
+            <A HREF='http://www.connectix-boards.org/' target='_blank'>Connectix-Boards</A>, 
+            <A HREF='http://www.dokeos.com/fr/' target='_blank'>Dokeos</A>, 
+            <A HREF='http://e107.org/' target='_blank'>e107</A>, 
+            <A HREF='http://fluxbb.org/' target='_blank'>FluxBB</A>, 
+            <A HREF='http://gepi.mutualibre.org/fr/' target='_blank'>GEPI</A>, 
+            <A HREF='http://www.impresscms.org/' target='_blank'>ImpressCMS</A>, 
+            <A HREF='http://www.malleo-cms.com/' target='_blank'>Malleo</A>, 
+            <A HREF='http://moodle.org/' target='_blank'>Moodle</A>, 
+            <A HREF='http://www.pms-solution.fr/' target='_blank'>PMS</A>, 
+            <A HREF='http://www.phpbms.org/' target='_blank'>phpBMS</A>, 
+            <A HREF='http://www.phpizabi.net/' target='_blank'>PHPizabi</A>, 
+            <A HREF='http://www.pligg.com/' target='_blank'>Pligg</A>, 
+            <A HREF='http://promethee.eu.org/' target='_blank'>Prométhée</A>, 
+            <A HREF='http://www.xmbforum.com/' target='_blank'>XMB-Forum</A>, 
+            <A HREF='http://www.prestashop.com/' target='_blank'>Prestashop</A>, 
+            <A HREF='http://www.oscommerce-fr.info/' target='_blank'>osCommerce</A>, 
+            <A HREF='http://www.hesk.com/' target='_blank'>HESK</A>, 
+            <A HREF='http://www.tine20.org/' target='_blank'>Tine</A>, 
+            <A HREF='http://sitracker.org/' target='_blank'>SiT!</A>, 
+            <A HREF='http://www.spip.net/' target='_blank'>SPIP</A>, 
+            <A HREF='http://www.phpmyfaq.de/' target='_blank'>phpMyFAQ</A>, 
+            <A HREF='http://68kb.com/' target='_blank'>68KB</A>, 
+            <A HREF='http://www.admidio.org/' target='_blank'>Admidio</A>, 
+            <A HREF='http://fengoffice.com/' target='_blank'>Feng Office</A>, 
+            <A HREF='http://www.adheo-solution.fr/' target='_blank'>Adheo</A>, 
+            <A HREF='http://www.phpfox.com/' target='_blank'>phpFoX</A>, 
+            <A HREF='http://www.todoyu.com/' target='_blank'>todoyu</A>, 
+            <A HREF='http://thelia.fr/' target='_blank'>Thelia</A>, 
+            <A HREF='http://sharetronix.com/' target='_blank'>Sharetronix</A>, 
+            <A HREF='http://www.npds.org/' target='_blank'>NPDS</A>, 
+            <A HREF='http://vanillaforums.org/' target='_blank'>Vanilla</A>, 
+            <A HREF='http://www.osticket.com/' target='_blank'>osTicket</A>, 
+            <A HREF='http://www.oneorzero.com/index.php?controller=main_general&' target='_blank'>OneOrZero AIMS</A>, 
+            <A HREF='http://www.mantisbt.org/' target='_blank'>MantisBT</A>, 
+            <A HREF='http://www.lodel.org/' target='_blank'>Lodel</A>, 
+            <A HREF='http://www.kubelabs.com/phpdug/' target='_blank'>PHPDug</A>, 
+            <A HREF='http://b2evolution.net/' target='_blank'>b2evolution</A>, 
+            <A HREF='http://www.artiphp.com/' target='_blank'>Artiphp</A>, 
+            <A HREF='http://www.web2project.net/' target='_blank'>web2Project</A>, 
+            <A HREF='http://www.socialengine.net/' target='_blank'>SocialEngine</A>, 
+            <A HREF='http://www.nuked-klan.org/' target='_blank'>Nuked-Klan</A>, 
+            <A HREF='http://www.docebo.org/doceboCms/' target='_blank'>Docebo</A>, 
+            <A HREF='http://www.websitebaker2.org/' target='_blank'>WebsiteBaker</A>, 
+            <A HREF='http://www.cs-cart.com/' target='_blank'>CS-Cart</A>, 
+            <A HREF='http://livecart.com/' target='_blank'>LiveCart</A>, 
+            <A HREF='http://www.zen-cart.com/' target='_blank'>ZenCart</A>, 
+            <A HREF='http://www.tomatocart.com/' target='_blank'>TomatoCart</A>, 
+            <A HREF='http://www.magentocommerce.com/' target='_blank'>Magento</A>, 
+            <A HREF='http://frontaccounting.net/' target='_blank'>FrontAccounting</A>, 
+            <A HREF='http://www.geeklog.net/' target='_blank'>Geeklog</A>, 
+            <A HREF='http://www.thebuggenie.com/' target='_blank'>The Bug Genie</A>,
+            <A HREF='http://www.epesibim.com/' target='_blank'>epesi-BIM</A>, 
+            <A HREF='http://www.openfreeway.org/' target='_blank'>Freeway</A>, 
+            <A HREF='http://www.boonex.com/' target='_blank'>Dolphin</A>, 
+            <A HREF='http://webissues.mimec.org/' target='_blank'>WebIssues</A>, 
+            <A HREF='http://www.projelead.fr/' target='_blank'>ProjeLead</A>, 
+            <A HREF='http://status.net/' target='_blank'>StatusNet</A>, 
+            <A HREF='http://www.chamilo.org/' target='_blank'>Chamilo</A>, 
+            <A HREF='http://www.atutor.ca/' target='_blank'>ATutor</A>, 
+            <A HREF='http://www.oscmax.com/' target='_blank'>osCMax</A>, 
+            <A HREF='http://mahara.org/' target='_blank'>Mahara</A>, 
+            <A HREF='http://www.simple-groupware.de/cms/' target='_blank'>SimpleGroupware</A>, 
+            <A HREF='http://trac.bevolunteer.org/' target='_blank'>BeWelcome-Rox</A>, 
+            <A HREF='http://www.pragmamx.fr/' target='_blank'>pragmaMx</A>, 
+            <A HREF='http://textpattern.com/' target='_blank'>Textpattern</A>, 
+            <A HREF='http://zikula.org/' target='_blank'>Zikula</A>, 
+            <A HREF='http://www.open-realty.org/' target='_blank'>Open-Realty</A>, 
+            <A HREF='http://coppermine-gallery.net/' target='_blank'>Coppermine Photo Gallery</A> (cpg), 
+            <A HREF='http://www.helpcenterlive.com/' target='_blank'>Help Center Live</A>, 
+            <A HREF='http://www.phpwcms.de/' target='_blank'>phpwcms</A>, 
+            <A HREF='http://www.etraxis.com/' target='_blank'>eTraxis</A>, 
+            <A HREF='http://portal.friendika.com/' target='_blank'>Friendika</A>, 
+            <A HREF='http://cibonfire.com/' target='_blank'>Bonfire</A>, 
+            <A HREF='http://www.pcpin.com' target='_blank'>PCPIN-Chat</A>, 
+            <A HREF='http://www.dmanager.org/' target='_blank'>DManager</A>, 
+            <A HREF='http://ocportal.com/' target='_blank'>ocPortal</A>, 
+            <A HREF='http://www.silverstripe.com/' target='_blank'>SilverStripe</A>, 
+            <A HREF='http://www.zazavi.com/' target='_blank'>Zazavi</A>, 
+            <A HREF='http://php.brickhost.com/' target='_blank'>phpScheduleIt</A>, 
+            <A HREF='http://www.pyrocms.com/' target='_blank'>PyroCMS</A>, 
+            <A HREF='http://moundlabs.com/' target='_blank'>Mound</A>, 
+            <A HREF='http://www.cotonti.com/' target='_blank'>Cotonti</a>, 
+            <A HREF='http://dragonflycms.org/' target='_blank'>Dragonfly-CMS</a>, 
+            <A HREF='http://aphpkb.org/' target='_blank'>aphpKb</a>, 
+            <A HREF='http://qdpm.net/' target='_blank'>qdPM</a>, 
+            <A HREF='http://www.bigace.de/' target='_blank'>BIGACE</a>, 
+            <A HREF='http://www.kimai.org/' target='_blank'>Kimai</a>, 
+            <A HREF='http://www.datemill.com/' target='_blank'>Etano</a>, 
+            <A HREF='http://www.pbboard.com/' target='_blank'>PBBoard</A>, 
+            <A HREF='http://www.s9y.org/' target='_blank'>Serendipity</A>, 
+            <A HREF='http://www.question2answer.org/' target='_blank'>Question2Answer</A>, 
+            <A HREF='http://www.oxwall.org/' target='_blank'>Oxwall</A>, 
+            <A HREF='http://traq.io/' target='_blank'>Traq</A>, 
+            <!-- <A HREF='http://projectorria.toolware.fr/' target='_blank'>Project Or RIA</A>,  -->
+            <A HREF='http://www.projeqtor.org/index.php/menu_home_fr' target='_blank'>ProjeQtOr</A>, 
+            <A HREF='http://www.fire-soft-board.com/' target='_blank'>Fire Soft Board</a>, 
+            <A HREF='http://galette.eu/dc/?navlang=fr&' target='_blank'>Galette</a>...<BR/>
+          </UL>
+          <p class="notice">
+            Veuillez <B>consulter <A HREF='authentification_externe.html' target='_blank'>authentification_externe.html</A></B>.<BR/>
+          </P>
+      </div>
+
+      <div class="panel">
+        <h2>Photos ou avatars</h2>
+          Placez les photos des utilisateurs dans le répertoire <I>/distant/avatar/</I>, avec comme nom de fichier : <I>pseudo</I><B>.jpg</B><BR/>
+          L'administrateur peut aussi remplacer les avatars.<BR/>
+          Si l'option est activée, les utilisateurs peuvent proposer de nouveaux avatars (validés par l'administrateur avant de pouvoir être utilisés).<BR/>
+      </div>
+
+      <div class="panel">
+        <h2>Annuaire des serveurs <I>IntraMessenger</I> publics</h2>
+          Vous pouvez vous inscrire sur l'annuaire des serveurs publics <I>IntraMessenger</I> sur internet : <A HREF='http://www.intramessenger.net/list/servers/' target='_blank'>http://www.intramessenger.net/list/servers/</A><BR/>
+          Voir <A HREF='../../admin/register_to_public_servers_list.php' target='_blank'>/admin/register_to_public_servers_list.php</A><BR/>
+          <UL>
+            <LI>renseigner : <A class="Code">_IM_ADDRESS_BOOK_PASSWORD</A> (sera demandé lors de l'inscription)<BR/>
+            </LI>
+            <LI>activer : <A class="Code">_ALLOW_AUTO_ADD_NEW_USER_ON_SERVER</A><BR/>
+            </LI>
+            <LI>laisser vide : <A class="Code">_PASSWORD_FOR_PRIVATE_SERVER</A> et <A class="Code">_ENTERPRISE_SERVER</A><BR/>
+            </LI>
+          </UL>
+      </div>
+
+      <div class="panel">
+        <h2>Contenu des répertoires</h2>
+          <IMG src="repertoires.png" align='left'/>
+          <SMALL><BR/></SMALL>
+          - <I>/admin/</I> (à renommer et/ou protéger !) contient l'interface admin <acronym title='Admin Control Panel'>ACP</acronym>.<BR/>
+          - <I>/admin/log/</I> journal d'évenements (logs) d'éventuels d'erreurs, ainsi que l'activité (ex: suppression, validation de comptes...) de l'administrateur.<BR/>
+          - <I>/admin/save/</I> vos sauvegardes.<BR/>
+          - <I>/common/</I> scripts communs.<BR/>
+          - <B><I>/common/config/</I> fichiers de configuration (à sauvegarder avant de mettre à jour !).</B><BR/>
+          - <I>/common/extern/</I> scripts d'authentification externe.<BR/>
+          - <I>/common/lang/</I> traductions.<BR/>
+          - <I>/common/library/</I> librairies externes : scripts de géolocation pour les connexions sur internet (GeoIP.dat à mettre à jour tous les mois).<BR/>
+          - <I>/common/styles/</I> styles (css et images).<BR/>
+          <SMALL><BR/></SMALL>
+          - <I>/distant/</I> les scripts appelés depuis les postes clients.<BR/>
+          - <I>/distant/avatar/</I> contient les photos (ou avatar) des utilisateurs (si l'administrateur y place des photos/images).<BR/>
+          - <I>/distant/include/</I> : scripts appelés indirectement (via /distant/action.php) depuis les postes clients.<BR/>
+          - <I>/distant/log/</I> logs (journaux) de connexions et d'erreurs.<BR/>
+          - <I>/distant/send/</I> images que l'ont peut envoyer (en tant qu'administrateur) aux utilisateurs.<BR/>
+          - <I>/distant/update/</I> contient les mises à jour du client (pour les mises à jour "depuis le serveur").<BR/>
+          <SMALL><BR/></SMALL>
+          - <I>/doc/fr/</I> c'est ici... n'oubliez pas de lire <A HREF="versions.html">versions.html</A> avant/après chaque mise à jour !<BR/>
+          <BR/>
+          <BR/>
+          - <I>/install/</I> scripts d'installation et de mise à jour de la structure des tables (à renommer après installation).<BR/>
+          - <I>/public/</I> permet aux postes clients de consulter les options du serveur (si l'administrateur ne supprime pas ce répertoire).<BR/>
+          - <I>/public/log/</I> journal d'évenements (logs) des propositions d'avatars.<BR/>
+          - <I>/public/upload/</I> avatars proposés, en attente de validation par l'administrateur.<BR/>
+      </div>
+
+      <div class="panel">
+        <h2>Informations</h2>
+          <UL>
+            <LI>
+              Forum officiel : <A HREF='http://www.intramessenger.com/forum/' target='_blank'>http://www.intramessenger.com/forum/</A><BR/>
+              N'hésitez pas à venir y proposer vos améliorations et suggestions ainsi que vos traductions.<BR/>
+            </LI>
+            <LI>
+              Support : <A HREF='http://www.intramessenger.net/contact.php?lang=FR&' target='_blank'>http://www.intramessenger.net/contact.php?lang=FR&</A><BR/>
+            </LI>
+            <LI>
+              Les mises à jours (nouvelles versions) du serveur ont lieu deux fois par an (vers septembre et janvier environ).
+            </LI>
+          </UL>
+            <p class="notice">
+            Consulter la <A href="http://www.intramessenger.com/forum/viewforum.php?f=12&" target="_blank">liste des nouveautés</A> ainsi que 
+            la <A href="http://www.intramessenger.com/forum/viewtopic.php?t=341&" target="_blank">liste des prochaines améliorations</A> (sur internet).
+            </P>
+      </div>
+
+      <div class="panel">
+        <A HREF='http://www.theuds.com' target='_blank'>THeUDS</A> © 2006 - 2016
+      </div>
+
+    </div>
+  </body>
+</html>

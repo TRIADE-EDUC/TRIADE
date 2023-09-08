@@ -1,0 +1,16 @@
+Options files are in folder (e.g. username is "NyName") :
+
+Windows XP :
+C:\Documents and Settings\MyName\Application Data\THeUDS\IntraMessenger\
+
+
+Windows Vista/7 :
+C:\Users\MyName\AppData\Roaming\THeUDS\IntraMessenger\ 
+or
+C:\Users\MyName\AppData\Local\THeUDS\IntraMessenger\ 
+
+
+
+
+
+Copy options file (options.ini) in current folder for portabiliy (e.g. to copy on USB key)...

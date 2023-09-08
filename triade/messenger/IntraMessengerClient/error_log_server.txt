@@ -1,0 +1,4 @@
+  31/10/2010 19:36:00:18  Le serveur ne répond pas. Y a-t'il un serveur HTTP sur la machine cible ?
+Un problème a été détecté pendant l'envoi d'informations sur la socket.
+  31/10/2010 19:36:01:10  Le serveur ne répond pas. Y a-t'il un serveur HTTP sur la machine cible ?
+Un problème a été détecté pendant l'envoi d'informations sur la socket.

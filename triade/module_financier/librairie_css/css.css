@@ -1,0 +1,60 @@
+/* CSS Document */
+
+.messages_utilisateur {
+	margin-bottom:5px;
+}
+
+.messages_utilisateur .message {
+	margin-top:5px;
+	background-color:#006699;
+	color:#FFFFFF;
+	text-align:center;
+	padding-left:10px;
+	padding-right:10px;
+}
+
+.messages_utilisateur .avertissement {
+	margin-top:5px;
+	background-color:#FFCC33;
+	color:#FFFFFF;
+	text-align:center;
+	padding-left:10px;
+	padding-right:10px;
+}
+
+.messages_utilisateur .erreur {
+	margin-top:5px;
+	background-color:#FF0000;
+	color:#FFFFFF;
+	text-align:center;
+	padding-left:10px;
+	padding-right:10px;
+}
+
+.element_liste_grise {
+	color:#CCCCCC;
+}
+
+.texte_noir {
+	color:#000000;
+}
+
+.texte_vert {
+	color:#66FF00;
+}
+
+.texte_orange {
+	color:#ff9900;
+}
+
+.texte_rouge {
+	color:#FF0000;
+}
+
+.texte_bleu {
+	color:#006699;
+}
+
+.texte_gris {
+	color:#cccccc;
+}

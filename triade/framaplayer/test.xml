@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="iso-8859-1" ?>
+<playlist>
+    <default>
+        <bitrateprefix>128</bitrateprefix>
+        <urlprefix>http://framaplayer.keonox.com/zic/</urlprefix>
+        <websiteprefix></websiteprefix>
+        <artistprefix></artistprefix>
+        <licenseprefix></licenseprefix>
+        <useurlfordownload></useurlfordownload>
+    </default>
+    <sound>
+        <bitrate></bitrate>
+        <url>Ave_plena_Magdalena-Joglaresa.mp3</url>
+        <website>http://www.belinda.sykes.btinternet.co.uk/index.htm</website>
+        <artist>Joglaresa</artist>
+        <title>Ave Plena Magdalena</title>
+        <license>CC BY-NC-ND</license>
+        <downloadurl></downloadurl>
+    </sound>
+    <sound>
+        <bitrate></bitrate>
+        <url>Blue_Chaos_realaze.mp3</url>
+        <website>http://donkeyddanett62.free.fr/index_fichiers/Realaze.php</website>
+        <artist>Blue Chaos</artist>
+        <title>Realaze</title>
+        <license>Copyleft Attitude</license>
+        <downloadurl></downloadurl>
+    </sound>
+    <sound>
+        <bitrate></bitrate>
+        <url>darwin_orco.mp3</url>
+        <website>http://orco.new.fr/</website>
+        <artist>Orco</artist>
+        <title>Darwin</title>
+        <license>Art Libre</license>
+        <downloadurl></downloadurl>
+    </sound>
+    <sound>
+        <bitrate></bitrate>
+        <url>Vivace-Lara_St._John.mp3</url>
+        <website>http://www.larastjohn.com/</website>
+        <artist>Lara St John</artist>
+        <title>Vivace</title>
+        <license>Art Libre</license>
+        <downloadurl></downloadurl>
+    </sound>
+    <sound>
+        <bitrate></bitrate>
+        <url>LaplagedeBlaneEst_ehma.mp3</url>
+        <website>http://ehma.culturelibre.net/</website>
+        <artist>Ehma</artist>
+        <title>La plage de Blane Est</title>
+        <license>CC BY-NC-SA</license>
+        <downloadurl></downloadurl>
+    </sound>
+    <sound>
+        <bitrate></bitrate>
+        <url>larrivee_ehma.mp3</url>
+        <website>http://ehma.culturelibre.net/</website>
+        <artist>Ehma</artist>
+        <title>L'arrivée</title>
+        <license>Art Libre</license>
+        <downloadurl></downloadurl>
+    </sound>
+    <sound>
+        <bitrate></bitrate>
+        <url>LesJeuxDePlage_ehma.mp3</url>
+        <website>http://ehma.culturelibre.net/</website>
+        <artist>Ehma</artist>
+        <title>Les Jeux de plages</title>
+        <license>Art Libre</license>
+        <downloadurl></downloadurl>
+    </sound>
+</playlist>

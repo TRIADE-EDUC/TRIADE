@@ -1,0 +1,175 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<!--
+/*******************************************************
+ **                  IntraMessenger - server          **
+ **                                                   **
+ **  Copyright:      (C) 2006 - 2012 THeUDS           **
+ **  Web:            http://www.theuds.com            **
+ **                  http://www.intramessenger.net    **
+ **  Licence :       GPL (GNU Public License)         **
+ **  http://opensource.org/licenses/gpl-license.php   **
+ *******************************************************/
+
+/*******************************************************
+ **       This file is part of IntraMessenger-server  **
+ **                                                   **
+ **  IntraMessenger is a free software.               **
+ **  IntraMessenger is distributed in the hope that   **
+ **  it will be useful, but WITHOUT ANY WARRANTY.     **
+ *******************************************************/
+ -->
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="fr" xml:lang="fr">
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
+    <meta http-equiv="content-language" content="fr" />
+    <meta name="description" content="How to update IntraMessenger clients" />
+    <meta http-equiv="content-style-type" content="text/css" />
+    <META NAME="Author" CONTENT="THeUDS.com">
+    <META NAME="copyright" content="THeUDS.com">
+    <LINK REL="SHORTCUT ICON" HREF="../../images/favicon.ico">
+    <title>Update IntraMessenger clients</title>
+    <base href="./" target="_blank" />
+    <style type="text/css" >
+      <!--
+      body {
+        font-family:"Trebuchet MS", Arial, Sans-Serif;
+        color:#444;
+        font-size:.9em;
+        background-color:#FFF;
+        margin:0;
+      }
+
+      #header {
+        background-color:#A5C2E0;
+        font-family:Georgia, serif;
+        font-size:1.5em;
+        border-bottom:1px solid #650;
+        color:#FFF;
+        padding:2px 6% 12px;
+      }
+
+      #content {
+        margin:20px 6%;
+      }
+
+      .panel {
+        border:1px solid #D8D8D8;
+        background-color:#EFEFEF;
+        margin:1em 0;
+        padding:1.2ex;
+      }
+
+      .panel h2 {
+        border-bottom:1px dashed #2181B0;
+        font-size:1.6em;
+        font-weight:400;
+        color:#2181B0;
+        margin:0 0 0.5em;
+      }
+
+      .notice {
+        background:#FFFED1;
+        border:1px solid #E5E4A0;
+        color:#4B4000;
+        margin:0 0 15px;
+        padding:10px;
+      }
+
+      ul,ol {
+        list-style:square;
+       line-height:130%;
+        text-align:justify;
+        margin:10px 8px;
+      }
+      A.Code {
+        font-size : 11px;
+        font-weight : bold;
+        color : #990000;
+      }
+      -->
+    </style>
+  </head>
+  <body>
+    <div id="header">
+      <div>
+        <h1>How to</h1>
+        <ul>
+        <li>Update <I>IntraMessenger</I> clients</li>
+        </ul>
+      </div>
+    </div>
+    <div id="content">
+    
+      <div class="panel">
+        <h2>Description</h2>
+        <p>
+        The file <I>UDS-Update.exe</I> must be in exe directory.<BR/>
+        Windows Vista users : the file <I>UDS-Update.exe.manifest</I> must be in exe directory (and maybe disable UAC).<BR/>
+        Update will be checked 30 minutes after startup.<BR/>
+        <BR/>
+        Two ways:<BR/>
+        <UL>
+          <LI>
+          automatic by internet <small>(from official website)</small> [<B>1</B>]
+          </LI>
+          <LI>
+          by the server [<B>2</B>]
+          </LI>
+        </UL>
+        </p>
+      </div>
+      
+      <div class="panel">
+        <h2>[1] Internet updates (by official website)</h2>
+        On clients, in options screen, click "From internet", and updates will be automatics.<BR/>
+        <BR/>
+        Server option <A class="Code">_FORCE_UPDATE_BY_INTERNET</A> allow to force client updates. Clients cannot disable updates.<BR/>
+      </div>
+      
+      <div class="panel">
+        <h2>[2] Server updates (local/intranet or internet server)</h2>
+          <UL>
+            <LI>In <I>/distant/update/</I> server directory, put last client version <I>IntraMessenger.exe</I>.<BR/>
+            </LI>
+            <LI>In file <I>/distant/update/version.ini</I> at row : <BR/>
+            <I><B>version=</I></B><BR/>
+            write the <A HREF="http://www.intramessenger.com/forum/viewtopic.php?t=218&" target="_blank">client version</A>.<BR/>
+            <BR/>
+            Example: <BR/>
+            <I>version=1.21A</I><BR/>
+          </UL>
+          Server option <A class="Code">FORCE_UPDATE_BY_SERVER</A> allow to force client updates.<BR/>
+          Clients cannot disable updates or choise update from internet (site officiel).<BR/>
+          <BR/>
+          <p class="notice">
+          If new translations are available (files <I>XX.ini</I>), upload them on server folder <I>/distant/update/</I>.<BR/>
+          </P>
+      </div>
+      
+      <div class="panel">
+        <h2>How to know client version</h2>
+        <A HREF="http://www.intramessenger.com/forum/viewtopic.php?t=218&" target="_blank">http://www.intramessenger.com/forum/viewtopic.php?t=218&</A>
+      </div>
+      
+<!--
+      <div class="panel">
+        <h2>*****</h2>
+          <UL>
+            <LI>
+            </LI>
+            <LI>
+            </LI>
+          </UL>
+      </div>
+-->
+
+      <div class="panel">
+        <A HREF='http://www.theuds.com' target='_blank'>THeUDS</A> © 2006 - 2012
+      </div>
+
+    </div>
+  </body>
+</html>

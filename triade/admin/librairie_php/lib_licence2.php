@@ -1,0 +1,14 @@
+<?php
+include_once("../common/lib_admin.php");
+include_once("../common/lib_ecole.php");
+include_once("langue.php");
+//include_once("lib_verif.php");
+include_once("lib_licence_text.php");
+include_once("lib_error.php");
+include_once("mactu.php");
+include_once("../common/config2.inc.php");
+include_once("../librairie_php/timezone.php");
+include_once("../common/config.inc.php");
+include_once("../common/config-md5.php");
+include_once("../common/productId.php");
+?>

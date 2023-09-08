@@ -1,0 +1,180 @@
+<!--
+/*******************************************************
+ **                  IntraMessenger - server          **
+ **                                                   **
+ **  Copyright:      (C) 2006 - 2010 THeUDS           **
+ **  Web:            http://www.theuds.com            **
+ **                  http://www.intramessenger.net    **
+ **  Licence :       GPL (GNU Public License)         **
+ **  http://opensource.org/licenses/gpl-license.php   **
+ *******************************************************/
+
+/*******************************************************
+ **       This file is part of IntraMessenger-server  **
+ **                                                   **
+ **  IntraMessenger is a free software.               **
+ **  IntraMessenger is distributed in the hope that   **
+ **  it will be useful, but WITHOUT ANY WARRANTY.     **
+ *******************************************************/
+ -->
+<HTML>
+<HEAD>
+<TITLE>Autenticazione esterna per IntraMessenger</TITLE>
+<META NAME="Author" CONTENT="THeUDS.com">
+<META NAME="copyright" content="THeUDS.com">
+<LINK REL="SHORTCUT ICON" HREF="../../images/favicon.ico">
+<meta http-equiv="Content-Type" content="text/html;charset=iso-8859-1" />
+</HEAD>
+<STYLE type="text/css">
+<!--
+Body {
+  font-family: Verdana, Arial, Tahoma;
+	font-size : 12px;
+	background-color : #FFFFFF;
+	color : #000000;
+	text-align : justify;
+	margin-left : 20px;
+	margin-right : 20px;
+}
+A,A:link,A:visited {
+  COLOR: #3333FF;
+  TEXT-DECORATION: none;
+}
+A:hover {
+  COLOR: #3333FF;
+  TEXT-DECORATION: underline;
+}
+A.Code {
+	font-size : 11px;
+	font-weight : bold;
+  color : #990000;
+}
+P.Titre {
+	text-decoration : underline;
+	font-weight : bold;
+	font-size : 18px;
+	text-align : center;
+}
+P.Chapitre {
+	background-color : #E1FFFF;
+	border : 1px solid #000000;
+	font-weight : bold;
+	font-size : 13px;
+	padding-left : 5px;
+	padding-bottom : 2px;
+	padding-top : 2px;
+	margin-top : 25px;
+}
+P.Copyright {
+	color : #808080;
+	font-size : 11px;
+	text-align : right;
+}
+
+div.notice {
+    margin:             0.5em 0 0.5em 0;
+    border:             0.1em solid #00FFD7;
+    padding:            10px 10px 10px 36px;
+    background-color:   #CCFFFF;
+}
+
+//-->
+</STYLE>
+<BODY>
+<P class="Titre">Autenticazione esterna per <I>IntraMessenger</I></P>
+
+<!-- <P class="chapitre">Authentification externe</P> -->
+Si pu&ograve; scegliere di fare l'autenticazione (il controllo del login (pseudo) e della password) tramite  un source esterno.(un altro sito)<BR/>
+Se si ha gi&agrave; un  forum/CMS (o altro), es : <B>http://votredomaine/forum/</B><BR/>
+si pu&ograve; installare <I>IntraMessenger</I> allo stesso livello : <B>http://votredomaine/intramessenger/</B> 
+(o al suo interno : http://votredomaine/forum/intramessenger/)<BR/>
+Si ha cos&igrave;  la possibilit&agrave; d'autorizzare l'accesso a <I>IntraMessenger</I> unicamente ai membri iscritti a questo forum.<BR/>
+E' sufficiente effettuare le modifiche sotto indicate in <I>IntraMessenger</I> (nulla da cambiare nel forum).<BR/>
+<I>IntraMessenger</I> andr&agrave;  semplicemente a verificare se i logins e le password sono corretti (che  l'utente sia connesso o no al forum).<BR/>
+<BR/>
+
+<div class="notice">Modifiche da  applicare per tutti i  tipi di autenticazione esterne :<BR/>
+  &nbsp; &nbsp; 1. Modificare le opzioni del file <I>/common/config/<B>config</B>.inc.php</I> :<BR/>
+  &nbsp; &nbsp; &nbsp; &nbsp; - attivare : <A class="Code">_USER_NEED_PASSWORD</A><BR/>
+  &nbsp; &nbsp; &nbsp; &nbsp; - attivare : <A class="Code">_ALLOW_AUTO_ADD_NEW_USER_ON_SERVER</A><BR/>
+  &nbsp; &nbsp; &nbsp; &nbsp; - lasciare vuoto : <A class="Code">_PENDING_NEW_AUTO_ADDED_USER</A><BR/>
+  &nbsp; &nbsp; &nbsp; &nbsp; - informare : <A class="Code">_EXTERN_URL_TO_REGISTER</A> : URL (indirizzo ) al quale iscriversi/autenticarsi <BR/>
+  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; (es: <I>	http://www.intramessenger.net/phpbb2/profile.php?mode=register&</I>).<BR/>
+  &nbsp; &nbsp; &nbsp; &nbsp; - determine : <A class="Code">_EXTERN_URL_FORGET_PASSWORD</A> : url (adress) to get back forgotten password <BR/>
+  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; (es: <I>http://www.intramessenger.net/phpbb2/profile.php?mode=sendpassword&</I>).<BR/>
+  &nbsp; &nbsp; &nbsp; &nbsp; - <A HREF='http://www.intramessenger.net/doc/im_select_extern_auth_EN.png' target='_blank'>attivare  l'opzione apposta</A> <I>_EXTERNAL_AUTHENTICATION</I>).<BR/>
+  &nbsp; &nbsp; &nbsp; &nbsp; - informare eventualmente del file <I>/common/config/extern.config.inc.php</I> se il server e/o il database sono differenti (dai parametri di IntraMessenger).<BR/>
+  &nbsp; &nbsp; 2. Informare eventualmente il file specifico : vedere qu&igrave; sotto (if 1 of 4 not same, determine : $extern_dbhost $extern_database $extern_dbuname).<BR/>
+  &nbsp; &nbsp; 3. Check on page : <B>/admin/list_options_test_extern_auth.php</B><BR/>
+</div>
+
+
+
+
+<P class="Chapitre">Specifico autenticazione via activeCollab</P>
+File <I>/common/config/extern.config.inc.php</I> : write license number in <A class="Code">LICENSE_KEY</A> (you can find it in <I>config/licence.php</I>).<BR/>
+
+
+<P class="Chapitre">Specifico autenticazione via ImpressCMS</P>
+File <I>/common/config/extern.config.inc.php</I> :<BR/>
+1. value <A class="Code">SDATA_DB_SALT</A> : inside ImpressCMS, open file /mainfile.php row 30 (XOOPS_TRUST_PATH) : the path, and row 32 : the file to open.<BR/>
+2. <A class="Code">$extern_prefix</A> : see <A class="Code">SDATA_DB_PREFIX</A><BR/>
+
+
+<P class="Chapitre">Specific parameters for Prestashop authentication </P>
+File <I>/common/config/extern.config.inc.php</I> : write code number in <A class="Code">_COOKIE_KEY_</A> (you can find it in <I>config/settings.inc.php</I> in Prestashop).<BR/>
+
+
+
+<!-- 
+
+<P class="Chapitre">Specifico autenticazione via Dotclear</P>
+Attivare (non vuota) l'opzione :<A class="Code">_AUTHENTICATION_ON_DOTCLEAR_1</A> o <A class="Code">_AUTHENTICATION_ON_DOTCLEAR_2</A><BR/>
+
+<P class="Chapitre">Specifico autenticazione via phpBB</P>
+Attivare (non vuota) l'opzione :<A class="Code">_AUTHENTICATION_ON_PHPBB_2</A> o <A class="Code">_AUTHENTICATION_ON_PHPBB_3</A><BR/>
+
+
+<P class="Chapitre">Specifico autenticazione via  Prestashop </P>
+File <I>/common/config/extern.config.inc.php</I> : write code number in <A class="Code">_COOKIE_KEY_</A> (you can find it in <I>config/settings.inc.php</I> in Prestashop).<BR/>
+
+
+<P class="Chapitre">Specifico autenticazione via PunBB</P>
+IF PunBB version 1.2, rename <I>/common/extern/punbb1.2.auth.inc.php</I> to <I>/common/extern/punbb.auth.inc.php</I>.<BR/>
+
+
+<P class="Chapitre">Specifico autenticazione via SMF (Simple Machines Forum)</P>
+With SMF version 1.2, rename file /common/extern/smf_1.0_.auth.inc.php to /common/extern/smf.auth.inc.php.<BR/>
+
+-->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--
+<P class="Chapitre">Autenticazione via xxxxxx</P>
+E' interamente possibile effettuare l'autenticazione tramite un server (sito) <A HREF='' target='_blank'>XXXXX</A>.<BR/>
+L'utente  (login e password) dovr&agrave; dunque esistere al meglio in <I>XXXXX</I>.<BR/>
+Attivare (non vuota) l'opzione :<A class="Code">_AUTHENTICATION_ON_XXXXXX</A><BR/>
+Informare eventualmente il file <I>/common/config/extern/<B>XXXXXXX</B>.config.inc.php</I> se il server e/o il database sono differenti (dai parametri di IntraMessenger).<BR/>
+-->
+
+
+
+</BODY>
+</HTML>

@@ -1,0 +1,10 @@
+<?php
+define("COLORTBD","#09CCFF");
+define("COLORTBF","#ADEEFF");
+define("COLORBD","#9ACD22");
+define("COLORBF","#CBFECA");
+define("COLORMD","#FF990B");
+define("COLORMF","#FFD291");
+define("COLORID","#9B396E");
+define("COLORIF","#DCBAFE");
+?>

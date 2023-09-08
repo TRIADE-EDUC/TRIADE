@@ -1,0 +1,167 @@
+--------------------------------------------------------------------
+                           FouleTexte 1.5
+                      (Forum de discussion PHP)
+                        par T.Arsicaud / 2000
+--------------------------------------------------------------------
+                        Version du 05/10/2001
+
+Merci d'avoir choisi FouleTexte 1.5. Vous trouverez dans ce document
+des indications sur les caractéristiques de ce forum de discussion, sur
+le système requis pour son utilisation et sur sa procédure d'installation.
+
+
+I/ CARACTERISTIQUES DE FouleTexte 1.5
+
+FouleTexte 1.5 est un forum de discussion écrit en PHP, dont l'une
+des principales caractéristiques est d'utiliser exclusivement des
+fichiers textes pour la sauvegarde et la lecture des messages postés
+par les utilisateurs. Il ne nécessite pas l'installation d'une base
+de données sur le serveur (du type mySQL) et peut donc être utilisé pour
+mettre en place facilement des forums de discussion sur des espaces
+d'hébergement proposant PHP, mais pas nécessairement de bases de données
+en complément (ce qui est notamment le cas chez de nombreux hébergeurs
+gratuits).
+
+Simple d'installation, FouleTexte 1.5 propose les fonctions classiques
+d'un forum de discussion : il permet d'afficher l'arborescence des
+messages postés, de lire chaque message, et d'afficher les intitulés
+des messages qui le précèdent ou le suivent éventuellement. Il est
+possible de répondre à un message déjà posté en intégrant automatiquement
+ses citations dans le corps du nouveau message.
+
+Il propose également une interface d'administration, avec mot de passe,
+permettant de supprimer éventuellement certains messages postés.
+Notez qu'une option d'affichage vous offre la possibilité de conserver
+ou de supprimer automatiquement les tags html éventuellement entrés par
+les utilisateurs (recommandé pour des raisons de sécurité).
+
+FouleTexte 1.5 a été conçu pour faciliter au maximum l'intégration du
+forum de discussion dans des pages Web possédant une structure
+relativement complexe. Il est notamment possible de paramétrer la taille
+et la couleur des tableaux utilisés pour la mise en page et l'affichage
+des messages postés par les utilisateurs.
+
+Une démo de FouleTexte est disponible à l'adresse suivante :
+http://www.echodelta.net/scriptsphp/fouletexte/demo/
+
+
+II/ NOUVEAUTES par rapport à FouleTexte 1.1
+
+FouleTexte 1.5 permet désormais de répartir l'affichage des messages
+sur plusieurs pages définies dynamiquement (auparavant, l'ensemble des
+messages apparaissait sur une seule et même page). Il est important de
+noter que Foutexte 1.5 reste entièrement compatible avec les versions
+précédentes, 1.0 et 1.1. Pour les modalités de mise à jour de FouleTexte,
+veuillez consulter les indications ci-dessous.
+
+
+III/ SYSTEME REQUIS
+
+FouleTexte fonctionne avec (et à partir de) PHP 3.0.16.
+En cas de problèmes avec une version antérieure, n'hésitez pas
+à me contacter par email, à l'adresse : deltascripts@ifrance.com.
+
+Comme nous l'avons vu, FouleTexte ne nécessite pas de bases de données.
+
+
+IV/ CONDITIONS D'UTILISATION
+
+FouleTexte 1.5 est gratuit. Vous pouvez l'utiliser, le modifier comme
+bon vous semble, tant que vous conservez la mention "FouleTexte 1.5 -
+(c) 2000 Thierry Arsicaud (deltascripts@ifrance.com)" copiée au début de
+chaque script. N'hésitez pas à m'envoyer un mail si vous utilisez FouleTexte
+sur votre site, pour me faire part de vos commentaires ou de vos suggestions.
+
+
+V/ INSTALLATION
+
+Pour installer le Livre d'Or sur votre site, vous devez disposer
+d'un logiciel de FTP disposant d'une commande CHMOD, à l'image du logiciel
+gratuit FTP WORKS 1.33, téléchargeable à l'adresse suivante :
+http://www.corbanware.com/ftpworks.html
+
+Les étapes de l'installation sont les suivantes :
+
+a) créez un répertoire sur votre espace d'hébergement (nommez le comme vous
+le souhaitez)
+
+b) changez les droits d'accès à ce répertoire, à l'aide de la commande CHMOD
+(ou équivalente), en indiquant "777" ou "rwxrwxrwx" (cette opération est
+nécessaire pour permettre la sauvegarde des messages postés par les utilisateurs,
+et donc l'écriture à l'intérieur de ce répertoire).
+
+c) transférez y les fichiers suivants :
+
+post.php             Page permettant de poster un nouveau message
+listemessages.php    Page permettant d'afficher les intitulés des messages postés
+lire.php             Page permettant de lire un message posté
+confirmpost.php      Page d'avertissement ou de confirmation suivant
+                      l'envoi d'un nouveau message
+admin.php            Interface d'administration
+
+L'installation de FouleTexte 1.5 est alors terminée.
+
+Vous pouvez commencer à utiliser le forum en vous rendant sur le Web
+aux adresses correspondantes.
+
+Chaque fois qu'un message sera posté, un nouveau fichier texte, du type
+"msg1.dat", sera créé sur le serveur. Si vous utilisez un logiciel FTP
+permettant de mettre à jour automatiquement votre site, pensez à
+"isoler" le répertoire créé précédemment, car sinon vous risqueriez
+d'effacer les nouveaux messages postés par les utilisateurs.
+
+
+VI/ MISES A JOUR
+
+Les mises à jour de FouleTexte 1.0 et 1.1 sont simples à effectuer :
+il suffit de remplacer les anciens fichiers listemessages.php,
+lire.php, confirmpost.php, post.php et admin.php présents sur le
+serveur par ceux compris dans la nouvelle distribution (en ayant
+préalablement repris les paramètres d'affichage et le code html inséré).
+
+Les nouveaux scripts n'affectent en rien les données postées avec
+l'ancienne version de FouleTexte. Les utilisateurs de FouleTexte 1.1
+peuvent donc passer à FouleTexte 1.5 sans risquer de perdre les données
+postées auparavant.
+
+
+VII/ ADMINISTRATION
+
+L'interface d'administration est directement accessible sur le Web
+(script admin.php). Après avoir choisi un mot de passe, elle vous
+permettra de supprimer éventuellement des messages postés par les
+utilisateurs.
+
+
+VIII/ CONFIGURATION DES PARAMETRES D'AFFICHAGE
+
+Vous pouvez modifier la taille et la couleur des tableaux utilisés
+pour l'affichage des messages et de leurs intitulés. Cette opération
+(optionnelle) doit être effectuée hors ligne, avant de (re)transférer
+les pages concernées :
+
+post.php
+listemessages.php
+lire.php
+confirmpost.php
+
+Pour modifier les paramètres d'affichage, éditez les lignes de code
+correspondantes, situées au début de chacun des scripts.
+
+Pour que le forum se "fonde" d'avantage dans votre site, vous pouvez par
+ailleurs insérer votre propre code html, au niveau des commentaires
+apparaissant également dans les scripts.
+
+
+IX/ CREDITS
+
+FouleTexte 1.5 a été développé par Thierry Arsicaud, en septembre 2000 /
+octobre 2001. N'hésitez pas à m'envoyer un mail pour me faire part
+de vos éventuelles difficultés d'utilisation, de vos commentaires
+ou suggestions. N'oubliez pas de visiter régulièrement mon site Web
+pour des mises à jour de FouleTexte et le téléchargement de nouveaux
+scripts (livre d'or, moteur de recherche, etc...).
+
+--------------------------------------------------------------------
+              Thierry Arsicaud - deltascripts@ifrance.com
+                  http://www.echodelta.net/scriptsphp/

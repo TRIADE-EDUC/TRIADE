@@ -1,0 +1,195 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<!--
+/*******************************************************
+ **                  IntraMessenger - server          **
+ **                                                   **
+ **  Copyright:      (C) 2006 - 2012 THeUDS           **
+ **  Web:            http://www.theuds.com            **
+ **                  http://www.intramessenger.net    **
+ **  Licence :       GPL (GNU Public License)         **
+ **  http://opensource.org/licenses/gpl-license.php   **
+ *******************************************************/
+
+/*******************************************************
+ **       This file is part of IntraMessenger-server  **
+ **                                                   **
+ **  IntraMessenger is a free software.               **
+ **  IntraMessenger is distributed in the hope that   **
+ **  it will be useful, but WITHOUT ANY WARRANTY.     **
+ *******************************************************/
+ -->
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="fr" xml:lang="fr">
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
+    <meta http-equiv="content-language" content="fr" />
+    <meta name="description" content="Comment mettre à jour les postes clients" />
+    <meta http-equiv="content-style-type" content="text/css" />
+    <META NAME="Author" CONTENT="THeUDS.com">
+    <META NAME="copyright" content="THeUDS.com">
+    <LINK REL="SHORTCUT ICON" HREF="../../images/favicon.ico">
+    <title>Mettre à jour les postes clients IntraMessenger</title>
+    <base href="./" target="_blank" />
+    <style type="text/css" >
+      <!--
+      body {
+        font-family:"Trebuchet MS", Arial, Sans-Serif;
+        color:#444;
+        font-size:.9em;
+        background-color:#FFF;
+        margin:0;
+      }
+
+      #header {
+        background-color:#A5C2E0;
+        font-family:Georgia, serif;
+        font-size:1.5em;
+        border-bottom:1px solid #650;
+        color:#FFF;
+        padding:2px 6% 12px;
+      }
+
+      #content {
+        margin:20px 6%;
+      }
+
+      .panel {
+        border:1px solid #D8D8D8;
+        background-color:#EFEFEF;
+        margin:1em 0;
+        padding:1.2ex;
+      }
+
+      .panel h2 {
+        border-bottom:1px dashed #2181B0;
+        font-size:1.6em;
+        font-weight:400;
+        color:#2181B0;
+        margin:0 0 0.5em;
+      }
+
+      .notice {
+        background:#FFFED1;
+        border:1px solid #E5E4A0;
+        color:#4B4000;
+        margin:0 0 15px;
+        padding:10px;
+      }
+
+      ul,ol {
+        list-style:square;
+       line-height:130%;
+        text-align:justify;
+        margin:10px 8px;
+      }
+      A.Code {
+        font-size : 11px;
+        font-weight : bold;
+        color : #990000;
+      }
+      -->
+    </style>
+  </head>
+  <body>
+    <div id="header">
+      <div>
+        <h1>Instructions</h1>
+        <ul>
+        <li>Pour mettre à jour les postes clients <I>IntraMessenger</I></li>
+        </ul>
+      </div>
+    </div>
+    <div id="content">
+    
+      <div class="panel">
+        <h2>Description</h2>
+        <p>
+        Le fichier <I>UDS-Update.exe</I> est indispensable dans le répertoire de l'exécutable (IntraMessenger.exe).<BR/>
+        Utilisateurs de Windows Vista : le fichier <I>UDS-Update.exe.manifest</I> est indispensable dans le répertoire de l'exécutable (la désactivation de l'UAC peut être nécessaire).<BR/>
+        La mise à jour sera vérifiée 30 minutes après le démarrage.<BR/>
+        <BR/>
+        Deux méthodes possibles :<BR/>
+        <UL>
+          <LI>
+          en automatique via internet <small>(depuis le site officiel)</small> [<B>1</B>]
+          </LI>
+          <LI>
+          via le serveur [<B>2</B>]
+          </LI>
+        </UL>
+        </p>
+      </div>
+      
+      <div class="panel">
+        <h2>[1] Mises à jour via internet (depuis le site officiel)</h2>
+        Sur chaque poste client, dans les options, il suffit de cocher "Depuis internet", et les mises à jour s'effectueront automatiquement.<BR/>
+        <BR/>
+        L'option serveur <A class="Code">_FORCE_UPDATE_BY_INTERNET</A> permet de forcer les postes clients.<BR/>
+        Les postes client ne pourront pas désactiver la mise à jour.<BR/>
+      </div>
+      
+      <div class="panel">
+        <h2>[2] Mises à jour via le serveur (local/intranet ou internet)</h2>
+          <UL>
+            <LI>Placer dans le répertoire <I>/distant/update/</I> du serveur la dernière version du client <I>IntraMessenger.exe</I>.<BR/>
+            </LI>
+            <LI>Dans le fichier <I>/distant/update/version.ini</I> à la ligne :<BR/>
+            <I><B>version=</I></B><BR/>
+            y indiquer la <A HREF="http://www.intramessenger.com/forum/viewtopic.php?t=218&" target="_blank">version du client</A>.<BR/>
+            <BR/>
+            Exemple : <BR/>
+            <I>version=1.21A</I><BR/>
+          </UL>
+          L'option serveur <A class="Code">FORCE_UPDATE_BY_SERVER</A> permet de forcer (bloquer) la mise à jour.<BR/>
+          Les postes client ne pourront pas désactiver la mise à jour, ni choisir la mise à jour via internet (site officiel).<BR/>
+          <BR/>
+          <p class="notice">
+          Si de nouvelles traductions sont disponibles (fichiers <I>XX.ini</I>), les placer dans le répertoire <I>/distant/update/</I> du serveur.<BR/>
+          </P>
+      </div>
+      
+      <div class="panel">
+        <h2>Connaitre le numéro de version de l'exécutable client</h2>
+        <A HREF="http://www.intramessenger.com/forum/viewtopic.php?t=218&" target="_blank">http://www.intramessenger.com/forum/viewtopic.php?t=218&</A>
+      </div>
+      
+<!--
+      <div class="panel">
+        <h2>*****</h2>
+          <UL>
+            <LI>
+            </LI>
+            <LI>
+            </LI>
+          </UL>
+      </div>
+-->
+
+      <div class="panel">
+        <h2>Informations</h2>
+          <UL>
+            <LI>
+
+            Forum officiel : <A HREF='http://www.intramessenger.com/forum/' target='_blank'>http://www.intramessenger.com/forum/</A><BR/>
+            N'hésitez pas à venir y proposer vos améliorations et suggestions ainsi que vos traductions.<BR/>
+            </LI>
+            <LI>
+            Support : <A HREF='http://www.intramessenger.net/contact.php?lang=FR&' target='_blank'>http://www.intramessenger.net/contact.php?lang=FR&</A><BR/>
+            </LI>
+
+          </UL>
+            <p class="notice">
+            Consulter la <A href="http://www.intramessenger.com/forum/viewforum.php?f=12&" target="_blank">liste des nouveautés</A> ainsi que 
+            la <A href="http://www.intramessenger.com/forum/viewtopic.php?t=341&" target="_blank">liste des prochaines améliorations</A> (sur internet).
+            </P>
+      </div>
+
+      <div class="panel">
+        <A HREF='http://www.theuds.com' target='_blank'>THeUDS</A> © 2006 - 2012
+      </div>
+
+    </div>
+  </body>
+</html>

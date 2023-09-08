@@ -1,0 +1,93 @@
+function getRequete() {
+	if (window.XMLHttpRequest) { 
+        	result = new XMLHttpRequest();     // Firefox, Safari, ...
+	}else { 
+	      if (window.ActiveXObject)  {
+	      result = new ActiveXObject("Microsoft.XMLHTTP");    // Internet Explorer 
+	      }
+       	}
+	return result;
+}
+
+
+
+function ajaxIABulletinCom(commentaire,moyenne,productID,ia,retour,prenom) {
+	var requete = getRequete();
+	var corps="commentaire="+escape(commentaire)+"&moyenne="+moyenne+"&productID="+productID+"&ia="+ia+"&prenom="+prenom;
+	if (requete != null) {
+		requete.onreadystatechange = function() { 
+			if (requete.readyState != 4)  {
+				document.getElementById(retour).value="Veuillez patienter...";
+    			}    
+
+	    		if (requete.readyState == 4) {
+	       			if(requete.status == 200) {
+					document.getElementById(retour).value=requete.responseText;
+				}
+  			}
+		}; 
+		
+		requete.open("POST","https://ia.triade-educ.net/apicombull.php",true); 
+		requete.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+  		requete.send(corps); 
+	}	
+}
+
+function verifToken(productID,ia,retour) {
+	var requete = getRequete();
+        var corps="productID="+productID+"&ia="+ia;
+        if (requete != null) {
+                requete.onreadystatechange = function() {
+                        if (requete.readyState == 4) {
+                                if(requete.status == 200) {
+					if (requete.responseText == "ko") {
+	                                        document.getElementById(retour).innerHTML="<center><b><font id='color3' >PLUS DE TOKEN !!</font></b> <img src='image/commun/openai.gif' width='30' align='center' style='-moz-border-radius:10px 10px; -webkit-border-radius:10px 10px; border-radius:10px 10px; box-shadow: 5px 5px 5px grey;' /></center>" ;
+					}
+                                }
+                        }
+                };
+                requete.open("POST","https://ia.triade-educ.net/verifToken.php",true);
+                requete.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+                requete.send(corps);
+        }
+}
+
+
+function ajaxCopilot(search,productID,ia,afficheretour) {
+	if (search.length < 5) return;
+	var newDiv = document.createElement("div");
+	newDiv.style.cssText = 'position:relative;top:0px;left:170px;width:70%;-moz-border-radius:100px;border:1px  solid #ddd; box-shadow: 3px 3px 3px #CCCCCC; background-image: linear-gradient(180deg, #176EE9, #176EE9 40%, #176EE9  );padding:5px;margin:20px;border-radius: 10px;color:#FFFFFF ';
+        var newContent = document.createTextNode(search);
+        newDiv.appendChild(newContent);
+        document.getElementById(afficheretour).insertBefore(newDiv,document.getElementById(afficheretour).children[0]);
+
+        verifToken(productID,ia,afficheretour);
+
+        var requete = getRequete();
+        var corps="commentaire="+escape(search)+"&productID="+productID+"&ia="+ia;
+        if (requete != null) {
+                requete.onreadystatechange = function() {
+                        if (requete.readyState != 4)  {
+                                document.getElementById('question').value="Veuillez patienter...";
+                        }
+
+                        if (requete.readyState == 4) {
+                                if(requete.status == 200) {
+                                        var newDiv = document.createElement("div");
+					newDiv.style.cssText = 'position:relative;top:0px;left:0px;width:70%;-moz-border-radius:100px;border:1px  solid #ddd; box-shadow: 3px 3px 3px #CCCCCC; background-image: linear-gradient(180deg, #fff, #ddd 40%, #ccc );padding:5px;margin:20px;border-radius: 10px;';
+					
+                                        var newContent = document.createTextNode(requete.responseText);
+                                        //newDiv.innerHTML=requete.responseText;
+                                        newDiv.appendChild(newContent);
+                                        document.getElementById(afficheretour).insertBefore(newDiv,document.getElementById(afficheretour).children[0]);
+                                        document.getElementById('question').value="";
+                                }
+                        }
+                };
+
+                requete.open("POST","https://ia.triade-educ.net/apisearch.php",true);
+                requete.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+                requete.send(corps);
+        }
+
+}

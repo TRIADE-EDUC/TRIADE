@@ -1,0 +1,225 @@
+2007-06-12 Laurent Laville <pear@laurent-laville.org>
+
+    * VERSION: Final version (stable) 2.3.0 released.
+
+      - No code changes since Release Candidate 1
+
+2007-02-12 Laurent Laville <pear@laurent-laville.org>
+
+    * VERSION: first release candidate (beta) 2.3.0RC1 released.
+
+      - simple AJAX progress bar ; see Request #3985
+      - file upload support for PHP4/5 with AFLAX (the AJAX for Adobe Flash Platform 8 or greater)
+      - file upload support with HTML_AJAX and multiple backend
+        (PHP5 and APC, PHP5 and uploadprogress extension, PHP 4 patch)
+
+2007-02-02 Laurent Laville <pear@laurent-laville.org>
+
+    * VERSION: second alpha version (alpha) 2.3.0a3 released.
+
+      - HTML_Progress2::toArray() return now FALSE when we use default standard JS backend
+        rather than its content, and if defined by HTML_Progress2::setScript() function,
+        the url of alternate script.
+      - HTML_Progress2::toArray() return now settings on AJAX client/server
+      - improve multi-label system and allow more free combination
+      - add phpdoc tags for AJAX support introduced with 2.3.0a2
+      - add support of AFLAX and upload file
+
+
+2007-01-23 Laurent Laville <pear@laurent-laville.org>
+
+    * VERSION: second alpha version (alpha) 2.3.0a2 released.
+
+      - clean-up old implementation of AJAX progress bar; used now package HTML_AJAX
+      - Javascript function calls used now OOP notation
+      - Javascript code PB handler is now externalized into file HTML_Progress2.js
+      - new method  setupAJAX()
+      - new implementation of method registerAJAX() (renamed too)
+      - getScript() has an optional 2nd parameter to support custom configuration
+
+2007-01-17 Laurent Laville <pear@laurent-laville.org>
+
+    * VERSION: first alpha version (alpha) 2.3.0a1 released.
+
+      - drop support of cell id mask identifier (begin private)
+        style should be apply only by cell classname attribute
+      - a progress bar widget (div) is now identified only by {see HTML_Progress2::getIdent()}
+        rather than "tfrm" + {HTML_Progress2::getIdent()}
+      - Default progress bar identifier (without prefix "tfrm") cannot be numeric (xhtml compliant)
+      - Improve Javascript function setProgress() which does not need anymore the third parameter.
+      - Improve Javascript function call to setElementStyle() and removed unecessary arguments
+        TIP: this function allow to build smooth progress bar (without cell: HTML_Progress2::setCellCount(0)
+      - fix typo error (millisecond term) in phpdoc tags
+      - add two new error code for ajax drivers: HTML_PROGRESS2_ERROR_INVALID_RESOURCE, HTML_PROGRESS2_ERROR_ABSTRACT
+      - add new methods :  registerAjax(), and fileExists()
+      - add a mini guide HOWTO_AJAX.txt for users of alpha 2.3.0 releases
+
+2007-01-03 Laurent Laville <pear@laurent-laville.org>
+
+    * VERSION: Final version (stable) 2.2.0 released.
+
+      - add new function importStyle() to give ability to import an existing stylesheet
+        and separate PHP code from HTML layout (with CSS)
+      - improved javascript custom handler for JavaDanse example
+        related to version 2.1.1 (bug fixed #8684)
+      - Copyright bumped to 2007
+      - Include a new fresh version of User Guide (TDG) that cover all versions 2.x.x
+
+2006-12-22 Laurent Laville <pear@laurent-laville.org>
+
+    * VERSION: Final version (stable) 2.1.1 released.
+
+      - used now :
+        "className" property rather than "visibility"
+        reduced div tags count used to build a progress bar (only 10 rather than 20 )
+      - apply more CS (space code indent, ...)
+      - add "alt" attribute to img html-tag to be more xhtml compliant
+      - JS function "hideProgress" lose its second parameter (no more needed)
+
+2006-12-20 Laurent Laville <pear@laurent-laville.org>
+
+      - fixed bug #8684 : Problem with generated JavaScript
+      - fixed "examples/generatorcus.php" to use new architecture with
+        external stylesheet introduced on August 11, 2006.
+
+2006-08-12 Laurent Laville <pear@laurent-laville.org>
+
+    * VERSION: Final version (stable) 2.1.0 released.
+
+      - The Definitive Guide has a new FAQ up-to-date, new examples (see
+        Appendixes section) and finally a guide for HTML_Progress2_Generator
+
+2006-08-11 Laurent Laville <pear@laurent-laville.org>
+
+      - HTMLPage2, ITDynamic, and SmartyDynamic renderers for Progress2 Generator
+        used now the new architecture with external stylesheet.
+
+2006-08-10 Laurent Laville <pear@laurent-laville.org>
+
+      - fix value return by apiVersion()
+      - progress meter use now its own event dispatcher (called "ProgressMeter")
+
+2006-08-09 Laurent Laville <pear@laurent-laville.org>
+
+      - Rewrites of HTML_Progress2 Generator class on PEAR_PackageFileManager_Frontend controller pattern
+        This essentially allow to improve presentation layout with stylesheet,
+        and give more power to add a new action or page at runtime.
+      - All remaining code (css class selector still in default renderer was moved
+        to external CSS file: 'default.css')
+      - new methods get and set StyleSheet into default QF renderer (Generator/Default.php)
+
+2006-07-22 Laurent Laville <pear@laurent-laville.org>
+
+      - fixes Bug #8265 : HTML_Page2 wrong dependency
+      - removed dupplicates entries in package xml 1.0
+
+2006-06-04 Laurent Laville <pear@laurent-laville.org>
+
+      - fixes typo error on removeListener() function
+        from HTML_Progress2 and HTML_Progress2_Monitor classes
+      - updates copyright (begin) date
+      - addListener() and removeListener() signatures changed.
+        Adds notification name serves as a filter
+
+2006-05-24 Laurent Laville <pear@laurent-laville.org>
+
+    * VERSION: Final version (stable) 2.0.1 released.
+
+      - fixes closing html style tag to avoid javascript error.
+      - fixes Bug #7437 : wrong text in Doc
+        (thanks to Stefan Valouch for reading it carefully)
+      - The Definitive Guide revision number will now follow the package release version.
+
+2006-05-16 Laurent Laville <pear@laurent-laville.org>
+
+    * updates headers comment block for quality assurance :
+      - add @since phpdoc tag
+      - upgrade license from PHP 3.0 to 3.01
+      - upgrade copyright until 2006
+
+2006-05-15 Laurent Laville <pear@laurent-laville.org>
+
+    * PEAR::PHP_Compat package begin optional dependency (only required for PHP4)
+
+2005-10-01 Laurent Laville <pear@laurent-laville.org>
+
+    * VERSION: Final version (stable) 2.0.0 released.
+
+2005-09-22 Laurent Laville <pear@laurent-laville.org>
+
+    For HTML_Progress2 class only :
+    * standardized observer notify interface
+      with onSubmit and onLoad events.
+
+    For HTML_Progress2_Monitor class only :
+    * updates headers comment block (package and methods)
+    * fixes problem with onCancel notification
+    * standardized notification interface
+
+2005-09-20 Laurent Laville <pear@laurent-laville.org>
+
+    * auto-size progress meter attribute was removed
+
+    * active cell, and background progress meter support now
+      background-image, background-repeat, background-position attributes
+
+2005-09-14 Laurent Laville <pear@laurent-laville.org>
+
+    * bugs fixes:
+      setBorderPainted(false) inefficient with setBorderAttributes()
+      and a positive width attribute value. Always show a border
+      arround the progress bar.
+
+2005-09-13 Laurent Laville <pear@laurent-laville.org>
+
+    * follows w3 / css standard (in Progress2.php):
+      - frame border attribute is renamed to border-width
+      - all labels background-color attribute have default transparent value rather than empty
+
+    * updates Progress2.php and Progress2_Lite.php headers comment block
+
+    * updates Progress2.php API comment blocks:
+      following pattern -> summary + long description
+
+2005-09-02 Laurent Laville <pear@laurent-laville.org>
+
+    * Fixed bug in moveNext() method: avoid exceed max limit
+
+2005-08-25 Laurent Laville <pear@laurent-laville.org>
+
+    For HTML_Progress2_Lite class only :
+
+    * frame attribute border renamed to border-width
+      to keep a unified attribute names (follow CSS standard)
+
+    * add font-style attribute for all label categories
+      (allow to use italic for percent and text labels)
+
+    * background-color has transparent rather than null string
+      by default (CSS standard)
+
+    * fixed my first bug in setLabelAttributes method
+      related to font group attributes
+
+2005-08-18 Laurent Laville <pear@laurent-laville.org>
+
+    * Added @example tag to have ability to display (highlight) source code
+
+    * Added @link tag to have ability to display a screenshot (PNG image)
+
+    * Removed @tutorial tag on Monitor.php and Progress2.php files
+      to prepare "The Definitive Guide" documentation
+
+    * Added @ignore tag on all unit testcases and some examples
+      to prevent includes in API docs
+
+    * Added ChangeLog, and NEWS files
+
+2005-08-01 Laurent Laville <pear@laurent-laville.org>
+
+    * VERSION: Version 2.0.0RC2 released.
+
+2005-06-23 Laurent Laville <pear@laurent-laville.org>
+
+    * VERSION: Version 2.0.0RC1 released.
+

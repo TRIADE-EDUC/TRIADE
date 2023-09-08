@@ -1,0 +1,484 @@
+ul {
+	font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	font-style: italic;
+	color: #09C;
+	text-align: left;
+	list-style-type: none;
+	font-weight: normal;
+	font-variant: normal;
+	text-transform: none;
+	text-decoration: none;
+	text-align: center;
+	margin: 0px;
+	padding: 0px;
+}
+
+#header {
+	background-image: url(../../Images/bannieresciences.png);
+	height: 150px;
+	background-repeat: no-repeat;
+	background-position: center top;
+}
+#footer {
+	background-image: url(../../Images/footersciences.png);
+	height: 191px;
+	background-repeat: no-repeat;
+	background-position: center bottom;
+}
+
+.menu {
+	height: 64px;
+	text-align: center;
+	margin: 0px;
+	padding: 0px;
+	list-style-type: none;
+	top: 0px;
+	clip: rect(0px,auto,auto,auto);
+	display: inline;
+}
+#menu {
+	margin: 0px;
+	padding: 0px;
+	list-style-type: none;
+	top: 0px;
+	clip: rect(0px,0px,0px,0px);
+	display: inline;
+}
+/* CSS Numidia Sciences */
+/* -------------- */
+
+body, td, TD, BODY {font-family: Trebuchet MS, Arial, Verdana, Sans-Serif; font-size: 12px;}
+
+/* body, td {font-family:Verdana; font-size:10px; color: #0B3A0C;}
+BODY, TD {font-family:Verdana; font-size:10px; color: #0B3A0C;}
+*/
+
+A:hover {color:#136415; text-decoration:underline; }
+A {color:#0B3A0C; text-decoration:none;}
+A.m:hover {color:#000000; text-decoration:underline; font-weight:bold; font-size:12px;}
+A.m {color:#000000; text-decoration:none; font-weight:bold; font-size:12px;}
+.t {font-family:Trebuchet MS; font-size:12px; color:#0B3A0C;}
+.m1 {font-family:Trebuchet MS; font-size:12px; color:#FFFFFF; font-weight:bold; }
+.tabnormal{}
+.tabnormal2{background-color:#FFFFFF;}
+.tabover{background-color:#CCCCCC; color:#000000; border-color:#CCCCCC }
+.tabover2{
+	background-color:#8CE2FF;
+	color:#000000;
+	border-color:#CCCCCC
+}
+
+/* Ajouts par CLG juillet 2006 */
+.center {
+    text-align: center;
+    font-size:12px;
+}
+.left {
+    text-align: left;
+    font-size:12px;
+}
+.right {
+    text-align: right;
+    font-size:12px;
+}
+#introduction ul {
+    list-style-image: url('../image/on10.gif');
+    font-size:12px;
+}
+/* fin de l'ajout */
+
+#titreStockage { color:#000000 }
+
+/* couleur */
+
+#colorbordure{background-color:"#168AAA"}
+
+#barreombre{background-image:url('../image/inc/01/bg.png');}
+
+#bodyfond{background-image:url('../../Images/bg.png')}
+#bodyfond2{background-image:url('../../Images/bg.png')}
+#bodyfond3{background-color:#FFFFFF;}
+
+.idAccesNom { width: 130px; }
+.idAccesNom2 {
+	font-family: Arial;
+	font-size:11px;
+	color:#CC0000;
+	background-color:#8CE2FF;
+	width: 130px;
+}
+
+#imgfond{background-image:url('../../Images/bg.png')} 
+
+#bodyforum{background-image:url('../../Images/bg.png')}
+
+#coulfondO{
+	background-color:#8CE2FF
+}   					/* Couleur arriere plan */
+#coulfond1{background-color:#FFF}   		/* Couleur fond central  */
+#coulfond2{
+	background-image:url(http://www.numidiasciences.com/Images/banniere%20sciences.png)
+}   		/* Couleur fond banniere  */
+
+#imgombre{background-image:url('../image/inc/omb.gif')}
+
+#coulBar0{
+	background-color:#09C
+}   					/* Couleur de la barre de menu avec Quitter id='coulBar0' */
+#menumodule1{font-family:Trebuchet MS; font-size:11px; color: #000000;}  	/* couleur du texte de la barre de menu avec quitter id='menumodule1' */ 
+#cadreCentral0{background-image:url('../../Images/bg.png')}  	/* id='cadreCentral0' */
+
+
+#coulModule0{
+	background-color:#09C
+} 					/* Couleur du fond des menus dans les modules  */
+#menumodule0{font-family:Trebuchet MS; font-size:11px; color: #FFFFFF;}  	/* couleur de fond du text */
+
+#coulTitre0{
+	background-color:#8CE2FF
+} 					/* Couleur du fond des titres dans les modules  */
+#bordure { border-top-width : 0px; border-right-width : 0px; border-bottom-width : 0px; border-left-width : 0px; }
+#color2 { color:black } 						/* importance des titre */
+#color3 { color:black } 						/* importance des titre */
+#bordure2 { border-top-width : 0px; border-right-width : 0px; border-bottom-width : 1px; border-left-width : 0px; }
+
+
+/* ----------- */ 
+
+.dhtmlgoodies_contentBox{
+	border:1px solid #000000;
+	height:0px;
+	visibility:hidden;
+	position:absolute;
+	background-image:url('../image/inc/01/bg.png');
+	overflow:hidden;
+	padding:2px;				
+}
+
+.dhtmlgoodies_content{
+	position:relative;		
+	font-family: Arial, Verdana, Sans-Serif; font-size: 12px;
+	width:100%;
+	font-size:0.8em;
+		
+}
+
+
+/*
+<body id='bodyfond'
+<tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' >
+<tr id='cadreCentral0' >  
+
+*/
+
+.banniere0 { font-family:Arial,Verdana,Helvetica; font-size:10px;color:#000000 }
+.banniere1 {  color:#0000CC }
+
+.meteofond { background-color:#669999 }
+.meteocorps { background-color:#D8E9EC }
+.meteotitre { color: #FFFFFF }
+.meteosstitre { color: #858586 }
+
+#select0 {
+	color:#000066;
+	background-color:#8CE2FF
+}
+#select1 {
+	color:#000066;
+	background-color:#8CE2FF
+}
+#colort1 { color:black }
+
+#cache { position:absolute; top:200px; z-index:10; visibility:hidden; }
+TEXTAREA,INPUT {
+	border-color : #000000;
+	border-top-width : 1px;
+	border-right-width : 1px;
+	border-bottom-width : 1px;
+	border-left-width : 1px;
+	text-indent : 1px;
+	font-family: Arial; font-size: 10px;
+}
+INPUT.saisie {
+	BORDER-TOP-WIDTH: 0px;
+	BORDER-LEFT-WIDTH: 0px;
+	FONT-SIZE: 12px;
+	BORDER-BOTTOM-WIDTH: 0px;
+	COLOR: black;
+	BORDER-RIGHT-WIDTH: 0px
+}
+SELECT {
+	background-color: #FFFFFF; border-color : #000000;
+	border-top-width : 1px;
+	border-right-width : 1px;
+	border-bottom-width : 1px;
+	border-left-width : 1px;
+	text-indent : 1px;
+	font-family: Arial; font-size: 10px;
+}
+OPTION {
+	background-color: #FFFFFF; border-color : #000000;
+	border-top-width : 1px;
+	border-right-width : 1px;
+	border-bottom-width : 1px;
+	border-left-width : 1px;
+	text-indent : 1px;
+	font-family: Arial; font-size: 10px;
+}
+.posrelative { POSITION: relative; }
+#conteneur {
+	OVERFLOW: hidden;
+	WIDTH: 92px;
+	CLIP: rect(0px 290px 100px 0px);
+	POSITION: absolute;
+	LEFT: 5px;
+	TOP: 5px;
+}
+.BUTTON { border:1px outset #ccdaec; BACKGROUND-COLOR: #ccdaec }
+font.T0 { font-family:Verdana; font-size: 10px;  }
+font.T1 { font-family:Verdana; font-size:10px;}
+font.T2 { font-family:Verdana; font-size: 14px; }
+font.T3 { font-family:Verdana; font-size: 15px; }
+font.T4 { font-family:Verdana; font-size: 16px; }
+.fond {
+        position: absolute;
+        width: 300px;
+        visibility: hidden;
+        border: 1px;
+        border-bottom-style : inset;
+        border-right-style : inset;
+        border-left-style : outset;
+        border-top-style : outset;
+	border-color : #000000; 
+        background-color: menu;
+        font-family: Tahoma;
+        line-height: 20px;
+        font-size: 11px;
+}
+.intitules { padding-left: 15px; padding-right: 10px; }
+.btradio1 {  }
+.bouton2 {
+	font-family: Arial;
+	font-size:10px;
+	color:#09C;
+	background-color:#8CE2FF;
+	font-weight:bold;
+}
+
+.TESTcpYearNavigation,
+.TESTcpMonthNavigation { background-color:#FFF;text-align:center;vertical-align:center;text-decoration:none;color:#000000;font-weight:bold; }
+.TESTcpDayColumnHeader,
+.TESTcpYearNavigation,
+.TESTcpMonthNavigation,
+.TESTcpCurrentMonthDate,
+.TESTcpCurrentMonthDateDisabled,
+.TESTcpOtherMonthDate,
+.TESTcpOtherMonthDateDisabled,
+.TESTcpCurrentDate,
+.TESTcpCurrentDateDisabled,
+.TESTcpTodayText,
+.TESTcpTodayTextDisabled,
+.TESTcpText {font-family:arial;font-size:8pt;}
+TD.TESTcpDayColumnHeader {text-align:right;border:solid thin #000000;border-width:0 0 1 0;}
+.TESTcpCurrentMonthDate,
+.TESTcpOtherMonthDate,
+.TESTcpCurrentDate {text-align:right;text-decoration:none;}
+.TESTcpCurrentMonthDateDisabled,
+.TESTcpOtherMonthDateDisabled,
+.TESTcpCurrentDateDisabled { color:#D0D0D0;text-align:right;text-decoration:line-through;}
+.TESTcpCurrentMonthDate{
+	color:#09C;
+	font-weight:bold;
+}
+.TESTcpCurrentDate {color: #FFFFFF;font-weight:bold;}
+.TESTcpOtherMonthDate{color:#808080;}
+TD.TESTcpCurrentDate {color:#FFFFFF;background-color: #6677DD;border-width:1;border:solid thin #000000;}
+TD.TESTcpCurrentDateDisabled{border-width:1;border:solid thin #FFAAAA;}
+TD.TESTcpTodayText,
+TD.TESTcpTodayTextDisabled {border:solid thin #000000;border-width:1 0 0 0;}
+A.TESTcpTodayText,
+SPAN.TESTcpTodayTextDisabled {height:20px;}
+A.TESTcpTodayText{
+	color:#09C;
+	font-weight:bold;
+}
+SPAN.TESTcpTodayTextDisabled{color:#D0D0D0;}
+.TESTcpBorder{border:solid thin #000000;border-width:1}
+
+
+#orgname {font-family:"Trebuchet MS"; font-size: 30px; color:#339; text-align: center; font-style: oblique; font-weight: bold;}
+
+
+#target {
+	position: absolute;
+	z-index:10;
+	border: 1px solid #000;
+	margin-top : 0px;
+	float : right;
+	visibility:hidden;
+	overflow:hidden;
+	font-family: Arial;
+	font-size:11px;
+	color:#CC0000;
+	background-color:#8CE2FF;
+	font-weight:bold;
+ 
+}
+#target0 {
+	position: obsolute;
+	z-index:10;
+	border: 1px solid #000;
+	margin-top : 0px;
+	float : right;
+	visibility:hidden;
+	overflow:hidden;
+	font-family: Arial;
+	font-size:11px;
+	color:#CC0000;
+	background-color:#8CE2FF;
+	font-weight:bold;
+ 
+}
+#target1 {
+	position: obsolute;
+	z-index:10;
+	border: 1px solid #000;
+	margin-top : 0px;
+	float : right;
+	visibility:hidden;
+	overflow:hidden;
+	font-family: Arial;
+	font-size:11px;
+	color:#CC0000;
+	background-color:#8CE2FF;
+	font-weight:bold;
+ 
+}
+#target2 {
+	position: obsolute;
+	z-index:10;
+	border: 1px solid #000;
+	margin-top : 0px;
+	float : right;
+	visibility:hidden;
+	overflow:hidden;
+	font-family: Arial;
+	font-size:11px;
+	color:#CC0000;
+	background-color:#8CE2FF;
+	font-weight:bold;
+ 
+}
+
+#target4 {
+	position: obsolute;
+	z-index:10;
+	border: 1px solid #000;
+	margin-top : 0px;
+	float : right;
+	visibility:hidden;
+	overflow:hidden;
+	font-family: Arial;
+	font-size:11px;
+	color:#CC0000;
+	background-color:#8CE2FF;
+	font-weight:bold;
+ 
+}
+
+#target span {
+	display:block;
+}
+
+
+#HTML_AJAX_LOADING {
+	visibility:hidden; 
+}
+
+
+fieldset {
+    position :              relative;
+    top :                   1em;
+    padding :               0 0.5em 1em 0.5em;
+    border-width:1;
+    
+}
+
+html>body fieldset {
+    padding-top :           1em;
+    top :                   0;
+}
+
+legend {
+    position :              relative;
+    top :                   -1em;
+    padding :               0em;
+    font-family: Arial;font-size:11px;color:#CC0000;;font-weight:bold;
+}
+
+.ContextMenu { 
+cursor:default; 
+font:menutext; 
+position:absolute; 
+text-align:left; 
+font-family: Arial, Helvetica, sans-serif; 
+font-size: 10pt; 
+width:120px; 
+background-color:menu; 
+border:1 solid buttonface; 
+visibility:hidden; 
+border:2 outset buttonhighlight; 
+} 
+
+.ContextMenuOver{ 
+color:black; 
+font-size:11; 
+font-weight:700; 
+background:#B7A2E7; 
+} 
+
+.ContextMenuOut{ 
+color:black; 
+font-size:11; 
+font-weight:500; 
+background:; 
+} 
+
+input[type=checkbox].css-checkbox {
+	  position: absolute; 
+    overflow: hidden; 
+    clip: rect(0 0 0 0); 
+    height:1px; 
+    width:1px; 
+    margin:-1px; 
+    padding:0;
+    border:0;
+}
+
+input[type=checkbox].css-checkbox + label.css-label {
+	padding-left:20px;
+	height:15px; 
+	display:inline-block;
+	line-height:15px;
+	background-repeat:no-repeat;
+	background-position: 0 0;
+	font-size:15px;
+	vertical-align:middle;
+	cursor:pointer;
+}
+
+input[type=checkbox].css-checkbox:checked + label.css-label {
+	background-position: 0 -15px;
+}
+
+.css-label{ background-image:url(../image/checkbox/lite-green-check.png); }
+
+.lite-green-check{background-image:url(../image/checkbox/lite-green-check.png);}
+.lite-blue-check{background-image:url(../image/checkbox/lite-blue-check.png);}
+.lite-gray-check{background-image:url(../image/checkbox/lite-gray-check.png);}
+.lite-cyan-check{background-image:url(../image/checkbox/lite-cyan-check.png);}
+.lite-orange-check{background-image:url(../image/checkbox/lite-orange-check.png);}
+.lite-red-check{background-image:url(../image/checkbox/lite-red-check.png);}
+
+

@@ -1,0 +1,348 @@
+-----------------------------------------------
+ERR-xx :
+--------------
+01 : sql_test
+02 : get_options_1.php
+03 : get_options_2.php
+04 : action.inc.start.php
+08 : action.inc.stop.php
+09 : action.inc.leave_server.php
+10 : action.inc.list_all_users.php
+12 : action.inc.list_all_contacts.php
+19 : action.inc.list_avatars.php
+20 : action.inc.list_contact_online_offline.php
+22 : action.inc.list_contact_online_only.php
+25 : action.inc.list_contact_to_confirm.php
+30 : action.inc.contact_user_vote.php
+31 : action.inc.contact_user_ask_add.php
+32 : action.inc.contact_user_confirme.php
+33 : action.inc.contact_user_delete.php
+34 : action.inc.contact_user_reject.php
+35 : action.inc.contact_user_delete_wait.php  (non testé !)
+36 : action.inc.contact_user_group.php
+37 : action.inc.contact_user_mask.php
+38 : action.inc.contact_user_privilege.php
+39 : action.inc.contact_user_pseudo.php
+40 : action.inc.contact_user_search.php
+50 : action.inc.msg_send.php
+51 : action.inc.msg_get.php
+53 : action.inc.msg_list_contact.php
+59 : message_send_alert.inc.php
+60 : action.inc.conference_invite.php
+61 : action.inc.conference_accept.php
+62 : action.inc.conference_list_user.php
+63 : action.inc.conference_msg_send.php
+65 : action.inc.conference_quit.php
+70 : action.inc.user_chang_passwd.php
+71 : action.inc.user_chang_nickname.php
+72 : action.inc.user_infos_update.php
+73 : action.inc.user_infos_list.php
+74 : action.inc.user_avatar_update.php
+75 : action.inc.user_status_update.php
+79 : action.inc.user_register.php
+
+
+87 : server_list_status_update.inc.php
+88 : server_list_status.inc.php
+
+89 : action.inc.server_list.php
+90 : action.inc.ext_phenix_today.php
+91 : action.inc.ext_phenix_triade_today.php
+110 : action.inc.shoutbox_list.php
+111 : action.inc.shoutbox_send.php
+112 : action.inc.shoutbox_approval.php
+113 : action.inc.shoutbox_delete.php
+115 : action.inc.shoutbox_vote.php
+116 : action.inc.shoutbox_group_list.php
+120 : action.inc.group_list.php
+121 : action.inc.group_ask_join.php
+122 : action.inc.group_leave.php
+130 : bookmark_list.inc.php
+131 : bookmark_send.inc.php 
+132 : bookmark_vote.inc.php 
+133 : bookmark_category_list.inc.php
+140 : sharefiles_request_send.inc.php
+141 : sharefiles_send.inc.php
+142 : sharefiles_delete.inc.php
+143 : sharefiles_download.inc.php
+144 : sharefiles_alert.inc.php
+146 : sharefiles_list.inc.php
+sharefiles_list_medias.inc.php
+sharefiles_list_projets.inc.php
+200 : action.inc.dashboard.php
+
+: action.inc.group_join_decide.php
+//
+52 : action.inc.msg_nb.php // INUTILE
+-----------------------------------------------
+Section admin :
+-------------
+A1 : list_contact.php
+A2 : list_sessions.php
+A3 : list_users.php
+A4 : list_group.php
+A5 : list_conference.php
+A6 : 
+A7 : contact_add.php - user.inc.php
+A8 : contact_reject.php
+A9 : contact_delete.php
+B1 : user_add.php
+B2 : user_attente.php
+B3 : user_autorize.php
+B4 : user_delete.php
+B5 : user_password_delete.php
+B6 : user_update_name.php user_update_email.php user_update_phone.php user_update_admin_alert.php user_update_hide.php
+B7 : user_delete_older.php
+B8 : user_level.php user_gender.php
+C1 : messagerie.php
+C2 : message_envoyer.php
+C3 : message_delete.php
+D1 : group_add.php
+D2 : group_update.php
+D3 : group_add_user.php
+D4 : group_delete_user.php
+D5 : group_delete.php
+D6 : group_sbx_change.php
+D7 : group_approval_user.php
+E1 : conference_delete_user.php
+F1 : list_bookmarks.php
+F2 : bookmark_add.php
+F3 : bookmark_delete.php  bookmark_update.php  bookmark_valid.php
+G1 : statistics.php
+G5 : list_roles.php  
+G6 : role_add.php   role_renaming  role_update.php  role_permissions.php  role_permission_add.php  role_permissions_list.php
+G7 : roles.inc.php
+H1 : avatar_change.php
+K1 : index.php
+N1 : list_files_sharing.php  list_files_sharing_pending.php   files_sharing_pending_delete.php  files_sharing_delete.php   list_files_exchanging_pending.php   files_sharing_pending_validate.php
+N2 : files_sharing_project_add.php  files_sharing_project_update_name.php  files_sharing_update_comment.php
+N3 : share_files.inc.php
+P1 : list_admin_acp.php  admin_acp_add.php admin_acp_delete.php
+U1 : ban_add.php
+U2 : ban_delete.php
+U3 : ban_import_file.php
+V1 : list_shoutbox.php
+V2 : shoutbox_delete_message.php
+V3 : shoutbox_valid_messages.php
+W1 : list_servers_status.php
+w2 : server_status_delete.php
+W3 : server_status_add.php
+W4 : server_update_name.php
+W5 : server_update_ip.php
+W6 : server_update_status.php
+W7 : server_update_comment.php
+-----------------------------------------------
+Before version 1.5 (190)
+-----------------------------------------------
+K1 : start.php
+K2 : sql_test.php
+K3 : status.php
+K4 : leave_server.php
+L1 : list_contact_of_user.php
+L2 : list_users.php
+L3 : list_contact_user_to_confirm.php
+L4 : list_contact_online_only.php
+L5 : list_contact_online_offline.php
+L6 : list_ban.php
+M1 : functions.inc.php
+M2 : stats.inc.php
+M3 : sessions.inc.php
+M4 : user_start.inc.php (extrait de functions.inc.php)
+M5 : stats_shoutbox.inc.php
+N1 : msg_send.php
+N2 : msg_get.php
+N3 : msg_nb.php
+N4 : msg_list_contact.php
+P1 : conference_invite.php
+P2 : conference_accept.php
+P3 : conference_list_user.php
+P4 : conference_quit.php
+P5 : conference_msg_send.php
+Q1 : contact_user_ask_add.php
+Q2 : contact_user_delete.php   
+Q3 : contact_user_confirme.php
+Q4 : contact_user_privilege.php
+Q5 : contact_user_mask.php      contact_user_vote.php
+Q6 : contact_user_reject.php
+Q7 : contact_user_pseudo.php
+Q8 : contact_user_group.php
+Q9 : contact_user_info.php
+Q0 : contact_user_delete_wait.php
+R1 : chang_pseudo_user.php          action.inc.user_chang_nickname.php
+R2 : user_infos_list.php
+R3 : user_infos_update.php
+R4 : avatar_update.php
+R5 : action.inc.user_chang_passwd.php
+S1 : phenix_today.php  phenix_triade_today.php
+S2 : opengoo_today.php
+-----------------------------------------------
+Auth extern :
+-----------
+S1 : phenix_today.php
+T1 : phpbb2.auth.inc.php
+T2 : phpnuke.auth.inc.php
+T3 : phorum.auth.inc.php
+T4 : vbulletin.auth.inc.php
+T5 : joomla.auth.inc.php
+T6 : phenix.sql.inc.php
+T7 : dolibarr.auth.inc.php
+T8 : dotproject.auth.inc.php
+T9 : egroupware.auth.inc.php
+T10: ovidentia.auth.inc.php
+T11: smf.auth.inc.php
+T12: achievo.auth.inc.php
+T13: taskfreak.auth.inc.php
+T14: ipboard.auth.inc.php
+T15: webcollab.auth.inc.php
+T16: php-fusion.auth.inc.php
+T17: xoops.auth.inc.php
+T18: mybb.auth.inc.php
+T19: phpgroupware.auth.inc.php
+T20: sugarcrm.auth.inc.php
+T21: vtigercrm.auth.inc.php
+T22: drupal.auth.inc.php
+T22: drupal7.auth.inc.php
+T23: typo3.auth.inc.php
+T24: nucleus.auth.inc.php
+T25: modx.auth.inc.php
+T26: streber.auth.inc.php
+T27: tikiwiki.auth.inc.php
+T28: phprojekt.auth.inc.php
+T29: mambo.auth.inc.php
+T30: toutateam.auth.inc.php
+T31: fudforum.auth.inc.php
+T32: punbb.auth.inc.php
+T33: aef.auth.inc.php
+T34: minibb.auth.inc.php
+T35: owl.auth.inc.php
+T36: webcalendar.auth.inc.php
+T37: ucenter.auth.inc.php
+T38: agora.auth.inc.php
+T39: collabtive.auth.inc.php
+T40: groupoffice.auth.inc.php
+T41: cuteflow.auth.inc.php
+T42: phpbb3.auth.inc.php
+T43: concrete.auth.inc.php
+T44: dotclear1.auth.inc.php
+T45: dotclear2.auth.inc.php
+T46: projectpier.auth.inc.php
+T47: bitweaver.auth.inc.php
+T48: wordpress.auth.inc.php
+T49: issuemanager.auth.inc.php
+T50: activecollab.auth.inc.php
+T51: textcube.auth.inc.php
+T52: ezpublish.auth.inc.php
+T53: elgg.auth.inc.php
+T54: yacs.auth.inc.php
+T55: typolight.auth.inc.php
+T55: contao.auth.inc.php
+T56: triade.auth.inc.php
+T57: phpcollab.auth.inc.php
+T58: opengoo.auth.inc.php
+T59: trellisdesk.auth.inc.php
+T60: obm.auth.inc.php
+T61: phpboost.auth.inc.php
+T62: cmsmadesimple.auth.inc.php
+T63: xmb.auth.inc.php
+T64: impresscms.auth.inc.php
+T65: gepi.auth.inc.php
+T66: promethee.auth.inc.php
+T67: dokeos.auth.inc.php
+T68: claroline.auth.inc.php
+T69: pligg.auth.inc.php
+T70: pms.auth.inc.php
+T71: malleo.auth.inc.php
+T72: moodle.auth.inc.php
+T73: phpbms.auth.inc.php
+T74: connectixboards.auth.inc.php
+T75: wbblite.auth.inc.php
+T76: e107.auth.inc.php
+T77: fluxbb.auth.inc.php
+T78: phpizabi.auth.inc.php
+T79: tine.auth.inc.php
+T80: sit.auth.inc.php
+T81: spip.auth.inc.php
+T82: phpmyfaq.auth.inc.php
+T83: hesk.auth.inc.php
+T84: prestashop.auth.inc.php
+T85: oscommerce.auth.inc.php
+T86: 68kb.auth.inc.php
+T87: admidio.auth.inc.php
+T88: fengoffice.auth.inc.php
+T89: adheo.auth.inc.php
+T89: projelead.auth.inc.php
+T90: skadate.auth.inc.php
+T91: phpfox.auth.inc.php
+T92: phpfox-konsort.auth.inc.php
+T93: weberp.auth.inc.php
+T94: todoyu.auth.inc.php
+T95: sharetronix.auth.inc.php
+T96: thelia.auth.inc.php
+T97: npds.auth.inc.php
+T98: vanilla.auth.inc.php
+T99: osticket.auth.inc.php
+T100: oozaims.auth.inc.php
+T101: mantisbt.auth.inc.php
+T102: lodel.auth.inc.php
+T103: phpdug.auth.inc.php
+T104: b2evolution.auth.inc.php
+T105: artiphp.auth.inc.php
+T106: web2project.auth.inc.php
+T107: socialengine.auth.inc.php
+T108: nukedklan.auth.inc.php
+T109: docebo.auth.inc.php
+T110: websitebaker.auth.inc.php
+T111: cscart.auth.inc.php
+T112: livecart.auth.inc.php
+T113: zencart.auth.inc.php
+T114: tomatocart.auth.inc.php
+T115: magento.auth.inc.php
+T116: frontaccount.auth.inc.php
+T117: geeklog.auth.inc.php
+T118: thebuggenie.auth.inc.php
+T119: epesi.auth.inc.php
+T120: freeway.auth.inc.php
+T121: dolphin.auth.inc.php
+T122: webissues.auth.inc.php
+T123: statusnet.auth.inc.php
+T124: chamilo.auth.inc.php
+T125: atutor.auth.inc.php
+T126: oscmax.auth.inc.php
+T127: mahara.auth.inc.php
+T128: simplegroupware.auth.inc.php
+T129: bewelcome.auth.inc.php
+T130: pragmamx.auth.inc.php
+T131: textpattern.auth.inc.php
+T132: zikula.auth.inc.php
+T133: etraxis.auth.inc.php
+T134: openrealty.auth.inc.php
+T135: cpg.auth.inc.php
+T136: helpcenterlive.auth.inc.php
+T137: phpwcms.auth.inc.php
+T138: friendika.auth.inc.php
+T139: bonfire.auth.inc.php
+T140: pcpin_chat.auth.inc.php
+T141: dmanager.auth.inc.php
+T142: mound.auth.inc.php
+T143: ocportal.auth.inc.php
+T144: silverstripe.auth.inc.php
+T145: zazavi.auth.inc.php
+T146: phpscheduleit.auth.inc.php
+T147: pyrocms.auth.inc.php
+T148: cotonti.auth.inc.php
+T149: dragonflycms.auth.inc.php
+T150: aphpkb.auth.inc.php
+T151: qdpm.auth.inc.php
+T152: bigace.auth.inc.php
+T153: kimai.auth.inc.php
+T154: etano.auth.inc.php
+T155: pbboard.auth.inc.php
+T156: serendipity.auth.inc.php
+T157: question2answer.auth.inc.php
+T158: oxwall.auth.inc.php
+T159: traq.auth.inc.php
+T160: projectorria.auth.inc.php    
+T160: projeqtor.auth.inc.php    
+T161: fsb2.auth.inc.php
+T162: galette.auth.inc.php
+-----------------------------------------------

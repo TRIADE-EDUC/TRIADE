@@ -1,0 +1,15 @@
+On Windows 7 and Vista (with active UAC)
+you may NOT install in Program-Files
+
+For Windows 64, better to use zip version.
+
+
+--------------------------------------------------
+
+
+Pour les versions 7 et Vista de Windows 
+(avec UAC activée)
+il est déconseillé d'installer dans Program-Files
+
+
+Pour Windows 64, il est préférable d'utiliser la version zip.

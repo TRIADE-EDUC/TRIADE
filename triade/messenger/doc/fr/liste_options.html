@@ -1,0 +1,1762 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<!--
+/*******************************************************
+ **                  IntraMessenger - server          **
+ **                                                   **
+ **  Copyright:      (C) 2006 - 2016 THeUDS           **
+ **  Web:            http://www.theuds.com            **
+ **                  http://www.intramessenger.net    **
+ **  Licence :       GPL (GNU Public License)         **
+ **  http://opensource.org/licenses/gpl-license.php   **
+ *******************************************************/
+
+/*******************************************************
+ **       This file is part of IntraMessenger-server  **
+ **                                                   **
+ **  IntraMessenger is a free software.               **
+ **  IntraMessenger is distributed in the hope that   **
+ **  it will be useful, but WITHOUT ANY WARRANTY.     **
+ *******************************************************/
+ -->
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="fr" xml:lang="fr">
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
+    <meta http-equiv="content-language" content="fr" />
+    <META NAME="http.language" content="French">
+    <META NAME="language" content="fr, ca, ch, be, lu">
+    <meta name="description" content="Liste détaillée des options du serveur IntraMessenger" />
+    <meta http-equiv="content-style-type" content="text/css" />
+    <META NAME="Author" CONTENT="THeUDS.com">
+    <META NAME="copyright" content="THeUDS.com">
+    <LINK REL="SHORTCUT ICON" HREF="../../images/favicon.ico">
+    <title>Options</title>
+    <!-- <base href="./" target="_blank" /> -->
+    
+    <!-- <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script> -->
+    <script src="jquery-1.8.3.min.js"></script>
+    <script src="animatescroll.js"></script>
+
+    <style type="text/css" >
+      <!--
+      body {
+        font-family:"Trebuchet MS", Arial, Sans-Serif;
+        color:#444;
+        font-size:.9em;
+        background-color:#FFF;
+        margin:0;
+        
+      }
+
+      #header {
+        top             : 0;
+        height          : 90px;
+        width           : 100%;
+
+        background-color:#A5C2E0;
+        font-family:Georgia, serif;
+        font-size:1.0em;
+        border-bottom:1px solid #650;
+        color:#FFF;
+        padding:2px 6% 12px;
+      }
+
+      #footer {
+        position: fixed;
+        bottom: 0;
+        height          : 90px;
+        width           : 100%;
+
+        background-color:#A5C2E0;
+        font-family:Georgia, serif;
+        font-size:1.0em;
+        border-bottom:1px solid #650;
+        color:#FFF;
+        padding:2px 6% 12px;
+      }
+
+      #content {
+        margin:20px 6%;
+        margin-bottom:120px;
+      }
+
+      .panel {
+        border:1px solid #D8D8D8;
+        background-color:#EFEFEF;
+        margin:1em 0;
+        padding:1.2ex;
+      }
+
+      .panel A {
+        font-size:0.8em;
+      }
+
+      .panel h2 {
+        border-bottom:1px dashed #2181B0;
+        font-size:1.2em;
+        font-weight:400;
+        color:#2181B0;
+        margin:0 0 0.5em;
+      }
+      
+      .suggest {
+        color:#21B081;
+      }
+
+      .alert {
+        background:#FFFED1;
+        border:1px solid #E4E5A0;
+        color:#B02181;
+        margin:5px 0 2px;
+        padding:8px;
+      }
+
+      .notice {
+        background:#D1FFFE;
+        border:1px solid #A0E5E4;
+        color:#4B4000;
+        margin:5px 0 2px;
+        padding:10px;
+        width: 86%;     /* GIC */
+      }
+
+      ul,ol {
+        list-style:square;
+       line-height:130%;
+        text-align:justify;
+        margin:10px 8px;
+      }
+      A.Code {
+        font-size : 11px;
+        font-weight : bold;
+        color : #990000;
+      }
+      -->
+    </style>
+  </head>
+  <body>
+  
+    <div id="header">
+      <div>
+        <h1>Liste alphabétique des options d'<I>IntraMessenger serveur</I></h1>
+
+        [<a href="#" onclick="$('#_ACP_ALLOW_MEMORY_AUTH').animatescroll({padding:7,easing:'easeOutBounce'});">A</a>] - 
+        [<a href="#" onclick="$('#_BACKUP_FILES').animatescroll({padding:7,easing:'easeOutBounce'});">B</a>] - 
+        [<a href="#" onclick="$('#_CENSOR_MESSAGES').animatescroll({padding:7,easing:'easeOutBounce'});">C</a>] - 
+        [<a href="#" onclick="$('#_DONOTDISTURB_REASONS_LIST').animatescroll({padding:7,easing:'easeOutBounce'});">D</a>] - 
+        [<a href="#" onclick="$('#_ENTERPRISE_SERVER').animatescroll({padding:7,easing:'easeOutBounce'});">E</a>] - 
+        [<a href="#" onclick="$('#_FLAG_COUNTRY_FROM_IP').animatescroll({padding:7,easing:'easeOutBounce'});">F</a>] - 
+        [<a href="#" onclick="$('#_GROUP_FOR_SBX_AND_ADMIN_MSG').animatescroll({padding:7,easing:'easeOutBounce'});">G</a>] - 
+        [<a href="#" onclick="$('#_HISTORY_MESSAGES_ON_ACP').animatescroll({padding:7,easing:'easeOutBounce'});">H</a>] - 
+        [<a href="#" onclick="$('#_IM_ADDRESS_BOOK_PASSWORD').animatescroll({padding:7,easing:'easeOutBounce'});">I</a>] - 
+        <!-- [<A HREF='liste_options.html#ZZZZZ'>J</A>] - 
+        [<A HREF='liste_options.html#ZZZZZ'>K</A>] - -->
+        [<a href="#" onclick="$('#_LANG').animatescroll({padding:7,easing:'easeOutBounce'});">L</a>] - 
+        [<a href="#" onclick="$('#_MAINTENANCE_MODE').animatescroll({padding:7,easing:'easeOutBounce'});">M</a>] - 
+        [<a href="#" onclick="$('#_NEED_QUICK_REGISTER_TO_AUTO_ADD_NEW_USER').animatescroll({padding:7,easing:'easeOutBounce'});">N</a>] - 
+        [<a href="#" onclick="$('#_ONLINE_REASONS_LIST').animatescroll({padding:7,easing:'easeOutBounce'});">O</a>] - 
+        [<a href="#" onclick="$('#_PASSWORD_FOR_PRIVATE_SERVER').animatescroll({padding:7,easing:'easeOutBounce'});">P</a>] - 
+        <!-- [<A HREF='liste_options.html#ZZZZZ'>Q</A>] - -->
+        [<a href="#" onclick="$('#_ROLES_TO_OVERRIDE_PERMISSIONS').animatescroll({padding:7,easing:'easeOutBounce'});">R</a>] - 
+        [<a href="#" onclick="$('#_SCROLL_TEXT').animatescroll({padding:7,easing:'easeOutBounce'});">S</a>] - 
+        [<a href="#" onclick="$('#_TIME_ZONES').animatescroll({padding:7,easing:'easeOutBounce'});">T</a>] - 
+        [<a href="#" onclick="$('#_UNREAD_MESSAGE_VALIDITY').animatescroll({padding:7,easing:'easeOutBounce'});">U</a>] - 
+        <!-- [<A HREF='liste_options.html#ZZZZZ'>V</A>] - -->
+        [<a href="#" onclick="$('#_WAIT_STARTUP_IF_SERVER_UNAVAILABLE').animatescroll({padding:7,easing:'easeOutBounce'});">W</a>] 
+        <!-- [<A HREF='liste_options.html#ZZZZZ'>X</A>] - 
+        [<A HREF='liste_options.html#ZZZZZ'>Y</A>] - 
+        [<A HREF='liste_options.html#ZZZZZ'>Z</A>] -->
+
+      </div>
+    </div>
+
+    <div id="content">
+
+      <div class="panel" id='_ACP_ALLOW_MEMORY_AUTH'>
+        <h2>_ACP_ALLOW_MEMORY_AUTH - <span style='font-size:0.8em;'>nouveauté de la <strong>version 2.0.5</strong></span></h2>
+        <div class="suggest">Option non affichée dans l'<acronym title='Admin Control Panel : interface d administration'>ACP</acronym>.</div>
+        Si activée, permet la mémorisation de l'authentification intégrée à l'<acronym title='Admin Control Panel : interface d administration'>ACP</acronym> dans les cookies du navigateur web.<br/>
+        Si l'option <a href="#" onclick="$('#_ACP_PROTECT_BY_HTACCESS').animatescroll({padding:7,easing:'easeOutBounce'});">_ACP_PROTECT_BY_HTACCESS</a> n'est <b>pas activée</b>.<br/>
+      </div>
+
+      <div class="panel" id='_ACP_PROTECT_BY_HTACCESS'>
+        <h2>_ACP_PROTECT_BY_HTACCESS - <span style='font-size:0.8em;'>nouveauté de la <strong> version 2.0.5</strong></span></h2>
+        <div class="suggest">Option non affichée dans l'<acronym title='Admin Control Panel : interface d administration'>ACP</acronym>.</div>
+        Si <u>non</u> activée, permet (l'authentification intégrée et) la gestion d'accès multiples à l'<acronym title='Admin Control Panel : interface d administration'>ACP</acronym>.<br/>
+        Chaque administrateur pouvant avoir des droits d'accès différents.<br/>
+        Les administrateurs des versions antérieures à 2.0.5 pourront activer cette option pour conserver la méthode d'authentification habituelle (via htaccess).<br/>
+      </div>
+
+      <div class="panel" id='_ADMIN_EMAIL'>
+        <h2>_ADMIN_EMAIL</h2>
+        Définir l'adresse email de l'administrateur. <br/>
+        Visible sur les postes clients dans l'onglet <I>Serveur</I>.<br/> 
+        <!-- (sauf si l'onglet est volontairement masqué en <A HREF='http://www.intramessenger.net/custom-version.php' target='_blank'>version personnalisée</A>).<br/> -->
+        Voir aussi l'option <a href="#" onclick="$('#_ADMIN_PHONE').animatescroll({padding:7,easing:'easeOutBounce'});">_ADMIN_PHONE</a>.<br/>
+      </div>
+
+      <div class="panel" id='_ADMIN_PHONE'>
+        <h2>_ADMIN_PHONE</h2>
+        Définir le numéro de téléphone de l'administrateur. <br/>
+        Visible sur les postes clients dans l'onglet <I>Serveur</I>.<br/>
+        <!-- (sauf si l'onglet est volontairement masqué en <A HREF='http://www.intramessenger.net/custom-version.php' target='_blank'>version personnalisée</A>).<br/> -->
+        Voir aussi l'option <a href="#" onclick="$('#_ADMIN_EMAIL').animatescroll({padding:7,easing:'easeOutBounce'});">_ADMIN_EMAIL</a>.<br/>
+      </div>
+
+      <div class="panel" id='_ALLOW_AUTO_ADD_NEW_USER_ON_SERVER'>
+        <h2>_ALLOW_AUTO_ADD_NEW_USER_ON_SERVER</h2>
+        Autoriser (ou non) <A HREF='http://www.intramessenger.com/forum/viewtopic.php?f=17&t=1423&' target='_blank'>les nouveaux utilisateurs à être automatiquement ajoutés</A>.<br/>
+        Si l'option n'est pas activée, c'est l'administrateur qui ajoute (créé) les utilisateurs un par un.<br/>
+        <!-- L'option <a href="#" onclick="$('#_PENDING_NEW_AUTO_ADDED_USER').animatescroll({padding:7,easing:'easeOutBounce'});">_PENDING_NEW_AUTO_ADDED_USER</a> ne doit <b>pas être activée</b>.<br/> -->
+        Voir aussi les options : 
+        <a href="#" onclick="$('#_NEED_QUICK_REGISTER_TO_AUTO_ADD_NEW_USER').animatescroll({padding:7,easing:'easeOutBounce'});">_NEED_QUICK_REGISTER_TO_AUTO_ADD_NEW_USER</a> 
+        - <a href="#" onclick="$('#_PENDING_USER_ON_COMPUTER_CHANGE').animatescroll({padding:7,easing:'easeOutBounce'});">_PENDING_USER_ON_COMPUTER_CHANGE</a>.<br/>
+        <div class="suggest">Valeur conseillée : activée pour une utilisation classique.</div>
+      </div>
+
+      <div class="panel" id='_ALLOW_CHANGE_AVATAR'>
+        <h2>_ALLOW_CHANGE_AVATAR</h2>
+        Autoriser (ou non) l'utilisateur à changer son avatar (photo) en <A HREF='http://www.intramessenger.net/images/IntraMessenger_11_EN.png' target='_blank'>modifiant son profil</A>.<br/>
+        Nécessite l'activation de l'option <a href="#" onclick="$('#_ALLOW_MANAGE_PROFILE').animatescroll({padding:7,easing:'easeOutBounce'});">_ALLOW_MANAGE_PROFILE</a>.<br/>
+      </div>
+
+      <div class="panel" id='_ALLOW_CHANGE_CONTACT_NICKNAME'>
+        <h2>_ALLOW_CHANGE_CONTACT_NICKNAME</h2>
+        Autoriser (ou non) l'utilisateur à renommer ses contacts.<br/>
+        Les options : <a href="#" onclick="$('#_ALLOW_MANAGE_CONTACT_LIST').animatescroll({padding:7,easing:'easeOutBounce'});">_ALLOW_MANAGE_CONTACT_LIST</a> 
+        - <a href="#" onclick="$('#_ALLOW_MANAGE_PROFILE').animatescroll({padding:7,easing:'easeOutBounce'});">_ALLOW_MANAGE_PROFILE</a> doivent être activées.<br/>
+      </div>
+
+      <div class="panel" id='_ALLOW_CHANGE_EMAIL_PHONE'>
+        <h2>_ALLOW_CHANGE_EMAIL_PHONE</h2>
+        Autoriser (ou non) l'utilisateur à changer son numéro de téléphone et son adresse email (en <A HREF='http://www.intramessenger.net/images/IntraMessenger_11_EN.png' target='_blank'>modifiant son profil</A>).<br/>
+        Nécessite l'activation de l'option <a href="#" onclick="$('#_ALLOW_MANAGE_PROFILE').animatescroll({padding:7,easing:'easeOutBounce'});">_ALLOW_MANAGE_PROFILE</a>.<br/>
+      </div>
+
+      <div class="panel" id='_ALLOW_CHANGE_FUNCTION_NAME'>
+        <h2>_ALLOW_CHANGE_FUNCTION_NAME</h2>
+        Autoriser (ou non) l'utilisateur à changer sa fonction (en <A HREF='http://www.intramessenger.net/images/IntraMessenger_11_EN.png' target='_blank'>modifiant son profil</A>).<br/>
+        Nécessite l'activation de l'option <a href="#" onclick="$('#_ALLOW_MANAGE_PROFILE').animatescroll({padding:7,easing:'easeOutBounce'});">_ALLOW_MANAGE_PROFILE</a>.<br/>
+      </div>
+
+      <div class="panel" id='_ALLOW_CLOSE_IM'>
+        <h2>_ALLOW_CLOSE_IM - <span style='font-size:0.8em;'>nouveauté de la version 2.0.4</span></h2>
+        <div class="suggest">Option non affichée dans l'<acronym title='Admin Control Panel : interface d administration'>ACP</acronym>.</div>
+        Autoriser (ou non) à fermer le client IntraMessenger<br/>
+        <div class="suggest">Valeur (par défaut) conseillée : activée.</div>
+      </div>
+
+      <div class="panel" id='_ALLOW_COL_FUNCTION_NAME'>
+        <h2>_ALLOW_COL_FUNCTION_NAME - <span style='font-size:0.8em;'>option (inversée) anciennement nommée <b>_HIDE_COL_FUNCTION_NAME</b> jusqu'à la version 2.0.4</span></h2>
+        <div class="suggest">Option non affichée dans l'<acronym title='Admin Control Panel : interface d administration'>ACP</acronym>.</div>
+        Autoriser (ou non) les utilisateurs à afficher la colonne nom/fonction.<br/>
+      </div>
+
+      <div class="panel" id='_ALLOW_CONFERENCE'>
+        <h2>_ALLOW_CONFERENCE</h2>
+        Autoriser (ou non) les utilisateurs à <A HREF='http://www.intramessenger.com/forum/pictures/im_conference_invitation.png' target='_blank'>se créer des conférences</A> à plusieurs.<br/>
+      </div>
+
+      <div class="panel" id='_ALLOW_CONTACT_RATING'>
+        <h2>_ALLOW_CONTACT_RATING - <span style='font-size:0.8em;'>option anciennement nommée <b>_ALLOW_USER_RATING</b> jusqu'à la version 2.0.4</span></h2>
+        Autoriser (ou non) l'utilisateur à noter ses contacts.<br/>
+        Si l'option est définie à <i>PUBLIC</i>, chacun peut consulter sa moyenne.<br/>
+        Nécessite l'activation de l'option <a href="#" onclick="$('#_ALLOW_MANAGE_CONTACT_LIST').animatescroll({padding:7,easing:'easeOutBounce'});">_ALLOW_MANAGE_CONTACT_LIST</a>.<br/>
+      </div>
+
+      <div class="panel" id='_ALLOW_EMAIL_NOTIFIER'>
+        <h2>_ALLOW_EMAIL_NOTIFIER</h2>
+        Autoriser (ou non) l'usage du notifieur d'email intégré.<br/>
+        Nécessite l'activation de l'option <a href="#" onclick="$('#_ALLOW_MANAGE_OPTIONS').animatescroll({padding:7,easing:'easeOutBounce'});">_ALLOW_MANAGE_OPTIONS</a>.<br/>
+        Voir aussi l'option <a href="#" onclick="$('#_INCOMING_EMAIL_SERVER_ADDRESS').animatescroll({padding:7,easing:'easeOutBounce'});">_INCOMING_EMAIL_SERVER_ADDRESS</a>.<br/>
+      </div>
+
+      <div class="panel" id='_ALLOW_HIDDEN_STATUS'>
+        <h2>_ALLOW_HIDDEN_STATUS - <span style='font-size:0.8em;'>nouveauté de la version 2.0.5</span></h2>
+        Autoriser (ou non) l'usage de l'état caché (indiqué "non connecté" <b>pour tous</b>).<br/>
+        Voir aussi l'option <a href="#" onclick="$('#_ALLOW_HIDDEN_TO_CONTACTS').animatescroll({padding:7,easing:'easeOutBounce'});">_ALLOW_HIDDEN_TO_CONTACTS</a>.<br/>
+      </div>
+
+      <div class="panel" id='_ALLOW_HIDDEN_TO_CONTACTS'>
+        <h2>_ALLOW_HIDDEN_TO_CONTACTS - <span style='font-size:0.8em;'>option anciennement nommée <b>_ALLOW_INVISIBLE</b> jusqu'à la version 2.0.4</span> </h2>
+        Autoriser (ou non) l'utilisateur à être invisible (caché si en ligne) <b>pour certains de ses contacts</b> (voir VIP).<br/>
+        Voir aussi les options <a href="#" onclick="$('#_ALLOW_MANAGE_CONTACT_LIST').animatescroll({padding:7,easing:'easeOutBounce'});">_ALLOW_MANAGE_CONTACT_LIST</a> 
+        et <a href="#" onclick="$('#_ALLOW_HIDDEN_STATUS').animatescroll({padding:7,easing:'easeOutBounce'});">_ALLOW_HIDDEN_STATUS</a>.<br/>
+      </div>
+
+      <div class="panel" id='_ALLOW_HISTORY_MESSAGES'>
+        <h2>_ALLOW_HISTORY_MESSAGES - <span style='font-size:0.8em;'>option anciennement nommée <b>_ALLOW_USER_TO_HISTORY_MESSAGES</b> jusqu'à la version 2.0.4</span></h2>
+        Autoriser (ou non) l'utilisateur à archiver (sur son poste) les messages échangés.<br/>
+        Si autorisé, l'utilisateur défini dans ses options combien de jours il souhaite les conserver (0 : pas d'archivage).<br/>
+        Voir aussi l'option <a href="#" onclick="$('#_ALLOW_HISTORY_MESSAGES_EXPORT').animatescroll({padding:7,easing:'easeOutBounce'});">_ALLOW_HISTORY_MESSAGES_EXPORT</a>.<br/>
+      </div>
+
+      <div class="panel" id='_ALLOW_HISTORY_MESSAGES_EXPORT'>
+        <h2>_ALLOW_HISTORY_MESSAGES_EXPORT - <span style='font-size:0.8em;'>nouveauté de la version 2.0.5</span></h2>
+        Autoriser (ou non) l'utilisateur à exporter (au format Excel) l'historique des messages archivés.<br/>
+        L'option <a href="#" onclick="$('#_ALLOW_HISTORY_MESSAGES').animatescroll({padding:7,easing:'easeOutBounce'});">_ALLOW_HISTORY_MESSAGES</a> doit être activée.<br/>
+      </div>
+
+      <div class="panel" id='_ALLOW_MANAGE_CONTACT_LIST'>
+        <h2>_ALLOW_MANAGE_CONTACT_LIST - <span style='BACKGROUND-COLOR: #88ffff; font-size:0.8em;'>option (inversée) anciennement nommée <b>_LOCK_USER_CONTACT_LIST</b> jusqu'à la version 2.0.4</span></h2>
+        Empêcher (ou non) les utilisateurs d'accèder à leur liste de contacts ainsi qu'à leur alarme.<br/>
+        Si activée, seul l'administrateur peut leur ajouter/supprimer des contacts.<br/>
+        Option de verrouillage utilisée par exemple en milieu scolaire.<br/>
+        Voir aussi les options : <a href="#" onclick="$('#_SPECIAL_MODE_GROUP_COMMUNITY').animatescroll({padding:7,easing:'easeOutBounce'});">_SPECIAL_MODE_GROUP_COMMUNITY</a>
+        - <a href="#" onclick="$('#_ALLOW_CHANGE_CONTACT_NICKNAME').animatescroll({padding:7,easing:'easeOutBounce'});">_ALLOW_CHANGE_CONTACT_NICKNAME</a> 
+        - <a href="#" onclick="$('#_ALLOW_CONTACT_RATING').animatescroll({padding:7,easing:'easeOutBounce'});">_ALLOW_CONTACT_RATING</a> 
+        - <a href="#" onclick="$('#_PUBLIC_USERS_LIST').animatescroll({padding:7,easing:'easeOutBounce'});">_PUBLIC_USERS_LIST</a>.<br/>
+      </div>
+
+      <div class="panel" id='_ALLOW_MANAGE_OPTIONS'>
+        <h2>_ALLOW_MANAGE_OPTIONS - <span style='BACKGROUND-COLOR: #88ffff; font-size:0.8em;'>option (inversée) anciennement nommée <b>_LOCK_USER_OPTIONS</b> jusqu'à la version 2.0.4</span></h2>
+        Empêcher (ou non) les utilisateurs d'accèder à leurs options ainsi qu'à leur alarme.<br/>
+        Option de verrouillage utilisée par exemple en milieu scolaire.<br/>
+        Voir aussi les options : <a href="#" onclick="$('#_ALLOW_EMAIL_NOTIFIER').animatescroll({padding:7,easing:'easeOutBounce'});">_ALLOW_EMAIL_NOTIFIER</a>
+        - <a href="#" onclick="$('#_ALLOW_SKIN').animatescroll({padding:7,easing:'easeOutBounce'});">_ALLOW_SKIN</a>
+        - <a href="#" onclick="$('#_ALLOW_SOUND_USAGE').animatescroll({padding:7,easing:'easeOutBounce'});">_ALLOW_SOUND_USAGE</a>
+        - <a href="#" onclick="$('#_PUBLIC_OPTIONS_LIST').animatescroll({padding:7,easing:'easeOutBounce'});">_PUBLIC_OPTIONS_LIST</a>.<br/>
+      </div>
+
+      <div class="panel" id='_ALLOW_MANAGE_PROFILE'>
+        <h2>_ALLOW_MANAGE_PROFILE - <span style='BACKGROUND-COLOR: #88ffff; font-size:0.8em;'>option (inversée) anciennement nommée <b>_LOCK_USER_PROFILE</b> jusqu'à la version 2.0.4</span></h2>
+        Empêcher (ou non) les utilisateurs d'accèder à leur profil.<br/>
+        Option de verrouillage utilisée par exemple en milieu scolaire.<br/>
+        Voir aussi les options : 
+        <a href="#" onclick="$('#_ALLOW_CHANGE_AVATAR').animatescroll({padding:7,easing:'easeOutBounce'});">_ALLOW_CHANGE_AVATAR</a> 
+        - <a href="#" onclick="$('#_ALLOW_CHANGE_EMAIL_PHONE').animatescroll({padding:7,easing:'easeOutBounce'});">_ALLOW_CHANGE_EMAIL_PHONE</a> 
+        - <a href="#" onclick="$('#_ALLOW_CHANGE_FUNCTION_NAME').animatescroll({padding:7,easing:'easeOutBounce'});">_ALLOW_CHANGE_FUNCTION_NAME</a> 
+        - <a href="#" onclick="$('#_INVITE_FILL_PROFILE_ON_FIRST_LOGIN').animatescroll({padding:7,easing:'easeOutBounce'});">_INVITE_FILL_PROFILE_ON_FIRST_LOGIN</a>.<br/>
+      </div>
+
+      <div class="panel" id='_ALLOW_POST_IT'>
+        <h2>_ALLOW_POST_IT - <span style='font-size:0.8em;'>nouveauté de la version 2.0.4</span></h2>
+        Autoriser (ou non) l'utilisateur à utiliser des post-it.<br/>
+      </div>
+
+      <div class="panel" id='_ALLOW_REDUCE_MAIN_SCREEN'>
+        <h2>_ALLOW_REDUCE_MAIN_SCREEN - <span style='font-size:0.8em;'>nouveauté de la version 2.0.4</span></h2>
+        <div class="suggest">Option non affichée dans l'<acronym title='Admin Control Panel : interface d administration'>ACP</acronym>.</div>
+        Autoriser (ou non) à réduire la fenêtre principale.<br/>
+        <div class="suggest">Valeur (par défaut) conseillée : activée.</div>
+      </div>
+
+      <div class="panel" id='_ALLOW_REDUCE_MESSAGE_SCREEN'>
+        <h2>_ALLOW_REDUCE_MESSAGE_SCREEN - <span style='font-size:0.8em;'>nouveauté de la version 2.0.4</span></h2>
+        <div class="suggest">Option non affichée dans l'<acronym title='Admin Control Panel : interface d administration'>ACP</acronym>.</div>
+        Autoriser (ou non) à réduire la fenêtre de discussion.<br/>
+        <div class="suggest">Valeur (par défaut) conseillée : activée.</div>
+      </div>
+      
+      <div class="panel" id='_ALLOW_SEND_TO_OFFLINE_USER'>
+        <h2>_ALLOW_SEND_TO_OFFLINE_USER</h2>
+        Autoriser (ou non) l'utilisateur à envoyer des messages à un contact non connecté.<br/>
+        (ne permet pas l'envoi à un groupe d'utilisateurs non connectés).
+      </div>
+
+      <div class="panel" id='_ALLOW_SKIN'>
+        <h2>_ALLOW_SKIN - <span style='font-size:0.8em;'>nouveauté de la version  2.0.4</span></h2>
+        Autoriser (ou non) à <A HREF='http://www.intramessenger.com/forum/viewtopic.php?f=12&t=968&' target='_blank'>appliquer un skin</A> sur le client IntraMessenger<br/>
+        Nécessite l'activation de l'option <a href="#" onclick="$('#_ALLOW_MANAGE_OPTIONS').animatescroll({padding:7,easing:'easeOutBounce'});">_ALLOW_MANAGE_OPTIONS</a>.<br/>
+        <div class="suggest">Valeur (par défaut) conseillée : activée.</div>
+      </div>
+
+      <div class="panel" id='_ALLOW_SMILEYS'>
+        <h2>_ALLOW_SMILEYS</h2>
+        Autoriser (ou non) l'utilisateur à envoyer des <A HREF='http://www.intramessenger.com/forum/pictures/im_smiley.png' target='_blank'>émoticones</A> (smileys, affichés en images) pendant une discussion.<br/>
+      </div>
+
+      <div class="panel" id='_ALLOW_SOUND_USAGE'>
+        <h2>_ALLOW_SOUND_USAGE - <span style='font-size:0.8em;'>nouveauté de la version 2.0.4</span></h2>
+        Autoriser (ou non) à utiliser les sons (notifications).<br/>
+        Nécessite l'activation de l'option <a href="#" onclick="$('#_ALLOW_MANAGE_OPTIONS').animatescroll({padding:7,easing:'easeOutBounce'});">_ALLOW_MANAGE_OPTIONS</a>.<br/>
+        <div class="suggest">Valeur (par défaut) conseillée : activée.</div>
+      </div>
+
+      <div class="panel" id='_ALLOW_UPPERCASE_SPACE_USERNAME'>
+        <h2>_ALLOW_UPPERCASE_SPACE_USERNAME</h2>
+        <div class="suggest">Option non affichée dans l'<acronym title='Admin Control Panel : interface d administration'>ACP</acronym>.</div>
+        Autoriser (ou non) l'utilisateur à avoir dans son identifiant (pseudo) des majuscules et/ou caractères espaces.<br/>
+        Voir aussi l'option <a href="#" onclick="$('#_FORCE_USERNAME_TO_PC_SESSION_NAME').animatescroll({padding:7,easing:'easeOutBounce'});">_FORCE_USERNAME_TO_PC_SESSION_NAME</a>.<br/>
+        <div class="suggest">Valeur conseillée : activée.</div>
+      </div>
+
+      <div class="panel" id='_ALLOW_USE_PROXY'>
+        <h2>_ALLOW_USE_PROXY</h2>
+        Autoriser (ou non) l'utilisateur à paramètrer l'accès au serveur IntraMessenger via un serveur proxy.<br/>
+        Voir aussi les options : <a href="#" onclick="$('#_PROXY_ADDRESS').animatescroll({padding:7,easing:'easeOutBounce'});">_PROXY_ADDRESS</a> - <a href="#" onclick="$('#_PROXY_PORT_NUMBER').animatescroll({padding:7,easing:'easeOutBounce'});">_PROXY_PORT_NUMBER</a>.<br/>
+      </div>
+
+      <div class="panel" id='_AUTO_ADD_CONTACT_USER_ID'>
+        <h2>_AUTO_ADD_CONTACT_USER_ID - <span style='font-size:0.8em;'>nouveauté de la version 2.0.4</span></h2>
+        <div class="suggest">Option non affichée dans l'<acronym title='Admin Control Panel : interface d administration'>ACP</acronym>.</div>
+        Liste des identifiants des utilisateurs à ajouter aux contacts dès l'inscription.<br/>
+        Usage typique : si IntraMessenger vous sert à effectuer du <strong>support client (helpdesk)</strong> : ajouter comme contacts les personnes du supports à nouveaux utilisateurs,<br/>
+        tout en leur bloquant la gestion de leur liste de contact : voir l'option : <a href="#" onclick="$('#_ALLOW_MANAGE_CONTACT_LIST').animatescroll({padding:7,easing:'easeOutBounce'});">_ALLOW_MANAGE_CONTACT_LIST</a>.<br/>
+        Exemple de valeur : "1;15;20" (une à plusieurs valeurs séparées par le caractère point-virgule).<br/>
+        <div class="suggest">Valeur conseillée : désactivée (vide) pour une utilisation classique.</div>
+      </div>
+
+      <div class="panel" id='_AWAY_REASONS_LIST'>
+        <h2>_AWAY_REASONS_LIST</h2>
+        Permet d'ajouter une série de <A HREF='http://www.intramessenger.com/forum/pictures/im_statereasondoublemenu_2.png' target='_blank'>motifs</a> pour l'état <i>absent</i>.<br/>
+        Jusqu'à 10 motifs séparés par des point-virgules.<br/>
+        La liste des motifs est la même quelque soit la langue configurée par l'utilisateur.<br/>
+        Options similaires : <a href="#" onclick="$('#_ONLINE_REASONS_LIST').animatescroll({padding:7,easing:'easeOutBounce'});">_ONLINE_REASONS_LIST</a> 
+        - <a href="#" onclick="$('#_BUSY_REASONS_LIST').animatescroll({padding:7,easing:'easeOutBounce'});">_BUSY_REASONS_LIST</a> 
+        - <a href="#" onclick="$('#_DONOTDISTURB_REASONS_LIST').animatescroll({padding:7,easing:'easeOutBounce'});">_DONOTDISTURB_REASONS_LIST</a>.<br/>
+        Voir aussi l'option <a href="#" onclick="$('#_FORCE_STATUS_LIST_FROM_SERVER').animatescroll({padding:7,easing:'easeOutBounce'});">_FORCE_STATUS_LIST_FROM_SERVER</a>.<br/>
+      </div>
+
+      <div class="panel" id='_BACKUP_FILES'>
+        <h2>_BACKUP_FILES - <span style='font-size:0.8em;'>nouveauté majeure de la <strong>version 2.0.5</strong></span></h2>
+        Autoriser (ou non) <strong><A HREF='http://www.intramessenger.com/forum/viewtopic.php?p=5317#p5317' target='_blank'>la sauvegarde des fichiers utilisateurs</A></strong>.<br/>
+      </div>
+
+      <div class="panel" id='_BACKUP_FILES_ALLOW_MULTI_FOLDERS'>
+        <h2>_BACKUP_FILES_ALLOW_MULTI_FOLDERS - <span style='font-size:0.8em;'>nouveauté de la version 2.0.5</span></h2>
+        Autoriser (ou non) la sauvegarde de plusieurs répertoires. Si non autorisé, permet de sauvegarder un seul répertoire uniquement.<br/>
+        L'option <a href="#" onclick="$('#_BACKUP_FILES_THIS_LOCAL_FOLDER_ONLY').animatescroll({padding:7,easing:'easeOutBounce'});">_BACKUP_FILES_THIS_LOCAL_FOLDER_ONLY</a> ne doit <b>pas être activée</b>.<br/>
+        Voir aussi l'option : <a href="#" onclick="$('#_BACKUP_FILES_ALLOW_SUB_FOLDERS').animatescroll({padding:7,easing:'easeOutBounce'});">_BACKUP_FILES_ALLOW_SUB_FOLDERS</a>.<br/>
+        Nécessite l'activation de l'option <a href="#" onclick="$('#_BACKUP_FILES').animatescroll({padding:7,easing:'easeOutBounce'});">_BACKUP_FILES</a>.<br/>
+        <div class="suggest">Valeur (par défaut) conseillée : activée.</div>
+      </div>
+
+      <div class="panel" id='_BACKUP_FILES_ALLOW_SUB_FOLDERS'>
+        <h2>_BACKUP_FILES_ALLOW_SUB_FOLDERS - <span style='font-size:0.8em;'>nouveauté de la version 2.0.5</span></h2>
+        Autoriser (ou non) la sauvegarde (récursive) des sous-dossiers.<br/>
+        Voir aussi l'option : <a href="#" onclick="$('#_BACKUP_FILES_ALLOW_MULTI_FOLDERS').animatescroll({padding:7,easing:'easeOutBounce'});">_BACKUP_FILES_ALLOW_MULTI_FOLDERS</a>.<br/>
+        Nécessite l'activation de l'option <a href="#" onclick="$('#_BACKUP_FILES').animatescroll({padding:7,easing:'easeOutBounce'});">_BACKUP_FILES</a>.<br/>
+        <div class="suggest">Valeur (par défaut) conseillée : activée.</div>
+      </div>
+
+      <div class="panel" id='_BACKUP_FILES_FOLDER'>
+        <h2>_BACKUP_FILES_FOLDER - <span style='font-size:0.8em;'>nouveauté de la version 2.0.5</span></h2>
+        Chemin relatif (depuis /admin/) d'accès aux sauvegardes, si les accès FTP correspondent à un répertoire sur le serveur web.<br/>
+        Avec cette option renseignée, les fichiers sont supprimables depuis l'interface d'administration (<acronym title='Admin Control Panel'>ACP</acronym>).<br/>
+        Si l'accès FTP correspondent au dossier /private_backup/files/ cette option devrait être <b>../private_backup/files/</b> <br/>
+        Si l'accès FTP correspondent à dossier /files/ au dessus de la racine site web (/public_html/ ou /www/) cette option devrait être <b>../../../files/</b> <br/>
+        <b>Si (et uniquement si) vide</b>, renseigner l'option <a href="#" onclick="$('#_BACKUP_FILES_FTP_PASSWORD').animatescroll({padding:7,easing:'easeOutBounce'});">_BACKUP_FILES_FTP_PASSWORD</a>.<br/>
+        Nécessite l'activation de l'option <a href="#" onclick="$('#_BACKUP_FILES').animatescroll({padding:7,easing:'easeOutBounce'});">_BACKUP_FILES</a>.<br/>
+        Voir aussi l'option <a href="#" onclick="$('#_BACKUP_FILES_FTP_LOGIN').animatescroll({padding:7,easing:'easeOutBounce'});">_BACKUP_FILES_FTP_LOGIN</a>.<br/>
+        <div class="suggest">Valeur conseillée : chemin au dessus de la racine du site web</div>
+      </div>
+
+      <div class="panel" id='_BACKUP_FILES_FORCE_EVERY_DAY_AT'>
+        <h2>_BACKUP_FILES_FORCE_EVERY_DAY_AT - <span style='font-size:0.8em;'>nouveauté de la version 2.0.5</span></h2>
+        <div class="suggest">Option non affichée dans l'<acronym title='Admin Control Panel : interface d administration'>ACP</acronym>.</div>
+        Heure de sauvegarde automatique (format 24 heures, exemple: <i>23:59</i>).<br/>
+        La sauvegarde est forcée tous les jours à cette heure là.<br/>
+        Nécessite l'activation de l'option <a href="#" onclick="$('#_BACKUP_FILES').animatescroll({padding:7,easing:'easeOutBounce'});">_BACKUP_FILES</a>.<br/>
+        Voir aussi l'option <a href="#" onclick="$('#_BACKUP_FILES_THIS_LOCAL_FOLDER_ONLY').animatescroll({padding:7,easing:'easeOutBounce'});">_BACKUP_FILES_THIS_LOCAL_FOLDER_ONLY</a>.<br/>
+      </div>
+
+      <div class="panel" id='_BACKUP_FILES_FTP_ADDRESS'>
+        <h2>_BACKUP_FILES_FTP_ADDRESS - <span style='font-size:0.8em;'>nouveauté de la version 2.0.5</span></h2>
+        Adresse de votre serveur FTP (exemple : ftp.votreserveur.com) de sauvegarde des fichiers utilisateurs.<br/>
+        Nécessite l'activation de l'option <a href="#" onclick="$('#_BACKUP_FILES').animatescroll({padding:7,easing:'easeOutBounce'});">_BACKUP_FILES</a>.<br/>
+        Voir aussi l'option <a href="#" onclick="$('#_BACKUP_FILES_FTP_PORT_NUMBER').animatescroll({padding:7,easing:'easeOutBounce'});">_BACKUP_FILES_FTP_PORT_NUMBER</a>.<br/>
+      </div>
+
+      <div class="panel" id='_BACKUP_FILES_FTP_LOGIN'>
+        <h2>_BACKUP_FILES_FTP_LOGIN - <span style='font-size:0.8em;'>nouveauté de la version 2.0.5</span></h2>
+        Login d'accès FTP de sauvegarde des fichiers utilisateurs.<br/>
+        <font color='red'>Vérifier que ce login n'a pas accès à la racine de votre site web, mais uniquement à un seul dossier</font> (exemple : /intramessenger/private_backup/files/).<br/>
+        Il est préférable de partager un dossier FTP en dehors du site web (pas un sous-dossier de /www/ ou /public_html/).<br/>
+        Nécessite l'activation de l'option <a href="#" onclick="$('#_BACKUP_FILES').animatescroll({padding:7,easing:'easeOutBounce'});">_BACKUP_FILES</a>.<br/>
+        Voir aussi les options <a href="#" onclick="$('#_BACKUP_FILES_FTP_PASSWORD_CRYPT').animatescroll({padding:7,easing:'easeOutBounce'});">_BACKUP_FILES_FTP_PASSWORD_CRYPT</a> 
+        et <a href="#" onclick="$('#_BACKUP_FILES_FTP_ADDRESS').animatescroll({padding:7,easing:'easeOutBounce'});">_BACKUP_FILES_FTP_ADDRESS</a>.<br/>
+      </div>
+
+      <div class="panel" id='_BACKUP_FILES_FTP_PASSWORD'>
+        <h2>_BACKUP_FILES_FTP_PASSWORD - <span style='font-size:0.8em;'>nouveauté de la version 2.0.5</span></h2>
+        <b>Uniquement si FTP sur autre serveur</b> (donc option <a href="#" onclick="$('#_BACKUP_FILES_FOLDER').animatescroll({padding:7,easing:'easeOutBounce'});">_BACKUP_FILES_FOLDER</a> vide) : mot de passe (en clair) de l'accès FTP.<br/>
+        Avec cette option renseignée, les fichiers sont supprimables depuis l'interface d'administration (<acronym title='Admin Control Panel'>ACP</acronym>).<br/>
+        Nécessite l'activation de l'option <a href="#" onclick="$('#_BACKUP_FILES').animatescroll({padding:7,easing:'easeOutBounce'});">_BACKUP_FILES</a>.<br/>
+        Voir aussi les options <a href="#" onclick="$('#_BACKUP_FILES_FTP_LOGIN').animatescroll({padding:7,easing:'easeOutBounce'});">_BACKUP_FILES_FTP_LOGIN</a> et <a href="#" onclick="$('#_BACKUP_FILES_FTP_PASSWORD_CRYPT').animatescroll({padding:7,easing:'easeOutBounce'});">_BACKUP_FILES_FTP_PASSWORD_CRYPT</a>.<br/>
+      </div>
+
+      <div class="panel" id='_BACKUP_FILES_FTP_PASSWORD_CRYPT'>
+        <h2>_BACKUP_FILES_FTP_PASSWORD_CRYPT - <span style='font-size:0.8em;'>nouveauté de la version 2.0.5</span></h2>
+        Mot de passe de l'accès FTP <b>chiffré</b> par <A HREF='http://www.intramessenger.net/download.php' target='_blank'>IM_skin</A> (kit skin).<br/>
+        Nécessite l'activation de l'option <a href="#" onclick="$('#_BACKUP_FILES').animatescroll({padding:7,easing:'easeOutBounce'});">_BACKUP_FILES</a>.<br/>
+        Voir aussi les options <a href="#" onclick="$('#_BACKUP_FILES_FTP_LOGIN').animatescroll({padding:7,easing:'easeOutBounce'});">_BACKUP_FILES_FTP_LOGIN</a> et <a href="#" onclick="$('#_BACKUP_FILES_FTP_PASSWORD').animatescroll({padding:7,easing:'easeOutBounce'});">_BACKUP_FILES_FTP_PASSWORD</a>.<br/>
+      </div>
+
+      <div class="panel" id='_BACKUP_FILES_FTP_PORT_NUMBER'>
+        <h2>_BACKUP_FILES_FTP_PORT_NUMBER - <span style='font-size:0.8em;'>nouveauté de la version 2.0.5</span></h2>
+        Nécessite l'activation de l'option <a href="#" onclick="$('#_BACKUP_FILES').animatescroll({padding:7,easing:'easeOutBounce'});">_BACKUP_FILES</a>.<br/>
+        Voir aussi l'option <a href="#" onclick="$('#_BACKUP_FILES_FTP_ADDRESS').animatescroll({padding:7,easing:'easeOutBounce'});">_BACKUP_FILES_FTP_ADDRESS</a>.<br/>
+        <div class="suggest">Valeur (par défaut) conseillée : 21.</div>
+      </div>
+
+      <div class="panel" id='_BACKUP_FILES_MAX_ARCHIVE_SIZE'>
+        <h2>_BACKUP_FILES_MAX_ARCHIVE_SIZE - <span style='font-size:0.8em;'>nouveauté de la version 2.0.5</span></h2>
+        Taille maxi par sauvegarde/archive (en Mo).<br/>
+        Nécessite l'activation de l'option <a href="#" onclick="$('#_BACKUP_FILES').animatescroll({padding:7,easing:'easeOutBounce'});">_BACKUP_FILES</a>.<br/>
+      </div>
+
+      <div class="panel" id='_BACKUP_FILES_MAX_NB_ARCHIVES_USER'>
+        <h2>_BACKUP_FILES_MAX_NB_ARCHIVES_USER - <span style='font-size:0.8em;'>nouveauté de la version 2.0.5</span></h2>
+        Nombre maxi de sauvegardes/archives (dump) stockées par utilisateur (de 1 à 9).<br/>
+        Nécessite l'activation de l'option <a href="#" onclick="$('#_BACKUP_FILES').animatescroll({padding:7,easing:'easeOutBounce'});">_BACKUP_FILES</a>.<br/>
+        <div class="suggest">Valeur (par défaut) conseillée : 3.</div>
+      </div>
+
+      <div class="panel" id='_BACKUP_FILES_MAX_SPACE_SIZE_TOTAL'>
+        <h2>_BACKUP_FILES_MAX_SPACE_SIZE_TOTAL - <span style='font-size:0.8em;'>nouveauté de la version 2.0.5</span></h2>
+        Taille maxi de l'espace d'hébergement des sauvegardes (en Mo).<br/>
+        Nécessite l'activation de l'option <a href="#" onclick="$('#_BACKUP_FILES').animatescroll({padding:7,easing:'easeOutBounce'});">_BACKUP_FILES</a>.<br/>
+      </div>
+
+      <div class="panel" id='_BACKUP_FILES_MAX_SPACE_SIZE_USER'>
+        <h2>_BACKUP_FILES_MAX_SPACE_SIZE_USER - <span style='font-size:0.8em;'>nouveauté de la version 2.0.5</span></h2>
+        Taille maxi de l'espace d'hébergement des sauvegardes (en Mo) par utilisateur.<br/>
+        Nécessite l'activation de l'option <a href="#" onclick="$('#_BACKUP_FILES').animatescroll({padding:7,easing:'easeOutBounce'});">_BACKUP_FILES</a>.<br/>
+      </div>
+
+      <div class="panel" id='_BACKUP_FILES_THIS_LOCAL_FOLDER_ONLY'>
+        <h2>_BACKUP_FILES_THIS_LOCAL_FOLDER_ONLY - <span style='font-size:0.8em;'>nouveauté de la version 2.0.5</span></h2>
+        <div class="suggest">Option non affichée dans l'<acronym title='Admin Control Panel : interface d administration'>ACP</acronym>.</div>
+        Sauvegarder uniquement ce répertoire local (vide : choix par l'utilisateur).<br/>
+        L'option <a href="#" onclick="$('#_BACKUP_FILES_ALLOW_MULTI_FOLDERS').animatescroll({padding:7,easing:'easeOutBounce'});">_BACKUP_FILES_ALLOW_MULTI_FOLDERS</a> ne doit <b>pas être activée</b>.<br/>        
+        Voir aussi les options : <a href="#" onclick="$('#_BACKUP_FILES_ALLOW_SUB_FOLDERS').animatescroll({padding:7,easing:'easeOutBounce'});">_BACKUP_FILES_ALLOW_SUB_FOLDERS</a> 
+        et <a href="#" onclick="$('#_BACKUP_FILES_FORCE_EVERY_DAY_AT').animatescroll({padding:7,easing:'easeOutBounce'});">_BACKUP_FILES_FORCE_EVERY_DAY_AT</a>.<br/>
+        Nécessite l'activation de l'option <a href="#" onclick="$('#_BACKUP_FILES').animatescroll({padding:7,easing:'easeOutBounce'});">_BACKUP_FILES</a>.<br/>
+        <div class="suggest">Valeur (par défaut) conseillée : vide.</div>
+      </div>
+
+      <div class="panel" id='_BOOKMARKS'>
+        <h2>_BOOKMARKS</h2>
+        Activer (ou non) <A HREF='http://www.intramessenger.com/forum/viewtopic.php?t=846&' target='_blank'>le partage de marques pages</A> (favoris).<br/>
+      </div>
+
+      <div class="panel" id='_BOOKMARKS_NEED_APPROVAL'>
+        <h2>_BOOKMARKS_NEED_APPROVAL</h2>
+        Rendre (ou non) les marques pages partagés modérés 
+        (<A HREF='http://www.intramessenger.com/forum/pictures/im_bookmarks.png' target='_blank'>approuvés avant publication</a>).<br/>
+        Nécessite l'activation de l'option <a href="#" onclick="$('#_BOOKMARKS').animatescroll({padding:7,easing:'easeOutBounce'});">_BOOKMARKS</a>.<br/>
+      </div>
+
+      <div class="panel" id='_BOOKMARKS_PUBLIC'>
+        <h2>_BOOKMARKS_PUBLIC</h2>
+        Rendre (ou non) les marques pages partagés consultables par tout le monde (abonnement flux RSS disponible).<br/>
+        Nécessite l'activation de l'option <a href="#" onclick="$('#_BOOKMARKS').animatescroll({padding:7,easing:'easeOutBounce'});">_BOOKMARKS</a>.<br/>
+      </div>
+
+      <div class="panel" id='_BOOKMARKS_VOTE'>
+        <h2>_BOOKMARKS_VOTE</h2>
+        Autoriser (ou non) la possibilité de <A HREF='http://www.intramessenger.com/forum/pictures/im_122C_bookmarks.png' target='_blank'>voter</a> (créer le buzz) des marques pages partagés.<br/>
+        Nécessite l'activation de l'option <a href="#" onclick="$('#_BOOKMARKS').animatescroll({padding:7,easing:'easeOutBounce'});">_BOOKMARKS</a>.<br/>
+      </div>
+
+      <div class="panel" id='_BUSY_REASONS_LIST'>
+        <h2>_BUSY_REASONS_LIST</h2>
+        Permet d'ajouter une série de <A HREF='http://www.intramessenger.com/forum/pictures/im_statereasondoublemenu_2.png' target='_blank'>motifs</a> pour l'état <i>occupé</i>.<br/>
+        Jusqu'à 10 motifs séparés par des point-virgules.<br/>
+        La liste des motifs est la même quelque soit la langue configurée par l'utilisateur.<br/>
+        Options similaires : <a href="#" onclick="$('#_ONLINE_REASONS_LIST').animatescroll({padding:7,easing:'easeOutBounce'});">_ONLINE_REASONS_LIST</a> 
+        - <a href="#" onclick="$('#_AWAY_REASONS_LIST').animatescroll({padding:7,easing:'easeOutBounce'});">_AWAY_REASONS_LIST</a> 
+        - <a href="#" onclick="$('#_DONOTDISTURB_REASONS_LIST').animatescroll({padding:7,easing:'easeOutBounce'});">_DONOTDISTURB_REASONS_LIST</a>.<br/>
+        Voir aussi l'option <a href="#" onclick="$('#_FORCE_STATUS_LIST_FROM_SERVER').animatescroll({padding:7,easing:'easeOutBounce'});">_FORCE_STATUS_LIST_FROM_SERVER</a>.<br/>
+      </div>
+
+      <div class="panel" id='_CENSOR_MESSAGES'>
+        <h2>_CENSOR_MESSAGES</h2>
+        Activer (ou non) la censure des messages échangés via un dictionnaire de mots interdits contenus dans le fichier <i>/common/config/censure.txt</i><br/>
+        L'option <a href="#" onclick="$('#_CRYPT_MESSAGES').animatescroll({padding:7,easing:'easeOutBounce'});">_CRYPT_MESSAGES</a> ne doit <b>pas être activée</b>.<br/>
+      </div>
+
+      <div class="panel" id='_CHECK_NEW_MSG_EVERY'>
+        <h2>_CHECK_NEW_MSG_EVERY</h2>
+        Définir l'interval de vérification de l'arrivée d'un premier nouveau message (10 à 60 secondes).<br/>
+        Permet de limiter les accès/requêtes au serveur (surtout si le nombre d'utilisateurs est important).<br/>
+        Voir aussi l'option <a href="#" onclick="$('#_SLOW_NOTIFY').animatescroll({padding:7,easing:'easeOutBounce'});">_SLOW_NOTIFY</a>.<br/>
+        <div class="suggest">Valeur conseillée : 30.</div>
+      </div>
+
+      <div class="panel" id='_CHECK_VERSION_INTERNET'>
+        <h2>_CHECK_VERSION_INTERNET</h2>
+        Activer (ou non) la vérification sur internet de la disponibilité d'une nouvelle version serveur : indication affichée dans le tableau de bord.<br/>
+        Depuis la version 2.0.3 cette vérification n'est effectuée qu'une fois par jour au maximum.<br/>
+        <div class="suggest">Valeur conseillée : activation vivement recommandée si le serveur a accès à internet (désactiver dans le cas contraire).</div>
+      </div>
+
+      <div class="panel" id='_CRYPT_MESSAGES'>
+        <h2>_CRYPT_MESSAGES</h2>
+        Activer (ou non) le chiffrement assymétrique des messages échangés entre les utilisateurs.<br/>
+        Les options : <a href="#" onclick="$('#_CENSOR_MESSAGES').animatescroll({padding:7,easing:'easeOutBounce'});">_CENSOR_MESSAGES</a> 
+        - <a href="#" onclick="$('#_HISTORY_MESSAGES_ON_ACP').animatescroll({padding:7,easing:'easeOutBounce'});">_HISTORY_MESSAGES_ON_ACP</a> ne doivent <b>pas être activées</b>.<br/>
+      </div>
+
+      <div class="panel" id='_DONOTDISTURB_REASONS_LIST'>
+        <h2>_DONOTDISTURB_REASONS_LIST</h2>
+        Permet d'ajouter une série de <A HREF='http://www.intramessenger.com/forum/pictures/im_statereasondoublemenu_2.png' target='_blank'>motifs</a> pour l'état <i>ne pas déranger</i>.<br/>
+        Jusqu'à 10 motifs séparés par des point-virgules.<br/>
+        La liste des motifs est la même quelque soit la langue configurée par l'utilisateur.<br/>
+        Options similaires : <a href="#" onclick="$('#_ONLINE_REASONS_LIST').animatescroll({padding:7,easing:'easeOutBounce'});">_ONLINE_REASONS_LIST</a> - <a href="#" onclick="$('#_AWAY_REASONS_LIST').animatescroll({padding:7,easing:'easeOutBounce'});">_AWAY_REASONS_LIST</a> - <a href="#" onclick="$('#_BUSY_REASONS_LIST').animatescroll({padding:7,easing:'easeOutBounce'});">_BUSY_REASONS_LIST</a>.<br/>
+        Voir aussi l'option <a href="#" onclick="$('#_FORCE_STATUS_LIST_FROM_SERVER').animatescroll({padding:7,easing:'easeOutBounce'});">_FORCE_STATUS_LIST_FROM_SERVER</a>.<br/>
+      </div>
+
+      <div class="panel" id='_ENTERPRISE_SERVER'>
+        <h2>_ENTERPRISE_SERVER</h2>
+        Activer (ou non) le mode entreprise : remonté des <A HREF='http://www.intramessenger.net/images/IntraMessenger_9.png' target='_blank'>versions de logiciels</A> installés, possibilité d'<A HREF='http://www.intramessenger.com/forum/pictures/IntraMessenger_5b.png' target='_blank'>envoyer des ordres</A> (arrêt, redémarrage...) à distance.<br/>
+        Voir aussi l'option <a href="#" onclick="$('#_GROUP_FOR_SBX_AND_ADMIN_MSG').animatescroll({padding:7,easing:'easeOutBounce'});">_GROUP_FOR_SBX_AND_ADMIN_MSG</a>.<br/>
+      </div>
+
+      <div class="panel" id='_EXTERN_URL_CHANGE_PASSWORD'>
+        <h2>_EXTERN_URL_CHANGE_PASSWORD</h2>
+        Définir l'adresse (URL) pour changer son mot de passe (via <A HREF='http://www.intramessenger.net/exter_auth.php' target='_blank'>l'authentification externe/tierce</A>).<br/>
+        Uniquement si l'option <a href="#" onclick="$('#_EXTERNAL_AUTHENTICATION').animatescroll({padding:7,easing:'easeOutBounce'});">_EXTERNAL_AUTHENTICATION</a> est activée.<br/>        
+        Nécessite l'activation de l'option <a href="#" onclick="$('#_USER_NEED_PASSWORD').animatescroll({padding:7,easing:'easeOutBounce'});">_USER_NEED_PASSWORD</a>.<br/>
+      </div>
+
+      <div class="panel" id='_EXTERN_URL_FORGET_PASSWORD'>
+        <h2>_EXTERN_URL_FORGET_PASSWORD</h2>
+        Adresse (URL) pour <A HREF='http://www.intramessenger.com/forum/pictures/im_startup_extern_fr.png' target='_blank'>récupérer son mot de passe</A> oublié 
+        (via <A HREF='http://www.intramessenger.net/exter_auth.php' target='_blank'>l'authentification externe/tierce</A>).<br/>
+        Uniquement si l'option <a href="#" onclick="$('#_EXTERNAL_AUTHENTICATION').animatescroll({padding:7,easing:'easeOutBounce'});">_EXTERNAL_AUTHENTICATION</a> est activée.<br/>
+        Nécessite l'activation de l'option <a href="#" onclick="$('#_USER_NEED_PASSWORD').animatescroll({padding:7,easing:'easeOutBounce'});">_USER_NEED_PASSWORD</a>.<br/>
+      </div>
+
+      <div class="panel" id='_EXTERN_URL_TO_REGISTER'>
+        <h2>_EXTERN_URL_TO_REGISTER</h2>
+        Adresse (URL) pour <A HREF='http://www.intramessenger.com/forum/pictures/im_startup_extern_fr.png' target='_blank'>s'inscrire</A>
+        (forum, CMS...) via <A HREF='http://www.intramessenger.net/exter_auth.php' target='_blank'>l'authentification externe/tierce</A>.<br/>
+        Uniquement si l'option <a href="#" onclick="$('#_EXTERNAL_AUTHENTICATION').animatescroll({padding:7,easing:'easeOutBounce'});">_EXTERNAL_AUTHENTICATION</a> est activée.<br/>
+      </div>
+
+      <div class="panel" id='_EXTERNAL_AUTHENTICATION'>
+        <h2>_EXTERNAL_AUTHENTICATION</h2>
+        Configurer (ou non) <A HREF='http://www.intramessenger.net/exter_auth.php' target='_blank'>l'authentification externe/tierce</A> via une base de données existantes.
+        Choix dans une <A HREF='http://www.intramessenger.net/doc/im_select_extern_auth_FR.png' target='_blank'>liste prédéfinie</A>.<br/>
+        Nécessite l'activation des options :
+        <a href="#" onclick="$('#_USER_NEED_PASSWORD').animatescroll({padding:7,easing:'easeOutBounce'});">_USER_NEED_PASSWORD</a>
+        - <a href="#" onclick="$('#_ALLOW_AUTO_ADD_NEW_USER_ON_SERVER').animatescroll({padding:7,easing:'easeOutBounce'});">_ALLOW_AUTO_ADD_NEW_USER_ON_SERVER</a>.<br/>
+        Les options : <a href="#" onclick="$('#_PENDING_NEW_AUTO_ADDED_USER').animatescroll({padding:7,easing:'easeOutBounce'});">_PENDING_NEW_AUTO_ADDED_USER</a> 
+        - <a href="#" onclick="$('#_NEED_QUICK_REGISTER_TO_AUTO_ADD_NEW_USER').animatescroll({padding:7,easing:'easeOutBounce'});">_NEED_QUICK_REGISTER_TO_AUTO_ADD_NEW_USER</a> ne doivent <b>pas être activées</b>.<br/>
+        
+        Voir aussi les options : 
+        <a href="#" onclick="$('#_EXTERN_URL_CHANGE_PASSWORD').animatescroll({padding:7,easing:'easeOutBounce'});">_EXTERN_URL_CHANGE_PASSWORD</a> 
+        - <a href="#" onclick="$('#_EXTERN_URL_FORGET_PASSWORD').animatescroll({padding:7,easing:'easeOutBounce'});">_EXTERN_URL_FORGET_PASSWORD</a>
+        - <a href="#" onclick="$('#_EXTERN_URL_TO_REGISTER').animatescroll({padding:7,easing:'easeOutBounce'});">_EXTERN_URL_TO_REGISTER</a>.<br/>
+      </div>
+
+      <div class="panel" id='_FLAG_COUNTRY_FROM_IP'>
+        <h2>_FLAG_COUNTRY_FROM_IP - <span style='font-size:0.8em;'>option anciennement nommée <b>_DISPLAY_USER_FLAG_COUNTRY</b> jusqu'à la version 2.0.4</span></h2>
+        Activer (ou non) l'affichage du drapeau du pays correspondant à l'adresse IP de l'utilisateur.<br/>
+        <div class="suggest">Valeur conseillée : activée uniquement pour un usage sur internet.</div>
+      </div>
+      
+      <div class="panel" id='_FORCE_AWAY_ON_SCREENSAVER'>
+        <h2>_FORCE_AWAY_ON_SCREENSAVER</h2>
+        Forcer (ou non) l'état <i>absent</i> lorsque l'économiseur d'écran est actif (ou la session verrouillée).<br/>
+        L'utilisateur ne peut plus désactiver cette option.<br/>
+      </div>
+
+      <div class="panel" id='_FORCE_LAUNCH_ON_STARTUP'>
+        <h2>_FORCE_LAUNCH_ON_STARTUP - <span style='font-size:0.8em;'>nouveauté de la version 2.0.4</span></h2>
+        <div class="suggest">Option non affichée dans l'<acronym title='Admin Control Panel : interface d administration'>ACP</acronym>.</div>
+        Forcer (ou non) le démarrage au lancement de Windows (<A HREF='http://www.intramessenger.com/forum/viewtopic.php?f=9&t=940&' target='_blank'>voir ici</A>).<br/>
+      </div>
+
+      <div class="panel" id='_FORCE_OPTION_FILE_FROM_SERVER'>
+        <h2>_FORCE_OPTION_FILE_FROM_SERVER - <span style='font-size:0.8em;'>nouveauté de la version 2.0.5.241</span></h2>
+        <div class="suggest">Option non affichée dans l'<acronym title='Admin Control Panel : interface d administration'>ACP</acronym>.</div>
+        Forcer (ou non) le fichier d'options depuis le serveur.<br/>
+        Mettre le fichier <I>options.ini</I> dans le dossier /distant/update/ (without <font color='red'><I>username=</font>...</I> mais avec <font color='blue'><I>url=</font>...</I>).<br/>
+        Nécessite au moins le client 1.31D<br/>
+      </div>
+
+      <div class="panel" id='_FORCE_STATUS_LIST_FROM_SERVER'>
+        <h2>_FORCE_STATUS_LIST_FROM_SERVER</h2>
+        Forcer (ou non) les status (<i>disponible, absent, occupé</I>...) à ceux contenus dans le fichier de la langue configurée 
+        (option <a href="#" onclick="$('#_LANG').animatescroll({padding:7,easing:'easeOutBounce'});">_LANG</a>) sur le serveur.<br/>
+        La liste des status est donc la même quelque soit la langue configurée par l'utilisateur.<br/>
+        Voir aussi les options : <a href="#" onclick="$('#_ONLINE_REASONS_LIST').animatescroll({padding:7,easing:'easeOutBounce'});">_ONLINE_REASONS_LIST</a> - <a href="#" onclick="$('#_AWAY_REASONS_LIST').animatescroll({padding:7,easing:'easeOutBounce'});">_AWAY_REASONS_LIST</a> - <a href="#" onclick="$('#_BUSY_REASONS_LIST').animatescroll({padding:7,easing:'easeOutBounce'});">_BUSY_REASONS_LIST</a> - <a href="#" onclick="$('#_DONOTDISTURB_REASONS_LIST').animatescroll({padding:7,easing:'easeOutBounce'});">_DONOTDISTURB_REASONS_LIST</a>.<br/>
+      </div>
+
+      <div class="panel" id='_FORCE_UPDATE_BY_INTERNET'>
+        <h2>_FORCE_UPDATE_BY_INTERNET</h2>
+        Forcer (ou non) les mises à jour des postes clients depuis le site internet officiel.<br/>
+        L'utilisateur ne peut plus désactiver la mise à jour.<br/>
+        <div class="suggest">Valeur conseillée : activée si les postes ont tous accès à internet.</div>
+      </div>
+
+      <div class="panel" id='_FORCE_UPDATE_BY_SERVER'>
+        <h2>_FORCE_UPDATE_BY_SERVER</h2>
+        Forcer (ou non) les mises à jour des postes clients depuis votre serveur IntraMessenger.<br/>
+        Voir cette documentation : <A HREF='http://www.intramessenger.net/doc/comment_mettre_a_jour_les_postes.html' target='_blank'>/doc/fr/comment_mettre_a_jour_les_postes.html</A>.<br/>
+        L'utilisateur ne peut plus désactiver la mise à jour.<br/>
+        <div class="suggest">Valeur conseillée : activée si les postes n'ont pas tous accès à internet.</div>
+      </div>
+
+      <div class="panel" id='_FORCE_USERNAME_TO_PC_SESSION_NAME'>
+        <h2>_FORCE_USERNAME_TO_PC_SESSION_NAME</h2>
+        Forcer (ou non) l'identifiant (pseudo) au nom de session Windows.<br/>
+        Si tous les postes sont en domaine, en activant cette option l'accès sans mot de passe (option <a href="#" onclick="$('#_USER_NEED_PASSWORD').animatescroll({padding:7,easing:'easeOutBounce'});">_USER_NEED_PASSWORD</a>) devient possible.<br/>
+        Si non activée : choix du pseudo par l'utilisateur.<br/>
+        Voir aussi les options : 
+        <a href="#" onclick="$('#_PENDING_USER_ON_COMPUTER_CHANGE').animatescroll({padding:7,easing:'easeOutBounce'});">_PENDING_USER_ON_COMPUTER_CHANGE</a>
+        - <a href="#" onclick="$('#_MINIMUM_USERNAME_LENGTH').animatescroll({padding:7,easing:'easeOutBounce'});">_MINIMUM_USERNAME_LENGTH</a>
+        - <a href="#" onclick="$('#_ALLOW_UPPERCASE_SPACE_USERNAME').animatescroll({padding:7,easing:'easeOutBounce'});">_ALLOW_UPPERCASE_SPACE_USERNAME</a>.<br/>
+        <div class="suggest">Valeur conseillée : désactivée pour une utilisation classique.</div>
+      </div>
+
+      <div class="panel" id='_GROUP_FOR_SBX_AND_ADMIN_MSG'>
+        <h2>_GROUP_FOR_SBX_AND_ADMIN_MSG</h2>
+        Activer (ou non) l'utilisation des 
+        <A HREF='http://www.intramessenger.com/forum/pictures/im_srv_grp_sbx.png' target='_blank'>groupes (gestion par l'administrateur) pour la ShoutBox</A> 
+        (<A HREF='http://www.intramessenger.com/forum/pictures/im_sbx_3.png' target='_blank'>exemple</a>)
+        et <A HREF='http://www.intramessenger.com/forum/pictures/IntraMessenger_5b.png' target='_blank'>grouper des envois de messages administrateur</A>.<br/>
+        Les options <a href="#" onclick="$('#_SPECIAL_MODE_GROUP_COMMUNITY').animatescroll({padding:7,easing:'easeOutBounce'});">_SPECIAL_MODE_GROUP_COMMUNITY</a> et 
+        <a href="#" onclick="$('#_SPECIAL_MODE_OPEN_GROUP_COMMUNITY').animatescroll({padding:7,easing:'easeOutBounce'});">_SPECIAL_MODE_OPEN_GROUP_COMMUNITY</a> ne doivent <b>pas être activée</b>.<br/>
+        Voir aussi les options : 
+        <a href="#" onclick="$('#_GROUP_USER_CAN_JOIN').animatescroll({padding:7,easing:'easeOutBounce'});">_GROUP_USER_CAN_JOIN</a> - 
+        <a href="#" onclick="$('#_GROUP_ID_DEFAULT_FOR_NEW_USER').animatescroll({padding:7,easing:'easeOutBounce'});">_GROUP_ID_DEFAULT_FOR_NEW_USER</a> - 
+        <a href="#" onclick="$('#_SHOUTBOX').animatescroll({padding:7,easing:'easeOutBounce'});">_SHOUTBOX</a>.<br/>
+      </div>
+
+      <div class="panel" id='_GROUP_ID_DEFAULT_FOR_NEW_USER'>
+        <h2>_GROUP_ID_DEFAULT_FOR_NEW_USER - <span style='font-size:0.8em;'>nouveauté de la version 2.0.5.241</span></h2>
+        <div class="suggest">Option non affichée dans l'<acronym title='Admin Control Panel : interface d administration'>ACP</acronym>.</div>
+        Numéro du groupe dans lequel est automatiquement ajouté chaque nouvel utilisateur.<br/>
+        <b>Une seule</b> de ces 3 options : 
+          <a href="#" onclick="$('#_SPECIAL_MODE_GROUP_COMMUNITY').animatescroll({padding:7,easing:'easeOutBounce'});">_SPECIAL_MODE_GROUP_COMMUNITY</a> - 
+          <a href="#" onclick="$('#_SPECIAL_MODE_OPEN_GROUP_COMMUNITY').animatescroll({padding:7,easing:'easeOutBounce'});">_SPECIAL_MODE_OPEN_GROUP_COMMUNITY</a> - 
+          <a href="#" onclick="$('#_GROUP_FOR_SBX_AND_ADMIN_MSG').animatescroll({padding:7,easing:'easeOutBounce'});">_GROUP_FOR_SBX_AND_ADMIN_MSG</a>
+        doit être activée.<br/>
+        Voir aussi les options :
+          <a href="#" onclick="$('#_GROUP_USER_CAN_JOIN').animatescroll({padding:7,easing:'easeOutBounce'});">_GROUP_USER_CAN_JOIN</a> - 
+          <a href="#" onclick="$('#_GROUP_FOR_SBX_AND_ADMIN_MSG').animatescroll({padding:7,easing:'easeOutBounce'});">_GROUP_FOR_SBX_AND_ADMIN_MSG</a>.<br/>
+      </div>
+
+      <div class="panel" id='_GROUP_USER_CAN_JOIN'>
+        <h2>_GROUP_USER_CAN_JOIN</h2>
+        Autoriser (ou non) :<br/>
+        &nbsp; - les utilisateurs à <A HREF='http://www.intramessenger.com/forum/pictures/im_srv_grp_sbx_2.png' target='_blank'>rejoindre des groupes</A> <b>publics</b>.<br/>
+        &nbsp;  - les utilisateurs à <b>demander</b> de rejoindre des groupes <b>officiels</b> (validation par l'administrateur ou les utilisateurs ayant ce <A HREF='http://www.intramessenger.com/forum/viewtopic.php?p=3287#p3287' target='_blank'>rôle activé</A>).<br/>
+        <b>Une seule</b> de ces 3 options : <a href="#" onclick="$('#_SPECIAL_MODE_GROUP_COMMUNITY').animatescroll({padding:7,easing:'easeOutBounce'});">_SPECIAL_MODE_GROUP_COMMUNITY</a> 
+        - <a href="#" onclick="$('#_SPECIAL_MODE_OPEN_GROUP_COMMUNITY').animatescroll({padding:7,easing:'easeOutBounce'});">_SPECIAL_MODE_OPEN_GROUP_COMMUNITY</a>
+        - <a href="#" onclick="$('#_GROUP_FOR_SBX_AND_ADMIN_MSG').animatescroll({padding:7,easing:'easeOutBounce'});">_GROUP_FOR_SBX_AND_ADMIN_MSG</a> 
+        doit être activée.<br/>
+        Voir aussi les options :
+          <a href="#" onclick="$('#_GROUP_ID_DEFAULT_FOR_NEW_USER').animatescroll({padding:7,easing:'easeOutBounce'});">_GROUP_ID_DEFAULT_FOR_NEW_USER</a> - 
+          <a href="#" onclick="$('#_GROUP_FOR_SBX_AND_ADMIN_MSG').animatescroll({padding:7,easing:'easeOutBounce'});">_GROUP_FOR_SBX_AND_ADMIN_MSG</a>.<br/>
+      </div>
+
+      <div class="panel" id='_HISTORY_MESSAGES_ON_ACP'>
+        <h2>_HISTORY_MESSAGES_ON_ACP - <span style='font-size:0.8em;'>option anciennement nommée <b>_LOG_MESSAGES</b> jusqu'à la version 2.0.4</span></h2>
+        Archiver (ou non) sur le serveur les messages échangés.<br/>
+        <A HREF='http://www.intramessenger.com/forum/pictures/im_log_messages.png' target='_blank'>Consultation</A> 
+        depuis l'interface d'administration (<acronym title='Admin Control Panel'>ACP</acronym>).<br/>
+        L'option <a href="#" onclick="$('#_CRYPT_MESSAGES').animatescroll({padding:7,easing:'easeOutBounce'});">_CRYPT_MESSAGES</a> ne doit <b>pas être activée</b>.<br/>
+        Voir aussi l'option <a href="#" onclick="$('#_CENSOR_MESSAGES').animatescroll({padding:7,easing:'easeOutBounce'});">_CENSOR_MESSAGES</a>.<br/>
+      </div>
+
+      <div class="panel" id='_IM_ADDRESS_BOOK_PASSWORD'>
+        <h2>_IM_ADDRESS_BOOK_PASSWORD</h2>
+        Définir le mot de passe pour s'inscrire à <A HREF='http://www.intramessenger.net/list/servers/' target='_blank'>l&#146;annuaire des serveurs publics sur internet</A>.<br/>
+        Etre dans l'annuaire permet aux utilisateurs d'accéder à votre serveur <A HREF='http://www.intramessenger.net/list/images/im_public_server_list.png' target='_blank'>directement depuis la liste déroulante</A>.<br/>
+        Ce mot de passe confirme votre choix de publier l'adresse de votre serveur IntraMessenger. En le modifiant vous indiquez ne plus vouloir être publié.<br/>
+        Si vous l'avez modifié par erreur et n'êtes plus enregistré sur l'annuaire, inscrivez vous à nouveau.<br/>
+      </div>
+
+      <div class="panel" id='_INCOMING_EMAIL_SERVER_ADDRESS'>
+        <h2>_INCOMING_EMAIL_SERVER_ADDRESS</h2>
+        Définir (forcer) l'adresse du serveur de courrier entrant (pour le notifieur intégré).<br/>
+        Nécessite l'activation de l'option <a href="#" onclick="$('#_ALLOW_EMAIL_NOTIFIER').animatescroll({padding:7,easing:'easeOutBounce'});">_ALLOW_EMAIL_NOTIFIER</a>.<br/>
+      </div>
+
+      <div class="panel" id='_INVITE_FILL_PROFILE_ON_FIRST_LOGIN'>
+        <h2>_INVITE_FILL_PROFILE_ON_FIRST_LOGIN</h2>
+        Inviter (ou non) l'utilisateur à renseigner son profil à la première utilisation.<br/>
+        Nécessite l'activation de l'option <a href="#" onclick="$('#_ALLOW_MANAGE_PROFILE').animatescroll({padding:7,easing:'easeOutBounce'});">_ALLOW_MANAGE_PROFILE</a>.<br/>
+      </div>
+
+      <div class="panel" id='_LANG'>
+        <h2>_LANG</h2>
+        Choisir la langue par défaut de l'interface d'administration (<acronym title='Admin Control Panel'>ACP</acronym>) et de certaines informations transmises aux utilisateurs.<br/>
+      </div>
+
+      <div class="panel" id='_LOCK_AFTER_NO_ACTIVITY_DURATION'>
+        <h2>_LOCK_AFTER_NO_ACTIVITY_DURATION</h2>
+        Définir après combien de jours d'inactivité un compte est automatiquement verrouillé (0 : illimité).<br/>
+        Ces comptes fantômes monopolisent inutilement des ressources serveur.<br/>
+        Ne pas confondre la date dernière activité avec la date de dernier accès.<br/>
+        Envoyer/recevoir un message, ajouter un contact met à jour la date de dernière activité.<br/>
+        Voir aussi les options : <a href="#" onclick="$('#_LOCK_AFTER_NO_CONTACT_DURATION').animatescroll({padding:7,easing:'easeOutBounce'});">_LOCK_AFTER_NO_CONTACT_DURATION</a>
+        - <a href="#" onclick="$('#_OUTOFDATE_AFTER_NOT_USE_DURATION').animatescroll({padding:7,easing:'easeOutBounce'});">_OUTOFDATE_AFTER_NOT_USE_DURATION</a>.<br/>
+        <div class="suggest">Valeur conseillée : 90.</div>
+      </div>
+
+      <div class="panel" id='_LOCK_AFTER_NO_CONTACT_DURATION'>
+        <h2>_LOCK_AFTER_NO_CONTACT_DURATION - <span style='font-size:0.8em;'>nouveauté de la version 2.0.4</span></h2>
+        <div class="suggest">Option non affichée dans l'<acronym title='Admin Control Panel : interface d administration'>ACP</acronym>.</div>
+        Définir après combien de jours de présence sans avoir ajouté un seul contact, un compte est automatiquement verrouillé (0 : illimité).<br/>
+        Ces comptes fantômes monopolisent inutilement des ressources serveur.<br/>
+        Nécessite l'activation de l'option <a href="#" onclick="$('#_ALLOW_MANAGE_CONTACT_LIST').animatescroll({padding:7,easing:'easeOutBounce'});">_ALLOW_MANAGE_CONTACT_LIST</a>.<br/>
+        Voir aussi les options : <a href="#" onclick="$('#_LOCK_AFTER_NO_ACTIVITY_DURATION').animatescroll({padding:7,easing:'easeOutBounce'});">_LOCK_AFTER_NO_ACTIVITY_DURATION</a>
+        - <a href="#" onclick="$('#_OUTOFDATE_AFTER_NOT_USE_DURATION').animatescroll({padding:7,easing:'easeOutBounce'});">_OUTOFDATE_AFTER_NOT_USE_DURATION</a>.<br/>
+        <div class="suggest">Valeur conseillée : 60.</div>
+      </div>
+
+      <div class="panel" id='_LOCK_DURATION'>
+        <h2>_LOCK_DURATION</h2>
+        Définir la durée (en minutes) de verrouillage du compte suite erreurs 
+        (option <a href="#" onclick="$('#_MAX_PASSWORD_ERRORS_BEFORE_LOCK_USER').animatescroll({padding:7,easing:'easeOutBounce'});">_MAX_PASSWORD_ERRORS_BEFORE_LOCK_USER</a>) de mot de passe (0 : illimité).<br/>
+        Nécessite l'activation de l'option <a href="#" onclick="$('#_USER_NEED_PASSWORD').animatescroll({padding:7,easing:'easeOutBounce'});">_USER_NEED_PASSWORD</a>.<br/>
+        <div class="suggest">Valeur conseillée : 15.</div>
+      </div>
+
+      <div class="panel" id='_LOG_SESSION_OPEN'>
+        <h2>_LOG_SESSION_OPEN</h2>
+        Archiver (ou non) dans le journal d'évènements (log) les ouvertures (date et heure) de sessions.<br/>
+        <div class="suggest">Valeur conseillée : activée.</div>
+      </div>
+
+      <div class="panel" id='_MAINTENANCE_MODE'>
+        <h2>_MAINTENANCE_MODE</h2>
+        <A HREF='http://www.intramessenger.com/forum/viewtopic.php?f=17&t=1420&' target='_blank'>Activer (ou non) le mode maintenance</A> : permet d'appliquer une mise à jour.<br/>
+        Empêche les utilisateurs de se connecter. Ceux déjà connectés ne peuvent plus communiquer (activité mise en veille).<br/>
+      </div>
+
+      <div class="panel" id='_MAX_NB_CONTACT_BY_USER'>
+        <h2>_MAX_NB_CONTACT_BY_USER</h2>
+        Définir le nombre maximum de contacts par utilisateurs (0 : illimité).<br/>
+        Voir aussi l'option <a href="#" onclick="$('#_ALLOW_MANAGE_CONTACT_LIST').animatescroll({padding:7,easing:'easeOutBounce'});">_ALLOW_MANAGE_CONTACT_LIST</a>.<br/>
+        <div class="suggest">Valeur conseillée : 0.</div>
+      </div>
+
+      <div class="panel" id='_MAX_NB_IP'>
+        <h2>_MAX_NB_IP</h2>
+        Définir le nombre maximum d'adresses IP identiques simultanées (0 : illimité).<br/>
+        Voir aussi l'option <a href="#" onclick="$('#_MAX_NB_SESSION').animatescroll({padding:7,easing:'easeOutBounce'});">_MAX_NB_SESSION</a>.<br/>
+        <div class="suggest">Option à activer uniquement pour un usage sur internet, pour un serveur de démonstration par exemple.</div>
+        <div class="suggest">Valeur conseillée : 0.</div>
+      </div>
+
+      <div class="panel" id='_MAX_NB_SESSION'>
+        <h2>_MAX_NB_SESSION</h2>
+        Définir le nombre maximum de sessions (utilisateurs connectés simultanément) (0 : illimité)<br/>
+        Voir aussi l'option <a href="#" onclick="$('#_MAX_NB_IP').animatescroll({padding:7,easing:'easeOutBounce'});">_MAX_NB_IP</a>.<br/>
+        <div class="suggest">Valeur conseillée : 0.</div>
+      </div>
+
+      <div class="panel" id='_MAX_NB_USER'>
+        <h2>_MAX_NB_USER</h2>
+        Définir le nombre maximum d'utilisateurs inscrits (0 : illimité).<br/>
+        Conseil : limiter plutôt le nombre de sessions simultanées et supprimer les comptes inutilisés.<br/>
+        Voir aussi les options : <a href="#" onclick="$('#_ALLOW_AUTO_ADD_NEW_USER_ON_SERVER').animatescroll({padding:7,easing:'easeOutBounce'});">_ALLOW_AUTO_ADD_NEW_USER_ON_SERVER</a> 
+        - <a href="#" onclick="$('#_MAX_NB_SESSION').animatescroll({padding:7,easing:'easeOutBounce'});">_MAX_NB_SESSION</a>
+        - <a href="#" onclick="$('#_OUTOFDATE_AFTER_NOT_USE_DURATION').animatescroll({padding:7,easing:'easeOutBounce'});">_OUTOFDATE_AFTER_NOT_USE_DURATION</a>
+        - <a href="#" onclick="$('#_LOCK_AFTER_NO_ACTIVITY_DURATION').animatescroll({padding:7,easing:'easeOutBounce'});">_LOCK_AFTER_NO_ACTIVITY_DURATION</a>.<br/>
+        <div class="suggest">Valeur conseillée : 0.</div>
+      </div>
+
+      <div class="panel" id='_MAX_PASSWORD_ERRORS_BEFORE_LOCK_USER'>
+        <h2>_MAX_PASSWORD_ERRORS_BEFORE_LOCK_USER</h2>
+        Définir le nombre maximum d'erreurs consécutives du mot de passe avant verrouillage du compte utilisateur.<br/>
+        Nécessite l'activation de l'option <a href="#" onclick="$('#_USER_NEED_PASSWORD').animatescroll({padding:7,easing:'easeOutBounce'});">_USER_NEED_PASSWORD</a>.<br/>
+        Voir aussi l'option <a href="#" onclick="$('#_LOCK_DURATION').animatescroll({padding:7,easing:'easeOutBounce'});">_LOCK_DURATION</a>.<br/>
+        <div class="suggest">Valeur conseillée : 5.</div>
+      </div>
+
+      <div class="panel" id='_MINIMUM_PASSWORD_LENGTH'>
+        <h2>_MINIMUM_PASSWORD_LENGTH</h2>
+        Définir la longueur minimale du mot de passe utilisateur.<br/>
+        Nécessite l'activation de l'option <a href="#" onclick="$('#_USER_NEED_PASSWORD').animatescroll({padding:7,easing:'easeOutBounce'});">_USER_NEED_PASSWORD</a>.<br/>
+        <div class="suggest">Valeur conseillée : 8.</div>
+      </div>
+
+      <div class="panel" id='_MINIMUM_USERNAME_LENGTH'>
+        <h2>_MINIMUM_USERNAME_LENGTH</h2>
+        Définir la longueur minimale du pseudo.<br/>
+        Voir aussi l'option <a href="#" onclick="$('#_FORCE_USERNAME_TO_PC_SESSION_NAME').animatescroll({padding:7,easing:'easeOutBounce'});">_FORCE_USERNAME_TO_PC_SESSION_NAME</a>.<br/>
+        <div class="suggest">Valeur conseillée : 4.</div>
+      </div>
+
+      <div class="panel" id='_NEED_QUICK_REGISTER_TO_AUTO_ADD_NEW_USER'>
+        <h2>_NEED_QUICK_REGISTER_TO_AUTO_ADD_NEW_USER</h2>
+        Activer (ou non) la nécessité d'une inscription rapide <u>avant</u> l'ajout automatique d'un nouvel utilisateur.<br/>
+        Nécessite l'activation de l'option <a href="#" onclick="$('#_ALLOW_AUTO_ADD_NEW_USER_ON_SERVER').animatescroll({padding:7,easing:'easeOutBounce'});">_ALLOW_AUTO_ADD_NEW_USER_ON_SERVER</a>.<br/>
+        Voir aussi les options : <a href="#" onclick="$('#_PENDING_NEW_AUTO_ADDED_USER').animatescroll({padding:7,easing:'easeOutBounce'});">_PENDING_NEW_AUTO_ADDED_USER</a>
+        - <a href="#" onclick="$('#_PENDING_USER_ON_COMPUTER_CHANGE').animatescroll({padding:7,easing:'easeOutBounce'});">_PENDING_USER_ON_COMPUTER_CHANGE</a>.<br/>
+      </div>
+
+      <div class="panel" id='_ONLINE_REASONS_LIST'>
+        <h2>_ONLINE_REASONS_LIST</h2>
+        Permet d'ajouter une série de <A HREF='http://www.intramessenger.com/forum/pictures/im_statereasondoublemenu_2.png' target='_blank'>motifs</a> pour l'état <i>disponible</i>.<br/>
+        Jusqu'à 10 motifs séparés par des point-virgules.<br/>
+        La liste des motifs est la même quelque soit la langue configurée par l'utilisateur.<br/>
+        Options similaires : <a href="#" onclick="$('#_AWAY_REASONS_LIST').animatescroll({padding:7,easing:'easeOutBounce'});">_AWAY_REASONS_LIST</a> - <a href="#" onclick="$('#_BUSY_REASONS_LIST').animatescroll({padding:7,easing:'easeOutBounce'});">_BUSY_REASONS_LIST</a> - <a href="#" onclick="$('#_DONOTDISTURB_REASONS_LIST').animatescroll({padding:7,easing:'easeOutBounce'});">_DONOTDISTURB_REASONS_LIST</a>.<br/>
+        Voir aussi l'option <a href="#" onclick="$('#_FORCE_STATUS_LIST_FROM_SERVER').animatescroll({padding:7,easing:'easeOutBounce'});">_FORCE_STATUS_LIST_FROM_SERVER</a>.<br/>
+      </div>
+
+      <div class="panel" id='_OUTOFDATE_AFTER_NOT_USE_DURATION'>
+        <h2>_OUTOFDATE_AFTER_NOT_USE_DURATION - <span style='font-size:0.8em;'>option anciennement nommée <b>_OUTOFDATE_AFTER_X_DAYS_NOT_USE</b> jusqu'à la version 2.0.4</span></h2>
+        Définir le nombre de jours sans utilisation à partir duquel les comptes sont considérés périmés, 
+        afin d'être <A HREF='http://www.theuds.com/intramessenger/admin_demo/user_deleting_older.php?lang=FR&' target='_blank'>supprimés par l'administrateur</A>.<br/>
+        Voir aussi les options : <a href="#" onclick="$('#_LOCK_AFTER_NO_CONTACT_DURATION').animatescroll({padding:7,easing:'easeOutBounce'});">_LOCK_AFTER_NO_CONTACT_DURATION</a>
+        - <a href="#" onclick="$('#_LOCK_AFTER_NO_ACTIVITY_DURATION').animatescroll({padding:7,easing:'easeOutBounce'});">_LOCK_AFTER_NO_ACTIVITY_DURATION</a>.<br/>
+        <div class="suggest">Valeur conseillée : 40.</div>
+      </div>
+
+      <div class="panel" id='_PASSWORD_FOR_PRIVATE_SERVER'>
+        <h2>_PASSWORD_FOR_PRIVATE_SERVER</h2>
+        <div class="suggest">Option non affichée dans l'<acronym title='Admin Control Panel : interface d administration'>ACP</acronym>.</div>
+        Définir <u>éventuellement</u> le mot de passe de restriction d'accès des postes (que chaque utilisateur devra saisir une première fois avant de pouvoir s'authentifier).<br/>
+        Ne remplace pas l'option <a href="#" onclick="$('#_USER_NEED_PASSWORD').animatescroll({padding:7,easing:'easeOutBounce'});">_USER_NEED_PASSWORD</a>.<br/>
+        Voir aussi l'option <a href="#" onclick="$('#_PENDING_NEW_AUTO_ADDED_USER').animatescroll({padding:7,easing:'easeOutBounce'});">_PENDING_NEW_AUTO_ADDED_USER</a>.<br/>
+        <div class="suggest">Valeur conseillée : désactivée pour une utilisation classique.</div>
+      </div>
+
+      <div class="panel" id='_PASSWORD_VALIDITY'>
+        <h2>_PASSWORD_VALIDITY - <span style='font-size:0.8em;'>nouveauté de la version 2.0.4</span></h2>
+        Durée (en jours) de validité du mot de passe (0 : illimité) avant expiration.<br/>
+        Nécessite l'activation de l'option <a href="#" onclick="$('#_USER_NEED_PASSWORD').animatescroll({padding:7,easing:'easeOutBounce'});">_USER_NEED_PASSWORD</a>.<br/>
+      </div>
+
+      <div class="panel" id='_PENDING_NEW_AUTO_ADDED_USER'>
+        <h2>_PENDING_NEW_AUTO_ADDED_USER</h2>
+        Activer (ou non) la validation par l'administrateur des utilisateurs automatiquement ajoutés.<br/>
+        Permet de mettre en attente de validation les nouveaux inscrits (vérifier que les pseudos sont <i>corrects</i>, filtrer les doublons...).<br/>
+        Nécessite l'activation de l'option <a href="#" onclick="$('#_ALLOW_AUTO_ADD_NEW_USER_ON_SERVER').animatescroll({padding:7,easing:'easeOutBounce'});">_ALLOW_AUTO_ADD_NEW_USER_ON_SERVER</a>.<br/>
+        Voir aussi l'option <a href="#" onclick="$('#_PENDING_USER_ON_COMPUTER_CHANGE').animatescroll({padding:7,easing:'easeOutBounce'});">_PENDING_USER_ON_COMPUTER_CHANGE</a>.<br/>
+        <div class="suggest">Valeur conseillée : désactivée pour une utilisation classique.</div>
+      </div>
+
+      <div class="panel" id='_PENDING_USER_ON_COMPUTER_CHANGE'>
+        <h2>_PENDING_USER_ON_COMPUTER_CHANGE</h2>
+        Activer (ou non) la validation par l'administrateur des utilisateurs qui changent de PC.<br/>
+        L'option <a href="#" onclick="$('#_USER_NEED_PASSWORD').animatescroll({padding:7,easing:'easeOutBounce'});">_USER_NEED_PASSWORD</a> ne doit <b>pas être activée</b>.<br/>
+        Voir aussi les options : 
+        <a href="#" onclick="$('#_PENDING_NEW_AUTO_ADDED_USER').animatescroll({padding:7,easing:'easeOutBounce'});">_PENDING_NEW_AUTO_ADDED_USER</a>
+        - <a href="#" onclick="$('#_ALLOW_AUTO_ADD_NEW_USER_ON_SERVER').animatescroll({padding:7,easing:'easeOutBounce'});">_ALLOW_AUTO_ADD_NEW_USER_ON_SERVER</a>.<br/>
+        <div class="suggest">Valeur conseillée : désactivée pour une utilisation classique.</div>
+      </div>
+
+      <div class="panel" id='_PROXY_ADDRESS'>
+        <h2>_PROXY_ADDRESS</h2>
+        Définir (forcer) l'adresse du serveur proxy.<br/>
+        L'utilisateur ne peut plus modifier ce paramètre.<br/>
+        <!-- Nécessite l'activation de l'option <a href="#" onclick="$('#_ALLOW_USE_PROXY').animatescroll({padding:7,easing:'easeOutBounce'});">_ALLOW_USE_PROXY</a>.<br/> -->
+        Voir aussi les options <a href="#" onclick="$('#_PROXY_PORT_NUMBER').animatescroll({padding:7,easing:'easeOutBounce'});">_PROXY_PORT_NUMBER</a> 
+        et <a href="#" onclick="$('#_ALLOW_USE_PROXY').animatescroll({padding:7,easing:'easeOutBounce'});">_ALLOW_USE_PROXY</a>.<br/>
+      </div>
+
+      <div class="panel" id='_PROXY_PORT_NUMBER'>
+        <h2>_PROXY_PORT_NUMBER</h2>
+        Définir (forcer) le numéro de port du serveur proxy.<br/>
+        L'utilisateur ne peut plus modifier ce paramètre.<br/>
+        <!-- Nécessite l'activation de l'option <a href="#" onclick="$('#_ALLOW_USE_PROXY').animatescroll({padding:7,easing:'easeOutBounce'});">_ALLOW_USE_PROXY</a>.<br/> -->
+        Voir aussi les options <a href="#" onclick="$('#_PROXY_ADDRESS').animatescroll({padding:7,easing:'easeOutBounce'});">_PROXY_ADDRESS</a> 
+        et <a href="#" onclick="$('#_ALLOW_USE_PROXY').animatescroll({padding:7,easing:'easeOutBounce'});">_ALLOW_USE_PROXY</a>.<br/>
+      </div>
+
+      <div class="panel" id='_PUBLIC_FOLDER'>
+        <h2>_PUBLIC_FOLDER</h2>
+        <div class="suggest">Option non affichée dans l'<acronym title='Admin Control Panel : interface d administration'>ACP</acronym>.</div>
+        Définir le nom du répertoire contenant les scripts publics (valeur par défaut : <I>public</I>).<br/>
+        Ne modifier que si nécessaire (après avoir renommé le répertoire).<br/>
+      </div>
+
+      <div class="panel" id='_PUBLIC_OPTIONS_LIST'>
+        <h2>_PUBLIC_OPTIONS_LIST</h2>
+        Permettre (ou non) de rendre la liste des options du serveur consultable pour tout le monde.<br/>
+        Voir aussi l'option <a href="#" onclick="$('#_ALLOW_MANAGE_OPTIONS').animatescroll({padding:7,easing:'easeOutBounce'});">_ALLOW_MANAGE_OPTIONS</a>.<br/>
+      </div>
+
+      <div class="panel" id='_PUBLIC_POST_AVATAR'>
+        <h2>_PUBLIC_POST_AVATAR</h2>
+        Permettre (ou non) de rendre la proposition de nouveaux avatars possible pour tout le monde.<br/>
+        Voir aussi l'option <a href="#" onclick="$('#_ALLOW_MANAGE_PROFILE').animatescroll({padding:7,easing:'easeOutBounce'});">_ALLOW_MANAGE_PROFILE</a>.<br/>
+      </div>
+
+      <div class="panel" id='_PUBLIC_USERS_LIST'>
+        <h2>_PUBLIC_USERS_LIST</h2>
+        Permettre (ou non) de rendre la liste des utilisateurs 
+        <A HREF='http://www.intramessenger.com/forum/pictures/im_public_user_list_en.png' target='_blank'>consultable pour tout le monde</A>.<br/>
+        Lors de l'ajout de contact, l'utilisateur bénéficie 
+        <A HREF='http://www.intramessenger.com/forum/pictures/im_public_user_list_en.png' target='_blank'>d'une liste déroulante</A> affichant tous les comptes actifs.<br/>
+        Si non activée, pour ajouter un contact il est nécessaire d'effectuer une recherche.<br/>
+        Voir aussi l'option <a href="#" onclick="$('#_ALLOW_MANAGE_CONTACT_LIST').animatescroll({padding:7,easing:'easeOutBounce'});">_ALLOW_MANAGE_CONTACT_LIST</a>.<br/>
+      </div>
+
+      <div class="panel" id='_PWD_NEED_DIGIT_LETTER'>
+        <h2>_PWD_NEED_DIGIT_LETTER</h2>
+        Forcer (ou non) les mots de passe à contenir des chiffres <u>ET</u> des lettres (au moins un de chaque).<br/>
+        Nécessite l'activation de l'option <a href="#" onclick="$('#_USER_NEED_PASSWORD').animatescroll({padding:7,easing:'easeOutBounce'});">_USER_NEED_PASSWORD</a>.<br/>        
+        Voir aussi les options : <a href="#" onclick="$('#_PWD_NEED_SPECIAL_CHARACTER').animatescroll({padding:7,easing:'easeOutBounce'});">_PWD_NEED_SPECIAL_CHARACTER</a>
+        - <a href="#" onclick="$('#_PWD_NEED_UPPER_LOWER').animatescroll({padding:7,easing:'easeOutBounce'});">_PWD_NEED_UPPER_LOWER</a>
+      </div>
+
+      <div class="panel" id='_PWD_NEED_SPECIAL_CHARACTER'>
+        <h2>_PWD_NEED_SPECIAL_CHARACTER</h2>
+        Forcer (ou non) les mots de passe à contenir des caractères spéciaux (au moins un).<br/>
+        Nécessite l'activation de l'option <a href="#" onclick="$('#_USER_NEED_PASSWORD').animatescroll({padding:7,easing:'easeOutBounce'});">_USER_NEED_PASSWORD</a>.<br/>        
+        Voir aussi les options : <a href="#" onclick="$('#_PWD_NEED_DIGIT_LETTER').animatescroll({padding:7,easing:'easeOutBounce'});">_PWD_NEED_DIGIT_LETTER</a>
+        - <a href="#" onclick="$('#_PWD_NEED_UPPER_LOWER').animatescroll({padding:7,easing:'easeOutBounce'});">_PWD_NEED_UPPER_LOWER</a>
+      </div>
+
+      <div class="panel" id='_PWD_NEED_UPPER_LOWER'>
+        <h2>_PWD_NEED_UPPER_LOWER</h2>
+        Forcer (ou non) les mots de passe à contenir des lettres majuscules <u>ET</u> minuscules (au moins une de chaque).<br/>
+        Nécessite l'activation de l'option <a href="#" onclick="$('#_USER_NEED_PASSWORD').animatescroll({padding:7,easing:'easeOutBounce'});">_USER_NEED_PASSWORD</a>.<br/>        
+        Voir aussi les options : <a href="#" onclick="$('#_PWD_NEED_DIGIT_LETTER').animatescroll({padding:7,easing:'easeOutBounce'});">_PWD_NEED_DIGIT_LETTER</a>
+        - <a href="#" onclick="$('#_PWD_NEED_SPECIAL_CHARACTER').animatescroll({padding:7,easing:'easeOutBounce'});">_PWD_NEED_SPECIAL_CHARACTER</a>
+      </div>
+
+      <div class="panel" id='_ROLES_TO_OVERRIDE_PERMISSIONS'>
+        <h2>_ROLES_TO_OVERRIDE_PERMISSIONS</h2>
+        Activer (ou non) <A HREF='http://www.intramessenger.com/forum/viewtopic.php?p=3287#p3287' target='_blank'>la gestion des rôles</A> : 
+        droits d'accès par profils utilisateurs.<br/>
+        Permet de donner l'accès à des fonctionnalités uniquement à certaines personnes (ex: recevoir les alertes admin).<br/>
+        Permet d'interdire l'accès à des fonctionnalités à d'autres (ex: interdire l'accès à la ShoutBox).<br/>
+        Permet de paramètrer différement des options pour justes certaines personnes (ex: quota quotidien de messages dans la ShoutBox).<br/>
+      </div>
+
+      <div class="panel" id='_ROLE_ID_DEFAULT_FOR_NEW_USER'>
+        <h2>_ROLE_ID_DEFAULT_FOR_NEW_USER - <span style='font-size:0.8em;'>nouveauté de la version 2.0.5</span></h2>
+        <div class="suggest">Option non affichée dans l'<acronym title='Admin Control Panel : interface d administration'>ACP</acronym>.</div>
+        Numéro du rôle dans lequel est automatiquement affecté chaque nouvel utilisateur.<br/>
+        Nécessite l'activation de l'option <a href="#" onclick="$('#_ROLES_TO_OVERRIDE_PERMISSIONS').animatescroll({padding:7,easing:'easeOutBounce'});">_ROLES_TO_OVERRIDE_PERMISSIONS</a>.<br/>
+        <div class="suggest">Valeur conseillée : désactivée (0).</div>
+      </div>
+
+      <div class="panel" id='_SCROLL_TEXT'>
+        <h2>_SCROLL_TEXT</h2>
+        Définir <u>temporairement</u> un texte d'information défilant dans la barre de titre (postes clients).<br/>
+      </div>
+
+      <div class="panel" id='_SEND_ADMIN_ALERT'>
+        <h2>_SEND_ADMIN_ALERT</h2>
+        <div class="suggest">Option non affichée dans l'<acronym title='Admin Control Panel : interface d administration'>ACP</acronym>.</div>
+        Permettre (ou non) d'envoyer des alertes (ex : utilisateurs ou message en attente de validation).<br/>
+        Permet de définir les utilisateurs pouvant les recevoir. Voir aussi la gestion des rôles (option <a href="#" onclick="$('#_ROLES_TO_OVERRIDE_PERMISSIONS').animatescroll({padding:7,easing:'easeOutBounce'});">_ROLES_TO_OVERRIDE_PERMISSIONS</a>).<br/>
+        <div class="suggest">Valeur conseillée : activée.</div>
+      </div>
+
+      <div class="panel" id='_SEND_ADMIN_ALERT_EMAIL'>
+        <h2>_SEND_ADMIN_ALERT_EMAIL - <span style='font-size:0.8em;'>nouveauté de la version 2.0.4</span></h2>
+        Permettre (ou non) d'envoyer par email les messages d'alerte (administrateur).<br/>
+        Nécessite l'activation des options <a href="#" onclick="$('#_SEND_ADMIN_ALERT').animatescroll({padding:7,easing:'easeOutBounce'});">_SEND_ADMIN_ALERT</a> 
+        (et <a href="#" onclick="$('#_ADMIN_EMAIL').animatescroll({padding:7,easing:'easeOutBounce'});">_ADMIN_EMAIL</a>).<br/>
+      </div>
+
+      <div class="panel" id='_SERVERS_STATUS'>
+        <h2>_SERVERS_STATUS</h2>
+        Permettre (ou non) de définir <A HREF='http://www.intramessenger.com/forum/pictures/im_srv_status_1.png' target='_blank'>la liste des serveurs/services et leurs états respectifs</A>
+        (exemple : serveur de messagerie, climatisation...)<br/>
+        Notification des changements d'états affiché aux utilisateurs par 
+        <A HREF='http://www.intramessenger.com/forum/pictures/im_srv_status_2.png' target='_blank'>une info-bulle</A>.<br/>
+        
+        Pour permettre le changement d'état directement depuis le client, voir le rôle <A class="Code">ROLE_CHANGE_SERVER_STATUS</A>.
+      </div>
+
+      <div class="panel" id='_SHARE_FILES'>
+        <h2>_SHARE_FILES - <span style='font-size:0.8em;'>nouveauté majeure de la version 2.0.4</span></h2>
+        Permettre (ou non) de <b><A HREF='http://www.intramessenger.com/forum/viewtopic.php?p=4654#p4654' target='_blank'>partager (publier) des fichiers</A></b>. 
+        Ces <b><font color='#EE82EE'>fichiers sont publics</font></b>.<br/>
+        Nécessite l'activation d'un compte FTP (dédié à ce partage de fichiers uniquement) sur un serveur web.<br/>
+        <!-- sur le serveur web hébergeant l'application IntraMessenger.<br/> -->
+        Nécessite le renseignement des options : <a href="#" onclick="$('#_SHARE_FILES_FTP_ADDRESS').animatescroll({padding:7,easing:'easeOutBounce'});">_SHARE_FILES_FTP_ADDRESS</a> 
+        - <a href="#" onclick="$('#_SHARE_FILES_FTP_LOGIN').animatescroll({padding:7,easing:'easeOutBounce'});">_SHARE_FILES_FTP_LOGIN</a> 
+        - <a href="#" onclick="$('#_SHARE_FILES_FTP_PASSWORD_CRYPT').animatescroll({padding:7,easing:'easeOutBounce'});">_SHARE_FILES_FTP_PASSWORD_CRYPT</a>.<br/>
+        <div class="notice">Voir aussi l'option <a href="#" onclick="$('#_SHARE_FILES_EXCHANGE').animatescroll({padding:7,easing:'easeOutBounce'});">_SHARE_FILES_EXCHANGE</a> pour les échanges de <b><font color='#FF6347'>fichiers privés</b> (entre utilisateurs)</font>.<br/></div>
+        Pour ne permettre l'écriture qu'à certains utilisateurs, voir le rôle <A class="Code">ROLE_SHARE_FILES_READ_ONLY</A>.
+      </div>
+
+      <div class="panel" id='_SHARE_FILES_ALLOW_ACCENT'>
+        <h2>_SHARE_FILES_ALLOW_ACCENT</h2>
+        <div class="suggest">Option non affichée dans l'<acronym title='Admin Control Panel : interface d administration'>ACP</acronym>.</div>
+        Autoriser (ou non) l'utilisation d'accents dans les fichiers (renomme automatiquement les fichiers envoyés sans accents).<br/>
+        Nécessite l'activation de l'option <a href="#" onclick="$('#_SHARE_FILES').animatescroll({padding:7,easing:'easeOutBounce'});">_SHARE_FILES</a>.<br/>
+        <div class="suggest">Valeur conseillée : activée.</div>
+        <div class="alert"><b><u>Non</u> activée uniquement si serveur FTP sous Windows</b> (exemple : <I>FileZilla Server</I>) !</div>
+      </div>
+
+      <div class="panel" id='_SHARE_FILES_ALLOW_UPPERCASE'>
+        <h2>_SHARE_FILES_ALLOW_UPPERCASE</h2>
+        <div class="suggest">Option non affichée dans l'<acronym title='Admin Control Panel : interface d administration'>ACP</acronym>.</div>
+        Autoriser (ou non) l'utilisation de majuscules dans les fichiers (renomme automatiquement les fichiers envoyés en minuscules).<br/>
+        Nécessite l'activation de l'option <a href="#" onclick="$('#_SHARE_FILES').animatescroll({padding:7,easing:'easeOutBounce'});">_SHARE_FILES</a>.<br/>
+        <div class="alert">Valeur conseillée : non activée, surtout <b>si serveur FTP sous Windows !</b></div>
+      </div>
+
+      <div class="panel" id='_SHARE_FILES_APPROVAL_QUEUE'>
+        <h2>_SHARE_FILES_APPROVAL_QUEUE</h2>
+        Définir la limite de file d'attente d'approbation (de 10 à 99).<br/>
+        Temporise l'envoi si ce quota de fichiers en attente d'approbation est atteint.<br/>
+        Nécessite l'activation de l'option <a href="#" onclick="$('#_SHARE_FILES').animatescroll({padding:7,easing:'easeOutBounce'});">_SHARE_FILES</a>.<br/>
+        Voir aussi les options <a href="#" onclick="$('#_SHARE_FILES_NEED_APPROVAL').animatescroll({padding:7,easing:'easeOutBounce'});">_SHARE_FILES_NEED_APPROVAL</a> et 
+        <a href="#" onclick="$('#_SHARE_FILES_EXCHANGE_NEED_APPROVAL').animatescroll({padding:7,easing:'easeOutBounce'});">_SHARE_FILES_EXCHANGE_NEED_APPROVAL</a>.<br/>
+      </div>
+
+      <div class="panel" id='_SHARE_FILES_COMPRESS'>
+        <h2>_SHARE_FILES_COMPRESS</h2>
+        Activer (ou non) la compression des fichiers avant expédition : désactive leur consultation depuis l'<acronym title='Admin Control Panel'>ACP</acronym>.<br/>
+        Nécessite l'activation de l'option <a href="#" onclick="$('#_SHARE_FILES').animatescroll({padding:7,easing:'easeOutBounce'});">_SHARE_FILES</a>.<br/>
+        Incompatible avec les options :<br/>
+        <a href="#" onclick="$('#_SHARE_FILES_NEED_APPROVAL').animatescroll({padding:7,easing:'easeOutBounce'});">_SHARE_FILES_NEED_APPROVAL</a> - 
+        <a href="#" onclick="$('#_SHARE_FILES_EXCHANGE_NEED_APPROVAL').animatescroll({padding:7,easing:'easeOutBounce'});">_SHARE_FILES_EXCHANGE_NEED_APPROVAL</a> - 
+        <a href="#" onclick="$('#_SHARE_FILES_TRASH').animatescroll({padding:7,easing:'easeOutBounce'});">_SHARE_FILES_TRASH</a> - 
+        <a href="#" onclick="$('#_SHARE_FILES_EXCHANGE_TRASH').animatescroll({padding:7,easing:'easeOutBounce'});">_SHARE_FILES_EXCHANGE_TRASH</a><br/>
+        Pour limiter l'usage de la bande passante, voir aussi les options : <br/>
+        <a href="#" onclick="$('#_SHARE_FILES_DOWNLOAD_QUOTA_FILES_USER_DAY').animatescroll({padding:7,easing:'easeOutBounce'});">_SHARE_FILES_DOWNLOAD_QUOTA_FILES_USER_DAY</a> - 
+        <a href="#" onclick="$('#_SHARE_FILES_DOWNLOAD_QUOTA_FILES_USER_WEEK').animatescroll({padding:7,easing:'easeOutBounce'});">_SHARE_FILES_DOWNLOAD_QUOTA_FILES_USER_WEEK</a> - 
+        <a href="#" onclick="$('#_SHARE_FILES_DOWNLOAD_QUOTA_FILES_USER_MONTH').animatescroll({padding:7,easing:'easeOutBounce'});">_SHARE_FILES_DOWNLOAD_QUOTA_FILES_USER_MONTH</a><br/> 
+        <a href="#" onclick="$('#_SHARE_FILES_DOWNLOAD_QUOTA_MB_USER_DAY').animatescroll({padding:7,easing:'easeOutBounce'});">_SHARE_FILES_DOWNLOAD_QUOTA_MB_USER_DAY</a> - 
+        <a href="#" onclick="$('#_SHARE_FILES_DOWNLOAD_QUOTA_MB_USER_WEEK').animatescroll({padding:7,easing:'easeOutBounce'});">_SHARE_FILES_DOWNLOAD_QUOTA_MB_USER_WEEK</a> - 
+        <a href="#" onclick="$('#_SHARE_FILES_DOWNLOAD_QUOTA_MB_USER_MONTH').animatescroll({padding:7,easing:'easeOutBounce'});">_SHARE_FILES_DOWNLOAD_QUOTA_MB_USER_MONTH</a>.<br/>
+      </div>
+
+      <div class="panel" id='_SHARE_FILES_DOWNLOAD_QUOTA_FILES_USER_DAY'>
+        <h2>_SHARE_FILES_DOWNLOAD_QUOTA_FILES_USER_DAY</h2>
+        Quota quotidien du nombre de téléchargements de <font color='#EE82EE'>fichiers publics</font> (0 : illimité).<br/>
+        Nécessite l'activation de l'option <a href="#" onclick="$('#_SHARE_FILES').animatescroll({padding:7,easing:'easeOutBounce'});">_SHARE_FILES</a>.<br/>
+        Voir aussi les options : <a href="#" onclick="$('#_SHARE_FILES_COMPRESS').animatescroll({padding:7,easing:'easeOutBounce'});">_SHARE_FILES_COMPRESS</a> - 
+        <a href="#" onclick="$('#_SHARE_FILES_DOWNLOAD_QUOTA_FILES_USER_WEEK').animatescroll({padding:7,easing:'easeOutBounce'});">_SHARE_FILES_DOWNLOAD_QUOTA_FILES_USER_WEEK</a> - 
+        <a href="#" onclick="$('#_SHARE_FILES_DOWNLOAD_QUOTA_FILES_USER_MONTH').animatescroll({padding:7,easing:'easeOutBounce'});">_SHARE_FILES_DOWNLOAD_QUOTA_FILES_USER_MONTH</a><br/>
+      </div>
+
+      <div class="panel" id='_SHARE_FILES_DOWNLOAD_QUOTA_FILES_USER_WEEK'>
+        <h2>_SHARE_FILES_DOWNLOAD_QUOTA_FILES_USER_WEEK</h2>
+        Quota hebdomadaire du nombre de téléchargements de <font color='#EE82EE'>fichiers publics</font> (0 : illimité).<br/>
+        Nécessite l'activation de l'option <a href="#" onclick="$('#_SHARE_FILES').animatescroll({padding:7,easing:'easeOutBounce'});">_SHARE_FILES</a>.<br/>
+        Voir aussi les options : <a href="#" onclick="$('#_SHARE_FILES_COMPRESS').animatescroll({padding:7,easing:'easeOutBounce'});">_SHARE_FILES_COMPRESS</a> - 
+        <a href="#" onclick="$('#_SHARE_FILES_DOWNLOAD_QUOTA_FILES_USER_DAY').animatescroll({padding:7,easing:'easeOutBounce'});">_SHARE_FILES_DOWNLOAD_QUOTA_FILES_USER_DAY</a> - 
+        <a href="#" onclick="$('#_SHARE_FILES_DOWNLOAD_QUOTA_FILES_USER_MONTH').animatescroll({padding:7,easing:'easeOutBounce'});">_SHARE_FILES_DOWNLOAD_QUOTA_FILES_USER_MONTH</a><br/>
+      </div>
+
+      <div class="panel" id='_SHARE_FILES_DOWNLOAD_QUOTA_FILES_USER_MONTH'>
+        <h2>_SHARE_FILES_DOWNLOAD_QUOTA_FILES_USER_MONTH</h2>
+        Quota mensuel du nombre de téléchargements de <font color='#EE82EE'>fichiers publics</font> (0 : illimité).<br/>
+        Nécessite l'activation de l'option <a href="#" onclick="$('#_SHARE_FILES').animatescroll({padding:7,easing:'easeOutBounce'});">_SHARE_FILES</a>.<br/>
+        Voir aussi les options : <a href="#" onclick="$('#_SHARE_FILES_COMPRESS').animatescroll({padding:7,easing:'easeOutBounce'});">_SHARE_FILES_COMPRESS</a> - 
+        <a href="#" onclick="$('#_SHARE_FILES_DOWNLOAD_QUOTA_FILES_USER_DAY').animatescroll({padding:7,easing:'easeOutBounce'});">_SHARE_FILES_DOWNLOAD_QUOTA_FILES_USER_DAY</a> - 
+        <a href="#" onclick="$('#_SHARE_FILES_DOWNLOAD_QUOTA_FILES_USER_WEEK').animatescroll({padding:7,easing:'easeOutBounce'});">_SHARE_FILES_DOWNLOAD_QUOTA_FILES_USER_WEEK</a>.<br/>
+      </div>
+
+      <div class="panel" id='_SHARE_FILES_DOWNLOAD_QUOTA_MB_USER_DAY'>
+        <h2>_SHARE_FILES_DOWNLOAD_QUOTA_MB_USER_DAY</h2>
+        Quota quotidien de taille (en Mo) de téléchargements de <font color='#EE82EE'>fichiers publics</font> (0 : illimité).<br/>
+        Nécessite l'activation de l'option <a href="#" onclick="$('#_SHARE_FILES').animatescroll({padding:7,easing:'easeOutBounce'});">_SHARE_FILES</a>.<br/>
+        Voir aussi les options : <a href="#" onclick="$('#_SHARE_FILES_COMPRESS').animatescroll({padding:7,easing:'easeOutBounce'});">_SHARE_FILES_COMPRESS</a> - 
+        <a href="#" onclick="$('#_SHARE_FILES_DOWNLOAD_QUOTA_MB_USER_WEEK').animatescroll({padding:7,easing:'easeOutBounce'});">_SHARE_FILES_DOWNLOAD_QUOTA_MB_USER_WEEK</a> - 
+        <a href="#" onclick="$('#_SHARE_FILES_DOWNLOAD_QUOTA_MB_USER_MONTH').animatescroll({padding:7,easing:'easeOutBounce'});">_SHARE_FILES_DOWNLOAD_QUOTA_MB_USER_MONTH</a>.<br/>
+      </div>
+
+      <div class="panel" id='_SHARE_FILES_DOWNLOAD_QUOTA_MB_USER_WEEK'>
+        <h2>_SHARE_FILES_DOWNLOAD_QUOTA_MB_USER_WEEK</h2>
+        Quota hebdomadaire de taille (en Mo) de téléchargements de <font color='#EE82EE'>fichiers publics</font> (0 : illimité).<br/>
+        Nécessite l'activation de l'option <a href="#" onclick="$('#_SHARE_FILES').animatescroll({padding:7,easing:'easeOutBounce'});">_SHARE_FILES</a>.<br/>
+        Voir aussi l'option <a href="#" onclick="$('#_SHARE_FILES_COMPRESS').animatescroll({padding:7,easing:'easeOutBounce'});">_SHARE_FILES_COMPRESS</a> - 
+        <a href="#" onclick="$('#_SHARE_FILES_DOWNLOAD_QUOTA_MB_USER_DAY').animatescroll({padding:7,easing:'easeOutBounce'});">_SHARE_FILES_DOWNLOAD_QUOTA_MB_USER_DAY</a> - 
+        <a href="#" onclick="$('#_SHARE_FILES_DOWNLOAD_QUOTA_MB_USER_MONTH').animatescroll({padding:7,easing:'easeOutBounce'});">_SHARE_FILES_DOWNLOAD_QUOTA_MB_USER_MONTH</a>.<br/>
+      </div>
+
+      <div class="panel" id='_SHARE_FILES_DOWNLOAD_QUOTA_MB_USER_MONTH'>
+        <h2>_SHARE_FILES_DOWNLOAD_QUOTA_MB_USER_MONTH</h2>
+        Quota mensuel de taille (en Mo) de téléchargements de <font color='#EE82EE'>fichiers publics</font> (0 : illimité).<br/>
+        Nécessite l'activation de l'option <a href="#" onclick="$('#_SHARE_FILES').animatescroll({padding:7,easing:'easeOutBounce'});">_SHARE_FILES</a>.<br/>
+        Voir aussi l'option <a href="#" onclick="$('#_SHARE_FILES_COMPRESS').animatescroll({padding:7,easing:'easeOutBounce'});">_SHARE_FILES_COMPRESS</a> - 
+        <a href="#" onclick="$('#_SHARE_FILES_DOWNLOAD_QUOTA_MB_USER_DAY').animatescroll({padding:7,easing:'easeOutBounce'});">_SHARE_FILES_DOWNLOAD_QUOTA_MB_USER_DAY</a> - 
+        <a href="#" onclick="$('#_SHARE_FILES_DOWNLOAD_QUOTA_MB_USER_WEEK').animatescroll({padding:7,easing:'easeOutBounce'});">_SHARE_FILES_DOWNLOAD_QUOTA_MB_USER_WEEK</a>.<br/>
+      </div>
+
+      <div class="panel" id='_SHARE_FILES_EXCHANGE'>
+        <h2>_SHARE_FILES_EXCHANGE - <span style='font-size:0.8em;'>nouveauté de la version 2.0.4</span></h2>
+        Autoriser (ou non) <b>l'échange/transfert de fichiers entre utilisateurs</b>. Ces <b><font color='#F4A460'>fichiers sont privés</font></b>.<br/>
+        Nécessite l'activation de l'option <a href="#" onclick="$('#_SHARE_FILES').animatescroll({padding:7,easing:'easeOutBounce'});">_SHARE_FILES</a>.<br/>
+      </div>
+
+      <div class="panel" id='_SHARE_FILES_EXCHANGE_NEED_APPROVAL'>
+        <h2>_SHARE_FILES_EXCHANGE_NEED_APPROVAL</h2>
+        Activer (ou non) la validation par l'administrateur des <font color='#F4A460'>fichiers échangés entre utilisateurs (privés)</font>.<br/>
+        Nécessite l'activation des options <a href="#" onclick="$('#_SHARE_FILES').animatescroll({padding:7,easing:'easeOutBounce'});">_SHARE_FILES</a> et <a href="#" onclick="$('#_SHARE_FILES_EXCHANGE').animatescroll({padding:7,easing:'easeOutBounce'});">_SHARE_FILES_EXCHANGE</a>.<br/>
+        Voir aussi les options <a href="#" onclick="$('#_SHARE_FILES_EXCHANGE_TRASH').animatescroll({padding:7,easing:'easeOutBounce'});">_SHARE_FILES_EXCHANGE_TRASH</a> et
+        <a href="#" onclick="$('#_SHARE_FILES_APPROVAL_QUEUE').animatescroll({padding:7,easing:'easeOutBounce'});">_SHARE_FILES_APPROVAL_QUEUE</a>.<br/>
+      </div>
+
+      <div class="panel" id='_SHARE_FILES_EXCHANGE_SCREENSHOT'>
+        <h2>_SHARE_FILES_EXCHANGE_SCREENSHOT</h2>
+        Permet l'échange de captures écrans entre utilisateurs (<font color='#F4A460'>fichiers privés</font>).<br/>
+        Nécessite l'activation des options <a href="#" onclick="$('#_SHARE_FILES').animatescroll({padding:7,easing:'easeOutBounce'});">_SHARE_FILES</a> et <a href="#" onclick="$('#_SHARE_FILES_EXCHANGE').animatescroll({padding:7,easing:'easeOutBounce'});">_SHARE_FILES_EXCHANGE</a>.<br/>
+        Voir aussi les options 
+        <a href="#" onclick="$('#_SHARE_FILES_EXCHANGE_WEBCAM').animatescroll({padding:7,easing:'easeOutBounce'});">_SHARE_FILES_EXCHANGE_WEBCAM</a> - 
+        <a href="#" onclick="$('#_SHARE_FILES_WEBCAM').animatescroll({padding:7,easing:'easeOutBounce'});">_SHARE_FILES_WEBCAM</a> - 
+        <a href="#" onclick="$('#_SHARE_FILES_SCREENSHOT').animatescroll({padding:7,easing:'easeOutBounce'});">_SHARE_FILES_SCREENSHOT</a>.<br/>
+      </div>
+
+      <div class="panel" id='_SHARE_FILES_EXCHANGE_TRASH'>
+        <h2>_SHARE_FILES_EXCHANGE_TRASH</h2>
+        Si activé, à la suppression les <font color='#F4A460'>fichiers échangés entre utilisateurs (privés)</font> sont mis à la corbeille (accessibles uniquement par l'administrateur).<br/>
+        Nécessite l'activation des options <a href="#" onclick="$('#_SHARE_FILES').animatescroll({padding:7,easing:'easeOutBounce'});">_SHARE_FILES</a> et <a href="#" onclick="$('#_SHARE_FILES_EXCHANGE').animatescroll({padding:7,easing:'easeOutBounce'});">_SHARE_FILES_EXCHANGE</a>.<br/>
+        Voir aussi l'option <a href="#" onclick="$('#_SHARE_FILES_EXCHANGE_NEED_APPROVAL').animatescroll({padding:7,easing:'easeOutBounce'});">_SHARE_FILES_EXCHANGE_NEED_APPROVAL</a>.<br/>
+      </div>
+
+      <div class="panel" id='_SHARE_FILES_EXCHANGE_UNREAD_VALIDITY'>
+        <h2>_SHARE_FILES_EXCHANGE_UNREAD_VALIDITY</h2>
+        Définir la durée (en jours : de 10 à 99) de validité des <font color='#F4A460'>fichiers privés</font> non lus avant expiration (mise en corbeille).<br/>
+        Nécessite l'activation des options <a href="#" onclick="$('#_SHARE_FILES').animatescroll({padding:7,easing:'easeOutBounce'});">_SHARE_FILES</a> et <a href="#" onclick="$('#_SHARE_FILES_EXCHANGE').animatescroll({padding:7,easing:'easeOutBounce'});">_SHARE_FILES_EXCHANGE</a>.<br/>
+        <div class="suggest">Valeur (par défaut) conseillée : 30.</div>
+      </div>
+
+      <div class="panel" id='_SHARE_FILES_EXCHANGE_WEBCAM'>
+        <h2>_SHARE_FILES_EXCHANGE_WEBCAM</h2>
+        Permet l'échange de capture/photo de la webcam via les <font color='#F4A460'>fichiers privés</font>.<br/>
+        Nécessite l'activation des options <a href="#" onclick="$('#_SHARE_FILES').animatescroll({padding:7,easing:'easeOutBounce'});">_SHARE_FILES</a> et <a href="#" onclick="$('#_SHARE_FILES_EXCHANGE').animatescroll({padding:7,easing:'easeOutBounce'});">_SHARE_FILES_EXCHANGE</a>.<br/>
+        Voir aussi les options 
+        <a href="#" onclick="$('#_SHARE_FILES_EXCHANGE_SCREENSHOT').animatescroll({padding:7,easing:'easeOutBounce'});">_SHARE_FILES_EXCHANGE_SCREENSHOT</a> - 
+        <a href="#" onclick="$('#_SHARE_FILES_WEBCAM').animatescroll({padding:7,easing:'easeOutBounce'});">_SHARE_FILES_WEBCAM</a> - 
+        <a href="#" onclick="$('#_SHARE_FILES_SCREENSHOT').animatescroll({padding:7,easing:'easeOutBounce'});">_SHARE_FILES_SCREENSHOT</a>.<br/>
+      </div>
+
+      <div class="panel" id='_SHARE_FILES_FOLDER'>
+        <h2>_SHARE_FILES_FOLDER</h2>
+        Chemin relatif (depuis /admin/) d'accès aux fichiers partagés, si les accès FTP correspondent à un répertoire sur le serveur web.<br/>
+        Avec cette option renseignée, les fichiers sont téléchargeables depuis l'interface d'administration (<acronym title='Admin Control Panel'>ACP</acronym>).<br/>
+        Si l'accès FTP correspondent au dossier /share/files/ cette option devrait être <b>../share/files/</b> <br/>
+        Si l'accès FTP correspondent à dossier /files/ au dessus de la racine site web (/public_html/ ou /www/) cette option devrait être <b>../../../files/</b> <br/>
+        Si (et uniquement si) vide, renseigner l'option <a href="#" onclick="$('#_SHARE_FILES_FTP_PASSWORD').animatescroll({padding:7,easing:'easeOutBounce'});">_SHARE_FILES_FTP_PASSWORD</a>.<br/>
+        Nécessite l'activation de l'option <a href="#" onclick="$('#_SHARE_FILES').animatescroll({padding:7,easing:'easeOutBounce'});">_SHARE_FILES</a>.<br/>
+        Voir aussi l'option <a href="#" onclick="$('#_SHARE_FILES_FTP_LOGIN').animatescroll({padding:7,easing:'easeOutBounce'});">_SHARE_FILES_FTP_LOGIN</a>.<br/>
+        <div class="suggest">Valeur conseillée : chemin au dessus de la racine du site web</div>
+      </div>
+
+      <div class="panel" id='_SHARE_FILES_FTP_ADDRESS'>
+        <h2>_SHARE_FILES_FTP_ADDRESS</h2>
+        Adresse de votre serveur FTP (exemple : ftp.votreserveur.com) de partage de fichiers.<br/>
+        Nécessite l'activation de l'option <a href="#" onclick="$('#_SHARE_FILES').animatescroll({padding:7,easing:'easeOutBounce'});">_SHARE_FILES</a>.<br/>
+        Voir aussi l'option <a href="#" onclick="$('#_SHARE_FILES_FTP_PORT_NUMBER').animatescroll({padding:7,easing:'easeOutBounce'});">_SHARE_FILES_FTP_PORT_NUMBER</a>.<br/>
+      </div>
+
+      <div class="panel" id='_SHARE_FILES_FTP_LOGIN'>
+        <h2>_SHARE_FILES_FTP_LOGIN</h2>
+        Login d'accès FTP.<br/>
+        <font color='red'>Vérifier que ce login n'a pas accès à la racine de votre site web, mais uniquement à un seul dossier</font> (exemple : /intramessenger/share/files/).<br/>
+        Il est préférable de partager un dossier FTP en dehors du site web (pas un sous-dossier de /www/ ou /public_html/).<br/>
+        Nécessite l'activation de l'option <a href="#" onclick="$('#_SHARE_FILES').animatescroll({padding:7,easing:'easeOutBounce'});">_SHARE_FILES</a>.<br/>
+        Voir aussi les options <a href="#" onclick="$('#_SHARE_FILES_FTP_PASSWORD_CRYPT').animatescroll({padding:7,easing:'easeOutBounce'});">_SHARE_FILES_FTP_PASSWORD_CRYPT</a> et <a href="#" onclick="$('#_SHARE_FILES_FTP_ADDRESS').animatescroll({padding:7,easing:'easeOutBounce'});">_SHARE_FILES_FTP_ADDRESS</a>.<br/>
+      </div>
+
+      <div class="panel" id='_SHARE_FILES_FTP_PASSWORD'>
+        <h2>_SHARE_FILES_FTP_PASSWORD</h2>
+        <b>Uniquement si FTP sur autre serveur</b> (donc option <a href="#" onclick="$('#_SHARE_FILES_FOLDER').animatescroll({padding:7,easing:'easeOutBounce'});">_SHARE_FILES_FOLDER</a> vide) : mot de passe (en clair) de l'accès FTP.<br/>
+        Nécessite l'activation de l'option <a href="#" onclick="$('#_SHARE_FILES').animatescroll({padding:7,easing:'easeOutBounce'});">_SHARE_FILES</a>.<br/>
+        Voir aussi les options <a href="#" onclick="$('#_SHARE_FILES_FTP_LOGIN').animatescroll({padding:7,easing:'easeOutBounce'});">_SHARE_FILES_FTP_LOGIN</a> et <a href="#" onclick="$('#_SHARE_FILES_FTP_PASSWORD_CRYPT').animatescroll({padding:7,easing:'easeOutBounce'});">_SHARE_FILES_FTP_PASSWORD_CRYPT</a>.<br/>
+      </div>
+
+      <div class="panel" id='_SHARE_FILES_FTP_PASSWORD_CRYPT'>
+        <h2>_SHARE_FILES_FTP_PASSWORD_CRYPT</h2>
+        Mot de passe de l'accès FTP <b><A HREF='http://www.intramessenger.com/forum/viewtopic.php?t=968&#p4174' target='_blank'>chiffré</A></b> par <A HREF='http://www.intramessenger.net/download.php' target='_blank'>IM_skin</A> (kit skin).<br/>
+        Nécessite l'activation de l'option <a href="#" onclick="$('#_SHARE_FILES').animatescroll({padding:7,easing:'easeOutBounce'});">_SHARE_FILES</a>.<br/>
+        Voir aussi les options <a href="#" onclick="$('#_SHARE_FILES_FTP_LOGIN').animatescroll({padding:7,easing:'easeOutBounce'});">_SHARE_FILES_FTP_LOGIN</a> et <a href="#" onclick="$('#_SHARE_FILES_FTP_PASSWORD').animatescroll({padding:7,easing:'easeOutBounce'});">_SHARE_FILES_FTP_PASSWORD</a>.<br/>
+      </div>
+
+      <div class="panel" id='_SHARE_FILES_FTP_PORT_NUMBER'>
+        <h2>_SHARE_FILES_FTP_PORT_NUMBER</h2>
+        Nécessite l'activation de l'option <a href="#" onclick="$('#_SHARE_FILES').animatescroll({padding:7,easing:'easeOutBounce'});">_SHARE_FILES</a>.<br/>
+        Voir aussi l'option <a href="#" onclick="$('#_SHARE_FILES_FTP_ADDRESS').animatescroll({padding:7,easing:'easeOutBounce'});">_SHARE_FILES_FTP_ADDRESS</a>.<br/>
+        <div class="suggest">Valeur (par défaut) conseillée : 21.</div>
+      </div>
+
+      <div class="panel" id='_SHARE_FILES_MAX_FILE_SIZE'>
+        <h2>_SHARE_FILES_MAX_FILE_SIZE</h2>
+        Taille maxi par fichier (en Ko).<br/>
+        Nécessite l'activation de l'option <a href="#" onclick="$('#_SHARE_FILES').animatescroll({padding:7,easing:'easeOutBounce'});">_SHARE_FILES</a>.<br/>
+      </div>
+
+      <div class="panel" id='_SHARE_FILES_MAX_NB_FILES_TOTAL'>
+        <h2>_SHARE_FILES_MAX_NB_FILES_TOTAL</h2>
+        Nombre maxi de fichiers stockés.<br/>
+        Nécessite l'activation de l'option <a href="#" onclick="$('#_SHARE_FILES').animatescroll({padding:7,easing:'easeOutBounce'});">_SHARE_FILES</a>.<br/>
+      </div>
+
+      <div class="panel" id='_SHARE_FILES_MAX_NB_FILES_USER'>
+        <h2>_SHARE_FILES_MAX_NB_FILES_USER</h2>
+        Nombre maxi de fichiers stockés par utilisateur.<br/>
+        Nécessite l'activation de l'option <a href="#" onclick="$('#_SHARE_FILES').animatescroll({padding:7,easing:'easeOutBounce'});">_SHARE_FILES</a>.<br/>
+        Voir aussi l'option <a href="#" onclick="$('#_SHARE_FILES_QUOTA_FILES_USER_WEEK').animatescroll({padding:7,easing:'easeOutBounce'});">_SHARE_FILES_QUOTA_FILES_USER_WEEK</a>.<br/>
+      </div>
+
+      <div class="panel" id='_SHARE_FILES_MAX_SPACE_SIZE_TOTAL'>
+        <h2>_SHARE_FILES_MAX_SPACE_SIZE_TOTAL</h2>
+        Taille maxi de l'espace d'hébergement de fichiers (en Mo).<br/>
+        Nécessite l'activation de l'option <a href="#" onclick="$('#_SHARE_FILES').animatescroll({padding:7,easing:'easeOutBounce'});">_SHARE_FILES</a>.<br/>
+      </div>
+
+      <div class="panel" id='_SHARE_FILES_MAX_SPACE_SIZE_USER'>
+        <h2>_SHARE_FILES_MAX_SPACE_SIZE_USER</h2>
+        Taille maxi de l'espace d'hébergement de fichiers (en Mo) par utilisateur.<br/>
+        Nécessite l'activation de l'option <a href="#" onclick="$('#_SHARE_FILES').animatescroll({padding:7,easing:'easeOutBounce'});">_SHARE_FILES</a>.<br/>
+      </div>
+
+      <div class="panel" id='_SHARE_FILES_NEED_APPROVAL'>
+        <h2>_SHARE_FILES_NEED_APPROVAL</h2>
+        Activer (ou non) la validation avant partage (publication) par l'administrateur des <font color='#EE82EE'>fichiers publics</font>.<br/>
+        Nécessite l'activation de l'option <a href="#" onclick="$('#_SHARE_FILES').animatescroll({padding:7,easing:'easeOutBounce'});">_SHARE_FILES</a>.<br/>
+        Voir aussi les options <a href="#" onclick="$('#_SHARE_FILES_APPROVAL_QUEUE').animatescroll({padding:7,easing:'easeOutBounce'});">_SHARE_FILES_APPROVAL_QUEUE</a> et <a href="#" onclick="$('#_SHARE_FILES_TRASH').animatescroll({padding:7,easing:'easeOutBounce'});">_SHARE_FILES_TRASH</a>.<br/>
+      </div>
+
+      <div class="panel" id='_SHARE_FILES_PROTECT'>
+        <h2>_SHARE_FILES_PROTECT</h2>
+        Activer (ou non) la protection (chiffrement) des fichiers : désactive leur consultation depuis l'<acronym title='Admin Control Panel'>ACP</acronym>.<br/>
+        Nécessite l'activation des options <a href="#" onclick="$('#_SHARE_FILES').animatescroll({padding:7,easing:'easeOutBounce'});">_SHARE_FILES</a> et <a href="#" onclick="$('#_SHARE_FILES_COMPRESS').animatescroll({padding:7,easing:'easeOutBounce'});">_SHARE_FILES_COMPRESS</a>.<br/>
+        Incompatible avec les options :<br/>
+        <a href="#" onclick="$('#_SHARE_FILES_NEED_APPROVAL').animatescroll({padding:7,easing:'easeOutBounce'});">_SHARE_FILES_NEED_APPROVAL</a> - 
+        <a href="#" onclick="$('#_SHARE_FILES_EXCHANGE_NEED_APPROVAL').animatescroll({padding:7,easing:'easeOutBounce'});">_SHARE_FILES_EXCHANGE_NEED_APPROVAL</a> - 
+        <a href="#" onclick="$('#_SHARE_FILES_TRASH').animatescroll({padding:7,easing:'easeOutBounce'});">_SHARE_FILES_TRASH</a> - 
+        <a href="#" onclick="$('#_SHARE_FILES_EXCHANGE_TRASH').animatescroll({padding:7,easing:'easeOutBounce'});">_SHARE_FILES_EXCHANGE_TRASH</a><br/>
+      </div>
+
+      <div class="panel" id='_SHARE_FILES_QUOTA_FILES_USER_WEEK'>
+        <h2>_SHARE_FILES_QUOTA_FILES_USER_WEEK</h2>
+        Définir le quota hebdomadaire de fichiers par utilisateur (0 : illimité).<br/>
+        Nécessite MySQL version 5 minimum.<br/>
+        Nécessite l'activation de l'option <a href="#" onclick="$('#_SHARE_FILES').animatescroll({padding:7,easing:'easeOutBounce'});">_SHARE_FILES</a>.<br/>
+        Voir aussi l'option <a href="#" onclick="$('#_SHARE_FILES_MAX_NB_FILES_USER').animatescroll({padding:7,easing:'easeOutBounce'});">_SHARE_FILES_MAX_NB_FILES_USER</a>.<br/>
+      </div>
+
+      <div class="panel" id='_SHARE_FILES_SCREENSHOT'>
+        <h2>_SHARE_FILES_SCREENSHOT</h2>
+        Permet la publication de capture écran en <font color='#EE82EE'>fichiers publics</font>.<br/>
+        Nécessite l'activation de l'option <a href="#" onclick="$('#_SHARE_FILES').animatescroll({padding:7,easing:'easeOutBounce'});">_SHARE_FILES</a>.<br/>
+        Voir aussi les options 
+        <a href="#" onclick="$('#_SHARE_FILES_EXCHANGE_SCREENSHOT').animatescroll({padding:7,easing:'easeOutBounce'});">_SHARE_FILES_EXCHANGE_SCREENSHOT</a> - 
+        <a href="#" onclick="$('#_SHARE_FILES_WEBCAM').animatescroll({padding:7,easing:'easeOutBounce'});">_SHARE_FILES_WEBCAM</a> -
+        <a href="#" onclick="$('#_SHARE_FILES_EXCHANGE_WEBCAM').animatescroll({padding:7,easing:'easeOutBounce'});">_SHARE_FILES_EXCHANGE_WEBCAM</a>.<br/>
+        </i>
+      </div>
+
+      <div class="panel" id='_SHARE_FILES_TRASH'>
+        <h2>_SHARE_FILES_TRASH</h2>
+        Si activé, à la suppression les <font color='#EE82EE'>fichiers publics</font> sont mis à la corbeille (accessibles uniquement par l'administrateur).<br/>
+        Nécessite l'activation de l'option <a href="#" onclick="$('#_SHARE_FILES').animatescroll({padding:7,easing:'easeOutBounce'});">_SHARE_FILES</a>.<br/>
+        Voir aussi l'option <a href="#" onclick="$('#_SHARE_FILES_NEED_APPROVAL').animatescroll({padding:7,easing:'easeOutBounce'});">_SHARE_FILES_NEED_APPROVAL</a>.<br/>
+      </div>
+
+      <div class="panel" id='_SHARE_FILES_VOTE'>
+        <h2>_SHARE_FILES_VOTE</h2>
+        Activer (ou non) la possibilité de noter (voter pour ou contre) les <font color='#EE82EE'>fichiers publics</font>.<br/>
+        Nécessite l'activation de l'option <a href="#" onclick="$('#_SHARE_FILES').animatescroll({padding:7,easing:'easeOutBounce'});">_SHARE_FILES</a>.<br/>
+      </div>
+
+      <div class="panel" id='_SHARE_FILES_WEBCAM'>
+        <h2>_SHARE_FILES_WEBCAM</h2>
+        Permet la publication de capture/photo de la webcam en <font color='#EE82EE'>fichiers publics</font>.<br/>
+        Nécessite l'activation de l'option <a href="#" onclick="$('#_SHARE_FILES').animatescroll({padding:7,easing:'easeOutBounce'});">_SHARE_FILES</a>.<br/>
+        Voir aussi les options 
+        <a href="#" onclick="$('#_SHARE_FILES_EXCHANGE_WEBCAM').animatescroll({padding:7,easing:'easeOutBounce'});">_SHARE_FILES_EXCHANGE_WEBCAM</a> - 
+        <a href="#" onclick="$('#_SHARE_FILES_EXCHANGE_SCREENSHOT').animatescroll({padding:7,easing:'easeOutBounce'});">_SHARE_FILES_EXCHANGE_SCREENSHOT</a> - 
+        <a href="#" onclick="$('#_SHARE_FILES_SCREENSHOT').animatescroll({padding:7,easing:'easeOutBounce'});">_SHARE_FILES_SCREENSHOT</a>.<br/>
+        </i>
+      </div>
+
+      <div class="panel" id='_SHOUTBOX'>
+        <h2>_SHOUTBOX</h2>
+        Activer (ou non) la <A HREF='http://www.intramessenger.com/forum/viewtopic.php?p=2670#p2670' target='_blank'>ShoutBox</A> (journal de bord) permettant d'échanger des informations entre tous les utilisateurs.<br/>
+        Voir aussi l'option <a href="#" onclick="$('#_GROUP_FOR_SBX_AND_ADMIN_MSG').animatescroll({padding:7,easing:'easeOutBounce'});">_GROUP_FOR_SBX_AND_ADMIN_MSG</a>.<br/>
+      </div>
+
+      <div class="panel" id='_SHOUTBOX_ALLOW_SCROLLING'>
+        <h2>_SHOUTBOX_ALLOW_SCROLLING - <span style='font-size:0.8em;'>nouveauté de la version 2.0.6</span></h2>
+        <div class="suggest">Option non affichée dans l'<acronym title='Admin Control Panel : interface d administration'>ACP</acronym>.</div>
+        Activée par défaut, permet de désactiver la réduction de la ShoutBox en mini scrolling horizontal (stickers) : essentiellement pour l'utilisation via TSE.<br/>
+        Nécessite l'activation de l'option <a href="#" onclick="$('#_SHOUTBOX').animatescroll({padding:7,easing:'easeOutBounce'});">_SHOUTBOX</a>.<br/>
+      </div>
+      
+      <div class="panel" id='_SHOUTBOX_APPROVAL_QUEUE'>
+        <h2>_SHOUTBOX_APPROVAL_QUEUE</h2>
+        Définir la limite de file d'attente d'approbation (0 : illimité {*}).<br/>
+        Temporise l'envoi si ce quota de messages en attente d'approbation est atteint.<br/>
+        Nécessite l'activation des options <a href="#" onclick="$('#_SHOUTBOX').animatescroll({padding:7,easing:'easeOutBounce'});">_SHOUTBOX</a> 
+        - <a href="#" onclick="$('#_SHOUTBOX_NEED_APPROVAL').animatescroll({padding:7,easing:'easeOutBounce'});">_SHOUTBOX_NEED_APPROVAL</a>.<br/>
+        {*} Voir aussi l'option <a href="#" onclick="$('#_SHOUTBOX_APPROVAL_QUEUE_USER').animatescroll({padding:7,easing:'easeOutBounce'});">_SHOUTBOX_APPROVAL_QUEUE_USER</a>.<br/>
+      </div>
+
+      <div class="panel" id='_SHOUTBOX_APPROVAL_QUEUE_USER'>
+        <h2>_SHOUTBOX_APPROVAL_QUEUE_USER</h2>
+        Définir la limite de file d'attente d'approbation par utilisateur (0 : illimité {*}).<br/>
+        Par utilisateur : temporise l'envoi si ce quota de messages en attente d'approbation est atteint.<br/>
+        Nécessite l'activation des options <a href="#" onclick="$('#_SHOUTBOX').animatescroll({padding:7,easing:'easeOutBounce'});">_SHOUTBOX</a> 
+        - <a href="#" onclick="$('#_SHOUTBOX_NEED_APPROVAL').animatescroll({padding:7,easing:'easeOutBounce'});">_SHOUTBOX_NEED_APPROVAL</a>.<br/>
+        {*} Voir aussi l'option <a href="#" onclick="$('#_SHOUTBOX_APPROVAL_QUEUE').animatescroll({padding:7,easing:'easeOutBounce'});">_SHOUTBOX_APPROVAL_QUEUE</a>.<br/>
+      </div>
+
+      <div class="panel" id='_SHOUTBOX_LOCK_USER_APPROVAL'>
+        <h2>_SHOUTBOX_LOCK_USER_APPROVAL</h2>
+        Définir le nombre de rejets d'approbation empêchant l'utilisateur d'envoyer d'autres messages (0 : illimité).<br/>
+        Nécessite l'activation des options <a href="#" onclick="$('#_SHOUTBOX').animatescroll({padding:7,easing:'easeOutBounce'});">_SHOUTBOX</a> 
+        - <a href="#" onclick="$('#_SHOUTBOX_NEED_APPROVAL').animatescroll({padding:7,easing:'easeOutBounce'});">_SHOUTBOX_NEED_APPROVAL</a>.<br/>
+      </div>
+
+      <div class="panel" id='_SHOUTBOX_LOCK_USER_VOTES'>
+        <h2>_SHOUTBOX_LOCK_USER_VOTES</h2>
+        Définir le nombre de votes négatifs empêchant l'utilisateur d'envoyer d'autres messages (0 : illimité).<br/>
+        Permet de limiter les <i>trolls</i>.<br/>
+        Nécessite l'activation des options <a href="#" onclick="$('#_SHOUTBOX').animatescroll({padding:7,easing:'easeOutBounce'});">_SHOUTBOX</a> 
+        - <a href="#" onclick="$('#_SHOUTBOX_VOTE').animatescroll({padding:7,easing:'easeOutBounce'});">_SHOUTBOX_VOTE</a>.<br/>
+      </div>
+
+      <div class="panel" id='_SHOUTBOX_MAX_NOTES_USER_DAY'>
+        <h2>_SHOUTBOX_MAX_NOTES_USER_DAY</h2>
+        Définir le quota quotidien de votes par utilisateur (0 : illimité).<br/>
+        Nécessite l'activation des options <a href="#" onclick="$('#_SHOUTBOX').animatescroll({padding:7,easing:'easeOutBounce'});">_SHOUTBOX</a> 
+        - <a href="#" onclick="$('#_SHOUTBOX_VOTE').animatescroll({padding:7,easing:'easeOutBounce'});">_SHOUTBOX_VOTE</a>.<br/>
+      </div>
+
+      <div class="panel" id='_SHOUTBOX_MAX_NOTES_USER_WEEK'>
+        <h2>_SHOUTBOX_MAX_NOTES_USER_WEEK</h2>
+        Définir le quota hebdomadaire de votes par utilisateur (0 : illimité).<br/>
+        Nécessite l'activation des options <a href="#" onclick="$('#_SHOUTBOX').animatescroll({padding:7,easing:'easeOutBounce'});">_SHOUTBOX</a> 
+        - <a href="#" onclick="$('#_SHOUTBOX_VOTE').animatescroll({padding:7,easing:'easeOutBounce'});">_SHOUTBOX_VOTE</a>.<br/>
+      </div>
+
+      <div class="panel" id='_SHOUTBOX_NEED_APPROVAL'>
+        <h2>_SHOUTBOX_NEED_APPROVAL</h2>
+        Activer (ou non) la <A HREF='http://www.intramessenger.com/forum/pictures/im_srv_sbx_2.png' target='_blank'>validation avant publication par l'administrateur</A> des messages envoyés.<br/>
+        Nécessite l'activation de l'option <a href="#" onclick="$('#_SHOUTBOX').animatescroll({padding:7,easing:'easeOutBounce'});">_SHOUTBOX</a>.<br/>
+        Voir aussi l'option <a href="#" onclick="$('#_SHOUTBOX_LOCK_USER_APPROVAL').animatescroll({padding:7,easing:'easeOutBounce'});">_SHOUTBOX_LOCK_USER_APPROVAL</a>.<br/>
+      </div>
+
+      <div class="panel" id='_SHOUTBOX_PUBLIC'>
+        <h2>_SHOUTBOX_PUBLIC</h2>
+        Rendre (ou non) consultable par tout le monde le contenu de la ShoutBox (abonnement flux RSS disponible).<br/>
+        Nécessite l'activation de l'option <a href="#" onclick="$('#_SHOUTBOX').animatescroll({padding:7,easing:'easeOutBounce'});">_SHOUTBOX</a>.<br/>
+      </div>
+
+      <div class="panel" id='_SHOUTBOX_QUOTA_USER_DAY'>
+        <h2>_SHOUTBOX_QUOTA_USER_DAY</h2>
+        Définir le quota quotidien de messages par utilisateur (0 : illimité).<br/>
+        Nécessite l'activation de l'option <a href="#" onclick="$('#_SHOUTBOX').animatescroll({padding:7,easing:'easeOutBounce'});">_SHOUTBOX</a>.<br/>
+      </div>
+
+      <div class="panel" id='_SHOUTBOX_QUOTA_USER_WEEK'>
+        <h2>_SHOUTBOX_QUOTA_USER_WEEK</h2>
+        Définir le quota hebdomadaire de messages par utilisateur (0 : illimité).<br/>
+        Nécessite MySQL version 5 minimum.<br/>
+        Nécessite l'activation de l'option <a href="#" onclick="$('#_SHOUTBOX').animatescroll({padding:7,easing:'easeOutBounce'});">_SHOUTBOX</a>.<br/>
+      </div>
+
+      <div class="panel" id='_SHOUTBOX_REFRESH_DELAY'>
+        <h2>_SHOUTBOX_REFRESH_DELAY</h2>
+        Définir le délai de rafraichissement de la ShoutBox (10 à 180 secondes).<br/>
+        Permet de limiter les accès/requêtes au serveur (surtout si le nombre d'utilisateurs est important).<br/>
+        Nécessite l'activation de l'option <a href="#" onclick="$('#_SHOUTBOX').animatescroll({padding:7,easing:'easeOutBounce'});">_SHOUTBOX</a>.<br/>
+        <div class="suggest">Valeur conseillée : 50.</div>
+      </div>
+
+      <div class="panel" id='_SHOUTBOX_REMOVE_MESSAGE_VOTES'>
+        <h2>_SHOUTBOX_REMOVE_MESSAGE_VOTES</h2>
+        Définir le nombre de votes négatifs activant la suppression automatique du message (0 : illimité).<br/>
+        Modération (auto-censure) par l'ensemble des participants.<br/>
+        Nécessite l'activation des options <a href="#" onclick="$('#_SHOUTBOX').animatescroll({padding:7,easing:'easeOutBounce'});">_SHOUTBOX</a> 
+        - <a href="#" onclick="$('#_SHOUTBOX_VOTE').animatescroll({padding:7,easing:'easeOutBounce'});">_SHOUTBOX_VOTE</a>.<br/>
+      </div>
+
+      <div class="panel" id='_SHOUTBOX_STORE_DAYS'>
+        <h2>_SHOUTBOX_STORE_DAYS</h2>
+        Définir la durée (jours) de stockage des messages dans la ShoutBox (avant expiration).<br/>
+        Nécessite l'activation de l'option <a href="#" onclick="$('#_SHOUTBOX').animatescroll({padding:7,easing:'easeOutBounce'});">_SHOUTBOX</a>.<br/>
+<!--        <div class="suggest">Valeur conseillée : 15.</div> -->
+      </div>
+
+      <div class="panel" id='_SHOUTBOX_STORE_MAX'>
+        <h2>_SHOUTBOX_STORE_MAX</h2>
+        Définir le nombre maximum de messages stockés dans la ShoutBox (ne conserver que les plus récents).<br/>
+        Nécessite l'activation de l'option <a href="#" onclick="$('#_SHOUTBOX').animatescroll({padding:7,easing:'easeOutBounce'});">_SHOUTBOX</a>.<br/>
+<!--        <div class="suggest">Valeur conseillée : 50.</div> -->
+      </div>
+
+      <div class="panel" id='_SHOUTBOX_VOTE'>
+        <h2>_SHOUTBOX_VOTE</h2>
+        Activer (ou non) la possibilité de noter 
+        (<A HREF='http://www.intramessenger.com/forum/pictures/im_sbx_2.png' target='_blank'>voter pour ou contre</A>) 
+        les messages échangés dans la ShoutBox.<br/>
+        Nécessite l'activation de l'option <a href="#" onclick="$('#_SHOUTBOX').animatescroll({padding:7,easing:'easeOutBounce'});">_SHOUTBOX</a>.<br/>
+      </div>
+
+      <div class="panel" id='_SITE_TITLE'>
+        <h2>_SITE_TITLE</h2>
+        Définir le titre du site afin de remplacer le nom de la plateforme utilisée (ex: phpBB, WordPress...) en authentification externe/tierce.<br/>
+        Uniquement si l'option <a href="#" onclick="$('#_EXTERNAL_AUTHENTICATION').animatescroll({padding:7,easing:'easeOutBounce'});">_EXTERNAL_AUTHENTICATION</a> est activée.<br/>        
+      </div>
+
+      <div class="panel" id='_SITE_TITLE_TO_SHOW'>
+        <h2>_SITE_TITLE_TO_SHOW</h2>
+        Définir le titre du site à afficher en 
+        <A HREF='http://www.intramessenger.com/forum/pictures/im_splashscreen.png' target='_blank'>splash screen</A> 
+        ainsi que dans l'onglet <I>à propos</I> 
+        (sauf si l'onglet est volontairement masqué en <A HREF='http://www.intramessenger.net/custom-version.php' target='_blank'>version personnalisée</A>).<br/>
+        Si cette option ainsi que <a href="#" onclick="$('#_SITE_URL_TO_SHOW').animatescroll({padding:7,easing:'easeOutBounce'});">_SITE_URL_TO_SHOW</a> sont vides le splash-screen au démarrage est désactivé.<br/>
+      </div>
+
+      <div class="panel" id='_SITE_URL_TO_SHOW'>
+        <h2>_SITE_URL_TO_SHOW</h2>
+        Définir l'adresse de site internet/intranet (URL) à afficher en 
+        <A HREF='http://www.intramessenger.com/forum/pictures/im_splashscreen.png' target='_blank'>splash screen</A> 
+        ainsi que dans l'onglet <I>à propos</I> 
+        (sauf si l'onglet est volontairement masqué en <A HREF='http://www.intramessenger.net/custom-version.php' target='_blank'>version personnalisée</A>).<br/>
+        Indiquer l'adresse du site web, et non celle du serveur IntraMessenger.<br/>
+        Si cette option ainsi <a href="#" onclick="$('#_SITE_TITLE_TO_SHOW').animatescroll({padding:7,easing:'easeOutBounce'});">_SITE_TITLE_TO_SHOW</a> sont vides le splash-screen au démarrage est désactivé.<br/>
+      </div>
+
+      <div class="panel" id='_SKIN_FORCED_COLOR_CUSTOM_VERSION'>
+        <h2>_SKIN_FORCED_COLOR_CUSTOM_VERSION - <span style='font-size:0.8em;'>nouveauté de la version 2.0.4</span></h2>
+        <div class="suggest">Option non affichée dans l'<acronym title='Admin Control Panel : interface d administration'>ACP</acronym>.</div>
+        Trois composantes (de 1 à 255) de la couleur du skin imposé depuis le serveur en <A HREF='http://www.intramessenger.net/custom-version.php' target='_blank'>version personnalisée</A>.<br/>
+        Nécessite l'activation de l'option <a href="#" onclick="$('#_ALLOW_SKIN').animatescroll({padding:7,easing:'easeOutBounce'});">_ALLOW_SKIN</a>.<br/>
+        <div class="suggest">Valeur par défaut : 0-0-0.</div>
+      </div>
+
+<!--      
+      <div class="panel" id='_SKIN_FORCED_NUMBER'>
+        <h2>_SKIN_FORCED_NUMBER</h2>
+        <i>
+        <A HREF='http://www.intramessenger.com/forum/viewtopic.php?t=1235&' target='_blank'>Prochainement</A>...<br/>
+        Forcer (ou non) un <A HREF='http://www.intramessenger.com/forum/viewtopic.php?f=12&t=968&' target='_blank'>skin</A>.<br/>
+-->        
+        <!-- Nécessite l'activation de l'option <a href="#" onclick="$('#_ALLOW_SKIN').animatescroll({padding:7,easing:'easeOutBounce'});">_ALLOW_SKIN</a>.<br/> -->
+<!--
+        Voir aussi l'option <a href="#" onclick="$('#_ALLOW_SKIN').animatescroll({padding:7,easing:'easeOutBounce'});">_ALLOW_SKIN</a>.<br/>
+        </i>
+      </div>
+-->
+
+      <div class="panel" id='_SLOW_NOTIFY'>
+        <h2>_SLOW_NOTIFY - <span style='font-size:0.8em;'>option anciennement nommée <b>_FULL_CHECK</b> jusqu'à la version 2.0.4</span></h2>
+        Forcer (ou non) à vérifier tout le temps si des contacts sont en attente.<br/>
+        Si activée la vérification n'a lieu <u>que toutes les 3 minutes</u>, permettant ainsi de limiter les accès/requêtes au serveur (surtout si le nombre d'utilisateurs est important).<br/>
+        Voir aussi l'option <a href="#" onclick="$('#_CHECK_NEW_MSG_EVERY').animatescroll({padding:7,easing:'easeOutBounce'});">_CHECK_NEW_MSG_EVERY</a>.<br/>
+      </div>
+
+      <div class="panel" id='_SPECIAL_MODE_GROUP_COMMUNITY'>
+        <h2>_SPECIAL_MODE_<b><font color='blue'>GROUP</font></b>_COMMUNITY</h2>
+        Activer (ou non) le <u>mode spécial</u> : tout le monde peut voir/discuter avec <u>uniquement</u> les personnes de son (ses mêmes) groupe(s).<br/>
+        La gestion des groupes est centralisée par l'administrateur : voir aussi l'option <a href="#" onclick="$('#_GROUP_USER_CAN_JOIN').animatescroll({padding:7,easing:'easeOutBounce'});">_GROUP_USER_CAN_JOIN</a>.<br/>
+        Nota : un utilisateur dans aucun groupe ne voit (et n'est vu de) personne.<br/>
+        Voir aussi l'option <a href="#" onclick="$('#_GROUP_ID_DEFAULT_FOR_NEW_USER').animatescroll({padding:7,easing:'easeOutBounce'});">_GROUP_ID_DEFAULT_FOR_NEW_USER</a>.<br/>
+        Les options : <a href="#" onclick="$('#_SPECIAL_MODE_OPEN_COMMUNITY').animatescroll({padding:7,easing:'easeOutBounce'});">_SPECIAL_MODE_OPEN_COMMUNITY</a> 
+        - <a href="#" onclick="$('#_SPECIAL_MODE_OPEN_GROUP_COMMUNITY').animatescroll({padding:7,easing:'easeOutBounce'});">_SPECIAL_MODE_OPEN_GROUP_COMMUNITY</a> 
+        - <a href="#" onclick="$('#_GROUP_FOR_SBX_AND_ADMIN_MSG').animatescroll({padding:7,easing:'easeOutBounce'});">_GROUP_FOR_SBX_AND_ADMIN_MSG</a>
+        ne doivent <b>pas être activées</b>.<br/>
+        <div class="suggest">Valeur conseillée : désactivée pour une utilisation classique.</div>
+      </div>
+
+      <div class="panel" id='_SPECIAL_MODE_OPEN_COMMUNITY'>
+        <h2>_SPECIAL_MODE_<b><font color='green'>OPEN</font></b>_COMMUNITY</h2>
+        Activer (ou non) le <u>mode spécial</u> : tout le monde voit/discute avec tout le monde, sans s'ajouter à la liste des contacts.<br/>
+        Les options <a href="#" onclick="$('#_SPECIAL_MODE_GROUP_COMMUNITY').animatescroll({padding:7,easing:'easeOutBounce'});">_SPECIAL_MODE_GROUP_COMMUNITY</a> 
+        - <a href="#" onclick="$('#_SPECIAL_MODE_OPEN_GROUP_COMMUNITY').animatescroll({padding:7,easing:'easeOutBounce'});">_SPECIAL_MODE_OPEN_GROUP_COMMUNITY</a> 
+        ne doivent <b>pas être activée</b>.<br/>
+        <div class="suggest">Valeur conseillée : désactivée pour une utilisation classique.</div>
+      </div>
+
+      <div class="panel" id='_SPECIAL_MODE_OPEN_GROUP_COMMUNITY'>
+        <h2>_SPECIAL_MODE_<b><font color='green'>OPEN</font>_<font color='blue'>GROUP</font></b>_COMMUNITY</h2>
+        Activer (ou non) le <u>mode spécial</u> : tout le monde voit/discute avec tout le monde (sans avoir à s'ajouter à la liste des contacts).<br/>
+        Tri par groupes, gérés par l'administrateur : voir aussi l'option <a href="#" onclick="$('#_GROUP_USER_CAN_JOIN').animatescroll({padding:7,easing:'easeOutBounce'});">_GROUP_USER_CAN_JOIN</a>.<br/>
+        Voir aussi l'option <a href="#" onclick="$('#_GROUP_ID_DEFAULT_FOR_NEW_USER').animatescroll({padding:7,easing:'easeOutBounce'});">_GROUP_ID_DEFAULT_FOR_NEW_USER</a>.<br/>
+        Les options : <a href="#" onclick="$('#_SPECIAL_MODE_OPEN_COMMUNITY').animatescroll({padding:7,easing:'easeOutBounce'});">_SPECIAL_MODE_OPEN_COMMUNITY</a> 
+        - <a href="#" onclick="$('#_SPECIAL_MODE_GROUP_COMMUNITY').animatescroll({padding:7,easing:'easeOutBounce'});">_SPECIAL_MODE_GROUP_COMMUNITY</a> 
+        - <a href="#" onclick="$('#_GROUP_FOR_SBX_AND_ADMIN_MSG').animatescroll({padding:7,easing:'easeOutBounce'});">_GROUP_FOR_SBX_AND_ADMIN_MSG</a>
+        ne doivent <b>pas être activées</b>.<br/>
+        <div class="suggest">Valeur conseillée : désactivée pour une utilisation classique.</div>
+      </div>
+
+      <div class="panel" id='_STATISTICS'>
+        <h2>_STATISTICS</h2>
+        <div class="suggest">Option non affichée dans l'<acronym title='Admin Control Panel : interface d administration'>ACP</acronym>.</div>
+        Enregistrer (ou non) les statistiques. <A HREF='http://www.intramessenger.com/forum/pictures/im_stats_with_zoom.png' target='_blank'>Consultation</a> depuis l'interface d'admin (<acronym title='Admin Control Panel'>ACP</acronym>).<br/>
+        <div class="suggest">Valeur conseillée : activée.</div>
+      </div>
+
+      <div class="panel" id='_STOP_USE_THIS_SERVER_ADDRESS_NOW_USE_THIS_URL'>
+        <h2>_STOP_USE_THIS_SERVER_ADDRESS_NOW_USE_THIS_URL</h2>
+        <div class="suggest">Option non affichée dans l'<acronym title='Admin Control Panel : interface d administration'>ACP</acronym>.</div>
+        Définir la nouvelle adresse (url) du nouveau serveur IntraMessenger afin que les utilisateurs y basculent immédiatement au prochain lancement.<br/>
+        <strong>Attention, ce n'est pas l'adresse du serveur qui est renommée, c'est bien une nouvelle adresse (en plus) !</strong><br/>
+        Exemple de changement d'adresse sur un même serveur web (donc <i>IntraMessenger</i> installé deux fois) :<br/>
+        &nbsp; &nbsp; http://votre-serveur/intramessenger/<br/>
+        &nbsp; &nbsp; http://votre-serveur/im/<br/>
+        Si activée, masque l'option <a href="#" onclick="$('#_STOP_USE_THIS_SERVER_ADDRESS_NOW_USE_THIS_URL_AFTER_LOGIN').animatescroll({padding:7,easing:'easeOutBounce'});">_STOP_USE_THIS_SERVER_ADDRESS_NOW_USE_THIS_URL_AFTER_LOGIN</a> !<br/>
+      </div>
+
+      <div class="panel" id='_STOP_USE_THIS_SERVER_ADDRESS_NOW_USE_THIS_URL_AFTER_LOGIN'>
+        <h2>_STOP_USE_THIS_SERVER_ADDRESS_NOW_USE_THIS_URL_AFTER_LOGIN - <span style='font-size:0.8em;'>nouveauté de la version 2.0.5</span></h2>
+        <div class="suggest">Option non affichée dans l'<acronym title='Admin Control Panel : interface d administration'>ACP</acronym>.</div>
+        Similaire à l'option <a href="#" onclick="$('#_STOP_USE_THIS_SERVER_ADDRESS_NOW_USE_THIS_URL').animatescroll({padding:7,easing:'easeOutBounce'});">_STOP_USE_THIS_SERVER_ADDRESS_NOW_USE_THIS_URL</a> qui ne doit <b>pas être activée</b>.<br/>
+        Définir l'adresse du nouveau serveur afin que les utilisateurs y basculent au prochain lancement : <b>après authentification</b>.<br/>
+        Le changement d'adresse n'est donc connu que des utilisateurs authentifiés.<br/>
+      </div>
+
+      <div class="panel" id='_TIME_ZONES'>
+        <h2>_TIME_ZONES</h2>
+        Afficher (ou non) les fuseaux/décalages horaires.<br/>
+        Option ajoutée afin de pouvoir désactiver cette fonctionnalité (existant depuis la version 1.3.5).<br/>
+        <div class="suggest">Valeur conseillée : activée uniquement pour un usage sur internet.</div>
+      </div>
+
+      <div class="panel" id='_UNREAD_MESSAGE_VALIDITY'>
+        <h2>_UNREAD_MESSAGE_VALIDITY</h2>
+        Définir la durée (en jours) de validité des messages non lus (0 : illimité) avant expiration (suppression).
+        <div class="suggest">Valeur conseillée : 30.</div>
+      </div>
+
+      <div class="panel" id='_USER_HIEARCHIC_MANAGEMENT_BY_ADMIN'>
+        <h2>_USER_HIEARCHIC_MANAGEMENT_BY_ADMIN</h2>
+        Activer (ou non) le <u>mode spécial</u> : gestion hiérarchique des utilisateurs, et afficher la colonne niveau dans l'interface d'administration (<acronym title='Admin Control Panel'>ACP</acronym>).<br/>
+        Les utilisateurs ne peuvent alors plus demander l'ajout d'un contact d'un niveau supérieur.<br/>
+        Les niveaux sont définis dans le fichier de langue du serveur (/common/lang/french-iso-8859-1.inc.php) à la section <i>level</i>.<br/>
+        Les niveaux sont par défaut : <i>Administrateur - Directeur - Chef de service - Employé - Invité</i> (leur nombre est défini avec <i>$c_nb_level</i>).<br/>
+        Un <i>invité</i> ne peut donc pas demandé à s'ajouter mutuellement aux contacts d'un <i>employé</i>, alors que le contraire est possible.<br/>
+        Nécessite l'activation de l'option <a href="#" onclick="$('#_ALLOW_MANAGE_CONTACT_LIST').animatescroll({padding:7,easing:'easeOutBounce'});">_ALLOW_MANAGE_CONTACT_LIST</a>.<br/>
+        Les options : 
+        <a href="#" onclick="$('#_SPECIAL_MODE_OPEN_COMMUNITY').animatescroll({padding:7,easing:'easeOutBounce'});">_SPECIAL_MODE_OPEN_COMMUNITY</a> 
+        - <a href="#" onclick="$('#_SPECIAL_MODE_OPEN_COMMUNITY').animatescroll({padding:7,easing:'easeOutBounce'});">_SPECIAL_MODE_OPEN_COMMUNITY</a> 
+        - <a href="#" onclick="$('#_SPECIAL_MODE_OPEN_GROUP_COMMUNITY').animatescroll({padding:7,easing:'easeOutBounce'});">_SPECIAL_MODE_OPEN_GROUP_COMMUNITY</a> 
+        ne doivent <b>pas être activées</b>.<br/>
+        <div class="suggest">Valeur conseillée : désactivée pour une utilisation classique.</div>
+      </div>
+
+      <div class="panel" id='_USER_NEED_PASSWORD'>
+        <h2>_USER_NEED_PASSWORD</h2>
+        Forcer (ou non) l'utilisation d'un mot de passe pour chaque utilisateur.<br/>
+        Peut être désactivée si l'une des options 
+        <a href="#" onclick="$('#_FORCE_USERNAME_TO_PC_SESSION_NAME').animatescroll({padding:7,easing:'easeOutBounce'});">_FORCE_USERNAME_TO_PC_SESSION_NAME</a> 
+        ou <a href="#" onclick="$('#_PENDING_USER_ON_COMPUTER_CHANGE').animatescroll({padding:7,easing:'easeOutBounce'});">_PENDING_USER_ON_COMPUTER_CHANGE</a> est activée.<br/>
+        Voir aussi les options : 
+        <a href="#" onclick="$('#_MINIMUM_PASSWORD_LENGTH').animatescroll({padding:7,easing:'easeOutBounce'});">_MINIMUM_PASSWORD_LENGTH</a>
+        - <a href="#" onclick="$('#_MAX_PASSWORD_ERRORS_BEFORE_LOCK_USER').animatescroll({padding:7,easing:'easeOutBounce'});">_MAX_PASSWORD_ERRORS_BEFORE_LOCK_USER</a>
+        <!-- - <a href="#" onclick="$('#_FORCE_USERNAME_TO_PC_SESSION_NAME').animatescroll({padding:7,easing:'easeOutBounce'});">_FORCE_USERNAME_TO_PC_SESSION_NAME</a>
+        - <a href="#" onclick="$('#_PENDING_USER_ON_COMPUTER_CHANGE').animatescroll({padding:7,easing:'easeOutBounce'});">_PENDING_USER_ON_COMPUTER_CHANGE</a>  -->
+        - <a href="#" onclick="$('#_EXTERNAL_AUTHENTICATION').animatescroll({padding:7,easing:'easeOutBounce'});">_EXTERNAL_AUTHENTICATION</a>
+        - <a href="#" onclick="$('#_PASSWORD_FOR_PRIVATE_SERVER').animatescroll({padding:7,easing:'easeOutBounce'});">_PASSWORD_FOR_PRIVATE_SERVER</a>.<br/>
+        <div class="suggest">Valeur conseillée : activée.</div>
+      </div>
+
+      <div class="panel" id='_WAIT_STARTUP_IF_SERVER_UNAVAILABLE'>
+        <h2>_WAIT_STARTUP_IF_SERVER_UNAVAILABLE</h2>
+        Activer (ou non) de laisser au démarrage le client en attente (sans rien <A HREF='http://www.intramessenger.com/forum/pictures/im_server_not_online_fr.png' target='_blank'>signaler</a>) au lieu de se fermer si le serveur est indisponible.<br/>
+      </div>
+
+
+
+
+
+
+<!--
+      <div class="panel" id=''>
+        <h2>_XXXXXXXXXXXXXX</h2>
+        zzzzzzzzzzzzzzzzzz<br/>
+      </div>
+
+
+        Voir aussi l'option <a href="#" onclick="$('#_XXXXXXXXXXXXX').animatescroll({padding:7,easing:'easeOutBounce'});">_XXXXXXXXXXXXX</a>.<br/>
+        Voir aussi les options : <a href="#" onclick="$('#_XXXXXXXXXXXXX').animatescroll({padding:7,easing:'easeOutBounce'});">_XXXXXXXXXXXXX</a> - <a href="#" onclick="$('#_XXXXXXXXXXXXX').animatescroll({padding:7,easing:'easeOutBounce'});">_XXXXXXXXXXXXX</a>.<br/>
+        Nécessite l'activation de l'option <a href="#" onclick="$('#_XXXXXXXXXXXXX').animatescroll({padding:7,easing:'easeOutBounce'});">_XXXXXXXXXXXXX</a>.<br/>
+        L'option <a href="#" onclick="$('#_XXXXXXXXXXXXX').animatescroll({padding:7,easing:'easeOutBounce'});">_XXXXXXXXXXXXX</a> ne doit <b>pas être activée</b>.<br/>
+
+
+
+      <div class="panel" id='_XXXXXXXXXX'>
+        <h2>_XXXXXXXXXX - <span style='font-size:0.8em;'>nouveauté de la future version 2.0.5</span></h2>
+        <i>
+        <A HREF='http://www.intramessenger.net/doc/prochainement.html' target='_blank'>Prochainement</A>...<br/>
+        <br/>
+        <div class="suggest">Valeur (par défaut) conseillée : activée.</div>
+        </i>
+      </div>
+
+
+      <div class="panel">
+        <h2>*****</h2>
+          <UL>
+            <LI>
+            </LI>
+            <LI>
+            </LI>
+          </UL>
+      </div>
+
+L'option <a href="#" onclick="$('#_XXXXXXXXXXXXX').animatescroll({padding:7,easing:'easeOutBounce'});">_XXXXXXXXXXXXX</a> ne doit <b>pas être activée</b>.<br/>
+Nécessite l'activation de l'option <a href="#" onclick="$('#_XXXXXXXXXXXXX').animatescroll({padding:7,easing:'easeOutBounce'});">_XXXXXXXXXXXXX</a>.<br/>
+
+<div class="suggest">Option non affichée dans l'<acronym title='Admin Control Panel : interface d administration'>ACP</acronym>.</div>
+
+ - <span style='font-size:0.8em;'>(Option non affichée dans l'<acronym title='Admin Control Panel : interface d administration'>ACP</acronym>)</span>
+
+ - <span style='font-size:0.8em;'>option anciennement nommée <b>_XXXXXXXXXXXX</b> jusqu'à la version 2.0.4</span>
+-->
+
+      <div class="panel">
+        <h2>Informations</h2>
+          <UL>
+            <LI>
+
+            <strong>Forum officiel : <A HREF='http://www.intramessenger.com/forum/' target='_blank'>http://www.intramessenger.com/forum/</A></strong><BR/>
+            N'hésitez pas à venir y proposer vos améliorations et suggestions ainsi que vos traductions.<BR/>
+            </LI>
+            <LI>
+            Support : <A HREF='http://www.intramessenger.net/contact.php?lang=FR&' target='_blank'>http://www.intramessenger.net/contact.php?lang=FR&</A><BR/>
+            </LI>
+
+          </UL>
+            <p class="notice">
+            Consulter la <A href="http://www.intramessenger.com/forum/viewforum.php?f=12&" target="_blank">liste des nouveautés</A> ainsi que 
+            la <A href="http://www.intramessenger.com/forum/viewtopic.php?t=341&" target="_blank">liste des prochaines améliorations</A> (sur internet).
+            </P>
+      </div>
+
+
+      <div class="panel">
+        <A HREF='http://www.theuds.com' target='_blank'>THeUDS</A> © 2006 - 2016
+      </div>
+
+    </div>
+
+    <div id="footer">
+      <div>
+        <div class="notice">
+          Consulter l'impact visuel sur les postes clients : <A href="http://www.intramessenger.net/doc/intramessenger_options.pdf" target="_blank">/doc/intramessenger_options.pdf</A>
+          ainsi que la carte (vue d'ensemble) : <A href="http://www.intramessenger.net/doc/IM_options_map_fr.png" target="_blank">/doc/fr/IM_options_map_fr.png</A>.<br/>
+          Les options sont stockées dans le fichier /common/config/config.inc.php : à modifier manuellement pour les options <i>cachées</i>.<br/>
+          Les options touchant aux postes clients ne sont prises en compte qu'une fois ceux-ci redémarrés.<br/>
+        </div>
+
+        [<a href="#" onclick="$('#_ACP_ALLOW_MEMORY_AUTH').animatescroll({padding:7,easing:'easeOutBounce'});">A</a>] - 
+        [<a href="#" onclick="$('#_BACKUP_FILES').animatescroll({padding:7,easing:'easeOutBounce'});">B</a>] - 
+        [<a href="#" onclick="$('#_CENSOR_MESSAGES').animatescroll({padding:7,easing:'easeOutBounce'});">C</a>] - 
+        [<a href="#" onclick="$('#_DONOTDISTURB_REASONS_LIST').animatescroll({padding:7,easing:'easeOutBounce'});">D</a>] - 
+        [<a href="#" onclick="$('#_ENTERPRISE_SERVER').animatescroll({padding:7,easing:'easeOutBounce'});">E</a>] - 
+        [<a href="#" onclick="$('#_FLAG_COUNTRY_FROM_IP').animatescroll({padding:7,easing:'easeOutBounce'});">F</a>] - 
+        [<a href="#" onclick="$('#_GROUP_FOR_SBX_AND_ADMIN_MSG').animatescroll({padding:7,easing:'easeOutBounce'});">G</a>] - 
+        [<a href="#" onclick="$('#_HISTORY_MESSAGES_ON_ACP').animatescroll({padding:7,easing:'easeOutBounce'});">H</a>] - 
+        [<a href="#" onclick="$('#_IM_ADDRESS_BOOK_PASSWORD').animatescroll({padding:7,easing:'easeOutBounce'});">I</a>] - 
+        <!-- [<A HREF='liste_options.html#ZZZZZ'>J</A>] - 
+        [<A HREF='liste_options.html#ZZZZZ'>K</A>] - -->
+        [<a href="#" onclick="$('#_LANG').animatescroll({padding:7,easing:'easeOutBounce'});">L</a>] - 
+        [<a href="#" onclick="$('#_MAINTENANCE_MODE').animatescroll({padding:7,easing:'easeOutBounce'});">M</a>] - 
+        [<a href="#" onclick="$('#_NEED_QUICK_REGISTER_TO_AUTO_ADD_NEW_USER').animatescroll({padding:7,easing:'easeOutBounce'});">N</a>] - 
+        [<a href="#" onclick="$('#_ONLINE_REASONS_LIST').animatescroll({padding:7,easing:'easeOutBounce'});">O</a>] - 
+        [<a href="#" onclick="$('#_PASSWORD_FOR_PRIVATE_SERVER').animatescroll({padding:7,easing:'easeOutBounce'});">P</a>] - 
+        <!-- [<A HREF='liste_options.html#ZZZZZ'>Q</A>] - -->
+        [<a href="#" onclick="$('#_ROLES_TO_OVERRIDE_PERMISSIONS').animatescroll({padding:7,easing:'easeOutBounce'});">R</a>] - 
+        [<a href="#" onclick="$('#_SCROLL_TEXT').animatescroll({padding:7,easing:'easeOutBounce'});">S</a>] - 
+        [<a href="#" onclick="$('#_TIME_ZONES').animatescroll({padding:7,easing:'easeOutBounce'});">T</a>] - 
+        [<a href="#" onclick="$('#_UNREAD_MESSAGE_VALIDITY').animatescroll({padding:7,easing:'easeOutBounce'});">U</a>] - 
+        <!-- [<A HREF='liste_options.html#ZZZZZ'>V</A>] - -->
+        [<a href="#" onclick="$('#_WAIT_STARTUP_IF_SERVER_UNAVAILABLE').animatescroll({padding:7,easing:'easeOutBounce'});">W</a>] 
+        <!-- [<A HREF='liste_options.html#ZZZZZ'>X</A>] - 
+        [<A HREF='liste_options.html#ZZZZZ'>Y</A>] - 
+        [<A HREF='liste_options.html#ZZZZZ'>Z</A>] -->
+
+      </div>
+    </div>
+        
+  </body>
+</html>
