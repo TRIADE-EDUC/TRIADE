@@ -448,7 +448,7 @@ for($j=$dep;$j<$nbEleveT;$j++) {  // premiere ligne de la creation PDF
 
 	// Titre
 	$pdf->SetXY($xtitre,20);
-	$pdf->SetFont('Courier','',18);
+	$pdf->SetFont('Courier','',17);
 	$pdf->WriteHTML($titre);
 	// fin titre
 

@@ -47,7 +47,7 @@ if ($id != 1) {
 <tr id='cadreCentral0'>
 <td valign=top>
 <i>&nbsp;&nbsp;Afin d'assurer la validit&eacute; des fichiers Triade, nous vous sug&eacute;rons d'installer le patch de r&eacute;f&eacute;rence MD5 avant chaque v&eacute;rification. 
-[ <a href="http://support.triade-educ.org/support/recupFichierMd5.php" target='_blank' >T&eacute;l&eacute;charger la r&eacute;f&eacute;rence MD5</a> ] </i>
+[ <a href="https://support.triade-educ.org/support/recupFichierMd5.php" target='_blank' >T&eacute;l&eacute;charger la r&eacute;f&eacute;rence MD5</a> ] </i>
 <br><br>
 <ul>
 <?php
@@ -170,7 +170,7 @@ if (LAN == "oui") {
 <a href="#" id=lienpatch ><img src="./image/commun/stat<?php print $codepatch ?>.gif" align=center id="verifpatch"  border="0"></a>
 &nbsp;&nbsp;&nbsp;
 </td></tr>
-	<script language="JavaScript" src="http://support.triade-educ.org/support/version-patch.php?v=<?php print VERSIONPATCH ?>"></script>
+	<script language="JavaScript" src="https://support.triade-educ.org/support/version-patch.php?v=<?php print VERSIONPATCH ?>"></script>
 	<script language="JavaScript">
 	if (update == 0) { document.getElementById("verifpatch").src="./image/commun/stat1.gif"; }
 	if (update == 1) { 
@@ -196,12 +196,12 @@ if (LAN == "oui") {
 		define("VERSIONMD5","000");
 	}
 	?>
-	<script language="JavaScript" src="http://support.triade-educ.org/support/version-md5.php?v=<?php print VERSIONMD5 ?>"></script>
+	<script language="JavaScript" src="https://support.triade-educ.org/support/version-md5.php?v=<?php print VERSIONMD5 ?>"></script>
 	<script language="JavaScript">
 	if (updatemd5 == 0) { document.getElementById("verifmd5").src="./image/commun/stat1.gif"; }
 	if (updatemd5 == 1) { 
 		document.getElementById("verifmd5").src="./image/commun/stat3.gif"; 
-		document.getElementById("lienmd5").href="http://support.triade-educ.org/support/recupFichierMd5.php";
+		document.getElementById("lienmd5").href="https://support.triade-educ.org/support/recupFichierMd5.php";
 	}
 	</script>
 
@@ -237,7 +237,7 @@ if (false) {
 <a href="#" id="lienMD5Structure" ><img src="./image/commun/stat<?php print $dbbstructure ?>.gif" align=center id="verifMD5Structure"  border="0"></a>
 &nbsp;&nbsp;&nbsp;
 </td></tr>
-	<script language="JavaScript" src="http://support.triade-educ.org/support/verif_structure.php?md5=<?php print $dbbstructureMD5 ?>"></script>
+	<script language="JavaScript" src="https://support.triade-educ.org/support/verif_structure.php?md5=<?php print $dbbstructureMD5 ?>"></script>
 	<script language="JavaScript">
 	if (updateMD5 == 0) { document.getElementById("verifMD5Structure").src="./image/commun/stat1.gif"; }
 	if (updateMD5 == 1) { 

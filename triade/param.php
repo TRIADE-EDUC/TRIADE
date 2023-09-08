@@ -220,11 +220,11 @@ if ((LAN == "oui") && ($ville != "") && ($adresse != "") && ($pays != "")){
 	if (HTTPS == "oui") {
 ?>
 		<br /><center>
-		<iframe src="http://support.triade-educ.org/support/google-map-V3-triade.php?etablissement=<?php print  urlencode($nom_etablissement)?>&adresse=<?php print urlencode($adresse) ?>&ville=<?php print urlencode($ville) ?>&pays=<?php print urlencode($pays)?>&web=<?php print urlencode($urlsite) ?>" width=400 height=300 MARGINWIDTH=0 MARGINHEIGHT=0 HSPACE=0 VSPACE=0 FRAMEBORDER=0 SCROLLING=no ></iframe >
+		<iframe src="https://support.triade-educ.org/support/google-map-V3-triade.php?etablissement=<?php print  urlencode($nom_etablissement)?>&adresse=<?php print urlencode($adresse) ?>&ville=<?php print urlencode($ville) ?>&pays=<?php print urlencode($pays)?>&web=<?php print urlencode($urlsite) ?>" width=400 height=300 MARGINWIDTH=0 MARGINHEIGHT=0 HSPACE=0 VSPACE=0 FRAMEBORDER=0 SCROLLING=no ></iframe >
 		</center>
 	<?php }else{ ?>
 		<br /><center>
-		<iframe src="http://support.triade-educ.org/support/google-map-V3-triade.php?etablissement=<?php print  urlencode($nom_etablissement)?>&adresse=<?php print urlencode($adresse) ?>&ville=<?php print urlencode($ville) ?>&pays=<?php print urlencode($pays)?>&web=<?php print urlencode($urlsite) ?>" width=400 height=300 MARGINWIDTH=0 MARGINHEIGHT=0 HSPACE=0 VSPACE=0 FRAMEBORDER=0 SCROLLING=no ></iframe >
+		<iframe src="https://support.triade-educ.org/support/google-map-V3-triade.php?etablissement=<?php print  urlencode($nom_etablissement)?>&adresse=<?php print urlencode($adresse) ?>&ville=<?php print urlencode($ville) ?>&pays=<?php print urlencode($pays)?>&web=<?php print urlencode($urlsite) ?>" width=400 height=300 MARGINWIDTH=0 MARGINHEIGHT=0 HSPACE=0 VSPACE=0 FRAMEBORDER=0 SCROLLING=no ></iframe >
 		</center>
 
 	<?php } ?>

@@ -33,6 +33,7 @@ $saisie_trimestre=$_COOKIE["saisie_trimestre"];
 <script language="JavaScript" src="librairie_js/function.js"></script>
 <script language="JavaScript" src="./librairie_js/clickdroit2.js"></script>
 <script type='text/javascript' src='./librairie_js/ajax-moyenne.js'></script>
+<script language="JavaScript" src="./librairie_js/ajaxIA.js"></script>
 <title>Triade Vidéo-Projecteur</title>
 </head>
 <body id='coulfond1' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0">
@@ -43,6 +44,9 @@ validerequete("profadmin");
 include_once('librairie_php/recupnoteperiode.php');
 $cnx=cnx();
 $ok=1;
+
+
+
 if (isset($_POST["valide"])) {
 	$idclasse=$_POST["saisie_classe"];
 	$trimes=$_POST["saisie_trimestre"];
@@ -303,7 +307,7 @@ if( count($data)  <= 0 ) {
 
 ?>
 <br><br>
-<table border=0><tr>
+<table border='0' ><tr>
 <td valign="top"><font class=T2>Moyenne de l'<?php print INTITULEELEVE ?> : </font></td>
 <td><font class=T2><b><div id="e1"></div></b> (Premier Trimestre) /  </font></td>
 <td><font class=T2><b><div id="e2"></div></b> (Deuxième Trimestre) /  </font></td>
@@ -315,6 +319,7 @@ if( count($data)  <= 0 ) {
 <td><font class=T2><b><div id="m3"></div></b> (Troisième Trimestre)  </font></td>
 </tr></table>
 
+<div id='afficheToken' style="position:relative;top:-50px;left:200px" ></div>
 
 </font></td></tr>
 <tr><td valign=top  ><br>
@@ -322,7 +327,14 @@ if( count($data)  <= 0 ) {
 <table border=1 >
 <?php // ---------------------------------------------------------- 
 
+include_once("common/productId.php");
+include_once("common/config-ia.php");
+$productID=PRODUCTID;
+$iakey=IAKEY;
 
+print "<script>";
+print "verifToken('$productID','$iakey','afficheToken');";
+print "</script>";
 
 include_once('librairie_php/recupnoteperiode.php');
 
@@ -448,10 +460,23 @@ for($i=0;$i<count($ordre);$i++) {
 	print "<input type=hidden name='direct_eleve' value='$idEleve' >";
 	
 
+	if (file_exists("./common/config-ia.php")) {
+		include_once("common/productId.php");
+	        include_once("common/config-ia.php");
+	        $productID=PRODUCTID;
+	        $iakey=IAKEY;
+	        $prenom=recherche_eleve_prenom($idEleve);
+	        $lienIA="ajaxIABulletinCom('".addslashes($commentaireeleve)."','$noteaff1','$productID','$iakey','saisie_text_$i','$prenom')";
+	}else{
+	        $lienIA="alert('Votre Triade n\'est pas configur&eacute; pour utiliser l\'IA. Contacter votre administrateur Triade')";
+	}
+
 	if (defined("NBCARBULL")) { $nbcar=NBCARBULL; }else{ $nbcar=400; }
 	if ($typecom > 0) { $nbcar=150; }
-	print "<input type='text' name='CharRestant_$i' size='2' disabled='disabled'> ($nbcar caractères maximum)<br>";
-	print "<textarea onkeypress=\"compter(this,'$nbcar', this.form.CharRestant_$i)\" cols='68' rows='3' name='saisie_text_$i' >$commentaireeleve</textarea></td>";
+	print "<input type='text' name='CharRestant_$i' size='2' disabled='disabled'> ($nbcar caract&eacute;res maximum)";
+	print "&nbsp;&nbsp;<input type='button' value='TRIADE-COPILOT' class='BUTTON' onClick=\"$lienIA\" >";
+	print "<br>";
+	print "<textarea onkeypress=\"compter(this,'$nbcar', this.form.CharRestant_$i)\" cols='68' rows='3' id='saisie_text_$i' name='saisie_text_$i' >$commentaireeleve</textarea></td>";
 
 	print "</tr>";
 	

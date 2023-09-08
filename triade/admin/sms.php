@@ -66,7 +66,7 @@ if (LAN == "oui") {
 		$idsms=SMSKEY;
 		$inc=GRAPH;
 		print "<table align=center><tr><td><font class=T2>Accès à votre compte SMS : </font></td>";
-		print "<td><script language=JavaScript>buttonMagicSubmit3('Cliquez ICI','http://support.triade-educ.org/support/sms-compte.php?idsms=$idsms&inc=$inc','','width=550,height=600','','');</script></td><td><script language=JavaScript>buttonMagicSubmit3('Réinitialiser votre compte SMS','sms-init.php','_self','','','');</script></td></tr></table>";
+		print "<td><script language=JavaScript>buttonMagicSubmit3('Cliquez ICI','https://support.triade-educ.org/support/sms-compte.php?idsms=$idsms&inc=$inc','','width=550,height=600','','');</script></td><td><script language=JavaScript>buttonMagicSubmit3('Réinitialiser votre compte SMS','sms-init.php','_self','','','');</script></td></tr></table>";
 	}
 }else{
 	print "<br><center><font class=T2>".ERREUR1."</font> <br><br> <i>".ERREUR2."</i></center>";

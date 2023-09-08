@@ -95,7 +95,7 @@ if(isset($_POST["create"])){
 </td></tr>
 <tr><td align=right width=40%><font class="T2"><?php print LANGNA1?> : </font></td><td><input type=text name="saisie_creat_nom" value="<?php print "$nom_admin" ?>" size=33 maxlength=30></td></tr>
 <tr><td align=right width=40%><font class="T2"><?php print LANGNA2?> : </font></td><td><input type=text name="saisie_creat_prenom"  value="<?php print "$prenom_admin" ?>" size=33 maxlength=30></td></tr>
-<tr><td align=right width=40%><font class="T2"><?php print nb2space(LANGNA3) ?> : </font></td><td><input type=button onclick="open('./modif_pers_pass.php?id=<?php print $saisie_id;?>&type=ADM','pass','width=400,height=200')" value='<?php print LANGPER30 ?>'  class="bouton2" > </td></tr>
+<tr><td align=right width=40%><font class="T2"><?php print nb2space(LANGNA3) ?> : </font></td><td><input type=button onclick="open('./modif_pers_pass.php?id=<?php print $saisie_id;?>&type=ADM','pass','width=450,height=300')" value='<?php print LANGPER30 ?>'  class="bouton2" > </td></tr>
 </table>
 </fieldset>
 <br><br><br>

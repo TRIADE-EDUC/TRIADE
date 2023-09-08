@@ -1,0 +1,38 @@
+a:51:{s:13:"accountexists";s:204:"Un utilisateur avec ce nom d'utilisateur existe déjà sur ce site. Si c'est votre compte, veuillez vous connecter avec votre nom et mot de passe et l'ajouter comme connexion liée dans vos préférences.";s:22:"auth_oauth2description";s:50:"Authentification basée sur les standards OAuth 2.";s:19:"auth_oauth2settings";s:37:"Réglages d'authentification OAuth 2.";s:19:"confirmaccountemail";s:681:"Bonjour,
+
+Un nouveau compte a été demandé sur « {$a->sitename} » en utilisant votre adresse de courriel.
+
+Pour confirmer votre nouveau compte, veuillez visiter la page web suivante :
+
+{$a->link}
+
+Dans la plupart des logiciels de courriel, cette adresse devrait apparaître comme un lien de couleur bleue qu'il vous suffit de cliquer. Si cela ne fonctionne pas, copiez ce lien et collez-le dans la barre d'adresse de votre navigateur web.
+
+Si vous avez besoin d'aide, veuillez contacter l'administrateur du site,
+{$a->admin}
+
+Si vous n'avez pas demandé de compte, quelqu'un cherche peut-être à compromettre votre compte. Contactez immédiatement l'administrateur du site.";s:26:"confirmaccountemailsubject";s:30:"{$a} : confirmation de compte";s:19:"confirmationinvalid";s:155:"Le lien de confirmation n'est pas valide ou est échu. Veuillez recommencer le processus de connexion afin de générer un nouveau message de confirmation.";s:19:"confirmationpending";s:54:"Ce compte est en attente de confirmation par courriel.";s:23:"confirmlinkedloginemail";s:765:"Bonjour,
+
+Une requête a été effectuée avec votre adresse de courriel pour lier le compte {$a->issuername} ({$a->linkedemail}) à votre compte sur la plateforme « {$a->sitename} ».
+
+Pour confirmer cette demande et lier ces comptes, veuillez visiter la page web suivante :
+
+{$a->link}
+
+Dans la plupart des logiciels de courriel, cette adresse devrait apparaître comme un lien de couleur bleue qu'il vous suffit de cliquer. Si cela ne fonctionne pas, copiez ce lien et collez-le dans la barre d'adresse de votre navigateur web.
+
+Si vous avez besoin d'aide, veuillez contacter l'administrateur du site,
+{$a->admin}
+
+Si vous n'avez pas demandé ceci, quelqu'un cherche peut-être à compromettre votre compte. Contactez immédiatement l'administrateur du site.";s:30:"confirmlinkedloginemailsubject";s:41:"{$a} : confirmation de liaison de compte";s:21:"createaccountswarning";s:266:"Ce plugin d'authentification permet aux utilisateurs de créer des comptes sur votre site. Si vous utilisez ce plugin, il est peut-être judicieux d'activer le réglage « Empêcher la création de compte lors de l'authentification » (authpreventaccountcreation).";s:20:"createnewlinkedlogin";s:29:"Lier un nouveau compte ({$a})";s:16:"emailconfirmlink";s:16:"Lier vos comptes";s:20:"emailconfirmlinksent";s:399:"<p>Un compte existant avec cette adresse de courriel a été trouvé, mais il n'est pas encore lié.</p>
+   <p>Les comptes doivent être liés pour que vous puissiez vous connecter.</p>
+   <p>Un message a été envoyé à votre adresse <b>{$a}</b></p>
+   <p>Il contient des instructions simples pour lier vos comptes.</p>
+   <p>En cas de difficulté, contactez l'administrateur de la plateforme.</p>";s:23:"emailpasswordchangeinfo";s:395:"Bonjour {$a->firstname},
+
+Quelqu'un (probablement vous) a demandé un nouveau mot de passe pour votre compte sur « {$a->sitename} ».
+
+Malheureusement, votre mot de passe ne peut donc pas être réinitialisé, parce que vous utilisez votre compte d'une autre plateforme pour vous connecter.
+
+Veuillez vous connecter comme précédemment, au moyen du lien sur la page de connexion.
+{$a->admin}";s:30:"emailpasswordchangeinfosubject";s:53:"{$a} : information sur le changement de mot de passe";s:4:"info";s:14:"Compte externe";s:6:"issuer";s:15:"Service OAuth 2";s:13:"issuernologin";s:72:"Cet fournisseur d'identité ne peut pas être utilisé pour se connecter";s:3:"key";s:4:"Clef";s:12:"linkedlogins";s:17:"Connexions liées";s:16:"linkedloginshelp";s:29:"Aide sur les connexion liées";s:8:"loggedin";s:56:"Utilisateur authentifié correctement par le fournisseur";s:25:"loginerror_userincomplete";s:165:"Les données utilisateur renvoyée ne contenaient pas de nom d'utilisateur ni d'adresse de courriel. Le service OAuth 2 a peut-être été configuré incorrectement.";s:21:"loginerror_nouserinfo";s:112:"Aucune donnée utilisateur n'a été renvoyée. Le service OAuth 2 a peut-être été configuré incorrectement.";s:24:"loginerror_invaliddomain";s:52:"L'adresse de courriel n'est pas permise sur ce site.";s:31:"loginerror_authenticationfailed";s:43:"Le processus d'authentification a échoué.";s:31:"loginerror_cannotcreateaccounts";s:66:"Un compte avec votre adresse de courriel n'a pas pu être trouvé.";s:16:"noconfiguredidps";s:42:"Aucun fournisseur OAuth2 n'est configuré.";s:18:"noissuersavailable";s:74:"Aucun des services OAuth 2 configurés ne vous permet de lier des comptes.";s:16:"notloggedindebug";s:52:"La tentative de connexion a échoué. Raison : {$a}";s:18:"notwhileloggedinas";s:112:"Les comptes liées ne peuvent pas être gérés lorsque vous êtes connecté sous le nom d'un autre utilisateur.";s:25:"oauth2:managelinkedlogins";s:32:"Gérer ses propres comptes liés";s:10:"notenabled";s:54:"Le plugin d'authentification OAuth2 n'est pas activé.";s:17:"plugindescription";s:263:"Ce plugin d'authentification affiche une liste de fournisseurs d'identité sur la page de connexion de Moodle. En choisissant un fournisseur d'identité, les utilisateurs peuvent se connecter avec leurs données d'authentification issues d'un fournisseur OAuth 2.";s:10:"pluginname";s:7:"OAuth 2";s:13:"alreadylinked";s:59:"Ce compte externe est déjà lié à un compte sur ce site.";s:28:"privacy:metadata:auth_oauth2";s:24:"Authentification OAuth 2";s:42:"privacy:metadata:auth_oauth2:authsubsystem";s:60:"Ce plugin est connecté au sous-système d'authentification.";s:41:"privacy:metadata:auth_oauth2:confirmtoken";s:24:"Le jeton de confirmation";s:48:"privacy:metadata:auth_oauth2:confirmtokenexpires";s:53:"L'horodatage de l'expiration du jeton de confirmation";s:34:"privacy:metadata:auth_oauth2:email";s:57:"L'adresse de courriel externe correspondant à ce compte.";s:37:"privacy:metadata:auth_oauth2:issuerid";s:59:"L'identifiant du fournisseur OAuth 2 pour ce compte OAuth 2";s:45:"privacy:metadata:auth_oauth2:tableexplanation";s:59:"Comptes OAuth 2 liés à un compte d'utilisateur de Moodle.";s:40:"privacy:metadata:auth_oauth2:timecreated";s:70:"L'horodatage du lien entre le compte utilisateur et le compte OAuth 2.";s:41:"privacy:metadata:auth_oauth2:timemodified";s:54:"L'horodatage de la modification de cet enregistrement.";s:35:"privacy:metadata:auth_oauth2:userid";s:70:"L'identifiant du compte utilisateur auquel le compte OAuth 2 est lié.";s:41:"privacy:metadata:auth_oauth2:usermodified";s:56:"L'identifiant de l'utilisateur qui a modifié ce compte.";s:37:"privacy:metadata:auth_oauth2:username";s:57:"Le nom d'utilisateur externe qui correspond à ce compte.";s:12:"testidplogin";s:27:"Tester la connexion avec :";s:8:"userinfo";s:38:"Données utilisateur du fournisseur :";s:5:"value";s:6:"Valeur";}

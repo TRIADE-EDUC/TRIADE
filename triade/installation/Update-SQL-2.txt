@@ -1,2 +1,0 @@
-ALTER TABLE `tria_stage_entreprise` ADD `accepte_mineur` INT NOT NULL DEFAULT '0';
-ALTER TABLE `tria_centralstageattribution` ADD `emailenvoyerpiecejointe` INT NOT NULL DEFAULT '0'; 

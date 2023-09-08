@@ -112,7 +112,7 @@ for($i=0;$i<count($data);$i++) {
 <table align='center'>
 <tr> 
 <td align=right><script language=JavaScript>buttonMagicSubmit("<?php print "Valider la demande" ?>","rien"); //text,nomInput</script></td>
-<td align=left><script language=JavaScript>buttonMagic("Listing des centrales","http://support.triade-educ.org/centralestage/listing.php?inc=<?php print GRAPH ?>","_self","","")</script></td>
+<td align=left><script language=JavaScript>buttonMagic("Listing des centrales","https://support.triade-educ.org/centralestage/listing.php?inc=<?php print GRAPH ?>","_self","","")</script></td>
 </tr>
 
 </table>

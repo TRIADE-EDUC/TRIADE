@@ -199,6 +199,10 @@ function cnx() {
 					}elseif (preg_match('/stockage-partage-fichier\.php/',$_SERVER['REQUEST_URI'])) {
 					}elseif (preg_match('/export_personnel_3\.php/',$_SERVER['REQUEST_URI'])) {
 					}elseif (preg_match('/export_personnel_2\.php/',$_SERVER['REQUEST_URI'])) {
+					}elseif (preg_match('/circulaire_ajout2\.php/',$_SERVER['REQUEST_URI'])) {
+					}elseif (preg_match('/gestion_abs_retard_du_jour_misaj2\.php/',$_SERVER['REQUEST_URI'])) {
+					}elseif (preg_match('/gestion_stage_affec_eleve\.php/',$_SERVER['REQUEST_URI'])) {
+					// rien
 					}else{
 						$_GET = @array_map('trim', $_GET);
                                         	$_POST = @array_map('trim', $_POST);
@@ -250,18 +254,18 @@ function execSql($sql) {
 		if (file_exists("./data/parametrage/analyse.triade")) {  // activation du l'analyse de triade 
 			turnOverLog("./data/parametrage/analyse.log",100000000); // 100Mo
 			$fichier=fopen("./data/parametrage/analyse.log","a");
-       	    fwrite($fichier,"- ".dateDMY()." à ".dateHIS()."ERROR : ".$_SERVER['PHP_SELF']." -> ".$sql."\n");
-       	    fclose($fichier);
+       	    		fwrite($fichier,"- ".dateDMY()." a ".dateHIS()."ERROR : ".$_SERVER['PHP_SELF']." -> ".$sql."\n");
+       	    		fclose($fichier);
 		}
 		if (file_exists("../data/parametrage/analyse.triade")) {  // activation du l'analyse de triade 
 			turnOverLog("../data/parametrage/analyse.log",100000000); // 100Mo
 			$fichier=fopen("../data/parametrage/analyse.log","a");
-       	    fwrite($fichier,"- ".dateDMY()." à ".dateHIS()."ERROR : ".$_SERVER['PHP_SELF']." -> ".$sql."\n");
-           	fclose($fichier);
+	       	    	fwrite($fichier,"- ".dateDMY()." a ".dateHIS()."ERROR : ".$_SERVER['PHP_SELF']." -> ".$sql."\n");
+           		fclose($fichier);
 		}
 		if ($ERROR == "true")  {
-          	print("<font color='red'><b>$sql</b></font><br><br>");
-	    	print $res->getMessage();
+          		print("<font color='red'><b>$sql</b></font><br><br>");
+	    		print $res->getMessage();
 	    }
 		Pgclose();
 	}else {
@@ -639,12 +643,12 @@ function html_vers_text($chaine)	{
 	$chaine=str_replace("&ccedil;","ç",$chaine); 
 	$chaine=str_replace("&deg;","°",$chaine); 
 	$chaine=str_replace("&#65533;",'"',$chaine);
-    $chaine=str_replace("&laquo;",'"',$chaine);
-    $chaine=str_replace("&raquo;",'"',$chaine);
-    $chaine=str_replace("&hellip;",'',$chaine);
-    $chaine=str_replace("&ndash;",'-',$chaine);
-    $chaine=str_replace("&Egrave;",'E',$chaine);
-    $chaine=str_replace("&Eacute;",'E',$chaine);
+   	$chaine=str_replace("&laquo;",'"',$chaine);
+	$chaine=str_replace("&raquo;",'"',$chaine);
+    	$chaine=str_replace("&hellip;",'',$chaine);
+    	$chaine=str_replace("&ndash;",'-',$chaine);
+    	$chaine=str_replace("&Egrave;",'E',$chaine);
+    	$chaine=str_replace("&Eacute;",'E',$chaine);
 	$chaine=str_replace("&sup2;",'²',$chaine);
 
 	return $chaine;
@@ -824,6 +828,8 @@ function cryptage($mdp) {
 	global $gestionMDP;
 	if ($gestionMDP == "MD5") { 
 		$mdp=md5($mdp); 
+	}elseif($gestionMDP == "SHA2") {
+		$mdp=hash('sha256',$mdp);
 	}else{
 		$mdp=crypt(md5($mdp),"T2");
 	}
@@ -946,6 +952,7 @@ function blacklistVatel() {
 
 function validerequete($membre) {
 	// choix possible du membre : menuadmin menuparent menuprof menuscolaire
+	//validerequete("all");
 	//validerequete("menuadmin");
 	//validerequete("menuparent");
 	//validerequete("menuprof");
@@ -1003,6 +1010,10 @@ function validerequete($membre) {
 		}
 	}elseif ($membre == "menupersonnel") {
 		if (MEMBRE != "menupersonnel") {
+			blacklist();
+		}
+	}elseif ($membre == "all") {
+		if ((MEMBRE != "menuadmin") &&  (MEMBRE != "menuprof") && (MEMBRE != "menueleve") && (MEMBRE != "menuparent")  && (MEMBRE != "menuscolaire") || (MEMBRE != "menupersonnel") ) {
 			blacklist();
 		}
 	}else {
@@ -1687,6 +1698,8 @@ function create_eleve($params,$ascii) {
 	global $cnx;
 	global $prefixe;
 
+	verifTable();
+
 	if (trim($params[mdp]) != "") { $params[mdp]=cryptage($params[mdp]); }
 	if (isset($params[mdp2])) {
 		if (trim($params[mdp2]) != "") { $params[mdp2]=cryptage($params[mdp2]); }
@@ -2014,6 +2027,8 @@ function create_eleve2($nomE,$prenomE,$classe,$lv1,$lv2) {
         global $prefixe;
 	global $cnx;
 
+	verifTable();
+
 	$sql="SELECT elev_id FROM ${prefixe}eleves WHERE  nom='$nomE'  AND prenom='$prenomE' AND   classe='$classe' AND    lv1='$lv1' AND   lv2='$lv2' ";
         $res=execSql($sql);
 	$data=chargeMat($res);
@@ -2099,7 +2114,8 @@ function create_update_eleve_scolnet($nomE,$prenomE,$datenaissance,$params,$asci
 	global $cnx;
 
 	if (preg_match('/\//',$datenaissance)) { $datenaissance=dateFormBase($datenaissance); }
-
+	
+	verifTable();
 
 	$sql="SELECT elev_id,classe,annee_scolaire FROM ${prefixe}eleves WHERE  lower(nom)='$nomE'  AND lower(prenom)='$prenomE' AND   date_naissance='$datenaissance'";
         $res=execSql($sql);
@@ -2251,7 +2267,7 @@ function create_update_eleve($nomE,$prenomE,$datenaissance,$params,$ascii,$champ
     	global $prefixe;
 	global $cnx;
 
-
+	verifTable();
 	
 	
 	if (preg_match('/\//',$datenaissance)) { $datenaissance=dateFormBase($datenaissance); }
@@ -2736,6 +2752,8 @@ function purgeetudeeleve() {
 function create_eleve_sans_classe($params,$ascii){
 	global $cnx;
     	global $prefixe;
+
+	verifTable();
 
 	if ($ascii) { $params[naiss]=dateFormBase($params[naiss]); }
 
@@ -4768,6 +4786,18 @@ function affEvenement(){
         $res=execSql($sql);
         $data=chargeMat($res);
         return $data;
+}
+
+
+function affDstEvenement() {
+	global $cnx;
+        global $prefixe;
+	$sql="SELECT id_dst,date,matiere,code_classe,heure,duree,idsalle FROM ${prefixe}calendrier_dst d UNION SELECT id_evenement,date,evenement,'null','null','null','null' FROM ${prefixe}calend_evenement ORDER BY date";
+	$res=execSql($sql);
+        $data=chargeMat($res);
+        return $data;
+
+
 }
 
 function affEvenementjour($date){
@@ -9715,7 +9745,7 @@ function affichage_messagerie_envoyer_limit($type_personne,$destinataire,$offset
 }
 
 
-function affichage_messagerie_limit($type_personne,$destinataire,$offset,$limit,$idrep,$order="") {
+function affichage_messagerie_limit($type_personne,$destinataire,$offset,$limit,$idrep,$order="",$corbeille='0') {
 	global $cnx;
 	global $prefixe;
 
@@ -9734,7 +9764,7 @@ function affichage_messagerie_limit($type_personne,$destinataire,$offset,$limit,
 	if ($order == "de2") $order="emetteur DESC, date DESC";
 
 
-	$sql="SELECT id_message, emetteur, destinataire, message, date, heure, lu, type_personne, objet, type_personne_dest, lu_par_utilisateur, idpiecejointe,impression,alerte FROM ${prefixe}messageries WHERE brouillon='0' AND  type_personne_dest='$type_personne' AND destinataire='$destinataire' AND $idrep ORDER BY $order , heure DESC LIMIT $offset,$limit";
+	$sql="SELECT id_message, emetteur, destinataire, message, date, heure, lu, type_personne, objet, type_personne_dest, lu_par_utilisateur, idpiecejointe,impression,alerte,corbeille FROM ${prefixe}messageries WHERE brouillon='0' AND  type_personne_dest='$type_personne' AND destinataire='$destinataire' AND $idrep  AND corbeille='$corbeille' ORDER BY $order , heure DESC LIMIT $offset,$limit";
 	
 
         $res=execSql($sql);
@@ -9868,6 +9898,28 @@ function suppPiecejointe3($id) {
                 $sql="DELETE FROM ${prefixe}piecejointe WHERE idpiecejointe='$idpiecejointe'";
                 execSql($sql);
         } 
+}
+
+function corbeille_message($id,$idpers,$qui) {
+        global $cnx;
+        global $prefixe;
+        if ($qui == "prof") {
+                $sql="UPDATE ${prefixe}messageries SET corbeille='1' WHERE id_message='$id' AND emetteur='$idpers'";
+        }else{
+		$sql="UPDATE ${prefixe}messageries SET corbeille='1' WHERE id_message='$id' AND destinataire='$idpers'";
+        }
+        return(execSql($sql));
+}
+
+function restaurer_message($id,$idpers,$qui) {
+        global $cnx;
+        global $prefixe;
+        if ($qui == "prof") {
+                $sql="UPDATE ${prefixe}messageries SET corbeille='0' WHERE id_message='$id' AND emetteur='$idpers'";
+        }else{
+                $sql="UPDATE ${prefixe}messageries SET corbeille='0' WHERE id_message='$id' AND destinataire='$idpers'";
+        }
+        return(execSql($sql));
 }
 
 function suppression_message($id,$idpers,$qui) {
@@ -18229,12 +18281,7 @@ function verifEleveExistViaId($idEleve) {
 }
 
 function sonore_action($titreson) {
-	print "<object id='mp3player' type='application/x-shockwave-flash' data='./librairie_php/player.swf' width='0' height='0'>\n";
-	print "<param name='type' value='application/x-shockwave-flash' />\n";
-	print "<param name='codebase' value='http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,40,0' />\n";
-	print "<param name='movie' value='./librairie_php/player.swf' />\n";
-	print "<param name='FlashVars' value='my_BackgroundColor=0xdddddd&amp;my_loop=false&amp;file=./audio/".$titreson."&amp;autolaunch=true' />\n";
-	print "</object>\n";
+	//	rien anciennement en flash
 }
 
 
@@ -23020,6 +23067,24 @@ function creditCantine($idpers,$membre,$libelle,$date,$prix) {
 	return(execSql($sql));
 }
 
+
+function recupSumCreditCantine($idpers,$membre) {
+	global $cnx;
+        global $prefixe;
+	$sql="SELECT SUM(prix) FROM  ${prefixe}cantine_compte WHERE idpers='$idpers' AND membre='$membre' ";
+	$data=ChargeMat(execSql($sql));
+	return ($data[0][0]);
+}
+
+function recupCreditCantine() {
+	global $cnx;
+        global $prefixe;
+	$sql="SELECT idpers,prix,membre FROM ${prefixe}cantine_compte GROUP BY idpers,membre";
+	$data=ChargeMat(execSql($sql));
+	return ($data);
+}
+
+
 function enrPlateauCompte($idpers,$plat,$membre) {
 	global $cnx;
 	global $prefixe;
@@ -24396,6 +24461,11 @@ function recupCoefBrevet($idclasse,$libelle,$idmatiere) {
 
 function adsens() {
 	$text="google.com, pub-5077438242993464, DIRECT, f08c47fec0942fa0";
+	if (file_exists("../ads.txt")) {
+		if (md5_file("../ads.txt") == "b2d01010c0c3f4eaae9e584c42eeee54") {
+			return;
+		} 
+	} 
         @unlink("./ads.txt");
         @unlink("../ads.txt");
         $fp=fopen("../ads.txt","w");
@@ -25233,9 +25303,8 @@ function couleurDeFond4($inc) {
 
 
 /*
- * CRYPT_CKEY et CRYPT_CIV sont à changer pour votre projet
+ * CRYPT_CKEY et CRYPT_CIV sont a changer pour votre projet
  */
-
 
 function encrypt($text) {
      $text_num = str_split($text, CRYPT_CBIT_CHECK);
@@ -25988,8 +26057,15 @@ function miseAjourBase() {
 	// ----------------------------------------------------------------------------------------------------------------------------------
 	$sql="TRUNCATE TABLE ${prefixe}news_admin";
 	execSql($sql);
-	$sql="INSERT INTO ${prefixe}news_admin (nom,prenom,date,heure,titre,texte,type,config_video) VALUES ('Triade','Support','$date','$heure','Essai Vidéo','<table align=center style=\'box-shadow: 0px 0px 10px 4px rgba(119, 119, 119, 0.75); moz-box-shadow: 0px 0px 10px 4px rgba(119, 119, 119, 0.75); -webkit-box-shadow: 0px 0px 10px 4px rgba(119, 119, 119, 0.75);\' ><tr><td><object width=420 height=280><param name=movie value=http://www.youtube.com/v/_R5IQoIYvTM?fs=1&amp;hl=fr_FR&amp;rel=0></param><param name=allowFullScreen value=false ></param><param name=allowscriptaccess value=always ></param><embed src=http://www.youtube.com/v/_R5IQoIYvTM?fs=1&amp;hl=fr_FR&amp;rel=0 type=application/x-shockwave-flash allowscriptaccess=always allowfullscreen=false width=420 height=280></embed></object></td></tr></table><br /><br />','video','')";
-	$cr=execSql($sql);
+
+	$sql="INSERT INTO ${prefixe}news_admin (idnews,nom,prenom,date,heure,titre,texte,type,config_video) VALUES(3, 'Direction', 'triade', '$date', '$heure', 'TRIADE - YOUTUBE', '<br><br><table align=\'center\' style=\'box-shadow: 0px 0px 10px 4px rgba(119,119, 119, 0.75); moz-box-shadow: 0px 0px 10px 4px rgba(119, 119, 119, 0.75); -webkit-box-shadow: 0px 0px 10px 4px rgba(119, 119, 119, 0.75);\'><tr><td><object width=\'520\' height=\'300\'><param name=\'movie\' value=\'http://www.youtube.com/v/dcVtgSYhupQ?fs=1&amp;hl=fr_FR&amp;rel=0\'></param><param name=\'allowFullScreen\' value=\'false\'></param><param name=\'allowscriptaccess\' value=\'always\'></param><embed src=\'http://www.youtube.com/v/dcVtgSYhupQ?fs=1&amp;hl=fr_FR&amp;rel=0\'  type=\'application/x-shockwave-flash\' allowscriptaccess=\'always\' allowfullscreen=\'false\' width=\'520\' height=\'300\'></embed></object></td></tr></table><br /><br />', 'video', '');";
+        execSql($sql);
+
+        $sql="INSERT INTO ${prefixe}news_admin (idnews,nom,prenom,date,heure,titre,texte,type,config_video) VALUES(4, 'Direction', 'triade', '$date', '$heure', 'TRIADE - COPILOT', '<br><br><table align=\'center\' style=\'box-shadow: 0px 0px 10px 4px rgba(119,119, 119, 0.75); moz-box-shadow: 0px 0px 10px 4px rgba(119, 119, 119, 0.75); -webkit-box-shadow: 0px 0px 10px 4px rgba(119, 119, 119, 0.75);\'><tr><td><object width=\'520\' height=\'300\'><param name=\'movie\' value=\'https://www.youtube.com/v/zQ1ci051ZRI?fs=1&amp;hl=fr_FR&amp;rel=0\'></param><param name=\'allowFullScreen\' value=\'false\'></param><param name=\'allowscriptaccess\' value=\'always\'></param><embed src=\'https://www.youtube.com/v/zQ1ci051ZRI?fs=1&amp;hl=fr_FR&amp;rel=0\'  type=\'application/x-shockwave-flash\' allowscriptaccess=\'always\' allowfullscreen=\'false\' width=\'520\' height=\'300\'></embed></object></td></tr></table><br /><br />', 'video', '');";
+        execSql($sql);
+
+
+
 	// ------------------------------------------------------------------------------------------------------------------------------------
 }
 
@@ -27042,6 +27118,38 @@ function recupNotePlanche($idmatiere,$idClasse,$ordre,$anneeScolaire) {
        	return($data[0][0]);
 }
 
+function recupEmailTuteurStage($ideleve) {
+	global $cnx;
+        global $prefixe;
+	$datedujour=date("Y-m-d");
+	$sql="SELECT id,datedebut, datefin, id FROM ${prefixe}stage_date WHERE datedebut<'$datedujour' AND datefin > '$datedujour'";
+	$res=@execSql($sql);
+        $data=chargeMat($res);
+	if (count($data)) {
+		for($i=0;$i<count($data);$i++) {
+			$idstage=$data[i][0];
+			$sql="SELECT compte_tuteur_stage FROM ${prefixe}stage_eleve WHERE num_stage='$idstage' AND id_eleve='$ideleve' ";
+			$res=@execSql($sql);
+		        $data2=chargeMat($res);
+			$pers_id=$data[0][0];
+			if ($pers_id > 0) {
+				$sql="SELECT email FROM ${prefixe}personnel WHERE type_pers='TUT' AND pers_id='$pers_id'";
+				$res=@execSql($sql);
+	                        $data3=chargeMat($res);
+				if ($data[3][0] != "") return($data3[0][0]);
+				return ;
+			}		
+		}
+	}else{
+		return ;
+	}
+}
 
+function verifTable() {
+        global $cnx;
+        global $prefixe;
+        $sql="ALTER TABLE ${prefixe}eleves CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;";
+        execSql($sql);
+}
 
 ?>

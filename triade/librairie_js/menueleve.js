@@ -21,7 +21,7 @@ document.write("<center><br /><table width='"+largeurfen+"' border='0' cellspaci
 document.write("<tr valign='top' id='coulfond1' >");
 document.write("<td height='717' id='bordure' >");
 document.write("<div align='left'>");
-document.write("<table background='./data/image_banniere/banniere000.jpg'  border='0' cellpadding='0' cellspacing='0' width='100%' height='62'  >");
+document.write("<table background='./data/image_banniere/banniere000.jpg'  border='0' cellpadding='0' cellspacing='0' width='100%' height='250'  >");
 document.write("<tr>");
-document.write("<td valign='bottom' colspan='3' rowspan='3'>");
+document.write("<td valign='bottom' colspan='3' rowspan='3' style='padding-left:3px' >");
 -->

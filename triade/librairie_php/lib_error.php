@@ -22,13 +22,13 @@
 include_once("./common/lib_admin.php");
 error_reporting(0);
 
-// Fonction spÃ©ciale de gestion des erreurs
+// Fonction spéciale de gestion des erreurs
 function userErrorHandler($errno, $errmsg, $filename, $linenum, $vars)
 {
     // Date et heure de l'erreur
     $dt = date("d/m/Y  H:i:s");
 
-    // DÃ©finit un tableau associatif avec les chaÃ®nes d'erreur
+    // Définit un tableau associatif avec les chaînes d'erreur
     // En fait, les seuls niveaux qui nous interessent
     // sont E_WARNING, E_NOTICE, E_USER_ERROR,
     // E_USER_WARNING et E_USER_NOTICE
@@ -41,9 +41,9 @@ function userErrorHandler($errno, $errmsg, $filename, $linenum, $vars)
                 E_CORE_WARNING    => "Core Warning",
                 E_COMPILE_ERROR   => "Compile Error",
                 E_COMPILE_WARNING => "Compile Warning",
-                E_USER_ERROR      => "Erreur spÃ©cifique",
-                E_USER_WARNING    => "Alerte spÃ©cifique",
-                E_USER_NOTICE     => "Note spÃ©cifique",
+                E_USER_ERROR      => "Erreur spécifique",
+                E_USER_WARNING    => "Alerte spécifique",
+                E_USER_NOTICE     => "Note spécifique",
                 E_STRICT          => "Runtime Notice"
                 );
 if ($errortype[$errno] != "Note") { 

@@ -128,7 +128,7 @@ for($i=0;$i<count($data);$i++) {
 
 // recherche des dates de debut et fin
 //$dateRecup=recupDateTrim("trimestre1");
-$dateRecup=recupDateTrimByIdclasse("trimestre1",$_POST["saisie_classe"]);
+$dateRecup=recupDateTrimByIdclasse("trimestre1",$_POST["saisie_classe"],$anneeScolaire);
 for($j=0;$j<count($dateRecup);$j++) {
 	$dateDebut=$dateRecup[$j][0];
 	$dateFin=$dateRecup[$j][1];
@@ -136,7 +136,7 @@ for($j=0;$j<count($dateRecup);$j++) {
 $dateDebutT1=dateForm($dateDebut);
 $dateFinT1=dateForm($dateFin);
 
-$dateRecup=recupDateTrimByIdclasse("trimestre2",$_POST["saisie_classe"]);
+$dateRecup=recupDateTrimByIdclasse("trimestre2",$_POST["saisie_classe"],$anneeScolaire);
 //$dateRecup=recupDateTrim("trimestre2");
 for($j=0;$j<count($dateRecup);$j++) {
 	$dateDebut=$dateRecup[$j][0];
@@ -146,7 +146,7 @@ $dateDebutT2=dateForm($dateDebut);
 $dateFinT2=dateForm($dateFin);
 
 //$dateRecup=recupDateTrim("trimestre3");
-$dateRecup=recupDateTrimByIdclasse("trimestre3",$_POST["saisie_classe"]);
+$dateRecup=recupDateTrimByIdclasse("trimestre3",$_POST["saisie_classe"],$anneeScolaire);
 for($j=0;$j<count($dateRecup);$j++) {
 	$dateDebut=$dateRecup[$j][0];
 	$dateFin=$dateRecup[$j][1];
@@ -187,7 +187,17 @@ $profp=implode(', ',$profp);
 
 if (count($profptab) > 1) { $hautclassant=1.5; }
 
-for($j=0;$j<count($eleveT);$j++) {  // premiere ligne de la creation PDF
+
+$plageEleve=$_POST["plageEleve"];
+if ($plageEleve == "tous") { $dep=0; $nbEleveT=count($eleveT); }
+if ($plageEleve == "10") { $dep=0; $nbEleveT=9; }
+if ($plageEleve == "20") { $dep=9; $nbEleveT=19; }
+if ($plageEleve == "30") { $dep=19; $nbEleveT=29; }
+if ($plageEleve == "40") { $dep=29; $nbEleveT=39; }
+if ($plageEleve == "50") { $dep=39; $nbEleveT=49; }
+if ($plageEleve == "60") { $dep=49; $nbEleveT=59; }
+if ($nbEleveT > count($eleveT)) { $nbEleveT=count($eleveT); }
+for($j=$dep;$j<$nbEleveT;$j++) {  // premiere ligne de la creation PDF
 	// variable eleve
 	$nomEleve=ucwords($eleveT[$j][0]);
 	$prenomEleve=ucwords($eleveT[$j][1]);

@@ -87,7 +87,7 @@
 	// Jeux de caracteres
 	$fp=fopen("../common/config5.inc.php","w");
 	$text3 = '<?php'."\n";
-	$text3.= 'define("CHARSET","iso-8859-1");'."\n";
+	$text3.= 'define("CHARSET","UTF-8");'."\n";
 	$text3.= '?>'."\n";
 	fwrite($fp,"$text3");
 	fclose($fp);
@@ -332,7 +332,7 @@
 	copy("data/audio/actu.mp3","../data/audio/actu.mp3");
 	if (!is_dir("../data/parametrage")) mkdir("../data/parametrage");
 	$fp=fopen("../data/parametrage/audio.txt","w");
-	$chaineaudio="<font size=1>Le ".date("d/m/Y").",</font> <br><font class=T1>Essai Audio</font>#||#";
+	$chaineaudio="<font size=1>Le ".date("d/m/Y").",</font> <br><font class=T1>TRIADE-AUDIO</font>#||#";
 	fwrite($fp,$chaineaudio);
 	fclose($fp);
 

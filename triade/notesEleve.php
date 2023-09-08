@@ -163,7 +163,7 @@ class Note {
 	var $notationsur;
 	var $idgroupe;
 	var $examen;
-	function Note($c,$s,$d,$v,$t,$u,$g,$e){
+	function __construct($c,$s,$d,$v,$t,$u,$g,$e){
 		$this->coeff = $c;
 		$this->sujet = $s;
 		$this->date = $d;

@@ -1,5 +1,7 @@
 # TRIADE - Licence
 
+**Logiciel sous licence GNU/GPL version 2**
+
 ```
 Copyright (C) 2000-2023 T.R.I.A.D.E.
 
@@ -12,5 +14,3 @@ Vous devez avoir reçu une copie de la Licence Publique Générale GNU en même 
 ```
 
 Pour voir la licence complète, rendez-vous dans : triade/Licence-GPL.txt
-
-*Note : C'est la licence GPL v2*

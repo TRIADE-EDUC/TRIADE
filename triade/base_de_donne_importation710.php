@@ -44,12 +44,12 @@ validerequete("menuadmin");
 <SCRIPT language="JavaScript" src="<?php print './librairie_js/'.$_SESSION[membre].'1.js'?>"></SCRIPT>
 <FORM method=POST action="">
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
-<tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' ><?php print "Importation d'un fichier sconet " ?></font></b></td></tr>
+<tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' ><?php print "Importation d'un fichier SIECLE " ?></font></b></td></tr>
 <tr id='cadreCentral0' >
 <td valign=top>
 <TABLE border=0 width=100%>
-<TR><TD align=top><font class=T2><?php print "Module d'importation de fichier sconet format Xml" ?><br><br>
-Module d'importation SCONET <br><br> <!-- via Exploitation -> Exports Excel -> Fiches élèves complètes --></font></TD>
+<TR><TD align=top><font class=T2><?php print "Module d'importation de fichier SIECLE format Xml" ?><br><br>
+Module d'importation SIECLE <br><br> <!-- via Exploitation -> Exports Excel -> Fiches élèves complètes --></font></TD>
 </TR></TABLE><br>
 <br />
 <br>

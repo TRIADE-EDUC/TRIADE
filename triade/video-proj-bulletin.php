@@ -250,6 +250,7 @@ for($i=0;$i<count($ordre);$i++) {
 	$commentaireeleve=preg_replace('/"/',"&rdquo;",$commentaireeleve);
         $commentaireeleve=preg_replace('/\r\n/',"<br />",$commentaireeleve);
 	$commentaireeleve=preg_replace('/\n/',"<br />",$commentaireeleve);
+	$commentaireeleve=stripslashes($commentaireeleve);
 	$b="<b>";
 	$bb="</b>";
 	if (trim($noteaff1) == "") {

@@ -57,6 +57,7 @@ if (isset($_POST["create"])) {
 	$params["visadirection"]=$_POST["visadirection"];
 	$params["videoprojo"]=$_POST["videoprojo"];
 	$params["entretien"]=$_POST["entretien"];
+	$params["edt"]=$_POST["edt"];
 	droitModule($_POST["idpers"],$params);
 	$idpers=$_POST["idpers"]; 	
 	$message="<br><center><font id=color3 class=T2 ><b>Permissions enregistrées</b></center><br><br>";
@@ -214,6 +215,14 @@ $perm=(verifDroit($idpers,"entretien")) ? "checked='checked'" : "";
 <tr class="tabnormal2" onmouseover="this.className='tabover'" onmouseout="this.className='tabnormal2'" >
 <td id=bordure align='right'><font class=T2> Module entretien individuel : </font></td>
 <td id=bordure ><input type='checkbox' value='1' name='entretien' <?php print $perm  ?> /></td>
+</tr>
+
+<?php 
+$perm=(verifDroit($idpers,"edt")) ? "checked='checked'" : ""; 
+?>
+<tr class="tabnormal2" onmouseover="this.className='tabover'" onmouseout="this.className='tabnormal2'" >
+<td id=bordure align='right'><font class=T2> Module emploi du temps : </font></td>
+<td id=bordure ><input type='checkbox' value='1' name='edt' <?php print $perm  ?> /></td>
 </tr>
 
 <td colspan='2' align='center' id='bordure' ><table><tr><td><script language=JavaScript>buttonMagicSubmit3("<?php print LANGENR ?>","create",""); //text,nomInput</script></td></tr></table></td>

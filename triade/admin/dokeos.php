@@ -114,7 +114,7 @@ if (file_exists("../dokeos/main/install/index.php")) {
 <td valign=top>
 <?php
 if (LAN == "oui") {
-	print "<iframe src='http://support.triade-educ.org/support/dokeos/index.php?graph=".GRAPH."' width=100% height=400 MARGINWIDTH=0 MARGINHEIGHT=0 HSPACE=0 VSPACE=0 FRAMEBORDER=0 SCROLLING=no ></iframe>";
+	print "<iframe src='https://support.triade-educ.org/support/dokeos/index.php?graph=".GRAPH."' width=100% height=400 MARGINWIDTH=0 MARGINHEIGHT=0 HSPACE=0 VSPACE=0 FRAMEBORDER=0 SCROLLING=no ></iframe>";
 }else{
 	print "<br><center><font class=T2>Réseau Internet non disponible pour ce module.</font> <br><br> <i>Consulter le module de Configuration pour activer le réseau.</i></center>";
 }

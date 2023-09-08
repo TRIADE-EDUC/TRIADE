@@ -287,7 +287,7 @@ if ($typebull == "bullFrCycle") { $bull="bulletin_construction_bullFrCycle.php";
 }
 
  
-if (($typebull == "bull0102") || ($typebull == "bull0109") || ($typebull == "bull0109-2") || ($typebull == "bull0103") || ($typebull == "bull01022") || ($typebull == "bull03") ||  ($typebull == "bull01") ||  ($typebull == "bull01b")  || ($typebull == "bull01019") || ($typebull == "bull800")  || ($typebull == "bull0101") || ($typebull == "bull01001") || ($typebull == "bull0101a") || ($typebull == "bull0101b") || ($typebull == "bull01017") || ($typebull == "bull0305") || ($typebull == "bull0305a") || ($typebull == "bull0305c") || ($typebull == "bull113") || ($typebull == "bull12") || ($typebull == "bull12bis") || ($typebull == "bull12ter") || ($typebull == "bull503") || ($typebull == "bulllprb") ||  ($typebull == "bull01011" ) ||  ($typebull == "bull01012" ) ||  ($typebull == "bull01013" ) ||  ($typebull == "bull01014" ) ||  ($typebull == "bull01015" ) || ($typebull == "bull01015-2") ||  ($typebull == "bull700" ) || ($typebull == "bull01018" ) ||  ($typebull == "bull01016" ) || ($typebull == "bull0305b") || ($typebull == "bull0305b-nv") || ($typebull == "bull0305b-2")||  ($typebull == "bull01UE") ||  ($typebull == "bull04UE") || ($typebull == "bull04UE3") || ($typebull == "bull04UE2") || ($typebull == "bull01XL") || ($typebull == "bull02XL")  || ($typebull == "bull02UE") || ($typebull == "bull03UE") || ($typebull == "bull05UE") || ($typebull == "bull0305d")  ) {
+if (($typebull == "bull0102") || ($typebull == "bull0109") || ($typebull == "bull0109-2") || ($typebull == "bull0103") || ($typebull == "bull01022") || ($typebull == "bull03") ||  ($typebull == "bull01") ||  ($typebull == "bull01b")  || ($typebull == "bull01019") || ($typebull == "bull800")  || ($typebull == "bull0101") || ($typebull == "bull01001") || ($typebull == "bull0101a") || ($typebull == "bull0101b") || ($typebull == "bull01017") || ($typebull == "bull0305") || ($typebull == "bull0305a") || ($typebull == "bull0305c") || ($typebull == "bull113") || ($typebull == "bull12") || ($typebull == "bull12bis") || ($typebull == "bull12ter") || ($typebull == "bull503") || ($typebull == "bulllprb") ||  ($typebull == "bull01011" ) ||  ($typebull == "bull01012" ) ||  ($typebull == "bull01013" ) ||  ($typebull == "bull01014" ) ||  ($typebull == "bull01015" ) || ($typebull == "bull01015-2") ||  ($typebull == "bull700" ) || ($typebull == "bull01018" ) ||  ($typebull == "bull01016" ) || ($typebull == "bull0305b") || ($typebull == "bull0305b-nv") || ($typebull == "bull0305b-2")||  ($typebull == "bull01UE") ||  ($typebull == "bull04UE") || ($typebull == "bull04UE3") || ($typebull == "bull04UE2") || ($typebull == "bull01XL") || ($typebull == "bull02XL")  || ($typebull == "bull02UE") || ($typebull == "bull03UE") || ($typebull == "bull05UE") || ($typebull == "bull0305d") || ($typebull == "bull099a")  ) {
 ?>
 	<br /><br />
 	<?php 
@@ -296,7 +296,7 @@ if (($typebull == "bull0102") || ($typebull == "bull0109") || ($typebull == "bul
 	?>
 	<select name="plageEleve" onChange="selection()" >
 	<option value="tous" id='select1'><?php print "Tous les &eacute;l&egrave;ves" ?></option>
-	<?php if (($typebull == "bull0305") || ($typebull == "bull0305a") || ($typebull == "bull0305b") || ($typebull == "bull0305b-nv") || ($typebull == "bull0305b-2") || ($typebull == "bull0305c") || ($typebull == "bull0305d") ) { ?>
+	<?php if (($typebull == "bull0305") || ($typebull == "bull0305a") || ($typebull == "bull0305b") || ($typebull == "bull0305b-nv") || ($typebull == "bull0305b-2") || ($typebull == "bull0305c") || ($typebull == "bull0305d") || ($typebull == "bull099a") ) { ?>
 		<option value="1" id='select1'><?php print "Le premier &eacute;l&egrave;ve" ?></option>
 	<?php } ?>
 	<option value="10" id='select1'><?php print "Les 10 premiers &eacute;l&egrave;ves" ?></option>
@@ -1011,7 +1011,7 @@ if (($typebull == "bull01") ||  ($typebull == "bull01b") || ($typebull == "bull0
 		$datap=config_param_visu("abssconet");
 		$abssconet=$datap[0][0];
 		if (trim($abssconet) == "oui") { $abssconet="checked='checked'"; }
-		print "<tr><td  colspan='2' align=right ><font class=T2>Prise en charge abs/rtd Sconet :</font>";
+		print "<tr><td  colspan='2' align=right ><font class=T2>Prise en charge abs/rtd SIECLE :</font>";
 		print " <input type='checkbox' name='abssconet'  value='oui' $abssconet /> (oui) </td></tr>";
 	
 		if (($typebull == "bull01") ||  ($typebull == "bull01b"))  {
@@ -1219,7 +1219,7 @@ if (($typebull == "bull0209") || ($typebull == "bull0210a") || ($typebull == "bu
 	$abssconet=$datap[0][0];
 	if (trim($abssconet) == "oui") { $abssconet="checked='checked'"; }
 	print "<table align=center ><tr>";
-	print "<td><font class=T2> Prise en charge abs/rtd Sconet : </font></td> ";
+	print "<td><font class=T2> Prise en charge abs/rtd SIECLE : </font></td> ";
 	print "<td><input type='checkbox' name='abssconet'  value='oui' $abssconet /> <i>(oui)</i></td>";
 	print "</tr></table><br>";
 }

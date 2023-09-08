@@ -98,6 +98,13 @@ if ( (verifDroit($_SESSION["id_pers"],"cantine")) || ($_SESSION["membre"] == "me
 </form>
 <tr><td height='20'></td></tr>
 <tr>
+<form action='cantine_export.php'  method='post'>
+<td align=right><font class=T2><?php print "Exportation des donn&eacute;es " ?> :</font></td>
+<td align=left><script language=JavaScript>buttonMagicSubmit("<?php  print LANGBREVET1 ?>","rien"); //text,nomInput</script>&nbsp;&nbsp;</td>
+<td></td></tr>
+</form>
+<tr><td height='20'></td></tr>
+<tr>
 <form action='cantine_stat.php'  method='post'>
 <td align=right><font class=T2><?php print "Statistique / Comptage" ?> :</font></td>
 <td align=left><script language=JavaScript>buttonMagicSubmit("<?php  print LANGBREVET1 ?>","rien"); //text,nomInput</script>&nbsp;&nbsp;</td>

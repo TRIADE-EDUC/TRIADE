@@ -27,7 +27,7 @@ session_start();
 <meta name="Copyright" content="Triade©, 2001">
 <LINK TITLE="style" TYPE="text/CSS" rel="stylesheet" HREF="../librairie_css/css.css">
 <script language="JavaScript" src="librairie_js/clickdroit.js"></script>
-<script type="text/javascript" src="http://support.triade-educ.org/support/actu.php?admin"></script>
+<script type="text/javascript" src="https://support.triade-educ.org/support/actu.php?admin"></script>
 <LINK REL="SHORTCUT ICON" href="./favicon.ico">
 <title>Triade admin</title>
 <?php

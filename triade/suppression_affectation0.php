@@ -76,7 +76,7 @@ unset($data);
 
 / <?php print LANGBULL3 ?> :
 <select name="anneeScolaire" >
-<?php filtreAnneeScolaireSelectAnterieur(); ?>
+<?php filtreAnneeScolaireSelectAnterieur('',10); ?>
 </select>&nbsp;&nbsp;
 
 

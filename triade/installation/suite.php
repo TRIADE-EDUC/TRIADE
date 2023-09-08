@@ -215,6 +215,18 @@ if (file_exists($fichier)) {
 							</select>
 						</td>
 					</tr>
+					<tr>
+						<td  style="text-align: right;">
+                                                        <span class=T2> Type de s&eacute;curit&eacute;:</span>
+						</td>
+						<td>
+                                                        <select name="gestionMDP" >
+                                                             <option STYLE='color:#000066;background-color:#FCE4BA'  value="SHA2">SHA-2</option>
+                                                             <option STYLE='color:#000066;background-color:#CCCCFF'  value="DES" >DES</option>
+                                                             <option STYLE='color:#000066;background-color:#FCE4BA'  value="MD5" >MD5</option>
+                                                        </select>
+                                                </td>
+					</tr>
 
 					<tr><td colspan="2">&nbsp;</td></tr>
 					<tr>

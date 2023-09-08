@@ -49,7 +49,7 @@ if (LAN == "oui") {
 	$data=list_patch();
 	$nb=count($data);
 ?>
-<iframe src="http://support.triade-educ.org/support/update-triade.php?version=<?php print VERSION?>&nb=<?php print $nb?>&inc=<?php print GRAPH ?>" width=100% height=600 MARGINWIDTH=0 MARGINHEIGHT=0 HSPACE=0 VSPACE=0 FRAMEBORDER=0 SCROLLING=no ></iframe >
+<iframe src="https://support.triade-educ.org/support/update-triade.php?version=<?php print VERSION?>&nb=<?php print $nb?>&inc=<?php print GRAPH ?>" width=100% height=600 MARGINWIDTH=0 MARGINHEIGHT=0 HSPACE=0 VSPACE=0 FRAMEBORDER=0 SCROLLING=no ></iframe >
 <?php
 }else{
 	print "<br><center><font class=T2>".ERREUR1."</font> <br><br> <i>".ERREUR2."</i></center>";

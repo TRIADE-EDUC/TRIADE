@@ -50,7 +50,7 @@ include_once('librairie_php/db_triade.php');
 validerequete("menuadmin");
 $cnx=cnx();
 ?>
-	<iframe width='100%' height=100% src="http://support.triade-educ.org/centralestage/listing.php?inc=<?php print GRAPH ?>&productid=<?php print PRODUCTID ?>" name='centralstage' MARGINWIDTH=0 MARGINHEIGHT=0 HSPACE=0 VSPACE=0 FRAMEBORDER=0 SCROLLING=no ></iframe> 
+	<iframe width='100%' height=100% src="https://support.triade-educ.org/centralestage/listing.php?inc=<?php print GRAPH ?>&productid=<?php print PRODUCTID ?>" name='centralstage' MARGINWIDTH=0 MARGINHEIGHT=0 HSPACE=0 VSPACE=0 FRAMEBORDER=0 SCROLLING=no ></iframe> 
 
 
 <!-- // fin  -->

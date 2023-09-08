@@ -30,6 +30,7 @@ $ville = METEOID;
 $jours = 2;
 $datedujour=dateDMY2();
 $url = "http://www.triade-educ.org/accueil/weather.php?ref=".METEOID."&date=$datedujour";
+//print $url;
 /*
 <TRIADE>
 	<forecast>

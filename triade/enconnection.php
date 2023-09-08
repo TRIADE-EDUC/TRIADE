@@ -100,7 +100,7 @@ if (POPUP == "non") {
 <?php
 if (LAN == "oui") {
 	include_once('librairie_php/xiti.php');
-	print "<script type='text/javascript' src='http://support.triade-educ.org/support/info.php'></script>";
+	print "<script type='text/javascript' src='https://support.triade-educ.org/support/info.php'></script>";
 }
 ?>
 <!-- // fin  -->

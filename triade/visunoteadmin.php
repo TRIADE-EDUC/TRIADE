@@ -407,6 +407,7 @@ $moyennne->set_fg_color('blue');
 		if ($sql2 == "") $data_note=array();	
 
 		$unenote=0;
+print "<td><table><tr>";
 		for($t=0;$t<count($data_note);$t++){
 			$pdf->SetFont('Arial','',10);
 			//note_id,elev_id,prof_id,code_mat,coef,date,sujet,$f_trunc(note,2),typenote,noteexam,notationsur
@@ -568,6 +569,7 @@ $moyennne->set_fg_color('blue');
 				}
 			}
 			if ($okmoy == 1) {
+				print "</tr></table>";
 				$moyenneleveaff=$moyenneeleve;
 				if ($noteeng == 1) {
 					$moyenneleveaff=$moyenneeleve."% - ".recherche_note_en($moyenneeleve);
@@ -597,7 +599,7 @@ $moyennne->set_fg_color('blue');
 				}
 				$pdf->SetFont('Arial','',11);
 				$pdf->SetFillColor(220);
-	            		$pdf->SetXY($xcoor,$ycoor);
+	            		$pdf->SetXY($xsujet3,$ycoor);
 			        $pdf->SetTextColor($rgb1,$rgb2,$rgb3);
 				$pdf->MultiCell(12,5,strtolower($moyenneleveaff),1,'',1);
 				

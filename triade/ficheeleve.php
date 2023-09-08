@@ -97,7 +97,7 @@ unset($curs);
 ul { style-type:none;list-style: none; cursor:pointer;margin-left: 3px;padding-left: 0; }
 li { padding:7x; }
 </style>
-
+<?php include("./librairie_php/googleanalyse.php"); ?>
 </head>
 <body id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" onload="Init();" >
 <?php include("./librairie_php/lib_licence.php"); ?>
@@ -137,6 +137,8 @@ li { padding:7x; }
 						}else {
 							// utilisation de l'opérateur ternaire expr1?expr2:expr3;
 							$libelle=$data[$i][4]?$data[$i][1]."-".$data[$i][5]:$data[$i][1];
+							if (isset($verif[$libelle])) continue;
+		                                        $verif[$libelle]=$libelle;
 							print "<option STYLE='color:#000066;background-color:#CCCCFF' value=\"".$data[$i][0]."\">".$libelle."</option>\n";
 						}
 						$gtmp=$data[$i][4];
@@ -145,6 +147,7 @@ li { padding:7x; }
 					 unset($gtmp);
 					 unset($ctmp);
 					 unset($libelle);
+					 unset($verif);
 					 ?>
 					 </select>
 				<?php }else{ ?>

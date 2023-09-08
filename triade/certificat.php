@@ -120,7 +120,7 @@ if( count($data) <= 0 )	{
 		print "<input type=hidden name='idclasse' value=\"".$_POST["saisie_classe"]."\">";
 		print "<input type=hidden name='num_certif' value='".$_POST["num_certif"]."' ></form>";
 		?>
-			<form method='post'><font class='T2'><?php print LANGTMESS453 ?> </font><select name='num_certif' onChange="this.form.submit()" >
+		<form method='post'><font class='T2'><?php print LANGTMESS453 ?> </font><select name='num_certif' onChange="this.form.submit()" >
 		<?php if ($_POST["num_certif"] != "") print "<option value='".$_POST["num_certif"]."'>".preg_replace('/_/','',$_POST["num_certif"])."</option>"; ?>
 		<option value=''></option>
 		<option value='_A'>A</option>
@@ -160,9 +160,9 @@ if( count($data) <= 0 )	{
 		<?php
 		if (file_exists("data/parametrage/certificat$num_certif.rtf")) {
 		?>
-			<td width=150 align='center' >[<a href="certificat11.php?eid=<?php print $data[$i][1] ?>&num_certif=<?php print $num_certif?>"><?php print LANGCERT1 ?></a>]</td></tr>
+			<td width=165 align='center' >[<a href="certificat11.php?eid=<?php print $data[$i][1] ?>&num_certif=<?php print $num_certif?>"><?php print LANGCERT1 ?></a>]</td></tr>
 		<?php }else{ ?>
-			<td width=150 align='center' >[<a href="certificat1.php?eid=<?php print $data[$i][1] ?>&num_certif=<?php print $num_certif?>"><?php print LANGCERT1 ?></a>]</td></tr>
+			<td width=165 align='center' >[<a href="certificat1.php?eid=<?php print $data[$i][1] ?>&num_certif=<?php print $num_certif?>"><?php print LANGCERT1 ?></a>]</td></tr>
 		<?php
 		}
 	}

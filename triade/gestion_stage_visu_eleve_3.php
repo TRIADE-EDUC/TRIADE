@@ -96,8 +96,6 @@ if (isset($_GET["idstage"])) {
 		$date2=dateForm($data[$i][23]);
 		$id_prof_visite2=$data[$i][24];
 
-
-	
 		if ($loger == 1) {
 			$checklogoui="checked";
 			$checklognon="";
@@ -278,7 +276,7 @@ foreach($tab as $key=>$value) {
 <tr>
 <td align=right width=45%><font class="T2"><?php print "Tuteur de stage" ?> :</font></td>
 <td align=left>
-<?php print strtoupper(recherche_personne_nom($compte_tuteur_stage))." ".ucwords(recherche_personne_prenom($compte_tuteur_stage)) ?>
+<?php print strtoupper(recherche_personne_nom($compte_tuteur_stage,"TUT"))." ".ucwords(recherche_personne_prenom($compte_tuteur_stage,"TUT")) ?>
 </td>
 </tr>
 <tr>

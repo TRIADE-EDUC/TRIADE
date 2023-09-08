@@ -38,6 +38,11 @@ $CFG = new stdClass();
 // will be stored.  This database must already have been created         //
 // and a username/password created to access it.                         //
 
+if (file_exists("./common/config.inc.php")) {
+	include_once("./common/config.inc.php");
+	include_once("./common/config2.inc.php");
+}
+
 if (file_exists("../../common/config.inc.php")) {
 	include_once("../../common/config.inc.php");
 	include_once("../../common/config2.inc.php");
@@ -51,6 +56,16 @@ if (file_exists("../common/config.inc.php")) {
 if (file_exists("../../../common/config.inc.php")) {
 	include_once("../../../common/config.inc.php");
 	include_once("../../../common/config2.inc.php");
+}
+
+if (file_exists("../../../../common/config.inc.php")) {
+	include_once("../../../../common/config.inc.php");
+	include_once("../../../../common/config2.inc.php");
+}
+
+if (file_exists("../../../../../common/config.inc.php")) {
+	include_once("../../../../../common/config.inc.php");
+	include_once("../../../../../common/config2.inc.php");
 }
 
 $CFG->dbtype    = 'mariadb';      // 'pgsql', 'mariadb', 'mysqli', 'auroramysql', 'sqlsrv' or 'oci'

@@ -2643,7 +2643,7 @@ define("LANGMESS150","Supprimer");
 define("LANGMESS157","Trimestre");
 define("LANGMESS158","Classe");
 define("LANGMESS151","Identifiez votre compte");
-define("LANGMESS152","Veuillez dabord identifier votre compte pour réinitialiser votre mot de passe.");
+define("LANGMESS152","Veuillez d'abord identifier votre compte pour réinitialiser votre mot de passe.");
 define("LANGMESS153","Demande de mot de passe");
 define("LANGMESS154","Création de groupe");
 define("LANGMESS155","Liste des groupes des enseignants");
@@ -3225,5 +3225,8 @@ define("LANGVATEL38","Indiquer la date");
 
 define("LANGMESSE01","Accès à votre compte SMS");
 define("LANGMESSE02","Gestion des SMS"); 
+
+define("LANGNEW100","Sanction(s)");
+define("LANGNEW101","Prévision sur ");
 
 ?>

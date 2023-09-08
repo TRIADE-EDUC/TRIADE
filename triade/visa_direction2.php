@@ -36,6 +36,7 @@ include_once("./common/config5.inc.php"); header('Content-type: text/html; chars
 <script language="JavaScript" src="./librairie_js/lib_defil.js"></script>
 <script language="JavaScript" src="./librairie_js/clickdroit.js"></script>
 <script language="JavaScript" src="./librairie_js/function.js"></script>
+<script language="JavaScript" src="./librairie_js/ajaxIA.js"></script>
 <script language="JavaScript" src="./librairie_js/lib_css.js"></script>
 <script language="JavaScript" src="./librairie_js/lib_trimestre.js"></script>
 <title>Triade - Compte de <?php print $_SESSION["nom"]." ".$_SESSION["prenom"] ?></title>
@@ -101,7 +102,7 @@ if (isset($_POST["consult"])) {
 
 
 
-	print "<table align=center width=100%>";
+	print "<table align=center width='100%' border=0 >";
 
 	
 
@@ -119,9 +120,24 @@ if (isset($_POST["consult"])) {
 			$com=recherche_com($ideleve,$tri,$_POST["type_bulletin"],$anneeScolaire);
 			$com=preg_replace('/\\\r\\\n/','',$com);
 			$com=stripslashes($com);
-			print "<br><textarea cols=60 rows=5 name='comm_$i' onkeypress=\"compter(this,'$nbcar', this.form.CharRestant_$i)\" >$com</textarea>";
+			print "<br><textarea cols=60 rows=5 name='comm_$i' onkeypress=\"compter(this,'$nbcar', this.form.CharRestant_$i)\" id='comm_$i'   >$com</textarea>";
 			$nbtexte=strlen($com);
+			
+			if (file_exists("./common/config-ia.php")) {
+			        include_once("common/productId.php");
+			        include_once("common/config-ia.php");
+			        $productID=PRODUCTID;
+			        $iakey=IAKEY;
+			        $lienIA="ajaxIAVisaDir('$i','$productID','$iakey','comm_$i')";
+			}else{
+			        $lienIA="alert('Votre Triade n\'est pas configur&eacute; pour utiliser l\'IA. Contacter votre administrateur Triade')";
+			}	
+	
 			print "&nbsp;<input type=text name='CharRestant_$i' size=3 disabled='disabled' value='$nbtexte' />";
+			print "</td><td valign='top'>";	
+			
+			print "<br><br><input type='button' value='TRIADE-COPILOT' id='bt_copilot_$i' class='BUTTON' onClick=\"$lienIA\" >";
+
 			print "<br /></td></tr>";
 
 			if (($_POST["type_bulletin"] == "montessori") || ($_POST["type_bulletin"] == "montessori_spec")){
@@ -259,7 +275,7 @@ if (isset($_POST["consult"])) {
 			      print "</td></tr>";
 			}
 			
-			print "<tr><td colspan='2' ><hr></td></tr>";
+			print "<tr><td colspan='3' ><hr></td></tr>";
 			
 
 

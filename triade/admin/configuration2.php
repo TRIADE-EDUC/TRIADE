@@ -39,6 +39,14 @@ $proxy=$_POST["proxy"];
 $dstprof=$_POST["dstprof"];
 $calprof=$_POST["calprof"];
 $ferie=$_POST["ferie"];
+if (trim($ferie) != "") {
+	$ferie="'";
+	$ferie.=$_POST["ferie"];
+	$ferie=preg_replace('/,/',"','",$ferie);
+	$ferie.="'";
+}
+
+$cnilprotecteur=$_POST["cnilprotecteur"];
 $forum=$_POST["forum"];
 $noteusa=$_POST["noteusa"];
 $mailreply=$_POST["mailreply"];
@@ -301,6 +309,7 @@ $tuteurenvoigrpelev=$_POST["tuteurenvoigrpelev"];
 $tuteurenvoidelegue=$_POST["tuteurenvoidelegue"];
 $tuteurenvoipersonnel=$_POST["tuteurenvoipersonnel"];
 $stageetudiantadminprof=$_POST["stageetudiantadminprof"];
+$affichageia=$_POST["affichageia"];
 
 $profpmodifaffect=$_POST["profpmodifaffect"];
 
@@ -657,6 +666,8 @@ $texte.="define(\"EXAMENVATELREUNION\",\"$examenvatelreunion\");\n";
 $texte.="define(\"MODIFTROMBIELEVE\",\"$modiftrombieleve\");\n";
 $texte.="define(\"INTITULEENSEIGNANT\",\"$intitule_enseignant\");\n";
 $texte.="define(\"INTITULECLASSE\",\"$intitule_classe\");\n";
+$texte.="define(\"CNILPROTECTEUR\",\"$cnilprotecteur\");\n";
+$texte.="define(\"AFFICHAGEIA\",\"$affichageia\");\n";
 $texte.="?>\n";
 
 

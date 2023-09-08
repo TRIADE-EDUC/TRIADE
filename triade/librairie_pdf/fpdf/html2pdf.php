@@ -171,6 +171,47 @@ function __construct($orientation='P',$unit='mm',$format='A4',$_title='',$_url='
 //////////////////////////////////////
 //Parser html
 
+function WriteHTML2($html)
+    {
+        //HTML parser
+        $html=str_replace("\n",' ',$html);
+        $a=preg_split('/<(.*)>/U',$html,-1,PREG_SPLIT_DELIM_CAPTURE);
+        foreach($a as $i=>$e)
+        {
+            if($i%2==0)
+            {
+                //Text
+                if($this->HREF)
+                    $this->PutLink($this->HREF,$e);
+                elseif($this->ALIGN=='center')
+                    $this->Cell(0,5,$e,0,1,'C');
+                else
+                    $this->Write(5,$e);
+            }
+            else
+            {
+                //Tag
+                if($e[0]=='/')
+                    $this->CloseTag(strtoupper(substr($e,1)));
+                else
+                {
+                    //Extract properties
+                    $a2=explode(' ',$e);
+                    $tag=strtoupper(array_shift($a2));
+                    $prop=array();
+                    foreach($a2 as $v)
+                    {
+                        if(preg_match('/([^=]*)=["\']?([^"\']*)/',$v,$a3))
+                            $prop[strtoupper($a3[1])]=$a3[2];
+                    }
+                    $this->OpenTag($tag,$prop);
+                }
+            }
+        }
+    }
+
+
+
 function WriteHTML($html)
 {
 	//Parseur HTML
@@ -186,9 +227,7 @@ function WriteHTML($html)
 				$this->PutLink($this->HREF,$e);
 			else
 				$this->Write(5,stripslashes(txtentities($e)));
-		}
-		else
-		{
+		}else{
 			//Balise
 			if($e{0}=='/')
 				$this->CloseTag(strtoupper(substr($e,1)));
@@ -217,6 +256,7 @@ function OpenTag($tag,$attr) //Balise ouvrante
 			$this->SetStyle('I',true);
 			break;
 		case 'B':
+		case 'b':
 		case 'I':
 		case 'U':
 			$this->SetStyle($tag,true);

@@ -25,6 +25,10 @@ include_once 'conf_error.php';
 include_once '../librairie_php/timezone.php';
 include_once '../librairie_php/lib_prefixe.php';
 include_once '../common/config2.inc.php';
+include_once '../common/config.inc.php';
+
+$gestionMDP=GESTIONMDP;
+global $gestionMDP;
 
 function cnx() {
 	global $dsn;
@@ -328,17 +332,15 @@ function validtriade($nom,$pren,$mdp) {
 }
 
 function cryptage($mdp) {
-	if (defined("GESTIONMPD")) {
-		if (GESTIONMPD == "MD5") { 
-			$mdp=md5($mdp); 
-		}else{
-			$mdp=crypt(md5($mdp),"T2");
-		}
-
-	}else{
-		$mdp=crypt(md5($mdp),"T2");
-	}
-	return $mdp;
+        global $gestionMDP;
+        if ($gestionMDP == "MD5") {
+                $mdp=md5($mdp);
+        }elseif($gestionMDP == "SHA2") {
+                $mdp=hash('sha256',$mdp);
+        }else{
+                $mdp=crypt(md5($mdp),"T2");
+        }
+        return $mdp;
 }
 
 //---------------------------------------------------------------------//
@@ -1665,6 +1667,12 @@ function modifPasseAdminIntraMSN($pwd) {
 	execSql($requete);
 }
 
+function modifPasseAdminMoodle($pwd) {
+	global $cnx;
+        global $prefixe;
+	$sql="UPDATE mdl_user SET password=MD5($pwd) WHERE username='administrateur'";
+	execSql($requete);
+}
 
 
 ?>

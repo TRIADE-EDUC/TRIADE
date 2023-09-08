@@ -44,6 +44,7 @@ if ($_SESSION["adminplus"] != "suppreme") {
 <script type='text/javascript' src="./librairie_php/server.php?client=Util,main,dispatcher,httpclient,request,json,loading,iframe"></script>
 <script type='text/javascript' src="./librairie_php/auto_server.php?client=all&stub=livesearch"></script>
 <title>Triade - Compte de <?php print "$_SESSION[nom] $_SESSION[prenom] "?></title>
+<?php include("./librairie_php/googleanalyse.php"); ?>
 </head>
 <body id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" onload="Init();" >
 <?php

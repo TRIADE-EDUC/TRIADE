@@ -50,7 +50,7 @@ if (!file_exists("./common/config-sms.php")) {
 	include("../common/config2.inc.php"); 
 	$url=$_SERVER['SERVER_NAME'];
 	$graph=GRAPH;
-	print "<iframe width='100%' height=500 src='http://support.triade-educ.org/support/sms-inscription.php?url=$url&inc=$graph' MARGINWIDTH=0 MARGINHEIGHT=0 HSPACE=0 VSPACE=0 FRAMEBORDER=0 ></iframe>";
+	print "<iframe width='100%' height=500 src='https://support.triade-educ.org/support/sms-inscription.php?url=$url&inc=$graph' MARGINWIDTH=0 MARGINHEIGHT=0 HSPACE=0 VSPACE=0 FRAMEBORDER=0 ></iframe>";
 }else{
 	print "<center><font class=T2>Votre établissement a déjà un compte d'inscrit au service SMS</font></center>";
 

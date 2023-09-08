@@ -23,9 +23,8 @@
 
 
 
-error_reporting(0);
+//error_reporting(0);
 include_once("../librairie_php/lib_emul_register.php");
-
 
 
 if (empty($_SESSION["nom"]))  {
@@ -86,7 +85,7 @@ include_once("../common/config4.inc.php");
 //----------------------------------------------------------------------------
 function droit() {
 print <<<EOF
-Copyright (C) 2000-2004 TAESCH - TRACHET - ORY
+Copyright (C) 2000-2023 - T.R.I.A.D.E
 
 Ce programme est libre, vous pouvez le redistribuer et/ou le modifier selon les termes de la Licence Publique Générale GNU publiée par la Free Software Foundation.
 

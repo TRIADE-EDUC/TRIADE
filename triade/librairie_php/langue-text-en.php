@@ -504,7 +504,7 @@ define("LANGBASE18","INFORMATION NONT AVAILABLE");
 define("LANGBULL1","Print Trimester Report Card");
 define("LANGBULL2","Enter class");
 define("LANGBULL3","School year");
-define("LANGBULL4","<a href=\"#\" onclick=\"open('./accrobat.php','acro','width=500,height=350')\"><b><FONT COLOR=red></FONT></B> Need <B>Adobe Acrobat Reader</B>.  FOr free Software download click <B>HERE</B></A>");
+define("LANGBULL4","<a href=\"#\" onclick=\"open('https://www.adobe.com','_blank','')\"><b><FONT COLOR=red></FONT></B> Need <B>Adobe Acrobat Reader</B>.  FOr free Software download click <B>HERE</B></A>");
 // -----------------------------------------------------------------------------------------------------------------------
 define("LANGPARENT1","no message");
 define("LANGPARENT2","No delegates assigned yet");
@@ -2091,7 +2091,7 @@ define("LANGCIRCU111","<font face=Verdana size=1><B><font color=red>D</font></B>
 
 define("LANGAFF7","Module to erase class assignment.");
 define("LANGAFF8","WARNING, this module is to be used to delete class assignment. ,<br> it erases all students grades in deleted classes.");
-define("LANGAFF9","WARNING,selected class grades will be erased. \\n Are you sure you want to do that ? \\n\\n TRIADE team");
+define("LANGAFF9","WARNING,selected class grades will be erased. \\n Are you sure you want to do that ? \\n\\nTRIADE team");
 define("LANGCREAT2","Delete an account");
 
 
@@ -3112,7 +3112,7 @@ define("LANGMESST701","News first page");
 define("LANGMESST702","Title of the video clip");
 define("LANGMESST703","Copy / paste");
 define("LANGMESST704","Enter recipient");
-define("LANGMESST705","The message has not been sent: You do not have permission to send a message to this person. The TRIADE team");
+define("LANGMESST705","The message has not been sent: You do not have permission to send a message to this person. TRIADE team");
 define("LANGTMESS400","Your request has been taken into account");
 define("LANGTMESS401","Please check your e-mail address");
 define("LANGTMESS402","No account matches with the email address");
@@ -3603,8 +3603,10 @@ define("LANGVATEL302","SMS alert");
 define("LANGVATEL303","SMS alert");
 
 
+define("LANGPUR4","WARNING : You are running a module that will delete selected data.\\n Do you want to continue ? \\n\\nTRIADE team");
 
-
+define("LANGNEW100","Punishment(s)");
+define("LANGNEW101","Forecast");
 
 
 ?>

@@ -37,7 +37,7 @@ session_start();
 <table border='0' width=100%  cellspacing=2>
 <?php
 include_once('librairie_php/db_triade.php');
-validerequete("3");
+validerequete("7");
 $cnx=cnx();
 $ideleve=$_GET["saisie_eleve"];
 $idclasse=$_GET["saisie_classe"];
@@ -59,7 +59,7 @@ if( count($data)  <= 0 ) {
 	<tr>
 	<td width=5 valign=top rowspan=3>
 	<div>
-	<div style="position:absolute;top:0px;left:0px;z-index:1000000" ><img src='image/commun/paperclip.png'></div>
+<!--	<div style="position:absolute;top:0px;left:0px;z-index:1000000" ><img src='image/commun/paperclip.png'></div> -->
 	<img src="image_trombi.php?idE=<?php print $ideleve ?>" height='100' style="position:relative;top:19;left:15px;z-index:1;border:2px solid #fff;background: url(img/tiger.png) no-repeat;-moz-box-shadow: 5px 5px 5px grey;-webkit-box-shadow: 5px 5px 5px grey ;box-shadow: 5px 5px 5px grey;-moz-border-radius:20px;-webkit-border-radius:25px;border-radius:25px;"   >
 	</div>
 	</td>

@@ -494,7 +494,7 @@ define("LANGBASE18","INFORMACION PAS DISPONIBLA");
 define("LANGBULL1","Impression bulletin trimestral");
 define("LANGBULL2","Indicatz la classa");
 define("LANGBULL3","Annada scolaire");
-define("LANGBULL4","<a href=\"#\" onclick=\"open('./accrobat.php','acro','width=500,height=350')\"><b><FONT COLOR=red>ATENCION</FONT></B> Besonh de l'aisina <B>Adobe Acrobat Reader</B>.  Logicial e telecargament gratuits  clicatz <B>ICI</B></A>");
+define("LANGBULL4","<a href=\"#\" onclick=\"open('https://www.adobe.com/fr/','_blank','')\"><b><FONT COLOR=red>ATENCION</FONT></B> Besonh de l'aisina <B>Adobe Acrobat Reader</B>.  Logicial e telecargament gratuits  clicatz <B>ICI</B></A>");
 // -----------------------------------------------------------------------------------------------------------------------
 define("LANGPARENT1","aucun messatge");
 define("LANGPARENT2","Aucun delegat afectat pel moment");
@@ -3490,6 +3490,57 @@ define("LANGVATEL270","Absences et Retards d'un étudiant");
 define("LANGVATEL271","Création impossible, année scolaire non indiquée.");
 define("LANGVATEL272","Nouvelle unité d'enseignement créée.");
 define("LANGVATEL273","Trombinoscope");
+define("LANGVATEL274","Envoi SMS pour les absences depuis ");
 
+define("LANGVATEL275","NBETUDIANTS => Nombre d'etudiants<br />
+ HISTOETUDIANT => Parcours de l'etudiant<br />
+ NOMETUDIANT => Nom de l'etudiant<br>
+ PREETUDIANT => Prénom de l'etudiant<br>
+ DATENAISETUDIANT => Date de naissance de l'etudiant<br>
+ IDENTETUDIANT => Code d'identification de l'etudiant<br>
+ NOMETABLISSEMENT => Nom de l'etablissement de l'etudiant<br>
+ DATEDUJOUR => Date du jour<br>
+ LANGUEETUDIANT => La langue d'enseignement<br>
+ NBRETUDIANTPA1 => Le nombre d'etudiants M4 et PREPA pour le titre 1 <br>
+ NBRETUDIANTPA2 => Le nombre d'etudiants en première année pour le titre 2 <br>
+ NBRETUDIANTPREPA => Le nombre d'etudiants en prepa  <br>
+ NBRETUDIANTM4 => Le nombre d'etudiants en M4 pour le titre 1 <br>
+ SPECIALISATION => Specialisation de la ".INTITULECLASSE." <br>
+ NOMDIRECTEUR => Nom du Directeur de l'etablissement <br>
+ NOMCLASSELONG => Nom de la ".INTITULECLASSE." au format long <br>");
+
+define("LANGVATEL276","Listes des commentaires des bulletins effectués.");
+define("LANGVATEL277","Consulter les commentaires de la ".INTITULECLASSE." par matière.");
+define("LANGVATEL278","Nombre effectué");
+define("LANGVATEL279","Taux effectué");
+define("LANGVATEL280","Signalé");
+define("LANGVATEL281","Envoi message");
+define("LANGVATEL282","commentaire(s) enregistré(s) sur ");
+define("LANGVATEL283","Age");
+define("LANGVATEL284","ans");
+define("LANGVATEL285","Listing des absences de cette période.");
+define("LANGVATEL286","Nbr&nbsp;d'absences&nbsp;");
+define("LANGVATEL287","Listing des retards de cette période.");
+define("LANGVATEL288","Graphiques");
+define("LANGVATEL289","Commentaire de la direction.");
+define("LANGVATEL290","Commentaire du professeur principal.");
+define("LANGVATEL291","Les commentaires des ".INTITULEENSEIGNANT."s sont disponibles sur la moyenne de l'".INTITULEELEVE.".");
+define("LANGVATEL292","Archive bulletin");
+
+define("LANGVATEL293","Control d'accès");
+define("LANGVATEL294","Changement de ".INTITULECLASSE."");
+define("LANGVATEL295","Indiquer l'année scolaire en cours des étudiants");
+define("LANGVATEL296","Indiquer l'année scolaire future pour les étudiants ");
+define("LANGVATEL297","Indiquer l'année scolaire de l'étudiant en cours ");
+define("LANGVATEL298","Indiquer la nouvelle année scolaire ");
+define("LANGVATEL299","Né(e) le ");
+define("LANGVATEL300","Fiche Etudiante");
+define("LANGVATEL301","Alerte Absences");
+define("LANGVATEL302","Alerte SMS");
+define("LANGVATEL303","Alerte SMS");
+
+
+define("LANGNEW100","Sanction(s)");
+define("LANGNEW101","Prévision sur ");
 
 ?>

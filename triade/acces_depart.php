@@ -248,6 +248,7 @@ if (is_writable("./data/install_log/install.inc")) {
 
 include_once("./common/config.inc.php");
 include_once("./librairie_php/db_triade.php");
+adsens();
 
 if (file_exists("./data/install_log/noaccess.inc")) {   // Interruption du service unique
 	$verif=2;
@@ -302,6 +303,14 @@ if (ini_get('register_globals')) {
 //	$disabled="disabled";
 }
 
+
+if ((file_exists("./data/parametrage/noacces.ete")) && ($_GET["saisie_membre"] != "administrateur")) {
+        $verif=3;
+        $disabled="disabled";
+        $action="acces_depart.php";
+        $codeErreur="" ;
+        $messageaccueil="L'ENT Triade est en vacance, l'&eacute;tablissement pr&eacute;pare la nouvelle ann&eacute;e, merci de revenir plus tard.";
+}
 
 if ((file_exists("./data/parametrage/noacces.parent")) && ($_GET["saisie_membre"] == "parent")) {
 	$verif=3;
@@ -372,7 +381,7 @@ if (screen.width >= 1024) { document.getElementById('saisiewidth').value='1020';
 
 </TD></TR></TABLE></font></p></FORM>
 <?php
-if (preg_match('/demo.triade-educ.com/',WEBROOT)) {
+if (preg_match('/demo.triade-educ.net/',WEBROOT)) {
         print "<br>";
         if ($_GET["saisie_membre"] == "administrateur") print "&nbsp;&nbsp;&nbsp;<i>Nom : neo - Pr&eacute;nom : neo - mot de passe : matrix</i>";
         if ($_GET["saisie_membre"] == "parent")         print "&nbsp;&nbsp;&nbsp;<i>Nom : merovingien - Pr&eacute;nom : merovingien - mot de passe : matrix</i>";
@@ -387,8 +396,10 @@ if (preg_match('/demo.triade-educ.com/',WEBROOT)) {
 <br />
 <?php
 if (isset($_GET["securite"])) {
-	print "<br><center><font class=T2 id=color2 >Connexion en mode sécurisée,<br>merci de renouveler votre demande d'authentification.</font></center><br><br>";
+	print "<br><center><font class=T2 id=color2 >Connexion en mode sécurisée,<br>merci de renouveler votre demande'authentification.</font></center><br><br>";
 }
+
+if ($messageaccueil != "") print "<p align=center><font class=T2 color=red><b>$messageaccueil</b></font></p><br/>";
 ?>
 
 <!-- // fin  -->

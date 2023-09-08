@@ -30,7 +30,7 @@ if ($_SESSION["membre"] == "menuadmin") {
 				if ($value == "leap_megtrav") $leap_megtrav=1;
 			}
 		}
-		$cr=create_comm_direc_bull($_POST["ideleve"],$_POST["tri"],utf8_decode($_POST["commentaire"]),$montessori,$type_bulletin,$leap_felicitation,$leap_encouragement,$leap_megcomp,$leap_megtrav,$jtc_promu,$jtc_reprendre,$jtc_orientation,$pp_av_trav,$pp_av_comp,$pp_enc,$pp_feli,$ppv2_av,$ppv2_faible,$ppv2_passable,$ppv2_enc,$ppv2_feli,$anneeScolaire);
+		$cr=create_comm_direc_bull($_POST["ideleve"],$_POST["tri"],$_POST["commentaire"],$montessori,$type_bulletin,$leap_felicitation,$leap_encouragement,$leap_megcomp,$leap_megtrav,$jtc_promu,$jtc_reprendre,$jtc_orientation,$pp_av_trav,$pp_av_comp,$pp_enc,$pp_feli,$ppv2_av,$ppv2_faible,$ppv2_passable,$ppv2_enc,$ppv2_feli,$anneeScolaire);
 		if ($cr) {
 			history_cmd($_SESSION["nom"],"COMMENTAIRE","Bulletin");
 			print "ok";

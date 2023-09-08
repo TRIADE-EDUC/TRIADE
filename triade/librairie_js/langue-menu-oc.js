@@ -17,7 +17,7 @@
  *
  ***************************************************************************/
 // Ne pas d&eacute;passer 24 caract&egrave;res
-langtitre0="Assist&eacute;ncia";
+langtitre0="TRIADE-COPILOT";
 langtitre1="Actualitat";
 langtitre2="Servici Triade";
 langtitre3="Forum";
@@ -298,3 +298,5 @@ langmenuadmin913="Eval. Enseignant";
 
 langmenupersonnel1="Acc&egrave;s Modules";
 langmenupersonnel2="Cantine";
+langmenugeneral01a="Memo";
+langmenuadmin023="Corbeille";

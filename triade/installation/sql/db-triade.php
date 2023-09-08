@@ -23,7 +23,6 @@
 include_once("../common/config.inc.php");
 include_once("DB.php");
 
-
 function cnx() {
         global $dsn;
         $cnx =& DB::connect($dsn);
@@ -45,13 +44,10 @@ function cnx() {
 function execSql($sql) {
         global $cnx;
 
-        // $sql=MyAddSlashes($sql);
-
         $res =& $cnx->query($sql);
         if(DB::isError($res))
         {
-		
-               	if (ereg("^DROP",$sql)) {
+               	if (preg_match('/^DROP/',$sql)) {
 			//rien
 		}else {	
                		print "<br>$sql</br>";
@@ -62,17 +58,13 @@ function execSql($sql) {
 		        print "<input type=button value='Réparer le requête SQL' onclick=\"history.go(0);\" >";
 		        print "<br><br>";
 
-                exit($res->getMessage()." ".$res->getCode()." ".$res->getDebugInfo());
+	                exit($res->getMessage()." ".$res->getCode()." ".$res->getDebugInfo());
         	}
         }
         else {
                 return $res;
         }
 }
-
-
-
-
 
 function Pgclose(){
         global $cnx;
@@ -109,15 +101,3 @@ function MyAddSlashes($chaine ) {
 function MyStripSlashes($chaine) {
   return( get_magic_quotes_gpc() == 1 ? stripslashes($chaine) : $chaine );
 }
-
-function miseAjourBase() {
-	global $cnx;
-	global $prefixe;
-	// ----------------------------------------------------------------------------------------------------------------------------------
-	$sql="TRUNCATE TABLE ${prefixe}news_admin";
-	execSql($sql);
-	$sql="INSERT INTO ${prefixe}news_admin (nom,prenom,date,heure,titre,texte,type,config_video) VALUES ('Triade','Support','$date',$heure','Essai Vidéo','<br><br><table align=\'center\' style=\'box-shadow: 0px 0px 10px 4px rgba(119, 119, 119, 0.75); moz-box-shadow: 0px 0px 10px 4px rgba(119, 119, 119, 0.75); -webkit-box-shadow: 0px 0px 10px 4px rgba(119, 119, 119, 0.75);\' ><tr><td><object width=\'420\' height=\'280\'><param name=\'movie\' value=\'http://www.youtube.com/watch?v=_R5IQoIYvTM\'></param><param name=\'allowFullScreen\' value=\'false\'></param><param name=\'allowscriptaccess\' value=\'always\'></param><embed src=\'http://www.youtube.com/watch?v=_R5IQoIYvTM\'  type=\'application/x-shockwave-flash\' allowscriptaccess=\'always\' allowfullscreen=\'false\' width=\'420\' height=\'280\'></embed></object></td></tr></table><br /><br />','video','')";
-	execSql($sql);
-	// ------------------------------------------------------------------------------------------------------------------------------------
-}
-

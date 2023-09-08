@@ -57,8 +57,8 @@ if (LAN == "oui") {
 	$cnx=cnx();
 ?>
 	
-<script language="JavaScript" src="http://support.triade-educ.org/support/version-patch.php?v=<?php print VERSIONPATCH ?>"></script>
-<script language="JavaScript" src="http://support.triade-educ.org/support/version-md5.php?v=<?php print VERSIONMD5 ?>"></script>
+<script language="JavaScript" src="https://support.triade-educ.org/support/version-patch.php?v=<?php print VERSIONPATCH ?>"></script>
+<script language="JavaScript" src="https://support.triade-educ.org/support/version-md5.php?v=<?php print VERSIONMD5 ?>"></script>
 <ul>
 <font class='T2'>Liste des fichiers non conformes : </font>
 <br><br>
@@ -96,7 +96,7 @@ if (update == 1) {
 	document.formulaire.envoi.disabled=true;
 }else{
 	if (updatemd5 == 1) {
-		document.getElementById("infopatch").innerHTML="<font color=red><b>ATTENTION, VOUS DEVEZ INSTALLER LE PATCH MD5,<br /> AVANT D'EFFECTUER CETTE OPERATION, <br />PATCH DISPONIBLE : <a href='http://support.triade-educ.org/support/recupFichierMd5.php' target='_blank' ><font color=red>MODULE \"Triade MD5 \"</font></a></b></font>"; 
+		document.getElementById("infopatch").innerHTML="<font color=red><b>ATTENTION, VOUS DEVEZ INSTALLER LE PATCH MD5,<br /> AVANT D'EFFECTUER CETTE OPERATION, <br />PATCH DISPONIBLE : <a href='https://support.triade-educ.org/support/recupFichierMd5.php' target='_blank' ><font color=red>MODULE \"Triade MD5 \"</font></a></b></font>"; 
 		document.formulaire.envoi.disabled=true;
 	}
 }

@@ -199,6 +199,8 @@ if ($choixmatiere == 0) {
 		else {
 			// utilisation de l'opérateur ternaire expr1?expr2:expr3;
 			$libelle=$data[$i][4]?$data[$i][1]."-".$data[$i][5]:$data[$i][1];
+			if (isset($verif[$libelle])) continue;
+                        $verif[$libelle]=$libelle;
 			print "<option STYLE='color:#000066;background-color:#CCCCFF' value=\"".$data[$i][0].":".$data[$i][4]."\">".$libelle."</option>\n";
 		}
 		$gtmp=$data[$i][4];
@@ -207,6 +209,7 @@ if ($choixmatiere == 0) {
 	 unset($gtmp);
 	 unset($ctmp);
 	 unset($libelle);
+	 unset($verif);
  ?>
 </select>
 <br /><br />
@@ -296,6 +299,8 @@ for($i=1;$i<count($data);$i++){
 	else {
 		// utilisation de l'opérateur ternaire expr1?expr2:expr3;
 		$libelle=$data[$i][4]?$data[$i][1]."-".$data[$i][5]:$data[$i][1];
+		if (isset($verif[$libelle])) continue;
+                $verif[$libelle]=$libelle;
 		print "<option STYLE='color:#000066;background-color:#CCCCFF' value=\"".$data[$i][0].":".$data[$i][4]."\">".$libelle."</option>\n";
 	}
 	$gtmp=$data[$i][4];
@@ -304,6 +309,7 @@ for($i=1;$i<count($data);$i++){
 unset($gtmp);
 unset($ctmp);
 unset($libelle);
+unset($verif);
 ?>
 </select>
 <br /><br />

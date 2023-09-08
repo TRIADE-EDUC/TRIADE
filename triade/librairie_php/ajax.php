@@ -80,7 +80,7 @@ callback = {
 var remoteLiveSearch = new livesearch(callback);
 
 
-alert("ok");
+//alert("ok");
 
 // we could change the queue by overriding the default one, but generally you want to create a new one
 // set our remote object to use the rls queue

@@ -45,7 +45,7 @@ if (isset($_POST["rien"])) {
 	$pays=$_POST["pays"];
 	$productidclient=$_POST["productidclient"];
 	enrDemandeAffiliation($contact,$email,$etablissement,$ville,$pays,$productidclient);
-	print "<script language='JavaScript' src='http://support.triade-educ.org/centralestage/demandeaffiliation.php?productidclient=$productidclient&productidcentral=".PRODUCTID."'></script>";
+	print "<script language='JavaScript' src='https://support.triade-educ.org/centralestage/demandeaffiliation.php?productidclient=$productidclient&productidcentral=".PRODUCTID."'></script>";
 
 }
 ?>

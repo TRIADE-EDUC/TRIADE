@@ -51,7 +51,7 @@ if ((GRAPH == '20') || (GRAPH == '21'))  {
 }else{	
 	if ((webrad == "oui") && (moduleradio == "oui"))   { 
 		document.write("<tr>");
-		document.write("<td colspan='3' id='coulTitre0' style='-webkit-border-radius: 15px;-moz-border-radius: 15px;border-radius: 15px;' ><a href='#' onMouseOver=\"AffBulleRadioAvecQuit('','','<div id=affradio ><iframe src=http://www.triade-educ.com/webradio/infomusic.php  height=100 MARGINWIDTH=0 MARGINHEIGHT=0 HSPACE=0 VSPACE=0 FRAMEBORDER=0 SCROLLING=NO ></iframe></div>'); window.status=''; return true;\" onMouseOut='HideBulleRadio()' onclick=\"open('webradio.php','webradio','width=329,height=195');return false\" ><img src='image/commun/webradio.jpg' align='center' border='0' style='-webkit-border-radius: 15px;-moz-border-radius: 15px;border-radius: 15px; box-shadow: 0px 0px 10px 4px rgba(119, 119, 119, 0.75); moz-box-shadow: 0px 0px 10px 4px rgba(119, 119, 119, 0.75); -webkit-box-shadow: 0px 0px 10px 4px rgba(119, 119, 119, 0.75); ' /></a></td>"); 
+		document.write("<td colspan='3' id='coulTitre0' style='-webkit-border-radius: 15px;-moz-border-radius: 15px;border-radius: 15px;' ><a href='#' onMouseOver=\"AffBulleRadioAvecQuit('','','<div id=affradio ><iframe src=https://www.triade-educ.org/webradio/infomusic.php  height=100 MARGINWIDTH=0 MARGINHEIGHT=0 HSPACE=0 VSPACE=0 FRAMEBORDER=0 SCROLLING=NO ></iframe></div>'); window.status=''; return true;\" onMouseOut='HideBulleRadio()' onclick=\"open('webradio.php','webradio','width=329,height=195');return false\" ><img src='image/commun/webradio.jpg' align='center' border='0' style='-webkit-border-radius: 15px;-moz-border-radius: 15px;border-radius: 15px; box-shadow: 0px 0px 10px 4px rgba(119, 119, 119, 0.75); moz-box-shadow: 0px 0px 10px 4px rgba(119, 119, 119, 0.75); -webkit-box-shadow: 0px 0px 10px 4px rgba(119, 119, 119, 0.75); ' /></a></td>"); 
 		document.write("</tr>");
 		document.write("<tr><td colspan='3' height=19>&nbsp;</td></tr>");
 	}else{
@@ -66,6 +66,7 @@ document.write(" <tr>");
 document.write("<td colspan='3' height='28' id='coulModule0' >");
 document.write("<p style='margin-left: 2px; margin-top:5px; margin-bottom:5px'>");
 document.write("<img src='./image/cube.gif' width='4' height='4'> <a href='gescompte.php' id='menumodule0'  >"+langmenugeneral01+"</a><br>");
+document.write("<img src='./image/cube.gif' width='4' height='4'> <a href='memo.php' id='menumodule0'  >"+langmenugeneral01a+"</a><br>");
 if (moduleagendaadmin == "oui") { document.write("<img src='./image/cube.gif' width='4' height='4'> <a href='#' id='menumodule0' onclick=\"open('./agenda/phenix/index.php','timecop','');\" >"+langmenuadmin00+"</a><br>"); }
 if (modulestockageadmin == "oui") { document.write("<img src='./image/cube.gif' width='4' height='4'> <a href='#' onclick=\"open('stockage.php','stockage','scrollbars=yes,resizable=yes,width=850,height=500')\" id='menumodule0' >"+langmenuadmin06+"</a><br>"); }
 if (moduleintramsnadmin == "oui") { document.write("<img src='./image/cube.gif' width='4' height='4'> <a href='./intra-msn.php' id='menumodule0' >"+langmenuadmin100+"</a><br>"); }
@@ -87,6 +88,7 @@ document.write("<p style='margin-left: 2px; margin-top:5px; margin-bottom:5px'>"
 if (modulemessagerieadmin == "oui") {
 	document.write("<img src='./image/cube.gif' width='4' height='4'> <a href='./messagerie_reception.php' id='menumodule0'>"+langmenuadmin03+"</a><br>");
 	document.write("<img src='./image/cube.gif' width='4' height='4'> <a href='./messagerie_envoi.php' id='menumodule0'>"+langmenuadmin02+"</a><br>");
+	document.write("<img src='./image/cube.gif' width='4' height='4'> <a href='./corbeille_message.php' id='menumodule0'>"+langmenuadmin023+"</a><br>");
 	document.write("<img src='./image/cube.gif' width='4' height='4'> <a href='./messagerie_brouillon.php' id='menumodule0'>"+langmenuadmin022+"</a><br>");
 	document.write("<img src='./image/cube.gif' width='4' height='4'> <a href='./messagerie_suppression.php' id='menumodule0'>"+langmenuadmin04+"</a><br>");
 }
@@ -196,6 +198,7 @@ if (rubriqueetablissement != "non") {
 	if (moduleadminpurgerinfo != "non") document.write("<img src='./image/cube.gif' width='4' height='4'> <a href='./purge.php' id='menumodule0'>"+langmenuadmin92+"</a><br />");
 	document.write("<img src='./image/cube.gif' width='4' height='4'> <a href='./elevesansclasse.php' id='menumodule0'>"+langmenuadmin83+"</a><br />");
 	document.write("<img src='./image/cube.gif' width='4' height='4'> <a href='./chgmentClas.php' id='menumodule0'>"+langmenuadmin91+"</a><br>");
+	langmenuadmin911 = langmenuadmin911.charAt(0).toUpperCase() + langmenuadmin911.slice(1);
 	document.write("<img src='./image/cube.gif' width='4' height='4'> <a href='./historyEtudiant.php' id='menumodule0'>"+langmenuadmin911+"</a><br>");
 	if (moduleadminnouvelleannee != "non") document.write("<img src='./image/cube.gif' width='4' height='4'> <a href='./newannee.php' id='menumodule0'  >"+langmenuadmin99+"</a><br />");
 	document.write("</p></td></tr>");

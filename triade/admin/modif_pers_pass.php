@@ -66,7 +66,7 @@ if(isset($_POST["create"])) {
 if ($affiche) {
 ?>
 <font class=T2>
-<form method=post name=formulaire onsubmit="return validepass('Veuillez indiquer une mot de passe.')">
+<form method=post name=formulaire onsubmit="return validepass('Veuillez indiquer un mot de passe.')">
 <?php print LANGNA1 ?> : <b><?php print ucwords($nom);?></b><br>
 <br>
 <?php print LANGNA2 ?> : <b><?php print ucwords(strtolower($prenom));?></b><br>
@@ -78,11 +78,11 @@ if ($affiche) {
 <input type=hidden name="id" value="<?php print $id?>">
 <input type=hidden name="type" value="<?php print $type?>">
 <table align=center border=0 ><tr><td><script language=JavaScript>buttonMagicSubmit('<?php print LANGENR ?>','create') </script> <script language=JavaScript>buttonMagicFermeture(); //bouton de fermeture</script>&nbsp;&nbsp;</td></tr></table>
-</form><BR><br>
+</form><BR>
 <?php
 }
 ?>
-<BR><br>
+<br>
 <table align=center border=0><tr><td><script language=JavaScript>buttonMagicFermeture(); //bouton de fermeture</script></td></tr></table>
 </BODY></HTML>
 <?php

@@ -73,6 +73,18 @@ document.write("<table border=0 cellspacing=10><tr><td>");
 document.write("<img src='./image/commun/linux.png' width=16 height=16 ></td><td><img src='./image/commun/windows.png' width=16 height=16 ></td><td><img src='./image/commun/MacOS.png' width=16 height=16 ></td><td><img src='./image/commun/android.png' width=16 height=16 >");
 document.write("</td></tr></table>");
 
+document.write("<br/><table border=0 cellspacing=10 >");
+document.write("<tr>");
+document.write("<td>&nbsp;&nbsp;&nbsp;<a href='https://www.triade-educ.org/accueil/discord.php' target='_blank' ><img src='./image/commun/discord-icon.png' width='32'  ></a>");
+document.write("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='https://www.youtube.com/@TRIADE-YOUTUBE' target='_blank' ><img border='0' src='./image/commun/icone-youtube.png' width='25' style=\"position:relative;top:-3px\" /></a></td>");
+document.write("</tr>");
+document.write("<tr>");
+document.write("<td coslspan='2'><br>&nbsp;&nbsp;&nbsp;<a href='https://www.triade-educ.org/accueil/triade-ia.php' target='_blank' ><img src='./image/commun/openai-lockup.png' width='80' border='0'  ></a></td>");
+document.write("</tr>");
+document.write("</table>");
+
+
+
 document.write("<tr>");
 document.write("<td colspan='3' height=19>");
 document.write("</td>");

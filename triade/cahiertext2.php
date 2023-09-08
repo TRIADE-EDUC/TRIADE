@@ -60,14 +60,16 @@ unset($listTmp);
 //print_r($HPV);
 if($HPV[gid]):
 	$val=LANGDEVOIR1;
-    $who="<b><font id='menumodule1'> $val : </b></font> ".ucwords(trunchaine(chercheGroupeNom($HPV[gid]),14));
+    	$who="<b><font id='menumodule1'> $val : </b></font> ".ucwords(trunchaine(chercheGroupeNom($HPV[gid]),14));
 	$classorgrp=1;
+	$classe=$HPV[gid];
 else:
 	$val=LANGDEVOIR2;
 	$cl=chercheClasse($HPV[cid]);
 	$classorgrp=0;
-    $who="<b><font id='menumodule1'> $val : </b></font>".ucwords(trunchaine($cl[0][1],14));
-    unset($cl);
+    	$who="<b><font id='menumodule1'> $val : </b></font>".ucwords(trunchaine($cl[0][1],14));
+	$classe=$cl[0][1];
+    	unset($cl);
 endif;
 
 // Sn : variable de Session nom
@@ -117,7 +119,7 @@ ORDER BY
 $curs=execSql($sql);
 $data=chargeMat($curs);
 @array_unshift($data,array()); // nécessaire pour compatibilité
-// patch pour problème sous-matière à 0
+// patch pour problème sous-matièr
 for($i=0;$i<count($data);$i++){
 	$tmp=explode(" 0 ",$data[$i][3]);
 	$data[$i][3]=$tmp[0].' '.$tmp[1];
@@ -144,6 +146,7 @@ unset($curs);
 <script language="JavaScript" src="./librairie_js/lib_defil.js"></script>
 <script language="JavaScript" src="./librairie_js/clickdroit.js"></script>
 <script language="JavaScript" src="./librairie_js/lib_css.js"></script>
+<script type="text/javascript" src="./librairie_js/ajaxIA.js"></script>
 <script language="JavaScript" src="./librairie_js/function.js"></script>
 <script type="text/javascript" src="./librairie_js/prototype.js"></script>
 <script type="text/javascript" src="./librairie_js/ajax-menu-tab.js"></script>
@@ -288,7 +291,7 @@ function upSelectMat(arg) {
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?></div>
 <SCRIPT language="JavaScript" src="./librairie_js/<?php print $_SESSION["membre"]?>1.js"></SCRIPT>
-<table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="745" >
+<table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="945" >
 <tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' ><?php print LANGMESS89 ?> </b><font id=color2><b><?php print trunchaine(chercheMatiereNom($sMat),15)." ".$who?></b></font></td></tr>
 <tr id='cadreCentral0' >
 <td valign='top' width="100%"  >
@@ -343,6 +346,23 @@ calendar("id1","document.form11.date_contenu",$_SESSION["langue"],"0");
 <input type=submit name="accesdate" value="<?php print VALIDER ?>" class='button' >
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 <input type=button value="<?php print LANGMESS91 ?>"  STYLE="font-family: Arial;font-size:10px;color:#CC0000;background-color:#CCCCFF;font-weight:bold;" onclick="open('cahiertext_visu_global.php?iddate=<?php print dateFormBase($datepour) ?>&id=<?php print $list1?>&classorgrp=<?php print $classorgrp?>','devoir','width=1050,height=600,resizable=yes,personalbar=no,toolbar=no,statusbar=no,locationbar=no,menubar=no,scrollbars=yes')" >
+
+<?php
+if(file_exists("./common/config-ia.php")) {
+	include_once("common/productId.php");
+        include_once("common/config-ia.php");
+        $productID=PRODUCTID;
+        $iakey=IAKEY;
+        $prenom=recherche_eleve_prenom($idEleve);
+	$matiere=trim(chercheMatiereNom($sMat));
+        $lienIA="open('devoirAcomposer.php?matiere=$matiere&classe=$classe','','width=600,height=500')";
+}else{
+        $lienIA="alert('Votre Triade n\'est pas configur&eacute; pour utiliser l\'IA. Contacter votre administrateur Triade')";
+}
+?>
+&nbsp;&nbsp;&nbsp;<input type='button' value='TRIADE-COPILOT' class='BUTTON' onClick="<?php print $lienIA ?>" >
+
+
 <br><br>
 <?php
 if ($_SESSION["membre"] == "menuadmin") {
@@ -404,7 +424,7 @@ tinymce.init({
     selector: "textarea#elm1",
     statusbar : false,
     width: '100%',
-    height: '240',
+    height: '470',
     browser_spellcheck : true,
     menubar : "format edit table ",
     plugins: ["textcolor emoticons","link","table","save"], 
@@ -417,8 +437,8 @@ tinymce.init({
 	/<\?.*\?>/g
 	],
 	schema: "html4",
-    <?php	
-     if (($_SESSION["membre"] == "menuprof") || (DIRCAHIERTEXTE == "oui")) { ?>
+<?php	
+      if (($_SESSION["membre"] == "menuprof") || (DIRCAHIERTEXTE == "oui")) { ?>
     	toolbar: "forecolor | bold italic | textcolor | emoticons |  bullist numlist outdent indent | link | save"
 <?php }else{ ?>
 	toolbar: "undo redo "
@@ -427,7 +447,7 @@ tinymce.init({
 var ed1 = tinymce.activeEditor; 
 
 </script>
-	<textarea id='elm1' name="saisie_contenu" ><?php print $contenu ?></textarea><br><br>
+	<textarea id='elm1' name="saisie_contenu" spellcheck='true' ><?php print $contenu ?></textarea><br><br>
 
 <?php
 if (($_SESSION["membre"] == "menuprof") || (DIRCAHIERTEXTE == "oui")) { 
@@ -435,7 +455,12 @@ if (($_SESSION["membre"] == "menuprof") || (DIRCAHIERTEXTE == "oui")) {
 	$maxsize="2000000";
 	if (UPLOADIMG == "oui") { $taille="8Mo"; $maxsize="8000000"; }
 ?>
-<table><tr><td valign=top><br/>
+<table><tr><td valign=top>
+<input type='text' size='60' placeholder="Indiquer des mots cl&eacute;s" id="questioncontenucours"  />&nbsp;&nbsp;
+<input type='button' value='TRIADE-COPILOT' class='button' 
+	onClick="ajaxContenuCours(document.getElementById('questioncontenucours').value,'<?php print $productID ?>','<?php print $iakey ?>','<?php print $matiere ?>','<?php print $classe ?>');" id="btq" />&nbsp;
+<a href='#'  onMouseOver="AffBulle('TRIADE-COPILOT vous aide &agrave; r&eacute;diger<br/>votre contenu de cours &agrave; partir<br/>de quelques mots cl&eacute;s ');"  onMouseOut="HideBulle()";><img src='./image/help.gif' border=0 align=center /></a>
+<br/><br>
 
 <input type="file" name="Filedata1" id="Filedata1" onChange="uploadFile('<?php print trim($idpiecejointe1) ?>','1')"> <a href='#'  onMouseOver="AffBulle('Fichier Taille Max : <?php print $taille ?>');"  onMouseOut="HideBulle()";><img src="./image/help.gif" border=0 align=center></a><br><br>
 <progress id="progressBar1" value="0" max="100" style="width:300px;">
@@ -473,7 +498,7 @@ tinymce.init({
     selector: "textarea#elm2",
     statusbar : false,
     width: '100%',
-    height: '240',
+    height: '470',
     browser_spellcheck : true,
     menubar : "format edit table ",
     plugins: ["textcolor emoticons","link","table","save"],
@@ -495,7 +520,7 @@ tinymce.init({
 });
 
 </script>
-	<textarea id='elm2' name="saisie_contenu" ><?php print $objectif ?></textarea><br><br>
+	<textarea spellcheck='true' id='elm2' name="saisie_contenu" ><?php print $objectif ?></textarea><br><br>
 
 <?php
 
@@ -556,7 +581,7 @@ tinymce.init({
     selector: "textarea#elm3",
     statusbar : false,
     width: '100%',
-    height: '240',
+    height: '450',
     browser_spellcheck : true,
     menubar : "format edit table ",
     plugins: ["textcolor emoticons","link","table","save"],
@@ -641,7 +666,7 @@ print "	<option value='00:00:00' id='select0'> ".LANGMESS97." </option>
 print "<br><br>";
 ?>
 
-	<textarea id='elm3' name="saisie_contenu" ><?php print $travail ?></textarea><br><br>
+	<textarea spellcheck='true' id='elm3' name="saisie_contenu" ><?php print $travail ?></textarea><br><br>
 
 <?php
 	if (($_SESSION["membre"] == "menuprof") || (DIRCAHIERTEXTE == "oui")) { 
@@ -687,7 +712,7 @@ tinymce.init({
     selector: "textarea#elm4",
     statusbar : false,
     width: '100%',
-    height: '240',
+    height: '490',
     browser_spellcheck : true,
     menubar : "tools table format edit ",
     plugins: [ "textcolor","link", "save"], 
@@ -709,7 +734,7 @@ tinymce.init({
 });
 
 </script>
-<textarea id='elm4' name="saisie_contenu" ><?php print $blocnotes ?></textarea>
+<textarea id='elm4' name="saisie_contenu" spellcheck='true'  ><?php print $blocnotes ?></textarea>
 <input type='hidden' id="saisie_idmatiere4" value="<?php print $sMat?>" >
 <input type='hidden' id="date_contenu4" value="<?php print $datepour ?>" >
 <input type='hidden' id="saisie_idclsorgrp4" value="<?php print $list1?>" >
@@ -726,7 +751,7 @@ if (isset($_GET["aff"])) $choix=$_GET["aff"];
 if ($choix == "") $choix=0;
 ?>
 <SCRIPT language='JavaScript'>InitBulle('#000000','#FCE4BA','red',1);</SCRIPT>
-<script type="text/javascript">initTabs('dhtmlgoodies_tabView1',Array('<?php print addslashes(LANGMESS92) ?>','<?php print addslashes(LANGMESS95) ?>','<?php print preg_replace('/à/','&agrave;',addslashes(LANGMESS98)) ?>','<?php print addslashes(LANGMESS99) ?>'),<?php print $choix ?>,'100%',510,Array(false,false,false,false));</script> 
+<script type="text/javascript">initTabs('dhtmlgoodies_tabView1',Array('<?php print addslashes(LANGMESS92) ?>','<?php print addslashes(LANGMESS95) ?>','<?php print preg_replace('/à/','&agrave;',addslashes(LANGMESS98)) ?>','<?php print addslashes(LANGMESS99) ?>'),<?php print $choix ?>,'100%',750,Array(false,false,false,false));</script> 
 
 <input type='hidden' id='choix' value='0' /> 
 
@@ -769,7 +794,7 @@ function savecontenu() {
 	var sClasseGrp=document.getElementById('sClasseGrp1').value;
 	var sMat=document.getElementById('sMat1').value;
 	var saisie_contenu=encodeURIComponent(document.getElementById('elm1').value);
-		var num=document.getElementById('number1').value;
+	var num=document.getElementById('number1').value;
 	var myAjax = new Ajax.Request(
 		"ajaxEnrDevoir.php",
 		{	method: "post",

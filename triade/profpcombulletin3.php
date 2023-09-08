@@ -90,6 +90,8 @@ for($i=0;$i<$nb;$i++) {
 	$leap_encouragement=$_POST["leap_encouragement_$eleveid"];
 	$leap_megcomp=$_POST["leap_megcomp_$eleveid"];
 	$leap_megtrav=$_POST["leap_megtrav_$eleveid"];
+	
+	$com=addslashes($com);
 
 	$cr=create_comm_profp_bull($eleveid,$tri,$com,$anneeScolaire,$type_bulletin);
 	if ($cr) {

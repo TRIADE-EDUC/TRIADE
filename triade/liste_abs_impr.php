@@ -74,7 +74,7 @@ if ($filtreABS == "NonJustifie") {
 <tr id='cadreCentral0'>
 <td ><br>
 <!-- // fin  -->
-<ul><font class="T2"><?php print "Indiquer la liste des tuteurs qui recevront un email" ?>.</font><br><br></ul>
+<ul><font class="T2"><?php print "Indiquer la liste des personnes qui recevront un email" ?>.</font><br><br></ul>
 
 <form method="post">
 <table>
@@ -191,16 +191,31 @@ if ($idclasse != "") {
                 }
 
 
+		$emailtuteurstage=recupEmailTuteurStage($ideleve);	
+		if ($emailtuteurstage == "") {
+                        $disabledTT="disabled='disabled'";
+                        $titleTT=" title=\"Aucun email tuteur indiqu&eacute;\" ";
+                        $imgTT="<img src='image/commun/alerte.png' $titleT  />";
+		}else{
+                        $disabledTT="";
+                        $titleTT=" title=\"$emailtuteurstage\" ";
+                        $imgTT="";
+		}
 	
-		print "<tr  id='tr$j'  class='tabnormal2' onmouseover=\"this.className='tabover'\" onmouseout=\"this.className='tabnormal2'\" >";
+		print "<tr id='tr$j' class='tabnormal2' onmouseover=\"this.className='tabover'\" onmouseout=\"this.className='tabnormal2'\" >";
 		print "<td id='bordure' valign='top' ><font class='T2'>".trunchaine(strtoupper(recherche_eleve_nom($ideleve))." ".ucwords(strtolower(recherche_eleve_prenom($ideleve))),20)."</font></td>";
 		print "<td id='bordure' valign='top' ><font class='T1'>$classe</font></td>";
 		print "<td id='bordure' valign='top' ><font class='T1'>absent le ".dateForm($data_2[$j][1])." durant ".$duree." </font></td>";
+		print "<td id='bordure' valign='top' ><table><tr>";
 		print "<td id='bordure' valign='top' >Email&nbsp;Etudiant&nbsp;<input $disabledE type='checkbox' name='liste[]' $titleE value='$ideleve:$datedebut:$datefin:$duree:$time:eleve'  onClick=\"DisplayLigne('tr$j');\" id='check$j' >";
 		$j++;
-		print "$imgE</td>";
-		print "<td id='bordure' valign='top' >Email&nbsp;Tuteur&nbsp;<input $disabledT type='checkbox' name='liste[]' $titleT value='$ideleve:$datedebut:$datefin:$duree:$time:tuteur'  onClick=\"DisplayLigne('tr$j');\" id='check$j' >";
-		print "$imgT</td>";
+		print "$imgE</td></tr><tr>";
+		print "<td id='bordure' valign='top' >Email&nbsp;Parent&nbsp;<input $disabledT type='checkbox' name='liste[]' $titleT value='$ideleve:$datedebut:$datefin:$duree:$time:tuteur'  onClick=\"DisplayLigne('tr$j');\" id='check$j' >";
+		$j++;
+		print "$imgT</td></tr><tr>";
+sh: q: command not found
+		$j++;
+		print "$imgTT</td></tr></table>";
 		print "</tr>";
 	}
 

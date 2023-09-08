@@ -58,7 +58,7 @@ if (($_SESSION['membre'] == "menuprof") && (PROFPACCESABSRTD == "oui")) {
 <ul><font class="T2"><?php print LANGbasededoni32 ?></font></ul>
 <br />
 <table border="0" align="center">
-<tr><td align="right" >&nbsp; <font class="T2"> <?php print "Imports absences et retards" ?> (Fiches sconet)</font>  </td>
+<tr><td align="right" >&nbsp; <font class="T2"> <?php print "Imports absences et retards" ?> (Fichier SIECLE)</font>  </td>
     <td ><script language=JavaScript>buttonMagic("<?php print CLICKICI?>","base_de_donne_importation710.php","_parent","","");</script></td>
 </tr>
 <tr><td height="10"></td></tr>

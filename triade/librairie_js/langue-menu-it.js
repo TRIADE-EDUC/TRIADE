@@ -17,7 +17,7 @@
  *
  ***************************************************************************/
 // Non sorpasare i 24 caratteri
-langtitre0="Assistenza";
+langtitre0="TRIADE-COPILOT";
 langtitre1="Attualità";
 langtitre2="Servizio Triade";
 langtitre3="Forum";
@@ -284,3 +284,5 @@ langmenuadmin529="Année Scolaire";
 langmenuadmin911="Classe antérieure";
 langmenuadmin912="Savoir-être";
 langmenuadmin913="Eval. Enseignant";
+langmenugeneral01a="Memo";
+langmenuadmin023="Corbeille";

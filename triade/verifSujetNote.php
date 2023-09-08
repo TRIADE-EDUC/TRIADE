@@ -37,6 +37,7 @@ $idg=$_POST["idg"];
 $idc=$_POST["idc"];
 $idm=$_POST["idm"];
 $cnx=cnx();
+$nom=addslashes($nom);
 $cr=verifNomSujet(addslashes($nom),$date,$idg,$idc,$idm);
 if ($cr) {
 	print "&nbsp;&nbsp;&nbsp;<font class=T1 color=red><b>ATTENTION, Ce nom de sujet est déjà attribué pour la même date.</b><br /></font>";

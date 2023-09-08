@@ -18,7 +18,7 @@ session_start();
  *   (at your option) any later version.
  *
  ***************************************************************************/
-error_reporting(E_ALL ^ E_NOTICE);
+error_reporting(0);
 include("./librairie_php/lib_licence.php");
 include("./librairie_php/lib_netscape.php");
 ?>
@@ -56,7 +56,7 @@ include("./librairie_php/lib_netscape.php");
 <tr><td id='bordure' >
 
 <?php print LANGVAL9 ?>
-
+<br><br>
 <form method=post action="valid.php">
 <div align=right><input type="submit" name="create" value="Suivant >" class="BUTTON"></div>
 </form>

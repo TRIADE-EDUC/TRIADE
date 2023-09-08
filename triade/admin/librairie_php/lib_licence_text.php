@@ -33,7 +33,7 @@ print "        <textarea cols=55 rows=3 STYLE='font-family: Arial;font-size:10px
 droit();
 
 print "</textarea>";
-print "        <HR><table width=95%><tr><TD align=left> <font size=2 >S.A.R.L. - T.R.I.A.D.E. © </FONT></TD><TD align=right><input type=button value='Fermer Fenêtre' onclick='masque_menu()' class='bouton2' ></TD></TR></table>";
+print "        <HR><table width=95%><tr><TD align=left> <font size=2 > T.R.I.A.D.E. © </FONT></TD><TD align=right><input type=button value='Fermer Fenêtre' onclick='masque_menu()' class='bouton2' ></TD></TR></table>";
 
 print "<BR></div>";
 print "</div>";
@@ -46,6 +46,6 @@ function droit() {
 	print DROITRIADE; 
 }
 
-define("PIEDPAGE","<p>La <b>T</b>ransparence et la <b>R</b>apidité de l'<b>I</b>nformatique <b>A</b>u service <b>D</b>e l'<b>E</b>nseignement<br> Pour visualiser ce site de façon optimale : résolution minimale : 800x600  <br> S.A.R.L. - T.R.I.A.D.E. © - Tous droits réservés</p>");
+define("PIEDPAGE","<p>La <b>T</b>ransparence et la <b>R</b>apidité de l'<b>I</b>nformatique <b>A</b>u service <b>D</b>e l'<b>E</b>nseignement<br> Pour visualiser ce site de façon optimale : résolution minimale 800x600 - T.R.I.A.D.E &copy;  - Tous droits réservés</p>");
 
 ?>

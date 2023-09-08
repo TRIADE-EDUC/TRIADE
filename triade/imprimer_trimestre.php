@@ -226,7 +226,7 @@ if (count($valeur)) {
 	<td><script language=JavaScript>buttonMagicSubmit3("<?php print LANGBT43?>","rien",""); //text,nomInput,action</script></td>
 <?php if (isset($_SESSION["profpclasse"])) { print "<td><script>buttonMagicRetour('profp2.php','_self')</script></td>"; } ?>
 <?php if ($_SESSION["membre"] == "menuadmin") { ?>
-	<td><script language=JavaScript>buttonMagic("<?php print LANGMESS386 ?>","http://support.triade-educ.org/support/bulletinPerso.php?type=bull",'_blank','','')</script></td>
+	<td><script language=JavaScript>buttonMagic("<?php print LANGMESS386 ?>","https://support.triade-educ.org/support/bulletinPerso.php?type=bull",'_blank','','')</script></td>
 <?php } ?>
 	
 </tr></table>

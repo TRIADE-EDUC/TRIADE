@@ -73,7 +73,7 @@ require_once "./librairie_php/class.writeexcel_worksheet.inc.php";
 $fichier="./data/fichier_ASCII/export_compta_".$_SESSION["id_pers"].".xls";
 @unlink($fichier);
 	
-$workbook = &new writeexcel_workbook($fichier);
+$workbook = new writeexcel_workbook($fichier);
 
 $worksheet1 =& $workbook->addworksheet('Listing');
 //	$worksheet1->freeze_panes(1, 0); # 0 row

@@ -170,7 +170,7 @@ if($cr){
 <?php
 }
 if ($erreur_fichier == "oui" ) {
-	print LANGCIRCU17;
+	print "<br><br><center><font color=red>".LANGCIRCU17."</font></center>";
 }
 
 print "<br><br><table align='center'><tr><td><script>buttonMagicRetour('circulaire_admin.php','_self')</script></td></tr></table><br><br>";

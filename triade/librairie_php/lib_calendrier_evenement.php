@@ -84,7 +84,7 @@ if ((CALSAMEDIAP == "non") && (CALSAMEDIMATIN == "oui"))  { $FerieSaMatin="backg
 
 if ($_SESSION["membre"] == "menuadmin") {
 	$click=<<<EOF
-onclick=\"PopupCentrer('calendrier_config_evenement2.php?saisiejour="+jour+"&saisiemois="+mois[d.getMonth()]+"&saisieannee="+a+"','500','350','scrollbars=yes','calendrier');\"
+onclick=\"PopupCentrer('calendrier_config_evenement2.php?saisiejour="+jour+"&saisiemois="+mois[d.getMonth()]+"&saisieannee="+a+"','550','350','scrollbars=yes','calendrier');\"
 EOF;
 }
 

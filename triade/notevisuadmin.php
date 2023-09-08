@@ -76,7 +76,7 @@ $mySession=hashSessionVar($ident);
 unset($ident);
 // données DB utiles pour cette page
 $sql="
-SELECT
+SELECT 
 	a.code_classe,
 	trim(c.libelle),
 	a.code_matiere,
@@ -248,10 +248,11 @@ function upSelectMat9(arg) {
 				 	if (($profPAcces == 1) && ($idclasseProfP != $data[$i][0])) continue ;
 				 	if( $i>1 && ($data[$i][4]==$gtmp) && ($data[$i][0]==$ctmp) ){
 						continue;
-						}
-					else {
+					}else{
 						// utilisation de l'opérateur ternaire expr1?expr2:expr3;
 						$libelle=$data[$i][4]?$data[$i][1]."-".$data[$i][5]:$data[$i][1];
+						if (isset($verif[$libelle])) continue;
+						$verif[$libelle]=$libelle;
 						print "<option STYLE='color:#000066;background-color:#CCCCFF' value=\"".$data[$i][0].":".$data[$i][4]."\">".$libelle."</option>\n";
 					}
 					$gtmp=$data[$i][4];
@@ -260,6 +261,7 @@ function upSelectMat9(arg) {
 				 unset($gtmp);
 				 unset($ctmp);
 				 unset($libelle);
+				 unset($verif);
 				 ?>
 				 </select>
 				 <br /><br />
@@ -321,6 +323,8 @@ if ($res) {
 					else {
 						// utilisation de l'opérateur ternaire expr1?expr2:expr3;
 						$libelle=$data[$i][4]?$data[$i][1]."-".$data[$i][5]:$data[$i][1];
+						if (isset($verif[$libelle])) continue;
+                                                $verif[$libelle]=$libelle;
 						print "<option STYLE='color:#000066;background-color:#CCCCFF' value=\"".$data[$i][0].":".$data[$i][4]."\">".ucfirst($libelle)."</option>\n";
 					}
 					$gtmp=$data[$i][4];
@@ -329,6 +333,7 @@ if ($res) {
 				 unset($gtmp);
 				 unset($ctmp);
 				 unset($libelle);
+				 unset($verif);
 				 ?>
 				 </select>
 				 <br /><br />
@@ -569,6 +574,8 @@ if ($res) {
 					else {
 						// utilisation de l'opérateur ternaire expr1?expr2:expr3;
 						$libelle=$data[$i][4]?$data[$i][1]."-".$data[$i][5]:$data[$i][1];
+						if (isset($verif[$libelle])) continue;
+                                                $verif[$libelle]=$libelle;
 						print "<option STYLE='color:#000066;background-color:#CCCCFF' value=\"".$data[$i][0].":".$data[$i][4]."\">".$libelle."</option>\n";
 					}
 					$gtmp=$data[$i][4];
@@ -577,6 +584,7 @@ if ($res) {
 				 unset($gtmp);
 				 unset($ctmp);
 				 unset($libelle);
+				 unset($verif);
 				 ?>
 				 </select>
 				 <br /><br />
@@ -646,6 +654,8 @@ if ($res) {
 					else {
 						// utilisation de l'opérateur ternaire expr1?expr2:expr3;
 						$libelle=$data[$i][4]?$data[$i][1]."-".$data[$i][5]:$data[$i][1];
+						if (isset($verif[$libelle])) continue;
+                                                $verif[$libelle]=$libelle;
 						print "<option STYLE='color:#000066;background-color:#CCCCFF' value=\"".$data[$i][0].":".$data[$i][4]."\">".$libelle."</option>\n";
 					}
 					$gtmp=$data[$i][4];
@@ -654,6 +664,7 @@ if ($res) {
 				 unset($gtmp);
 				 unset($ctmp);
 				 unset($libelle);
+				 unset($verif);
 				 ?>
 				 </select>
 				 <br /><br />
@@ -716,6 +727,8 @@ if ($res) {
 					else {
 						// utilisation de l'opérateur ternaire expr1?expr2:expr3;
 						$libelle=$data[$i][4]?$data[$i][1]."-".$data[$i][5]:$data[$i][1];
+						if (isset($verif[$libelle])) continue;
+                                                $verif[$libelle]=$libelle;
 						print "<option STYLE='color:#000066;background-color:#CCCCFF' value=\"".$data[$i][0].":".$data[$i][4]."\">".$libelle."</option>\n";
 					}
 					$gtmp=$data[$i][4];
@@ -724,6 +737,7 @@ if ($res) {
 				 unset($gtmp);
 				 unset($ctmp);
 				 unset($libelle);
+				 unset($verif);
 				 ?>
 				 </select>
 				 <br /><br />
@@ -778,6 +792,8 @@ if ($res) {
                                         }else{
                                                 // utilisation de l'opérateur ternaire expr1?expr2:expr3;
                                                 $libelle=$data[$i][4]?$data[$i][1]."-".$data[$i][5]:$data[$i][1];
+						if (isset($verif[$libelle])) continue;
+                                                $verif[$libelle]=$libelle;
                                                 print "<option STYLE='color:#000066;background-color:#CCCCFF' value=\"".$data[$i][0].":".$data[$i][4]."\">".$libelle."</option>\n";
                                         }
                                         $gtmp=$data[$i][4];
@@ -786,6 +802,7 @@ if ($res) {
                                  unset($gtmp);
                                  unset($ctmp);
                                  unset($libelle);
+				 unset($verif);
                                  ?>
 </select><BR><br>
 <font class="T2"><?php print LANGPROF1?> :</font> <select name="sMat" size="1"> <!-- saisie_matiere -->

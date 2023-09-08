@@ -30,7 +30,7 @@ if  (($_SESSION["membre"] == "menuadmin") || ( ($_SESSION["membre"] == "menuprof
 			}
 			modifLeap($_POST["ideleve"],$_POST["tri"],'',$montessori,$type_bulletin,$leap_felicitation,$leap_encouragement,$leap_megcomp,$leap_megtrav,$anneeScolaire);
 		}
-		$cr=create_comm_profp_bull($_POST["ideleve"],$_POST["tri"],utf8_decode($_POST["commentaire"]),$anneeScolaire);
+		$cr=create_comm_profp_bull($_POST["ideleve"],$_POST["tri"],$_POST["commentaire"],$anneeScolaire,'');
 		if ($cr) {
 			print "ok";
 		}else{

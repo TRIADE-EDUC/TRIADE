@@ -58,7 +58,7 @@ if (isset($_POST["ok"])) { actionDemandeValidation($_POST["productid"],"ok",$_PO
 if (isset($_POST["pasok"])) { actionDemandeValidation($_POST["productid"],"pasok",'');$etat="2"; }
 if (isset($_POST["supp"])) { actionDemandeValidation($_POST["productid"],"supp",'');$etat="3"; }
 if ($etat != "") {
-	print "<script language='JavaScript' src='http://support.triade-educ.org/centralestage/etataffiliation.php?productidclient=".$_POST["productid"]."&productidcentral=".PRODUCTID."&etat=$etat' ></script>";
+	print "<script language='JavaScript' src='https://support.triade-educ.org/centralestage/etataffiliation.php?productidclient=".$_POST["productid"]."&productidcentral=".PRODUCTID."&etat=$etat' ></script>";
 }
 
 $data=listeDemandeAffiliation();

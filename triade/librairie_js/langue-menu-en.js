@@ -17,7 +17,7 @@
  *
  ***************************************************************************/
 // ne pas dépaser 24 caractères
-langtitre0="Helpdesk"; // Assistance
+langtitre0="TRIADE-COPILOT"; // Assistance
 langtitre1="News";
 langtitre2="Triade Service";
 langtitre3="Forum";
@@ -246,20 +246,21 @@ langmenuadmin32="H.teacher / teacher";
 langmenuadmin20="Internship mentor";
 langmenuadmin40bis="Equip. Reservation";
 // non traduit
-langmenuadmin41bis="Gestion délégués";
-langmenuparent36="Délégués";
+langmenuadmin41bis="Delegates managment";
+langmenuparent36="Delegates";
 langmenuprof46="Plan de classe";
 langmenuadmin524="Notanet";
 langmenuadmin39="Personal interview";
-langmenuadmin525="Vacation profs.";
+langmenuadmin525="Teachers' vacation";
 langmenuadmin102="Preliminary registration";
 langmenuadmin101="House Rules";
 langmenuprof47="Stage Pro.";
-langmenuadmin90="Comptabilité";
-langmenuadmin91bis="Fiche d'état";
-langmenuadmin92bis="Versement";
-langmenuadmin93="Rappel";
-langmenuadmin94="Config. Echéancier";
+
+langmenuadmin90="Accounting";
+langmenuadmin91bis="Status sheet";
+langmenuadmin92bis="Payment";
+langmenuadmin93="Reminder";
+langmenuadmin94="Manage schedule";
 langmenuadmin95="Quantification";
 langmenuadmin96="Export"; // sam
 langmenuadmin97="Signing Sheet";
@@ -276,7 +277,7 @@ langmenuadmin01B="School News";
 langmenuadmin01C="News défilant";
 langmenupersonnel1="Accès Modules";
 langmenupersonnel2="Cantine";
-langmenuadmin399="Entretien Enseignant";
+langmenuadmin399="Teachers' meeting";
 langmenuadmin531="Centrale Stages";
 
 
@@ -298,7 +299,7 @@ langmenuadmin9103="Settings";
 langmenuadmin022="Drafts";
 //langmenuadmin055="News Vidéo"; sam le 06/06/2014
 langmenuadmin055="Video News";
-langmenuadmin1011="Boursier";
+langmenuadmin1011="Scholarship";
 langmenuadmin526="Fourniture scolaire";
 langmenuadmin527="Gestion ressources";
 //langmenugeneral01="Votre compte"; Traduit par Sam
@@ -306,6 +307,8 @@ langmenugeneral01="My Account";
 langmenuparent34bis="Planning";
 langmenuadmin528="Organigramme";
 langmenuadmin529="Année Scolaire";
-langmenuadmin911="Classe antérieure";
+langmenuadmin911="Previous class";
 
 langmenuadmin912="Savoir-être";
+langmenugeneral01a="Memo";
+langmenuadmin023="Corbeille";

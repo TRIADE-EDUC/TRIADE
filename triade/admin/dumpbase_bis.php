@@ -280,7 +280,7 @@ if (DBTYPE == "mysql") {
 
 
 		print "<script>var etat=0; </script>";
-		print "<script language='JavaScript' src='http://support.triade-educ.org/support/crontab/verif.php?id=".BACKUPKEY."'></script>";
+		print "<script language='JavaScript' src='https://support.triade-educ.org/support/crontab/verif.php?id=".BACKUPKEY."'></script>";
 
 		print "<br /><ul><form method='post'><font class='T2'>Nombre d'archives possible : ";
 		print "<select name='nbsave'>
@@ -299,10 +299,10 @@ if (DBTYPE == "mysql") {
 		if (etat != 0) {
 			document.write("Sauvegarde en Fonctionnement : <img src='./image/commun/stat1.gif' /><br />");
 			document.write("<font class='T1'>OpÃ©rationnel jusqu'au : "+finabonnement+"</font>");
-			document.write("&nbsp;&nbsp;&nbsp;<font class=T2>[ <a href='http://support.triade-educ.org/support/crontab/inscr_valider.php?&relance=1&id=<?php print BACKUPKEY?>' target='_blank' ><b>Renouveler</b></a> ]</font>");
+			document.write("&nbsp;&nbsp;&nbsp;<font class=T2>[ <a href='https://support.triade-educ.org/support/crontab/inscr_valider.php?&relance=1&id=<?php print BACKUPKEY?>' target='_blank' ><b>Renouveler</b></a> ]</font>");
 		}else{
 			document.write("Sauvegarde en Fonctionnement  : <img src='./image/commun/stat2.gif' />");
-			document.write(" <font class=T2>[ <a href='http://support.triade-educ.org/support/crontab/inscr_valider.php?&id=<?php print BACKUPKEY?>' target='_blank' ><b>Activer</b></a> ]</font>");
+			document.write(" <font class=T2>[ <a href='https://support.triade-educ.org/support/crontab/inscr_valider.php?&id=<?php print BACKUPKEY?>' target='_blank' ><b>Activer</b></a> ]</font>");
 		}
 
 		</script>
@@ -338,7 +338,7 @@ if (DBTYPE == "mysql") {
 			print "<br><br>L'Equipe Triade</font></ul>";	
 		}else{	
 			if (LAN == "oui") {
-				print "<iframe src='http://support.triade-educ.org/support/crontab/index.php?graph=".GRAPH."' width=100% height=400 MARGINWIDTH=0 MARGINHEIGHT=0 HSPACE=0 VSPACE=0 FRAMEBORDER=0 SCROLLING=no ></iframe>";
+				print "<iframe src='https://support.triade-educ.org/support/crontab/index.php?graph=".GRAPH."' width=100% height=400 MARGINWIDTH=0 MARGINHEIGHT=0 HSPACE=0 VSPACE=0 FRAMEBORDER=0 SCROLLING=no ></iframe>";
 			}else{
 				print "<br><center><font class=T2>RÃ©seau Internet non disponible pour ce module.</font> <br><br> <i>Consulter le module de Configuration pour activer le rÃ©seau.</i></center>";
 			}

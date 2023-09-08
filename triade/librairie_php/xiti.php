@@ -4,7 +4,7 @@
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH 
+ *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - F. ORY
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -17,10 +17,4 @@
  *   (at your option) any later version.
  *
  ***************************************************************************/
-include_once("./common/config2.inc.php");
 ?>
-<div align="right" style="visibility:hidden" >
-
-
-
-</div>

@@ -1,6 +1,6 @@
 <?php
 session_start();
-//error_reporting(0);
+error_reporting(0);
 
 if (empty($_SESSION["nom"]))  {
     header('Location: acces_refuse.php');
@@ -357,7 +357,7 @@ function barre_outil($revenir)
 	echo "</font></b></td>";
 	echo "<td align=\"right\">\n";
 	//if($allow_change_lang==1) {echo "<a href=\"stockage.php?action=langue&id=$id&ordre=$ordre&sens=$sens&rep=$rep\"><img src=\"image/stockage/lang.gif\" alt=\"$mess[92]\" border=\"0\"></a>&nbsp;&nbsp;\n";}
-	//echo "<a href=\"http://support.triade-educ.org/stockage/index.php?inc=".GRAPH."&URL=".URLSITE."\"><img src=\"image/stockage/hdd.gif\" alt=\"Stockage +\" border=\"0\"></a>&nbsp;&nbsp;\n";
+	//echo "<a href=\"https://support.triade-educ.org/stockage/index.php?inc=".GRAPH."&URL=".URLSITE."\"><img src=\"image/stockage/hdd.gif\" alt=\"Stockage +\" border=\"0\"></a>&nbsp;&nbsp;\n";
 	echo "<a href=\"stockage-partage.php\" title=\"Réseau / Partage\"><img src=\"image/stockage/reseau.png\" alt=\"Réseau Partage\" border=\"0\"></a>&nbsp;&nbsp;\n";
 	$http=protohttps(); // return http:// ou https://
 	echo "<a href=\"stockage.php\"><img src=\"image/stockage/hdd.gif\" alt=\"Local\" border=\"0\"></a>&nbsp;&nbsp;\n";

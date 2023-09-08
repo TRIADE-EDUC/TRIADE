@@ -133,16 +133,14 @@ if (isset($_POST["create"])) {
 		$audiook="oui";
 
 	   	history_cmd($_SESSION["nom"],"COMMUNIQUER","Audio");
-	
-
 }
 
 
-if  (isset($_POST["supp"])) {
-    $f=fopen("./data/parametrage/audio.txt","r");
+if (isset($_POST["supp"])) {
+    	$f=fopen("./data/parametrage/audio.txt","r");
 	$donnee=fread($f,90000);
-    $tab=explode("#||#",$donnee);
-    fclose($f);
+    	$tab=explode("#||#",$donnee);
+    	fclose($f);
 	@unlink("./data/parametrage/audio.txt");
 	@unlink("./data/audio/actu.mp3");
 }
@@ -152,7 +150,7 @@ if  (isset($_POST["supp"])) {
 <br />
 <form method="post"   name=formulaire ENCTYPE="multipart/form-data">
 <table  width=100%  border="0" align="center" >
-<tr  >
+<tr>
 <td align="right"><font class="T2"><?php print LANGMESS241 ?></font></TD>
 <TD align="left"><input type="text" name="saisie_titre" size=30 maxlength=28 ></td>
 </tr>
@@ -165,13 +163,9 @@ if  (isset($_POST["supp"])) {
 <h3 id="status"></h3>
 <p id="loaded_n_total"></p>
 <br>
-
-
-
 </td>
 </tr>
 </table>
-<br /><br />
 <table align=center><tr><td>
 <script language=JavaScript>buttonMagicSubmit3("<?php print LANGAUDIO4 ?>","create","onclick='attente();'"); //text,nomInput</script>
 <A href='#' onMouseOver="AffBulle3('Information','./image/commun/info.jpg','<font face=Verdana size=1><B><font color=red><?php print LANGAUDIO3?></font></B><?php print LANGAUDIO3bis." <b>$taille2</b> . </font>" ?> '); window.status=''; return true;" onMouseOut='HideBulle()'><img src='./image/help.gif' align=center width='15' height='15'  border=0></A> <br /><br />
@@ -180,26 +174,59 @@ if  (isset($_POST["supp"])) {
 <?php
 $fic="./data/parametrage/audio.txt";
 if (file_exists($fic)) {
-        $fichier=fopen("./data/parametrage/audio.txt","r");
-	    $donnee=fread($fichier,90000);
-		$tab=explode("#||#",$donnee);
-	    fclose($fichier);
+	$fichier=fopen("./data/parametrage/audio.txt","r");
+	$donnee=fread($fichier,90000);
+	$tab=explode("#||#",$donnee);
+	fclose($fichier);
 ?>
 <!-- <input type="button" value="Stop" id="btnPlayStop" onclick="Playa.doPlayStop();" /> -->
 <center><a href='#'  onMouseOver="AffBulle3('Information','./image/commun/info.jpg','<?php print $tab[0]; ?>');"  onMouseOut="HideBulle()";><img src="./image/commun/son.gif" border=0 align=center></a> : <font class=T1 color=#000000><b><?php print LANGAUDIO1 ?></b></font>
 <br><br>
-<audio src="./data/audio/actu.mp3" controls > 
-
-</audio>
+<audio src="./data/audio/actu.mp3" controls ></audio>
 <br><br>
 <form method=post>
 <font class=T1><?php print LANGAUDIO6 ?> :</font> <input name="supp" type=submit value="<?php print LANGBT50?>" STYLE="font-family: Arial;font-size:10px;color:#CC0000;background-color:#CCCCFF;font-weight:bold;">
-</center><br><br>
+</center>
 </form>
 <?php
 }
-
 ?>
+
+<br><br><hr><br><br>
+<center>
+<?php
+echo "<font class='T2 shadow'><b>Enregistrer votre annonce !!!</b></font>";
+echo "<br/>";
+echo "<br/>";
+echo "<center>";
+echo "<br><b><font color='red'>Mimimun 15 secondes - Maximum 45 secondes</b></font>";
+?>
+<br><br>
+
+<div style="max-width: 28em;">
+                <select id="encodingTypeSelect" style='display:none' >
+                  <option value="mp3">MP3 (MPEG-1 Audio Layer III) (.mp3)</option>
+                </select>
+                <div id="controls">
+                        <button id="recordButton" >Enregistrer</button>
+                        <button id="stopButton" disabled >Arreter</button>
+                </div>
+                <div id="formats" style='display:none'  ></div>
+                <pre style='display:none'  >Log</pre>
+                <pre id="log" style='display:none'  ></pre>
+
+                <ol id="recordingsList"></ol>
+</div>
+
+<!-- inserting these scripts at the end to be able to use all the elements in the DOM -->
+<script src="js/WebAudioRecorder.min.js" ></script>
+<script src="js/app.js" ></script>
+
+<br>
+<font color='blue'>&nbsp;Sauvegarder votre message MP3, et ajouter le fichier &agrave; l'annonce.</font></center>
+<br><br>
+
+
 
 </td>
 </tr></table>

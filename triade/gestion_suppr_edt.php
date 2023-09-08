@@ -37,7 +37,14 @@ session_start();
 <?php 
 include_once("./librairie_php/lib_licence.php");
 include_once('librairie_php/db_triade.php');
-validerequete("2");
+if ($_SESSION["membre"] == "menupersonnel") {
+        if (!verifDroit($_SESSION["id_pers"],"edt")) {
+                accesNonReserveFen();
+                exit;
+        }
+}else{
+	validerequete("2");
+}
 $cnx=cnx();
 ?>
 <SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre].".js'>" ?></SCRIPT>

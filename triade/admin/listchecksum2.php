@@ -50,7 +50,7 @@ if (LAN == "oui") {
 	$list=$_POST["liste"];
 
 	print "<iframe width='468' height='80' name='TRIADE-SUPPORT' src='vide.html' MARGINWIDTH=0 MARGINHEIGHT=0 HSPACE=0 VSPACE=0 FRAMEBORDER=0 SCROLLING=no ></iframe>";
-	print "<form method='post' action='http://support.triade-educ.org/support/recup_liste_check2.php' target='TRIADE-SUPPORT' name='formulaire'>";
+	print "<form method='post' action='https://support.triade-educ.org/support/recup_liste_check2.php' target='TRIADE-SUPPORT' name='formulaire'>";
 	print "<input type=hidden name='check-list' value=\"$list\">";
 	print "<input type=hidden name='inc' value=\"".GRAPH."\">";
 	print "</form>";

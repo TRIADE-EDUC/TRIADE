@@ -53,6 +53,8 @@
 <br><br><br>
 <input type=button Value="Modifier le mot de passe pour la gestion de Intra-MSN" onclick="open('pass_intra-msn.php','_parent','')" class='button' >
 <br><br><br>
+<input type=button Value="Modifier le mot de passe pour la gestion de Moodle" onclick="open('pass_moodle.php','_parent','')" class='button' >
+<br><br><br>
 
 </td></tr></table>
 <!-- // fin de la saisie -->

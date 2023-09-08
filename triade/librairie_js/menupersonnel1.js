@@ -53,7 +53,6 @@ if ((GRAPH == '20') || (GRAPH == '21'))  {
 		document.write("</tr>");
 	}
 } 
-document.write("<tr><td colspan='3' height=19>&nbsp;</td></tr>");
 document.write("<tr>");
 document.write(" <td colspan='3'  id='coulTitre0' ><b><font id='menumodule1'>"+langmenuadmin07+"</font></b></td>");
 document.write("</tr>");
@@ -61,6 +60,7 @@ document.write(" <tr>");
 document.write("<td colspan='3' height='38' id='coulModule0' >");
 document.write("<p style='margin-left: 2; margin-top:5; margin-bottom:5'>");
 document.write("<img src='./image/cube.gif' width='4' height='4'> <a href='gescompte.php' id='menumodule0'  >"+langmenugeneral01+"</a><br>");
+document.write("<img src='./image/cube.gif' width='4' height='4'> <a href='memo.php' id='menumodule0'  >"+langmenugeneral01a+"</a><br>");
 document.write("<img src='./image/cube.gif' width='4' height='4'> <a href='#' id='menumodule0' onclick=\"open('./agenda/phenix/index.php','timecop','resizable=yes,width=1000,height=700');\" >"+langmenuadmin00+"</a><br>");
 document.write("<img src='./image/cube.gif' width='4' height='4'> <a href='#' onclick=\"open('stockage.php','stockage','scrollbars=yes,resizable=yes,width=850,height=500')\" id='menumodule0' >"+langmenuadmin06+"</a><br>");
 document.write("<img src='./image/cube.gif' width='4' height='4'> <a href='./flux.php' id='menumodule0' >"+langmenuadmin521+"</a><br>");
@@ -80,6 +80,7 @@ document.write("<td colspan='3'  id='coulModule0'>");
 document.write("<p style='margin-left: 2; margin-top:5; margin-bottom:5'>");
 document.write("<img src='./image/cube.gif' width='4' height='4'> <a id='menumodule0' href='./messagerie_reception.php'>"+langmenuparent12+"</a><br>");
 document.write("<img src='./image/cube.gif' width='4' height='4'> <a id='menumodule0' href='./messagerie_envoi.php'>"+langmenuparent11+"</a><br>");
+document.write("<img src='./image/cube.gif' width='4' height='4'> <a href='./corbeille_message.php' id='menumodule0'>"+langmenuadmin023+"</a><br>");
 document.write("<img src='./image/cube.gif' width='4' height='4'> <a href='./messagerie_suppression.php' id='menumodule0'>"+langmenuadmin04+"</a><br>");
 document.write("</p>");
 document.write("</td>");
@@ -123,8 +124,9 @@ if (modulecahiertextes == "oui") document.write("<img src='./image/cube.gif' wid
 if (moduleimprbulletin == "oui") document.write("<img src='./image/cube.gif' width='4' height='4'> <a id='menumodule0' href='./imprimer_trimestre.php' >"+langmenuadmin63+"</a><br>");
 if (moduleimprtableau == "oui") document.write("<img src='./image/cube.gif' width='4' height='4'> <a id='menumodule0' href='./imprimer_tableaupp.php' >"+langmenuadmin66+"</a><br>");
 if (modulevisadirection == "oui") document.write("<img src='./image/cube.gif' width='4' height='4'> <a id='menumodule0' href='./visa_direction.php' >"+langmenuadmin68+"</a><br>");
-if (modulevideoprojo == "oui") document.write("<img src='./image/cube.gif' width='4' height='4'> <a id='menumodule0' href='#' onClick=\"open('./video-proj-index.php','video','width=800,height=600,resizable=yes,personalbar=no,toolbar=no,statusbar=no,locationbar=no,menubar=no,scrollbars=yes');\" >"+langmenuadmin65+"</a></td>");
-if (moduleentretien != "non") document.write("<img src='./image/cube.gif' width='4' height='4'> <a id='menumodule0' href='./entretien.php'>"+langmenuadmin39+"</a><br>");
+if (modulevideoprojo == "oui") document.write("<img src='./image/cube.gif' width='4' height='4'> <a id='menumodule0' href='#' onClick=\"open('./video-proj-index.php','video','width=800,height=600,resizable=yes,personalbar=no,toolbar=no,statusbar=no,locationbar=no,menubar=no,scrollbars=yes');\" >"+langmenuadmin65+"</a><br/>");
+if (moduleentretien != "non") document.write("<img src='./image/cube.gif' width='4' height='4'> <a id='menumodule0' href='./entretien.php'>"+langmenuadmin39+"</a><br/>");
+if (moduleedt != "non") document.write("<img src='./image/cube.gif' width='4' height='4'> <a id='menumodule0' href='./edt.php'>"+langmenuadmin31+"</a><br/>");
 
 document.write("</p>");
 document.write("</td>");

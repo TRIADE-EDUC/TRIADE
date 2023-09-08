@@ -103,7 +103,7 @@ if (isset($_POST["consult"])) {
 			print "<td valign='top' >";
 			print "<input type=hidden value=\"".$data[$i][1]."\" name='eleveid[]' />";
 			print " <b> ".ucfirst($data[$i][3])." ".strtoupper($data[$i][2])."</b>";
-			$com=recherche_com_profp($ideleve,$tri,$anneeScolaire,$_POST["type_bulletin"]);
+			$com=recherche_com_profP($ideleve,$tri,$anneeScolaire,$_POST["type_bulletin"]);
 			print "<br><textarea cols=60 rows=5 name='comm[]' onkeypress=\"compter(this,'$nbcar', this.form.CharRestant_$i)\" >$com</textarea>";
 			$nbtexte=strlen($com);
 			print "&nbsp;<input type=text name='CharRestant_$i' size=3 disabled='disabled' value='$nbtexte' />";

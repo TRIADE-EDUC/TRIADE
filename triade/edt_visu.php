@@ -310,7 +310,11 @@ calendarpopupCalend('id2','document.form.saisiedate',$_SESSION["langue"],"1","0"
 
 &nbsp;&nbsp;<a href='javascript:imprimer()'><img src="image/print.gif" border='0' align=center ></a>
 
-<?php if (($_SESSION["membre"] != "menuprof")  && ($_SESSION["membre"] != "menupersonnel")){ ?>
+<?php 
+
+if ($_SESSION["membre"] == "menupersonnel") $verifacces=verifDroit($_SESSION["id_pers"],"edt"); 
+
+if (($_SESSION["membre"] != "menuprof")  || (($_SESSION["membre"] == "menupersonnel") && ($verifacces != 1))) { ?>
 &nbsp;&nbsp;&nbsp;&nbsp;
 Enseignant : <select name="profID" onchange="displayPreviousProf();displayInfoEtat(this.value)">
 <?php print select_personne_uniq($donnee[0][7]); ?>
@@ -331,7 +335,7 @@ if (isset($idclasse)) {
 <?php select_classe(); ?>
 </select>
 <br>
-<?php if (($_SESSION["membre"] == "menuadmin") || ($_SESSION["membre"] == "menuscolaire")) { ?>
+<?php if (($_SESSION["membre"] == "menuadmin") || ($_SESSION["membre"] == "menuscolaire") || ($_SESSION["membre"] == "menupersonnel") ) { ?>
 	&nbsp;&nbsp;<input type="button" onclick="open('edit_event_seq.php','','width=700,height=470');" class="BUTTON" value="Automatiser une séquence" />
 	&nbsp;&nbsp;<input type="button" onclick="open('telecharger.php?fichier=<?php print $fichiercsv ?>&fichiername=Export_Google.csv','_blank','');" class="BUTTON" value="Export Google Agenda" />
 <?php }else{

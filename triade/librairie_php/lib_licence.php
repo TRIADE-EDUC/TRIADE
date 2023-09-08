@@ -489,6 +489,8 @@ if (verifDroit($_SESSION["id_pers"],'videoprojo')) { $ok="oui"; }else{ $ok='non'
 print "var modulevideoprojo='$ok';\n";
 if (verifDroit($_SESSION["id_pers"],'entretien')) { $ok="oui"; }else{ $ok='non'; }
 print "var moduleentretien='$ok';\n";
+if (verifDroit($_SESSION["id_pers"],'edt')) { $ok="oui"; }else{ $ok='non'; }
+print "var moduleedt='$ok';\n";
 
 print "</script>";
 

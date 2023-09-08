@@ -326,7 +326,7 @@ if (file_exists("./common/config-sms.php")) {
 <font class="T2"><?php print LANGMESS452  ?> :</font>
 </td><td align=left><table><tr><td>
 <script language=JavaScript> buttonMagic("<?php print LANGCONFIG?>","gestion_sms_config.php","_parent","","")</script>
-<script language=JavaScript>buttonMagic('<?php print LANGMESS453 ?>','http://support.triade-educ.com/support/sms-compte.php?idsms=<?php print $idsms?>&inc=<?php print $inc ?>','','width=550,height=600','','');</script>&nbsp;&nbsp;
+<script language=JavaScript>buttonMagic('<?php print LANGMESS453 ?>','https://support.triade-educ.com/support/sms-compte.php?idsms=<?php print $idsms?>&inc=<?php print $inc ?>','','width=550,height=600','','');</script>&nbsp;&nbsp;
 </td></tr></table>
 
 

@@ -88,6 +88,14 @@ if ($verif2 == "1" ) {
 		print "<html><script type='text/javascript'>location.href='./archivage2.php'</script></html>";
 		exit;
 	}
+	if ($_POST["base"] == "infolog")  {
+		$_SESSION["adminplus"]="suppreme";
+		print "<html><script type='text/javascript'>";
+		print "open('./visu_accesslog.php','_blank','');";
+		print "location.href='./history_cmd.php';";
+		print "</script></html>";
+		exit;
+	}
  	if ($_POST["base"] == "ascii")	{
 		$_SESSION["adminplus"]="suppreme";
 		print "<html><script type='text/javascript'>location.href='./base_de_donne_importation4.php'</script></html>";
@@ -223,9 +231,15 @@ if ($verif2 == "1" ) {
 		exit;
 
 	}
+	if ($_POST["base"] == "medic") {
+		$_SESSION["adminplusprofp"]="suppreme";
+		print "<html><script type='text/javascript'>location.href='./profpmedic.php?eid=".$_POST['eid']."'</script></html>";
+		exit;
+
+	}
 	if ($_POST["modulesecurite"] == "passmodulemedical") {
 		$_SESSION["adminplus"]="suppreme";
-		print "<html><script type='text/javascript'>location.href='./ficheeleve6.php?eid=".$_POST["eid"]."'</script></html>";
+		print "<html><script type='text/javascript'>location.href='./ficheeleve6.php?eid=".$_POST['eid']."'</script></html>";
 		exit;
 
 	}

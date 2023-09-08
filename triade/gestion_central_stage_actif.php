@@ -76,7 +76,7 @@ $http=(HTTPS == "oui")?"https://":"http://";
 
 
 <br><br>
-<form action='http://support.triade-educ.org/centralestage/activation.php' method='post' target="centralstage" name="formulaire" id="formulaire" >
+<form action='https://support.triade-educ.org/centralestage/activation.php' method='post' target="centralstage" name="formulaire" id="formulaire" >
 <table border=0 align=center >
 
 <tr> 
@@ -111,14 +111,7 @@ $http=(HTTPS == "oui")?"https://":"http://";
 
 
 <table align=center >
-<tr>
-<?php 
-if (!file_exists("./common/config.centralStage.php")) { ?>
-<td><script language=JavaScript>buttonMagicSubmit4("<?php print "Activer"?>","rien","ActiveCentraleStage()")</script></td>
-<?php }else{ ?>
-<td><script language=JavaScript>buttonMagicSubmit4("<?php print "Désactiver"?>","rien","DesactiveCentraleStage();")</script>&nbsp;&nbsp;&nbsp;&nbsp;</td>
-<?php } ?>
-</tr>
+<tr><td><script language=JavaScript>buttonMagicSubmit4("<?php print "Activer"?>","rien","ActiveCentraleStage()")</script></td><td><script language=JavaScript>buttonMagicSubmit4("<?php print "Désactiver"?>","rien","DesactiveCentraleStage();")</script>&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
 </table>
 <br><br>
 <font class="T1">ATTENTION : Désactiver supprime toutes les affiliations.</font>
@@ -130,7 +123,7 @@ if (!file_exists("./common/config.centralStage.php")) { ?>
 <tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' ><?php print "Etat de l'activation" ?></font></b></td></tr>
 <tr id='cadreCentral0'>
 <td valign=top>
-<iframe width='100%' height=100% src="http://support.triade-educ.org/centralestage/verifactivation.php?productid=<?php print PRODUCTID ?>&inc=<?php print GRAPH ?>" name='centralstage' MARGINWIDTH=0 MARGINHEIGHT=0 HSPACE=0 VSPACE=0 FRAMEBORDER=0 SCROLLING=no ></iframe> 
+<iframe width='100%' height=100% src="https://support.triade-educ.org/centralestage/verifactivation.php?productid=<?php print PRODUCTID ?>&inc=<?php print GRAPH ?>" name='centralstage' MARGINWIDTH=0 MARGINHEIGHT=0 HSPACE=0 VSPACE=0 FRAMEBORDER=0 SCROLLING=no ></iframe> 
 
 
 <!-- // fin  -->

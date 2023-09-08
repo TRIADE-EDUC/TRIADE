@@ -53,7 +53,7 @@ if (LAN == "oui") {
 		$idsms=SMSKEY;
 		$inc=GRAPH;
 		print "<table align=center><tr><td><font class=T2>".LANGMESS215." : </font></td>";
-		print "<td><script language=JavaScript>buttonMagic('".CLICKICI."','http://support.triade-educ.org/support/sms-compte.php?idsms=$idsms&inc=$inc','','width=550,height=600','','');</script></td></tr></table>";
+		print "<td><script language=JavaScript>buttonMagic('".CLICKICI."','https://support.triade-educ.org/support/sms-compte.php?idsms=$idsms&inc=$inc','','width=550,height=600','','');</script></td></tr></table>";
 	}else{
 		print "<center><font color=red class='T2' >".LANGMESS37.".</font></center>";
 	}

@@ -36,6 +36,7 @@ $idpiecejointe=md5($_SESSION["membre"].$_SESSION["id_pers"].date("YMDHms").rand(
 <script type="text/javascript" src="./librairie_js/ajax-messagerie.js"></script>
 <script language="JavaScript" src="./librairie_js/clickdroit2.js"></script>
 <script type="text/javascript" src="./librairie_js/info-bulle.js"></script>
+<script language="JavaScript" src="./librairie_js/ajaxIA.js"></script>
 <script type="text/javascript" src="./librairie_js/prototype.js"></script>
 <script type="text/javascript" src="./librairie_js/ajax_actualisepiecejointe.js"></script>
 <title>Triade - Compte de <?php print $_SESSION["nom"]." ".$_SESSION["prenom"] ?></title>
@@ -136,7 +137,15 @@ for($i=0;$i<count($data);$i++) {
 
 <BR><BR><BR>
 <?php
-$messageencours="<br><br><hr>";
+
+$idpers=$_SESSION['id_pers'];
+$membre=$_SESSION['membre'];
+$libelle="Sign_$idpers_$membre";
+$signature=aff_valeur_parametrage($libelle);
+$signature=preg_replace('/\\\r\\\n/','',$signature);
+
+
+$messageencours="<br><br>$signature<hr>";
 $messageencours.="> <i>".LANGMESS31.": $destinataire</i><br>";
 $messageencours.="> <i>".LANGTE12." ".dateForm($data[$i][4])." ".LANGTE13." ".$data[$i][5]."</i>";
 $message=Decrypte($data[$i][3],$number);
@@ -162,10 +171,30 @@ CKEDITOR.replace( 'editor', {
 <input type="hidden" name=saisie_type_personne_dest value="<?php print $qui_envoi?>" >
 <input type="hidden" name="idpiecejoint" value="<?php print $idpiecejointe ?>" >
 
+<?php
+if (file_exists("./common/config-ia.php")) {
+        include_once("common/productId.php");
+        include_once("common/config-ia.php");
+        $productID=PRODUCTID;
+        $iakey=IAKEY;
+        $lienIA="ajaxIAMessagerieReponse(document.getElementById('commentaire').value,'$productID','$iakey','editor',CKEDITOR)";
+}else{
+        $lienIA="alert('Votre Triade n\'est pas configur&eacute; pour utiliser l\'IA. Contacter votre administrateur Triade')";}
+?>
+
+
 <br><br>
 <div  style="position:absolute; top:780 ;left:100 "  >
 <table align=center><tr><td>
 <script language=JavaScript>buttonMagicSubmit2('<?php print LANGBT4?>','rien','<?php print LANGBT5 ?>'); //text,nomInput</script>
+<?php 
+if (($_SESSION['membre'] == "menuadmin") || ($_SESSION['membre'] == "menuprof") || ($_SESSION['membre'] == "menuscolaire")) {
+	print "&nbsp,&nbsp;<input type='text' size=50 id='commentaire' placeholder=\"Indiquer une suggestion de message &agrave; r&eacute;diger\"  /> <input type='button' value='TRIADE-COPILOT' id='bt_copilot' class='BUTTON' onClick=\"$lienIA\" >&nbsp;&nbsp;<a href='#'  onMouseOver=\"AffBulle('TRIADE-COPILOT vous permet de pr&eacute;parer votre message via des mots clefs que vous indiquer.');\"  onMouseOut=\"HideBulle()\";><img src=\"./image/help.gif\" border=0 align=center></a>
+";
+}
+
+
+?>
 </td></tr></table>
 <br><br>
 </div>
@@ -180,22 +209,8 @@ $maxsize="2000000";
 if (UPLOADIMG == "oui") { $taille="8Mo"; $maxsize="8000000"; }
 ?>
 <table><tr><td valign=top><br/>
-<!--
-<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="http://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0" width="292" height="54" id="fileUpload" align="middle">
-<param name="allowScriptAccess" value="sameDomain" />
-<param name="movie" value="librairie_php/fileUpload.swf" />
-<param name="quality" value="high" />
-<param name="wmode" value="transparent">
-<param name=FlashVars value="idpiecejoint=<?php print trim($idpiecejointe) ?>&maxsize=<?php print trim($maxsize) ?>&idsession=<?php print session_id()?>">
-<?php $couleur=couleurFont(GRAPH); ?>
-<param name="bgcolor" value="<?php print $couleur ?>" />
-<embed src="librairie_php/fileUpload.swf" quality="high" bgcolor="<?php print $couleur ?>"  wmode="transparent"
-       width="292" height="54" name="fileUpload" align="middle" allowScriptAccess="sameDomain" 
-       type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" flashvars="idpiecejoint=<?php print trim($idpiecejointe) ?>&maxsize=<?php print trim($maxsize) ?>&idsession=<?php print session_id()?>" />
-</object></td> <td valign='top'><br> <a href='#'  onMouseOver="AffBulle('Fichier Taille Max : <?php print $taille ?>');"  onMouseOut="HideBulle()";><img src="./image/help.gif" border=0 align=center></a>
--->
-
 <input type="file" name="Filedata" id="Filedata" onChange="uploadFile('<?php print trim($idpiecejointe) ?>')"> <a href='#'  onMouseOver="AffBulle('Fichier Taille Max : <?php print $taille ?>');"  onMouseOut="HideBulle()";><img src="./image/help.gif" border=0 align=center></a><br><br>
+<SCRIPT type="text/javascript">InitBulle("#000000","#FCE4BA","red",1);</SCRIPT> 
 <progress id="progressBar" value="0" max="100" style="width:300px;">
 </progress>
 <h3 id="status"></h3>
@@ -214,5 +229,4 @@ if (UPLOADIMG == "oui") { $taille="8Mo"; $maxsize="8000000"; }
 <?php
 }
 ?>
-<SCRIPT type="text/javascript">InitBulle("#000000","#FCE4BA","red",1);</SCRIPT> 
 </BODY></HTML>

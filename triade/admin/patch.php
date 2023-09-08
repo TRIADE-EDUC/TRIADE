@@ -115,21 +115,6 @@ $maxsize="2000000";
 if (MAXUPLOAD == "oui") { $taille="8Mo"; $maxsize="8000000"; }
 ?>
 
-<!-- 
-<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="http://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0" width="292" height="54" id="fileUpload" align="middle">
-<param name="allowScriptAccess" value="sameDomain" />
-<param name="movie" value="./librairie_php/fileUploadPatch.swf" />
-<param name="quality" value="high" />
-<param name="wmode" value="transparent">
-<param name=FlashVars value="maxsize=<?php print trim($maxsize) ?>&idsession=<?php print session_id()?>" >
-<?php $couleur=couleurFont(GRAPH); ?>
-<param name="bgcolor" value="<?php print $couleur ?>" />
-<embed src="./librairie_php/fileUploadPatch.swf" quality="high" bgcolor="<?php print $couleur ?>"  wmode="transparent"
-       width="292" height="54" name="fileUpload" align="middle" allowScriptAccess="sameDomain" 
-       type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" flashvars="maxsize=<?php print trim($maxsize) ?>&idsession=<?php print session_id()?>" />
-</object><a href='#'  onMouseOver="AffBulle('Fichier Taille Max : <?php print $taille ?>');"  onMouseOut="HideBulle()";><img src="../image/help.gif" border=0  ></a>
--->
-
 <form id="upload_form" enctype="multipart/form-data" method="post">
 <input type="file" name="Filedata" id="Filedata" onchange="uploadFile()"> <a href='#'  onMouseOver="AffBulle('Fichier Taille Max : <?php print $taille ?>');"  onMouseOut="HideBulle()";><img src="../image/help.gif" border=0 align=center></a><br><br>
 <progress id="progressBar" value="0" max="100" style="width:300px;">

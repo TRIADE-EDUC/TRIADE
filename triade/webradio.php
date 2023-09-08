@@ -8,6 +8,7 @@ if (file_exists("common/lib_crypt.php")) {
 	}
 
 	function encrypt($text)	{
+		
 	     	$text_num = str_split($text, CRYPT_CBIT_CHECK);
      		$text_num = CRYPT_CBIT_CHECK - strlen($text_num[count($text_num)-1]);
  
@@ -22,16 +23,25 @@ if (file_exists("common/lib_crypt.php")) {
  
     		return base64_encode($decrypted);
 	}
+	
 	$nom=TextNoAccent($_SESSION["nom"]);
 	$prenom=TextNoAccent($_SESSION["prenom"]);
 	$tab['nom']="$nom $prenom";
-	$serialize=encrypt(serialize($tab));
+	if (SERVEURTYPE == "LINUX") {
+		$serialize=encrypt(serialize($tab));
+	}else{
+		$serialize=serialize($tab);
+	}
 }
 
 
 include_once("common/config2.inc.php");
 if (LAN == "oui") {
-	header("Location:http://www.triade-educ.org/accueil/webradio.php?GRAPH=".GRAPH."&tab=$serialize&r=".CRYPT_CIV."&r2=".CRYPT_CKEY);
+	if (SERVEURTYPEdd == "LINUX") {
+		header("Location:https://www.triade-educ.org/accueil/webradio.php?GRAPH=".GRAPH."&tab=$serialize&r=".CRYPT_CIV."&r2=".CRYPT_CKEY);
+	}else{
+		header("Location:https://www.triade-educ.org/accueil/webradio.php?GRAPH=".GRAPH);
+	}
 }else{
 	print "<script>alert(\"Internet non accessible ! Valider l'accès via votre compte administrateur Triade\"); this.close(); </script>";
 	

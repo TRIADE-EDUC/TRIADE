@@ -35,7 +35,8 @@ session_start();
 <script type="text/javascript" src="./librairie_js/prototype.js"></script>
 <script type="text/javascript" src="./librairie_js/ajaxStage.js"></script>
 <script type="text/javascript" src="./librairie_js/ajax_entreprise_centrale.js"></script>
-<script type="text/javascript" src="./librairie_js/xorax_serialize.js" ></script>
+<script type="text/javascript" src="./librairie_js/xorax_serialize.js" ></script> 
+<script type="text/javascript" src="./unserialize-js/phpUnserialize.js" ></script>
 <title>Triade - Compte de <?php print $_SESSION["nom"]." ".$_SESSION["prenom"]?></title>
 <script>
 function AffectDateStage(val) {

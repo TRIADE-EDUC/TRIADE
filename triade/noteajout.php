@@ -216,6 +216,8 @@ if ($res) {
 				else {
 				// utilisation de l'opérateur ternaire expr1?expr2:expr3;
 					$libelle=$data[$i][4]?$data[$i][1]."-".$data[$i][5]:$data[$i][1];
+					if (isset($verif[$libelle])) continue;
+                                        $verif[$libelle]=$libelle;
 					print "<option STYLE='color:#000066;background-color:#CCCCFF' value=\"".$data[$i][0].":".$data[$i][4]."\">".ucfirst($libelle)."</option>\n";
 				}
 				$gtmp=$data[$i][4];
@@ -224,6 +226,7 @@ if ($res) {
 			 unset($gtmp);
 			 unset($ctmp);
 			 unset($libelle);
+			 unset($verif);
 			 ?>
 			 </select>
 			 <br /><br />
@@ -487,6 +490,8 @@ if ($res) {
 					else {
 						// utilisation de l'opérateur ternaire expr1?expr2:expr3;
 						$libelle=$data[$i][4]?$data[$i][1]."-".$data[$i][5]:$data[$i][1];
+						if (isset($verif[$libelle])) continue;
+        	                                $verif[$libelle]=$libelle;
 						print "<option STYLE='color:#000066;background-color:#CCCCFF' value=\"".$data[$i][0].":".$data[$i][4]."\">".$libelle."</option>\n";
 					}
 					$gtmp=$data[$i][4];
@@ -495,6 +500,7 @@ if ($res) {
 				 unset($gtmp);
 				 unset($ctmp);
 				 unset($libelle);
+				 unset($verif);
 				 ?>
 				 </select>
 				 <br /><br />

@@ -478,7 +478,7 @@ define("LANGBASE18","INFORMACION NO DISPONIBLE");
 define("LANGBULL1","Impresion  del boletin trimestral");
 define("LANGBULL2","Indique la clase");
 define("LANGBULL3","Ano escolar");
-define("LANGBULL4","<a href=\"#\" onclick=\"open('./accrobat.php','acro','width=500,height=350')\"><b><FONT COLOR=red>CUIDADO</FONT></B> Necesidad del util <B>Adobe Acrobat Reader</B>.  Programa y bajar gratis haga click aqui <B>AQUI</B></A>");
+define("LANGBULL4","<a href=\"#\" onclick=\"open('https://www.adobe.com/fr/','_blank','')\"><b><FONT COLOR=red>CUIDADO</FONT></B> Necesidad del util <B>Adobe Acrobat Reader</B>.  Programa y bajar gratis haga click aqui <B>AQUI</B></A>");
 // -----------------------------------------------------------------------------------------------------------------------
 define("LANGPARENT1","ningun mensaje");
 define("LANGPARENT2","Ningun represantante ha sido nombrado aun");
@@ -2553,7 +2553,7 @@ define("LANGMESS157","Trimestre");
 define("LANGMESS158","Classe");
 //-----------------probleme_acces_2.php
 define("LANGMESS151","Identifiez votre compte");
-define("LANGMESS152","Veuillez dabord identifier votre compte pour réinitialiser votre mot de passe.");
+define("LANGMESS152","Veuillez d'abord identifier votre compte pour réinitialiser votre mot de passe.");
 define("LANGMESS153","Demande de mot de passe");
 //-----------------geston_groupe.php
 define("LANGMESS154","Création de groupe");
@@ -3375,5 +3375,7 @@ define("LANGVATEL38","Indiquer la date");
 define("LANGMESSE01","Accès à votre compte SMS");
 define("LANGMESSE02","Gestion des SMS"); 
 
+define("LANGNEW100","Sanction(s)");
+define("LANGNEW101","Prévision sur ");
 
 ?>

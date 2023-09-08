@@ -45,7 +45,7 @@ if ($id != 1) {
 <div align='center'><?php top_h(); ?>
 <SCRIPT language="JavaScript"<?php print "src='./librairie_js/$_SESSION[membre]"."1.js'>" ?></SCRIPT>
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
-<tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' ><?php print "Importation sconet absence" ?></font></b></td></tr>
+<tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' ><?php print "Importation SIECLE absence" ?></font></b></td></tr>
 <tr id='cadreCentral0'>
 <td >
 <?php

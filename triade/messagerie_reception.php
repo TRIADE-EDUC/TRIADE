@@ -83,6 +83,9 @@ function validecase() {
 }
 
 </script>
+
+<?php include("./librairie_php/googleanalyse.php"); ?>
+
 </head>
 <?php
 
@@ -146,7 +149,7 @@ if(isset($_POST["suppmess"])) {
 
 			if ($checkbox == "on") {
 				$iddestinataire=$id_pers;
-				$cr=suppression_message($id_supp,$iddestinataire,'null') ;
+				$cr=corbeille_message($id_supp,$iddestinataire,'null') ;
 			}
 	}
 }
@@ -296,8 +299,8 @@ if ((isset($_GET["nba"])) && ($deb != 1)){
 }else {
 	$depart=0;
 }
-$data=affichage_messagerie_limit($type_personne,$destinataire,$depart,$nbaff,$idrep,$orderby);
-// id_message, emetteur, destinataire, message, date, heure, lu, type_personne, objet, type_personne_dest, lu_par_utilisateur, idpiecejointe, impression, alerte
+$data=affichage_messagerie_limit($type_personne,$destinataire,$depart,$nbaff,$idrep,$orderby,'0');
+// id_message, emetteur, destinataire, message, date, heure, lu, type_personne, objet, type_personne_dest, lu_par_utilisateur, idpiecejointe, impression, alerte, corbeille
 for($i=0;$i<count($data);$i++) {
 	$impression=$data[$i][12];
 	$alerte=$data[$i][13];

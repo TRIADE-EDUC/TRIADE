@@ -49,7 +49,13 @@ if ($valide == 0) {
 include_once('librairie_php/db_triade.php');
 if (file_exists("./data/install_log/access.log")) {
 	print "<br><ul>Fichier LOG des activités des utilisateurs Triade : ";
-	print "<a href='visu_accesslog.php' target='_blank' ><img src='./image/stockage/txt.gif' align=center border=0 /></a>";
+	if (($_SESSION["membre"] == "menuadmin") && (!isset($_SESSION['admin1']))) {
+		print "<a href='base_de_donne_key.php?base=infolog' target='_top' ><img src='./image/stockage/txt.gif' align=center border=0 /></a>";
+	}
+	if (isset($_SESSION["admin1"])) {
+		print "<a href='visu_accesslog.php' target='_blank' ><img src='./image/stockage/txt.gif' align=center border=0 /></a>";
+	}
+
 	print "</ul>";
 }
 ?>

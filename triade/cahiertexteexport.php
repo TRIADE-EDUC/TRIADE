@@ -43,7 +43,16 @@ if (isset($_POST["anneeScolaire"])) {
 <?php 
 include_once("./librairie_php/lib_licence.php"); 
 include_once("librairie_php/db_triade.php");
-validerequete("menuadmin");	
+if ($_SESSION["membre"] == "menupersonnel") {
+        $cnx=cnx();
+        if (!verifDroit($_SESSION["id_pers"],"cahiertextes")) { 
+        	accesNonReserveFen();
+                exit();
+        }
+        Pgclose();
+}else{
+	validerequete("menuadmin");	
+}
 ?>
 <SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
@@ -71,7 +80,7 @@ $cnx=cnx();
 <br />
 <!-- // fin  -->
 <table width="90%" border="0" align="center">
-<tr><td align="right"><font class="T2"><?php print LANGBULL3 ?> :</font></td><td>
+<tr><td align="right" width='50%' ><font class="T2"><?php print LANGBULL3 ?> :</font></td><td>
                  <select name='anneeScolaire' >
                  <?php
                  filtreAnneeScolaireSelectNote($anneeScolaire,8);

@@ -45,7 +45,7 @@ session_start();
 <td valign=top>
 <br>
 <div id="infopatch" align="center"></div>
-<script language="JavaScript" src="http://support.triade-educ.org/support/version-patch.php?v=<?php print VERSIONPATCH ?>"></script>
+<script language="JavaScript" src="https://support.triade-educ.org/support/version-patch.php?v=<?php print VERSIONPATCH ?>"></script>
 
 <?php
 include_once("./librairie_php/db_triade_admin.php");

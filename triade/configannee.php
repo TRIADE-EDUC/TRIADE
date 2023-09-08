@@ -94,8 +94,39 @@ Indiquer le jour et le mois de la fin de votre année scolaire : <input type='te
 <BR><br>
 </form>
 
-
-
 </td></tr></table>
+<br><br>
+
+<?php
+if (isset($_POST["okete"])) {
+	touch("./data/parametrage/noacces.ete");	
+}
+
+if (isset($_POST["koete"])) {
+	unlink("./data/parametrage/noacces.ete");	
+}
+
+
+
+?>
+<form method='post' >
+<table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
+<tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' ><?php print "Passage de Triade en mode &eacute;t&eacute; " ?></font></b></td></tr>
+<tr id='cadreCentral0' >
+<td ><br/>
+<ul>
+Tous les comptes n'auront plus acc&egrave;s &agrave; leur compte Triade sauf les comptes directions. <br/><br />
+<?php
+if (file_exists("./data/parametrage/noacces.ete")) {
+	print "<script>buttonMagicSubmit('D&eacute;sactiver','koete','ok')</script>";
+}else{
+	print "<script>buttonMagicSubmit('".VALIDER."','okete','ok')</script>";
+}
+?>
+</ul>
+<br/>
+<br/>
+</td></tr></table>
+</form>
 <SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."2.js'>" ?></SCRIPT>
 </BODY></HTML>

@@ -138,7 +138,7 @@ include_once("common/version.php");
 <?php droit(); ?>
 </textarea>
 <br><br>
-Triade©, <?php print DATEOUT ?> <br>
+Triade &copy;, <?php print DATEOUT ?> <br>
 <a href="http://www.triade-educ.org" target="_blank">www.triade-educ.org</a>
 </ul>
 <!-- // fin de la saisie -->

@@ -303,7 +303,7 @@ if (($_SESSION["membre"] == "menuadmin") || ($_SESSION["membre"] == "menuscolair
 
 	?>
 	</i></td></tr>
-	<tr><td colspan=4 id=bordure><hr></td></tr>
+	<tr><td colspan='5' id='bordure' ><hr></td></tr>
 <?php
 	}
 }

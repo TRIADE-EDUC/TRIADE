@@ -50,7 +50,7 @@ session_start();
 <tr><td align=center><br>
 <table><tr><td align=center>
 
-<form method=post action="http://support.triade-educ.org/keyonline/enregistrement.php" target="_blank">
+<form method=post action="https://support.triade-educ.org/keyonline/enregistrement.php" target="_blank">
 <script language=JavaScript>buttonMagicSubmit("<?php print langbta1?>","Submit"); //text,nomInput</script>
 </form>
 </tr></td></table>

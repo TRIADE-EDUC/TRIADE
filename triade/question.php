@@ -128,7 +128,7 @@ Pgclose();
 </table>
 <br>
 <?php
-if (preg_match('/demo.triade-educ.org/',WEBROOT)) {
+if (preg_match('/demo.triade-educ.net/',WEBROOT)) {
         $disabled="disabled='disabled'";
         $message="Version de démonstration, vous êtes actuellement sur la platforme de démonstration.\n\n(Saisie Impossible)\n\nL'Equipe Triade";
 }

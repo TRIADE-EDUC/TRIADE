@@ -60,7 +60,7 @@ if (isset($_POST["supp"])) {
 <!-- // fin  -->
 
 
-<table bgcolor=#FFFFFF border=1 bordercolor="#CCCCCC" width=100%>
+<table bgcolor=#FFFFFF border=1 bordercolor="#CCCCCC" width=100% style="border-collapse: collapse;">
 <?php
 
 if ($_SESSION["membre"] == "menuprof") {

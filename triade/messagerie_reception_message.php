@@ -37,6 +37,7 @@ session_start();
 <title>TRIADE - Messagerie</title>
 </head>
 <body bgcolor='#FFFFFF' >
+<div name="a"></div>
 <?php
 include_once("./librairie_php/lib_licence.php");
 include_once('librairie_php/db_triade.php');
@@ -137,8 +138,18 @@ for($i=0;$i<count($data);$i++)
 			}
 		}
 	?>
-		<a href='#' onclick="alerteMessage('<?php print $data[$i][0] ?>')" title='Alerte Message' ><img src="./image/commun/email_alerte.jpg" align="absmiddle" alt="Alerte Message" border='0' /></A>
-       		<a href='#' onclick="imprimerMessage();" title='Imprimer' ><img src="./image/commun/email_imprimer.jpg" align="absmiddle" alt="Imprimer" border='0' /></A>
+<?php 
+$message=Decrypte($data[$i][3],$number);
+$message=strip_tags($message);
+$message=stripslashes($message);
+$message=preg_replace('/<p>\&nbsp;<\/p>/','',$message);
+$message=preg_replace('#(\\\\r|\\\\r\\\\n|\\\\n)#', ' ',$message);
+$message="Message automatique : Une circulaire a été déposée à votre attention.";
+?>
+
+		<a href='#a' onclick="alerteMessage('<?php print $data[$i][0] ?>')" title='Alerte Message' ><img src="./image/commun/email_alerte.jpg" align="absmiddle" alt="Alerte Message" border='0' /></a>
+<!--       		<a href='#a' onClick="ecoutermessage('<?php print $message ?>');" title='Ecouter' ><img src="./image/commun/email_son.jpg" align="absmiddle" alt="Ecouter" border='0' /></a>  -->
+       		<a href='#a' onclick="imprimerMessage();" title='Imprimer' ><img src="./image/commun/email_imprimer.jpg" align="absmiddle" alt="Imprimer" border='0' /></a>
             </td></tr></table>
           </td>
         </tr>
@@ -189,6 +200,12 @@ function imprimerMessage() {
 		flagImpMessage('<?php print $idmessage ?>');
         }
 	
+}
+
+function ecoutermessage(message) {
+	var language="fr-fr";	
+	var url="https://ia.triade-educ.net/apitext-to-speech.php?productId=<?php print $productId ?>&message="+encodeURIComponent(message)+"&lang="+language;
+	open(url,'son','width=30,height=30');
 }
 
 

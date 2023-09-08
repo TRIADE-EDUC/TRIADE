@@ -10,8 +10,14 @@ if(preg_match('/db_param\.inc\.php/', $_SERVER['REQUEST_URI'])) {
 	include('./forbidden.inc.php'); forbidden();
 }
 // inclure ici les tableaux des bases de données accessibles
-$_tableau_databases[0]="vucq9456_ecole_test" ;
-$_libelle_databases[0]="vucq9456_ecole_test" ;
+
+if (file_exists('../../../common/config.inc.php')) include_once('../../../common/config.inc.php');
+if (file_exists('../../common/config.inc.php')) include_once('../../common/config.inc.php');
+if (file_exists('../common/config.inc.php')) include_once('../common/config.inc.php');
+
+
+$_tableau_databases[0]=DB ;
+$_libelle_databases[0]=DB ;
 
 // pour multi-bases
 if (isset($database)) {
@@ -33,11 +39,11 @@ switch(LOCATION):
 		//$time_zone = 'Europe/Paris'; //Pour modifier l'heure PHP
 		//$time_zone_mysql =  "'-00:00'"; //Pour modifier l'heure MySQL
 		break;
-	case 'vucq9456_ecole_test':
-		define('SQL_SERVER', 'localhost');		// nom du serveur
-		define('USER_NAME', 'vucq9456_admin');		// nom utilisateur
-		define('USER_PASS', '0hD3UoS+');		// mot de passe
-		define('DATA_BASE', 'vucq9456_ecole_test');		// nom base de données
+	case DB :
+		define('SQL_SERVER', HOST );		// nom du serveur
+		define('USER_NAME', USER );		// nom utilisateur
+		define('USER_PASS', PWD );		// mot de passe
+		define('DATA_BASE', DB );		// nom base de données
 		define('SQL_TYPE',  'mysql');			// Type de serveur de base de données
 		// Encode de caracteres de la base de données 
 		$charset = "utf-8" ;

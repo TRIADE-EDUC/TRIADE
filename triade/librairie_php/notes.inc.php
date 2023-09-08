@@ -296,7 +296,9 @@ function affHtml(){
 	print "<table border=\"1\" style=\"border-collapse: collapse;\" >\n";
 	for($i=0;$i<count($n);$i++){
 		print "<tr>\n";
-		print "<td bgcolor='#FFFFFF'>".$n[$i]->getNomElev()."</td>";
+		$infoAffiche=$n[$i]->getNomElev();
+		$infoAffiche=preg_replace('/\\\\/','',$infoAffiche);
+		print "<td bgcolor='#FFFFFF'>".stripslashes($infoAffiche)."</td>";
 		$not=$n[$i]->getNote();
 		
 		switch($not){

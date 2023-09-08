@@ -96,10 +96,10 @@ $fichier_info="../data/patch/$rep_patch/product/info.triade";
 if (file_exists($fichier_info)) {
 			$fic=fopen($fichier_info,"r");
 			$lines=file ("$fichier_info");
-			print "<tr><td colspan=2><b><u>Mise à jour de fichier :</b></u></td></tr>";
+			print "<tr><td colspan=2><b><u>Mise &agrave; jour de fichier :</b></u></td></tr>";
 			foreach ($lines as $line_num => $line) {
 				if(preg_match('/:/',$line)){
-					list($tab0,$tab1)= preg_split ('/:/', $line, 2);
+					list($tab0,$tab1)= preg_split('/:/', $line, 2);
 					//$tab0=trim($tab0);
 					print "<tr><td> <img src='image/on1.gif' width=8 height=8 > &nbsp;".$tab0."&nbsp;&nbsp;</td>";
 					$source="../data/patch/$rep_patch/product/".$tab0;

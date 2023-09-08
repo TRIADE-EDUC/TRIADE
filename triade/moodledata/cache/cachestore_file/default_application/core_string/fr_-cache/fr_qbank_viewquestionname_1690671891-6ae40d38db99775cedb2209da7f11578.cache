@@ -1,0 +1,1 @@
+a:4:{s:10:"pluginname";s:26:"Voir le nom de la question";s:16:"privacy:metadata";s:100:"Le plugin de banque de questions Voir le nom de la question n'enregistre aucune donnée personnelle.";s:23:"edit_question_name_hint";s:30:"Modifier le nom de la question";s:24:"edit_question_name_label";s:31:"Nouvelle valeur pour {$a->name}";}

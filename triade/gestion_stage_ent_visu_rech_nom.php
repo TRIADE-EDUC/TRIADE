@@ -108,7 +108,7 @@ $data=recherche_entreprise_nom($recherche);
 		<?php print LANGSTAGE36 ?> : <b><?php print $data[$i][10] ?> </b><br><br>
 		<?php print "Qualit&eacute;" ?> : <b><?php print $data[$i][24] ?> </b><br><br>
 		<?php print LANGSTAGE37 ?> : <b><?php print $data[$i][11] ?></b> <br><br>
-		Plan : <a href="#" onclick="open('http://support.triade-educ.org/support/google-map-V3-triade.php?etablissement=<?php print  urlencode($data[$i][1])?>&adresse=<?php print urlencode($data[$i][3]) ?>&ville=<?php print urlencode($data[$i][5]) ?>&pays=<?php print urlencode($data[$i][14])?>','_blank','width=450,height=350')" /><img src="image/commun/loupe.png" border="0" /></a><br><br><br>
+		Plan : <a href="#" onclick="open('https://support.triade-educ.org/support/google-map-V3-triade.php?etablissement=<?php print  urlencode($data[$i][1])?>&adresse=<?php print urlencode($data[$i][3]) ?>&ville=<?php print urlencode($data[$i][5]) ?>&pays=<?php print urlencode($data[$i][14])?>','_blank','width=450,height=350')" /><img src="image/commun/loupe.png" border="0" /></a><br><br><br>
 		<hr>
 		<font class='T1'>
 		<u>Historique des élèves</u> :<br><br>

@@ -484,6 +484,7 @@ for($j=$dep;$j<$nbEleveT;$j++) {  // premiere ligne de la creation PDF
 		//                      $coef=recupCoefUE($idmatiere,$idClasse,$_POST["saisie_trimestre"]);
 		                        $coef=recupCoeff($idmatiere,$idClasse,$ordre);
 		                        $coef=preg_replace('/\.00$/','',$coef);
+					$notePlanche=recupNotePlanche($idmatiere,$idClasse,$ordre,$anneeScolaire);
 		
 		                        // mise en place du cadre note
 		                        // ------------------------------------------------------
@@ -528,7 +529,7 @@ for($j=$dep;$j<$nbEleveT;$j++) {  // premiere ligne de la creation PDF
 		                        // ---------------------------------------------------------------------------------------
 					if ($absValider != "VALIDE") {
 			                        if (($note < 10) && ($note != "")) { $note="0".$note; }
-			                        if ($note >= 6) {
+			                        if ($note >= $notePlanche) {
 			                                if (preg_match('/pratique professionnelle/i',$matiere)) {
 			                                        if ($note < 10) {
 			                              //                  $ects="";
@@ -605,7 +606,7 @@ for($j=$dep;$j<$nbEleveT;$j++) {  // premiere ligne de la creation PDF
 		                                $nbNoteUE++;
 		                        }
 		                        // ------------------------------
-		                        if (($note >= 6) || ($note == "VAL"))  $ectsEU+=$ects; 
+		                        if (($note >= $notePlanche) || ($note == "VAL"))  $ectsEU+=$ects; 
 				}
 			}
 		}
@@ -697,6 +698,7 @@ for($j=$dep;$j<$nbEleveT;$j++) {  // premiere ligne de la creation PDF
 //			$coef=recupCoefUE($idmatiere,$idClasse,$_POST["saisie_trimestre"]);
 			$coef=recupCoeff($idmatiere,$idClasse,$ordre);
 			$coef=preg_replace('/\.00$/','',$coef);
+			$notePlanche=recupNotePlanche($idmatiere,$idClasse,$ordre,$anneeScolaire);
 
 			// mise en place du cadre note 
 			// ------------------------------------------------------
@@ -799,7 +801,7 @@ for($j=$dep;$j<$nbEleveT;$j++) {  // premiere ligne de la creation PDF
 		
 			if ($absValider != "VALIDE") {
 				if (($note < 10) && ($note != "")) { $note="0".$note;  }
-				if ($note >= 6) {
+				if ($note >= $notePlanche) {
 					if (preg_match('/pratique professionnelle/i',$matiere)) {
 						if ($note < 10) {
 							//$ects="";

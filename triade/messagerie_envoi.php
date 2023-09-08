@@ -74,7 +74,7 @@ if (isset($_GET["f"])) {
 
 if ($_GET["autorise"] == "non") {
 	print "<script>alert(\"".LANGMESST705."\")</script>";
-	history_cmd($_SESSION["nom"],"MESSAGERIE","Tentative d'envoi à ".$_GET["aqui"]);
+	history_cmd($_SESSION["nom"],"MESSAGERIE","Tentative d'envoi pour ".$_GET["aqui"]);
 }
 
 $valid=0;

@@ -442,6 +442,9 @@ $affichageVateloui="";
 $examenvatelreunionnon="";
 $examenvatelreunionoui="";
 
+$affichageIAOui="";
+$affichageIANon="";
+
 $fichier="../common/config2.inc.php";
 if ( file_exists($fichier)) {
 	if ( file_exists("../common/config6.inc.php")) {
@@ -906,7 +909,10 @@ if ( file_exists($fichier)) {
 
 	if (MODIFTROMBIELEVE == "oui")    { $modiftrombieleveoui="checked='checked'"; }
 	if (MODIFTROMBIELEVE == "non")    { $modiftrombielevenon="checked='checked'"; }
+	if (defined("CNILPROTECTEUR"))    { $cnilprotecteur=CNILPROTECTEUR; }
 
+	if (AFFICHAGEIA == "oui")    { $affichageIAOui="checked='checked'"; }
+	if (AFFICHAGEIA == "non")    { $affichageIANon="checked='checked'"; }
 
 
 
@@ -2486,6 +2492,8 @@ if (MONNAIE == "FC") { $selectedFC="selected='selected'"; }
 		if (TAILLESTOCKAGE == "5000000") { $val2="5Mo"; }
 		if (TAILLESTOCKAGE == "7000000") { $val2="7Mo"; }
 		if (TAILLESTOCKAGE == "10000000") { $val2="10Mo"; }
+		if (TAILLESTOCKAGE == "60000000") { $val2="60Mo"; }
+		if (TAILLESTOCKAGE == "100000000") { $val2="100Mo"; }
 		print "<option value='".TAILLESTOCKAGE."' STYLE='color:#000066;background-color:#FCE4BA' >".$val2."</option>";
 	}		
 	?>
@@ -2494,6 +2502,8 @@ if (MONNAIE == "FC") { $selectedFC="selected='selected'"; }
 		<option value="5000000" class=bouton2 >5Mo</option>
 		<option value="7000000" class=bouton2 >7Mo</option>
 		<option value="10000000" class=bouton2 >10Mo</option>
+		<option value="60000000" class=bouton2 >60Mo</option>
+		<option value="100000000" class=bouton2 >100Mo</option>
 		</select>
 </td></tr>
 
@@ -2509,6 +2519,9 @@ if (MONNAIE == "FC") { $selectedFC="selected='selected'"; }
 		<option value="20" class="bouton2" >20</option>
 		<option value="30" class="bouton2" >30</option>
 		<option value="40" class="bouton2" >40</option>
+		<option value="60" class="bouton2" >60</option>
+		<option value="90" class="bouton2" >90</option>
+		<option value="100" class="bouton2" >100</option>
 		</select>
 </td></tr>
 
@@ -2541,8 +2554,11 @@ if (MONNAIE == "FC") { $selectedFC="selected='selected'"; }
 
 
 <tr><td align=right >Planification jours fériés : </td>
+<?php
+$ferie=preg_replace("/'/","",$ferie);
+?>
 <td align=left><input type=text  name="ferie" value="<?php print $ferie ?>" size=30>
-<A href='#' onMouseOver="AffBulle2('ATTENTION AU FORMAT','../image/commun/warning.jpg','<font face=Verdana size=1><font color=red>I</font>ndiquez les dates fériés sous la forme :<br> \'jour/mois\',\'jour/mois\',...&nbsp;&nbsp;<br> <i>exemple : \'31/01\',\'25/12\',...</i></FONT>'); window.status=''; return true;" onMouseOut='HideBulle()'><img src='../image/help.gif' align=center border=0></A>
+<A href='#' onMouseOver="AffBulle2('ATTENTION AU FORMAT','../image/commun/warning.jpg','<font face=Verdana size=1><font color=red>I</font>ndiquez les dates f&eacute;ri&eacute;s sous la forme :<br>jour/mois,jour/mois,...&nbsp;&nbsp;<br> <i>exemple : 31/01,25/12, etc...</i></FONT>'); window.status=''; return true;" onMouseOut='HideBulle()'><img src='../image/help.gif' align=center border=0></A>
 </td>
 </tr>
 
@@ -2689,7 +2705,9 @@ if ($modulenote6oui != "") {
 </td>
 </tr>
 
-<tr><td align=right >Numéro C.N.I.L. : </td><td align=left><input type=text  name="cnil" size=30 value="<?php print $cnil ?>" /></tr>
+<tr><td align=right >Num&eacute;ro D.P.O (Data Proctection Officier) : </td><td align=left><input type=text  name="cnil" size=30 value="<?php print $cnil ?>" /></tr>
+<tr><td align=right >Email du responsable D.P.O : </td><td align=left><input type=text  name="cnilprotecteur" size=30 value="<?php print $cnilprotecteur ?>" /></tr>
+<tr><td align=right >Comment cr&eacute;er le registre de traitement :  </td><td> <a href='https://www.cnil.fr/fr/RGDP-le-registre-des-activites-de-traitement' target='_blank' >Consulter ce lien</a></td></tr>
 
 <?php
 include_once("../librairie_php/lib_get_init.php");
@@ -2876,6 +2894,11 @@ if (file_exists("../common/config-messenger.php")) {
 <input type=radio <?php print $moduleeLearningmoodle ?> name="moduleelearning" value="moodle" class=btradio1 selected='selected' > Moodle 
 </tr>
 
+<tr><td align=right >Autoriser TRIADE-COPILOT : </td>
+<td align=left>
+<input type=radio <?php print $affichageIAOui ?> name="affichageia" value="oui" class=btradio1  > oui &nbsp;&nbsp;&nbsp;
+<input type=radio <?php print $affichageIANon ?> name="affichageia" value="non" class=btradio1  > non 
+</tr>
 
 <!-------------------------------- -- -->
 <tr><td colspan=2><br>

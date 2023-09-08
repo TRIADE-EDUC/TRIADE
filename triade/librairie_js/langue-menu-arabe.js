@@ -282,3 +282,5 @@ langmenuadmin529="Année Scolaire";
 langmenuadmin911="Classe antérieure";
 langmenuadmin912="Savoir-etre";
 langmenuadmin913="Eval. Enseignant";
+langmenugeneral01a="Memo";
+langmenuadmin022="Corbeille";

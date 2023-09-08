@@ -119,6 +119,8 @@ foreach($tabMail as $idEleve => $messageabs) {
 	$NomResponsable1=strtoupper($nomtuteur);
 	$civ_1=civ($dataadresse[0][13]);
 
+	$emailtuteurstage=recupEmailTuteurStage($idEleve);
+
 	$idsite=chercherIdSiteClasse($idClasse);
 	$data=visu_paramViaIdSite($idsite);
         //nom_ecole,adresse,postal,ville,tel,email,directeur,urlsite,academie,pays,departement,annee_scolaire FROM
@@ -126,6 +128,18 @@ foreach($tabMail as $idEleve => $messageabs) {
 		$nom_etablissement=trim($data[$i][0]);
 	       	$mail=trim($data[$i][5]);
   	}
+
+	if ($compte == "tuteurstage") {
+
+                $message="
+
+        Bonjour,
+
+        Nous vous informons que $nomEleve $prenomEleve fût absent(e) :
+        $messageabs
+";
+        }
+
 
 	if ($compte == "tuteur") {
 
@@ -170,6 +184,26 @@ foreach($tabMail as $idEleve => $messageabs) {
 	$message=TextNoAccent($message);
 	$email_expediteur=trim($email_expediteur);
 	$emailparent1=cherchemailparent($idEleve);
+
+	
+	if ($compte == "tuteurstage") {
+                if (ValideMail($emailtuteurstage)) {
+                        $to=$emailtuteurstage;
+                        if (ValideMail($emailcc)) $to.=",".$emailcc;
+                        mailTriade($sujet,$message,$message,$to,$email_expediteur,$email_expediteur,$nom_expediteur,"");
+//print "$sujet,$message,$message,$to,$email_expediteur,$email_expediteur,$nom_expediteur";
+//print "<hr>";
+                }
+
+                $emailparent2=cherchemailparent2($idEleve);
+                if (ValideMail($emailparent2)) {
+                        $to=$emailparent2;
+                        if (ValideMail($emailcc)) $to.=",".$emailcc;
+                        mailTriade($sujet,$message,$message,$to,$email_expediteur,$email_expediteur,$nom_expediteur,"");
+//print "$sujet,$message,$message,$to,$email_expediteur,$email_expediteur,$nom_expediteur";
+//print "<hr>";
+                }
+        }
 
 	if ($compte == "tuteur") { 
 		if (ValideMail($emailparent1)) {

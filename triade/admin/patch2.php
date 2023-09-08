@@ -53,6 +53,7 @@ include_once("librairie_php/db_triade_admin.php");
 $cnx=cnx();
 
 $fichier_orig="./patch_ftp/".$_POST["patch_ftp"];
+
 if (file_exists($fichier_orig)) {
 	$fichier=preg_replace('/\.zip/',"",$_POST["patch_ftp"]);
 	rename($fichier_orig,"./patch.zip");
@@ -73,6 +74,7 @@ if (file_exists($fichier_info)) {
 	print "<font class='T2'>$donnee</font>";
 	fclose($fichier);
 }
+
 		
 $fichier_info="../data/patch/$fichier/PATCHREQ";
 if (file_exists($fichier_info)) {
@@ -94,7 +96,7 @@ if (isset($patchrequis)) {
 	<br><table>
 	<?php if (!preg_match('/^000-/',$fichier)) { ?>
 		<tr><td>
-		<form method="post" action="http://support.triade-educ.org/support/verifpatch.php" target='_blank' >
+		<form method="post" action="https://support.triade-educ.org/support/verifpatch.php" target='_blank' >
 		<input type=hidden value="<?php print $fichier ?>" name="patch">
 		<input type=hidden value="<?php print $md5fichier ?>" name="md5sum">
 		<input type=submit  class="bouton2"  value="Vérifier la validité du patch" >

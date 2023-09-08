@@ -54,7 +54,7 @@ $cnx=cnx();
 <td ><br>
      <!-- // fin  -->
 <ul>
-<script language=JavaScript>buttonMagic("Import sconet absences",'base_de_donne_importation700.php','_parent','','')</script>
+<script language=JavaScript>buttonMagic("Import SIECLE absences",'base_de_donne_importation700.php','_parent','','')</script>
 </ul>
 <br><br><br>
 

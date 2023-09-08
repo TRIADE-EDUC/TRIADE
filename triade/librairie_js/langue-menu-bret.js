@@ -17,7 +17,7 @@
  *
  ***************************************************************************/
 // Ne pas d&eacute;passer 24 caract&egrave;res
-langtitre0="Skoazell";
+langtitre0="TRIADE-COPILOT";
 langtitre1="Keleier";
 langtitre2="Servij Triade";
 langtitre3="Forom";
@@ -274,3 +274,5 @@ langmenuadmin529="Année Scolaire";
 langmenuadmin911="Classe antérieure";
 langmenuadmin912="Savoir-être";
 langmenuadmin913="Eval. Enseignant";
+langmenugeneral01a="Memo";
+langmenuadmin023="Corbeille";

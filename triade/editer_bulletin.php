@@ -32,6 +32,7 @@ session_start();
 <script language="JavaScript" src="librairie_js/function.js"></script>
 <script language="JavaScript" src="./librairie_js/verif_creat.js"></script>
 <title>Triade Editer Bulletin</title>
+<?php include("./librairie_php/googleanalyse.php"); ?>
 </head>
 <body id='coulfond1' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0">
 <?php 

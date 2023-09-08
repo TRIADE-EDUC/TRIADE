@@ -49,7 +49,7 @@ session_start();
 <!-- // fin  -->
 <?php 
 $productid=PRODUCTID;
-$option=file_get_contents("http://support.triade-educ.org/centralestage/ajaxclientcentrale.php?productid=$productid"); 
+$option=file_get_contents("https://support.triade-educ.org/centralestage/ajaxclientcentrale.php?productid=$productid"); 
 ?>
 <ul>
 <font class='T2'>Centrale de stage : 

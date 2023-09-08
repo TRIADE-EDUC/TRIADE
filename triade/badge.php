@@ -31,7 +31,7 @@ session_start();
 <script type="text/javascript" src="./librairie_js/prototype.js"></script>
 <script language="JavaScript" src="./librairie_js/ajax_codebarre.js"></script>
 <script language="JavaScript" src="./librairie_js/verif_creat.js"></script>
-<script language="JavaScript" src="http://support.triade-educ.org/support/badge/config.php"></script>
+<script language="JavaScript" src="https://support.triade-educ.org/support/badge/config.php"></script>
 </head>
 <body id='coulfond1' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0">
 <ul>
@@ -58,7 +58,7 @@ if ((!isset($_POST['create'])) && (!isset($_POST['create2']))) { ?>
 	</form>
 
 <br>
-	<iframe src='http://support.triade-educ.org/support/badge/tarif.php?GRAPH=<?php print GRAPH ?>' width='400' height='300' MARGINWIDTH=0 MARGINHEIGHT=0 HSPACE=0 VSPACE=0 FRAMEBORDER=0 SCROLLING=yes /></iframe>
+	<iframe src='https://support.triade-educ.org/support/badge/tarif.php?GRAPH=<?php print GRAPH ?>' width='400' height='300' MARGINWIDTH=0 MARGINHEIGHT=0 HSPACE=0 VSPACE=0 FRAMEBORDER=0 SCROLLING=yes /></iframe>
 <?php 
 } 
 
@@ -245,7 +245,7 @@ Livraison: $prixcolissimo
 
 	Elle sera finalisé après réception du paiement.<br><br>
 
-	Télécharger la facture ProFormat <a href='http://support.triade-educ.org/support/badge/factureProFormat.php?productid=<?php print $productid ?>&email=<?php print $email ?>&nbBadge=<?php print $nbBadge ?>' target='_blank' ><font color=blue>Facture</font></a><br><br>
+	T&eacute;l&eacute;charger la facture ProFormat <a href='https://support.triade-educ.org/support/badge/factureProFormat.php?productid=<?php print $productid ?>&email=<?php print $email ?>&nbBadge=<?php print $nbBadge ?>' target='_blank' ><font color=blue>Facture</font></a><br><br>
 
         <font size=1><i>Pour toutes questions, merci de contacter le support à cette adresse :<br> support@triade-educ.org</i></font>
 

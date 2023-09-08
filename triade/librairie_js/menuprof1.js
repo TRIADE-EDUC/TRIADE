@@ -8,7 +8,7 @@ document.write("<table border='0' cellpadding='0' cellspacing='0' width='100%' h
 document.write("<tr id='coulBar0' >");
 document.write("<td height='20' width='20%'>");
 if (lienassist == '0' ) {
-	document.write("<div align='center'><a href='#' onclick=\"open('http://doc.triade-educ.com','_blank','')\" class='m'>"+langtitre0+"</a></div>");
+	document.write("<div align='center'><a href='#' onclick=\"open('besoin_daide.php','_self','')\" class='m'>"+langtitre0+"</a></div>");
 }else{
 	document.write("<div align='center'><a href='"+lienassist+"' class='m' target='_blank' >"+langtitre0+"</a></div>");
 }
@@ -60,6 +60,7 @@ document.write("<tr>");
 document.write("<td colspan='3'  id='coulModule0' >");
 document.write("<p style='margin-left: 2; margin-top:5; margin-bottom:5'>");
 document.write("<img src='./image/cube.gif' width='4' height='4'> <a href='gescompte.php' id='menumodule0'  >"+langmenugeneral01+"</a><br>");
+document.write("<img src='./image/cube.gif' width='4' height='4'> <a href='memo.php' id='menumodule0'  >"+langmenugeneral01a+"</a><br>");
 if (modulestockageprof == "oui") { document.write("<img src='./image/cube.gif' width='4' height='4'> <a href='#' onclick=\"open('stockage.php','stockage','scrollbars=yes,resizable=yes,width=850,height=500')\" id='menumodule0' >"+langmenuadmin06+"</a><br>"); }
 //if (moduleintramsnprof == "oui") { document.write("<img src='./image/cube.gif' width='4' height='4'> <a href='./intra-msn.php' id='menumodule0' >"+langmenuadmin100+"</a><br>"); }
 if (moduleagendaprof == "oui") { document.write("<img src='./image/cube.gif' width='4' height='4'> <a href='#' id='menumodule0' onclick=\"open('./agenda/phenix/index.php','timecop','');\" >"+langmenuadmin00+"</a><br>"); }
@@ -84,6 +85,7 @@ if (modulemessagerieprof == "oui") {
 	document.write("<p style='margin-left: 2; margin-top:5; margin-bottom:5'>");
 	document.write("<img src='./image/cube.gif' width='4' height='4'> <a id='menumodule0' href='./messagerie_reception.php'>"+langmenuprof12+"</a><br>");
 	document.write("<img src='./image/cube.gif' width='4' height='4'> <a id='menumodule0' href='./messagerie_envoi.php'>"+langmenuprof11+"</a><br>");
+	document.write("<img src='./image/cube.gif' width='4' height='4'> <a href='./corbeille_message.php' id='menumodule0'>"+langmenuadmin023+"</a><br>");
 	document.write("<img src='./image/cube.gif' width='4' height='4'> <a id='menumodule0' href='./messagerie_suppression.php'>"+langmenuprof13+"</a><br>");
 	document.write("</p>");
 	document.write("</td>");

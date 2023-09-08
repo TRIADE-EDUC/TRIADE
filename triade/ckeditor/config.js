@@ -12,6 +12,7 @@ CKEDITOR.editorConfig = function( config ) {
    	config.filebrowserUploadUrl = '/'+REPECOLE+'/kcfinder/upload.php?type=files';
    	config.filebrowserImageUploadUrl = '/'+REPECOLE+'/kcfinder/upload.php?type=images';
 	config.filebrowserFlashUploadUrl = '/'+REPECOLE+'/kcfinder/upload.php?type=flash';
+	config.extraPlugins = 'scayt';
 	
 	if (colorGRAPH == '0') { config.uiColor = '#B2CADE'; }
 	if (colorGRAPH == '1') { config.uiColor = '#FCE4BA'; }

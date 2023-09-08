@@ -31,6 +31,7 @@ session_start();
 <script language="JavaScript" src="librairie_js/function.js"></script>
 <script language="JavaScript" src="./librairie_js/verif_creat.js"></script>
 <title>Triade Vidéo-Projecteur</title>
+<?php include("./librairie_php/googleanalyse.php"); ?>
 </head>
 <body style="" marginheight="0" marginwidth="0" leftmargin="0" topmargin="0">
 <?php include("./librairie_php/lib_licence.php"); ?>
@@ -54,7 +55,7 @@ filtreAnneeScolaireSelectNote($anneeScolaire,3);
 <?php
 include_once('librairie_php/db_triade.php');
 $cnx=cnx();
-validerequete("3");
+validerequete("7");
 if ($_SESSION["membre"] == "menuprof") {
 	$ident=array('nom','Sn','prenom','Sp','membre','Sm','id_pers','Spid');
 	$mySession=hashSessionVar($ident);

@@ -29,21 +29,7 @@ session_start();
 <script language="JavaScript" src="./librairie_js/clickdroit.js"></script>
 <script language="JavaScript" src="./librairie_js/function.js"></script>
 <script language="JavaScript" src="./librairie_js/lib_css.js"></script>
-<script type="text/javascript">
-_editor_url = "./HTMLArea";
-_editor_lang = "fr";
-</script>
-<script type="text/javascript" src="./HTMLArea/htmlarea-pdf.js"></script>
-<script type="text/javascript">
-HTMLArea.loadPlugin("ContextMenu");
-HTMLArea.loadPlugin("TableOperations");
-function initDocument() {
-  var editor = new HTMLArea("editor");
-  editor.registerPlugin(ContextMenu);
-  //editor.registerPlugin(TableOperations);
-  editor.generate();
-}
-</script>
+<script type="text/javascript" src="./ckeditor/ckeditor.js"></script>
 <title>Triade - Compte de <?php print "$_SESSION[nom] $_SESSION[prenom]" ?></title>
 </head>
 <body id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" onload="initDocument()" >
@@ -69,9 +55,14 @@ if (isset($_POST["create"])) {
 <font class=T2><b><?php print LANGPARAM4 ?></b></font>
 <br><br>
 <font class=T1><?php print LANGCONFIG2 ?></font>:<br><br>
-<table width=100% height=200 bgcolor="#FFFFFF" border=1 cellpadding="5" >
+<table width=100% height=200 bgcolor="#FFFFFF" border=1 cellpadding="5" style="border-collapse: collapse;" >
 <tr><td valign=top>
-<?php print $texte ?>
+<?php 
+$texte=stripslashes($texte);
+$texte=preg_replace('#(\\\\r|\\\\r\\\\n|\\\\n)#','',$texte);
+$texte=stripslashes($texte);
+print $texte;
+?>
 </td></tr></table>
 <br><br>
 <script language=JavaScript>buttonMagicFermeture();</script>
@@ -94,8 +85,20 @@ if (isset($_POST["create"])) {
 </form>
 <br>
 <form method=post>
-<textarea id="editor" style="height: 48em; width: 100%;" name="suite"><?php print $texte ?>
-</textarea><br><br>
+
+<textarea id="editor" name="suite" cols='200' ><?php 
+
+$texte=stripslashes($texte);
+$texte=preg_replace('#rnrn#', ' ',$texte);
+print $texte ?>
+
+</textarea>
+<script type="text/javascript">var colorGRAPH='<?php print GRAPH ?>';
+//<![CDATA[
+CKEDITOR.replace( 'editor', { height: '320px' , language:'<?php print ($_SESSION["langue"] == "fr") ? "fr" : "en";  ?>' } );
+//]]></script>
+<br>
+
 <script language=JavaScript>buttonMagicSubmit("<?php print LANGBT19?>","create");</script>
 <script language=JavaScript>buttonMagicFermeture();</script>
 <script language=JavaScript>buttonMagicReactualise();</script>

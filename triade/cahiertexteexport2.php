@@ -51,7 +51,16 @@ setcookie("dateFin_export_cahierTexte",$_POST["saisie_date_fin"],time()+36000*24
 <?php 
 include_once("./librairie_php/lib_licence.php"); 
 include_once("librairie_php/db_triade.php");
-validerequete("menuadmin");	
+if ($_SESSION["membre"] == "menupersonnel") {
+        $cnx=cnx();
+        if (!verifDroit($_SESSION["id_pers"],"cahiertextes")) {    
+	        accesNonReserveFen();
+                exit();
+        }
+        Pgclose();
+}else{
+	validerequete("menuadmin");	
+}
 ?>
 <SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
@@ -71,10 +80,10 @@ $dateDebut=$_POST["saisie_date_debut"];
 $dateFin=$_POST["saisie_date_fin"];
 
 /* ordre de classement : 
- * CLASSE > ENSEIGNANT > MATIERE > SOUS MATIERE > entrÃ©es classÃ©es par dates 
+ * CLASSE > ENSEIGNANT > MATIERE > SOUS MATIERE > entr�es clases par dates 
  *
  * fichier 2 : ordre de classement : 
- * ENSEIGNANT >CLASSE > MATIERE > SOUS MATIERE > entrÃ©es classÃ©es par dates 
+ * ENSEIGNANT >CLASSE > MATIERE > SOUS MATIERE > entrées clases par dates 
  *
  */
 
@@ -83,23 +92,10 @@ include_once('./PHPWord.php');
 // New Word Document
 $PHPWord = new PHPWord();
 
-// New portrait section
-
-// Add text elements
-//$section->addText('Hello World!');
-//$section->addTextBreak(2);
-
-//$section->addText('I am inline styled.', array('name'=>'Verdana', 'color'=>'006699'));
-//$section->addTextBreak(2);
-
-//$PHPWord->addFontStyle('rStyle', array('bold'=>true, 'italic'=>true, 'size'=>16));
-//$PHPWord->addParagraphStyle('pStyle', array('align'=>'center', 'spaceAfter'=>100));
-//$section->addText('I am styled by two style definitions.', 'rStyle', 'pStyle');
-//$section->addText('I have only a paragraph style definition.', null, 'pStyle');
-
 $dataclasse=affClasse();
 
 $PHPWord->addParagraphStyle('pStyle', array('spacing'=>100));
+
 
 //code_class,libelle,desclong,offline
 for($i=0;$i<count($dataclasse);$i++) {
@@ -109,8 +105,8 @@ for($i=0;$i<count($dataclasse);$i++) {
 
 	$section = $PHPWord->createSection();
 	
-	$section->addText("Classe : $libelle", array('bold'=>true,'name'=>'Verdana', 'color'=>'006699', 'size'=>16));
-	$section->addText("         $libellelong", array('italic'=>true,'name'=>'Verdana', 'color'=>'006699', 'size'=>14));
+	$section->addText(utf8_decode("Classe : $libelle"), array('bold'=>true,'name'=>'Verdana', 'color'=>'006699', 'size'=>16));
+	$section->addText(utf8_decode("         $libellelong"), array('italic'=>true,'name'=>'Verdana', 'color'=>'006699', 'size'=>14));
 
 	
 
@@ -128,14 +124,13 @@ for($i=0;$i<count($dataclasse);$i++) {
 
 		$textrun = $section->createTextRun('pStyle');
 		$textrun->addText("Enseignant : ",array('size'=>12));
-		$textrun->addText("$nomprof  ",array('bold'=>true,'size'=>12));
-		$textrun->addText("MatiÃ¨re : ",array('size'=>12));
-		$textrun->addText("$nommatiere ",array('bold'=>true,'size'=>12));
+		$textrun->addText(utf8_decode("$nomprof  "),array('bold'=>true,'size'=>12));
+		$textrun->addText(utf8_decode("Matière :"),array('size'=>12));
+		$textrun->addText(utf8_decode("$nommatiere "),array('bold'=>true,'size'=>12));
 	//	$section->addTextBreak();
 		$data=exportPDF_contobj_cahiertext(dateFormBase($dateDebut),dateFormBase($dateFin),"date_contenu",$idprof,$idmatiere,$idclasse);
 
 		for($o=0;$o<count($data);$o++) {
-
 			$saisiele=dateForm($data[$o][0]);
 			$pourle=dateForm($data[$o][2]);
 			$contenu=strip_tags(html_vers_text($data[$o][3]));
@@ -146,15 +141,15 @@ for($i=0;$i<count($dataclasse);$i++) {
 			$section->addText("Saisie le $saisiele pour le $pourle ", array('italic'=>true,'name'=>'Verdana', 'color'=>'F79646', 'size'=>10));
 			$textrun = $section->createTextRun('pStyle');
 			$textrun->addText("Contenu : ", array('bold'=>true,'name'=>'Verdana', 'color'=>'006699', 'size'=>10));
-			$textrun->addText("$contenu", array('name'=>'Arial', 'color'=>'000000', 'size'=>10));
+			$textrun->addText(utf8_decode("$contenu"), array('name'=>'Arial', 'color'=>'000000', 'size'=>10));
 			$textrun = $section->createTextRun('pStyle');
 			$textrun->addText("Objectif : ", array('bold'=>true,'name'=>'Verdana', 'color'=>'006699', 'size'=>10));
-			$textrun->addText("$objectif", array('name'=>'Arial', 'color'=>'000000', 'size'=>10));
+			$textrun->addText(utf8_decode("$objectif"), array('name'=>'Arial', 'color'=>'000000', 'size'=>10));
 		
 		}
 		$data=exportPDF_devoir_cahiertext(dateFormBase($dateDebut),dateFormBase($dateFin),"date_devoir",$idprof,$idmatiere,$idclasse);
 		if (count($data)) {
-			$section->addText("Devoir Ã  faire en $nommatiere ", array('bold'=>true,'name'=>'Verdana', 'color'=>'006699', 'size'=>10));
+			$section->addText(utf8_decode("Devoir à faire en $nommatiere "), array('bold'=>true,'name'=>'Verdana', 'color'=>'006699', 'size'=>10));
 		}
 		for($o=0;$o<count($data);$o++) {
 			$saisiele=dateForm($data[$o][0]);
@@ -195,7 +190,7 @@ for($i=0;$i<count($dataprof);$i++) {
 
 	$section = $PHPWord->createSection();
 
-	$section->addText("Enseignant : $civ $nom $prenom", array('bold'=>true,'name'=>'Verdana', 'color'=>'006699', 'size'=>16));
+	$section->addText(utf8_decode("Enseignant : $civ $nom $prenom"), array('bold'=>true,'name'=>'Verdana', 'color'=>'006699', 'size'=>16));
 
 	$dataClasse=recupClasseProf($idpers,$anneeScolaire);
 
@@ -207,7 +202,7 @@ for($i=0;$i<count($dataprof);$i++) {
 		
 		$textrun = $section->createTextRun('pStyle');
                 $textrun->addText("Classe : ",array('name'=>'Verdana', 'color'=>'000000', 'size'=>12));
-		$textrun->addText("$nomclasse $libellelong",array('bold'=>true,'name'=>'Verdana', 'color'=>'000000', 'size'=>12));
+		$textrun->addText(utf8_decode("$nomclasse $libellelong"),array('bold'=>true,'name'=>'Verdana', 'color'=>'000000', 'size'=>12));
 
 		$dataens=visu_affectation_detail_cahier_texte_ens($idclasse,$anneeScolaire,$idpers);
 		//ordre_affichage,code_matiere,code_prof,code_classe,coef,g.libelle,a.langue,a.avec_sous_matiere,a.visubull,a.nb_heure
@@ -217,8 +212,8 @@ for($i=0;$i<count($dataprof);$i++) {
 			$idmatiere=$dataens[$j][1];
 			$textrun = $section->createTextRun('pStyle');
 			$nommatiere=chercheMatiereNom($idmatiere);
-			$textrun->addText("MatiÃ¨re : ",array('name'=>'Verdana', 'color'=>'000000', 'size'=>12));
-			$textrun->addText("$nommatiere ", array('bold'=>true,'name'=>'Verdana', 'color'=>'000000', 'size'=>12));
+			$textrun->addText(utf8_decode("Matière :"),array('name'=>'Verdana', 'color'=>'000000', 'size'=>12));
+			$textrun->addText(utf8_decode("$nommatiere "), array('bold'=>true,'name'=>'Verdana', 'color'=>'000000', 'size'=>12));
 			$data=exportPDF_contobj_cahiertext(dateFormBase($dateDebut),dateFormBase($dateFin),"date_contenu",$idprof,$idmatiere,$idclasse);
 			// date_saisie, heure_saisie, date_contenu, contenu, objectif	
 			for($o=0;$o<count($data);$o++) {
@@ -233,10 +228,10 @@ for($i=0;$i<count($dataprof);$i++) {
 				$section->addText("Saisie le $saisiele pour le $pourle ", array('italic'=>true,'name'=>'Verdana', 'color'=>'F79646', 'size'=>10));
 				$textrun = $section->createTextRun('pStyle');
        		                $textrun->addText("Contenu : ", array('bold'=>true,'name'=>'Verdana', 'color'=>'006699', 'size'=>10));
-	                        $textrun->addText("$contenu", array('name'=>'Arial', 'color'=>'000000', 'size'=>10));
+	                        $textrun->addText(utf8_decode("$contenu"), array('name'=>'Arial', 'color'=>'000000', 'size'=>10));
 	                        $textrun = $section->createTextRun('pStyle');
 	                        $textrun->addText("Objectif : ", array('bold'=>true,'name'=>'Verdana', 'color'=>'006699', 'size'=>10));
-	                        $textrun->addText("$objectif", array('name'=>'Arial', 'color'=>'000000', 'size'=>10));
+	                        $textrun->addText(utf8_decode("$objectif"), array('name'=>'Arial', 'color'=>'000000', 'size'=>10));
 
 			}
 			unset($saisiele);
@@ -245,7 +240,7 @@ for($i=0;$i<count($dataprof);$i++) {
 			unset($objectif);
 			$data=exportPDF_devoir_cahiertext(dateFormBase($dateDebut),dateFormBase($dateFin),"date_devoir",$idprof,$idmatiere,$idclasse);
 			if (count($data)) {
-				$section->addText("Devoir Ã  faire en $nommatiere ", array('bold'=>true,'name'=>'Verdana', 'color'=>'006699', 'size'=>10));
+				$section->addText(utf8_decode("Devoir Ã  faire en $nommatiere "), array('bold'=>true,'name'=>'Verdana', 'color'=>'006699', 'size'=>10));
 			}
 			for($o=0;$o<count($data);$o++) {
 				$saisiele=dateForm($data[$o][0]);
@@ -254,7 +249,7 @@ for($i=0;$i<count($dataprof);$i++) {
 				$devoir=preg_replace('/\n/',' ',$devoir);
 				if (trim($devoir) == "") continue; 
 				$section->addText("Saisie le $saisiele pour le $pourle ", array('name'=>'Verdana', 'color'=>'F79646', 'size'=>10));
-	                        $section->addText("$devoir ", array('name'=>'Arial', 'color'=>'000000', 'size'=>10));
+	                        $section->addText(utf8_decode("$devoir "), array('name'=>'Arial', 'color'=>'000000', 'size'=>10));
 			}
 			unset($nommatiere);	
 			unset($saisiele);

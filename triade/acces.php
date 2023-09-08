@@ -69,6 +69,8 @@ if  ((preg_match('/microsoft/i',$nav_info)) || (preg_match('/internet explorer/i
 	$navigateur="NONIE";
 }
 
+
+
 // test si compte blacklister
 $nom=trim(ucwords($hashPostVar[nom]));
 $prenom=trim($hashPostVar[prenom]);
@@ -77,6 +79,11 @@ $data=verifblacklist(strtolower($nom),strtolower($prenom),strtolower($membre));
 if (count($data) > 0) {
       header("Location: acces_depart.php?bl=1&message=".LANGTERREURCONNECT."&saisie_membre=$hashPostVar[membre]&saisie_titre=$hashPostVar[membre]");
       exit;
+}
+
+if ((file_exists("./data/parametrage/noacces.ete")) && ($membre != "administrateur")) {
+	header("Location: acces_depart.php?bl=1&message=".LANGTERREURCONNECT."&saisie_membre=$hashPostVar[membre]&saisie_titre=$hashPostVar[membre]");
+	exit;
 }
 
 

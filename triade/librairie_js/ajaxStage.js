@@ -136,7 +136,7 @@ function AdressEntrepriseCS(urlcentral,p,productid,identreprise,retourAffiche,in
 		if (xdr) {
 	    		xdr.onerror = function() { 
 			if (_info == 'lieu') { 
-				alert("Problème d'accès à la centrale de stage"); 
+				alert("Probleme d'acces a la centrale de stage"); 
 				}	
 			};
 		   	xdr.ontimeout = timeo ;
@@ -173,7 +173,7 @@ AdressEntreprise = function (identreprise,retourAffiche,info) {
 		"ajaxStage.php",
 		{	method: "post",
 			parameters : "identreprise="+identreprise+"&info="+info,
-			asynchronous: false,
+			asynchronous: true,
 			timeout: 5000,
 			onComplete: function(transport) {  
 				if (200 == transport.status)  {
@@ -214,7 +214,8 @@ TuteurEntreprise = function (identreprise) {
 		requete.onreadystatechange = function() { 
 	    		if(requete.readyState == 4) {
 	       			if(requete.status == 200) {
-					var tab=unserialize(requete.responseText); //pers_id, civ, nom, prenom, identifiant, offline
+					var tab=phpUnserialize(requete.responseText);
+//alert(requete.responseText);
 					var newOption = document.createElement("option");
 					newOption.setAttribute("value",'0');
 					newOption.setAttribute("id","select0");
@@ -227,6 +228,7 @@ TuteurEntreprise = function (identreprise) {
 						newOption.innerHTML=tab[i][2]+" "+tab[i][3];
 						document.getElementById('idtuteur').appendChild(newOption);
 					}	
+		
 				}
   			}
 		}; 

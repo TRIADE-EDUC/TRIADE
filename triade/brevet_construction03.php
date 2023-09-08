@@ -1,6 +1,6 @@
 <?php
 session_start();
-error_reporting(0);
+//error_reporting(0);
 /***************************************************************************
  *                              T.R.I.A.D.E
  *                            ---------------
@@ -60,7 +60,7 @@ if ($id != 1) {
 include_once('librairie_php/db_triade.php');
 $cnx=cnx();
 validerequete("menuadmin");
-$valeur=visu_affectation_detail($_POST["saisie_classe"]);
+$valeur=visu_affectation_detail($_POST["saisie_classe"],$_COOKIE["anneeScolaire"]);
 
 
 $matsvt=$_POST["matsvt"];

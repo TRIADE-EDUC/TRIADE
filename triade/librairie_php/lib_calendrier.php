@@ -23,13 +23,11 @@ $dstT.="\" \"";
 $date_deja="00/0000";
 $txt_fini=0;
 
-$data=affDst(); // id_dst,date,matiere,code_classe,heure,duree
+$data=affDstEvenement(); 
 
 $tab_j=array();
-// $data : tab bidim - soustab 3 champs
-for($i=0;$i<count($data);$i++)
-{
-      $date_actuel=dateMY();
+for($i=0;$i<count($data);$i++) {
+      	$date_actuel=dateMY();
 	$date_recup=dateMoisAnnee($data[$i][1]);
 	$date_recup_jour_mois=dateJourMois($data[$i][1]);
 
@@ -39,20 +37,31 @@ for($i=0;$i<count($data);$i++)
                 $data[$i][3]=preg_replace('/"/',"&quot;",$data[$i][3]);
                 $data[$i][3]=preg_replace('/\'/','\\\\\'',$data[$i][3]);
 		$heure=$data[$i][5];
-		$data[$i][5]=preg_replace('/\./',"h",$data[$i][5])."0 mn";
+		$data[$i][5]=preg_replace('/\./',"h",$data[$i][5]);
+		$data[$i][5].="0 mn";
 		$data[$i][5]="0".$data[$i][5];
 		if (!preg_match('/h/',$data[$i][5])) { $data[$i][5]="0${heure}h00 mn"; }
 		if ($date_deja == $date_recup_jour_mois ) {
 			$dstT.="<hr />";
-			$dstT.="<font size=2>".LANGCALEN7.": <strong>".trim($data[$i][3])."</strong><br />DST de: <strong>".trim($data[$i][2]."</strong> à ".timeForm($data[$i][4])." (".$data[$i][5].") </font>");
+			if (trim($data[$i][3]) != "") {
+				$dstT.="<font size=2>".LANGCALEN7.": <strong>".trim($data[$i][3])."</strong><br />DST de: <strong>".trim($data[$i][2]."</strong> à ".timeForm($data[$i][4])." (".$data[$i][5].") </font>");
+			}else{
+				$dstT.="<font size=2>Ev&egrave;nement : <strong>".trim($data[$i][2])."</strong></font>";
+			}
 		}else{
 			if ($txt_fini == 1) {
 				$dstT.="\"";
 			}
 			$date_deja=$date_recup_jour_mois;
-			$dstJ.=",\"".$date_recup_jour_mois."\"";
-			$dstT.=",\" <font size=2>".LANGCALEN7.": <strong>".trim($data[$i][3])."</strong><br />DST de: <strong>".trim($data[$i][2]."</strong> à ".timeForm($data[$i][4])." (".$data[$i][5].") </font>");
-			$txt_fini=1;
+			if (trim($data[$i][3]) != "null") {
+				$dstJ.=",\"".$date_recup_jour_mois."\"";
+				$dstT.=",\" <font size=2>".LANGCALEN7.": <strong>".trim($data[$i][3])."</strong><br />DST de: <strong>".trim($data[$i][2]."</strong> à ".timeForm($data[$i][4])." (".$data[$i][5].") </font>");
+				$txt_fini=1;
+			}else{
+				$dstJ.=",\"".$date_recup_jour_mois."\"";
+				$dstT.=",\" <font size=2>Ev&egrave;nement : <strong>".trim($data[$i][2])."</strong></font>";
+				$txt_fini=1;
+			}
 		}
        }
 }
@@ -152,7 +161,10 @@ print <<<EOF
 			if ((7*i+j>=j1-1)&&(jour<=nb_jour)) {
 				if ( (estFerie(jour,m)) || (estConseil(jour,m)) $FerieSamedi $FerieMercredi $FerieDimanche $FerieVendredi )  {
 					if (estConseil(jour,m)) {
-						disp("<td style=\"width:10; background-color:pink; text-align:center;\"><font face='Arial' size='-1' color='#0000CC'><a href=\"#\" onMouseOver=\\"AffBulle('<font face=Georgia, Times New Roman, Times, serif>"+dstT[ii]+" <\/font>');\\"  onMouseOut='HideBulle()'>"+aff_j+"<\/a><\/font><\/td>");
+						var color="pink";
+						var regex = /nement :/;
+						if (dstT[ii].search(regex) != -1) { color="#B0F2b6"; }
+						disp("<td style=\"width:10; background-color:"+color+"; text-align:center;\"><font face='Arial' size='-1' color='#0000CC'><a href=\"#\" onMouseOver=\\"AffBulle('<font face=Georgia, Times New Roman, Times, serif>"+dstT[ii]+" <\/font>');\\"  onMouseOut='HideBulle()'>"+aff_j+"<\/a><\/font><\/td>");
         		                        ii++;
 					}else {
 						disp("<td style=\"width:10; background-color:#CCCCFF; text-align:center;\"><font face='Arial' size='-1' color='"+colTexte+"'>"+aff_j+"<\/font><\/td>");

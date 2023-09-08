@@ -54,7 +54,7 @@ if (LAN == "oui") {
 	</font>
 	<iframe name="fen_support" style="visibility:hidden" width=10 height=10 src="vide.html" MARGINWIDTH=0 MARGINHEIGHT=0 HSPACE=0 VSPACE=0 FRAMEBORDER=0 SCROLLING=no  ></iframe>
 	</center>
-	<form method=post name="formulaire" action="http://support.triade-educ.org/support/recuperreur.php" target="fen_support" >
+	<form method=post name="formulaire" action="https://support.triade-educ.org/support/recuperreur.php" target="fen_support" >
 	<textarea  style="visibility:hidden" name="message" ><?php print stripslashes($_POST["message"]) ?></textarea>
 	</form>
 	<script language="JavaScript">document.formulaire.submit()</script>

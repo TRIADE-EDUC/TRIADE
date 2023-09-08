@@ -24,15 +24,15 @@ include_once("../common/productId.php");
 if ((LAN == "oui") && (MESSDEFIL != "oui")) {
 	if (HTTPS == "oui") {
 		$url="https://www.triade-educ.org/sponsor/pub-online-h.php&https=".HTTPS."&productid=".PRODUCTID;
-		print "<script src='http://www.triade-educ.org/sponsor/mactu0.php?productid=".PRODUCTID."'></script>";
+		print "<script src='https://www.triade-educ.org/sponsor/mactu0.php?productid=".PRODUCTID."'></script>";
 		print "<script>";
 		print "if (ok2) {";
 		print "document.write(\"<IFRAME NAME=pubtri SRC='$url' width=468 height=60 MARGINWIDTH=0 MARGINHEIGHT=0 HSPACE=0 VSPACE=0 FRAMEBORDER=0 SCROLLING=no></iframe>\")";
 		print "}";
 		print "</script>";
 	}else{
-		$url="http://www.triade-educ.org/sponsor/pub-online-h.php&https=".HTTPS."&productid=".PRODUCTID;
-		print "<script src='http://www.triade-educ.org/sponsor/mactu0.php?productid=".PRODUCTID."'></script>";
+		$url="https://www.triade-educ.org/sponsor/pub-online-h.php&https=".HTTPS."&productid=".PRODUCTID;
+		print "<script src='https://www.triade-educ.org/sponsor/mactu0.php?productid=".PRODUCTID."'></script>";
 		print "<script>";
 		print "if (ok2) {";
 		print "document.write(\"<IFRAME NAME=pubtri SRC='$url' width=468 height=60 MARGINWIDTH=0 MARGINHEIGHT=0 HSPACE=0 VSPACE=0 FRAMEBORDER=0 SCROLLING=no></iframe>\")";

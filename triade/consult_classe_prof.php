@@ -90,6 +90,7 @@ if ( (isset($_POST["consult"])) || (isset($_POST["saisie_classe"]) ) ) {
 	// ne fonctionne que si au moins 1 élève dans la classe
 	// nom classe
 	$cl=$data[0][0];
+	$nomClasse=$cl;
 
 	if( count($data) > 0 ) {
 		$fic=$_POST["saisie_classe"];
@@ -103,6 +104,25 @@ if ( (isset($_POST["consult"])) || (isset($_POST["saisie_classe"]) ) ) {
 		include_once('./librairie_pdf/fpdf/fpdf.php');
 		include_once('./librairie_pdf/html2pdf.php');
 		include_once("librairie_php/timezone.php");
+
+		require_once "./librairie_php/class.writeexcel_workbook.inc.php";
+		require_once "./librairie_php/class.writeexcel_worksheet.inc.php";
+		$fichierxls="./data/fichier_ASCII/export_classe_".$_SESSION["id_pers"].".xls";
+		@unlink($fichier);
+		$workbook = new writeexcel_workbook($fichierxls);
+		$worksheet1 =& $workbook->addworksheet('Listing');
+		$header =& $workbook->addformat();$header->set_color('white');
+		$header->set_align('center');
+		$header->set_align('vcenter');
+		$header->set_pattern();
+		$header->set_fg_color('blue');
+		$center =& $workbook->addformat();
+		$center->set_align('left');
+
+		$worksheet1->set_selection('A0');
+		$worksheet1->write(0, 0, "Nom", $header);
+		$worksheet1->write(0, 1, utf8_decode("Prenom"), $header);
+		$worksheet1->write(0, 2, "Classe", $header);
 	
 		$pdf=new PDF();  // declaration du constructeur
 		$pdf->AddPage();
@@ -134,11 +154,18 @@ if ( (isset($_POST["consult"])) || (isset($_POST["saisie_classe"]) ) ) {
 			$eleve=$j.") ".strtoupper($data[$i][2])." ".trunchaine(ucwords($data[$i][3]),30);
 			$pdf->SetXY($xcoor0,$ycoor0);
 			$pdf->WriteHTML($eleve);
+			$worksheet1->write($i, 0,utf8_decode($data[$i][2]), $center);
+			$worksheet1->write($i, 1,utf8_decode($data[$i][3]), $center);
+			$worksheet1->write($i, 2,utf8_decode($nomClasse), $center);
 		}
 		if (file_exists($fichierpdf))  {  @unlink($fichierpdf); }
 		$pdf->output('F',$fichierpdf);
 	}
 }
+
+$workbook->close();
+
+print "<script language=JavaScript>buttonMagic('Export Excel','visu_document.php?fichier=$fichierxls','_blank','','');</script>&nbsp;&nbsp;";
 
 ?>
 </UL>

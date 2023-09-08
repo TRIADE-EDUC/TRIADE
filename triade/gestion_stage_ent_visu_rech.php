@@ -166,7 +166,7 @@ print "<font class=T1><ul>";
 			<?php print LANGSTAGE42 ?> : <b><?php print $data[$i][8] ?> / <?php print $data[$i][9] ?></b> <br><br>
 			<?php print LANGSTAGE36 ?> : <b><?php print $data[$i][10] ?> </b><br><br>	
 			<?php print LANGSTAGE37 ?> : <b><?php print $data[$i][11] ?></b> <br><br>
-			Plan : <a href="#" onclick="open('http://support.triade-educ.org/support/google-map-triade.php?etablissement=<?php print  urlencode($data[$i][1])?>&adresse=<?php print urlencode($data[$i][3]) ?>&ville=<?php print urlencode($data[$i][5]) ?>&pays=<?php print urlencode($data[$i][14])?>','_blank','width=450,height=350')" /><img src="image/commun/loupe.png" border="0" /></a><br><br><br>
+			Plan : <a href="#" onclick="open('https://support.triade-educ.org/support/google-map-triade.php?etablissement=<?php print  urlencode($data[$i][1])?>&adresse=<?php print urlencode($data[$i][3]) ?>&ville=<?php print urlencode($data[$i][5]) ?>&pays=<?php print urlencode($data[$i][14])?>','_blank','width=450,height=350')" /><img src="image/commun/loupe.png" border="0" /></a><br><br><br>
 
 			<hr>
 			<u>Historique des élèves</u> :<br><br>

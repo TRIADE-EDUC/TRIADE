@@ -4,9 +4,9 @@ session_start();
  *                              T.R.I.A.D.E
  *                            ---------------
  *
- *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
- *   Site                 : http://www.triade-educ.com
+ *   begin                : Janvier 2023
+ *   copyright            : (C) 2000 E. TAESCH 
+ *   Site                 : http://www.triade-educ.org
  *
  *
  ***************************************************************************/

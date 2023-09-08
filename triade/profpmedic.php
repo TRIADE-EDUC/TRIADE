@@ -1,5 +1,13 @@
 <?php
 session_start();
+include_once("./common/config2.inc.php");
+if (!isset($_SESSION['adminplusprofp'])) {
+	if (PASSMODULEMEDICAL == "oui") {
+		header("Location:base_de_donne_key.php?base=medic&eid=".$_GET['eid']);
+		exit;
+	}
+}
+
 /***************************************************************************
  *                              T.R.I.A.D.E
  *                            ---------------
@@ -104,7 +112,7 @@ for($i=0;$i<count($data);$i++) {
 	<tr><td id="bordure2" ><br />&nbsp;&nbsp;<font class="T2 shadow" >
 	Information du </font><b><?php print $data[$i][1]?></b> &nbsp;&nbsp;&nbsp;[<a href="profpmedic.php?supp=<?php print $data[$i][0]?>&eid=<?php print $idEleve?>" >supprimer</a>]
 	<br><br>
-	&nbsp;<?php print $data[$i][4]?>
+	&nbsp;<?php print stripslashes(strip_tags($data[$i][4]))?>
 
 	<br>
 	<div align=right>De : <?php print $data[$i][3]?> &nbsp;&nbsp;</div>

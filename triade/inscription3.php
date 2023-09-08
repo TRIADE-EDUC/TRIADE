@@ -71,9 +71,9 @@ $cnx=cnx();
 				if ((LAN == "oui") && (AGENTWEB == "oui")) {
 					$nomeleve=$_SESSION["nom"];
 					$prenomeleve=$_SESSION["prenom"];
-				$vocal=urlencode(stripHTMLtags("Votre compte, $nomeleve, $prenomeleve, est maintenant validé. Si vous avez des questions, n'hésitez pas à contacter votre administrateur Triade, via le lien question , sur la page de connexion."));
-				$mess="<iframe width='120' height='350' src=\"http://www.triade-educ.com/agentweb/agentpers.php?inc=6&mess=$vocal&m=M9\"  MARGINWIDTH=0 MARGINHEIGHT=0 HSPACE=0 VSPACE=0 FRAMEBORDER=0 SCROLLING=no align=left ></iframe>";
-				print $mess;
+			//	$vocal=urlencode(stripHTMLtags("Votre compte, $nomeleve, $prenomeleve, est maintenant validé. Si vous avez des questions, n'hésitez p &agrave; contacter votre administrateur Triade, via le lien question , sur la page de connexion."));
+ 			//	$mess="<iframe width='120' height='350' src=\"https://www.triade-educ.org/agentweb/agentpers.php?inc=6&mess=$vocal&m=M9\"  MARGINWIDTH=0 MARGINHEIGHT=0 HSPACE=0 VSPACE=0 FRAMEBORDER=0 SCROLLING=no align=left ></iframe>";
+			//	print $mess;
 			}
 ?>
 				<img src="./image/logo_triade_licence.gif"

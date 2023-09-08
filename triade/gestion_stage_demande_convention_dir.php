@@ -134,7 +134,7 @@ for($i=0;$i<count($data);$i++) {
 			<?php print LANGSTAGE42 ?> : <?php print $info[0][8] ?> / <?php print $info[0][9] ?></b> <br>
 			<?php print LANGSTAGE36 ?> : <?php print $info[0][10] ?><br>
 			<?php print LANGSTAGE37 ?> : <?php print $info[0][11] ?> <br>
-			Plan : <a href="#" onclick="open('http://support.triade-educ.org/support/google-map-triade.php?etablissement=<?php print  urlencode($info[0][1])?>&adresse=<?php print urlencode($info[0][3]) ?>&ville=<?php print urlencode($info[0][5]) ?>&pays=<?php print urlencode($info[0][14])?>','_blank','width=450,height=350')" /><img src="image/commun/loupe.png" border="0" /></a><br>
+			Plan : <a href="#" onclick="open('https://support.triade-educ.org/support/google-map-triade.php?etablissement=<?php print  urlencode($info[0][1])?>&adresse=<?php print urlencode($info[0][3]) ?>&ville=<?php print urlencode($info[0][5]) ?>&pays=<?php print urlencode($info[0][14])?>','_blank','width=450,height=350')" /><img src="image/commun/loupe.png" border="0" /></a><br>
 			</font>
 			<hr>
 			<font class=T2>Commentaire : <?php print $data[$i][4] ?></font>

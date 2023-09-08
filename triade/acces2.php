@@ -1,6 +1,5 @@
 <?php
 session_start();
-include_once("./librairie_php/verifEmailEnregistre.php");
 include_once("./common/config.inc.php");
 include_once("./librairie_php/db_triade.php");
 if ($_SESSION["membre"] == "menuadmin") {
@@ -56,6 +55,8 @@ if ($_SESSION["membre"] == "menuadmin") {
       }
 </style>
 
+<?php include("./librairie_php/googleanalyse.php"); ?>
+
 </head>
 <body id="bodyfond" style="margin:0;" >
 
@@ -84,6 +85,8 @@ $cnx=cnx();
 $ident=array('nom','Sn','prenom','Sp','membre','Sm','id_pers','Spid');
 $mySession=hashSessionVar($ident);
 unset($ident);
+
+$code=1;
 
 verifResaList();
 
@@ -122,7 +125,7 @@ if (LAN == "oui") {
 		//email_eleve,sexe
 		for($h=0;$h<count($recupM);$h++) {
 			$urlm=base64_encode('m='.$recupM[$h][0].'&s='.$recupM[$h][1]);
-			print "<script src='http://support.triade-educ.com/support/gestionM.php?p=$urlm'></script>";
+			print "<script src='https://support.triade-educ.com/support/gestionM.php?p=$urlm'></script>";
 			modifEtat($_SESSION["id_pers"],$_SESSION['idparent'],$_SESSION["membre"]);
 		}
 	}
@@ -262,12 +265,12 @@ if (isset($_POST["createvideo"])) {
 		$lienyoutube=$_POST["saisie_lien_youtube"];
 		$lienyoutube=preg_replace('/watch\?v=/',"v/",$lienyoutube);
 		$resultatvideo="<br><br><table align='center' style='box-shadow: 0px 0px 10px 4px rgba(119, 119, 119, 0.75); moz-box-shadow: 0px 0px 10px 4px rgba(119, 119, 119, 0.75); -webkit-box-shadow: 0px 0px 10px 4px rgba(119, 119, 119, 0.75);' ><tr><td>";
-		$resultatvideo.="<object width='420' height='280'>";
+		$resultatvideo.="<object width='520' height='300'>";
 		$resultatvideo.="<param name='movie' value='$lienyoutube?fs=1&amp;hl=fr_FR&amp;rel=0'></param>";
 		$resultatvideo.="<param name='allowFullScreen' value='false'></param>";
 		$resultatvideo.="<param name='allowscriptaccess' value='always'></param>";
 		$resultatvideo.="<embed src='$lienyoutube?fs=1&amp;hl=fr_FR&amp;rel=0' "; 
-		$resultatvideo.=" type='application/x-shockwave-flash' allowscriptaccess='always' allowfullscreen='false' width='420' height='280'></embed>";
+		$resultatvideo.=" type='application/x-shockwave-flash' allowscriptaccess='always' allowfullscreen='false' width='520' height='300'></embed>";
 		$resultatvideo.="</object></td></tr></table><br /><br />";
 	}
 	$cr=create_news_video($_POST["saisie_titre"],addslashes($resultatvideo),$_SESSION["nom"],$_SESSION["prenom"],'video',$indice);
@@ -381,7 +384,7 @@ if (DSTVISUACCUEIL != "non") {
 ?>
 <table  border=0 width=100% >
 <TR><TD>
-&nbsp;&nbsp;<strong><font class=T2><?php print LANGCALEN9?></font> : </strong><BR><BR>
+&nbsp;&nbsp;<strong><font class=T2><?php print ucfirst(LANGCALEN9) ?></font> : </strong><BR><BR>
 <?php
 $data=affDst();
 // $data : tab bidim - soustab 3 champs
@@ -485,7 +488,7 @@ if (LAN == "oui") {
 		if ($updatestatus == 1) {
 			$status=nbpers();
 			$http=protohttps(); // return http:// ou https://
-			print "<script language='JavaScript' src='${http}www.triade-educ.com/status/index.php?id=$status&productId=$productID' ></script>\n";
+			print "<script language='JavaScript' src='${http}www.triade-educ.org/status/index.php?id=$status&productId=$productID' ></script>\n";
 		}
 	}
 }
@@ -589,13 +592,13 @@ for($i=0;$i<count($recupMessAdmin);$i++) {
 		$titre1="<i>sans objet</i>";
 	}
 	if ($imgfilm == "video") {
-		$imgfilm="<img src='./image/commun/film.png' border='0' align='center' />&nbsp;";
+		$imgfilm="<img src='./image/commun/video-icon.png' border='0' align='center' width='25' />&nbsp;";
 	}else{
-		$imgfilm="<img src='./image/paper.gif' border='0' align='center' />&nbsp;&nbsp;";
+		$imgfilm="<img src='./image/commun/newspaper.png' border='0' align='center' width='25' />&nbsp;&nbsp;";
 	}
 ?>
 
-<TR><TD bordercolor="#FFFFFF" id="bordure" valign=top height=1% > <?php print $imgfilm ?><a href="#" onclick="displayMessage('messageAccueil.php?id=<?php print $id1 ?>');return false" title="Cliquez ici" ><b><?php print $titre1?></b></a></TD>
+<TR><TD bordercolor="#FFFFFF" id="bordure" valign=top height=1% > <?php print $imgfilm ?><a href="#" onclick="displayMessage('messageAccueil.php?id=<?php print $id1 ?>');return false;" title="Cliquez ici" ><b><?php print $titre1?></b></a></TD>
 <TD width=25% align=left  id="bordure" bordercolor="#FFFFFF" > <U><?php print LANGTE2?></u> : <i><?php print $date1?></i> - <i><?php print $heure1?></i></TD></TR>
 <?php } ?>
 </TABLE>
@@ -656,13 +659,6 @@ endif ;
 	   <script type="text/javascript" >new Effect.Pulsate("PAIE3", {pulses : 5 , duration: 10 }); </script>
 
 
-<?php
-fin_prog($debut);
-Pgclose();
-include_once("./librairie_php/finbody.php"); 
-include_once("librairie_php/lib_verif_nav.php");
-$navigateur=verif_navigateur();
-?>
 
 <script type="text/javascript">
 messageObj = new DHTML_modalMessage();	// We only create one object of this class
@@ -691,14 +687,15 @@ function displayStaticMessage(messageContent,cssClass) {
 	messageObj.display();
 }
 function closeMessage() { messageObj.close(); }
-
 </script>
 <?php if (md5_file("librairie_php/mactu.php") != "7f1e92090ce16c5d90d1acf8e1077010") { ?>
-
-<!-- 
-
--->
-
 <?php } ?>
-
 </BODY></HTML>
+<?php
+fin_prog($debut);
+Pgclose();
+include_once("./librairie_php/finbody.php"); 
+include_once("librairie_php/lib_verif_nav.php");
+$navigateur=verif_navigateur();
+file_get_contents("https://www.triade-educ.org/accueil/infoTriade.php");
+?>

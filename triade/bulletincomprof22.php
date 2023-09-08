@@ -447,6 +447,8 @@ SQL;
 			<?php select_com_bulletin($_SESSION["id_pers"],35); ?>
 			</select>
 			<input type='text' name='CharRestant_<?php print $i?>' size='2' disabled='disabled'>
+			
+		
 			<br>
 			<input type=hidden name="saisie_eleve_<?php print $i?>" value="<?php print $idEleve?>" >
 			<textarea onkeypress="compter(this,'<?php print $nbcar ?>', this.form.CharRestant_<?php print $i?>)" cols="68" rows="5" name="saisie_text_<?php print $i?>" ><?php print $commentaireeleve?></textarea><br>

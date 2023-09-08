@@ -31,6 +31,7 @@ session_start();
 <script language="JavaScript" src="./librairie_js/function.js"></script>
 <script language="JavaScript" src="./librairie_js/info-bulle.js"></script>
 <title>Triade - Compte de <?php print $_SESSION["nom"]." ".$_SESSION["prenom"] ?></title>
+<?php include("./librairie_php/googleanalyse.php"); ?>
 </head>
 <body id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" onload="Init();" >
 <?php include("./librairie_php/lib_licence.php"); ?>
@@ -56,9 +57,9 @@ session_start();
 <img src="./image/commun/on1.gif" width="8" height="8"> <a href="./base_de_donne_importation20.php"><?php print LANGMESS225.", (xls - office 2003)"?></A> <br />
 <br />
 <!-- <img src="./image/commun/on1.gif" width="8" height="8"> <a href="./base_de_donne_importation50.php"><s><?php print LANGMESS226 ?></s></A> <br /> -->
-<img src="./image/commun/on1.gif" width="8" height="8"> <a href="./base_de_donne_importation700.php" ><?php print LANGMESS226 ?> (Sconet absences)</A> <br />
+<img src="./image/commun/on1.gif" width="8" height="8"> <a href="./base_de_donne_importation700.php" ><?php print LANGMESS226 ?> (SIECLE absences)</A> <br />
 <br />
-<img src="./image/commun/on1.gif" width="8" height="8"> <a href="./base_de_donne_importation200.php"><?php print "Sconet, (xls - office 2003)"?></A> <br />
+<img src="./image/commun/on1.gif" width="8" height="8"> <a href="./base_de_donne_importation200.php"><?php print "SIECLE, (xls - office 2003)"?></A> <br />
 <br />
 <img src="./image/commun/on1.gif" width="8" height="8"> <a href="./base_de_donne_importation400.php"><?php print "CTI, (xls - office 2003)"?></A> <br />
 <br>

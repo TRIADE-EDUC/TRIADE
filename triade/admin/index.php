@@ -61,21 +61,7 @@ if ( LAN == "oui") {
 	include_once("../common/version.php");
 ?>
 	<div align=left>
-	<a href="http://www.xiti.com/xiti.asp?s=150072" TARGET="_top"><script language="JavaScript1.1" type="text/javascript">
-	<!--
-	var version="<?php print VERSION?>";
-	Xt_param = 's=150072&p=Admin_Triade_'+version;
-	Xt_r = document.referrer;
-	Xt_h = new Date();
-	Xt_i = '<img width="39" height="25" border="0" id="mailing" class="blk_nav" onmouseover="resetit(this.id)" onmouseout="unfadeimg(this.id)"  style="filter:alpha(opacity=25);-moz-opacity:0.25" ';
-	Xt_i += 'src="http://logv24.xiti.com/hit.xiti?'+Xt_param;
-	Xt_i += '&hl='+Xt_h.getHours()+'x'+Xt_h.getMinutes()+'x'+Xt_h.getSeconds();
-	if(parseFloat(navigator.appVersion)>=4) {
-		Xt_s=screen;Xt_i+='&r='+Xt_s.width+'x'+Xt_s.height+'x'+Xt_s.pixelDepth+'x'+Xt_s.colorDepth;
-	}
-	document.write(Xt_i+'&ref='+Xt_r.replace(/[<>"]/g, '').replace(/&/g, '$')+'" title="Analyse d\'audience">');
-	//-->
-	</script></a></div>
+	</div>
 <?php } ?>
 <!-- audience Xiti -->
 </BODY>

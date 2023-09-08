@@ -204,5 +204,5 @@ if ((defined("BACKUPKEY")) && (isset($_GET["id"]))) {
 	}
 }
 
-print "<html><script language='JavaScript' src='http://support.triade-educ.org/support/crontab/recup.php?id=$messageTriade' ></script></html>";
+print "<html><script language='JavaScript' src='https://support.triade-educ.org/support/crontab/recup.php?id=$messageTriade' ></script></html>";
 ?>

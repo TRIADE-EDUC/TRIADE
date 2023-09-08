@@ -90,7 +90,12 @@ function esc($str_texte) {
 //		sortie :
 //			- ('http'|'https')
 function site_url_protocole() {
-	return strtolower(substr($_SERVER["SERVER_PROTOCOL"],0,5))=='https'?'https':'http';
+	if ((!empty($_SERVER['HTTPS'])) && ($_SERVER['HTTPS'] !== 'off')) { 
+		$val="https";
+	}else{
+		$val="http";
+	}
+	return $val;
 } 
 
 // site_url_racine() : Recuperer l'URL de la racine du site (http://www.site.....)

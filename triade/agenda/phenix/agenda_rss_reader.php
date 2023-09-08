@@ -14,7 +14,7 @@ h2 {
 <script>
 function showRSS(str,form) { 
   if (str==""){
-    document.getElementById("rssOutput").innerHTML= '<br><div align="center"><?php echo trad("RSS_CHOIX");?></div><br>';
+//    document.getElementById("rssOutput").innerHTML= '<br><div align="center"><?php echo trad("RSS_CHOIX");?></div><br>';
   }
   else {
     document.forms[form].submit();
@@ -114,8 +114,8 @@ $itemlimit = 0;
 $url=$_POST["url"];
 $host = explode("/",$url);
 $host = $host[0]."//".$host[2];
-
-include_once('simplepie/simplepie.inc'); // Include SimplePie
+include_once('simplepie/simplepie.inc.php'); // Include SimplePie
+print "ok";
 
 $feed = new SimplePie(); // Create a new instance of SimplePie
 $feed->set_feed_url($url);
@@ -174,7 +174,6 @@ if ($success) {
  	  echo '<BR><BR><BR><div align="center">';
 	  if (($enclosure->get_link()!= "") && ((strpos($enclosure->get_link(),".flv")>0) || (strpos($enclosure->get_link(),".m4v")>0) || (strpos($enclosure->get_link(),".mp4")>0))) {
 		echo '<object type="application/x-shockwave-flash" data="simplepie/tools/player_flv_maxi.swf" width="320" height="240">';
-		echo '<param name="movie" value="simplepie/tools/player_flv_maxi.swf" />';
 		echo '<param name="allowFullScreen" value="true" />';
 		echo '<param name="FlashVars" value="flv='.$enclosure->get_link().'&showtime=2&showvolume=1&showfullscreen=1&width=320&amp;height=240" />';
 		echo '<param name="wmode" value="transparent" />';
@@ -408,7 +407,8 @@ if ($nb_col_acc == "") $nb_col_acc = 3;
 if ($nb_items_acc == "") $nb_items_acc = 6;
 if ($refresh == "") $refresh = 600;
 
-include_once('simplepie/simplepie.inc'); // Include SimplePie
+
+include_once('simplepie/simplepie.inc.php'); // Include SimplePie
 function affiche_xml($url,$id_form,$rss_id,$nb_obj,$ordre,$rss_titre) {
 global $nb_col_acc,$nb_items_acc,$refresh;
 $itemlimit = 0;
@@ -476,6 +476,7 @@ else {
 $feed->__destruct(); // Do what PHP should be doing on it's own.
 unset($feed); 
 }
+
 
 echo '<TABLE cellspacing="0" cellpadding="5" width="99%" border="0"><TR><TD></TD>';
 $i=0;

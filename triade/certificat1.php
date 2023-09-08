@@ -18,6 +18,7 @@ session_start();
  *   (at your option) any later version.
  *
  ***************************************************************************/
+
 include_once("./common/config.inc.php");
 include_once("./librairie_php/lib_get_init.php");
 $id=php_ini_get("safe_mode");
@@ -94,11 +95,50 @@ $datedujour=dateDMY();
 
 // creation PDF
 // -----------
-define('FPDF_FONTPATH','./librairie_pdf/fpdf/font/');
-include_once('./librairie_pdf/fpdf/fpdf.php');
-include_once('./librairie_pdf/html2pdf.php');
+//define('FPDF_FONTPATH','./librairie_pdf/fpdf/font/');
+//include_once('./librairie_pdf/fpdf/fpdf.php');
+//include_once('./librairie_pdf/html2pdf.php');
+//include_once('./librairie_pdf/WriteHTML.php');
 
-$pdf=new PDF();  // declaration du constructeur
+include_once('./TCPDF-main/config/tcpdf_config.php');
+include_once('./TCPDF-main/tcpdf.php');
+
+// create new PDF document
+$pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+
+// set default header data
+//$pdf->setHeaderData(PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, PDF_HEADER_TITLE.' 006', PDF_HEADER_STRING);
+
+// set header and footer fonts
+$pdf->setHeaderFont(Array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
+$pdf->setFooterFont(Array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
+
+// set default monospaced font
+$pdf->setDefaultMonospacedFont(PDF_FONT_MONOSPACED);
+
+// set margins
+$pdf->setMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
+$pdf->setHeaderMargin(PDF_MARGIN_HEADER);
+$pdf->setFooterMargin(PDF_MARGIN_FOOTER);
+
+// set auto page breaks
+$pdf->setAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
+
+// set image scale factor
+//$pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
+
+// set some language-dependent strings (optional)
+if (@file_exists(dirname(__FILE__).'/lang/eng.php')) {
+	require_once(dirname(__FILE__).'/lang/eng.php');
+	$pdf->setLanguageArray($l);
+}
+
+// ---------------------------------------------------------
+
+// set font
+$pdf->setFont('dejavusans', '', 10);
+
+// add a page
 
 
 if ($laclasse == 1) {
@@ -126,17 +166,17 @@ if ($laclasse == 1) {
 		$texte=preg_replace("/AnneeScolaire/",$anneeScolaire,$texte);
 		$texte=preg_replace("/DateDuJour/",$datedujour,$texte);
 		$texte=preg_replace("/Nationalite/",$Nationalite,$texte);
+		$texte=preg_replace("/&#39;/","'",$texte);
 
 		$pdf->AddPage();
-		$pdf->SetXY(0,0);
-		$pdf->WriteHTML($texte);
-
+		$pdf->writeHTML($texte, true, false, true, false, '');
+		$pdf->lastPage();
 	}
 
 	print " &nbsp;&nbsp;".LANGPARAM5." ".$classeNom." ".LANGPARAM5bis.".<br><br>";
 	$fichierpdf="./data/pdf_certif/certificat-scolarite_".$fic.".pdf";
 	if (file_exists($fichierpdf))  {  @unlink($fichierpdf); }
-	$pdf->output('F',$fichierpdf);
+	$pdf->Output(WEBROOT."/".ECOLE."/$fichierpdf", 'F');
 
 }else {
 
@@ -154,17 +194,32 @@ if ($laclasse == 1) {
 	$texte=preg_replace("/AnneeScolaire/",$anneeScolaire,$texte);
 	$texte=preg_replace("/DateDuJour/",$datedujour,$texte);
 	$texte=preg_replace("/Nationalite/",$Nationalite,$texte);
+	$texte=preg_replace("/&#39;/","'",$texte);
 
 	print " &nbsp;&nbsp;".LANGCERTIF1." ".$nomEleve." ".$prenomEleve." ".LANGCERTIF1bis.".<br><br>";
 	$fic=$eleve;
 
+	$texte=preg_replace('#(\\\\r|\\\\r\\\\n|\\\\n)#','',$texte);
+	$texte=stripslashes($texte);
+	$texte=stripslashes($texte);
+	$texte=preg_replace('/style="text-align:/','align="',$texte);
+	$texte=preg_replace('/strong/',"B",$texte);
+	$texte=preg_replace('/\<h1/',"<B><FONT size=5",$texte);
+	$texte=preg_replace('/h1\>/',"FONT></B>",$texte);
+	
+	$texte=html_vers_text($texte);
+	
 	$pdf->AddPage();
-	$pdf->SetXY(0,0);
-	$pdf->WriteHTML($texte);
-
+	$pdf->writeHTML($texte, true, false, true, false, '');
+	$pdf->lastPage();
 	$fichierpdf="./data/pdf_certif/certificat-scolarite_".$fic.".pdf";
 	if (file_exists($fichierpdf))  {  @unlink($fichierpdf); }
-	$pdf->output('F',$fichierpdf);
+
+	print "<hr>";
+	print $texte;
+	print "<hr>";
+	
+	$pdf->Output(WEBROOT."/".ECOLE."/$fichierpdf", 'F');
 
 }
 ?>

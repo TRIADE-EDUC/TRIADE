@@ -114,9 +114,22 @@ endif;
 <script language="JavaScript" src="./librairie_js/info-bulle.js"></script>
 <script language="JavaScript" src="./librairie_js/clickdroit2.js"></script>
 <script language="JavaScript" src="./librairie_js/lib_css.js"></script>
+<script language="JavaScript" src="./librairie_js/ajaxIA.js"></script>
 <script language="JavaScript" src="./librairie_js/lib_pulldown.js"></script>
+<script type="text/javascript" src="./librairie_js/prototype.js"></script>
 
 <script type="text/JavaScript">
+
+<?php
+include_once("common/productId.php");
+include_once("common/config-ia.php");
+$productID=PRODUCTID;
+$iakey=IAKEY;
+?>
+
+verifToken('<php print $productID ?>','<?php print $iakey ?>','afficheToken');
+
+
 <!--
 function GP_AdvOpenWindow(theURL,winName,ft,pw,ph,wa,il,aoT,acT,bl,tr,trT,slT,pu) { //v3.08
   // Copyright(c) George Petrov, www.dmxzone.com member of www.DynamicZones.com
@@ -322,6 +335,7 @@ function envoi() {
 		$text=preg_replace("/\"/","\\\"",$text);
 		print "tab[$nb]=\"".$text."\";\n";
 	}
+		
 ?>
 </script>
 <table  border='0' bordercolor="#000000" width='100%' >
@@ -469,9 +483,27 @@ SQL;
 			<?php select_com_bulletin($_SESSION["id_pers"],35); ?>
 			</select>
 			<input type='text' name='CharRestant_<?php print $i?>' size='2' disabled='disabled'>
+
+			
+			<?php
+			if(file_exists("./common/config-ia.php")) {
+				include_once("common/productId.php");
+				include_once("common/config-ia.php");
+				$productID=PRODUCTID;
+				$iakey=IAKEY;
+				$prenom=recherche_eleve_prenom($idEleve);
+				$lienIA="ajaxIABulletinCom(document.getElementById('saisie_text_$i').value,'$moyEleve','$productID','$iakey','saisie_text_$i','$prenom')";
+			}else{
+				$lienIA="alert('Votre Triade n\'est pas configur&eacute; pour utiliser l\'IA. Contacter votre administrateur Triade')";
+			}
+			?>
+			<input type='button' value='TRIADE-COPILOT' class='BUTTON' onClick="<?php print $lienIA ?>" >
+			<span id="afficheToken" style="position:relative;top:-70px;left:-40px"  /></span>
+
+
 			<br>
 			<input type=hidden name="saisie_eleve_<?php print $i?>" value="<?php print $idEleve?>" >
-			<textarea onkeypress="compter(this,'<?php print $nbcar ?>', this.form.CharRestant_<?php print $i?>)" cols="68" rows="5" name="saisie_text_<?php print $i?>" ><?php print $commentaireeleve?></textarea><br>
+			<textarea onkeypress="compter(this,'<?php print $nbcar ?>', this.form.CharRestant_<?php print $i?>)" cols="68" rows="5" name="saisie_text_<?php print $i?>" id="saisie_text_<?php print $i?>"  ><?php print $commentaireeleve?></textarea><br>
 <?php
 			$choix_triprecedent="";
 			if ($choix_tri == "trimestre2") { $choix_triprecedent="trimestre1"; }

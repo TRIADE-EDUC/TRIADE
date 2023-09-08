@@ -23,7 +23,7 @@ function ucfirst(string) {
 }
 
 
-langtitre0="Assistance";
+langtitre0="TRIADE-COPILOT";
 langtitre1="Actualit&eacute;";
 langtitre2="Service Triade";
 langtitre3="Forum";
@@ -83,7 +83,8 @@ langmenuprof44="D.S.T.";
 langmenuadmin00="Agenda";
 langmenuadmin0="Messagerie";
 langmenuadmin01="News - Actualit&eacute;s";
-langmenuadmin02="Ecrire ";
+langmenuadmin02="Ecrire";
+langmenuadmin023="Corbeille";
 langmenuadmin03="R&eacute;ception";
 langmenuadmin04="Messages envoy&eacute;s";
 langmenuadmin05="News Audio";
@@ -184,7 +185,7 @@ if (footer != "") {
 	}
 	langmenupied+="<br>Pour visualiser ce site de façon optimale : r&eacute;solution minimale : 800x600 <br>"; 
 }else{
-	langmenupied="<p> La <b>T</b>ransparence et la <b>R</b>apidit&eacute; de l'<b>I</b>nformatique <b>A</b>u service <b>D</b>e l'<b>E</b>nseignement<br>Pour visualiser ce site de façon optimale : r&eacute;solution minimale : 800x600 <br> S.A.R.L.  T.R.I.A.D.E. ©  2014  - Tous droits r&eacute;serv&eacute;s";
+	langmenupied="<p> La <b>T</b>ransparence et la <b>R</b>apidit&eacute; de l'<b>I</b>nformatique <b>A</b>u service <b>D</b>e l'<b>E</b>nseignement<br>Pour visualiser ce site de façon optimale : r&eacute;solution minimale : 800x600 <br> T.R.I.A.D.E. © 2024 - Tous droits r&eacute;serv&eacute;s";
 }
 img_logo_pied="<img src='./image/commun/triade-xhtml.jpg' alt='XHTML'>  <img src='./image/commun/triade-w3C.jpg' alt='w3C'> <img src='./image/commun/triade-css.png' alt='css' > <a href='http://www.triade-educ.com/accueil/don-triade.php' target='_blank' ><img border='0' src='./image/commun/triade_paypal.png' alt='Paypal' ></a><br /><br />";
  
@@ -306,4 +307,6 @@ langmenuadmin911=intituleclasse+" antérieure";
 
 langmenuadmin912="Savoir-être";
 langmenuadmin913="Eval. Enseignant";
+
+langmenugeneral01a="M&eacute;mo";
 

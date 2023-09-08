@@ -112,17 +112,11 @@ function popupfen($idpers,$membre,$nom,$prenom,$ip,$os,$nav,$idsession) {
 	if (($_SESSION["membre"] == "menuparent") && (MODULEMESSAGERIEPARENT == "oui")) $messagerieVisu=1;
 	if (($_SESSION["membre"] == "menututeur") && (MODULEMESSAGERIETUTEUR == "oui")) $messagerieVisu=1;
 	if (($_SESSION["membre"] == "menuscolaire") && (MODULEMESSAGERIESCOLAIRE == "oui")) $messagerieVisu=1;
+	if (($_SESSION["membre"] == "menupersonnel") && (MODULEMESSAGERIESCOLAIRE == "oui")) $messagerieVisu=1;
 
 	if ((LAN == "oui") && (AGENTWEB == "oui") && ($messagerieVisu) ) {
 		if ($compteur_mess == 1) { $M="M7"; }
 		if ($compteur_mess > 1) { $M="M8"; }
-		if (file_exists("../agentweb/swf/messageoffline".GRAPH.".swf")) {		
-		//	$texte="<iframe width=100 height=100 src=\"./agentweb/agentmini.php?inc=".GRAPH."&mess=0&nb=$compteur_mess&nbsanc=$nbsanc&alertp=$alertPaiement&m=$M&mbis=$alertPaiement\"  MARGINWIDTH=0 MARGINHEIGHT=0 HSPACE=0 VSPACE=0 FRAMEBORDER=0 SCROLLING=no align=right ></iframe>";
-			$largeurFen=375;
-			$hauteurFen=150;
-			$br="<br><br>";
-			$son=0;
-		}
 	}
 	// mcessagerie
 
@@ -147,7 +141,7 @@ function popupfen($idpers,$membre,$nom,$prenom,$ip,$os,$nav,$idsession) {
 
 	if (($_SESSION["membre"] == "menuadmin") || ($_SESSION["membre"] == "menuscolaire")) {
 //		$texte.="&nbsp;<a href=\"gestion_sanction_du_jour.php\"  ><img src=\"./image/commun/enable.png\" border=\"0\" align=\"center\" > <font color=\"$colortext2\"><b>".count($datasanc)."</b> sanction(s) enregistrée(s) aujoud\'hui.</font></a><br>";
-		$texte.="<td><span class=\"vertical-line\"></span></td><td><font size=10 color=black ><b>".count($datasanc)."</b></td><td align=center valign=center><img src=\"./image/commun/enable.png\" border=\"0\" align=\"center\" ><br />Sanction(s)</td></td>";	
+		$texte.="<td><span class=\"vertical-line\"></span></td><td><font size=10 color=black ><b>".count($datasanc)."</b></td><td align=center valign=center><img src=\"./image/commun/enable.png\" border=\"0\" align=\"center\" ><br />".LANGNEW100."</td></td>";	
 	}
 
 	if (($membre == "menuparent") || ($membre == "menueleve")) {

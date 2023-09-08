@@ -8,7 +8,7 @@ if (defined("HTTPS")) {
 	if (HTTPS == "oui") {
 		if ($_SERVER['HTTPS'] != "on") {
 			$serv=$_SERVER["SERVER_NAME"];
-			header("Location: https://$serv/triadev1/index1.php");
+			header("Location: https://$serv/triade/index1.php");
 		}
 	}
 }
@@ -90,6 +90,7 @@ if (! file_exists($fichier)) {
      <link rel="stylesheet" type="text/CSS" href="./librairie_css/css.css" media="screen" />
      <link rel="shortcut icon" href="./favicon.ico" type="image/icon" />
    <title>Triade</title>
+<?php include("./librairie_php/googleanalyse.php"); ?>
 </head>
 <body id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" >
 	<noscript><meta http-equiv="Refresh" content="0; URL=noscript.php"></noscript>
@@ -181,7 +182,7 @@ if (! file_exists($fichier)) {
 	<table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
 	<tr id='coulBar0' ><td height="2" align="center"><b><font id='menumodule1'><?php print LANGTMESS482 ?></font></b></td></tr>
 	<tr id='cadreCentral0'><td >
-	<?php  if ((LAN == "non") || (preg_match('/demo.triade-educ.com/',WEBROOT))) { ?>
+	<?php  if ((LAN == "non") || (preg_match('/demo.triade-educ.net/',WEBROOT))) { ?>
 	<div id="introduction"><br>
       	<p class="center" style="color: #000; font-size:12px;">TRIADE
 	<strong><?php print VERSION?></strong> est l'outil d'interface entre quatre p&ocirc;les essentiels : <br /> <?php print ucfirst(INTITULEDIRECTION) ?>s - Enseignants - Parents - <?php print ucfirst(TextNoAccent(INTITULEELEVE)) ?>s .</p>
