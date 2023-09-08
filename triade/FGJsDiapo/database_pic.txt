@@ -1,3 +1,0 @@
-jsdiapo_images = ["./image/commun/default.png"];
-jsdiapo_images_comm = [""];
-var database_pic_version = "1.1";

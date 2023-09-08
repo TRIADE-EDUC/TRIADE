@@ -1,6 +1,0 @@
-.dijitMenuBarRtl {
-  text-align: right;
-}
-.dijitMenuItemRtl .dijitMenuExpand:before {
-  content: "\f0d9";
-}
