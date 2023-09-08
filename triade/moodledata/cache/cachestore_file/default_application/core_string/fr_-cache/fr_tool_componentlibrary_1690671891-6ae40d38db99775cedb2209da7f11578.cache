@@ -1,0 +1,9 @@
+a:13:{s:6:"copied";s:9:"Copié !";s:4:"copy";s:6:"Copier";s:15:"copytoclipboard";s:28:"Copier dans le presse-papier";s:9:"installer";s:837:"<h3>Réglages de la bibliothèque de composants</h3>
+    <p>Pour consulter la bibliothèque de composants, vous devez avoir un accès <em>shell</em> à votre installation de Moodle installation, avoir accès en écriture au dossier /admin/tool/componentlibrary et l'exécutable npm installé sur le serveur Moodle.</p>
+    <p>Si ces prérequis sont satisfaits, vous pouvez vous déplacer au dossier racine de votre installation de Moodle et lancer :</p>
+    <pre>$ npm install</pre>
+    <pre>$ npm install grunt</pre>
+    <p>Ces commandes vont récupérer tous les paquetages requis pour la création de la documentation de la bibliothèque de composants.</p>
+    <p>Une fois ceux-ci installés, vous pouvez lancer :</p>
+    <pre>$ grunt componentlibrary</pre>
+    <p>Pour plus d'infos, consultez le fichier README.md de ce plugin.</p>";s:10:"pluginname";s:30:"Bibliothèque de composants UI";s:16:"privacy:metadata";s:78:"Le plugin Bibliothèque de composants n'enregistre aucune donnée personnelle.";s:8:"runjsdoc";s:96:"La documentation Javascript est générée séparément. Pour la générer, lancer `grunt jsdoc`";s:8:"showboth";s:22:"Afficher avec les deux";s:11:"showdefault";s:20:"Afficher par défaut";s:8:"showhelp";s:20:"Afficher avec l'aide";s:9:"showmixed";s:18:"Afficher mélangé";s:12:"showrequired";s:20:"Affiché avec requis";s:14:"toggleviewinfo";s:45:"Afficher/masquer cette instance de formulaire";}

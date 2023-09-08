@@ -1,0 +1,22 @@
+a:26:{s:8:"encoding";s:19:"Encodage du fichier";s:13:"expiredaction";s:39:"Action à l'échéance de l'inscription";s:18:"expiredaction_help";s:220:"Sélectionnez une action à effectuer lorsque l'inscription du participant arrive à échéance. Veuillez noter que certaines données et réglages de l'utilisateur sont supprimées lors de la désinscription d'un cours.";s:14:"filelockedmail";s:359:"Le fichier texte que vous utilisez pour l'inscription ({$a}) ne pourra pas être effacé par le cron. Cela signifie la plupart du temps que ses droits d'accès ne sont pas correctement réglés. Veuillez corriger ces droits d'accès, de sorte que Moodle puisse effacer le fichier. Sans cela les inscriptions pourraient être effectuées à plusieurs reprises.";s:21:"filelockedmailsubject";s:43:"Erreur importante : fichier d'inscriptions";s:15:"flatfile:manage";s:53:"Gérer manuellement les inscriptions des utilisateurs";s:16:"flatfile:unenrol";s:51:"Désinscrire manuellement du cours des utilisateurs";s:18:"flatfileenrolments";s:35:"Inscriptions par fichier plat (CSV)";s:12:"flatfilesync";s:49:"Synchronisation des inscriptions par fichier plat";s:8:"location";s:22:"Emplacement du fichier";s:13:"location_desc";s:122:"Indiquer le chemin d'accès complet au fichier d'inscription. Ce fichier sera supprimé automatiquement après traitement.";s:11:"notifyadmin";s:25:"Informer l'administrateur";s:14:"notifyenrolled";s:34:"Informer les utilisateurs inscrits";s:14:"notifyenroller";s:51:"Informer l'utilisateur responsable des inscriptions";s:34:"messageprovider:flatfile_enrolment";s:42:"Messages de l'inscription par fichier plat";s:7:"mapping";s:41:"Correspondance des rôles du fichier plat";s:10:"pluginname";s:18:"Fichier plat (CSV)";s:15:"pluginname_desc";s:1015:"Cette méthode permet une vérification systématique à partir d'un fichier texte spécialement mis en forme disposé à un emplacement choisi. Le fichier est en format CSV (séparateurs virgules) avec 4 ou 6 champs par ligne, à savoir :
+
+  opération, rôle, ID (utilisateur), ID (cours) [, début, fin]
+
+où :
+
+*  opération : add | del
+*  rôle : student | teacher | teacheredit
+*  ID (utilisateur) : champ idnumber de l'utilisateur dans la table « user » (PAS le champ id)
+*  ID (cours) : champ idnumber du cours dans la table « course » (PAS le champ id)
+*  début : date de début (en secondes depuis le 1.1.1970 à 0 h UTC) - facultatif
+*  fin : date de fin (en secondes depuis le 1.1.1970 à 0 h UTC) - facultatif
+
+Cela pourrait par exemple ressembler à ceci :
+<pre class="informationbox">
+    add, student, 5, CF101
+    add, teacher, 6, CF101
+    add, teacheredit, 7, CF101
+    del, student, 8, CF101
+    del, student, 17, CF101
+    add, student, 21, CF101, 1091115000, 1091215000
+</pre>";s:31:"privacy:metadata:enrol_flatfile";s:152:"Le plugin d'inscriptions par fichier plat (CSV) enregistre des données personnelles en lien avec de futures inscriptions, dans la table enrol_flatfile.";s:38:"privacy:metadata:enrol_flatfile:action";s:50:"L'action d'inscription attendue à la date donnée";s:40:"privacy:metadata:enrol_flatfile:courseid";s:48:"L'identifiant du cours associé à l'inscription";s:38:"privacy:metadata:enrol_flatfile:roleid";s:49:"L'identifiant du rôle à attribuer ou à retirer";s:41:"privacy:metadata:enrol_flatfile:timestart";s:45:"La date et l'heure du début de l'inscription";s:39:"privacy:metadata:enrol_flatfile:timeend";s:45:"La date et l'heure de la fin de l'inscription";s:44:"privacy:metadata:enrol_flatfile:timemodified";s:54:"La date et l'heure de la modification de l'inscription";s:38:"privacy:metadata:enrol_flatfile:userid";s:65:"L'identifiant de l'utilisateur associé à l'attribution du rôle";}

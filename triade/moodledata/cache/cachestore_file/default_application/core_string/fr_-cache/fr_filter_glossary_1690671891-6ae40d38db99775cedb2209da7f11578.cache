@@ -1,0 +1,1 @@
+a:4:{s:16:"glossarycategory";s:43:"{$a->glossary} : catégorie {$a->category}";s:15:"glossaryconcept";s:31:"{$a->glossary} : {$a->concept}";s:10:"filtername";s:34:"Liaison automatique des glossaires";s:16:"privacy:metadata";s:85:"Le plugin Liaison automatique des glossaires n'enregistre aucune donnée personnelle.";}
