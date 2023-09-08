@@ -1,0 +1,61 @@
+@charset "utf-8";
+/* +--------------------------------------------------------------------------+
+// 2017 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// +-------------------------------------------------+
+// $Id: dgrowl-pure.css,v 1.2 2017-08-04 07:48:10 wlair Exp $ */
+/*------------------------------------------------------------------------------------------*/
+.pure .dGrowl-main {
+
+}
+
+.pure .dGrowl-notification {
+    border: 1px solid transparent;
+    color: #289816;
+	background-color: rgb(209, 245, 203);
+	border-color: #93d687;
+    padding:10px 15px;
+    margin-bottom: 20px;
+    border-radius: 4px;
+}
+.pure .dGrowl-topRight {
+
+}
+/* -- CHANNELS -- */
+.pure .dGrowl-channel {
+
+}
+/* -- NOTIFICATIONS -- */
+.pure .dGrowl-title {
+
+}
+.pure .dGrowl-topRight .dGrowl-notification {
+}
+.pure .dGrowl-notification.dGrowl-visible {
+
+}
+.pure a.dGrowl-close-btn {
+    font-size:0px;
+}
+.pure a.dGrowl-close-btn:after {
+    content: "\f00d";
+    display: inline-block;
+    font: normal normal normal 14px/1 FontAwesome;
+    font-size: 20px;
+}
+.pure a.dGrowl-close-btn:hover {
+
+font-size: 0;
+}
+/* default notification*/
+.pure .dGrowl-notification {
+
+}
+/* Custom notification styles! */
+.pure .dGrowl-channel-error .dGrowl-notification {
+
+}
+
+/* default notification*/
+.pure .dGrowl-channel-service .dGrowl-notification {
+
+}

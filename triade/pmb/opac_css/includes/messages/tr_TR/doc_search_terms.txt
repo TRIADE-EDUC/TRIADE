@@ -1,0 +1,15 @@
+﻿<h2>Konu başlıklarında arama</h2>
+<p><strong>Kataloğumuzdaki yapıtların konuları arasında dolaşmak için konu başlıklarında arama yapabilirsiniz.</strong></p>
+<hr />
+
+<p>Bir veya birkaç kelimeden oluşan konu başlıkları (eş ve karşıt anlamlı hiyerarşik terimler dizini) kayıtların bir çeşit sınıflandırılmasıdır.
+<br /><i>Ör. edebiyat, felsefe tarihi, nükleer fizik, ...</i></p>
+<p>Aramak istediğiniz terim veya terimleri yazınız (<i>ör. tarih</i>) ve <i>Ara</i>ya tıklayınız.*</p>
+<p>Sonuçlar iki bölüme ayrılır. <b>Üst kısımda arama sonucunda bulunan konu başlıkları görüntülenir.</b> Bu bölüm yeni arama yapılana kadar değişmez. Konu başlıklarından birine (<i>ör. siyaset tarihi</i>) tıklayınız.</p>
+<p><b>Alt kısımda</b> seçtiğiniz konu başlığı, bir üst konu başlığı (ör. <i>tarih</i>), bir alt konu başlıkları (<i>ör. Türkiye siyaset tarihi</i>, ...) ve olası göndermeler (<i>ör. siyaset bilimi, anayasa, ...</i>) görüntülenir.
+<br />Bu bölümdeki <b>bağlantılara tıklayarak konu başlıkları arasında geçiş yapabilirsiniz.</b></p>
+<p>İlginizi çeken konuyla <b>ilgili kayıtları görüntülemek için</b>, konu başlıklarının solunda bulunan <b>büyütece <img src='images/search.gif' align='absmiddle'> tıklayınız</b>.
+<br />Büyüteç gözükmüyorsa, bu konu başlığı altında hiçbir yapıt bulunmamaktadır.</p>
+
+<hr />
+<p>* Arama motoru hakkında detaylı bilgi için <a href="help.php?whatis=expbool">Mantıksal arama ve Boole işleçleri</a> sayfasını okuyabilirsiniz.</p>

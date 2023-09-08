@@ -1,0 +1,452 @@
+@charset "utf-8";
+/* -------------------------------------------------------*/
+
+/* -------------------------------------------------------*/
+
+/*                      Glyphe Icons                      */
+
+/* -------------------------------------------------------*/
+
+/* -------------------------------------------------------*/
+
+#resa_notice a:before,
+.actions_last_pageNot span:before,
+.plusN a:before,
+.avisNCourte a:before,
+.statutPartN span:before {}
+
+/* ---------------------------------------------------------------------*/
+
+/* ---------------------------------------------------------------------*/
+
+/*          Notice reduite     record_in_result_display                 */
+
+/* ---------------------------------------------------------------------*/
+
+/* ---------------------------------------------------------------------*/
+
+/* ---------------------------------------------------------*/
+
+/*                        Grid Layout                       */
+
+/* ---------------------------------------------------------*/
+
+.asideContentNot {}
+
+.vignetteimgNot {}
+
+.parentNotCourte .vignetteimgNot {}
+
+.notice_corps {}
+
+.panier_avis_notCourte {}
+.panier_avis_notCourte a{
+	text-decoration:none;
+}
+/* ---------------------------------------------------------*/
+
+/*                      Notice reduite                      */
+
+/* ---------------------------------------------------------*/
+
+.parentNotCourte {}
+
+/* ---------------------------------------------------------*/
+
+/*                        Picture                           */
+
+/* ---------------------------------------------------------*/
+
+.vignetteDocNot {
+	text-align: left;
+	overflow: hidden;
+}
+
+.vignetteNot {}
+
+.parentNotCourte .vignetteNot {}
+
+/* ---------------------------------------------------------*/
+
+/*                     Titre   Notice                       */
+
+/* ---------------------------------------------------------*/
+
+.title_notCourte h3 {}
+
+.title_notCourte h3 a {}
+
+/* ---------------------------------------------------------*/
+
+/*                     Notice summary                       */
+
+/* ---------------------------------------------------------*/
+
+.resume_notCourte span {}
+
+.infoCompl_notCourte {}
+
+.infoCompl_notCourte span {}
+
+/* ---------------------------------------------------------*/
+
+/*                       Notice complet                     */
+
+/* ---------------------------------------------------------*/
+
+.plusN {}
+
+.plusN a {}
+
+.plusN a:before {}
+
+/* ---------------------------------------------------------*/
+
+/*                      Avis commentaire                    */
+
+/* ---------------------------------------------------------*/
+
+span.imgComment,
+span.imgStatutPartN,
+span.imgDocNum {
+	flex: 0 1 40px;
+}
+
+span.imgComment img.imgComment,
+span.imgStatutPartN img.imgStatutPartN,
+.imgDocNum>img {}
+
+.avisNCourte>a>img,
+.imgStatutPartN>a>img {}
+
+.avisNCourte2 {}
+
+.avisNCourte2 a {}
+
+.avisN a {}
+
+.avisNCourte a {}
+
+.avisNCourte a:hover {
+	text-decoration: none;
+}
+
+a.listeLectureN:hover {}
+
+a.listeLectureN:hover span {}
+
+.avisNCourte a:before {}
+
+span.imgTag,
+span.imgSuggest,
+.listeLectureN a span:first-child,
+span.ExtnotCom.imgListeLecture {
+	background-color: transparent;
+}
+
+span.imgTag img,
+img.imgSuggest {}
+
+span.tagsN,
+span.suggestsN,
+span.docNumn,
+span.docNumN,
+span.listeLectureN {
+}
+
+.tagsN a,
+.suggestsN a,
+.listeLectureN a,
+.docnumNCourtePermalink a,
+span.docNumN a,
+a.listeLectureN span {}
+
+/* ---------------------------------------------------------*/
+
+/*                            Panier                        */
+
+/* ---------------------------------------------------------*/
+
+.onglet_basketNotCourte .img_basketNotCourte img {}
+
+.onglet_basketNotCourte .img_basketNotCourte {
+
+}
+.onglet_basketNotCourte .img_basketNotCourte:hover {
+	text-decoration:none;
+}
+a.img_basketNotCourte:hover {}
+
+.onglet_basketNotCourte,
+.avisNCourte,
+.statutPartN,
+.tagsNCourte,
+.suggestNCourte,
+.listeLectureNCourte,
+.docnumNCourte,
+div.tagsN,
+div.suggestN,
+div.listeLectureN {}
+
+span.StatutPartN {}
+
+.statutPartN2 {}
+
+/* ---------------------------------------------------------*/
+
+/*                          Reserver                        */
+
+/* ---------------------------------------------------------*/
+
+#resa_notice {}
+
+#resa_notice h3 {}
+
+#resa_notice a {}
+
+#resa_notice a:before {}
+
+.dispoLien_notice a {}
+
+/* ---------------------------------------------------------------------*/
+
+/*                              Notice Footer                           */
+
+/* ---------------------------------------------------------------------*/
+
+.footer_notice {}
+
+/* ---------------------------------------------------------------------*/
+
+/* ---------------------------------------------------------------------*/
+
+/*                 Notice Full  record_extended_display                 */
+
+/* ---------------------------------------------------------------------*/
+
+/* ---------------------------------------------------------------------*/
+
+/* ---------------------------------------------------------*/
+
+/*                        Grid Layout                       */
+
+/* ---------------------------------------------------------*/
+
+#noticeNot {}
+
+#blocNotice_descr {}
+
+/* ---------------------------------------------------------*/
+
+/*                    Enrichissisement                      */
+
+/* ---------------------------------------------------------*/
+
+#blocNotice_descr ul.onglets_isbd_publicNot {}
+
+#blocNotice_descr ul.onglets_isbd_publicNot:after {}
+
+#blocNotice_descr ul.onglets_isbd_publicNot .isbd_public_active a {}
+
+#blocNotice_descr ul.onglets_isbd_publicNot .isbd_public_active a span {}
+
+#blocNotice_descr ul.onglets_isbd_publicNot li a {}
+
+#blocNotice_descr ul.onglets_isbd_publicNot li {}
+
+#blocNotice_descr ul.onglets_isbd_publicNot li:hover {}
+
+#blocNotice_descr ul.onglets_isbd_publicNot li:hover a span {}
+
+#blocNotice_descr ul.onglets_isbd_publicNot li img {}
+
+/* ---------------------------------------------------------*/
+
+/*                           Panier                         */
+
+/* ---------------------------------------------------------*/
+
+.onglet_basketNot {}
+
+.onglet_basketNot .img_basketNot img {}
+
+.onglet_basketNot .img_basketNot {}
+
+.onglet_basketNotCourte2 {}
+
+/* ---------------------------------------------------------*/
+
+/*                         Notice content                   */
+
+/* ---------------------------------------------------------*/
+
+.notice_contenu {}
+
+.descr_notice {}
+
+.descr_notice td {}
+
+.labelNot {}
+
+/* ---------------------------------------------------------*/
+
+/*                     Titre   Notice                       */
+
+/* ---------------------------------------------------------*/
+
+#exempl_titleNot {}
+
+#exempl_titleNot {}
+
+/* ---------------------------------------------------------*/
+
+/*                       Notice complet                     */
+
+/* ---------------------------------------------------------*/
+
+.lienP a {
+	text-decoration: none;
+}
+
+.lienP {}
+
+/* ---------------------------------------------------------*/
+
+/*                      Avis commentaire                    */
+
+/* ---------------------------------------------------------*/
+
+.avisN {}
+
+span.avisN {}
+
+.asideContentNot>.avisN>span.avisN img.img_star_avis {}
+
+.avisN a+a {}
+
+/* ---------------------------------------------------------*/
+
+/*                     exemplaires                          */
+
+/* ---------------------------------------------------------*/
+
+#zone_exemplaires {}
+
+#zone_exemplaires h3 span {}
+
+.exemplairesNot th {}
+
+.exemplairesNot th,
+.exemplairesNot td {}
+
+/* ---------------------------------------------------------*/
+
+/*                      Reservation                         */
+
+/* ---------------------------------------------------------*/
+
+#bt_resa_NotCourte {}
+
+/*Flex display                        
+--------------------------------------------------------------------------------------------*/
+
+div[class='onglet_basketNotCourte'],
+div[class='avisNCourte'],
+div[class='tagsNCourte'],
+div[class='listeLectureNCourte'] a,
+div[class='suggestNCourte'],
+div[class='onglet_basketNot'] a.img_basketNot,
+div[class='tagsN'],
+div[class='suggestN'],
+div[class='docnumNCourte docnumNCourtePermalink'],
+div[class='docnumNCourte'],
+div[class='listeLectureN'] a {
+	text-decoration: none;
+}
+
+div[class='onglet_basketNotCourte'] a,
+div[class='tagsNCourte'],
+div[class='listeLectureNCourte'] a,
+div[class='suggestNCourte'],
+div[class='docnumNCourte'],
+div[class='onglet_basketNot'] a.img_basketNot,
+div[class='tagsN'],
+div[class='suggestN'],
+div[class='docnumNCourte docnumNCourtePermalink'],
+div[class='listeLectureN'] a {}
+
+div[class='onglet_basketNotCourte'] a span:nth-child(1) {
+	flex: 0 0 37px;
+}
+
+div[class='avisNCourte'] span:nth-child(1) {}
+
+div[class='onglet_basketNotCourte'] a span:nth-child(1) img,
+div[class='avisNCourte'] span:nth-child(1) img,
+a[class='img_basketNot'] span:nth-child(1) img {}
+
+div[class='onglet_basketNotCourte'] a span:nth-child(1) img {
+	width: 100%;
+	height: 36px;
+	padding: 8px;
+}
+
+a[class='img_basketNot'] span:nth-child(1) img {
+	width: 38px;
+}
+
+div[class='onglet_basketNotCourte'] a span:nth-child(2),
+div[class='avisNCourte'] span:nth-child(2),
+div[class='tagsNCourte'] span:nth-child(2),
+div[class='suggestNCourte'] span:nth-child(2),
+div[class='listeLectureNCourte'] a span:nth-child(2),
+div[class='onglet_basketNot'] a span:nth-child(2),
+div[class='tagsN'] span:nth-child(2),
+div[class='suggestN'] span:nth-child(2),
+div[class='docnumNCourte docnumNCourtePermalink'] span:nth-child(2),
+div[class='docnumNCourte'] span:nth-child(2),
+div[class='listeLectureN'] a span:nth-child(2) {
+	padding-top: 6px;
+}
+
+div[class='onglet_basketNotCourte'] a>*,
+div[class='avisNCourte']>*,
+div[class='tagsNCourte']>*,
+div[class='listeLectureNCourte'] a>*,
+div[class='suggestNCourte']>*,
+div[class='docnumNCourte']>*,
+div[class='onglet_basketNot'] a.img_basketNot>*,
+div[class='tagsN']>*,
+div[class='suggestN']>*,
+div[class='docnumNCourte docnumNCourtePermalink']>*,
+div[class='listeLectureN'] a>* {
+	flex: 0 1 40px;
+}
+
+/*------------------------------------------------------------------------------------------*/
+
+/*-------------------------------------------------768-------------------------------------*/
+
+/*------------------------------------------------------------------------------------------*/
+
+@media screen and (max-width: 767px) {
+	.asideContentNot,
+	.notice_contenu {}
+}
+
+/*------------------------------------------------------------------------------------------*/
+
+/*--------------------------------------------Smart-----------------------------------------*/
+
+/*------------------------------------------------------------------------------------------*/
+
+@media screen and (max-width: 599px) {
+	.parentNotCourte .vignetteNot {}
+	.notice_contenu {}
+	.descr_notice,
+	.descr_notice tbody {}
+	.descr_notice tr {}
+	.descr_notice td {}
+	.descr_notice .labelNot {}
+	.descr_notice .labelNot>span {}
+}

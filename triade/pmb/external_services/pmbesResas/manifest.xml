@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- Fichier manifest de description des méthodes disponibles
+****************************************************************************************
+© 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: manifest.xml,v 1.1 2011-07-29 12:32:11 dgoron Exp $ -->
+<manifest>
+	<name>pmbesResas</name>
+	<description>msg:Resas_functions_description</description>
+	<requirements>
+		<requirement group="pmbesTypes"/>
+	</requirements>
+	<types>
+		<type name="resa_extend" imported="true" imported_from="pmbesTypes"/>
+		<type name="emprunteur" imported="true" imported_from="pmbesTypes"/>
+	</types>
+	<methods>
+		<!--<method name="listResas" rights="" version="1.0" comment="msg:listResas_description" language_independant="true">
+			<pmb_requirements>
+				<pmb_requirement start_path="include" file="resa_func.inc.php"/>
+			</pmb_requirements>
+			<inputs>
+				<description>msg:listResas_input_description</description>
+				<param name="idnotice" type="scalar" dataType="integer" description="msg:listResas_idnotice"/>
+				<param name="idbulletin" type="scalar" dataType="integer" description="msg:listResas_idbulletin"/>
+				<param name="idempr" type="scalar" dataType="integer" description="msg:listResas_idempr"/>
+				<param name="order" type="scalar" dataType="string" description="msg:listResas_order"/>
+				<param name="condition" type="scalar" dataType="string" description="msg:listResas_condition"/>
+				<param name="montrerquoi" type="scalar" dataType="integer" description="msg:listResas_montrerquoi"/>
+				<param name="f_loc" type="scalar" dataType="integer" description="msg:listResas_f_loc"/>
+			</inputs>
+			<outputs>
+				<description>msg:listResas_output_description</description>
+				<result name="result" type="scalar" dataType="resa_extend" description="msg:listResas_result"/>
+			</outputs>
+		</method>
+		--><method name="confirmResaReader" rights="" version="1.0" comment="msg:confirmResaReader_description" language_independant="true">
+			<pmb_requirements>
+				<pmb_requirement start_path="include" file="mail.inc.php"/>
+				<pmb_requirement start_path="include" file="sms.inc.php"/>
+				<pmb_requirement start_path="include" file="resa.inc.php"/>
+				<pmb_requirement start_path="class" file="emprunteur.class.php"/>
+			</pmb_requirements>
+			<inputs>
+				<description>msg:confirmResaReader_input_description</description>
+				<param name="id_resa" type="scalar" dataType="integer" description="msg:confirmResaReader_id_resa"/>
+				<param name="id_empr_concerne" type="scalar" dataType="integer" description="msg:confirmResaReader_id_empr_concerne"/>
+				<param name="f_loc" type="scalar" dataType="integer" description="msg:confirmResaReader_f_loc"/>
+			</inputs>
+			<outputs>
+				<description>msg:confirmResaReader_output_description</description>
+				<result name="result" type="scalar" dataType="string" description="msg:confirmResaReader_result"/>
+			</outputs>
+		</method>
+		<method name="generatePdfResasReaders" rights="" version="1.0" comment="msg:generatePdfResasReaders_description" language_independant="true">
+			<pmb_requirements>
+				<pmb_requirement start_path="class" file="fpdf.class.php"/>
+				<pmb_requirement start_path="include" file="fpdf.inc.php"/>
+				<pmb_requirement start_path="class" file="emprunteur.class.php"/>
+			</pmb_requirements>
+			<inputs>
+				<description>msg:generatePdfResasReaders_input_description</description>
+				<param name="tresas" type="scalar" dataType="array" description="msg:generatePdfResasReaders_tresas"/>
+				<param name="f_loc" type="scalar" dataType="integer" description="msg:generatePdfResasReaders_f_loc"/>
+			</inputs>
+			<outputs>
+				<description>msg:generatePdfResasReaders_output_description</description>
+				<result name="result" type="scalar" dataType="string" description="msg:generatePdfResasReaders_result"/>
+			</outputs>
+		</method>
+		<!-- <method name="generatePdfResaReader" rights="" version="1.0" comment="msg:generatePdfResaReader_description" language_independant="true">
+			<pmb_requirements>
+				<pmb_requirement start_path="class" file="fpdf.class.php"/>
+				<pmb_requirement start_path="include" file="fpdf.inc.php"/>
+				<pmb_requirement start_path="class" file="emprunteur.class.php"/>
+			</pmb_requirements>
+			<inputs>
+				<description>msg:generatePdfResaReader_input_description</description>
+				<param name="id_empr" type="scalar" dataType="string" description="msg:generatePdfResaReader_id_empr"/>
+				<param name="f_loc" type="scalar" dataType="integer" description="msg:generatePdfResaReader_f_loc"/>
+			</inputs>
+			<outputs>
+				<description>msg:generatePdfResaReader_output_description</description>
+				<result name="result" type="scalar" dataType="string" description="msg:generatePdfResaReader_result"/>
+			</outputs>
+		</method> -->
+		<method name="get_empr_information" rights="" version="1.0" language_independant="true" comment="msg:get_empr_information_description">
+			<inputs>
+				<description>msg:get_empr_information_input_description</description>
+				<param name="idempr" type="scalar" dataType="integer" description="msg:get_empr_information_idempr"/>
+			</inputs>
+			<outputs>
+				<description>msg:get_empr_information_output_description</description>
+				<result name="result" type="scalar" dataType="emprunteur" description="msg:get_empr_information_result"/>
+			</outputs>
+		</method>
+		<method name="list_empr_resas" rights="" version="1.0" language_independant="true" comment="msg:list_empr_resas_description">
+			<pmb_requirements>
+				<pmb_requirement start_path="class" file="acces.class.php"/>
+			</pmb_requirements>
+			<inputs>
+				<description>msg:list_empr_resas_input_description</description>
+				<param name="empr_id" type="scalar" dataType="integer" description="msg:list_empr_resas_empr_id"/>
+				<param name="OPACUserId" type="scalar" dataType="integer" description="msg:list_empr_resas_OPACUserId"/>
+			</inputs>
+			<outputs>
+				<description>msg:list_empr_resas_output_description</description>
+				<result type="array" name="resas_ids" description="msg:list_empr_resas_resas_ids">
+					<result name="item" type="scalar" dataType="integer"/>
+				</result>
+			</outputs>
+		</method>
+		<method name="get_empr_information_and_resas" rights="" version="1.0" language_independant="true" comment="msg:get_empr_information_and_resas_description">
+			<requirements>
+		  		<requirement group="pmbesResas" name="get_empr_information" version="1.0"/>
+		  		<requirement group="pmbesResas" name="list_empr_resas" version="1.0"/>
+			</requirements>
+			<inputs>
+				<description>msg:get_empr_information_and_resas_input_description</description>
+				<param name="empr_id" type="scalar" dataType="integer" description="msg:get_empr_information_and_resas_empr_id"/>
+				<param name="OPACUserId" type="scalar" dataType="integer" description="msg:get_empr_information_and_resas_OPACUserId"/>
+			</inputs>
+			<outputs>
+				<description>msg:get_empr_information_and_resas_output_description</description>
+				<result name="information" type="scalar" dataType="emprunteur" description="msg:get_empr_information_and_resas_information"/>
+				<result type="array" name="resa_ids" description="msg:get_empr_information_and_resas_resa_ids">
+					<result name="item" type="scalar" dataType="integer"/>
+				</result>
+			</outputs>
+		</method>
+	</methods>
+</manifest>

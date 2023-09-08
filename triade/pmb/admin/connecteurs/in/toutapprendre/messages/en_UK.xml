@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le connecteur nasa_ads
+****************************************************************************************
+© 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: en_UK.xml,v 1.1 2015-06-15 12:55:33 pmbs Exp $ -->
+
+<XMLlist>
+	<entry code="rec_addr">Register an address to access the server's properties</entry>
+	<entry code="error_contact_server">Error accessing the ToutApprendre server</entry>
+	<entry code="toutapprendre_url">URL</entry>
+	<entry code="toutapprendre_title">Title</entry>
+	<entry code="toutapprendre_description">Description</entry>
+	<entry code="toutapprendre_author">Author</entry>
+	<entry code="toutapprendre_contact">Contact</entry>
+	<entry code="toutapprendre_unconfigured">The source of the connector is not configured</entry>
+	<entry code="toutapprendre_toutapprendre">ToutApprendre</entry>
+	<entry code="toutapprendre_cp_field">Customizable field to use</entry>
+	<entry code="toutapprendre_no_field">No integer type customizable field</entry>
+	<entry code="toutapprendre_enrichment_source">(enrichment from ToutApprendre)</entry>
+	<entry code="toutapprendre_enrichment_template">Enrichment display template</entry>
+	<entry code="toutapprendre_establishmentid">Identifier of the school</entry>
+	<entry code="toutapprendre_privatekey">Private key</entry>
+</XMLlist>

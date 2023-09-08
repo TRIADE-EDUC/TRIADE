@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour la classe datasource
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_common_selector_lvl.xml,v 1.5 2019-03-21 14:29:29 dgoron Exp $ -->
+
+<XMLlist>
+	<entry code="cms_module_common_selector_lvl">OPAC page type</entry>
+	<entry code="cms_module_common_selector_lvl_author_see">Author</entry>
+	<entry code="cms_module_common_selector_lvl_categ_see">Category</entry>
+	<entry code="cms_module_common_selector_lvl_indexint_see">Decimal indexation</entry>
+	<entry code="cms_module_common_selector_lvl_coll_see">Collection</entry>
+	<entry code="cms_module_common_selector_lvl_more_results">Search result (level 2)</entry>
+	<entry code="cms_module_common_selector_lvl_notice_display">Record</entry>
+	<entry code="cms_module_common_selector_lvl_bulletin_display">Issue</entry>
+	<entry code="cms_module_common_selector_lvl_publisher_see">Publisher</entry>
+	<entry code="cms_module_common_selector_lvl_titre_uniforme_see">Uniform title</entry>
+	<entry code="cms_module_common_selector_lvl_serie_see">Serie</entry>
+	<entry code="cms_module_common_selector_lvl_search_result">Search result (level 1)</entry>
+	<entry code="cms_module_common_selector_lvl_subcoll_see">Sub-collection</entry>
+	<entry code="cms_module_common_selector_lvl_search_history">Search history</entry>
+	<entry code="cms_module_common_selector_lvl_etagere_see">Shelve</entry>
+	<entry code="cms_module_common_selector_lvl_etageres_see">Shelves</entry>
+	<entry code="cms_module_common_selector_lvl_show_cart">Basket</entry>
+	<entry code="cms_module_common_selector_lvl_show_list">Reading list</entry>
+	<entry code="cms_module_common_selector_lvl_section_see">Section</entry>
+	<entry code="cms_module_common_selector_lvl_rss_see">RSS feed</entry>
+	<entry code="cms_module_common_selector_lvl_concept_see">Concepts</entry>
+	<entry code="cms_module_common_selector_lvl_authperso_see">custom authorities</entry>
+	<entry code="cms_module_common_selector_lvl_sort">Sort</entry>
+	<entry code="cms_module_common_selector_lvl_lastrecords">Latest books</entry>
+	<entry code="cms_module_common_selector_lvl_infopages">Infopages</entry>
+	<entry code="cms_module_common_selector_lvl_extend">Extension</entry>
+	<entry code="cms_module_common_selector_lvl_external_authorities">External authorities</entry>
+	<entry code="cms_module_common_selector_lvl_perio_a2z_see">Page A to Z</entry>
+	<entry code="cms_module_common_selector_lvl_cmspage">Page</entry>
+	<entry code="cms_module_common_selector_lvl_index">Home</entry>
+	<entry code="cms_module_common_selector_lvl_simple_search">Simple search</entry>
+	<entry code="cms_module_common_selector_lvl_extended_search">multi-standard searches</entry>
+	<entry code="cms_module_common_selector_lvl_term_search">Search by terms</entry>
+	<entry code="cms_module_common_selector_lvl_external_search">External search</entry>
+	<entry code="cms_module_common_selector_lvl_perio_a2z">A to Z tab</entry>
+	<entry code="cms_module_common_selector_lvl_bannette_see">SDI basket</entry>
+	<entry code="cms_module_common_selector_lvl_faq">FAQ</entry>
+	<entry code="cms_module_common_selector_lvl_tags_search">Search by tags</entry>
+	<entry code="cms_module_common_selector_lvl_search_perso">Predefined searches</entry>
+	<entry code="cms_module_common_selector_lvl_empr">My account</entry>
+	<entry code="cms_module_common_selector_lvl_askmdp">Forgotten password</entry>
+	<entry code="cms_module_common_selector_lvl_subscribe">Online inscription</entry>
+	<entry code="cms_module_common_selector_lvl_contact_form">Contact form</entry>
+	<entry code="cms_module_common_selector_lvl_collstate_bulletins_display">Constitution des reliures</entry>
+	<entry code="cms_module_common_selector_lvl_simple_search_mode_abstract">Recherche simple dans le champ résumé</entry>
+	<entry code="cms_module_common_selector_lvl_simple_search_mode_auteur">Recherche simple dans les auteurs</entry>
+	<entry code="cms_module_common_selector_lvl_simple_search_mode_categorie">Recherche simple dans les catégories</entry>
+	<entry code="cms_module_common_selector_lvl_simple_search_mode_collection">Recherche simple dans les collections</entry>
+	<entry code="cms_module_common_selector_lvl_simple_search_mode_concept">Recherche simple dans les concepts</entry>
+	<entry code="cms_module_common_selector_lvl_simple_search_mode_docnum">Recherche simple dans les documents numériques</entry>
+	<entry code="cms_module_common_selector_lvl_simple_search_mode_indexint">Recherche simple dans les indexations décimales</entry>
+	<entry code="cms_module_common_selector_lvl_simple_search_mode_keyword">Recherche simple dans les mots-clés</entry>
+	<entry code="cms_module_common_selector_lvl_simple_search_mode_editeur">Recherche simple dans les éditeurs</entry>
+	<entry code="cms_module_common_selector_lvl_simple_search_mode_souscollection">Recherche simple dans les sous-collections</entry>
+	<entry code="cms_module_common_selector_lvl_simple_search_mode_title">Recherche simple dans les titres</entry>
+	<entry code="cms_module_common_selector_lvl_simple_search_mode_titre_uniforme">Recherche simple dans les titres uniformes</entry>
+</XMLlist>

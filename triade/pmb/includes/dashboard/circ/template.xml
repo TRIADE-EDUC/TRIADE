@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!-- 
+****************************************************************************************
+© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: template.xml,v 1.2 2015-06-15 12:55:35 pmbs Exp $ -->
+<template default_lang='fr_FR'>
+	<content lang='fr_FR'><![CDATA[
+		<h2>Emprunteurs</h2>
+		<div class='row'>
+			<div class='title'>Total : </div>
+			<div class='value'>{{emprs.0.total}}</div>
+		</div>
+		<div class='row'>
+			<div class='title'>Abonnements expirés : </div>
+			<div class='value'>{{emprs.0.expired}}</div>
+		</div>
+		<div class='row'>&nbsp;</div>
+		<h2>Prets</h2>
+		<div class='row'>
+			<div class='title'>En cours : </div>
+			<div class='value'>{{prets.0.total}}</div>
+		</div>
+		<div class='row'>
+			<div class='title'>En retard : </div>
+			<div class='value'>{{prets.0.late}}</div>
+		</div>
+		<div class='row'>&nbsp;</div>
+		<h2>Réservation</h2>
+		<div class='row'>
+			<div class='title'>A valider : </div>
+			<div class='value'>{{resas.0.a_valider}}</div>
+		</div>
+		<div class='row'>
+			<div class='title'>Confirmées : </div>
+			<div class='value'>{{resas.0.confirmee}}</div>
+		</div>
+		]]>
+	</content>
+	
+	<content lang='en_UK'><![CDATA[
+		<h2>Borrowers</h2>
+		<div class='row'>
+			<div class='title'>Amount : </div>
+			<div class='value'>{{emprs.0.total}}</div>
+		</div>
+		<div class='row'>
+			<div class='title'>Overdue subscriptions : </div>
+			<div class='value'>{{emprs.0.expired}}</div>
+		</div>
+		<div class='row'>&nbsp;</div>
+		<h2>Loans</h2>
+		<div class='row'>
+			<div class='title'>Ongoing : </div>
+			<div class='value'>{{prets.0.total}}</div>
+		</div>
+		<div class='row'>
+			<div class='title'>Late : </div>
+			<div class='value'>{{prets.0.late}}</div>
+		</div>
+		<div class='row'>&nbsp;</div>
+		<h2>Holds</h2>
+		<div class='row'>
+			<div class='title'>Waiting for validation : </div>
+			<div class='value'>{{resas.0.a_valider}}</div>
+		</div>
+		<div class='row'>
+			<div class='title'>Confirmed : </div>
+			<div class='value'>{{resas.0.confirmee}}</div>
+		</div>
+		]]>
+	</content>
+</template>

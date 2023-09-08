@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le module Articleslist
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_bannetteslist_view_django_directory.xml,v 1.1 2019-04-30 13:58:05 dgoron Exp $ -->
+
+<XMLlist>
+	<entry code='cms_module_bannetteslist_view_django_directory'>Répertoire de templates à utiliser</entry>
+</XMLlist>

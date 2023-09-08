@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le module Article
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_metadatas.xml,v 1.2 2017-11-24 09:24:18 dgoron Exp $ -->
+
+<XMLlist>
+	<entry code='cms_module_metadatas_datasource_metadatas_article'>Méta-données d'un article</entry>
+	<entry code='cms_module_metadatas_datasource_metadatas_section'>Méta-données d'une rubrique</entry>
+	<entry code='cms_module_metadatas_datasource_metadatas_record'>Méta-données d'une notice</entry>
+	<entry code='cms_module_metadatas_datasource_metadatas_page_opac'>Méta-données d'une page OPAC</entry>
+	
+	<entry code="cms_module_metadatas_desc_og">Open Graph Protocol (OGP)</entry>
+	<entry code="cms_module_metadatas_desc_og_title">Titre</entry>
+	<entry code="cms_module_metadatas_desc_og_type">Type</entry>
+	<entry code="cms_module_metadatas_desc_og_image">Image</entry>
+	<entry code="cms_module_metadatas_desc_og_url">URL</entry>
+	<entry code="cms_module_metadatas_desc_og_description">Description</entry>
+	<entry code="cms_module_metadatas_desc_og_locale">Langue</entry>
+	<entry code="cms_module_metadatas_desc_og_site_name">Nom du site</entry>
+	<entry code="cms_module_metadatas_desc_twitter">Twitter</entry>
+	<entry code="cms_module_metadatas_desc_twitter_title">Titre</entry>
+	<entry code="cms_module_metadatas_desc_twitter_card">Résumé</entry>
+	<entry code="cms_module_metadatas_desc_twitter_description">Description</entry>
+	<entry code="cms_module_metadatas_desc_twitter_image">Image</entry>
+	<entry code="cms_module_metadatas_desc_twitter_site">Site</entry>
+	
+	<entry code='cms_module_metadatas_view_django'>Vue Django</entry>
+	
+	<entry code='cms_module_metadatas_manage_title'>Définition de vos groupes de méta-données</entry>
+	<entry code='cms_module_metadatas_add_metadatas'>Ajouter un groupe de méta-données</entry>
+	<entry code='cms_module_metadatas_group_name'>Nom du groupe de méta-données</entry>
+	<entry code='cms_module_metadatas_group_prefix'>Préfixe de construction des méta-données</entry>
+	<entry code='cms_module_metadatas_group_separator'>Séparateur de construction des méta-données</entry>
+	<entry code='cms_module_metadatas_group_template'>Template de groupe</entry>
+	<entry code='cms_module_metadatas_replace'>Remplacer si existant dans la page</entry>
+	<entry code='cms_module_metadatas_group_add_metadata'>Ajouter une méta-donnée :</entry>
+	<entry code='cms_module_metadatas_group_bt_add_line'>+</entry>
+	<entry code='cms_module_metadatas_group_edit_metadata'>Modifier</entry>
+	<entry code='cms_module_metadatas_group_key_metadata'>Clé</entry>
+	<entry code='cms_module_metadatas_group_label_metadata'>Label</entry>
+	<entry code='cms_module_metadatas_group_desc_metadata'>Description</entry>
+	<entry code='cms_module_metadatas_group_default_template_metadata'>Template Django par défaut</entry>
+	<entry code='cms_module_metadatas_group_add_button_metadata'>Ajouter</entry>
+	<entry code='cms_module_metadatas_group_modify_button_metadata'>Modifier</entry>
+	<entry code='cms_module_metadatas_group_edit_button_metadata'>Editer</entry>
+	<entry code='cms_module_metadatas_group_delete_button_metadata'>Supprimer</entry>
+	<entry code='cms_module_metadatas_group_delete_metadatas'>Etes-vous sur de vouloir supprimer ce groupe de méta-données ?</entry>
+	<entry code='cms_module_metadatas_manage_form_advertisements'>NB : Toutes les modifications du tableau sont automatiquement enregistrées</entry>
+	
+</XMLlist>

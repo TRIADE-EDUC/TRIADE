@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- Mimetypes supportés par la classe
+****************************************************************************************
+© 2002-2010 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: manifest.xml,v 1.2 2018-06-22 09:55:45 ngantier Exp $ -->
+
+<manifest name="epub">
+	<desc msg="Lecture des fichiers epub"/>
+	<screenshoot url="images/epub.class.png"></screenshoot>
+	<mimetypes>
+		<mimetype name="application/epub+zip"/>
+		<mimetype name="application/octet-stream"/>
+	</mimetypes>
+</manifest>

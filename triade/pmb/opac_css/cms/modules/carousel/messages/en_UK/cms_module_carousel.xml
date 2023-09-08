@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le module Article
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_carousel.xml,v 1.1 2015-06-16 10:24:26 pmbs Exp $ -->
+
+<XMLlist>
+	<entry code='cms_module_common_datasource_shelve'>Shelf</entry>
+	<entry code='cms_module_carousel_view_carousel'>Default view</entry>
+	<entry code='cms_module_carousel_datasource_notices'>Source of data by default</entry>
+</XMLlist>

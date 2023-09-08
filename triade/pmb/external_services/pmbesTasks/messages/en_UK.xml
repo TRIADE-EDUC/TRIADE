@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- messages localisés en français pour les méthodes de classe pmbesTasks
+****************************************************************************************
+© 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: en_UK.xml,v 1.2 2015-06-26 08:03:41 pmbs Exp $ -->
+
+<!DOCTYPE XMLlist SYSTEM "../../../includes/XMLlist.dtd" >
+<XMLlist>
+<!-- 
+pmbesTasks
+-->  
+  <entry code="Tasks_functions_description">Functions related to the scheduler</entry> 
+<!-- 
+timeoutTasks
+-->  
+  <entry code="timeoutTasks_description">Checks the time-out of ongoing tasks</entry>  
+  <entry code="timeoutTasks_output_description"></entry>
+  <entry code="timeoutTasks_result"></entry> 
+<!-- 
+checkTasks
+-->  
+  <entry code="checkTasks_description">Checks the ongoing processes</entry>  
+  <entry code="checkTasks_output_description"></entry>
+  <entry code="checkTasks_result"></entry> 
+<!-- 
+runTasks
+-->
+  <entry code="runTasks_description">Checks the tasks to do</entry>  
+  <entry code="runTasks_source_id">Identifier of PMB's outgoing connector</entry>
+  <entry code="runTasks_output_description"></entry>
+  <entry code="runTasks_result">Table of tasks to do</entry>
+<!-- 
+listTasksPlanned
+-->
+  <entry code="listTasksPlanned_description">List of scheduled tasks</entry>  
+  <entry code="listTasksPlanned_output_description"></entry>
+  <entry code="listTasksPlanned_result">Returns the scheduled tasks</entry> 
+<!-- 
+listTypesTasks
+-->
+  <entry code="listTypesTasks_description">List of types of tasks</entry>  
+  <entry code="listTypesTasks_output_description"></entry>
+  <entry code="listTypesTasks_result">Returns the types of tasks</entry> 
+<!-- 
+getInfoTaskPlanned
+--> 
+  <entry code="getInfoTaskPlanned_description">Information about the scheduling of a task</entry>  
+  <entry code="getInfoTaskPlanned_input_description"></entry>
+  <entry code="getInfoTaskPlanned_planificateur_id">Identifier of the scheduling of the task</entry>
+  <entry code="getInfoTaskPlanned_output_description"></entry>
+  <entry code="getInfoTaskPlanned_result">Returns the information on the scheduling of a task</entry>  
+
+</XMLlist>

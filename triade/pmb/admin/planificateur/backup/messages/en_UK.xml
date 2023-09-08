@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- messages localisés en français pour la sauvegarde
+****************************************************************************************
+© 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: en_UK.xml,v 1.1 2015-06-15 12:55:34 pmbs Exp $ -->
+
+<XMLlist>
+	<entry code="planificateur_backup_choice">Selection of the backup set(s)</entry>
+	<entry code="sauv_unknown_sets">No set chosen</entry>
+	<entry code="sauv_sets">Backup set(s)</entry>
+	<entry code="sauv_launch">Backup of the set</entry>
+	<entry code="backup_no_proceed">No processing for the following backup sets</entry>
+	<entry code="backup_stopped">Stopped tasks</entry>
+	<entry code="backup_abort">Cancelled task</entry>
+	<entry code="backup_delete">Deletion of the backup</entry>
+	<entry code="backup_delete_error">Backup not deleted</entry>
+</XMLlist>

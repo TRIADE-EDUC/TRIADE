@@ -1,0 +1,10 @@
+﻿<h2>Basit arama</h2>
+<p><strong>Aramak istediğiniz terim veya terimleri yazınız ve <i>Ara</i>ya tıklayınız.</strong></p>
+<hr />
+
+<p>Cins isim veya özel isim girebilirsiniz.</p>
+<p>Harflere getirilen <b>diyakritik imler</b> (çengel, çift nokta, aksan, ...), <b>noktalama işaretleri</b> (!, ', ...), <b>harf ve sayı dışındaki karakterler</b> (%, €, ...) ve <b>ı harfi</b> arama esnasında <b>kayda alınmaz</b>. Aramak istediğiniz terim bunlardan birini içeriyorsa, tırnak içine alınız (<i>ör. "ılık", "T.C.D.D.", "R&B", ...</i>).*</p>
+<p>Başlık, yazar, yayıncı, dizi, altdizi, konu başlıkları (eş ve karşıt anlamlı hiyerarşik terimler dizini), sınıflandırmalar (<i>ör. Dewey</i>), etiketler (anahtar kelimeler), özet ve notlar alanlarında arama yapabilirsiniz. Bunun için, <i>Ara</i>ya tıklamadan önce ilgili kutu veya kutuları işaretleyiniz.</p>
+
+<hr />
+<p>* Arama motoru hakkında daha detaylı bilgi için <a href="help.php?whatis=expbool">Mantıksal arama ve Boole işleçleri</a> sayfasını okuyabilirsiniz.</p>

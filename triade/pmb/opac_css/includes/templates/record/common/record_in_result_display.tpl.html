@@ -1,0 +1,311 @@
+<!-- $Id: record_in_result_display.tpl.html,v 1.61 2019-02-18 14:06:31 ngantier Exp $ -->
+
+<div id="record_container_{{ record.id }}" class="parentNotCourte uk-clearfix">
+	{% block record_case_traitement %}
+		{% if global.cart_aff_case_traitement %}
+			<input type='checkbox' class='checkboxNot' value='{{ record.id }}' name='notice[]'/>
+		{% endif %}
+	{% endblock %}
+
+ 	{% block record_picture_tdoc %}
+		<div class="vignetteimgNot">
+			{% block record_picture %}
+					{% if record.get_picture_url %}
+						<!-- Vignette de la notice -->
+						<div class="vignetteDocNot">
+							<img class="vignetteNot" src= "{{ record.get_picture_url }}" alt="{% if record.niveau_biblio == 'b' %}{{ record.bul_info.title }}, {% endif %}{% if record.picture_title %}{{record.picture_title}}{% else %}{{ record.tit1 }}{% endif %}" />
+						</div>						
+					{% endif %}	
+			{% endblock %}
+			
+			{% block record_tdoc %}
+				<p class="typeDoc_notCourte">
+					{% if record.niveau_biblio == 'm' %}
+						{{ record.tdoc }}
+					{% else %}
+						{{ record.biblio_doc }}{% if record.biblio_doc != record.tdoc %} : {{ record.tdoc }}{% endif %}
+					{% endif %}
+				</p>
+			{% endblock %} 
+		</div>
+	{% endblock %}
+	
+	{% block record_content %}
+			<!-- Contenu de la notice -->
+			<div class="notice_corps">
+				<div class="descr_notice_corps">
+					{% block record_coins_span %}
+						{{ record.display_coins_span }}
+					{% endblock %}
+					
+					{% block record_tit1 %}
+						<div class="title_notCourte">
+							<h3><a href="{{ record.permalink }}">
+								{% block record_serie %}
+									{% if record.serie.id %}
+										<!-- Serie -->
+										<span class="serie_notCourte">{{ record.serie.name }}{% if record.tnvol %}, {{ record.tnvol }}. {% endif %}</span>
+									{% else %}
+										{% if record.tnvol %}
+											<span class="serie_notCourte">{{ record.tnvol }}. </span>
+										{% endif %}
+									{% endif %}
+								{% endblock %}
+								
+								{% block record_title %}
+									<span class="tit1_notCourte">{{ record.tit1 }}{% if record.tit4 %} : {{record.tit4}}{% endif %}</span>
+								{% endblock %}
+							</a></h3>
+						</div>
+					{% endblock %}
+					
+					{% block record_infoCompl %}
+						<div class="infoCompl_notCourte">
+							{% block record_responsabilites %}
+								{% for auteur in record.responsabilites.auteurs %}
+									{% if loop.first %}
+										<span class="auteur_notCourte">
+									{% else %}
+										 ; 
+									{% endif %}
+										<a href="{{ record.liens_opac.lien_rech_auteur | replace '!!id!!' auteur.id }}">{{ auteur.auteur_titre }}</a>{% if auteur.fonction_aff %}, {{ auteur.fonction_aff }}{% endif %}{% if auteur.qualification %} ({{ auteur.qualification }}){% endif %}
+									{% if loop.last %}
+										</span>
+									{% endif %}
+								{% endfor %}
+							{% endblock %}
+							
+							{% block record_publishers %}
+								{% if record.publishers.0.isbd %}
+									 {% if record.responsabilites.auteurs %}
+									 	{% if record.responsabilites.auteurs.0.id %} | {% endif %}
+									 {% endif %}
+									 <span class="editeur_notCourte"><a href="{{ record.liens_opac.lien_rech_editeur | replace '!!id!!' record.publishers.0.id }}">{{ record.publishers.0.isbd }}</a></span>
+								{% endif %}
+							{% endblock %}
+							
+							{% block record_collection %}
+								{% if record.collection.isbd %}
+									{% if record.responsabilites.auteurs %}
+										{% if record.responsabilites.auteurs.0.id %} | {% else %}{% if record.publishers.0.isbd %} | {% endif %}{% endif %}
+									{% endif %}	
+									 <span class="editeur_notCourte"><a href="{{ record.liens_opac.lien_rech_collection | replace '!!id!!' record.collection.id }}">{{ record.collection.isbd }}</a></span>
+								{% endif %}
+							{% endblock %}
+							
+							{% block record_bul_info %}{% endblock %}
+							
+							{% block record_year %}
+								{% if record.year %}
+									{% if record.responsabilites.auteurs %}
+										{% if record.responsabilites.auteurs.0.id %} | {% else %}{% if record.publishers.0.isbd %} | {% else %}{% if record.collection.isbd %} | {% endif %}{% endif %}{% endif %}
+									{% endif %}
+									 <span class="annee_notCourte">{{ record.year }}</span>
+								{% endif %}
+							{% endblock %}
+						</div>
+					{% endblock %}
+					
+					{% block record_resume %}
+						{% if record.resume %}
+							<div class="resume_notCourte">
+								<span>{{ record.resume | strip_tags  | limitstring 250 }}</span>
+							</div>
+						{% endif %}
+					{% endblock %}
+				</div>
+				{% block record_permalink %}
+					<!-- Plus d'informations -->
+					<div class="plusN">
+						<a href="{{ record.permalink }}">{{ msg.location_more_info }}</a>
+					</div>
+				{% endblock %}
+			</div>
+	{% endblock %}
+	
+	{% block record_aside_content %}
+		<div class="panier_avis_notCourte">
+			{% block record_new %}
+				{% if record.new %}
+					<!-- Statut particulier (nouveaute)-->
+					<div class="statutPartN">
+						<span class="imgStatutPartN"><img class="imgStatutPartN" src="{{ img.new_w.png }}" style="border:0px" alt="{{ msg.record_display_new }}"/></span><span class="StatutPartN">{{ msg.record_display_new }}</span>
+					</div>
+				{% endif %}
+			{% endblock %}
+			
+			{% block record_cart%}
+				{% if record.cart_allow %}
+					{% if global.lvl != 'show_cart' %}
+						<!-- Ajouter au panier -->
+						<div class="onglet_basketNoticeCourte ui-panel-basket-item">
+							<div id="record_container_{{ record.id }}_cart" class="ui-flex ui-flex-middle">
+								{% if record.in_cart %}
+									<a href="cart_info.php?action=remove&id={{ record.id }}&amp;header={{ record.tit1 | urlencode }}" title="{{ msg.notice_basket_remove }}" target="cart_info" class="img_basketNotCourte">
+										<span class="icon_basketNot"><img src="{{ img.record_in_basket.png }}" style="border:0px" alt="{{ msg.notice_basket_remove }}" /></span>
+									</a>
+									<a href="./index.php?lvl=show_cart" class="label_basketNotCourte" title="{{ msg.notice_title_basket_exist }}">
+										<span class="label_basketNot">{{ msg.notice_title_basket_exist }}</span>
+									</a>
+								{% else %}
+									<a href="cart_info.php?id={{ record.id }}&amp;header={{ record.tit1 | urlencode }}" target="cart_info" class="img_basketNotCourte" title="{{ msg.record_display_add_to_cart }}" >
+										<span class="icon_basketNot"><img src="{{ img.white_basket.png }}" style="border:0px" alt="{{ msg.record_display_add_to_cart }}"/></span>
+									</a>
+									<a href="cart_info.php?id={{ record.id }}&amp;header={{ record.tit1 | urlencode }}" target="cart_info" class="label_basketNotCourte" title="{{ msg.record_display_add_to_cart }}" >
+										<span class="label_basketNot">{{ msg.record_display_add_to_cart }}</span>
+									</a>
+								{% endif %}
+							</div>
+						</div>
+					{% endif %}
+				{% endif %}		
+			{% endblock %}	
+
+			{% block record_avis %}
+				{% if record.avis_allowed %}
+					<!-- Avis sur la notice -->
+					<div class="avisNCourte">
+						<span class="imgComment"><img class="imgComment" src="{{ img.comment_w.png }}" style="border:0px" alt="Commentaires"/></span><span class="only_stars">{{ record.display_avis }}</span>
+					</div>
+				{% endif %}
+			{% endblock %}
+			
+			{% block record_tag %}
+				{% if record.tag_allowed %}
+					<!--  Tag sur la notice -->
+					<div class="tagsNCourte">
+						<span class="imgTag"><img class="imgTag" src="{{ img.tag_w.png }}" style="border:0px" alt="Tags"/></span><span class="tagsN">{{ record.display_tag }}</span>
+					</div>
+				{% endif %}
+			{% endblock %}
+	
+			{% block record_suggest %}
+				{% if record.sugg_allowed %}
+					<!--  Suggestion sur la notice -->
+					<div class="suggestNCourte">
+						<span class="imgSuggest"><img class="imgSuggest" src="{{ img.suggest_w.png }}" style="border:0px" alt="Suggestions"/></span><span class="suggestsN">{{ record.display_suggestion }}</span>
+					</div>
+				{% endif %}
+			{% endblock %}
+			
+			{% block record_liste_lecture %}	
+				{% if record.liste_lecture_allowed %}
+					<!--  Associer la notice a une liste de lecture -->
+					<div class="listeLectureNCourte">
+						{{ record.display_liste_lecture }}
+					</div>
+				{% endif %}
+			{% endblock %}
+			
+			{% block record_lien %}
+				{% if record.lien %}
+				    <div class="lienNCourte avisNCourte">
+					<span class="imgLienN imgComment"><img src="{{img.globe_w.png}}" alt="open_link_url_notice"/></span>
+					<span class="lienN "><a href="{{record.lien}}" target="_blank">{{msg.lien_start | replace, " : ",""}}</a></span>
+				    </div>
+				{% endif %}
+			{% endblock %}
+					
+			{% block record_docnum %}
+				<!-- Documents numeriques -->
+				{% if record.explnums_datas.nb_explnums %}
+					{{ record.explnums_datas.visionneuse_script }}
+					{% if record.explnums_datas.nb_explnums == 1 %}
+						{% if record.explnums_datas.explnums.0.consultation %}
+							{{ record.explnums_datas.explnums.0.access_datas.script }}
+							<div class="docnumNCourte">
+								<span class="imgDocNum"><img src="{{ img.doc_num_w.png }}" style="border:0px" alt="Document numeriques"/></span>
+								<span class="docNumN">
+									<a href="{{ record.explnums_datas.explnums.0.access_datas.href }}" target="_blank" title="{{ msg.explnum_singular_label }}" {% if record.explnums_datas.explnums.0.access_datas.onclick %}onclick="{{ record.explnums_datas.explnums.0.access_datas.onclick }}"{% endif %}>
+										{{ msg.explnum_singular_label }}
+									</a>
+								</span>
+							</div>
+						{% else %}
+							<div class="docnumNCourte docnumNCourtePermalink">
+								<span class="imgDocNum"><img src="{{ img.doc_num_w.png }}" style="border:0px" alt="Document numeriques"/></span>
+								<span class="docNumN">
+									<a href="{{ record.explnums_datas.explnums.0.access_datas.href }}" target="_blank" title="{{ msg.explnum_singular_label }}" {% if record.explnums_datas.explnums.0.access_datas.onclick %}onclick="{{ record.explnums_datas.explnums.0.access_datas.onclick }}"{% endif %}>
+										{{ msg.explnum_singular_label }}
+									</a>
+								</span>
+							</div>
+						{% endif %}
+					{% else %}
+						<div class="docnumNCourte docnumNCourtePermalink">
+							<span class="imgDocNum"><img src="{{ img.doc_num_w.png }}" style="border:0px" alt="Document numeriques"/></span>
+							<span class="docNumN"><a href="{{ record.permalink }}#docnum" title="{{ msg.explnum }}">{{ msg.explnum }}</a></span>
+						</div>
+					{% endif %}
+				{% endif %}
+			{% endblock %}
+		</div>
+		<div class='clear'></div>
+	{% endblock %}
+
+	{% block record_footer %}
+		<div class="footer_notice">
+			{% block record_resa_availability %}
+				{% if record.availability.availability != 'none' %}
+					{% if record.availability.availability != 'empty' %}
+						{% block record_resa %}
+							<!-- Bouton de reservation -->
+							{% if record.resas_datas.flag_resa_visible %}
+								{% if record.resas_datas.flag_resa_possible %}
+									{% if !record.resas_datas.flag_max_resa %}
+										<div id="resa_notice-{{ record.id }}" class="resa_notice">
+											<h3>
+												<a href="{{ record.resas_datas.href }}" onclick="{{ record.resas_datas.onclick }}" id="bt_resa_NotCourte-{{ record.id }}" class="bt_resa_NotCourte">{{ msg.record_display_expl_reserve }}</a>
+											</h3>
+										</div>
+									{% endif %}
+								{% endif %}
+							{% endif %}
+						{% endblock %}
+					
+						{% block record_availability %}
+							<!-- Voir les disponibilites -->
+							<div class="dispoLien_notice">
+								<a href="{{ record.permalink }}#zone_exemplaires">
+									{% if record.availability.availability == 'available' %}
+										<span class="notice_dispo">{{ msg.available }}</span>
+									{% else %}
+										{% if record.availability.next_return %}
+                                       		<span class="notice_deRetour">{{ msg.record_display_expl_out }}{{ record.availability.next_return | format 'd M Y' }}</span>
+                                        {% else %} 
+											{% if record.availability.availability == 'no_lendable' %}
+												<span class="notice_no_lendable">{{ msg.record_display_no_lendable }}</span>
+											{% else %}
+												{% if record.availability.availability == 'reserved' %}
+													<span class="notice_reservee">{{ msg.expl_reserve }}</span>
+												{% else %}
+													{% if record.availability.availability == 'unavailable' %}
+														<span class="notice_nonDispo">{{ msg.record_display_expl_unavailable }}</span>
+													{% endif %}
+												{% endif %}
+											{% endif %}
+										{% endif %}
+									{% endif %}
+								</a>
+							</div>
+						{% endblock %}
+					{% endif %}
+				{% endif %}
+			{% endblock %}
+		</div>
+	{% endblock %}
+	
+	{% block record_expl %}
+		{% if record.external_parameters.expl %}
+			<!-- Sortie externe - Exemplaires -->
+			{% if record.availability.availability != 'none' %}
+				<!-- Exemplaire -->
+				<div id="zone_exemplaires-{{ record.id }}">
+					{{ record.display_expl_responsive_list }}
+				</div>
+			{% endif %}
+		{% endif %}
+	{% endblock %}
+	
+	<div class='clear'></div>
+</div>

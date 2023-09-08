@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le module Article
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_common_datasource_records.xml,v 1.4 2015-01-20 09:08:03 arenou Exp $ -->
+
+<XMLlist>
+	<entry code="cms_module_common_selector_shelve">Sélecteur manuel d'une étagère</entry>
+	<entry code="cms_module_common_selector_type_article">Depuis un type de contenu d'article</entry>
+	<entry code="cms_module_common_selector_type_section">Depuis un type de contenu de rubrique</entry>
+	<entry code="cms_module_common_selector_type_article_generic">Sélecteur par la valeur d'un champ générique d'article</entry>
+	<entry code="cms_module_common_selector_type_section_generic">Sélecteur par la valeur d'un champ générique de rubrique</entry>	
+</XMLlist>

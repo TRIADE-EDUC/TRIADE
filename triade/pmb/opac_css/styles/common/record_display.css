@@ -1,0 +1,660 @@
+@charset "utf-8";
+/* -------------------------------------------------------*/
+/* -------------------------------------------------------*/
+/*                      Glyphe Icons                      */
+/* -------------------------------------------------------*/
+/* -------------------------------------------------------*/
+#resa_notice a:before,
+.actions_last_pageNot span:before,
+.plusN a:before,
+.avisNCourte a:before,
+.statutPartN span:before {
+	font-family: FontAwesome;
+	font-weight: normal;
+	font-style: normal;
+	display: inline-block;
+	text-decoration: inherit;
+	-webkit-font-smoothing: antialiased;
+}
+/* ---------------------------------------------------------------------*/
+/* ---------------------------------------------------------------------*/
+/*          Notice reduite     record_in_result_display                 */
+/* ---------------------------------------------------------------------*/
+/* ---------------------------------------------------------------------*/
+
+
+/* ---------------------------------------------------------*/
+/*                        Grid Layout                       */
+/* ---------------------------------------------------------*/
+.asideContentNot {
+	float: left;
+	margin-right: 15px;
+	width: 26%;
+}
+
+.vignetteimgNot {
+	margin-bottom: 10px;
+}
+
+.parentNotCourte .vignetteimgNot {
+	width: 13%;
+	float: left;
+	margin-right: 2.5%;
+}
+
+.notice_corps {
+	width: 56%;
+	float: left;
+}
+
+.panier_avis_notCourte {
+	margin-left: 74%;
+}
+/* ---------------------------------------------------------*/
+/*                      Notice reduite                      */
+/* ---------------------------------------------------------*/
+.parentNotCourte {
+	margin: 0px auto;
+	padding: 20px 5px 15px;
+	background-color: #fff;
+	border-bottom: 1px solid #e7e7e7;
+}
+
+.panier_avis_notCourte .text_search0, .panier_avis_notCourte .text_search1, .panier_avis_notCourte .text_search2, .panier_avis_notCourte .text_search3, .panier_avis_notCourte .text_search4, .panier_avis_notCourte .text_search5, .footer_notice .text_search0, .footer_notice .text_search1, .footer_notice .text_search2, .footer_notice .text_search3, .footer_notice .text_search4, .footer_notice .text_search5, .plusN .text_search0, .plusN .text_search1, .plusN .text_search2, .plusN .text_search3, .plusN .text_search4, .plusN .text_search5 {
+    background-color: transparent;
+    text-decoration: none;
+    padding: 0px !important;
+}
+
+.avisNCourte a {
+    text-decoration: none;
+    color: #555252;
+    margin-left: 5px;
+}
+/* ---------------------------------------------------------*/
+/*                        Picture                           */
+/* ---------------------------------------------------------*/
+.vignetteDocNot {
+	text-align: left;
+	overflow: hidden;
+}
+
+.vignetteNot {
+	width: initial;
+	height: auto;
+	border: solid 1px #E6E6E6;
+	max-width:100%;
+}
+.parentNotCourte .vignetteNot{
+	width: 100%;
+}
+/* ---------------------------------------------------------*/
+/*                     Titre   Notice                       */
+/* ---------------------------------------------------------*/
+.title_notCourte h3 {
+	margin-bottom: 10px;
+	font-size: 1.35em;
+	padding-top: 3px;
+}
+
+.title_notCourte h3 a {
+	text-decoration: none;
+	color: inherit;
+}
+/* ---------------------------------------------------------*/
+/*                     Notice summary                       */
+/* ---------------------------------------------------------*/
+.resume_notCourte span {
+	color: #666666;
+	line-height: 16px;
+	font-style: italic;
+}
+
+.infoCompl_notCourte {
+	margin-bottom: 10px;
+	font-weight: bold;
+}
+
+.infoCompl_notCourte span {
+	color: #666666;
+	font-size: 90%;
+}
+/* ---------------------------------------------------------*/
+/*                       Notice complet                     */
+/* ---------------------------------------------------------*/
+.plusN {
+	margin: 5px 0;
+}
+
+.plusN a {
+	text-decoration: none;
+	font-weight: bold;
+}
+
+.plusN a:before {
+	content: "\f196";
+	font-size: 120%;
+	vertical-align: bottom;
+	margin-right: 7px;
+	text-align: center;
+}
+/* ---------------------------------------------------------*/
+/*                      Avis commentaire                    */
+/* ---------------------------------------------------------*/
+span.imgComment,
+span.imgStatutPartN,
+span.imgDocNum {
+	background-color: #787878;
+	padding: 6px 8px;
+	display: inline-block;
+}
+
+span.imgComment img.imgComment,
+span.imgStatutPartN img.imgStatutPartN,
+.imgDocNum>img{
+	vertical-align: middle;
+	line-height: 30px;
+	height: 18px;
+}
+
+.avisNCourte>a>img,
+.imgStatutPartN>a>img {
+	vertical-align: inherit;
+	vertical-align: text-bottom;
+}
+
+.avisNCourte2 {
+	text-align: right;
+	margin-top: 15px;
+}
+
+.avisNCourte2 a {
+	text-decoration: none;
+	font-style: italic;
+	font-size: 90%;
+}
+
+.avisN a {
+	text-decoration: none;
+	font-weight: 500;
+	color: #525252;
+	display: inline-block;
+	vertical-align: text-bottom;
+	line-height: 29px;
+}
+
+.avisNCourte a {
+	text-decoration: none;
+	color: #555252;
+	margin-left: 5px;
+}
+a.listeLectureN:hover{
+	text-decoration: none;	
+}
+a.listeLectureN:hover span{
+	text-decoration: underline;	
+	
+}
+.avisNCourte a:before {
+}
+
+i.fa.fa-clipboard {
+    font-size: 20px;
+    color: #fff;
+}
+
+span.img_permalink i {
+    vertical-align: middle;
+}
+
+span.img_permalink,
+span.imgTag,
+span.imgSuggest,
+.listeLectureN a span:first-child,
+span.ExtnotCom.imgListeLecture {
+	background-color: #787878;
+	display: inline-block;
+	padding: 3px 8px;
+}
+span.imgTag img,
+img.imgSuggest {
+	vertical-align:middle;
+}
+span.tagsN,
+span.suggestsN,
+span.docNumn,
+span.docNumN,
+span.listeLectureN{
+	padding: 0px 10px;
+	display: inline;
+}
+.tagsN a,
+.suggestsN a,
+.listeLectureN a,
+.docnumNCourtePermalink a,
+span.docNumN a,
+a.listeLectureN span{
+	display: inline;
+	color: #525252;
+}
+/* ---------------------------------------------------------*/
+/*                            Panier                        */
+/* ---------------------------------------------------------*/
+.onglet_basketNotCourte .img_basketNotCourte img {
+	background-color: #787878;
+	padding: 7px;
+	margin-right: 7px;
+	vertical-align: middle;
+}
+
+.onglet_basketNotCourte .img_basketNotCourte {
+	text-decoration: none;
+	background-color: inherit;
+	color: #555252;
+	vertical-align: top;
+	line-height: 30px;
+}
+a.img_basketNotCourte:hover{
+	text-decoration:underline;
+}
+.onglet_basketNotCourte, 
+.avisNCourte, 
+.statutPartN,
+.tagsNCourte,
+.suggestNCourte,
+.listeLectureNCourte,
+.docnumNCourte,
+div.tagsN,
+div.suggestN,
+div.listeLectureN{
+	background-color: #e9ebee;
+	margin-bottom: 10px;
+	line-height: 30px;
+}
+
+span.StatutPartN {
+	text-decoration: none;
+	background-color: #e9ebee;
+	padding: 8px 8px 7px 0;
+	color: #555252;
+	margin-left: 5px;
+}
+
+.statutPartN2 {
+	margin-top: 15px;
+}
+/* ---------------------------------------------------------*/
+/*                          Reserver                        */
+/* ---------------------------------------------------------*/
+#resa_notice {
+	float: right;
+}
+
+#resa_notice h3 {
+	border-bottom: none;
+}
+
+#resa_notice a {
+	text-decoration: none;
+	color: #5CB32A;
+}
+
+#resa_notice a:before {
+	content: "\f064";
+	font-size: 120%;
+	vertical-align: middle;
+	margin-right: 7px;
+	text-align: center;
+}
+
+.dispoLien_notice a {
+	text-decoration: none;
+	font-size: 1.17em;
+	font-weight: 600;
+}
+/* ---------------------------------------------------------------------*/
+/*                              Notice Footer                           */
+/* ---------------------------------------------------------------------*/
+.footer_notice {
+	margin: 15px 0 5px 0;
+}
+/* ---------------------------------------------------------------------*/
+/* ---------------------------------------------------------------------*/
+/*                 Notice Full  record_extended_display                 */
+/* ---------------------------------------------------------------------*/
+/* ---------------------------------------------------------------------*/
+
+/* ---------------------------------------------------------*/
+/*                        Grid Layout                       */
+/* ---------------------------------------------------------*/
+#noticeNot {
+	max-width: 98%;
+	margin: 0px auto;
+	padding: 0;
+}
+
+#blocNotice_descr {
+	padding: 0px;
+	margin-bottom: 30px;
+}
+
+/* ---------------------------------------------------------*/
+/*                    Enrichissisement                      */
+/* ---------------------------------------------------------*/
+#blocNotice_descr ul.onglets_isbd_publicNot {
+	width: 100%;
+	margin-bottom: 15px;
+	padding: 0;
+	position: static;
+}
+
+#blocNotice_descr ul.onglets_isbd_publicNot:after {
+	content: "";
+	display: block;
+	clear: both;
+}
+
+#blocNotice_descr ul.onglets_isbd_publicNot .isbd_public_active a {
+	background: #787878;
+}
+
+#blocNotice_descr ul.onglets_isbd_publicNot .isbd_public_active a span {
+	color: #ffffff;
+}
+
+#blocNotice_descr ul.onglets_isbd_publicNot li a {
+	display: block;
+	padding: 0px 9px;
+	text-decoration: none;
+	color: #565656;
+	border: 0;
+}
+
+#blocNotice_descr ul.onglets_isbd_publicNot li {
+	display: block;
+	float: left;
+	margin: 10px 6px 0px 0;
+	position: relative;
+	text-align: center;
+	color: #666666;
+	border-bottom: none;
+	min-height: 30px;
+	line-height: 30px;
+	background-color: #E0E2E6;
+	min-width: 24%;
+}
+
+#blocNotice_descr ul.onglets_isbd_publicNot li:hover {
+	background: #787878;
+}
+
+#blocNotice_descr ul.onglets_isbd_publicNot li:hover a span {
+	color: #ffffff;
+}
+
+#blocNotice_descr ul.onglets_isbd_publicNot li img {
+	position: absolute;
+	right: 3%;
+	top: 20%;
+	background-color: #fff;
+	border-radius: 50%;
+	padding: 2px;
+}
+/* ---------------------------------------------------------*/
+/*                           Panier                         */
+/* ---------------------------------------------------------*/
+.onglet_basketNot {
+	float: none;
+	/* background-color: #E9EBEE; */
+	margin: 0px 0px 10px 0px;
+	clear:both;
+}
+
+.onglet_basketNot .img_basketNot img {
+	background-color: #787878;
+	padding: 7px 8px;
+	vertical-align: middle;
+	margin-right: 7px;
+}
+
+.onglet_basketNot .img_basketNot {
+	text-decoration: none;
+	padding: 0px 0px 0px 0;
+	color: #555252;
+	vertical-align: top;
+	line-height: 29px;
+	display: block;
+	background-color: #E9EBEE;
+}
+
+.onglet_basketNotCourte2 {
+	text-align: right;
+}
+/* ---------------------------------------------------------*/
+/*                         Notice content                   */
+/* ---------------------------------------------------------*/
+.notice_contenu {
+	margin-left: 23%;
+	overflow: hidden;
+}
+
+.descr_notice {
+	width: 100%;
+}
+
+.descr_notice td {
+	padding: 4px;
+	min-width: 110px;
+}
+
+.labelNot {
+	vertical-align: top;
+}
+/* ---------------------------------------------------------*/
+/*                     Titre   Notice                       */
+/* ---------------------------------------------------------*/
+#exempl_titleNot {
+	font-weight: bold;
+	font-size: 1.35em;
+}
+
+#exempl_titleNot {
+	font-weight: 600;
+	font-size: 1.2em;
+}
+/* ---------------------------------------------------------*/
+/*                       Notice complet                     */
+/* ---------------------------------------------------------*/
+.lienP a {
+	font-weight: 400;
+	text-decoration: none;
+	color: #525252;
+}
+
+.lienP {
+	margin: 10px 0px 5px;
+	background-color: #E9EBEE;
+}
+/* ---------------------------------------------------------*/
+/*                      Avis commentaire                    */
+/* ---------------------------------------------------------*/
+.avisN {
+	background-color: #E9EBEE;
+}
+
+span.avisN {
+	margin-left: 5px;
+	display: inline-block;
+}
+
+.asideContentNot > .avisN > span.avisN img.img_star_avis {
+	vertical-align: sub;
+}
+
+.avisN a+a {
+	margin-left: 7px;
+}
+/* ---------------------------------------------------------*/
+/*                     exemplaires                          */
+/* ---------------------------------------------------------*/
+#zone_exemplaires {
+	margin-bottom: 15px;
+}
+
+#zone_exemplaires h3 span {
+	text-transform: uppercase;
+}
+
+.exemplairesNot th {
+	background-color: #AB0101;
+	color: #ffffff;
+	line-height: 22px;
+	text-align: left;
+}
+
+.exemplairesNot th,
+.exemplairesNot td {
+	padding: 0px 5px;
+}
+/* ---------------------------------------------------------*/
+/*                      Reservation                         */
+/* ---------------------------------------------------------*/
+#bt_resa_NotCourte {
+	font-weight: 600;
+}
+
+
+/* ---------------------------------------------------------*/
+/*                   Statut de la notice                    */
+/* ---------------------------------------------------------*/
+#main_hors_footer .statutNot {
+    margin: 5px 0 10px;
+}
+
+/*Flex display                        
+--------------------------------------------------------------------------------------------*/
+div.lienP,
+div[class='onglet_basketNotCourte'],
+div[class='avisNCourte'],
+div[class='tagsNCourte'],
+div[class='listeLectureNCourte'] a,
+div[class='suggestNCourte'],
+div[class='onglet_basketNot'] a.img_basketNot,
+div[class='tagsN'],
+div[class='suggestN'],
+div[class='docnumNCourte docnumNCourtePermalink'],
+div[class='docnumNCourte'],
+div[class='listeLectureN'] a{
+	background-color: #787878;
+}
+
+div.lienP, 
+div[class='onglet_basketNotCourte'] a,
+div[class='avisNCourte'],
+div[class='tagsNCourte'],
+div[class='listeLectureNCourte'] a,
+div[class='suggestNCourte'],
+div[class='docnumNCourte'],
+div[class='onglet_basketNot'] a.img_basketNot,
+div[class='tagsN'],
+div[class='suggestN'],
+div[class='docnumNCourte docnumNCourtePermalink'],
+div[class='listeLectureN'] a{
+	display:-moz-flex;
+	display:-ms-flex;
+	display:-webkit-flex; /* Safari */
+	-moz-flex:1 1 auto;  /* IE 10 */
+	-webkit-flex: 1 1 auto;  /* Safari 6.1+ */
+	-ms-flex:1 1 auto;  /* IE 10 */
+	align-items: center;
+	-webkit-align-items: center;
+	display: flex;
+	flex: 1 1 auto;
+	line-height: 23px;
+}
+div[class='onglet_basketNotCourte'] a span:nth-child(1){
+	background-color: #787878;
+}
+div[class='avisNCourte'] span:nth-child(1){
+	padding: 3px 8px;
+}
+div[class='onglet_basketNotCourte'] a span:nth-child(1) img,
+div[class='avisNCourte']  span:nth-child(1) img,
+a[class='img_basketNot']  span:nth-child(1) img{
+	margin-right: 0;
+}
+
+.lienP span.label_permalink,
+div[class='onglet_basketNotCourte'] a span:nth-child(2),
+div[class='avisNCourte'] span:nth-child(2),
+div[class='tagsNCourte'] span:nth-child(2),
+div[class='suggestNCourte'] span:nth-child(2),
+div[class='listeLectureNCourte'] a span:nth-child(2),
+div[class='onglet_basketNot'] a span:nth-child(2),
+div[class='tagsN'] span:nth-child(2),
+div[class='suggestN'] span:nth-child(2),
+div[class='docnumNCourte docnumNCourtePermalink'] span:nth-child(2),
+div[class='docnumNCourte'] span:nth-child(2),
+div[class='listeLectureN'] a span:nth-child(2){
+	display:block;
+	background-color: #E9EBEE;
+	padding: 5px 7px 6px 7px;
+	padding-left: 7px;
+	-moz-flex: 1;
+	-webkit-flex: 1;
+	-ms-flex: 1;
+	flex: 1;
+	line-height: 25px;
+}
+/*------------------------------------------------------------------------------------------*/
+/*-------------------------------------------------768-------------------------------------*/
+/*------------------------------------------------------------------------------------------*/
+
+@media screen and (max-width: 767px) {
+	.asideContentNot,
+	.notice_contenu{
+		float:none;
+		width:auto;
+		margin: 10px auto;
+	}	
+}
+
+/*------------------------------------------------------------------------------------------*/
+/*--------------------------------------------Smart-----------------------------------------*/
+/*------------------------------------------------------------------------------------------*/
+
+@media screen and (max-width: 599px) {
+	.parentNotCourte .vignetteNot{
+		width:initial;		
+	}
+	.notice_contenu{
+		border-top:solid 2px;
+		margin-top: 20px;
+	}
+
+	.descr_notice,
+	.descr_notice tbody {
+        display: block;
+        margin-top: 10px;
+    }
+    .descr_notice tr {
+        display: table;
+        width: 100%;
+        text-align: left;
+    }
+    .descr_notice td  {
+		display: table-row;
+		width: 100%;
+    }
+    .descr_notice .labelNot{
+    	padding: 0;
+    	line-height: normal;
+    }
+    .descr_notice .labelNot>span{
+    	display:block;
+    	padding: 4px 7px;
+    	font-weight: 500;
+    	margin: 5px 0px;
+    	background-color: #efefef;
+    }   
+}

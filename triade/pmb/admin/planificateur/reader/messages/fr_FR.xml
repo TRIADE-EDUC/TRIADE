@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- messages localisés en français pour la dsi
+****************************************************************************************
+© 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: fr_FR.xml,v 1.1 2011-07-29 12:32:15 dgoron Exp $ -->
+
+<XMLlist>
+	<entry code="planificateur_reader_abon">Choix d'une ou plusieurs options</entry>
+	<entry code="planificateur_reader_loc">Choix de la localisation</entry>
+	<entry code="planificateur_reader_statut">Choix d'un statut</entry>
+	<entry code="planificateur_reader_abon_fin_proche">Relance des lecteurs en fin d'abonnement</entry>
+	<entry code="planificateur_reader_abon_depasse">Relance des lecteurs dont l'abonnement est dépassé</entry>
+	<entry code="reader_relance">Relance des lecteurs</entry>
+	<entry code="reader_relance_abon_fin_proche">Relance des lecteurs en fin d'abonnement</entry>
+	<entry code="reader_relance_abon_depassee">Relance des lecteurs dont l'abonnement est dépassé</entry>
+	<entry code="reader_no_result">Aucune ligne retournée !</entry>
+	<entry code="reader_no_option">Aucune option choisie !</entry>
+	<!--<entry code="planificateur_reader_abon_fin_proche_mail">Avertir par mail les lecteurs en fin d'abonnement</entry>
+	<entry code="planificateur_reader_abon_fin_proche_pdf">Génération pdf des lecteurs en fin d'abonnement</entry>
+	<entry code="planificateur_reader_abon_depasse_mail">Avertir par mail les abonnements dépassés</entry>
+	<entry code="planificateur_reader_abon_depasse_pdf">Génération pdf des abonnements dépassés</entry>
+-->
+</XMLlist>

@@ -1,0 +1,46 @@
+{% extends 'gabarit.html' %}
+
+<!-- $Id: category.html,v 1.4 2019-02-19 08:05:59 dgoron Exp $ -->
+
+{% block detail %}
+	{% if element.has_parent %}
+		<div class="aut_display_row">
+			<div class="aut_display_cell">
+				<b>{{ msg.categ_parent }} :</b>
+			</div>
+			<div class="aut_display_cell" id="parent_categ">
+				<a href="./index.php?lvl=categ_see&id={{ element.parent_id }}">{{ element.parent_libelle  }}</a>
+			</div>
+		</div>
+	{% endif %}
+	
+	{% if element.has_child %}
+		<div class="aut_display_row">
+			<div class="aut_display_cell">
+				<b>{{msg.aut_categs_children}} :</b>
+			</div>
+			<div class="aut_display_cell" id="childs_categs">
+				{% for child in element.listchilds %}
+					{% if global.thesaurus_categories_categ_in_line %}
+						{% if !loop.first %}
+							{{ global.pmb_keyword_sep }}
+						{% endif %}
+						<span><a href="./index.php?lvl=categ_see&id={{ child.id }}">{{ child.libelle }}</a></span>
+					{% else %}
+					 	<a href="./index.php?lvl=categ_see&id={{ child.id }}">{{ child.libelle }}</a><br/>
+				  	{% endif %}	
+				{% endfor %}
+			</div>
+		</div>
+	{% endif %}
+	{% if element.commentaire %}
+		<div class="aut_display_row">
+			<div class="aut_display_cell">
+				<b>{{msg.707}} :</b>
+			</div>
+			<div class="aut_display_cell">
+				{{ element.commentaire | nl2br }}
+			</div>
+		</div>
+	{% endif %}
+{% endblock detail %}

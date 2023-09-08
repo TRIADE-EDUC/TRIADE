@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le module Article
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_bannette_view_bannette_from_tpl.xml,v 1.2 2017-05-23 15:00:20 dgoron Exp $ -->
+
+<XMLlist>
+	<entry code='cms_module_bannette_view_django_template_record_content'>Template de notice à utiliser pour le content</entry>
+	<entry code='cms_module_bannette_view_django_template_bannette_content'>Template de bannette à utiliser pour le content</entry>
+	<entry code="cms_module_bannette_view_bannette_build_nb_notices">Nombre de notices maximales à afficher</entry>
+<!-- 	<entry code="cms_module_bannette_view_bannette_from_tpl_id_desc">ID de la bannette</entry> -->
+	<entry code="cms_module_bannette_view_bannette_from_tpl_name_desc">Titre</entry>
+	<entry code="cms_module_bannette_view_bannette_from_tpl_comment_desc">Commentaire publique</entry>
+	<entry code="cms_module_bannette_view_bannette_from_tpl_content_desc">Contenu de la bannette</entry>
+	<entry code="cms_module_bannette_view_bannette_from_tpl_record_number_desc">Nombre de notices</entry>
+	<entry code="cms_module_bannette_view_bannette_from_tpl_records_desc">Liste des notices</entry>
+	<entry code="cms_module_bannette_view_bannette_from_tpl_record_id_desc">ID de la notice</entry>
+	<entry code="cms_module_bannette_view_bannette_from_tpl_record_title_desc">Titre de la notice</entry>
+	<entry code="cms_module_bannette_view_bannette_from_tpl_record_link_desc">Lien Opac de la notice</entry>
+	<entry code="cms_module_bannette_view_bannette_from_tpl_record_url_vign_desc">Url de la vignette</entry>
+	<entry code="cms_module_bannette_view_bannette_from_tpl_notices_record_render_desc">Contenu de la notice</entry>
+	<entry code="cms_module_bannette_view_bannette_from_tpl_flux_rss_desc">Liste des flux RSS</entry>
+	<entry code="cms_module_bannette_view_bannette_from_tpl_flux_rss_id_desc">Identifiant du flux RSS</entry>
+	<entry code="cms_module_bannette_view_bannette_from_tpl_flux_rss_name_desc">Nom</entry>
+	<entry code="cms_module_bannette_view_bannette_from_tpl_flux_rss_opac_link_desc">Lien Opac</entry>
+	<entry code="cms_module_bannette_view_bannette_from_tpl_flux_rss_link_desc">Lien du Flux RSS</entry>
+	<entry code="cms_module_bannette_view_bannette_from_tpl_flux_rss_lang_desc">Langue</entry>
+	<entry code="cms_module_bannette_view_bannette_from_tpl_flux_rss_copy_desc">Copyright</entry>
+	<entry code="cms_module_bannette_view_bannette_from_tpl_flux_rss_editor_mail_desc">Email de l'éditeur</entry>
+	<entry code="cms_module_bannette_view_bannette_from_tpl_flux_rss_webmaster_mail_desc">Email du Webmasteur</entry>
+	<entry code="cms_module_bannette_view_bannette_from_tpl_flux_rss_ttl_desc">Time to live</entry>
+	<entry code="cms_module_bannette_view_bannette_from_tpl_flux_rss_img_url_desc">URL de l'image</entry>
+	<entry code="cms_module_bannette_view_bannette_from_tpl_flux_rss_img_title_desc">Titre de l'image</entry>	
+	<entry code="cms_module_bannette_view_bannette_from_tpl_flux_rss_img_link_desc">Lien de l'image</entry>
+	<entry code="cms_module_bannette_view_bannette_from_tpl_flux_rss_format_desc">Format du flux</entry>
+	<entry code="cms_module_bannette_view_bannette_from_tpl_flux_rss_content_desc">Contenu du flux</entry>
+	<entry code="cms_module_bannette_view_bannette_from_tpl_flux_rss_date_last_desc">Date</entry>
+	<entry code="cms_module_bannette_view_bannette_from_tpl_flux_rss_export_court_desc">Export court</entry>
+	<entry code="cms_module_bannette_view_bannette_from_tpl_flux_rss_template_desc">Template</entry>
+</XMLlist>

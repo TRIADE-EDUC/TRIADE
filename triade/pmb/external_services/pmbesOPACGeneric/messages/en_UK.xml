@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!--
+****************************************************************************************
+© 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: en_UK.xml,v 1.2 2015-06-26 08:11:57 pmbs Exp $ -->
+
+<!DOCTYPE XMLlist SYSTEM "../../../includes/XMLlist.dtd" >
+<XMLlist>
+  <entry code="pmbesOPACGeneric_description">Functions related to the OPAC, which can be used anonymously or when logged in</entry>
+  <!--
+    list_shelves
+  -->
+  <entry code="list_shelves_description">Lists the different shelves visible in the OPAC</entry>
+  <entry code="list_shelves_input_description"></entry>
+  <entry code="list_shelves_output_description"></entry>
+  <entry code="list_shelves_OPACUserId">Id of a borrower, to check the access rights for this shelf.
+    -1: Do not take into account
+    0: anonymous borrower
+    x: id of the borrower</entry>
+  <entry code="list_shelves_shelves">The different shelves</entry>
+  <!--
+    retrieve_shelf_content
+  -->
+  <entry code="retrieve_shelf_content_description">Lists the different records contained in a shelf</entry>
+  <entry code="retrieve_shelf_content_input_description"></entry>
+  <entry code="retrieve_shelf_content_output_description">This function takes into account the different access rights applicable to the borrower</entry>
+  <entry code="retrieve_shelf_content_OPACUserId">Id of a borrower, to check the access rights for these records.
+    -1: Do not take into account
+    0: anonymous borrower
+    x: id of the borrower</entry>
+  <entry code="retrieve_shelf_content_self_id">Id of the shelf</entry>
+  <entry code="retrieve_shelf_content_shelf_content">Ids of the records</entry>
+  
+  <entry code="list_locations_description">Lists the different locations of the OPAC</entry>
+  <entry code="list_locations_input_description"></entry>
+  <entry code="list_locations_output_description"></entry>
+  <entry code="list_locations_locations">The different locations</entry>
+
+   <!--
+is_also_borrowed_enabled
+--><entry code="is_also_borrowed_enabled_description">Lets you know if the feature "Other Reading" is enabled or not</entry>
+   <entry code="is_also_borrowed_enabled_input_description"></entry>
+   <entry code="is_also_borrowed_enabled_output_description"></entry>
+   <entry code="is_also_borrowed_enabled_result">If the function is activated or not</entry>
+
+  <entry code="also_borrowed_description">Returns the other readings linked to a record</entry>
+  <entry code="also_borrowed_input_description"></entry>
+  <entry code="also_borrowed_input_notice_id">The id of the record</entry>
+  <entry code="also_borrowed_input_bulletin_id">The id of the issue</entry>
+  <entry code="also_borrowed_output_description"></entry>
+  <entry code="also_borrowed_notice_reference">The different other readings</entry>
+  <entry code="also_borrowed_list_also_borrowed_notice_reference">The id of the record</entry>
+  <entry code="also_borrowed_notice_reference_notice_id">The id of a record</entry>
+  <entry code="also_borrowed_notice_reference_notice_title">The title of a record</entry>
+  <entry code="also_borrowed_notice_reference_notice_author">The author of a record</entry>
+
+   <!--
+list_sections
+--><entry code="list_sections_description">Lists the different visible sections of the OPAC</entry>
+   <entry code="list_sections_input_description"></entry>
+   <entry code="list_sections_output_description"></entry>
+   <entry code="list_sections_location">The location of the sections</entry>
+   <entry code="list_sections_sections">The different sections</entry>
+
+	<!--
+	get_location_information
+	-->
+	<entry code="get_location_information_description">Returns the informations linked to a location</entry>
+	<entry code="get_location_information_input_description"></entry>
+	<entry code="get_location_information_output_description"></entry>
+	<entry code="get_location_information_location_id">The id of the location</entry>
+	<entry code="get_location_information_location">The informations</entry>
+	<!--
+	get_location_information_and_sections
+	-->
+	<entry code="get_location_information_and_sections_description">Returns the informations and the different sections linked to a location</entry>
+	<entry code="get_location_information_and_sections_input_description"></entry>
+	<entry code="get_location_information_and_sections_output_description"></entry>
+	<entry code="get_location_information_and_sections_location_id">The id of the location</entry>
+	<entry code="get_location_information_and_sections_location">The informations</entry>
+	<entry code="get_location_information_and_sections_sections">The different sections</entry>
+	
+	<!--
+	get_section_information
+	-->
+	<entry code="get_section_information_description">Returns the informations linked to a section</entry>
+	<entry code="get_section_information_input_description"></entry>
+	<entry code="get_section_information_output_description"></entry>
+	<entry code="get_section_information_section_id">The id of the section</entry>
+	<entry code="get_section_information_section">The informations</entry>
+	
+	<!--
+	get_marc_table
+	-->
+	<entry code="get_marc_table_description">Retrieves the informations contained in PMB's configuration xml files. Lets you for instance have the labels referring to codes used in PMB</entry>
+	<entry code="get_marc_table_type">Type of information wanted:
+country -&gt; Country
+icondoc -&gt; Images linked to the records
+icondoc_big -&gt; Images linked to the records (full size)
+lang -&gt; Languages
+doctype -&gt; Types of documents
+recordtype -&gt; Type of records
+function -&gt; Authors functions
+section_995 -&gt; Copies section
+typdoc_995 -&gt; Copies support
+codstatdoc_995 -&gt; Stat code of copy
+diacritique -&gt; Diacritical characters
+nivbiblio -&gt; Bibliographic level
+relationtypeup -&gt; Relation between sub-record -> record
+relationtypedown -&gt; Relation between record -> sub-record
+relationtype_aut -&gt; Relation between authority -> sub-authority
+relationtype_autup -&gt; Relation between sub-authority -> authority
+relationtypeup_unimarc -&gt; Unimarc code of the field for the sub-authority -> authority
+relationtypedown_unimarc -&gt; Unimarc code of the field for the authority -> Sub authority
+	</entry>
+	<entry code="get_marc_table_result">Table with the links [code] =&gt; Label/value</entry>
+	
+</XMLlist>

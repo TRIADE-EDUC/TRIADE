@@ -1,0 +1,8 @@
+<h2>Administration du planificateur</h2>
+
+<p>La section <b>administration du planificateur</b> permet d&apos;automatiser des actions effectu&eacute;es manuellement par l&apos;administrateur.
+<ul>
+<li>La <b>Gestion des t&agrave;ches</b> r&eacute;f&eacute;rence l&apos;ensemble des t&agrave;ches planifi&eacute;es</li>
+<li>Le <b>Tableau de bord</b> est la partie utilis&eacute;e par le cron du Syst&egrave;me d&apos;Exploitation pour le pilotage des t&agrave;ches</li>
+
+</ul></p>

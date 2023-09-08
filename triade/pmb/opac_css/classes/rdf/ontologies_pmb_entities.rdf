@@ -1,0 +1,3082 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- $Id: ontologies_pmb_entities.rdf,v 1.35 2019-06-04 14:58:14 tsamson Exp $ -->
+
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:dct="http://purl.org/dc/terms/"
+         xmlns:pmb="http://www.pmbservices.fr/ontology#"
+         xmlns:owl="http://www.w3.org/2002/07/owl#"
+         xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
+
+    <rdf:Description rdf:about="http://www.w3.org/2004/02/skos/core">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Ontology"/>
+        <dct:creator>Thomas Samson</dct:creator>
+        <dct:creator>Alexis Petithomme</dct:creator>
+        <dct:title xml:lang="fr">Ontologie des entités PMB</dct:title>
+        <dct:description xml:lang="fr">Ontologie PMB basée sur Skos</dct:description>
+        <pmb:name>contribution</pmb:name>
+    </rdf:Description>
+    
+    <!-- CLASSES -->
+    
+    <!-- Classe PMB -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#Class">
+        <rdfs:label xml:lang='fr'>Classe</rdfs:label>
+        <rdfs:comment>Classe au sens PMB</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+        <pmb:name>class</pmb:name>
+    </rdf:Description>
+	
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#entity">
+        <rdfs:label xml:lang='fr'>Entité</rdfs:label>
+        <rdfs:comment>Entité PMB</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+        <rdfs:subClassOf rdf:resource="http://www.pmbservices.fr/ontology#Class"/>
+        <rdfs:subClassOf rdf:nodeID="contribution_comment_0-1"/>
+        <pmb:name>entity</pmb:name>
+    </rdf:Description>
+    
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#entity_link">
+        <rdfs:label xml:lang='fr'>Lien</rdfs:label>
+        <rdfs:comment>Lien entre entités PMB</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+	<rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+        <rdfs:subClassOf rdf:resource="http://www.pmbservices.fr/ontology#Class"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#entity"/>
+        <rdfs:range rdf:resource="http://www.pmbservices.fr/ontology#entity"/>
+        <pmb:name>entity_link</pmb:name>
+    </rdf:Description>
+    
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#entity_link_type">
+        <rdfs:label xml:lang='fr'>Type de lien</rdfs:label>
+        <rdfs:comment>Type de lien entre entités PMB</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+	<rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+        <rdfs:subClassOf rdf:resource="http://www.pmbservices.fr/ontology#Class"/>
+        <pmb:name>entity_link_type</pmb:name>
+    </rdf:Description>
+    
+    <!-- Notice PMB -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#record">
+        <rdfs:label xml:lang='fr'>Notice</rdfs:label>
+        <rdfs:comment>Notice dans PMB</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+        <rdfs:subClassOf rdf:resource="http://www.pmbservices.fr/ontology#entity"/>
+        <pmb:displayLabel rdf:resource="http://www.pmbservices.fr/ontology#tit1"/>
+        <pmb:name>record</pmb:name>
+        <pmb:flag>pmb_entity</pmb:flag>
+        <rdfs:subClassOf rdf:nodeID="identifier_1-1"/>
+        <rdfs:subClassOf rdf:nodeID="bibliographical_lvl_1-1"/>
+        <rdfs:subClassOf rdf:nodeID="hierarchical_lvl_1-1"/>
+        <rdfs:subClassOf rdf:nodeID="doctype_1-1"/>
+        <rdfs:subClassOf rdf:nodeID="tit1_1-1"/>
+        <rdfs:subClassOf rdf:nodeID="tit2_0-1"/>
+        <rdfs:subClassOf rdf:nodeID="tit3_0-1"/>
+        <rdfs:subClassOf rdf:nodeID="tit4_0-1"/>
+        <rdfs:subClassOf rdf:nodeID="tparent_0-1"/>
+        <rdfs:subClassOf rdf:nodeID="tnvol_0-1"/>
+        <rdfs:subClassOf rdf:nodeID="has_publisher_0-1"/>
+        <rdfs:subClassOf rdf:nodeID="has_other_publisher_0-1"/>
+        <rdfs:subClassOf rdf:nodeID="has_main_author_0-1"/>
+        <rdfs:subClassOf rdf:nodeID="has_collection_0-1"/>
+        <rdfs:subClassOf rdf:nodeID="nocoll_0-1"/>
+        <rdfs:subClassOf rdf:nodeID="has_subcollection_0-1"/>
+        <rdfs:subClassOf rdf:nodeID="has_date_0-1"/>
+        <rdfs:subClassOf rdf:nodeID="publishing_notice_0-1"/>
+        <rdfs:subClassOf rdf:nodeID="isbn_0-1"/>
+        <rdfs:subClassOf rdf:nodeID="nb_pages_0-1"/>
+        <rdfs:subClassOf rdf:nodeID="illustration_0-1"/>
+        <rdfs:subClassOf rdf:nodeID="size_0-1"/>
+        <rdfs:subClassOf rdf:nodeID="price_0-1"/>
+        <rdfs:subClassOf rdf:nodeID="accompanying_material_0-1"/>
+        <rdfs:subClassOf rdf:nodeID="general_note_0-1"/>
+        <rdfs:subClassOf rdf:nodeID="content_note_0-1"/>
+        <rdfs:subClassOf rdf:nodeID="resume_note_0-1"/>
+        <rdfs:subClassOf rdf:nodeID="has_indexint_0-1"/>
+        <rdfs:subClassOf rdf:nodeID="keywords_0-1"/>
+        <rdfs:subClassOf rdf:nodeID="url_0-1"/>
+        <rdfs:subClassOf rdf:nodeID="eformat_0-1"/>
+        <rdfs:subClassOf rdf:nodeID="has_record_status_1-1"/>
+        <rdfs:subClassOf rdf:nodeID="new_record_0-1"/>
+        <rdfs:subClassOf rdf:nodeID="comment_0-1"/>
+        <rdfs:subClassOf rdf:nodeID="thumbnail_url_0-1"/>
+        <rdfs:subClassOf rdf:nodeID="thumbnail_0-1"/>
+        <rdfs:subClassOf rdf:nodeID="record_language_0-1"/>
+        <rdfs:subClassOf rdf:nodeID="original_language_0-1"/>
+        <rdfs:subClassOf rdf:nodeID="publication_language_0-1"/>
+        <rdfs:subClassOf rdf:nodeID="has_bulletin_0-1"/>
+    </rdf:Description>    
+    
+    <!-- Bulletin PMB -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#bulletin">
+        <rdfs:label xml:lang='fr'>Bulletin</rdfs:label>
+        <rdfs:comment>Bulletin dans PMB</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+        <rdfs:subClassOf rdf:resource="http://www.pmbservices.fr/ontology#record"/>
+        <pmb:displayLabel rdf:resource="http://www.pmbservices.fr/ontology#label"/>
+        <pmb:name>bulletin</pmb:name>
+	<pmb:bibliographical_lvl>b</pmb:bibliographical_lvl>
+	<pmb:hierarchical_lvl>2</pmb:hierarchical_lvl>
+    </rdf:Description>
+    
+    <!-- Document numérique PMB -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#docnum">
+        <rdfs:label xml:lang='fr'>Document numérique</rdfs:label>
+        <rdfs:comment>Document numérique dans PMB</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+        <rdfs:subClassOf rdf:resource="http://www.pmbservices.fr/ontology#Class"/>
+        <pmb:displayLabel rdf:resource="http://www.pmbservices.fr/ontology#label"/>
+        <pmb:name>docnum</pmb:name>
+        <pmb:flag>pmb_entity</pmb:flag>
+        <rdfs:subClassOf rdf:nodeID="label_1-1"/>
+        <rdfs:subClassOf rdf:nodeID="has_record_1-1"/>
+        <rdfs:subClassOf rdf:nodeID="thumbnail_0-1"/>
+        <rdfs:subClassOf rdf:nodeID="has_docnum_status_1-1"/>
+        <rdfs:subClassOf rdf:nodeID="docnum_file_1-1"/>
+        <rdfs:subClassOf rdf:nodeID="upload_directory_1-1"/>
+    </rdf:Description>
+    
+    <!-- Autorité PMB -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#authority">
+        <rdfs:label xml:lang='fr'>Autorité</rdfs:label>
+        <rdfs:comment>Autorité dans PMB</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdfs:subClassOf rdf:resource="http://www.pmbservices.fr/ontology#Class"/>
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+        <pmb:name>authority</pmb:name>
+        <rdfs:subClassOf rdf:nodeID="has_authority_status_1-1"/>
+        <rdfs:subClassOf rdf:nodeID="comment_0-1"/>
+    </rdf:Description>
+    
+    <!-- Auteur PMB -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#author">
+        <rdfs:label xml:lang='fr'>Auteur</rdfs:label>
+        <rdfs:comment>Auteur dans PMB</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+        <rdfs:subClassOf rdf:resource="http://www.pmbservices.fr/ontology#authority"/>
+        <rdfs:subClassOf rdf:resource="http://www.pmbservices.fr/ontology#entity"/>
+        <pmb:displayLabel rdf:resource="http://www.pmbservices.fr/ontology#author_name"/>
+        <pmb:displayLabel rdf:resource="http://www.pmbservices.fr/ontology#author_first_name"/>
+        <pmb:name>author</pmb:name>
+        <pmb:flag>pmb_entity</pmb:flag>
+        <rdfs:subClassOf rdf:nodeID="author_type_1-1"/>
+        <rdfs:subClassOf rdf:nodeID="author_name_1-1"/>
+        <rdfs:subClassOf rdf:nodeID="author_first_name_0-1"/>
+        <rdfs:subClassOf rdf:nodeID="has_date_0-1"/>
+        <rdfs:subClassOf rdf:nodeID="place_0-1"/>
+        <rdfs:subClassOf rdf:nodeID="town_0-1"/>
+        <rdfs:subClassOf rdf:nodeID="subdivision_0-1"/>
+        <rdfs:subClassOf rdf:nodeID="number_0-1"/>
+        <rdfs:subClassOf rdf:nodeID="author_see_0-1"/>
+        <rdfs:subClassOf rdf:nodeID="website_0-1"/>
+    </rdf:Description>
+    
+    <!-- Catégorie PMB -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#category">
+        <rdfs:label xml:lang='fr'>Catégorie</rdfs:label>
+        <rdfs:comment>Auteur dans PMB</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+        <rdfs:subClassOf rdf:resource="http://www.pmbservices.fr/ontology#authority"/>
+        <rdfs:subClassOf rdf:resource="http://www.pmbservices.fr/ontology#entity"/>
+        <pmb:displayLabel rdf:resource="http://www.pmbservices.fr/ontology#label"/>
+        <pmb:name>category</pmb:name>
+        <pmb:flag>pmb_entity</pmb:flag>
+        <rdfs:subClassOf rdf:nodeID="label_1-1"/>
+        <rdfs:subClassOf rdf:nodeID="note_0-1"/>
+        <rdfs:subClassOf rdf:nodeID="parent_category_0-1"/>   
+        <rdfs:subClassOf rdf:nodeID="category_see_0-1"/>
+	<!--<rdfs:subClassOf rdf:nodeID="authority_number_0-1"/>-->
+        <rdfs:subClassOf rdf:nodeID="has_thesaurus_1-1"/>
+    </rdf:Description>
+    
+    <!-- Éditeur PMB -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#publisher">
+        <rdfs:label xml:lang='fr'>Éditeur</rdfs:label>
+        <rdfs:comment>Éditeur dans PMB</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+        <rdfs:subClassOf rdf:resource="http://www.pmbservices.fr/ontology#authority"/>
+        <rdfs:subClassOf rdf:resource="http://www.pmbservices.fr/ontology#entity"/>
+        <pmb:displayLabel rdf:resource="http://www.pmbservices.fr/ontology#publisher_name"/>
+        <pmb:name>publisher</pmb:name>
+        <pmb:flag>pmb_entity</pmb:flag>
+        <rdfs:subClassOf rdf:nodeID="publisher_name_1-1"/>
+        <rdfs:subClassOf rdf:nodeID="address_1_0-1"/>
+        <rdfs:subClassOf rdf:nodeID="address_2_0-1"/>
+        <rdfs:subClassOf rdf:nodeID="zip_code_0-1"/>
+        <rdfs:subClassOf rdf:nodeID="town_0-1"/>
+        <rdfs:subClassOf rdf:nodeID="country_0-1"/>
+        <rdfs:subClassOf rdf:nodeID="website_0-1"/>
+        <rdfs:subClassOf rdf:nodeID="supplier_0-1"/>
+    </rdf:Description>
+    
+    <!-- Collection PMB -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#collection">
+        <rdfs:label xml:lang='fr'>Collection</rdfs:label>
+        <rdfs:comment>Collection dans PMB</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+        <rdfs:subClassOf rdf:resource="http://www.pmbservices.fr/ontology#authority"/>
+        <rdfs:subClassOf rdf:resource="http://www.pmbservices.fr/ontology#entity"/>
+        <rdfs:subClassOf rdf:nodeID="label_1-1"/>
+        <rdfs:subClassOf rdf:nodeID="issn_0-1"/>
+        <rdfs:subClassOf rdf:nodeID="has_publisher_0-1"/>
+        <rdfs:subClassOf rdf:nodeID="website_0-1"/>
+        <pmb:displayLabel rdf:resource="http://www.pmbservices.fr/ontology#label"/>
+        <pmb:name>collection</pmb:name>
+        <pmb:flag>pmb_entity</pmb:flag>
+    </rdf:Description>
+    
+    <!-- Sous-collection PMB -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#subcollection">
+        <rdfs:label xml:lang='fr'>Sous-collection</rdfs:label>
+        <rdfs:comment>Sous-collection dans PMB</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+        <rdfs:subClassOf rdf:resource="http://www.pmbservices.fr/ontology#authority"/>
+        <rdfs:subClassOf rdf:resource="http://www.pmbservices.fr/ontology#entity"/>
+        <rdfs:subClassOf rdf:nodeID="label_1-1"/>
+        <rdfs:subClassOf rdf:nodeID="issn_0-1"/>
+        <rdfs:subClassOf rdf:nodeID="has_collection_0-1"/>
+        <rdfs:subClassOf rdf:nodeID="has_publisher_0-1"/>
+        <rdfs:subClassOf rdf:nodeID="website_0-1"/>
+        <pmb:displayLabel rdf:resource="http://www.pmbservices.fr/ontology#label"/>
+        <pmb:name>subcollection</pmb:name>
+        <pmb:flag>pmb_entity</pmb:flag>
+    </rdf:Description>
+    
+    <!-- Titre de série PMB -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#serie">
+        <rdfs:label xml:lang='fr'>Titre de série</rdfs:label>
+        <rdfs:comment>Titre de série dans PMB</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+        <rdfs:subClassOf rdf:resource="http://www.pmbservices.fr/ontology#authority"/>
+        <rdfs:subClassOf rdf:resource="http://www.pmbservices.fr/ontology#entity"/>
+        <rdfs:subClassOf rdf:nodeID="label_1-1"/>
+        <pmb:displayLabel rdf:resource="http://www.pmbservices.fr/ontology#label"/>
+        <pmb:name>serie</pmb:name>
+        <pmb:flag>pmb_entity</pmb:flag>
+    </rdf:Description>
+    
+    <!-- Oeuvre PMB -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#work">
+        <rdfs:label xml:lang='fr'>Oeuvre</rdfs:label>
+        <rdfs:comment>Oeuvre dans PMB</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+        <rdfs:subClassOf rdf:resource="http://www.pmbservices.fr/ontology#authority"/>
+        <rdfs:subClassOf rdf:resource="http://www.pmbservices.fr/ontology#entity"/>
+        <rdfs:subClassOf rdf:nodeID="work_type_1-1"/>
+        <rdfs:subClassOf rdf:nodeID="work_nature_1-1"/>
+        <rdfs:subClassOf rdf:nodeID="label_1-1"/>
+        <rdfs:subClassOf rdf:nodeID="shape_0-1"/>
+        <rdfs:subClassOf rdf:nodeID="has_shape_0-1"/>
+        <rdfs:subClassOf rdf:nodeID="has_date_0-1"/>
+        <rdfs:subClassOf rdf:nodeID="place_0-1"/>
+        <rdfs:subClassOf rdf:nodeID="subject_0-1"/>
+        <rdfs:subClassOf rdf:nodeID="intended_termination_0-1"/>
+        <rdfs:subClassOf rdf:nodeID="targeted_audience_0-1"/>
+        <rdfs:subClassOf rdf:nodeID="story_0-1"/>
+        <rdfs:subClassOf rdf:nodeID="context_0-1"/>
+        <rdfs:subClassOf rdf:nodeID="has_tone_0-1"/>
+        <rdfs:subClassOf rdf:nodeID="coord_0-1"/>
+        <rdfs:subClassOf rdf:nodeID="equinox_0-1"/>
+        <rdfs:subClassOf rdf:nodeID="other_feature_0-1"/>
+        <pmb:displayLabel rdf:resource="http://www.pmbservices.fr/ontology#label"/>
+        <pmb:name>work</pmb:name>
+        <pmb:flag>pmb_entity</pmb:flag>
+    </rdf:Description>
+    
+    <!-- Index décimal PMB -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#indexint">
+        <rdfs:label xml:lang='fr'>Indexation décimale</rdfs:label>
+        <rdfs:comment>Indexation décimale dans PMB</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+        <rdfs:subClassOf rdf:resource="http://www.pmbservices.fr/ontology#authority"/>
+        <rdfs:subClassOf rdf:resource="http://www.pmbservices.fr/ontology#entity"/>
+        <rdfs:subClassOf rdf:nodeID="label_1-1"/>
+        <pmb:displayLabel rdf:resource="http://www.pmbservices.fr/ontology#label"/>
+        <pmb:name>indexint</pmb:name>
+        <pmb:flag>pmb_entity</pmb:flag>
+    </rdf:Description>
+    
+    <!-- Concept PMB -->
+    <rdf:Description rdf:about="http://www.w3.org/2004/02/skos/core#Concept">
+        <rdfs:label xml:lang='fr'>Concept</rdfs:label>
+        <rdfs:comment>Concept dans PMB</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+        <rdfs:subClassOf rdf:resource="http://www.pmbservices.fr/ontology#authority"/>
+        <rdfs:subClassOf rdf:resource="http://www.pmbservices.fr/ontology#entity"/>
+        <pmb:displayLabel rdf:resource="http://www.pmbservices.fr/ontology#label"/>
+        <pmb:name>concept</pmb:name>
+        <pmb:flag>pmb_entity</pmb:flag>
+    </rdf:Description>
+    
+    <!-- Responsabilité PMB--> 
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#responsability">
+        <rdfs:label xml:lang='fr'>Responsabilité</rdfs:label>
+        <rdfs:comment>Responsabilité PMB</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+        <rdfs:subClassOf rdf:resource="http://www.pmbservices.fr/ontology#Class"/>
+        <pmb:name>responsability</pmb:name>
+        <rdfs:subClassOf rdf:nodeID="has_author_1-1"/>
+        <rdfs:subClassOf rdf:nodeID="author_function_0-1"/>        
+    </rdf:Description>
+    
+    <!-- Responsabilité TU PMB--> 
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#responsability_tu">
+        <rdfs:label xml:lang='fr'>Responsabilité des oeuvres</rdfs:label>
+        <rdfs:comment>Responsabilité des oeuvres PMB</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+        <rdfs:subClassOf rdf:resource="http://www.pmbservices.fr/ontology#responsability"/>
+        <pmb:name>responsability</pmb:name>
+    </rdf:Description>
+    
+    <!-- Notice liée PMB--> 
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#linked_record">
+        <rdfs:label xml:lang='fr'>Notice liée</rdfs:label>
+        <rdfs:comment>Notice liée PMB</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+        <rdfs:subClassOf rdf:resource="http://www.pmbservices.fr/ontology#Class"/>
+        <pmb:name>linked_record</pmb:name>
+        <rdfs:subClassOf rdf:nodeID="has_record_1-1"/>
+        <rdfs:subClassOf rdf:nodeID="relation_type_1-1"/>
+    </rdf:Description>
+    
+    <!-- Autorité liée PMB--> 
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#linked_authority">
+        <rdfs:label xml:lang='fr'>Autorité liée</rdfs:label>
+        <rdfs:comment>Autorité liée PMB</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+        <rdfs:subClassOf rdf:resource="http://www.pmbservices.fr/ontology#Class"/>
+        <pmb:name>linked_authority</pmb:name>
+        <rdfs:subClassOf rdf:nodeID="has_authority_1-1"/>
+        <rdfs:subClassOf rdf:nodeID="relation_type_authority_1-1"/>
+    </rdf:Description>
+    
+    <!-- Fournisseur PMB -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#supplier">
+        <rdfs:label xml:lang='fr'>Fournisseur</rdfs:label>
+        <rdfs:comment>Fournisseur dans PMB</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+        <rdfs:subClassOf rdf:resource="http://www.pmbservices.fr/ontology#Class"/>
+        <pmb:name>supplier</pmb:name>
+    </rdf:Description>
+    
+    <!-- Oeuvre liée -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#linked_work">
+        <rdfs:label xml:lang='fr'>Oeuvre liée</rdfs:label>
+        <rdfs:comment>Oeuvre liée dans PMB</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+        <rdfs:subClassOf rdf:resource="http://www.pmbservices.fr/ontology#Class"/>
+        <pmb:name>linked_work</pmb:name>
+        <rdfs:subClassOf rdf:nodeID="has_work_1-1"/>
+        <rdfs:subClassOf rdf:nodeID="relation_type_work_1-1"/>
+    </rdf:Description>
+    
+    <!-- Événements PMB -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#event">
+        <rdfs:label xml:lang='fr'>Événement</rdfs:label>
+        <rdfs:comment>Événements PMB</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+        <rdfs:subClassOf rdf:resource="http://www.pmbservices.fr/ontology#Class"/>
+        <pmb:name>event</pmb:name>
+    </rdf:Description>
+    
+    <!-- Contenu éditorial : rubrique -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#cms_section">
+        <rdfs:label xml:lang='fr'>Rubrique</rdfs:label>
+        <rdfs:comment>Contenu éditorial</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+        <rdfs:subClassOf rdf:resource="http://www.pmbservices.fr/ontology#Class"/>
+        <rdfs:subClassOf rdf:nodeID="has_title_1-1"/>
+        <rdfs:subClassOf rdf:nodeID="has_summary_0-1"/>
+        <rdfs:subClassOf rdf:nodeID="has_logo_0-1"/>
+        <rdfs:subClassOf rdf:nodeID="has_publication_state_0-1"/>
+        <rdfs:subClassOf rdf:nodeID="has_start_date_0-1"/>
+        <rdfs:subClassOf rdf:nodeID="has_end_date_0-1"/>
+        <rdfs:subClassOf rdf:nodeID="has_creation_date_0-1"/>
+        <rdfs:subClassOf rdf:nodeID="has_update_date_0-1"/>
+        <rdfs:subClassOf rdf:nodeID="has_cms_section_1-1"/>
+		<pmb:name>cms_section</pmb:name>
+		<pmb:displayLabel rdf:resource="http://www.pmbservices.fr/ontology#title"/>
+    </rdf:Description>
+    
+    <!-- Contenu éditorial : article -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#cms_article">
+        <rdfs:label xml:lang='fr'>Article</rdfs:label>
+        <rdfs:comment>Contenu éditorial</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+        <rdfs:subClassOf rdf:resource="http://www.pmbservices.fr/ontology#Class"/>
+        <rdfs:subClassOf rdf:nodeID="has_title_1-1"/>
+        <rdfs:subClassOf rdf:nodeID="has_summary_0-1"/>
+        <rdfs:subClassOf rdf:nodeID="has_content_0-1"/>
+        <rdfs:subClassOf rdf:nodeID="has_logo_0-1"/>
+        <rdfs:subClassOf rdf:nodeID="has_publication_state_0-1"/>
+        <rdfs:subClassOf rdf:nodeID="has_start_date_0-1"/>
+        <rdfs:subClassOf rdf:nodeID="has_end_date_0-1"/>
+        <rdfs:subClassOf rdf:nodeID="has_cms_section_1-1"/>
+        <rdfs:subClassOf rdf:nodeID="has_creation_date_0-1"/>
+        <rdfs:subClassOf rdf:nodeID="has_update_date_0-1"/>
+        <pmb:name>cms_article</pmb:name>
+		<pmb:displayLabel rdf:resource="http://www.pmbservices.fr/ontology#title"/>
+    </rdf:Description>
+    
+    <!-- Exemplaire -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#expl">
+        <rdfs:label xml:lang='fr'>Exemplaire</rdfs:label>
+        <rdfs:comment>Exemplaire</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+        <rdfs:subClassOf rdf:resource="http://www.pmbservices.fr/ontology#Class"/>
+        <rdfs:subClassOf rdf:nodeID="has_cb_1-1"/>
+        <rdfs:subClassOf rdf:nodeID="has_record_0-1"/>
+        <rdfs:subClassOf rdf:nodeID="has_bulletin_0-1"/>
+        <rdfs:subClassOf rdf:nodeID="has_typdoc_1-1"/>
+        <rdfs:subClassOf rdf:nodeID="has_cote_1-1"/>
+        <rdfs:subClassOf rdf:nodeID="has_expl_status_1-1"/>
+        <rdfs:subClassOf rdf:nodeID="has_expl_location_1-1"/>
+        <rdfs:subClassOf rdf:nodeID="has_expl_codestat_1-1"/>
+        <rdfs:subClassOf rdf:nodeID="note_0-1"/>
+        <rdfs:subClassOf rdf:nodeID="price_0-1"/>
+        <rdfs:subClassOf rdf:nodeID="comment_0-1"/>
+        <rdfs:subClassOf rdf:nodeID="owner_1-1"/>
+        <rdfs:subClassOf rdf:nodeID="docs_section_1-1"/>
+        <pmb:name>expl</pmb:name>
+		<pmb:displayLabel rdf:resource="http://www.pmbservices.fr/ontology#has_record"/>
+        <pmb:flag>pmb_entity</pmb:flag>
+    </rdf:Description>
+    
+    <!-- PROPRIÉTÉS -->
+   
+   
+    <!--Propriétés PMB-->
+
+    <!-- Libellé PMB -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#displayLabel">
+        <rdfs:label xml:lang='fr'>Libellé</rdfs:label>
+        <rdfs:comment>Relie à un libellé dans PMB</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+        <rdfs:domain rdf:resource=""/>
+        <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+        <pmb:name>displayLabel</pmb:name>
+    </rdf:Description>
+	
+    <!-- Nom PMB -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#name">
+        <rdfs:label xml:lang='fr'>Nom</rdfs:label>
+        <rdfs:comment>relie à un nom dans PMB</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+        <rdfs:domain rdf:resource=""/>
+        <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+        <pmb:name>name</pmb:name>
+    </rdf:Description>
+	
+    <!-- Datatype PMB -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#datatype">
+        <rdfs:label xml:lang='fr'>Type de donnée</rdfs:label>
+        <rdfs:label xml:lang='en'>Datatype</rdfs:label>
+        <rdfs:comment>Relie à un type de donnée</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+        <rdfs:domain rdf:resource=""/>
+        <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
+        <pmb:name>datatype</pmb:name>
+    </rdf:Description>
+    
+    <!-- flag PMB -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#flag">
+        <rdfs:label xml:lang='fr'>flag</rdfs:label>
+        <rdfs:label xml:lang='en'>flag</rdfs:label>
+        <rdfs:comment>Cette entité peut être créée dans un formulaire de flag</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+        <rdfs:domain rdf:resource=""/>
+        <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
+        <pmb:name>flag</pmb:name>
+    </rdf:Description>
+    
+    <!-- Propriétés des entités -->
+    
+    <!-- Identifiant d'une entité PMB -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#identifier">
+        <rdfs:label xml:lang='fr'>Identifiant</rdfs:label>
+        <rdfs:comment>Relie a un identifiant</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+        <rdfs:domain rdf:resource=""/>
+        <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+        <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#integer"/>
+        <pmb:name>identifier</pmb:name>
+    </rdf:Description>
+        
+    <!-- Niveau bibliographique PMB -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#bibliographical_lvl">        
+        <rdfs:label xml:lang='fr'>Niveau bibliographique</rdfs:label>
+        <rdfs:comment>Relie à un niveau bibliographique dans PMB</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#record"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+        <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#list"/>
+        <pmb:list_item rdf:nodeID="list_item_bibliographical_lvl_m"/>
+        <pmb:list_item rdf:nodeID="list_item_bibliographical_lvl_a"/>
+        <pmb:list_item rdf:nodeID="list_item_bibliographical_lvl_s"/>
+        <pmb:list_item rdf:nodeID="list_item_bibliographical_lvl_b"/>
+        <pmb:name>bibliographical_lvl</pmb:name>
+    </rdf:Description>
+    
+    <rdf:Description rdf:nodeID="list_item_bibliographical_lvl_m">
+        <rdfs:label xml:lang='fr'>Monographie</rdfs:label>
+        <pmb:identifier>m</pmb:identifier>
+    </rdf:Description>
+    
+    <rdf:Description rdf:nodeID="list_item_bibliographical_lvl_a">
+        <rdfs:label xml:lang='fr'>Article</rdfs:label>
+        <pmb:identifier>a</pmb:identifier>
+    </rdf:Description>
+    
+    <rdf:Description rdf:nodeID="list_item_bibliographical_lvl_s">
+        <rdfs:label xml:lang='fr'>Périodique</rdfs:label>
+        <pmb:identifier>s</pmb:identifier>
+    </rdf:Description>
+    
+    <rdf:Description rdf:nodeID="list_item_bibliographical_lvl_b">
+        <rdfs:label xml:lang='fr'>Bulletin</rdfs:label>
+        <pmb:identifier>b</pmb:identifier>
+    </rdf:Description>
+        
+    <!-- Niveau hiérarchique PMB -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#hierarchical_lvl">        
+        <rdfs:label xml:lang='fr'>Niveau hiérarchique</rdfs:label>
+        <rdfs:comment>Relie à un niveau hiérarchique dans PMB</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#record"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+        <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#list"/>
+        <pmb:list_item rdf:nodeID="list_item_hierarchical_lvl_0"/>
+        <pmb:list_item rdf:nodeID="list_item_hierarchical_lvl_1"/>
+        <pmb:list_item rdf:nodeID="list_item_hierarchical_lvl_2"/>
+        <pmb:name>hierarchical_lvl</pmb:name>
+    </rdf:Description>
+    
+    <rdf:Description rdf:nodeID="list_item_hierarchical_lvl_0">
+        <rdfs:label xml:lang='fr'>0</rdfs:label>
+        <pmb:identifier>0</pmb:identifier>
+    </rdf:Description>
+    
+    <rdf:Description rdf:nodeID="list_item_hierarchical_lvl_1">
+        <rdfs:label xml:lang='fr'>1</rdfs:label>
+        <pmb:identifier>1</pmb:identifier>
+    </rdf:Description>
+    
+    <rdf:Description rdf:nodeID="list_item_hierarchical_lvl_2">
+        <rdfs:label xml:lang='fr'>2</rdfs:label>
+        <pmb:identifier>2</pmb:identifier>
+    </rdf:Description>
+        
+    <!-- Type de document PMB -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#doctype">        
+        <rdfs:label xml:lang='fr'>Type de document</rdfs:label>
+        <rdfs:comment>Relie à un type de document dans PMB</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#record"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+        <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#marclist"/>
+        <pmb:marclist_type>doctype</pmb:marclist_type>
+        <pmb:name>doctype</pmb:name>
+    </rdf:Description>
+    
+    <!-- A pour titre 1 -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#tit1">        
+        <rdfs:label xml:lang='fr'>Titre principal</rdfs:label>
+        <rdfs:comment>Relie à un titre principal</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#record"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+        <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#small_text"/>
+        <pmb:name>tit1</pmb:name>
+    </rdf:Description>
+    
+    <!-- Titre 2 de la notice PMB -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#tit2">        
+        <rdfs:label xml:lang='fr'>Titre secondaire</rdfs:label>
+        <rdfs:comment>Relie a un titre secondaire</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#record"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+        <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#small_text"/>
+        <pmb:name>tit2</pmb:name>
+    </rdf:Description>
+    
+    <!-- Titre 3 de la notice PMB -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#tit3">        
+        <rdfs:label xml:lang='fr'>Titre parallèle</rdfs:label>
+        <rdfs:comment>Relie a un titre parallèle</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#record"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+        <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#small_text"/>
+        <pmb:name>tit3</pmb:name>
+    </rdf:Description>
+	
+    <!-- Titre 4 de la notice PMB -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#tit4">        
+        <rdfs:label xml:lang='fr'>Complément du titre</rdfs:label>
+        <rdfs:comment>Relie a un complément de titre</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#record"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+        <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#small_text"/>
+        <pmb:name>tit4</pmb:name>
+    </rdf:Description>
+    
+    <!-- Série de la notice PMB -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#tparent">
+        <rdfs:label xml:lang='fr'>Série</rdfs:label>
+        <rdfs:comment>Relie à une série</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#record"/>
+        <rdfs:range rdf:resource="http://www.pmbservices.fr/ontology#serie"/>
+        <rdfs:subClassOf rdf:resource="http://www.pmbservices.fr/ontology#entity_link"/>
+        <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#resource_selector"/>
+        <pmb:name>tparent</pmb:name>
+        <pmb:flag>serie</pmb:flag>
+    </rdf:Description>
+    
+    <!-- Numéro dans la série PMB -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#tnvol">
+        <rdfs:label xml:lang='fr'>Numéro de série</rdfs:label>
+        <rdfs:comment>Relie à un numéro de série</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#record"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+        <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#integer"/>
+        <pmb:name>tnvol</pmb:name>
+    </rdf:Description>
+    
+    <!-- Auteur principal de la notice PMB -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#has_main_author">
+        <rdfs:label xml:lang='fr'>Auteur principal</rdfs:label>
+        <rdfs:comment>Relie a un auteur principal</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#record"/>
+        <rdfs:range rdf:resource="http://www.pmbservices.fr/ontology#responsability"/>
+        <rdfs:subClassOf rdf:resource="http://www.pmbservices.fr/ontology#entity_link"/>
+        <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#responsability_selector"/>
+        <pmb:name>has_main_author</pmb:name>
+        <pmb:flag>author</pmb:flag>
+    </rdf:Description>
+    
+    <!-- Autre auteur de la notice PMB -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#has_other_author">
+        <rdfs:label xml:lang='fr'>Autre auteur</rdfs:label>
+        <rdfs:comment>Relie à un autre auteur</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#record"/>
+        <rdfs:range rdf:resource="http://www.pmbservices.fr/ontology#responsability"/>
+        <rdfs:subClassOf rdf:resource="http://www.pmbservices.fr/ontology#entity_link"/>
+        <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#responsability_selector"/>
+        <pmb:name>has_other_author</pmb:name>
+        <pmb:flag>author</pmb:flag>
+    </rdf:Description>
+    
+    <!-- Autre auteur de la notice PMB -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#has_secondary_author">
+        <rdfs:label xml:lang='fr'>Auteur secondaire</rdfs:label>
+        <rdfs:comment>Relie à un auteur secondaire</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#record"/>
+        <rdfs:range rdf:resource="http://www.pmbservices.fr/ontology#responsability"/>
+        <rdfs:subClassOf rdf:resource="http://www.pmbservices.fr/ontology#entity_link"/>
+        <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#responsability_selector"/>
+        <pmb:name>has_secondary_author</pmb:name>
+        <pmb:flag>author</pmb:flag>
+    </rdf:Description>
+    
+    <!-- Fonction d'auteur PMB -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#author_function">
+        <rdfs:label xml:lang='fr'>Fonction</rdfs:label>
+        <rdfs:comment>Relie a une fonction d'auteur</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#responsability"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+        <rdfs:subClassOf rdf:resource="http://www.pmbservices.fr/ontology#entity_link_type"/>
+        <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#marclist"/>
+        <pmb:marclist_type>function</pmb:marclist_type>
+        <pmb:name>author_function</pmb:name>
+    </rdf:Description>
+    
+    <!-- Auteur PMB -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#has_author">
+        <rdfs:label xml:lang='fr'>Auteur</rdfs:label>
+        <rdfs:comment>Relie a un auteur</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#responsability"/>
+        <rdfs:range rdf:resource="http://www.pmbservices.fr/ontology#author"/>
+        <rdfs:subClassOf rdf:resource="http://www.pmbservices.fr/ontology#entity_link"/>
+        <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#resource_selector"/>
+        <pmb:name>has_author</pmb:name>
+        <pmb:flag>author</pmb:flag>
+    </rdf:Description>
+    
+    <!-- Éditeur PMB -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#has_publisher">
+        <rdfs:label xml:lang='fr'>Éditeur</rdfs:label>
+        <rdfs:comment>Relie a un éditeur</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#record"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#collection"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#subcollection"/>
+        <rdfs:range rdf:resource="http://www.pmbservices.fr/ontology#publisher"/>
+        <rdfs:subClassOf rdf:resource="http://www.pmbservices.fr/ontology#entity_link"/>
+        <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#resource_selector"/>
+        <pmb:name>has_publisher</pmb:name>
+        <pmb:flag>publisher</pmb:flag>
+    </rdf:Description>
+    
+    <!-- Éditeur PMB -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#has_other_publisher">
+        <rdfs:label xml:lang='fr'>Autre éditeur</rdfs:label>
+        <rdfs:comment>Relie a un autre éditeur</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#record"/>
+        <rdfs:range rdf:resource="http://www.pmbservices.fr/ontology#publisher"/>
+        <rdfs:subClassOf rdf:resource="http://www.pmbservices.fr/ontology#entity_link"/>
+        <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#resource_selector"/>
+        <pmb:name>has_other_publisher</pmb:name>
+        <pmb:flag>publisher</pmb:flag>
+    </rdf:Description>
+    
+    <!-- Collection PMB -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#has_collection">
+        <rdfs:label xml:lang='fr'>Collection</rdfs:label>
+        <rdfs:comment>Relie à une collection</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#record"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#subcollection"/>
+        <rdfs:range rdf:resource="http://www.pmbservices.fr/ontology#collection"/>
+        <rdfs:subClassOf rdf:resource="http://www.pmbservices.fr/ontology#entity_link"/>
+        <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#resource_selector"/>
+        <pmb:name>has_collection</pmb:name>
+        <pmb:flag>collection</pmb:flag>
+    </rdf:Description>
+    
+    <!-- Numéro dans la collection PMB -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#nocoll">
+        <rdfs:label xml:lang='fr'>Numéro de collection</rdfs:label>
+        <rdfs:comment>Relie à un numéro de collection</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#record"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+        <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#integer"/>
+        <pmb:name>nocoll</pmb:name>
+    </rdf:Description>
+    
+    <!-- Sous-collection PMB -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#has_subcollection">
+        <rdfs:label xml:lang='fr'>Sous-collection</rdfs:label>
+        <rdfs:comment>Relie à une sous-collection</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#record"/>
+        <rdfs:range rdf:resource="http://www.pmbservices.fr/ontology#subcollection"/>
+        <rdfs:subClassOf rdf:resource="http://www.pmbservices.fr/ontology#entity_link"/>
+        <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#resource_selector"/>
+        <pmb:name>has_subcollection</pmb:name>
+        <pmb:flag>subcollection</pmb:flag>
+    </rdf:Description>
+    
+    <!-- date PMB -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#has_date">
+        <rdfs:label xml:lang='fr'>Date</rdfs:label>
+        <rdfs:comment>Relie à une date</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#author"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#work"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#record"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+        <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#small_text"/>
+        <pmb:name>has_date</pmb:name>
+    </rdf:Description>
+    
+    <!-- Mention d'édition PMB -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#publishing_notice">
+        <rdfs:label xml:lang='fr'>Mention d'édition</rdfs:label>
+        <rdfs:comment>Relie à une mention d'édition</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#record"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+        <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#small_text"/>
+        <pmb:name>publishing_notice</pmb:name>
+    </rdf:Description>
+    
+    <!-- ISBN PMB -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#isbn">
+        <rdfs:label xml:lang='fr'>ISBN</rdfs:label>
+        <rdfs:comment>Relie à un ISBN</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#record"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+        <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#small_text"/>
+        <pmb:name>isbn</pmb:name>
+    </rdf:Description>
+    
+    <!-- Importance matérielle PMB -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#nb_pages">
+        <rdfs:label xml:lang='fr'>Importance matérielle</rdfs:label>
+        <rdfs:comment>Relie à une importance matérielle</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#record"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+        <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#small_text"/>
+        <pmb:name>nb_pages</pmb:name>
+    </rdf:Description>
+    
+    <!-- Autres caractéristiques matérielles PMB -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#illustration">
+        <rdfs:label xml:lang='fr'>Autres caractéristiques matérielles</rdfs:label>
+        <rdfs:comment>Relie à des autres caractéristiques matérielles</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#record"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+        <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#small_text"/>
+        <pmb:name>illustration</pmb:name>
+    </rdf:Description>
+    
+    <!-- Format PMB -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#size">
+        <rdfs:label xml:lang='fr'>Format</rdfs:label>
+        <rdfs:comment>Relie à un format</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#record"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+        <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#small_text"/>
+        <pmb:name>size</pmb:name>
+    </rdf:Description>
+    
+    <!-- Prix PMB -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#price">
+        <rdfs:label xml:lang='fr'>Prix</rdfs:label>
+        <rdfs:comment>Relie à un prix</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#record"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#expl"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+        <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#small_text"/>
+        <pmb:name>price</pmb:name>
+    </rdf:Description>
+    
+    <!-- Matériel d'accompagnement PMB -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#accompanying_material">
+        <rdfs:label xml:lang='fr'>Matériel d'accompagnement</rdfs:label>
+        <rdfs:comment>Relie à un matériel d'accompagnement</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#record"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+        <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#small_text"/>
+        <pmb:name>accompanying_material</pmb:name>
+    </rdf:Description>
+    
+    <!-- Note générale PMB -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#general_note">
+        <rdfs:label xml:lang='fr'>Note générale</rdfs:label>
+        <rdfs:comment>Relie à une note générale</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#record"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+        <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#text"/>
+        <pmb:name>general_note</pmb:name>
+    </rdf:Description>
+    
+    <!-- Note de contenu PMB -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#content_note">
+        <rdfs:label xml:lang='fr'>Note de contenu</rdfs:label>
+        <rdfs:comment>Relie à une note de contenu</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#record"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+        <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#text"/>
+        <pmb:name>content_note</pmb:name>
+    </rdf:Description>
+    
+    <!-- Note de résumé PMB -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#resume_note">
+        <rdfs:label xml:lang='fr'>Résumé</rdfs:label>
+        <rdfs:comment>Relie à un résumé</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#record"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+        <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#text"/>
+        <pmb:name>resume_note</pmb:name>
+    </rdf:Description>
+    
+    <!-- Concept PMB -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#has_concept">
+        <rdfs:label xml:lang='fr'>Concept</rdfs:label>
+        <rdfs:comment>Relie à un concept</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <rdfs:subClassOf rdf:resource="http://www.pmbservices.fr/ontology#entity_link"/>
+        <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#resource_selector"/>
+	<pmb:reciprocalLink>1</pmb:reciprocalLink>
+        <pmb:name>has_concept</pmb:name>
+        <pmb:flag>concept</pmb:flag>
+	<rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#category"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#collection"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#sub_collection"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#serie"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#work"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#indexint"/>
+        <rdfs:domain rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#docnum"/>
+		<rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#record"/>
+		<rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#author"/>
+		<rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#cms_article"/>
+		<rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#cms_section"/>	
+    </rdf:Description>
+    
+    <!-- Catégorie PMB -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#has_category">
+        <rdfs:label xml:lang='fr'>Catégorie</rdfs:label>
+        <rdfs:comment>Relie à une catégorie</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#record"/>
+        <rdfs:range rdf:resource="http://www.pmbservices.fr/ontology#category"/>
+        <rdfs:subClassOf rdf:resource="http://www.pmbservices.fr/ontology#entity_link"/>
+        <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#resource_selector"/>
+        <pmb:name>has_category</pmb:name>
+        <pmb:flag>category</pmb:flag>        
+    </rdf:Description>
+    
+    <!-- Indexation décimale PMB -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#has_indexint">
+        <rdfs:label xml:lang='fr'>Indexation décimale</rdfs:label>
+        <rdfs:comment>Relie à une indexation décimale</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#record"/>
+        <rdfs:range rdf:resource="http://www.pmbservices.fr/ontology#indexint"/>
+        <rdfs:subClassOf rdf:resource="http://www.pmbservices.fr/ontology#entity_link"/>
+        <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#resource_selector"/>
+        <pmb:name>has_indexint</pmb:name>
+        <pmb:flag>indexint</pmb:flag>
+    </rdf:Description>
+    
+    <!-- Mots clés PMB -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#keywords">
+        <rdfs:label xml:lang='fr'>Mots-clés</rdfs:label>
+        <rdfs:comment>Relie à des mots-clés</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#record"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+        <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#text"/>
+        <pmb:name>keywords</pmb:name>
+    </rdf:Description>
+    
+    <!-- Oeuvre PMB -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#has_work">
+        <rdfs:label xml:lang='fr'>Oeuvre</rdfs:label>
+        <rdfs:comment>Relie à un oeuvre</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#record"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#linked_work"/>
+        <rdfs:range rdf:resource="http://www.pmbservices.fr/ontology#work"/>
+        <rdfs:subClassOf rdf:resource="http://www.pmbservices.fr/ontology#entity_link"/>
+        <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#resource_selector"/>
+	<pmb:reciprocalLink>1</pmb:reciprocalLink>
+        <pmb:name>has_work</pmb:name>
+        <pmb:flag>work</pmb:flag>
+    </rdf:Description>
+    
+    <!-- Langue de publication PMB -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#publication_language">
+        <rdfs:label xml:lang='fr'>Langue de publication</rdfs:label>
+        <rdfs:comment>Relie a une langue de publication</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#record"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+        <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#marclist"/>
+        <pmb:marclist_type>lang</pmb:marclist_type>
+        <pmb:name>publication_language</pmb:name>
+    </rdf:Description>
+    
+    <!-- Langue originale PMB -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#original_language">
+        <rdfs:label xml:lang='fr'>Langue originale</rdfs:label>
+        <rdfs:comment>Relie a une langue originale</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#record"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+        <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#marclist"/>
+        <pmb:marclist_type>lang</pmb:marclist_type>
+        <pmb:name>original_language</pmb:name>
+    </rdf:Description>
+    
+    <!-- URL PMB -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#url">
+        <rdfs:label xml:lang='fr'>Lien</rdfs:label>
+        <rdfs:comment>Relie à un lien</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#record"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#cms_article"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+        <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#small_text"/>
+        <pmb:name>url</pmb:name>
+    </rdf:Description>
+    
+    <!-- Format électronique PMB -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#eformat">
+        <rdfs:label xml:lang='fr'>Format électronique</rdfs:label>
+        <rdfs:comment>Relie à un format électronique</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#record"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+        <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#small_text"/>
+        <pmb:name>eformat</pmb:name>
+    </rdf:Description>
+    
+    <!-- Notice liée PMB -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#has_linked_record">
+        <rdfs:label xml:lang='fr'>Notice liée</rdfs:label>
+        <rdfs:label xml:lang='en'>Linked record</rdfs:label>
+        <rdfs:comment>Relie à une notice liée</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#record"/>
+        <rdfs:range rdf:resource="http://www.pmbservices.fr/ontology#linked_record"/>
+        <rdfs:subClassOf rdf:resource="http://www.pmbservices.fr/ontology#entity_link"/>
+        <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#linked_record_selector"/>
+        <pmb:name>has_linked_record</pmb:name>
+        <pmb:flag>record</pmb:flag>
+    </rdf:Description>
+    
+    <!-- Type de relation PMB -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#relation_type">
+        <rdfs:label xml:lang='fr'>Type de relation</rdfs:label>
+        <rdfs:comment>Relie a un type de relation</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#linked_record"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+        <rdfs:subClassOf rdf:resource="http://www.pmbservices.fr/ontology#entity_link_type"/>
+        <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#marclist"/>
+        <pmb:marclist_type>relationtypeup</pmb:marclist_type>
+        <pmb:name>relation_type</pmb:name>
+    </rdf:Description>
+    
+    <!-- Propriété notice PMB -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#has_record">
+        <rdfs:label xml:lang='fr'>Notice</rdfs:label>
+        <rdfs:comment>Relie a une notice</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#linked_record"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#docnum"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#work"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#expl"/>
+        <rdfs:range rdf:resource="http://www.pmbservices.fr/ontology#record"/>
+        <rdfs:subClassOf rdf:resource="http://www.pmbservices.fr/ontology#entity_link"/>
+        <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#resource_selector"/>
+		<pmb:reciprocalLink>1</pmb:reciprocalLink>
+        <pmb:name>has_record</pmb:name>
+        <pmb:flag>record</pmb:flag>
+    </rdf:Description>
+    
+    <!-- Langue de la notice PMB -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#record_language">
+        <rdfs:label xml:lang='fr'>Langue</rdfs:label>
+        <rdfs:comment>Relie a une langue de notice</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#record"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+        <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#marclist"/>
+        <pmb:marclist_type>lang</pmb:marclist_type>
+        <pmb:name>record_language</pmb:name>
+    </rdf:Description>
+    
+    <!-- Statut notice PMB -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#has_record_status">
+        <rdfs:label xml:lang='fr'>Statut</rdfs:label>
+        <rdfs:comment>Relie a un statut de notice</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#record"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+        <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#list"/>
+        <pmb:list_query>SELECT id_notice_statut AS id, IF(opac_libelle, opac_libelle, gestion_libelle) AS value FROM notice_statut ORDER BY value</pmb:list_query>
+        <pmb:name>has_record_status</pmb:name>
+    </rdf:Description>
+    
+    <!-- Nouveauté PMB -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#new_record">
+        <rdfs:label xml:lang='fr'>Nouveauté</rdfs:label>
+        <rdfs:comment>Est une nouveauté</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#record"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+        <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#checkbox"/>
+        <pmb:name>new_record</pmb:name>
+    </rdf:Description>
+    
+    <!-- Commentaire PMB -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#comment">
+        <rdfs:label xml:lang='fr'>Commentaire</rdfs:label>
+        <rdfs:comment>Relie à un commentaire</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+        <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#text"/>
+        <pmb:name>comment</pmb:name>
+		<rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#category"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#collection"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#sub_collection"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#work"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#indexint"/>
+        <rdfs:domain rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#docnum"/>
+		<rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#record"/>
+		<rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#author"/>
+		<rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#cms_article"/>
+		<rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#cms_section"/>
+		<rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#expl"/>
+    </rdf:Description>
+    
+    <!-- URL de la vignette PMB -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#thumbnail_url">
+        <rdfs:label xml:lang='fr'>URL de vignette</rdfs:label>
+        <rdfs:comment>Relie à une URL de vignette</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#record"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+        <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#small_text"/>
+        <pmb:name>thumbnail_url</pmb:name>
+    </rdf:Description>
+    
+    <!-- Upload de la vignette PMB -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#thumbnail">
+        <rdfs:label xml:lang='fr'>Vignette</rdfs:label>
+        <rdfs:comment>Relie à une vignette</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#record"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#docnum"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+        <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#file"/>
+        <pmb:name>thumbnail</pmb:name>
+    </rdf:Description>
+    
+    <!-- Document numérique PMB -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#docnum_file">
+        <rdfs:label xml:lang='fr'>Fichier</rdfs:label>
+        <rdfs:comment>Relie à un fichier</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#docnum"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+        <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#file"/>
+        <pmb:name>docnum_file</pmb:name>
+    </rdf:Description>
+    
+    <!-- Statut d'autorité PMB -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#has_authority_status">
+        <rdfs:label xml:lang='fr'>Statut d'autorité</rdfs:label>
+        <rdfs:comment>Relie a un statut d'autorité</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#authority"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+        <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#list"/>
+        <pmb:list_query>SELECT id_authorities_statut AS id, authorities_statut_label AS value FROM authorities_statuts ORDER BY value</pmb:list_query>
+        <pmb:name>has_authority_status</pmb:name>
+    </rdf:Description>
+
+    <!-- Type d'auteur PMB -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#author_type">
+        <rdfs:label xml:lang='fr'>Type d'auteur</rdfs:label>
+        <rdfs:comment>Relie à un type d'auteur</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#author"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+        <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#list"/>        
+        <pmb:list_item rdf:nodeID="list_item_author_type_physical_person"/>
+        <pmb:list_item rdf:nodeID="list_item_author_type_collectivity"/>
+        <pmb:list_item rdf:nodeID="list_item_author_type_congress"/>
+        <pmb:name>author_type</pmb:name>
+    </rdf:Description>
+    
+    <rdf:Description rdf:nodeID="list_item_author_type_physical_person">
+        <rdfs:label xml:lang='fr'>Personne physique</rdfs:label>
+        <pmb:identifier>70</pmb:identifier>
+    </rdf:Description>
+    
+    <rdf:Description rdf:nodeID="list_item_author_type_collectivity">
+        <rdfs:label xml:lang='fr'>Collectivité</rdfs:label>
+        <pmb:identifier>71</pmb:identifier>
+    </rdf:Description>
+    
+    <rdf:Description rdf:nodeID="list_item_author_type_congress">
+        <rdfs:label xml:lang='fr'>Congrès</rdfs:label>
+        <pmb:identifier>72</pmb:identifier>
+    </rdf:Description>
+    
+    <!-- Element d'entrée ou nom PMB -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#author_name">
+        <rdfs:label xml:lang='fr'>Nom</rdfs:label>
+        <rdfs:comment>Relie à un nom</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#author"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+        <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#small_text"/>
+        <pmb:name>author_name</pmb:name>
+    </rdf:Description>
+    
+    <!-- Element rejeté ou prénom PMB -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#author_first_name">
+        <rdfs:label xml:lang='fr'>Prénom</rdfs:label>
+        <rdfs:comment>Relie à un prénom</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#author"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+        <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#small_text"/>
+        <pmb:name>author_first_name</pmb:name>
+    </rdf:Description>
+    
+    <!-- Lieu PMB -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#place">
+        <rdfs:label xml:lang='fr'>Lieu</rdfs:label>
+        <rdfs:comment>Relie à un lieu</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#author"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#work"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+        <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#small_text"/>
+        <pmb:name>place</pmb:name>
+    </rdf:Description>
+    
+    <!-- Ville PMB -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#town">
+        <rdfs:label xml:lang='fr'>Ville</rdfs:label>
+        <rdfs:comment>Relie à une ville</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#author"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#publisher"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+        <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#small_text"/>
+        <pmb:name>town</pmb:name>
+    </rdf:Description>
+    
+    <!-- Pays PMB -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#country">
+        <rdfs:label xml:lang='fr'>Pays</rdfs:label>
+        <rdfs:comment>Relie à un pays</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#author"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#publisher"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+        <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#small_text"/>
+        <pmb:name>country</pmb:name>
+    </rdf:Description>
+    
+    <!-- Subdivision PMB -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#subdivision">
+        <rdfs:label xml:lang='fr'>Subdivision</rdfs:label>
+        <rdfs:comment>Relie à une subdivision</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#author"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+        <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#small_text"/>
+        <pmb:name>subdivision</pmb:name>
+    </rdf:Description>
+    
+    <!-- Numéro PMB -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#number">
+        <rdfs:label xml:lang='fr'>Numéro</rdfs:label>
+        <rdfs:comment>Relie à un numéro</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#author"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+        <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#small_text"/>
+        <pmb:name>number</pmb:name>
+    </rdf:Description>
+    
+    <!-- Forme retenue PMB -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#author_see">
+        <rdfs:label xml:lang='fr'>Forme retenue</rdfs:label>
+        <rdfs:comment>Relie à une forme retenue</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#author"/>
+        <rdfs:range rdf:resource="http://www.pmbservices.fr/ontology#author"/>
+        <rdfs:subClassOf rdf:resource="http://www.pmbservices.fr/ontology#entity_link"/>
+        <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#resource_selector"/>
+	<pmb:reciprocalLink>1</pmb:reciprocalLink>
+        <pmb:name>author_see</pmb:name>
+        <pmb:flag>author</pmb:flag>
+    </rdf:Description>
+    
+    <!-- Site web PMB -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#website">
+        <rdfs:label xml:lang='fr'>Site web</rdfs:label>
+        <rdfs:comment>Relie à un site web</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#author"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#publisher"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#collection"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#subcollection"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+        <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#small_text"/>
+        <pmb:name>website</pmb:name>
+    </rdf:Description>
+    
+    <!-- Autorité liée PMB -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#has_linked_authority">
+        <rdfs:label xml:lang='fr'>Autorité liée</rdfs:label>
+        <rdfs:comment>Relie à une autorité liée</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#authority"/>
+        <rdfs:range rdf:resource="http://www.pmbservices.fr/ontology#linked_authority"/>
+        <rdfs:subClassOf rdf:resource="http://www.pmbservices.fr/ontology#entity_link"/>
+        <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#linked_authority_selector"/>
+        <pmb:reciprocalLink>1</pmb:reciprocalLink>
+        <pmb:name>has_linked_authority</pmb:name>
+    </rdf:Description>
+    
+    <!-- Type de relation entre autorités PMB -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#relation_type_authority">
+        <rdfs:label xml:lang='fr'>Type de relation</rdfs:label>
+        <rdfs:comment>Relie à un type de relation entre autorité</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#linked_authority"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+        <rdfs:subClassOf rdf:resource="http://www.pmbservices.fr/ontology#entity_link_type"/>
+        <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#marclist"/>
+        <pmb:name>relation_type_authority</pmb:name>
+        <pmb:marclist_type>relationtype_aut</pmb:marclist_type>
+    </rdf:Description>
+    
+    <!-- Propiété autorité PMB -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#has_authority">
+        <rdfs:label xml:lang='fr'>Autorité</rdfs:label>
+        <rdfs:comment>Relie à une autorité</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#linked_authority"/>
+        <rdfs:range rdf:resource="http://www.pmbservices.fr/ontology#authority"/>
+        <rdfs:subClassOf rdf:resource="http://www.pmbservices.fr/ontology#entity_link"/>
+        <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#resource_selector"/>
+        <pmb:name>has_authority</pmb:name>
+    </rdf:Description> 
+    
+    <!-- Libellé PMB -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#label">
+        <rdfs:label xml:lang='fr'>Libellé</rdfs:label>
+        <rdfs:comment>Relie à un libellé</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#category"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#collection"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#subcollection"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#serie"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#work"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#indexint"/>
+        <rdfs:domain rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#docnum"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+        <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#small_text"/>
+        <pmb:name>label</pmb:name>
+    </rdf:Description>
+    
+    <!-- Thesaurus -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#has_thesaurus">
+        <rdfs:label xml:lang='fr'>Thesaurus</rdfs:label>
+        <rdfs:comment>Relie a un thesaurus</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#category"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+        <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#list"/>
+        <pmb:list_query>SELECT id_thesaurus AS id, libelle_thesaurus AS value FROM thesaurus ORDER BY value</pmb:list_query>
+        <pmb:name>has_thesaurus</pmb:name>
+    </rdf:Description>
+    
+    <!-- Note PMB -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#note">
+        <rdfs:label xml:lang='fr'>Note</rdfs:label>
+        <rdfs:comment>Relie à une note</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#category"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#expl"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+        <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#text"/>
+        <pmb:name>note</pmb:name>
+    </rdf:Description>
+    
+    <!-- Catégorie parente PMB -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#parent_category">
+        <rdfs:label xml:lang='fr'>Catégorie parent</rdfs:label>
+        <rdfs:comment>Relie à une catégorie parente</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#category"/>
+        <rdfs:range rdf:resource="http://www.pmbservices.fr/ontology#category"/>
+        <rdfs:subClassOf rdf:resource="http://www.pmbservices.fr/ontology#entity_link"/>
+        <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#resource_selector"/>
+        <pmb:name>parent_category</pmb:name>
+    </rdf:Description> 
+    
+    <!-- Catégorie renvoi voir PMB -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#category_see">
+        <rdfs:label xml:lang='fr'>Renvoi voir</rdfs:label>
+        <rdfs:comment>Relie à un "renvoi voir"</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#category"/>
+        <rdfs:range rdf:resource="http://www.pmbservices.fr/ontology#category"/>
+        <rdfs:subClassOf rdf:resource="http://www.pmbservices.fr/ontology#entity_link"/>
+        <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#resource_selector"/>
+	<pmb:reciprocalLink>1</pmb:reciprocalLink>
+        <pmb:name>category_see</pmb:name>
+        <pmb:flag>category</pmb:flag>
+    </rdf:Description> 
+    
+    <!-- Catégorie renvoi voir aussi PMB -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#category_see_also">
+        <rdfs:label xml:lang='fr'>Renvoi voir aussi</rdfs:label>
+        <rdfs:comment>Relie à un "renvoi voir aussi"</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#category"/>
+        <rdfs:range rdf:resource="http://www.pmbservices.fr/ontology#category"/>
+        <rdfs:subClassOf rdf:resource="http://www.pmbservices.fr/ontology#entity_link"/>
+	<pmb:reciprocalLink>1</pmb:reciprocalLink>
+        <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#resource_selector"/>
+        <pmb:name>category_see_also</pmb:name>
+        <pmb:flag>category</pmb:flag>
+    </rdf:Description>
+    
+    <!-- Numéro d'autorité PMB -->
+    <!--<rdf:Description rdf:about="http://www.pmbservices.fr/ontology#authority_number">
+        <rdfs:label xml:lang='fr'>Numéro d'autorité</rdfs:label>
+        <rdfs:comment>Relie à un numéro d'autorité</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#category"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+        <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#small_text"/>
+        <pmb:name>authority_number</pmb:name>
+    </rdf:Description>-->
+    
+    <!-- Nom éditeur PMB -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#publisher_name">
+        <rdfs:label xml:lang='fr'>Nom</rdfs:label>
+        <rdfs:comment>Relie à un nom</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#publisher"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+        <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#small_text"/>
+        <pmb:name>publisher_name</pmb:name>
+    </rdf:Description>
+        
+    <!-- Adresse 1 PMB -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#address_1">
+        <rdfs:label xml:lang='fr'>Adresse 1</rdfs:label>
+        <rdfs:comment>Relie à une adresse 1</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#publisher"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+        <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#small_text"/>
+        <pmb:name>address_1</pmb:name>
+    </rdf:Description>
+    
+    <!-- Adresse 2 PMB -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#address_2">
+        <rdfs:label xml:lang='fr'>Adresse 2</rdfs:label>
+        <rdfs:comment>Relie à une adresse 2</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#publisher"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+        <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#small_text"/>
+        <pmb:name>address_2</pmb:name>
+    </rdf:Description>
+    
+    <!-- Code postal PMB -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#zip_code">
+        <rdfs:label xml:lang='fr'>Code postal</rdfs:label>
+        <rdfs:comment>Relie à un code postal</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#publisher"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+        <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#small_text"/>
+        <pmb:name>zip_code</pmb:name>
+    </rdf:Description>
+    
+    <!-- Fournisseur PMB -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#has_supplier">
+        <rdfs:label xml:lang='fr'>Fournisseur</rdfs:label>
+        <rdfs:comment>Relie à un fournisseur</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#publisher"/>
+        <rdfs:range rdf:resource="http://www.pmbservices.fr/ontology#supplier"/>
+        <rdfs:subClassOf rdf:resource="http://www.pmbservices.fr/ontology#entity_link"/>
+        <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#resource_selector"/>
+        <pmb:name>has_supplier</pmb:name>
+        <pmb:flag>supplier</pmb:flag>
+    </rdf:Description>
+    
+    <!-- ISSN PMB -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#issn">
+        <rdfs:label xml:lang='fr'>ISSN</rdfs:label>
+        <rdfs:comment>Relie à un ISSN</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#collection"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#subcollection"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+        <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#small_text"/>
+        <pmb:name>issn</pmb:name>
+    </rdf:Description>
+    
+    
+    
+    <!-- Type d'oeuvre -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#work_type">
+        <rdfs:label xml:lang='fr'>Type</rdfs:label>
+        <rdfs:comment>Relie à un type d'oeuvre</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#work"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+        <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#marclist"/>
+        <pmb:marclist_type>oeuvre_type</pmb:marclist_type>
+        <pmb:name>work_type</pmb:name>
+    </rdf:Description>
+    
+    <!-- Nature de l'oeuvre -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#work_nature">
+        <rdfs:label xml:lang='fr'>Nature</rdfs:label>
+        <rdfs:comment>Relie à une nature d'oeuvre</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#work"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+        <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#marclist"/>
+        <pmb:marclist_type>oeuvre_nature</pmb:marclist_type>
+        <pmb:name>work_nature</pmb:name>
+    </rdf:Description>
+    
+    <!-- Type de relation entre oeuvres PMB -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#relation_type_work">
+        <rdfs:label xml:lang='fr'>Type de relation</rdfs:label>
+        <rdfs:comment>Relie à un type de relation entre oeuvre</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#linked_work"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+        <rdfs:subClassOf rdf:resource="http://www.pmbservices.fr/ontology#entity_link_type"/>
+        <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#marclist"/>
+        <pmb:marclist_type>oeuvre_link</pmb:marclist_type>
+        <pmb:name>relation_type_work</pmb:name>
+    </rdf:Description>
+    
+    <!-- Expression de PMB -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#expression_of">
+        <rdfs:label xml:lang='fr'>Expression de</rdfs:label>
+        <rdfs:comment>Expression de</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#work"/>
+        <rdfs:range rdf:resource="http://www.pmbservices.fr/ontology#linked_work"/>
+        <rdfs:subClassOf rdf:resource="http://www.pmbservices.fr/ontology#entity_link"/>
+        <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#linked_work_selector"/>
+        <pmb:name>expression_of</pmb:name>
+        <pmb:flag>work</pmb:flag>
+    </rdf:Description>
+    
+    <!-- A pour expression une oeuvre PMB -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#has_expression">
+        <rdfs:label xml:lang='fr'>Expression</rdfs:label>
+        <rdfs:comment>A pour expression</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#work"/>
+        <rdfs:range rdf:resource="http://www.pmbservices.fr/ontology#linked_work"/>
+        <rdfs:subClassOf rdf:resource="http://www.pmbservices.fr/ontology#entity_link"/>
+        <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#linked_work_selector"/>
+        <pmb:name>has_expression</pmb:name>
+        <pmb:flag>work</pmb:flag>
+    </rdf:Description>
+    
+    <!-- Autres liens entre oeuvre PMB -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#has_other_link">
+        <rdfs:label xml:lang='fr'>Autre lien</rdfs:label>
+        <rdfs:comment>A pour autre lien</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#work"/>
+        <rdfs:range rdf:resource="http://www.pmbservices.fr/ontology#linked_work"/>
+        <rdfs:subClassOf rdf:resource="http://www.pmbservices.fr/ontology#entity_link"/>
+        <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#resource_selector"/>
+        <pmb:name>has_other_link</pmb:name>
+        <pmb:flag>work</pmb:flag>
+    </rdf:Description>
+    
+    <!-- Événement PMB -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#has_event">
+        <rdfs:label xml:lang='fr'>Événement</rdfs:label>
+        <rdfs:comment>Relie à un événement</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#work"/>
+        <rdfs:range rdf:resource="http://www.pmbservices.fr/ontology#event"/>
+        <rdfs:subClassOf rdf:resource="http://www.pmbservices.fr/ontology#entity_link"/>
+        <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#resource_selector"/>
+        <pmb:name>has_event</pmb:name>
+    </rdf:Description>
+    
+    <!-- Responsabilité auteur PMB -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#has_responsability_author">
+        <rdfs:label xml:lang='fr'>Auteur</rdfs:label>
+        <rdfs:comment>Relie a un auteur</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#work"/>
+        <rdfs:range rdf:resource="http://www.pmbservices.fr/ontology#responsability_tu"/>
+        <rdfs:subClassOf rdf:resource="http://www.pmbservices.fr/ontology#entity_link"/>
+        <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#responsability_selector"/>
+        <pmb:name>has_responsability_author</pmb:name>
+        <pmb:flag>author</pmb:flag>
+    </rdf:Description>
+    
+    <!-- Responsabilité interprête PMB -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#has_responsability_performer">
+        <rdfs:label xml:lang='fr'>Interprète</rdfs:label>
+        <rdfs:comment>Relie a un interprète</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#work"/>
+        <rdfs:range rdf:resource="http://www.pmbservices.fr/ontology#responsability_tu"/>
+        <rdfs:subClassOf rdf:resource="http://www.pmbservices.fr/ontology#entity_link"/>
+        <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#responsability_selector"/>
+        <pmb:name>has_responsability_performer</pmb:name>
+        <pmb:flag>author</pmb:flag>
+    </rdf:Description>
+    
+    <!-- Forme de l'oeuvre (saisis libre) PMB -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#shape">        
+        <rdfs:label xml:lang='fr'>Forme (saisie libre)</rdfs:label>
+        <rdfs:comment>Relie a une forme</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#work"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+        <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#small_text"/>
+        <pmb:name>shape</pmb:name>
+    </rdf:Description>
+    
+    <!-- Forme de l'oeuvre PMB -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#has_shape">        
+        <rdfs:label xml:lang='fr'>Forme</rdfs:label>
+        <rdfs:comment>Relie a une forme</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#work"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+        <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#marclist"/>
+        <pmb:marclist_type>music_form</pmb:marclist_type>
+        <pmb:name>has_shape</pmb:name>
+    </rdf:Description>
+    
+    <!-- Sujet PMB -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#subject">        
+        <rdfs:label xml:lang='fr'>Sujet</rdfs:label>
+        <rdfs:comment>Relie a un sujet</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#work"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+        <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#text"/>
+        <pmb:name>subject</pmb:name>
+    </rdf:Description>
+    
+    <!-- Complétude visée -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#intended_termination">
+        <rdfs:label xml:lang='fr'>Complétude visée</rdfs:label>
+        <rdfs:comment>Relie à une complétude</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#work"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+        <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#list"/>        
+        <pmb:name>intended_termination</pmb:name>
+        <pmb:list_item rdf:nodeID="list_item_intended_termination_default"/>
+        <pmb:list_item rdf:nodeID="list_item_intended_termination_finished_work"/>
+        <pmb:list_item rdf:nodeID="list_item_intended_termination_infinite_work"/>
+    </rdf:Description>
+    
+    <rdf:Description rdf:nodeID="list_item_intended_termination_default">
+        <rdfs:label xml:lang='fr'>--</rdfs:label>
+        <pmb:identifier>0</pmb:identifier>
+    </rdf:Description>
+    
+    <rdf:Description rdf:nodeID="list_item_intended_termination_finished_work">
+        <rdfs:label xml:lang='fr'>Oeuvre finie</rdfs:label>
+        <pmb:identifier>1</pmb:identifier>
+    </rdf:Description>
+    
+    <rdf:Description rdf:nodeID="list_item_intended_termination_infinite_work">
+        <rdfs:label xml:lang='fr'>Oeuvre infinie</rdfs:label>
+        <pmb:identifier>2</pmb:identifier>
+    </rdf:Description>
+    
+    <!-- Public visé PMB -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#targeted_audience">        
+        <rdfs:label xml:lang='fr'>Public visé</rdfs:label>
+        <rdfs:comment>Relie a un public visé</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#work"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+        <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#small_text"/>
+        <pmb:name>targeted_audience</pmb:name>
+    </rdf:Description>
+    
+    <!-- Histoire PMB -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#story">        
+        <rdfs:label xml:lang='fr'>Histoire</rdfs:label>
+        <rdfs:comment>Relie a une histoire</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#work"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+        <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#text"/>
+        <pmb:name>story</pmb:name>
+    </rdf:Description>
+    
+    <!-- Contexte PMB -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#context">
+        <rdfs:label xml:lang='fr'>Contexte</rdfs:label>
+        <rdfs:comment>Relie a un contexte</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#work"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+        <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#text"/>
+        <pmb:name>context</pmb:name>
+    </rdf:Description>
+    
+    <!-- Distribution instrumentale et vocale PMB -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#music_distribution">        
+        <rdfs:label xml:lang='fr'>Distribution instrumentale et vocale (pour la musique)</rdfs:label>
+        <rdfs:comment>Relie a une distribution instrumentale et vocale</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#work"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+        <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#small_text"/>
+        <pmb:name>music_distribution</pmb:name>
+    </rdf:Description>
+    
+    <!-- Réference numérique PMB -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#digital_reference">        
+        <rdfs:label xml:lang='fr'>Référence numérique (pour la musique)</rdfs:label>
+        <rdfs:comment>Relie a une référence numérique</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#work"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+        <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#small_text"/>
+        <pmb:name>digital_reference</pmb:name>
+    </rdf:Description>
+    
+    <!-- Tonalité (saisie libre) PMB -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#tone">        
+        <rdfs:label xml:lang='fr'>Tonalité (saisie libre)</rdfs:label>
+        <rdfs:comment>Relie a une tonalité</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#work"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+        <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#small_text"/>
+        <pmb:name>tone</pmb:name>
+    </rdf:Description>
+    
+    <!-- Tonalité PMB -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#has_tone">        
+        <rdfs:label xml:lang='fr'>Tonalité</rdfs:label>
+        <rdfs:comment>Relie a une tonalité</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#work"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+        <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#marclist"/>
+        <pmb:marclist_type>music_key</pmb:marclist_type>
+        <pmb:name>has_tone</pmb:name>
+    </rdf:Description>
+    
+    <!-- Coordonnées PMB -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#coord">        
+        <rdfs:label xml:lang='fr'>Coordonnées</rdfs:label>
+        <rdfs:comment>Relie a des coordonnées</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#work"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+        <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#small_text"/>
+        <pmb:name>coord</pmb:name>
+    </rdf:Description>
+    
+    <!-- Équinoxe PMB -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#equinox">        
+        <rdfs:label xml:lang='fr'>Équinoxe</rdfs:label>
+        <rdfs:comment>Relie a une équinoxe</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#work"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+        <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#small_text"/>
+        <pmb:name>equinox</pmb:name>
+    </rdf:Description>
+    
+    <!-- Subdivision de forme PMB -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#subdivision_shape">        
+        <rdfs:label xml:lang='fr'>Subdivision de forme</rdfs:label>
+        <rdfs:comment>Relie a une subdivision de forme</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#work"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+        <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#small_text"/>
+        <pmb:name>subdivision_shape</pmb:name>
+    </rdf:Description>
+    
+    <!-- Autre caractéristique PMB -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#other_feature">        
+        <rdfs:label xml:lang='fr'>Autre caractéristique</rdfs:label>
+        <rdfs:comment>Relie a une autre caractéristique</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#work"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+        <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#text"/>
+        <pmb:name>other_feature</pmb:name>
+    </rdf:Description>
+    
+    <!-- Répertoire d'upload PMB -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#upload_directory">        
+        <rdfs:label xml:lang='fr'>Répertoire d'upload</rdfs:label>
+        <rdfs:comment>Relie a un répertoire d'upload</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#docnum"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+        <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#upload_directories"/>
+        <pmb:name>upload_directory</pmb:name>
+    </rdf:Description>
+    
+    <!-- Statut document numérique PMB -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#has_docnum_status">
+        <rdfs:label xml:lang='fr'>Statut</rdfs:label>
+        <rdfs:comment>Relie a un statut de document numérique</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#docnum"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+        <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#list"/>
+        <pmb:list_query>SELECT id_explnum_statut AS id, IF(opac_libelle, opac_libelle, gestion_libelle) AS value FROM explnum_statut ORDER BY value</pmb:list_query>
+        <pmb:name>has_docnum_status</pmb:name>
+    </rdf:Description>
+    
+    <!-- Localisation PMB -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#location">
+        <rdfs:label xml:lang='fr'>Localisation</rdfs:label>
+        <rdfs:comment>Relie à une localisation</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#docnum"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+        <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#list"/>        
+        <pmb:name>location</pmb:name>
+        <pmb:list_item rdf:nodeID="list_item_location_default"/>
+        <pmb:list_query>SELECT idlocation as id, location_libelle as value FROM docs_location ORDER BY value</pmb:list_query>
+    </rdf:Description>
+    
+    <rdf:Description rdf:nodeID="list_item_location_default">
+        <rdfs:label xml:lang='fr'>Toutes les localisations</rdfs:label>
+        <pmb:identifier>-1</pmb:identifier>
+    </rdf:Description>
+    
+       <!-- Propriétaire PMB -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#owner">
+        <rdfs:label xml:lang='fr'>Propriétaire</rdfs:label>
+        <rdfs:comment>Relie à un propriétaire</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#docnum"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#expl"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+        <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#list"/>        
+        <pmb:name>owner</pmb:name>
+        <pmb:list_query>select idlender as id, lender_libelle  as value from lenders order by lender_libelle</pmb:list_query>
+    </rdf:Description>    
+    
+    <!-- Document numérique associé à une notice PMB -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#has_docnum">
+        <rdfs:label xml:lang='fr'>Document numérique</rdfs:label>
+        <rdfs:comment>Relie à un document numérique</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#record"/>
+        <rdfs:range rdf:resource="http://www.pmbservices.fr/ontology#docnum"/>
+        <rdfs:subClassOf rdf:resource="http://www.pmbservices.fr/ontology#entity_link"/>
+        <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#resource_selector"/>
+        <pmb:name>has_docnum</pmb:name>
+    </rdf:Description>
+    
+    <!-- Bulletin -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#has_bulletin">
+        <rdfs:label xml:lang='fr'>Bulletin</rdfs:label>
+        <rdfs:comment>Relie a un bulletin</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#record"/>
+        <rdfs:range rdf:resource="http://www.pmbservices.fr/ontology#bulletin"/>
+        <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#resource_selector"/>
+        <pmb:name>has_bulletin</pmb:name>
+    </rdf:Description>
+    
+    <!-- type d'article -->
+<!--    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#article_type">
+        <rdfs:label xml:lang='fr'>Type d'article</rdfs:label>
+        <rdfs:comment>Relie à un type d'article</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#cms_article"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+        <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#list"/>
+        <pmb:list_query>SELECT id_editorial_type AS id, editorial_type_label AS value FROM cms_editorial_types WHERE editorial_type_element = 'article' ORDER BY value</pmb:list_query>
+        <pmb:name>article_type</pmb:name>
+    </rdf:Description>-->
+    
+    <!-- type de section -->
+<!--    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#section_type">
+        <rdfs:label xml:lang='fr'>Type de section</rdfs:label>
+        <rdfs:comment>Relie à un type de section</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#cms_section"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+        <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#list"/>
+        <pmb:list_query>SELECT id_editorial_type AS id, editorial_type_label AS value FROM cms_editorial_types WHERE editorial_type_element = 'section' ORDER BY value</pmb:list_query>
+        <pmb:name>section_type</pmb:name>
+    </rdf:Description>-->
+    
+    <!-- Titre -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#title">
+        <rdfs:label xml:lang='fr'>Titre</rdfs:label>
+        <rdfs:comment>Relie à un titre</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#cms_article"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#cms_section"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+        <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#small_text"/>
+        <pmb:name>title</pmb:name>
+    </rdf:Description>   
+    
+    <!-- Résumé -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#summary">
+        <rdfs:label xml:lang='fr'>Résumé</rdfs:label>
+        <rdfs:comment>Relie à un résumé</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#cms_article"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#cms_section"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+        <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#text"/>
+        <pmb:name>summary</pmb:name>
+    </rdf:Description>
+    
+    <!-- Contenu -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#content">
+        <rdfs:label xml:lang='fr'>Contenu</rdfs:label>
+        <rdfs:comment>Relie à un contenu</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#cms_article"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+        <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#text"/>
+        <pmb:name>content</pmb:name>
+    </rdf:Description>
+    
+    <!-- Logo -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#logo">
+        <rdfs:label xml:lang='fr'>Logo</rdfs:label>
+        <rdfs:comment>Relie à un logo</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#cms_article"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+        <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#file"/>
+        <pmb:name>logo</pmb:name>
+    </rdf:Description>
+    
+    <!-- Statut de publication -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#publication_state">
+        <rdfs:label xml:lang='fr'>Statut de publication</rdfs:label>
+        <rdfs:comment>Relie à un statut de publication</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#cms_article"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#cms_section"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+        <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#list"/>
+        <pmb:list_query>SELECT id_publication_state AS id, editorial_publication_state_label AS value FROM cms_editorial_publications_states ORDER BY value</pmb:list_query>
+        <pmb:name>publication_state</pmb:name>
+    </rdf:Description>
+    
+    <!-- Date début -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#start_date">
+        <rdfs:label xml:lang='fr'>Date de début</rdfs:label>
+        <rdfs:comment>Relie à une date de début</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#cms_article"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#cms_section"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+        <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#date"/>
+        <pmb:name>start_date</pmb:name>
+    </rdf:Description>
+    
+    <!-- Date fin -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#end_date">
+        <rdfs:label xml:lang='fr'>Date de fin</rdfs:label>
+        <rdfs:comment>Relie à une date de fin</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#cms_article"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#cms_section"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+        <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#date"/>
+        <pmb:name>end_date</pmb:name>
+    </rdf:Description>
+    
+    <!-- Rubrique PMB -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#has_cms_section">
+        <rdfs:label xml:lang='fr'>Rubrique</rdfs:label>
+        <rdfs:comment>Relie à une rubrique</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#cms_article"/>
+		<rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#cms_section"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+        <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#list"/>
+        <pmb:list_query>SELECT id_section AS id, section_title AS value FROM cms_sections ORDER BY value</pmb:list_query>
+        <pmb:name>has_cms_section</pmb:name>
+        <pmb:flag>cms_section</pmb:flag>
+    </rdf:Description>
+    
+    <!-- Date fin -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#creation_date">
+        <rdfs:label xml:lang='fr'>Date de création</rdfs:label>
+        <rdfs:comment>Relie à une date de création</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#cms_article"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#cms_section"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+        <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#date"/>
+        <pmb:name>creation_date</pmb:name>
+    </rdf:Description>
+    
+    <!-- Date de mise à jour -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#update_date">
+        <rdfs:label xml:lang='fr'>Date de mise à jour</rdfs:label>
+        <rdfs:comment>Relie à une date de mise à jour</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#cms_article"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#cms_section"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+        <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#date"/>
+        <pmb:name>update_date</pmb:name>
+    </rdf:Description>
+    
+    <!-- Code-barres -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#cb">
+        <rdfs:label xml:lang='fr'>No. exemplaire</rdfs:label>
+        <rdfs:comment>Relie a un no. exemplaire</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#expl"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+        <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#small_text"/>
+        <pmb:name>cb</pmb:name>
+    </rdf:Description>
+    
+    <!-- Supports exemplaire PMB -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#typdoc">
+        <rdfs:label xml:lang='fr'>Support</rdfs:label>
+        <rdfs:comment>Relie a un support</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#expl"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+        <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#list"/>
+        <pmb:list_query>SELECT idtyp_doc AS id, tdoc_libelle AS value FROM docs_type ORDER BY value</pmb:list_query>
+        <pmb:name>typdoc</pmb:name>
+    </rdf:Description>
+    
+    <!-- Cote -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#cote">
+        <rdfs:label xml:lang='fr'>Cote</rdfs:label>
+        <rdfs:comment>Relie a une cote</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#expl"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+        <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#small_text"/>
+        <pmb:name>cote</pmb:name>
+    </rdf:Description>
+    
+    <!-- Sections exemplaire PMB -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#docs_section">
+        <rdfs:label xml:lang='fr'>Section</rdfs:label>
+        <rdfs:comment>Relie a une section</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#expl"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+        <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#list"/>
+        <pmb:list_query>SELECT idsection AS id, section_libelle AS value FROM docs_section WHERE section_visible_opac = '1' ORDER BY value</pmb:list_query>
+        <pmb:name>docs_section</pmb:name>
+    </rdf:Description>
+    
+    <!-- Statut exemplaire PMB -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#has_expl_status">
+        <rdfs:label xml:lang='fr'>Statut</rdfs:label>
+        <rdfs:comment>Relie a un statut d'exemplaire</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#expl"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+        <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#list"/>
+        <pmb:list_query>SELECT idstatut AS id, IF(statut_libelle_opac, statut_libelle_opac, statut_libelle) AS value FROM docs_statut ORDER BY value</pmb:list_query>
+        <pmb:name>has_expl_status</pmb:name>
+    </rdf:Description>
+    
+    <!-- Localisation PMB -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#expl_location">
+        <rdfs:label xml:lang='fr'>Localisation</rdfs:label>
+        <rdfs:comment>Relie à une localisation</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#expl"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+        <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#list"/>        
+        <pmb:name>expl_location</pmb:name>
+        <pmb:list_query>SELECT idlocation as id, location_libelle as value FROM docs_location ORDER BY value</pmb:list_query>
+    </rdf:Description>
+    
+    <!-- Code statistique -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#expl_codestat">
+        <rdfs:label xml:lang='fr'>Code statistique</rdfs:label>
+        <rdfs:comment>Relie à un code statistique</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#expl"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+        <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#list"/>
+        <pmb:name>expl_codestat</pmb:name>
+        <pmb:list_query>SELECT idcode as id, codestat_libelle as value FROM docs_codestat ORDER BY value</pmb:list_query>
+    </rdf:Description>
+    
+    <!-- Commentaire de contribution PMB -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#contribution_comment">
+        <rdfs:label xml:lang='fr'>Commentaire de contribution</rdfs:label>
+        <rdfs:comment>Relie à un commentaire de contribution</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+        <rdfs:domain rdf:resource="http://www.pmbservices.fr/ontology#entity"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+        <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#text"/>
+        <pmb:name>contribution_comment</pmb:name>
+    </rdf:Description>
+    
+    <!-- DATATYPES -->
+    
+    <!-- entier PMB -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#integer">
+        <rdfs:label xml:lang='fr'>Type entier</rdfs:label>
+        <rdfs:label xml:lang='en'>Integer</rdfs:label>
+        <rdfs:comment>Renseigne qu'une ressource est de type entier dans PMB</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
+    </rdf:Description>
+    
+    <!-- small_text PMB -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#small_text">
+        <rdfs:label xml:lang='fr'>Type texte court</rdfs:label>
+        <rdfs:label xml:lang='en'>Small text</rdfs:label>
+        <rdfs:comment>Renseigne qu'une ressource est de type texte court dans PMB</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
+    </rdf:Description>
+    
+    <!-- Text PMB -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#text">
+        <rdfs:label xml:lang='fr'>Type texte</rdfs:label>
+        <rdfs:label xml:lang='en'>Text</rdfs:label>
+        <rdfs:comment>Renseigne qu'une ressource est de type texte</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
+    </rdf:Description>
+    
+    <!-- Booléen PMB -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#boolean">
+        <rdfs:label xml:lang='fr'>Type booléen</rdfs:label>
+        <rdfs:label xml:lang='en'>Boolean</rdfs:label>
+        <rdfs:comment>Renseigne qu'une ressource est de type booléen</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
+    </rdf:Description>
+    
+    <!-- Fichier PMB -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#file">
+        <rdfs:label xml:lang='fr'>Type fichier</rdfs:label>
+        <rdfs:label xml:lang='en'>File</rdfs:label>
+        <rdfs:comment>Renseigne qu'une ressource est de type fichier</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
+    </rdf:Description>
+    
+    <!-- Marclist PMB -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#marclist">
+        <rdfs:label xml:lang='fr'>Type marclist</rdfs:label>
+        <rdfs:comment>Renseigne qu'une ressource est de type marclist</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
+    </rdf:Description>
+    
+    <!-- Marclist PMB -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#marclist_selector">
+        <rdfs:label xml:lang='fr'>Type marclist selecteur de ressource</rdfs:label>
+        <rdfs:comment>Renseigne qu'une ressource est de type marclist selecteur de ressource</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
+    </rdf:Description>
+    
+    <!-- Ressource PMB -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#resource">
+        <rdfs:label xml:lang='fr'>Type ressource</rdfs:label>
+        <rdfs:comment>Renseigne qu'une ressource est de type ressource</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
+    </rdf:Description>
+	
+    <!-- Type de marclist PMB -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#marclist_type">        
+        <rdfs:label xml:lang='fr'>a pour marclist</rdfs:label>
+        <rdfs:comment>Relie à un marclist PMB</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+        <rdfs:domain rdf:resource=""/>
+        <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+        <pmb:name>marclist_type</pmb:name>
+    </rdf:Description>
+    
+    <!-- Datatype list PMB -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#list">
+        <rdfs:label xml:lang='fr'>Type liste</rdfs:label>
+        <rdfs:comment>Renseigne qu'une ressource est de type liste</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
+    </rdf:Description>
+	
+    <!-- Choix d'une liste PMB -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#list_item">
+        <rdfs:label xml:lang='fr'>a pour choix</rdfs:label>
+        <rdfs:comment>Définit un choix pour un type de données liste</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+        <rdfs:domain rdf:resource=""/>
+        <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+        <pmb:name>list_item</pmb:name>
+    </rdf:Description>
+    
+    <!-- Choix d'une liste PMB baséé sur une requête -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#list_query">
+        <rdfs:label xml:lang='fr'>a pour choix</rdfs:label>
+        <rdfs:comment>Définit un choix basé sur une requête pour un type de données liste</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+        <rdfs:domain rdf:resource=""/>
+        <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+        <pmb:name>list_query</pmb:name>
+    </rdf:Description>
+    
+    <!-- Datatype list PMB -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#upload_directories">
+        <rdfs:label xml:lang='fr'>Type liste de répertoires d'upload</rdfs:label>
+        <rdfs:comment>Renseigne qu'une ressource est de type liste de répertoires d'upload</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+    </rdf:Description>
+    
+    <!-- Datatype merged selector PMB -->
+    <rdf:Description rdf:about="http://www.pmbservices.fr/ontology#merge_selector">
+        <rdfs:label xml:lang='fr'>Liaison de deux datatypes</rdfs:label>
+        <rdfs:comment>Permet de faire la liaison entre deux datatypes ou plus</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://www.pmbservices.fr/ontology#" />
+        <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
+    </rdf:Description>
+    
+    <!-- RESTRICTIONS -->
+    
+    <rdf:Description rdf:nodeID="identifier_1-1">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+        <owl:onProperty rdf:resource="http://www.pmbservices.fr/ontology#identifier"/>
+        <owl:minCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:minCardinality>
+        <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
+    </rdf:Description>
+    
+    <rdf:Description rdf:nodeID="bibliographical_lvl_1-1">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+        <owl:onProperty rdf:resource="http://www.pmbservices.fr/ontology#bibliographical_lvl"/>
+        <owl:minCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:minCardinality>
+        <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
+    </rdf:Description>
+    
+    <rdf:Description rdf:nodeID="hierarchical_lvl_1-1">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+        <owl:onProperty rdf:resource="http://www.pmbservices.fr/ontology#hierarchical_lvl"/>
+        <owl:minCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:minCardinality>
+        <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
+    </rdf:Description>
+    
+    <rdf:Description rdf:nodeID="doctype_1-1">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+        <owl:onProperty rdf:resource="http://www.pmbservices.fr/ontology#doctype"/>
+        <owl:minCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:minCardinality>
+        <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
+    </rdf:Description>
+    
+    <rdf:Description rdf:nodeID="tit1_1-1">        
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+        <owl:onProperty rdf:resource="http://www.pmbservices.fr/ontology#tit1"/>
+        <owl:minCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:minCardinality>
+        <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
+    </rdf:Description>
+
+    <rdf:Description rdf:nodeID="tit2_0-1">        
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+        <owl:onProperty rdf:resource="http://www.pmbservices.fr/ontology#tit2"/>
+        <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
+    </rdf:Description>
+
+    <rdf:Description rdf:nodeID="tit3_0-1">        
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+        <owl:onProperty rdf:resource="http://www.pmbservices.fr/ontology#tit3"/>
+        <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
+    </rdf:Description>
+
+    <rdf:Description rdf:nodeID="tit4_0-1">        
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+        <owl:onProperty rdf:resource="http://www.pmbservices.fr/ontology#tit4"/>
+        <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
+    </rdf:Description>
+
+    <rdf:Description rdf:nodeID="tparent_0-1">        
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+        <owl:onProperty rdf:resource="http://www.pmbservices.fr/ontology#tparent"/>
+        <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
+    </rdf:Description>
+    
+    <rdf:Description rdf:nodeID="has_author_1-1">                
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+        <owl:onProperty rdf:resource="http://www.pmbservices.fr/ontology#has_author"/>
+        <owl:minCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:minCardinality>
+        <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
+    </rdf:Description>
+    
+    <rdf:Description rdf:nodeID="author_function_0-1">                
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+        <owl:onProperty rdf:resource="http://www.pmbservices.fr/ontology#author_function"/>
+        <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
+    </rdf:Description>
+
+    <rdf:Description rdf:nodeID="has_record_0-1">                
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+        <owl:onProperty rdf:resource="http://www.pmbservices.fr/ontology#has_record"/>
+        <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
+    </rdf:Description>
+
+    <rdf:Description rdf:nodeID="has_record_1-1">                
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+        <owl:onProperty rdf:resource="http://www.pmbservices.fr/ontology#has_record"/>
+        <owl:minCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:minCardinality>
+        <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
+    </rdf:Description>
+    
+    <rdf:Description rdf:nodeID="relation_type_1-1">                
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+        <owl:onProperty rdf:resource="http://www.pmbservices.fr/ontology#relation_type"/>
+        <owl:minCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:minCardinality>
+        <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
+    </rdf:Description>
+    
+    <rdf:Description rdf:nodeID="serie_0-1">                
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+        <owl:onProperty rdf:resource="http://www.pmbservices.fr/ontology#seriel"/>
+        <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
+    </rdf:Description>
+    
+    <rdf:Description rdf:nodeID="tnvol_0-1">                
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+        <owl:onProperty rdf:resource="http://www.pmbservices.fr/ontology#tnvol"/>
+        <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
+    </rdf:Description>
+    
+    <rdf:Description rdf:nodeID="has_main_author_0-1">                
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+        <owl:onProperty rdf:resource="http://www.pmbservices.fr/ontology#has_main_author"/>
+        <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
+    </rdf:Description>
+    
+    <rdf:Description rdf:nodeID="has_collection_0-1">                
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+        <owl:onProperty rdf:resource="http://www.pmbservices.fr/ontology#has_collection"/>
+        <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
+    </rdf:Description>
+    
+    <rdf:Description rdf:nodeID="nocoll_0-1">                
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+        <owl:onProperty rdf:resource="http://www.pmbservices.fr/ontology#nocoll"/>
+        <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
+    </rdf:Description>
+    
+    <rdf:Description rdf:nodeID="has_subcollection_0-1">                
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+        <owl:onProperty rdf:resource="http://www.pmbservices.fr/ontology#has_subcollection"/>
+        <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
+    </rdf:Description>
+    
+    <rdf:Description rdf:nodeID="has_date_0-1">                
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+        <owl:onProperty rdf:resource="http://www.pmbservices.fr/ontology#has_date" />
+        <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
+    </rdf:Description>
+    
+    <rdf:Description rdf:nodeID="publishing_notice_0-1">                
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+        <owl:onProperty rdf:resource="http://www.pmbservices.fr/ontology#publishing_notice"/>
+        <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
+    </rdf:Description>
+    
+    <rdf:Description rdf:nodeID="isbn_0-1">                
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+        <owl:onProperty rdf:resource="http://www.pmbservices.fr/ontology#isbn"/>
+        <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
+    </rdf:Description>
+    
+    <rdf:Description rdf:nodeID="nb_pages_0-1">                
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+        <owl:onProperty rdf:resource="http://www.pmbservices.fr/ontology#nb_pages"/>
+        <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
+    </rdf:Description>
+    
+    <rdf:Description rdf:nodeID="illustration_0-1">                
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+        <owl:onProperty rdf:resource="http://www.pmbservices.fr/ontology#illustration"/>
+        <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
+    </rdf:Description>
+    
+    <rdf:Description rdf:nodeID="size_0-1">                
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+        <owl:onProperty rdf:resource="http://www.pmbservices.fr/ontology#size"/>
+        <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
+    </rdf:Description>
+    
+    <rdf:Description rdf:nodeID="price_0-1">                
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+        <owl:onProperty rdf:resource="http://www.pmbservices.fr/ontology#price"/>
+        <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
+    </rdf:Description>
+    
+    <rdf:Description rdf:nodeID="accompanying_material_0-1">                
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+        <owl:onProperty rdf:resource="http://www.pmbservices.fr/ontology#accompanying_material" />
+        <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
+    </rdf:Description>
+    
+    <rdf:Description rdf:nodeID="general_note_0-1">                
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+        <owl:onProperty rdf:resource="http://www.pmbservices.fr/ontology#general_note"/>
+        <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
+    </rdf:Description>
+    
+    <rdf:Description rdf:nodeID="content_note_0-1">                
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+        <owl:onProperty rdf:resource="http://www.pmbservices.fr/ontology#content_note"/>
+        <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
+    </rdf:Description>
+    
+    <rdf:Description rdf:nodeID="resume_note_0-1">                
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+        <owl:onProperty rdf:resource="http://www.pmbservices.fr/ontology#resume_note"/>
+        <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
+    </rdf:Description>
+    
+    <rdf:Description rdf:nodeID="has_indexint_0-1">                
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+        <owl:onProperty rdf:resource="http://www.pmbservices.fr/ontology#has_indexint"/>
+        <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
+    </rdf:Description>
+    
+    <rdf:Description rdf:nodeID="keywords_0-1">                
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+        <owl:onProperty rdf:resource="http://www.pmbservices.fr/ontology#keywords"/>
+        <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
+    </rdf:Description>
+    
+    <rdf:Description rdf:nodeID="url_0-1">                
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+        <owl:onProperty rdf:resource="http://www.pmbservices.fr/ontology#url"/>
+        <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
+    </rdf:Description>
+    
+    <rdf:Description rdf:nodeID="eformat_0-1">                
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+        <owl:onProperty rdf:resource="http://www.pmbservices.fr/ontology#eformat"/>
+        <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
+    </rdf:Description>
+    
+    <rdf:Description rdf:nodeID="has_record_status_1-1">                
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+        <owl:onProperty rdf:resource="http://www.pmbservices.fr/ontology#has_record_status"/>
+        <owl:minCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:minCardinality>
+        <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
+    </rdf:Description>
+    
+    <rdf:Description rdf:nodeID="has_authority_status_1-1">                
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+        <owl:onProperty rdf:resource="http://www.pmbservices.fr/ontology#has_authority_status"/>
+        <owl:minCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:minCardinality>
+        <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
+    </rdf:Description>
+    
+    <rdf:Description rdf:nodeID="new_record_0-1">                
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+        <owl:onProperty rdf:resource="http://www.pmbservices.fr/ontology#new_record"/>
+        <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
+    </rdf:Description>
+    
+    <rdf:Description rdf:nodeID="comment_0-1">                
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+        <owl:onProperty rdf:resource="http://www.pmbservices.fr/ontology#comment"/>
+        <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
+    </rdf:Description>
+    
+    <rdf:Description rdf:nodeID="thumbnail_url_0-1">                
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+        <owl:onProperty rdf:resource="http://www.pmbservices.fr/ontology#thumbnail_url"/>
+        <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
+    </rdf:Description>
+    
+    <rdf:Description rdf:nodeID="thumbnail_0-1">                
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+        <owl:onProperty rdf:resource="http://www.pmbservices.fr/ontology#thumbnail"/>
+        <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
+    </rdf:Description>
+    
+    <rdf:Description rdf:nodeID="author_type_1-1">                
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+        <owl:onProperty rdf:resource="http://www.pmbservices.fr/ontology#author_type"/>
+        <owl:minCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:minCardinality>
+        <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
+    </rdf:Description> 
+       
+    <rdf:Description rdf:nodeID="author_name_1-1">                
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+        <owl:onProperty rdf:resource="http://www.pmbservices.fr/ontology#author_name"/>
+        <owl:minCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:minCardinality>
+        <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
+    </rdf:Description>
+    
+    <rdf:Description rdf:nodeID="author_first_name_0-1">                
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+        <owl:onProperty rdf:resource="http://www.pmbservices.fr/ontology#author_first_name"/>
+        <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
+    </rdf:Description>
+    
+    <rdf:Description rdf:nodeID="place_0-1">                
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+        <owl:onProperty rdf:resource="http://www.pmbservices.fr/ontology#place"/>
+        <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
+    </rdf:Description>
+    
+    <rdf:Description rdf:nodeID="town_0-1">                
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+        <owl:onProperty rdf:resource="http://www.pmbservices.fr/ontology#town"/>
+        <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
+    </rdf:Description>
+    
+    <rdf:Description rdf:nodeID="subdivision_0-1">                
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+        <owl:onProperty rdf:resource="http://www.pmbservices.fr/ontology#subdivision"/>
+        <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
+    </rdf:Description>
+    
+    <rdf:Description rdf:nodeID="number_0-1">                
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+        <owl:onProperty rdf:resource="http://www.pmbservices.fr/ontology#number"/>
+        <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>        
+    </rdf:Description>
+    
+    <rdf:Description rdf:nodeID="author_see_0-1">                
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+        <owl:onProperty rdf:resource="http://www.pmbservices.fr/ontology#author_see"/>
+        <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
+    </rdf:Description>
+    
+    <rdf:Description rdf:nodeID="website_0-1">                
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+        <owl:onProperty rdf:resource="http://www.pmbservices.fr/ontology#website"/>
+        <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
+    </rdf:Description>
+    
+    <rdf:Description rdf:nodeID="has_authority_1-1">                
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+        <owl:onProperty rdf:resource="http://www.pmbservices.fr/ontology#has_authority"/>
+        <owl:minCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:minCardinality>
+        <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>        
+    </rdf:Description>
+    
+    <rdf:Description rdf:nodeID="relation_type_authority_1-1">                
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+        <owl:onProperty rdf:resource="http://www.pmbservices.fr/ontology#relation_type_authority"/>
+        <owl:minCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:minCardinality>
+        <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>        
+    </rdf:Description> 
+    
+    <rdf:Description rdf:nodeID="label_1-1">                
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+        <owl:onProperty rdf:resource="http://www.pmbservices.fr/ontology#label"/>
+        <owl:minCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:minCardinality>
+        <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
+    </rdf:Description>
+    
+    <rdf:Description rdf:nodeID="note_0-1">                
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+        <owl:onProperty rdf:resource="http://www.pmbservices.fr/ontology#note"/>
+        <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
+    </rdf:Description>
+    
+    <rdf:Description rdf:nodeID="parent_category_0-1">                
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+        <owl:onProperty rdf:resource="http://www.pmbservices.fr/ontology#parent_category"/>
+        <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
+    </rdf:Description>
+    
+    <rdf:Description rdf:nodeID="authority_number_0-1">                
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+        <owl:onProperty rdf:resource="http://www.pmbservices.fr/ontology#category_number"/>
+        <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
+    </rdf:Description>
+    
+    <rdf:Description rdf:nodeID="publisher_name_1-1">                
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+        <owl:onProperty rdf:resource="http://www.pmbservices.fr/ontology#publisher_name"/>
+        <owl:minCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:minCardinality>
+        <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
+    </rdf:Description>
+    
+    <rdf:Description rdf:nodeID="address_1_0-1">                
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+        <owl:onProperty rdf:resource="http://www.pmbservices.fr/ontology#address_1"/>
+        <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
+    </rdf:Description>
+    
+    <rdf:Description rdf:nodeID="address_2_0-1">                
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+        <owl:onProperty rdf:resource="http://www.pmbservices.fr/ontology#address_2"/>
+        <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
+    </rdf:Description>
+    
+    <rdf:Description rdf:nodeID="zip_code_0-1">                
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+        <owl:onProperty rdf:resource="http://www.pmbservices.fr/ontology#zip_code"/>
+        <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
+    </rdf:Description>
+    
+    <rdf:Description rdf:nodeID="supplier_0-1">                
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+        <owl:onProperty rdf:resource="http://www.pmbservices.fr/ontology#supplier"/>
+        <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
+    </rdf:Description>
+    
+    <rdf:Description rdf:nodeID="has_publisher_0-1">                
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+        <owl:onProperty rdf:resource="http://www.pmbservices.fr/ontology#has_publisher"/>
+        <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
+    </rdf:Description>
+    
+    <rdf:Description rdf:nodeID="has_other_publisher_0-1">                
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+        <owl:onProperty rdf:resource="http://www.pmbservices.fr/ontology#has_other_publisher"/>
+        <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
+    </rdf:Description>
+    
+    <rdf:Description rdf:nodeID="has_work_1-1">                
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+        <owl:onProperty rdf:resource="http://www.pmbservices.fr/ontology#has_work"/>
+        <owl:minCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:minCardinality>
+        <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
+    </rdf:Description>
+    
+    <rdf:Description rdf:nodeID="relation_type_work_1-1">                
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+        <owl:onProperty rdf:resource="http://www.pmbservices.fr/ontology#relation_type_work"/>
+        <owl:minCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:minCardinality>
+        <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
+    </rdf:Description>
+    
+    <rdf:Description rdf:nodeID="work_type_1-1">                
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+        <owl:onProperty rdf:resource="http://www.pmbservices.fr/ontology#work_type"/>
+        <owl:minCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:minCardinality>
+        <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
+    </rdf:Description>
+    
+    <rdf:Description rdf:nodeID="work_nature_1-1">                
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+        <owl:onProperty rdf:resource="http://www.pmbservices.fr/ontology#work_nature"/>
+        <owl:minCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:minCardinality>
+        <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
+    </rdf:Description>
+    
+    <rdf:Description rdf:nodeID="shape_0-1">                
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+        <owl:onProperty rdf:resource="http://www.pmbservices.fr/ontology#shape"/>
+        <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
+    </rdf:Description>
+    
+    <rdf:Description rdf:nodeID="has_shape_0-1">                
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+        <owl:onProperty rdf:resource="http://www.pmbservices.fr/ontology#has_shape"/>
+        <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
+    </rdf:Description>
+    
+    <rdf:Description rdf:nodeID="subject_0-1">                
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+        <owl:onProperty rdf:resource="http://www.pmbservices.fr/ontology#subject"/>
+        <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
+    </rdf:Description>
+    
+    <rdf:Description rdf:nodeID="intended_termination_0-1">                
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+        <owl:onProperty rdf:resource="http://www.pmbservices.fr/ontology#intended_termination"/>
+        <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
+    </rdf:Description>
+    
+    <rdf:Description rdf:nodeID="targeted_audience_0-1">                
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+        <owl:onProperty rdf:resource="http://www.pmbservices.fr/ontology#targeted_audience"/>
+        <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
+    </rdf:Description>
+    
+    <rdf:Description rdf:nodeID="story_0-1">                
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+        <owl:onProperty rdf:resource="http://www.pmbservices.fr/ontology#story"/>
+        <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
+    </rdf:Description>
+    
+    <rdf:Description rdf:nodeID="context_0-1">                
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+        <owl:onProperty rdf:resource="http://www.pmbservices.fr/ontology#context"/>
+        <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
+    </rdf:Description>
+    
+    <rdf:Description rdf:nodeID="has_tone_0-1">                
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+        <owl:onProperty rdf:resource="http://www.pmbservices.fr/ontology#has_tone"/>
+        <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
+    </rdf:Description>
+    
+    <rdf:Description rdf:nodeID="coord_0-1">                
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+        <owl:onProperty rdf:resource="http://www.pmbservices.fr/ontology#coord"/>
+        <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
+    </rdf:Description>
+    
+    <rdf:Description rdf:nodeID="equinox_0-1">                
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+        <owl:onProperty rdf:resource="http://www.pmbservices.fr/ontology#equinox"/>
+        <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
+    </rdf:Description>
+    
+    <rdf:Description rdf:nodeID="other_feature_0-1">                
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+        <owl:onProperty rdf:resource="http://www.pmbservices.fr/ontology#other_feature"/>
+        <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
+    </rdf:Description>
+    
+    <rdf:Description rdf:nodeID="has_record_1-1">                
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+        <owl:onProperty rdf:resource="http://www.pmbservices.fr/ontology#has_record"/>
+        <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
+    </rdf:Description>
+    
+    <rdf:Description rdf:nodeID="has_docnum_status_1-1">                
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+        <owl:onProperty rdf:resource="http://www.pmbservices.fr/ontology#has_docnum_status"/>
+        <owl:minCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:minCardinality>
+        <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
+    </rdf:Description>
+    
+    <rdf:Description rdf:nodeID="docnum_file_1-1">                
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+        <owl:onProperty rdf:resource="http://www.pmbservices.fr/ontology#docnum_file"/>
+        <owl:minCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:minCardinality>
+        <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
+    </rdf:Description>
+    
+    <rdf:Description rdf:nodeID="upload_directory_1-1">                
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+        <owl:onProperty rdf:resource="http://www.pmbservices.fr/ontology#upload_directory"/>
+        <owl:minCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:minCardinality>
+        <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
+    </rdf:Description>
+    
+    <rdf:Description rdf:nodeID="has_thesaurus_1-1">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+        <owl:onProperty rdf:resource="http://www.pmbservices.fr/ontology#has_thesaurus"/>
+        <owl:minCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:minCardinality>
+        <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
+    </rdf:Description>
+    
+    <rdf:Description rdf:nodeID="has_bulletin_0-1">                
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+        <owl:onProperty rdf:resource="http://www.pmbservices.fr/ontology#has_bulletin"/>
+        <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
+    </rdf:Description>
+    
+    <rdf:Description rdf:nodeID="has_title_1-1">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+        <owl:onProperty rdf:resource="http://www.pmbservices.fr/ontology#title"/>
+        <owl:minCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:minCardinality>
+        <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
+    </rdf:Description>
+    
+    <rdf:Description rdf:nodeID="has_summary_0-1">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+        <owl:onProperty rdf:resource="http://www.pmbservices.fr/ontology#summary"/>
+        <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
+    </rdf:Description>
+    
+    <rdf:Description rdf:nodeID="has_content_0-1">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+        <owl:onProperty rdf:resource="http://www.pmbservices.fr/ontology#content"/>
+        <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
+    </rdf:Description>
+    
+    <rdf:Description rdf:nodeID="has_logo_0-1">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+        <owl:onProperty rdf:resource="http://www.pmbservices.fr/ontology#logo"/>
+        <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
+    </rdf:Description>
+    
+    <rdf:Description rdf:nodeID="has_publication_state_0-1">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+        <owl:onProperty rdf:resource="http://www.pmbservices.fr/ontology#publication_state"/>
+        <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
+    </rdf:Description>
+    
+    <rdf:Description rdf:nodeID="has_start_date_0-1">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+        <owl:onProperty rdf:resource="http://www.pmbservices.fr/ontology#start_date"/>
+        <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
+    </rdf:Description>
+    
+    <rdf:Description rdf:nodeID="has_end_date_0-1">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+        <owl:onProperty rdf:resource="http://www.pmbservices.fr/ontology#end_date"/>
+        <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
+    </rdf:Description>
+    
+    <rdf:Description rdf:nodeID="has_cms_section_1-1">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+        <owl:onProperty rdf:resource="http://www.pmbservices.fr/ontology#has_cms_section"/>
+        <owl:minCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:minCardinality>
+        <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
+    </rdf:Description>
+    
+    <rdf:Description rdf:nodeID="has_creation_date_0-1">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+        <owl:onProperty rdf:resource="http://www.pmbservices.fr/ontology#creation_date"/>
+        <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
+    </rdf:Description>
+    
+    <rdf:Description rdf:nodeID="has_update_date_0-1">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+        <owl:onProperty rdf:resource="http://www.pmbservices.fr/ontology#update_date"/>
+        <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
+    </rdf:Description>
+    
+    <rdf:Description rdf:nodeID="publication_language_0-1">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+        <owl:onProperty rdf:resource="http://www.pmbservices.fr/ontology#publication_language"/>
+        <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
+    </rdf:Description>
+    
+    <rdf:Description rdf:nodeID="original_language_0-1">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+        <owl:onProperty rdf:resource="http://www.pmbservices.fr/ontology#original_language"/>
+        <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
+    </rdf:Description>
+    
+    <rdf:Description rdf:nodeID="record_language_0-1">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+        <owl:onProperty rdf:resource="http://www.pmbservices.fr/ontology#record_language"/>
+        <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
+    </rdf:Description>
+    
+    <rdf:Description rdf:nodeID="has_cb_1-1">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+        <owl:onProperty rdf:resource="http://www.pmbservices.fr/ontology#cb"/>
+        <owl:minCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:minCardinality>
+        <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
+    </rdf:Description>
+    
+    <rdf:Description rdf:nodeID="has_typdoc_1-1">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+        <owl:onProperty rdf:resource="http://www.pmbservices.fr/ontology#typdoc"/>
+        <owl:minCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:minCardinality>
+        <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
+    </rdf:Description>
+    
+    <rdf:Description rdf:nodeID="has_cote_1-1">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+        <owl:onProperty rdf:resource="http://www.pmbservices.fr/ontology#cote"/>
+        <owl:minCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:minCardinality>
+        <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
+    </rdf:Description>
+    
+    <rdf:Description rdf:nodeID="has_expl_status_1-1">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+        <owl:onProperty rdf:resource="http://www.pmbservices.fr/ontology#has_expl_status"/>
+        <owl:minCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:minCardinality>
+        <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
+    </rdf:Description>
+    
+    <rdf:Description rdf:nodeID="has_expl_location_1-1">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+        <owl:onProperty rdf:resource="http://www.pmbservices.fr/ontology#expl_location"/>
+        <owl:minCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:minCardinality>
+        <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
+    </rdf:Description>
+    
+    <rdf:Description rdf:nodeID="has_expl_codestat_1-1">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+        <owl:onProperty rdf:resource="http://www.pmbservices.fr/ontology#expl_codestat"/>
+        <owl:minCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:minCardinality>
+        <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
+    </rdf:Description>
+    
+    <rdf:Description rdf:nodeID="owner_1-1">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+        <owl:onProperty rdf:resource="http://www.pmbservices.fr/ontology#owner"/>
+        <owl:minCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:minCardinality>
+        <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
+    </rdf:Description>
+    
+    <rdf:Description rdf:nodeID="docs_section_1-1">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+        <owl:onProperty rdf:resource="http://www.pmbservices.fr/ontology#docs_section"/>
+        <owl:minCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:minCardinality>
+        <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
+    </rdf:Description>
+    
+    <rdf:Description rdf:nodeID="contribution_comment_0-1">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+        <owl:onProperty rdf:resource="http://www.pmbservices.fr/ontology#contribution_comment"/>
+        <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
+    </rdf:Description>
+</rdf:RDF>

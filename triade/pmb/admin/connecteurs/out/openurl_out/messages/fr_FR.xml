@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../../../../../includes/XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français
+****************************************************************************************
+© 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: fr_FR.xml,v 1.1 2011-08-02 12:36:01 arenou Exp $ -->
+
+<XMLlist>
+	<entry code="openurl_service_endpoint">Adresse du serveur</entry>
+	<entry code="openurl_service_endpoint_unrecorded">Enregistrer la source pour obtenir l'adresse</entry>
+	<entry code="openurl_serialization">Mode de sérialisation</entry>
+	<entry code="openurl_serialization_kev">KEV</entry>
+	<entry code="openurl_serialization_xml">XML</entry>
+	<entry code="openurl_mode">Mode de fonctionnement</entry>
+	<entry code="openurl_mode_requeteur">Requêteur</entry>
+	<entry code="openurl_mode_byref">Fournisseur de données By-Reference</entry>
+			
+</XMLlist>

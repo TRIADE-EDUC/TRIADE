@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le connecteur OAI
+****************************************************************************************
+© 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: en_UK.xml,v 1.2 2017-09-15 10:29:40 apetithomme Exp $ -->
+
+<XMLlist>
+	<entry code="id_pmb">Identifiant PMB (à transmettre à Cairn.info)</entry>
+	<entry code="id_cairn">Identifiant Cairn.info</entry>
+	<entry code="generate_id">Générer</entry>
+	<entry code="alert_id_cairn">Vous devez renseigner un identifiant Cairn.info.</entry>
+	<entry code="confirm_generation">Attention, le nouvel identifiant sera à communiquer à Cairn.info. Voulez-vous continuer ?</entry>
+</XMLlist>

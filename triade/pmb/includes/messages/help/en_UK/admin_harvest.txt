@@ -1,0 +1,2 @@
+<h2>Administration of the record harvester</h2>
+<p>This page lets you manage the import of records coming from different connectors.</p>

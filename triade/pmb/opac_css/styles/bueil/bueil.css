@@ -1,0 +1,1127 @@
+/* +--------------------------------------------------------------------------+
+// � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// +-------------------------------------------------+
+// $Id: bueil.css,v 1.79 2017-10-24 10:28:55 bdufaitel Exp $
+*/
+
+/* ---------------------------------------------------------------------------*/
+/* ---------------------------------------------------------------------------*/
+/*                         ATTRIBUTS GENERAUX                                 */
+/*                                                                            */
+/*  attrbitus generaux de la page                                             */
+/* ---------------------------------------------------------------------------*/
+/* ---------------------------------------------------------------------------*/
+
+
+* {
+	margin: 0px;
+	padding: 0px;
+}
+
+body { 
+	font-family : Verdana, Arial, Helvetica, sans-serif;
+	font-size : 11px;
+}
+
+img {
+	border: none;
+}
+
+
+/* ---------------------------------------------------------------------------*/
+/* ---------------------------------------------------------------------------*/
+/*                            ID FIXES                                        */
+/*                                                                            */
+/*  feuilles de styles appliquees e des id fixes                              */
+/* ---------------------------------------------------------------------------*/
+/* ---------------------------------------------------------------------------*/
+
+#pmbopac {
+	margin:0;
+}
+
+/* partie d'affichage principale a droite de l'ecran */
+#container 	{}
+#intro {
+	width:175px;
+	padding-bottom:10px;
+	margin-left:10px;
+}
+	
+#intro_bibli h3 {font-size:11px;}
+	
+#intro_bibli img {
+	max-width: 170px;
+	width: expression(this.width > 170 ? "170px" : true);
+}
+	
+#intro_bibli .p1, #intro_bibli .p2{
+	margin-bottom:10px;
+}
+		
+#all_footer {
+	position:absolute;
+	top:660px;
+	padding-left:10px;
+	left:0;
+}
+
+#main {
+		margin:5px 10px 5px 195px;
+		position:absolute;
+	}
+
+	#main h3 { 
+		font-size:14px;
+		padding-left:14px;
+		background:transparent url('pointsable.gif') no-repeat 3px 4px;
+	}
+
+	#main h3 span {
+		font-size:14px;
+		color:#008cc6; /*009cdc*/
+	}
+#main_hors_footer {}
+#main #search {
+		border:1px solid #bbbbbb;
+    	margin-bottom: 10px;
+    	margin-top: 25px;
+    	padding:0 5px 15px 5px;
+    	background:#eeeeee;
+    	
+		-moz-border-radius-bottomright:10px;
+	 	-webkit-border-radius-bottom-right:10px;
+		border-radius-bottom-right:10px;
+		-moz-border-radius-topright:10px;
+	 	-webkit-border-radius-top-right:10px;
+		border-radius-top-right:10px;
+	}
+	
+	#main ul.search_tabs, #onglets_list ul.list_tabs{
+	      margin-top: -24px;
+	      padding-left: 0px;
+	      margin-left: 0px;
+          list-style:none;
+          font-size:13px;
+	}
+
+	#main ul.search_tabs li, #onglets_list ul.list_tabs li{
+		float:left;
+		padding:4px 6px 0px 6px;
+        border:1px solid #bbbbbb;  
+        margin-right:6px;
+		margin-bottom:5px;
+        height:19px;
+        border-bottom:none;  
+		background:#bbb;
+		color:#000000;
+	}
+
+	#main ul.search_tabs li a, #onglets_list ul.list_tabs li a{
+		text-decoration:none;
+		font-weight:normal;
+		color:#000000;
+	}
+	
+	#main ul.search_tabs li:hover, #onglets_list ul.list_tabs li:hover {
+		background:#eee;
+	}
+          
+	#main ul.search_tabs li#current, #onglets_list ul.list_tabs li#current{
+	  	float:left;
+	  	padding:3px 8px 0px 15px;
+	  	background:#eee url('pointsable.gif') no-repeat 4px 7px;
+       	border:1px solid #bbbbbb;  
+        border-bottom:1px solid #eee;
+	  	margin-bottom:4px;
+        height:19px;
+        font-size:14px;
+    }
+    
+    
+    
+    #main  #search_crl {
+    	clear:both;
+    	}      
+
+.div_clr {
+    	clear:both;
+    	}  
+
+	#location {
+		clear:both;
+		margin-top: 15px;
+	}
+
+	#aut_see {
+			border:1px solid #cccccc;
+    	margin-top:-1px;
+    	padding:5px;
+    	background:#eeeeee;
+    	margin-bottom:10px;
+	}
+
+	#navigator {
+		margin-top:5px;
+		border:1px solid #cccccc;
+		padding:2px 0 0 5px;
+	}
+
+
+	#navigator td {
+		border-left:1px #FFFFFF solid;
+		border-right:1px #FFFFFF solid;
+		text-align:center;
+		font-size:11px;
+		font-weight:italic;
+	}
+/* informations e ajouter pour afficher les categories */
+div.row_categ {
+ display: block;
+ clear: left;
+}
+
+#categories {
+	/*display: block;*/
+	margin:0px;
+	padding:0px;
+	height:100%;
+	}
+
+#categories h1{}
+#categories h3{padding-bottom:6px;}
+
+#categories a{
+	color:#666;
+	text-decoration:none;
+}
+
+#categories a:hover {
+	color:#999;
+	text-decoration:underline;
+}
+
+/* informations e ajouter pour afficher les categories */
+#categories-container {
+	background:#eee;
+	border: 1px solid #bbbbbb;
+	padding-left:10px;
+	padding-bottom:15px;
+	padding-top:10px;
+	-moz-border-radius:10px;
+	-webkit-border-radius:10px;
+	border-radius:10px;
+}
+
+div.category 	{	
+		float:left;
+		width:31%;
+		color:#666;
+		padding:2px;
+		}
+		
+#categories-container H2 {
+		font-size:13px;
+		padding-bottom :0px;
+		margin:0px;
+		color:#666;
+		}
+		
+#categories-container H2 IMG {
+		padding-top:3px;
+		}
+#categories-container A {
+		color:#666;
+		}
+#categories-container h2 A {
+		color:#666;
+		}
+#categories-container UL {
+	margin-left: 0px;
+	margin-top: 5px;
+	margin-bottom: 0px;
+	padding-left: 0px;
+	}
+
+#categories-container LI  {
+	display: inline;
+	}
+
+#categories-container LI A {
+	text-decoration:none;
+	}
+	
+#categories-container LI A:hover {
+	text-decoration:underline;
+	}
+
+#categories-container LI:after  {
+	content: " - "; 
+	}
+	
+#categories ul.search_tabs {
+	margin-top: 0px;
+}	
+
+#categorie ul.search_tabs li{
+	float:left;
+    margin-right:4px;
+	background:#5ab9f9;
+	color:#5ab9f9;
+	-moz-border-radius-topleft:5px;
+   	-moz-border-radius-topright:5px;
+}
+
+#categories ul.search_tabs li a{
+	text-decoration:none;
+	font-weight:normal;
+	color:#000000;
+	height:20px;
+	border:none;
+	-moz-border-radius-topleft:5px;
+   	-moz-border-radius-topright:5px;
+}
+          
+#categories ul.search_tabs li#current{
+   	border:none;
+   	height:20px;
+   	padding-left:5px;
+   	background: #EEEEEE;
+    border-color: #BBBBBB #BBBBBB #EEEEEE;
+    border-style: solid;
+    border-width: 1px;
+}          	
+
+/* Mise en page des colonnes d'affichage des recherches 
+   par auteurs, editeurs, collections , sous-collections et categories */
+.categ_colonne {
+	width:33%;
+	float:left;
+}
+/* reset des largeurs de #categories */
+/* apres un float:left; l'element bloc suivant doit avoir l'attribut clear:both s?lectionn? pour ?viter un bug d'affichage */
+
+#last_entries {
+	clear:both;
+	margin-top: 15px;
+}
+
+#etageres {
+	margin-top: 15px;
+	clear:both;
+}
+
+#pageHeader 
+	{ }
+
+#bandeau { 
+	 width:155px;
+	 padding:0px 5px 15px 10px;
+	 margin-left:10px;
+	 background: #eeeeee;
+	 border:#bbbbbb 1px solid;
+	 -moz-border-radius:10px;
+	 -webkit-border-radius:10px;
+	 border-radius:10px;
+}
+
+	#bandeau a{}
+
+	#bandeau div{
+		padding:0px;
+	}
+	
+	#bandeau form {
+		margin: 0px 0px 0px 0px ;
+	}
+
+	#bandeau h3 {
+		margin: 15px -5px 5px -10px ;
+		font-weight:bold;
+		font-size:12px;
+		background:#fff url('pointsable.gif') no-repeat 4px 4px;
+		padding:2px 0px 2px 22px;
+	}
+
+	#bandeau P.centered {
+	margin: 0px 0px 0px 0px ;
+	text-align:center;
+	}
+
+	#bandeau span {
+	font-size:11px;
+	}
+		
+	#bandeau h3 span {
+	font-size:12px;
+	}
+	#bandeau #connexion #login_form input.login, #bandeau #connexion #login_form input.password {
+	width: 100px;
+	}
+
+#footer {
+		clear:both;
+		margin-top: 15px;
+		margin-left: 0px;
+		margin-bottom: 0px;
+		margin-right: 0px;
+		padding: 5px;
+		color: transparent;
+		voice-family: "\"}\"";
+		voice-family:inherit;
+		background: url("liens.png") top left;
+		border:#bbbbbb 1px solid;
+		text-align:center;
+	}
+	
+#footer a {
+	color:#444444;	}
+
+#footer a:hover {
+	color:#444444;
+	text-decoration:underline;	}
+
+#notice 
+	{  }
+
+	#notice h3
+	{ }
+		
+	#notice span 
+	{ }
+
+#script_analytics {
+    position: fixed;
+    top: 0;
+    width: 100%;
+}
+/* ---------------------------------------------------------------------------*/
+/* ---------------------------------------------------------------------------*/
+/*                            BALISES HTML                                    */
+/*                                                                            */
+/*  feuilles de styles appliquees e des balises sans classes ni id specifies  */
+/* ---------------------------------------------------------------------------*/
+/* ---------------------------------------------------------------------------*/
+
+A 	{
+	color:#444444;
+	}
+
+A:hover {
+	}
+
+.categmouseout {
+	border: solid 2px #555555;
+	background-color: #FFFFFF;
+	color: #000000;
+	position: absolute;
+	visibility:hidden;
+	z-index: 2000;
+}
+.categmouseover {
+	border: solid 2px #555555;
+	background-color: #FFFFFF;
+	color: #000000;
+	position: absolute;
+	visibility:visible;
+	z-index: 2000;
+	margin-top: 2px;
+}
+
+.listedescription {
+	border: solid 2px #555555;
+	background-color: #fff;
+	color: #000000;
+	position: absolute;
+	visibility:hidden;
+	z-index: 2000;
+}
+
+/*------------------------------------
+/*	tableaux
+/------------------------------------*/
+.exemplaires { 
+	border-collapse: separate;
+}
+
+tr { 
+}
+
+th {
+	text-align: left ;
+	background-color: #EEEEEE;
+	padding-right: 19px;
+}
+
+td {
+	font-size : 11px;
+	vertical-align: top;
+	}
+
+td.jauge
+	{	}
+
+td.visible
+	{ }
+
+td.visible-centered
+	{ }
+
+tr.even {
+	background: #E0E0E0;
+	}
+tr.surbrillance {
+	background: #EECCCC;
+	}
+tr.odd
+	{ }
+
+
+/* ---------------------------------------------------------------------------*/
+/* ---------------------------------------------------------------------------*/
+/*                            CLASSES GENERIQUES                              */
+/*                                                                            */
+/*  feuilles de styles appliquees e classes de balises                        */
+/* ---------------------------------------------------------------------------*/
+/* ---------------------------------------------------------------------------*/
+
+
+/* divers pour les affichages simples de texte   */
+/*-----------------------------------------------*/
+
+.row
+	{ clear: both; }
+
+.right,
+.right-50,
+.right-15,
+.right-85 
+	{	float: right; }
+
+.right-50 {	width: 50%; }
+
+.right-15 {	width: 15%; }
+
+.right-85 {	width: 85%; }
+
+
+.right-clear-right,
+.right-50-clear-right
+	{	float: right;
+		clear: right; }
+
+.left-clear-left,
+.left-50-clear-left
+	{	float: left;
+		clear: left; }
+
+.left,
+.left-50,
+.left-15
+	{	float: left;}
+
+.left-50
+	{	width: 50%;}
+
+.left-15
+	{	width: 15%;}
+
+.left-85
+	{	width: 85%;}
+
+.spacer
+	{	clear: both;
+		visibility: hidden;
+		display: none;
+		margin-bottom: -10px;
+		margin-top: -10px; }
+
+.p1 {
+	padding-top: 10px;
+	clear: both;
+}
+	
+.text_query 
+	{  }
+
+.fond-mere {
+	}
+
+.fond-article {
+	}
+
+/* ---------------------------------------------------------------------------*/
+/* ---------------------------------------------------------------------------*/
+/*                            CLASSES LIEES A L'APPLICATION                   */
+/*                                                                            */
+/*  feuilles de styles appliquees e des balises sans classes ni id specifies  */
+/* ---------------------------------------------------------------------------*/
+/* ---------------------------------------------------------------------------*/
+
+input.bouton, input.boutonrechercher 
+	{ }
+
+input.numero_page 
+	{ }
+
+
+/* ---------------------------------------------------------------------------*/
+/* ---------------------------------------------------------------------------*/
+/*                       ONGLETS DE L'AFFICHAGE PUBLIC/ISBD                   */
+/* ---------------------------------------------------------------------------*/
+/* ---------------------------------------------------------------------------*/
+
+ul.onglets_isbd_public {
+    list-style-type: none;
+    padding-bottom: 24px;
+    border-bottom: 1px solid #aaaaaa;
+    clear: both;
+    padding-left:2px;
+}
+
+ul.onglets_isbd_public li {
+    float: left;
+    height: 21px;
+    margin: 2px 2px 0 2px;
+    border: 1px solid #aaaaaa;
+    background-color: #cccccc;
+}
+
+ul.onglets_isbd_public li.isbd_public_active {
+    border-bottom: 1px solid #ffffff;
+    background-color: #ffffff;
+}
+
+ul.onglets_isbd_public a {
+    float: left;
+    display: block;
+    color: #666;
+    text-decoration: none;
+    padding: 4px;
+    cursor: default ;
+}
+
+ul.onglets_isbd_public li.isbd_public_inactive a:hover {
+    background: #FFF;
+    cursor: pointer ;
+    }
+
+ul.onglets_isbd_public li.onglet_basket,
+ul.onglets_isbd_public li.onglet_basket a {
+    border: none;
+	background:none;
+    cursor: pointer ;
+	width:25px;
+	}
+
+ul.onglets_isbd_public li.onglet_tags,
+ul.onglets_isbd_public li.onglet_tags a {
+    border: none;
+	background:none;
+    cursor: pointer ;
+	text-decoration:underline;
+	}
+
+/* Colonnes */
+.colonne2 {
+  float: left;
+  width: 50%;
+}
+
+.colonne_suite {
+  float: left;
+}
+
+.bg-grey {
+  background-color: #eeeeee;
+  border-top:1px solid white;
+  -moz-border-radius:2px;
+  -webkit-border-radius:2px;
+  border-radius:2px;
+  vertical-align: top;
+  height: auto;
+  padding-right: 0.2em;
+  width: 26em;
+}
+
+/* Etageres */
+.etagere {
+	background:#fff;
+	border:#cccccc 1px solid;
+}
+
+#etagere-titre h1 {
+	background: url("liens.png") top left;
+	margin:0px;
+	padding:5px;
+	font-size:13px;
+	font-weight:bold;
+}
+#etagere-titre h1 a {
+	color:#000000;
+}
+
+#etagere-titre a {
+}
+
+#etagere-comment h2 {
+	text-align:right;
+	font-style:italic;
+	font-size:16px;
+	color:#ffffff;
+	margin:0px;
+	padding:0px;
+	margin-top:-3px;
+	padding-bottom:5px;
+}
+
+#etagere-notice-list {
+	padding-left:5px;
+
+}
+
+#etagere-notice-list A {
+}
+#etagere-notice-list A:hover {
+}
+
+/*********************    correction espacement de gauche dans la notice    ********************/
+
+
+#etagere-notice-list tbody tr td table {
+	padding-top:5px;
+}
+#resultatrech_liste tbody tr td table,
+#resultatrech_liste tbody{
+	padding-top:5px;
+}
+
+/**********************************************************************************************/
+/* barre de navigation */
+#navigator table {
+}
+
+#navigator td {
+}
+
+.liste_bulletins {
+    padding-left: 3px;
+    padding-right: 3px;
+    	}  
+.notice-heada {
+    font-family: verdana, helvetica, arial, geneva, sans-serif;
+	text-decoration: none;
+    font-size: 11px;
+    font-weight: bold;
+	padding-top:5px;
+}
+
+.notice-parent {
+    font-family: verdana, helvetica, arial, geneva, sans-serif;
+    color: #000000;
+    margin-left: 0px;
+    font-size: 8pt;
+    text-decoration: none
+}
+
+.img_plus {
+	background-color: #8CC6FF;
+}
+
+.notice-child {
+    font-family: arial, helvetica, geneva, sans-serif;
+    margin-left: 25px;
+    padding-left: 4px;
+    padding-right: 4px;
+    text-align: justify;
+    border-bottom-style: solid;
+    border-bottom-width: 1px;
+    border-bottom-color: #c0c0c0;
+    border-left-style: solid;
+    border-left-width: 1px;
+    border-left-color: #c0c0c0;
+    border-right-style: none;
+    border-top-style: none;
+}
+
+.notice-child td {
+    padding-right: 5px;
+}
+
+.heada {
+    font-family: verdana, helvetica, arial, geneva, sans-serif;
+	text-decoration: none;
+    font-weight: bold;
+}
+.parent {
+    font-family: verdana, helvetica, arial, geneva, sans-serif;
+    color: #000000;
+    margin-left: 0px;
+    text-decoration: none
+}
+.child {
+    font-family: arial, helvetica, geneva, sans-serif;
+   margin-left: 25px;
+    padding-left: 4px;
+    padding-right: 4px;
+    text-align: justify;
+    border-bottom-style: solid;
+    border-bottom-width: 1px;
+    border-bottom-color: #c0c0c0;
+    border-left-style: solid;
+    border-left-width: 1px;
+    border-left-color: #c0c0c0;
+    border-right-style: none;
+    border-top-style: none;
+}
+
+iframe#iframe_resume_panier {
+	width: 800px;
+	height: 35px;
+	border: none;
+}
+
+/* Bannettes */
+#bannette {
+	background:#EEEEFF; 
+	border:#cccccc 1px solid;
+}
+
+.bannette-titre h1 {
+	background: url("liens.png") top left;
+	margin:0px;
+	padding:5px;
+	font-size:13px;
+	font-weight:bold;
+}
+.bannette-titre h1 a {
+	color:#000000;
+}
+
+.bannette-titre a {
+	text-align:right;
+	font-style:italic;
+	font-size:16px;
+	color:#ffffff;
+	margin:0px;
+	padding:0px;
+	margin-top:-3px;
+	padding-bottom:5px;
+}
+
+#bannette-notice-list {
+	padding-left:5px;
+}
+
+.alerte {
+	color: red;
+	font-size:14px;
+	}
+
+.echelle_avis {
+	background-color: #eeeeee;
+	padding: 7px;
+	margin: 3px;
+	border:1px solid #BBBBCC;
+}
+
+.text_search0 {
+	background-color: yellow;
+	text-decoration: underline;
+}
+
+.text_search1 {
+	background-color: #dd9797;
+	text-decoration: underline;
+}
+
+.text_search2 {
+	background-color: #ddb397;
+	text-decoration: underline;
+}
+
+.text_search3 {
+	background-color: #cd97dd;
+	text-decoration: underline;
+}
+
+.text_search4 {
+	background-color: #97c2dd;
+	text-decoration: underline;
+}
+
+.text_search5 {
+	background-color: #97ddae;
+	text-decoration: underline;
+}
+
+#titre-popup {
+		margin-top:5px;
+		padding-top: 5px;
+		padding-bottom: 5px;
+		background:#CCCCEE;
+		border:1px solid #BBBBCC;
+		color: #fee064;
+	}
+
+.etiq_champ {
+	font-weight:bold;
+	}
+
+/*Suggestion Multiple*/
+
+.tab_sug{
+	table-layout: fixed;
+}
+
+table{
+	border-collapse:collapse;
+	width:100%;
+}
+.tab_sug th, .tab_sug td{
+	border:1px solid #CCCCCC;
+	border-collapse:collapse;
+	overflow:hidden;	
+	vertical-align:center;
+	text-align: center;
+	width : 100%;
+}
+
+.tab_sug  input, .tab_sug textarea{
+   width:95%;
+   height:100%;
+}
+.tab_sug select{
+	width:95%;
+}
+
+.erreur_saisie {
+	background-color: #ff0000;
+}
+
+/***********************
+ * Carroussel bulletin *
+ ***********************/
+.carroussel_bulletin{
+	text-align : center;
+	/*border : 1px solid black;*/
+}
+
+.carroussel_bulletin .active{
+	border : 1px solid black;
+	cursor : pointer;
+}
+
+.carroussel_bulletin .current_bull_carroussel{
+	border : 1px solid black;
+	font-weight : bold;
+}
+
+
+
+/*---------------------------------------------------------------*
+ *---------------------------------------------------------------* 
+ * 		      Mise en forme de la fiche emprunteur				 *
+ *---------------------------------------------------------------*
+ *---------------------------------------------------------------*/
+ 
+
+#empr_onglet ul.empr_tabs {
+	list-style:none;
+	font-size:11px;
+    padding-left: 0px;
+    margin-left: 0px;
+    margin-bottom: 0px;
+    margin-top: 0px;
+}
+
+#empr_onglet ul.empr_tabs li {
+	background: none repeat scroll 0 0 #BBBBBB;
+    border-top: 1px solid #BBBBBB;
+    border-left: 1px solid #BBBBBB;
+    border-right: 1px solid #BBBBBB;
+    border-bottom: 1px solid #BBBBBB;
+    color: #000000;
+    float: left;
+    height: 19px;
+    margin-bottom: 5px;
+    margin-right: 6px;
+    padding: 4px 6px 0;
+}
+
+#empr_onglet ul.empr_tabs li a {
+	color: #000000;
+	text-decoration: none;
+}
+
+#empr_onglet ul.empr_tabs li:hover {
+   	background-color: #EEEEEE;
+   	border-top: 1px solid #BBBBBB;
+    border-left: 1px solid #BBBBBB;
+    border-right: 1px solid #BBBBBB;
+    border-bottom: 1px solid #EEEEEE;
+}
+
+#empr_onglet ul.empr_tabs li#current {
+	background: url("pointsable.gif") no-repeat scroll 4px 7px #EEEEEE;
+    border-top: 1px solid #BBBBBB;
+    border-left: 1px solid #BBBBBB;
+    border-right: 1px solid #BBBBBB;
+    border-bottom: 1px solid #EEEEEE;
+    float: left;
+    font-size: 14px;
+    height: 19px;
+    margin-bottom: 4px;
+    padding: 3px 8px 0 15px;
+}
+
+ul.empr_subtabs {
+	list-style:none;
+    padding-top: 20px;
+    padding-left: 0px;
+    margin-left: 0px;
+    margin-bottom: 0px;
+    margin-top: 0px;
+}
+
+ul.empr_subtabs li{
+	background-color: #EEEEEE;
+	display:inline-block;
+	margin-bottom: 4px;
+	margin-right: 4px;
+	padding: 0.4em;
+}
+
+ ul.empr_subtabs li a{
+	text-decoration:none;
+}
+
+#fiche-empr,#empr-all, #empr-late, #empr-old, #empr-resa, #empr-dsi, #empr-sugg, #empr-list, #empr-dema {
+	margin-top: 25px;
+	padding-left: 12px;
+} 
+
+#empr-list #onglets_list #div_mylist #list_cadre {
+	border: none !important;
+}
+
+#empr-list h3 {
+	margin-top: -10px;
+}
+
+#empr-list #onglets_list {
+	margin-top: 25px;
+}
+
+#empr-sugg h3 {
+	color: #008CC6;
+}
+
+.authorities{
+	background : #A8A8A8;
+}
+
+.vignetteimg {
+  max-width: 140px;
+  max-height: 200px;
+  width: expression(this.width > 140 ? "140px" : true);
+  height: expression(this.height > 200 ? "200px" : true);
+}
+
+#search_onglet ul#search_tabs {
+	padding-left: 0px;
+	margin-left: 0px;
+	margin-top: 0px;	
+}
+
+#search_onglet ul#search_tabs li {
+	display:inline;
+	float: none;
+}
+
+#search_onglet ul#search_tabs li.current {
+	background: #EEEEEE;
+    border-color: #BBBBBB #BBBBBB #EEEEEE;
+    border-style: solid;
+    border-width: 1px;
+}
+
+#resultatrech_see h3 {
+	color: #008CC6;
+}
+
+
+/* ---------------------------------------------------------------------------*/
+/* ---------------------------------------------------------------------------*/
+/*                               Liens Sociaux                                */
+/* ---------------------------------------------------------------------------*/
+/* ---------------------------------------------------------------------------*/
+
+
+table td div.addthis_toolbox {
+	margin-bottom: 10px;
+}
+
+a.addthis_button_facebook_like iframe {
+	height: 20px !important;
+    width: 60px !important;
+}
+
+a.addthis_button_tweet iframe {
+    width: 105px !important;
+}
+
+
+/* -----------------------------------------------------*/
+/*                 Liste p�riodiques                    */
+/* -----------------------------------------------------*/
+
+
+#perio_a2z {
+	margin-bottom: 5px;
+	margin-top: 5px;
+}
+
+#perio_a2z #perio_a2z_search {
+	margin-top: 10px;
+	margin-bottom: 10px;
+	width :	50%;
+}
+
+#perio_a2z ul.onglets_isbd_public {
+	margin-top: 5px;
+}
+
+table.a2z_contens {
+	margin-top: 10px;
+}
+
+table.a2z_perio_list {
+	width: 200px;
+	margin-right: 10px;
+}
+
+table.a2z_perio_list tr td {
+	border-bottom: 1px solid #aaaaaa;
+	padding-bottom: 3px;
+}
+
+#a2z_perio b .header_title {
+	font-size: 16px;
+	text-transform: uppercase;
+}
+
+#a2z_perio .notice-child h3 span {
+    padding-left: 0px;
+}
+
+#a2z_perio .navbar {
+	margin-top: 10px;
+}
+
+input#a2z_abt_actif {
+	vertical-align: middle;
+	margin-left: 2px;
+	margin-right: 2px;
+}
+

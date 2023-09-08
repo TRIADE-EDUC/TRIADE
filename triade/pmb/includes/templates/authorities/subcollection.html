@@ -1,0 +1,74 @@
+{% extends 'gabarit.html' %}
+
+<!-- $Id: subcollection.html,v 1.9 2017-11-22 14:47:46 dgoron Exp $ -->
+
+{% block header %}
+	<h1><span>{{ msg.detail_subcoll }}</span></h1>
+{% endblock %}
+
+	
+{% block title %}
+	<h3 style='display:inline'>
+		{{ authority.name }} {% if authority.subcollection_web %} <a target="_blank" href="{{ authority.subcollection_web }}"><img src='{{ img.globe.gif }}'/></a>{% endif %}
+	</h3>
+	<script type="text/javascript">
+		document.title = "{{ authority.name }}";
+	</script>
+{% endblock %} 
+
+{% block details %}
+	<div class="aut_display_row">
+		<div class="aut_display_cell">
+			<b>{{ msg.subcollection_details_author | printf "" }}</b>
+		</div>
+		<div class="aut_display_cell">
+			<a href="./autorites.php?categ=see&sub=publisher&id={{ authority.editeur }}">{{ authority.editeur_libelle }}</a>
+		</div>
+	</div>
+	<div class="aut_display_row">
+		<div class="aut_display_cell">
+			<b>{{ msg.subcollection_details_collection | printf "" }}</b>
+		</div>
+		<div class="aut_display_cell">
+			<a href="./autorites.php?categ=see&sub=collection&id={{ authority.parent }}">{{ authority.parent_libelle }}</a>
+		</div>
+	</div>
+	<div class="aut_display_row">
+		<div class="aut_display_cell">
+			<b>{{ msg.subcollection_details_issn | printf "" }}</b>
+		</div>
+		<div class="aut_display_cell">
+			{% if authority.issn %}{{ authority.issn }}{% else %}{{ msg.subcollection_details_no_issn }}{% endif %}
+		</div>
+	</div>
+	{% if authority.comment %}
+		<div class="aut_display_row">
+			<div class="aut_display_cell">
+				<b>{{ msg.707 }} :</b>
+			</div>
+			<div class='aut_comment aut_display_cell'>
+				{{ authority.comment | nl2br }}
+			</div>
+		</div>
+	{% endif %}
+{% endblock %}
+
+{% block aut_buttons %}
+	<div class='row'>
+		<div class='left'>
+			<input type='button' class='bouton' value='{{msg.62}}' onclick="document.location='./autorites.php?categ=souscollections&sub=collection_form&id={{authority.num_object}}'"/>
+			<input type='button' class='bouton' value='{{msg.158}}' onclick="document.location='./autorites.php?categ=souscollections&sub=replace&id={{authority.num_object}}'"/>
+			<input type='button' class='bouton' value='{{msg.aut_duplicate}}' onclick="document.location='./autorites.php?categ=souscollections&sub=duplicate&id={{authority.num_object}}'"/>
+			{% if global.pmb_type_audit %}
+				<input type='button' class='bouton' value='{{msg.audit_button}}' onclick="openPopUp('./audit.php?type_obj={{authority.audit_type}}&object_id={{authority.num_object}}', 'audit_popup')"/>
+			{% endif %}	
+		</div>
+		<div class='right'>
+			<input type='button' class='bouton' value='{{msg.63}}' onclick="confirm_delete();" />
+		</div>
+	</div>
+{% endblock %}
+
+{% block aut_link_delete %}
+	document.location='./autorites.php?categ=souscollections&sub=delete&id={{authority.num_object}}';
+{% endblock %}

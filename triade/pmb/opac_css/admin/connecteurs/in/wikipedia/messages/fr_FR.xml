@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le connecteur OAI
+****************************************************************************************
+© 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: fr_FR.xml,v 1.3 2012-12-04 13:17:28 mbertin Exp $ -->
+
+<XMLlist>
+	<entry code="wikipedia_no_informations">Aucune Information disponible.</entry>
+	<entry code="wikipedia_enrichment_source">(source Wikipedia)</entry>
+	<entry code="wikipedia_width">Largeur</entry>
+	<entry code="wikipedia_height">Hauteur</entry>
+	<entry code="wikipedia_label">Wikipédia</entry>
+</XMLlist>

@@ -1,0 +1,22 @@
+<!-- $Id: titre_uniforme.html,v 1.8 2019-02-15 08:30:30 ngantier Exp $ -->
+
+{{ authority.name }} [{{ authority.oeuvre_nature_name }} {{ authority.oeuvre_type_name }}]
+{% for auteur in authority.sorted_responsabilities.authors %}
+	 / {{ auteur.objet.display }} {% for attribute in auteur.attributes %}{% if attribute.fonction_label%}, {{ attribute.fonction_label }}{% endif %}{% if attribute.qualif_label %} ({{ attribute.qualif_label }}){% endif %}{% endfor %}
+{% endfor %}
+{% for performer in authority.sorted_responsabilities.performers %}
+	 / {{ performer.objet.display }} {% for attribute in performer.attributes %}{% if attribute.fonction_label%}, {{ attribute.fonction_label }}{% endif %}{% if attribute.qualif_label %} ({{ attribute.qualif_label }}){% endif %}{% endfor %}
+{% endfor %}
+{% if authority.date %}({{ authority.date }}){% endif %}
+{% for event in authority.oeuvre_events %}
+	{% if loop.first %}
+		 (
+	{% endif %}
+		{{ event.isbd }}
+	{% if loop.revcounter0 %}
+		 / 
+	{% endif %}
+	{% if loop.last %}
+		)
+	{% endif %}
+{% endfor %}

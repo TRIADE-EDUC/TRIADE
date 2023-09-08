@@ -1,0 +1,168 @@
+<!-- $Id: frbr_cataloging_scheme.html,v 1.3 2018-03-14 10:26:02 tsamson Exp $ -->
+
+<form class="form-'.$current_module.'" name="cataloging_scheme_form" method="post" id="cataloging_scheme_form" action="./modelling.php?module=modelling&categ=frbr&sub=cataloging_scheme&action=save&scheme_id={{ scheme.id }}">
+	<h3>
+	{% if not scheme.id %}
+		{{ msg.frbr_cataloging_scheme_new }}
+	{% endif %}
+	{% if scheme.id %}
+		{{ scheme.name }}
+	{% endif %}
+	</h3>
+	
+	<div class="form-contenu">
+		<div class='row ui-clearfix'>
+			<div class='colonne10'>
+				<label for='scheme_name'>{{ msg.frbr_cataloging_scheme_label }}</label>
+			</div>
+			<div class='row'> 
+				<input type='text' name='scheme_name' id='scheme_name' class="saisie-80em" value='{{ scheme.name }}'/>
+			</div>
+		</div>
+		<div class='uk-clearfix ui-clearfix row' id='scheme_entities'>
+			<div class='row ui-clearfix'>
+				<div class='colonne10'>
+					<label class="uk-form-label wyr-form-label">{{ msg.frbr_cataloging_scheme_entity }}</label>
+				</div>
+				<div class='colonne-suite'>
+					<select name='entities[0]' id='entity_0' class='uk-select uk-form-width-medium uk-form-small wyr-form-width-custom'>
+						<option value='0'>{{ msg.frbr_cataloging_scheme_choose_entity }}</option>
+					</select>
+				</div>
+			</div>						
+		</div>
+		<input type="hidden" id="current_index" value="0"/>
+		<div class='row'>
+			<div class='colonne10'>
+				<input type='button' name='add_entity' id='add_entity' class='bouton' value='+' />
+			</div>
+			<div class='colonne-suite'></div>
+		</div>
+		<hr/>
+		<div class='row'>
+			<div class='left'>
+				<input type='submit' class='bouton' value='{{msg.77}}'/>
+				<input type='button' class='bouton' value='{{msg.76}}' onclick="document.location='./modelling.php?categ=frbr&sub=cataloging_schemes&action=list';"/>
+			</div>
+			<div class='right'>
+				<input type='button' class='bouton' value='{{msg.63}}' onclick="document.location='./modelling.php?categ=frbr&sub=cataloging_schemes&action=delete&scheme_id={{scheme.id}}';"/>
+			</div>
+		</div>
+	</div>
+</form>
+<script type='text/javascript'>
+	require(["dojo/dom-construct", "dojo/dom", "dojo/on", "dojo/_base/lang", "dojo/domReady!"],
+	function(domConstruct, dom, on, lang){
+		var entities = {{ entities }};
+		var entitiesLinks = {{ entities_links }};
+		var scheme_elements = {{ scheme.json_elements }};
+
+		entities.forEach(
+			function(entity) {
+				var selected = ((entity.name == "{% if  scheme.entities | length %}{{ scheme.entities.0 }}{% endif %}") ? true : false);
+				domConstruct.create('option', {innerHTML : entity.label, value : entity.name, selected : selected}, 'entity_0');
+			}
+		);
+		
+		on(dom.byId('entity_0'), 'change', function() {
+			removeParentNodeNextSiblings(this);
+		});
+		
+		on(dom.byId('add_entity'), 'click', addEntitiesLinked);
+		
+		function addEntitiesLinked() {
+			var sourceEntity = dom.byId('entity_' + dom.byId('current_index').value);
+			if (sourceEntity) {				
+				createDomLink(sourceEntity);
+			}
+		}
+
+		function createDomLink(sourceEntity) {
+			removeParentNodeNextSiblings(sourceEntity);
+			if (entitiesLinks[sourceEntity.value]) {
+				var current_index = dom.byId('current_index').value;
+				domConstruct.create('hr', {}, 'scheme_entities');
+				var uiClearfix = domConstruct.create('div', {'class' : 'row ui-clearfix'}, 'scheme_entities');
+				var colonne10 = domConstruct.create('div', {'class' : 'colonne10'}, uiClearfix);
+				domConstruct.create('label', {'class' :  'uk-form-label wyr-form-label', innerHTML : '{{ msg.frbr_cataloging_scheme_entity_link }}' }, colonne10);
+				var colonneSuite = domConstruct.create('div', {'class' : 'colonne-suite'}, uiClearfix);
+				var subSelect = domConstruct.create('select', {'class' : 'uk-select uk-form-width-medium uk-form-small wyr-form-width-custom',name : 'links[' + current_index + ']', id : 'link_' + current_index}, colonneSuite);
+				domConstruct.create('option', {innerHTML : '{{msg.frbr_cataloging_scheme_choose_entity_link}}', value : 0}, subSelect);
+
+				for (var link in entitiesLinks[sourceEntity.value]) {
+					domConstruct.create('option', {innerHTML : entitiesLinks[sourceEntity.value][link].label, value : link}, subSelect);
+				}
+
+				on(subSelect, 'change', function(e) {
+					removeParentNodeNextSiblings(e.target);
+					var linkType = entitiesLinks[sourceEntity.value][e.target.value].type;
+					createDomLinkType(linkType, current_index);
+					createDomEntitiesLinked(entitiesLinks[sourceEntity.value][subSelect.value].linked_entities);
+				});
+			}
+		}
+
+		function createDomLinkType(linkType, index) {
+			if (linkType) {
+				var uiClearfix = domConstruct.create('div', {'class' : 'row ui-clearfix'}, 'scheme_entities');
+				var colonne10 = domConstruct.create('div', {'class' : 'colonne10'}, uiClearfix);
+				domConstruct.create('label', {'class' : 'uk-form-label wyr-form-label', innerHTML : '{{ msg.frbr_cataloging_scheme_entity_link_type }}' }, colonne10);
+				var colonneSuite = domConstruct.create('div', {'class' : 'colonne-suite'}, uiClearfix);
+				var subSelect = domConstruct.create('select', {'class' : 'uk-select uk-form-width-medium uk-form-small wyr-form-width-custom', name : 'links_types[' + index + ']', id : 'link_type_' + index}, colonneSuite);
+				
+				domConstruct.create('option', {innerHTML : '{{msg.frbr_cataloging_scheme_choose_entity_link_type}}', value : 0}, subSelect);
+				if (Object.keys(linkType.type_kinds).length) {
+					for(var key in linkType.type_kinds) {
+						if ((typeof linkType.type_kinds[key] == "object") || (typeof linkType.type_kinds[key] == "Array")) {
+							var optgroup = domConstruct.create('optgroup', {label : key}, subSelect);
+							for(var key2 in linkType.type_kinds[key]) {
+								domConstruct.create('option', {innerHTML : linkType.type_kinds[key][key2], value : key2}, optgroup);
+							}
+						} else {
+							domConstruct.create('option', {innerHTML : linkType.type_kinds[key], value : key}, subSelect);
+						}
+					}
+				}
+			}
+		}
+		
+		function createDomEntitiesLinked(sourceEntity) {
+			dom.byId('current_index').value = parseInt(dom.byId('current_index').value) + 1;
+			var current_index = dom.byId('current_index').value;
+			var uiClearfix = domConstruct.create('div', {'class' : 'row ui-clearfix'}, 'scheme_entities');
+			var colonne10 = domConstruct.create('div', {'class' : 'colonne10'}, uiClearfix);
+			domConstruct.create('label', {'class' : 'uk-form-label wyr-form-label', innerHTML : '{{ msg.frbr_cataloging_scheme_linked_entity }}' }, colonne10);
+			var colonneSuite = domConstruct.create('div', {'class' : 'colonne-suite'}, uiClearfix);
+			if (sourceEntity.length > 1) {
+				var subSelect = domConstruct.create('select', {'class' : 'uk-select uk-form-width-medium uk-form-small wyr-form-width-custom', name : 'entities[' + current_index + ']', id : 'entity_' + current_index}, colonneSuite);
+				domConstruct.create('option', {innerHTML : '{{msg.frbr_cataloging_scheme_choose_entity}}', value : 0}, subSelect);
+				for (var i = 0; i < sourceEntity.length; i++) {
+					domConstruct.create('option', {innerHTML : (sourceEntity[0].label ? sourceEntity[0].label : sourceEntity[0].name), value : sourceEntity[i].name}, subSelect);	
+				}
+			} else if (sourceEntity.length == 1) {
+				domConstruct.create('span', {innerHTML : (sourceEntity[0].label ? sourceEntity[0].label : sourceEntity[0].name) }, colonneSuite);
+				domConstruct.create('input', {type : 'hidden', name : 'entities[' + current_index + ']', id : 'entity_' + current_index, value : sourceEntity[0].name}, colonneSuite);
+			}
+		}
+
+		function removeParentNodeNextSiblings(node) {
+			while (node.parentNode.parentNode.nextSibling) {
+				domConstruct.destroy(node.parentNode.parentNode.nextSibling);
+			}
+			var res = node.id.split('_')
+			dom.byId('current_index').value = parseInt(res[res.length-1]);
+		}
+		
+		for (var i in scheme_elements) {
+			if (scheme_elements[i].link) {
+				addEntitiesLinked();
+				var current_index = dom.byId('current_index').value;
+				dom.byId('link_' + current_index).value = scheme_elements[i].link;
+				on.emit(dom.byId('link_' + current_index), 'change', {});
+				if (dom.byId('link_type_' + current_index)) {
+					dom.byId('link_type_' + current_index).value = scheme_elements[i].link_type;
+				}
+			}
+		}
+	});
+</script>

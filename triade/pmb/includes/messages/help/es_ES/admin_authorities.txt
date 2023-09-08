@@ -1,0 +1,7 @@
+<h2>Administration des Autorit&eacute;s</h2>
+
+<p>La section <b>administration des autorit&eacute;s</b> permet de d&eacute;finir les param&egrave;tres de l&apos;application pour les notices.
+<ul>
+<li><b>origines</b> permet de d&eacute;finir les origines des autorit&eacute;s, afin de les distinguer lors des imports</li>
+</ul></p>
+ 

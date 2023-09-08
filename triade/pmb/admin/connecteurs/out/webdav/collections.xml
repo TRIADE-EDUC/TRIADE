@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+
+<!-- Catalogue de connecteurs sortants
+****************************************************************************************
+© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: collections.xml,v 1.4 2016-03-31 08:55:44 dgoron Exp $ -->
+
+<collections>
+	<groups>
+		<group name="standard" value="msg:webdav_collections_group_standard" class="webdav_group_standard">
+			<collection code="typdoc">msg:webdav_collection_typdoc</collection>
+			<collection code="statut">msg:webdav_collection_status</collection>
+			<collection code="categorie">msg:webdav_collection_categorie</collection>
+			<collection code="indexint">msg:webdav_collection_indexint</collection>
+			<collection code="liste_lecture_tag">msg:webdav_collection_liste_lecture_tag</collection>
+			<collection code="liste_lecture">msg:webdav_collection_liste_lecture</collection>
+		</group>
+		<group name="scan_request" value="msg:webdav_collections_group_scan_request" class="webdav_group_scan_request">
+			<collection code="scan_request_status">msg:webdav_collection_status</collection>
+			<collection code="scan_request_priority">msg:webdav_collection_priority</collection>
+		</group>
+		<group name="music" value="msg:webdav_collection_music" class="webdav_group_music"></group>
+	</groups>
+</collections>

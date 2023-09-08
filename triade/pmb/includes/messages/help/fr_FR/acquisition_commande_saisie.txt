@@ -1,0 +1,8 @@
+<br />
+<h2>Aide &agrave; la saisie</h2>
+<ul>
+<li>Ligne 1 : Titre</li>
+<li>Ligne 2 (Auteur) : Entr&eacute;e,rejet&eacute;</li>
+<li>Ligne 3 (Editeur) : Ville : Nom,Ann&eacute;e</li>
+<li>Ligne 4 (Collection) : Nom</li>
+</ul>

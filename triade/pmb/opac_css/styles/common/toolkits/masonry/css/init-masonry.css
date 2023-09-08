@@ -1,0 +1,31 @@
+/* responsive general setting
+ ========================================================================== */
+/*
+ * container settings
+ */
+ .ms-grid-container {
+	max-width: 1200px;
+	margin: 0 auto;
+	background-color: #fff;
+}
+
+/*
+ * columnWidth
+ */
+.ms-grid-item {
+	width: 285px;
+	/*columnWidth option*/
+}
+
+/*
+ * columnWidth responsive
+ */
+.ms-grid-sizer {
+	width: 25%;
+}
+
+/* Gutter
+ ========================================================================== */
+.ms-grid-item {
+	margin-bottom: 20px;
+}

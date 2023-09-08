@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le module Articleslist
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_sectionslist.xml,v 1.4 2017-11-21 16:26:08 dgoron Exp $ -->
+
+<XMLlist>
+	<entry code='cms_module_common_datasource_sections_sections'>Parent Rubrics</entry>
+	<entry code='cms_module_common_datasource_all_sections'>All the rubrics</entry>
+	<entry code='cms_module_common_datasource_sections'>Rubrics</entry>
+	<entry code='cms_module_common_datasource_sections_categories'>Rubrics of a record's categories</entry>
+	<entry code='cms_module_common_datasource_searchsections'>Search in the rubrics</entry>
+	<entry code='cms_module_common_view_sectionslist'>Rubrics list - Django template with link</entry>
+	<entry code='cms_module_sectionslist_view_carousel'>Carousel view</entry>
+	<entry code='cms_module_sectionslist_view_carousel_responsive'>Responsive carousel view</entry>
+	<entry code='cms_module_common_datasource_sections_by_concepts'>Rubriques indexées par des concepts</entry>
+	<entry code='cms_module_common_datasource_sections_by_categories'>Rubriques indexées par des catégories</entry>
+	<entry code='cms_module_common_datasource_sections_by_section_categories'>Rubriques des catégories d'une rubrique</entry>
+</XMLlist>

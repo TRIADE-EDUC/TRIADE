@@ -1,0 +1,2 @@
+<h2>Recherche segmentée</h2>
+<p>Vous trouverez ici les options pour param&eacute;trer les recherches segmentées de l'OPAC. </p>

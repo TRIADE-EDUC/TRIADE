@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<XMLlist>
+	<entry code='cms_module_opacitem_selector_opacitem_choose'>Elément de l'opac</entry>
+	<entry code='cms_module_opacitem_selector_opacitem_globals'>Paramètres</entry>
+	
+	
+	<entry code='cms_module_opacitem_item_infopage'>Infopages</entry>
+	<entry code='cms_module_opacitem_item_navperio'>Navigateur de périodiques</entry>
+	<entry code='cms_module_opacitem_item_categ'>Affichage des catégories</entry>
+	<entry code='cms_module_opacitem_item_bannettes_abo'>Affichage des bannettes privées</entry>
+	<entry code='cms_module_opacitem_item_bannettes_pub'>Affichage des bannettes publiques</entry>
+	<entry code='cms_module_opacitem_item_section'>Affichage des sections</entry>
+	<entry code='cms_module_opacitem_item_margueritte'>Marguerite de couleurs</entry>
+	<entry code='cms_module_opacitem_item_centcases'>Affichage 100 cases</entry>
+	<entry code='cms_module_opacitem_item_dernotices'>Dernières notices</entry>
+	<entry code='cms_module_opacitem_item_etageres'>Etagères</entry>
+	<entry code='cms_module_opacitem_item_rssflux'>Flux RSS</entry>
+	<entry code='cms_module_opacitem_item_contact_form'>Formulaire de contact</entry>
+	<entry code="cms_module_opacitem_item_collstate_bulletins_display">Constitution des reliures</entry>
+</XMLlist>

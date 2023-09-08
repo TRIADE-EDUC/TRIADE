@@ -1,0 +1,44 @@
+{% extends 'gabarit.html' %}
+
+<!-- $Id: collection.html,v 1.1 2018-02-16 15:45:42 apetithomme Exp $ -->
+
+{% block detail %}
+	{% if element.editeur %}
+		<div class="aut_display_row">
+			<div class="aut_display_cell">
+				<b>{{msg.164}} :</b>
+			</div>
+			<div class="aut_display_cell">
+				<a href="./autorites.php?categ=see&sub=publisher&id={{ element.parent }}">{{ element.editeur }}</a>
+			</div>
+		</div>
+	{% endif %}
+	<div class="aut_display_row">
+		<div class="aut_display_cell">
+			<b>{{ msg.collection_tpl_issn }} :</b>
+		</div>
+		<div class="aut_display_cell">
+			{% if element.issn %}{{ element.issn }}{% else %}{{ msg.collection_tpl_no_issn }}{% endif %}
+		</div>
+	</div>
+	{% if element.collection_web %}
+		<div class="aut_display_row">
+			<div class="aut_display_cell">
+				<b>{{msg.editeur_web}} :</b>
+			</div>
+			<div class="aut_display_cell">
+				<a target="_blank" href="{{ element.collection_web }}">{{ element.collection_web }}</a>
+			</div>
+		</div>
+	{% endif %}
+	{% if element.comment %}
+		<div class="aut_display_row">
+			<div class="aut_display_cell">
+				<b>{{msg.707}} :</b>
+			</div>
+			<div class="aut_display_cell">
+				{{ element.comment | nl2br }}
+			</div>
+		</div>
+	{% endif %}
+{% endblock detail %}

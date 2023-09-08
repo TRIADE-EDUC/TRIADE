@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le module Article
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_itemslist_selector_items_generic.xml,v 1.2 2016-09-20 10:25:41 apetithomme Exp $ -->
+
+<XMLlist>
+	<entry code="cms_module_watcheslist_selector_watches_generic">Selection from a list of monitorings</entry>
+	<entry code="cms_module_watch_selector_watch_generic">Selection from a monitoring</entry>
+	<entry code="cms_module_watcheslist_selector_categories_generic">Selection from a sorting list</entry>
+	<entry code="cms_module_itemslist_selector_items_by_tags">Selection from a list of tags</entry>
+</XMLlist>

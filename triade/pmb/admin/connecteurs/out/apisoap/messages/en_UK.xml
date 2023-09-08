@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../../../../../includes/XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français
+****************************************************************************************
+© 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: en_UK.xml,v 1.1 2015-06-15 12:55:34 pmbs Exp $ -->
+
+<XMLlist>
+	<entry code="apisoap_exported_functions">Exported API functions</entry>
+	<entry code="apisoap_authentication">Authentication</entry>
+	<entry code="apisoap_authenfication_none">None: use the anonymous user of the functions</entry>
+	<entry code="apisoap_authenfication_group">Limit to groups of external users:</entry>
+	<entry code="apisoap_cache_wsdl">Cache the wsdl</entry>
+    <entry code="apisoap_service_endpoint">Address of the webservice</entry>
+    <entry code="apisoap_service_endpoint_unrecorded">Register the source to have it</entry>
+</XMLlist>

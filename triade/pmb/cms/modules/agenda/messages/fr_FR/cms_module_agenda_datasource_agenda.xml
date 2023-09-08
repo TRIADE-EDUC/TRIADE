@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le module Article
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_agenda_datasource_agenda.xml,v 1.5 2016-09-20 10:25:41 apetithomme Exp $ -->
+
+<XMLlist>
+	<entry code="cms_module_common_selector_env_var">Evènement depuis une variable d'environnement</entry>
+	<entry code="cms_module_agenda_selector_calendars">Calendriers créés dans l'interface d'administration</entry>
+	<entry code="cms_module_agenda_selector_calendars_date">Calendriers créés dans l'interface d'administration / Date</entry>
+	<entry code="cms_module_agenda_datasource_agenda_event_start_desc">Date de début</entry>
+	<entry code="cms_module_agenda_datasource_agenda_event_start_format_value_desc">Valeur formatée de la date de début</entry>
+	<entry code="cms_module_agenda_datasource_agenda_event_start_value_desc">Valeur brute de la date de début</entry>
+	<entry code="cms_module_agenda_datasource_agenda_event_start_time_desc">Timestamp de la date de début</entry>
+	<entry code="cms_module_agenda_datasource_agenda_event_end_desc">Date de fin (optionnelle)</entry>
+	<entry code="cms_module_agenda_datasource_agenda_event_end_format_value_desc">Valeur formatée de la date de fin</entry>
+	<entry code="cms_module_agenda_datasource_agenda_event_end_value_desc">Valeur brute de la date de fin</entry>
+	<entry code="cms_module_agenda_datasource_agenda_event_end_time_desc">Timestamp de la date de fin</entry>
+	<entry code="cms_module_agenda_datasource_agenda_id_type_desc">Identifiant du type de contenu utilisé pour l'évènement</entry>
+	<entry code="cms_module_agenda_datasource_agenda_color_desc">Couleur du calendrier associé</entry>
+	<entry code="cms_module_agenda_datasource_agenda_calendar_desc">Nom du calendrier associé</entry>
+	<entry code="cms_module_agenda_datasource_agenda_events_desc">Tableau d'évènements</entry>
+</XMLlist>

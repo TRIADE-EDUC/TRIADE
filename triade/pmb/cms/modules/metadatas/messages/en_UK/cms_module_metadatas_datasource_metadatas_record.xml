@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le module Article
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_metadatas_datasource_metadatas_record.xml,v 1.4 2018-01-15 10:06:34 ngantier Exp $ -->
+
+<XMLlist>
+	<entry code="cms_module_common_selector_record">Manual record selector</entry>
+	<entry code="cms_module_common_selector_env_var">Selector from an environment variable</entry>
+	<entry code="cms_module_common_selector_type_section">Selector from the value of a field of a content type of a rubric</entry>
+	<entry code="cms_module_common_selector_type_article">Selector from the value of a field of a content type of an article</entry>
+	<entry code="cms_module_common_selector_type_article_generic">Selector from the value of a generic field of an article</entry>
+	<entry code="cms_module_common_selector_type_section_generic">Selector from the value of a generic field of a rubric</entry>
+	<entry code="cms_module_common_selector_record_permalink">Sélecteur depuis un permalink</entry>
+
+	<entry code='cms_module_metadatas_datasource_metadatas_record_link_desc'>Link to the record</entry>
+	<entry code='cms_module_metadatas_datasource_metadatas_record_record_desc'>Description of the record</entry>
+	<entry code="cms_module_metadatas_datasource_main_fields">Main fields</entry>
+	<entry code="cms_module_metadatas_datasource_record_id_desc">Record identifier</entry>
+	<entry code="cms_module_metadatas_datasource_record_header_desc">Header</entry>
+	<entry code="cms_module_metadatas_datasource_record_resume_desc">Summary</entry>
+	<entry code="cms_module_metadatas_datasource_record_content_desc">Content</entry>
+	<entry code="cms_module_metadatas_datasource_record_link_desc">Link</entry>
+	<entry code="cms_module_metadatas_datasource_record_title_desc">Title</entry>
+	<entry code="cms_module_metadatas_datasource_record_vign_desc">Thumbnail</entry>
+	<entry code="cms_module_metadatas_datasource_record_used_template">Choix du template</entry>
+	<entry code="cms_module_metadatas_datasource_record_data">Données de la notice</entry>
+</XMLlist>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour la classe racine d'un module
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: frbr_entity_common_datasource_custom_fields.xml,v 1.1 2018-03-28 09:23:58 dgoron Exp $ -->
+
+<XMLlist>
+	<entry code="frbr_entity_records_datasource_custom_fields">Notices</entry>
+	<entry code="frbr_entity_authors_datasource_custom_fields">Auteurs</entry>
+	<entry code="frbr_entity_categories_datasource_custom_fields">Catégories</entry>
+	<entry code="frbr_entity_concepts_datasource_custom_fields">Concepts</entry>
+	<entry code="frbr_entity_publishers_datasource_custom_fields">Editeurs</entry>
+	<entry code="frbr_entity_collections_datasource_custom_fields">Collections</entry>
+	<entry code="frbr_entity_subcollections_datasource_custom_fields">Sous-collection</entry>
+	<entry code="frbr_entity_series_datasource_custom_fields">Titres de série</entry>
+	<entry code="frbr_entity_works_datasource_custom_fields">Oeuvres</entry>
+	<entry code="frbr_entity_indexint_datasource_custom_fields">Indexations décimales</entry>
+	<entry code="frbr_entity_authperso_datasource_custom_fields">Autorités personnalisées</entry>
+	<entry code="frbr_entity_common_datasource_custom_fields_choice">Choix du champ</entry>
+</XMLlist>

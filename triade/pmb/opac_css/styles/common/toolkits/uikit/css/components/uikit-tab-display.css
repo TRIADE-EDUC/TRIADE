@@ -1,0 +1,14 @@
+#search>p>span, #search>div, #search>form {
+    border: solid 0px #d7d7d7;
+	padding: 15px 20px 25px;
+	border-top: none;
+	border-bottom: none;    
+}
+#search:after {
+	content: "";
+	border: solid 1px #d7d7d7;
+	border-top: none;
+	display: block!important;
+	width: 100%!important;
+	height: 20px;
+}

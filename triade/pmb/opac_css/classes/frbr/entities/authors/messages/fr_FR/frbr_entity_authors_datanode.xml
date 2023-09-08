@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le module Articleslist
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: frbr_entity_authors_datanode.xml,v 1.4 2018-06-29 13:02:47 tsamson Exp $ -->
+
+<XMLlist>
+	<entry code='frbr_entity_authors_datasource_records'>Notices</entry>
+	<entry code='frbr_entity_authors_datasource_concepts'>Concepts</entry>
+	<entry code='frbr_entity_authors_datasource_works'>Oeuvres</entry>
+	<entry code='frbr_entity_authors_datasource_used_in_custom_fields'>Entités utilisant les auteurs dans un champ personnalisé</entry>
+</XMLlist>

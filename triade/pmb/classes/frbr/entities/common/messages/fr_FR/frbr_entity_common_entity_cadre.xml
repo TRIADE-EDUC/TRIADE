@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour la classe racine d'un module
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: frbr_entity_common_entity_cadre.xml,v 1.7 2017-09-20 09:39:08 vtouchard Exp $ -->
+
+<XMLlist>
+	<entry code="frbr_entity_common_entity_cadre_add">Création d'un nouveau cadre</entry>
+	<entry code="frbr_entity_common_entity_cadre_edit">Modification de cadre - %s</entry>
+	<entry code="frbr_entity_common_entity_cadre_parent">Jeu de données ou page associé</entry>
+	<entry code="frbr_entity_common_entity_cadre_name">Nom</entry>
+	<entry code="frbr_entity_common_entity_cadre_comment">Description</entry>
+	<entry code="frbr_entity_common_entity_cadre_view_choice">Choisissez une vue</entry>
+	<entry code="frbr_entity_common_entity_cadre_confirm_delete">Voulez-vous vraiment supprimer ce cadre ?</entry>
+	<entry code="frbr_entity_common_entity_cadre_name_empty">Veuillez saisir le nom du cadre.</entry>
+	<entry code="frbr_entity_common_entity_cadre_css_class">Classe CSS</entry>
+	<entry code="frbr_entity_common_entity_cadre_view_empty">Veuillez sélectionner une vue.</entry>
+	<entry code="frbr_entity_common_entity_cadre_visible_in_graph">Visible dans le graphe</entry>
+	<entry code="frbr_entity_common_entity_cadre_display_empty_template">Afficher le cadre même sans données</entry>
+</XMLlist>

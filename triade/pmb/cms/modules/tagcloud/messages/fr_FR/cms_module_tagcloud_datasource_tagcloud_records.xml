@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le module Article
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_tagcloud_datasource_tagcloud_records.xml,v 1.3 2014-07-02 07:21:54 ngantier Exp $ -->
+
+<XMLlist>
+	<entry code='cms_module_tagcloud_datasource_tagcloud_no_parameters'>Aucun paramètre pour cette source.</entry>
+	<entry code='cms_module_tagcloud_datasource_admin_facette'>Nuages</entry>
+	<entry code='cms_module_tagcloud_datasource_admin_rmc'>Multi-critères</entry>
+	<entry code='cms_module_tagcloud_selector_tagcloud'>Liste de notices</entry>
+	<entry code='cms_module_tagcloud_datasource_admin_facette_add'>Ajouter une recherche</entry>
+	<entry code='cms_module_tagcloud_datasource_admin_rmc_add'>Ajouter une recherche</entry>
+	<entry code='cms_module_tagcloud_datasource_admin_facette_name'>Nom du nuage</entry>
+	<entry code='cms_module_tagcloud_datasource_admin_facette_list'>Critère principal</entry>
+	<entry code='cms_module_tagcloud_datasource_admin_facette_add'>Ajouter</entry>
+	<entry code='cms_module_tagcloud_datasource_admin_critere'>Critères</entry>
+	<entry code='cms_module_tagcloud_datasource_admin_ss_critere'>Sous critères</entry>
+	<entry code='cms_module_tagcloud_datasource_admin_search_field'>Recherche sur les champs</entry>
+	<entry code='cms_module_tagcloud_datasource_admin_search_word'>Recherche sur les mots</entry>
+	<entry code='cms_module_tagcloud_datasource_admin_rmc_name'>Nom de la recherche</entry>
+	<entry code='cms_module_tagcloud_datasource_admin_rmc_addlabel'>Ajouter un critère de recherche sur</entry>
+	<entry code='cms_module_tagcloud_datasource_admin_rmc_add'>Ajouter</entry>
+	<entry code='cms_module_tagcloud_datasource_admin_rmc_save'>Enregistrer</entry>
+	<entry code='cms_module_tagcloud_datasource_admin_rmc_delete'>Supprimer</entry>
+	<entry code='cms_module_tagcloud_datasource_admin_facette_delete'>Supprimer</entry>
+	<entry code='cms_module_tagcloud_datasource_admin_rmc_delete_popup'>Etes-vous sur de vouloir supprimer cette recherche ?</entry>
+	<entry code='cms_module_tagcloud_datasource_admin_facette_delete_popup'>Etes-vous sur de vouloir supprimer ce nuage ?</entry>
+</XMLlist>

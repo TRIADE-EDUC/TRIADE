@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le module categlist 
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_categlist_datasource_categs.xml,v 1.2 2015-09-22 13:34:21 vtouchard Exp $ -->
+
+<XMLlist>
+	<entry code='cms_module_categlist_datasource_terms_nom_desc'>Tableau des catégories renvoyées</entry>
+	<entry code='cms_module_categlist_datasource_terms_libelle_retenue'>Libellé de la forme retenue</entry>
+	<entry code='cms_module_categlist_datasource_terms_id_retenue'>Id de la forme retenue</entry>
+	<entry code='cms_module_categlist_datasource_terms_libelle_rejetee'>Libellé de la forme rejetée</entry>
+	<entry code='cms_module_categlist_datasource_terms_id_rejetee'>Id de la forme rejetée</entry>
+</XMLlist>

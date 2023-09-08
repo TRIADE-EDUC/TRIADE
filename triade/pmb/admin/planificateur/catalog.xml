@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- catalogue de planification
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: catalog.xml,v 1.10 2018-11-13 12:15:09 dgoron Exp $ -->
+
+<catalog>
+	<action id="1" name="dsi" path="dsi" comment="msg:planificateur_catalog_dsi" />
+	<action id="2" name="backup" path="backup" comment="msg:planificateur_catalog_backup" />
+	<action id="3" name="sync" path="sync" comment="msg:planificateur_catalog_sync" />
+	<action id="4" name="clean" path="clean" comment="msg:planificateur_catalog_clean" />
+	<action id="5" name="stats" path="stats" comment="msg:planificateur_catalog_stats" />
+	<action id="6" name="mysql" path="mysql" comment="msg:planificateur_catalog_mysql" />
+	<action id="7" name="proc" path="proc" comment="msg:planificateur_catalog_proc" />
+	<action id="8" name="mailing" path="mailing" comment="msg:planificateur_catalog_mailing" />
+	<!--<action id="9" name="resa" path="resa" comment="msg:planificateur_catalog_resa" />
+	<action id="10" name="loan" path="loan" comment="msg:planificateur_catalog_loan" />
+	<action id="11" name="reader" path="reader" comment="msg:planificateur_catalog_reader" />
+-->
+	<action id="12" name="scan_docnum" path="scan_docnum" comment="msg:planificateur_catalog_scan_docnum" />
+	<action id="13" name="docwatches" path="docwatches" comment="msg:planificateur_catalog_docwatches" />
+	<action id="14" name="scheduler_caddie" path="caddie" comment="msg:planificateur_catalog_scheduler_caddie" />
+	<action id="15" name="scheduler_chklnk" path="chklnk" comment="msg:planificateur_catalog_scheduler_chklnk" />
+<!-- 	<action id="16" name="scheduler_mails_waiting" path="mails_waiting" comment="msg:planificateur_catalog_scheduler_mails_waiting" /> -->
+	<action id="17" name="pnb" path="pnb" comment="msg:planificateur_catalog_pnb" />
+</catalog>

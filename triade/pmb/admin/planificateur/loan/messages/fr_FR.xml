@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- messages localisés en français pour les prêts
+****************************************************************************************
+© 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: fr_FR.xml,v 1.1 2011-07-29 12:32:14 dgoron Exp $ -->
+
+<XMLlist>
+	<entry code="planificateur_loan_generate">Options de génération automatique</entry>
+	<entry code="loan_relance">Gestion des relances</entry>
+	<entry code="loan_all_actions">Validation des actions</entry>
+	<entry code="loan_print_mail">Impression/Mail non envoyés</entry>
+	<entry code="loan_csv_mail">CSV/Mail non envoyé</entry>
+	<entry code="loan_no_empr">Aucun emprunteur concerné</entry>
+	<entry code="loan_no_letter">Aucun retard à imprimer</entry>
+	<entry code="planificateur_loan_filters">Filtres proposés</entry>
+	<entry code="planificateur_loan_tris">Tris proposés</entry>
+	<entry code="planificateur_loan_loc">Choix de la localisation</entry><!--
+	
+	<entry code="planificateur_loan_running_reader_pdf">Génération pdf des prêts en cours par lecteur</entry>
+	<entry code="planificateur_loan_running_reader_mail">Notification par mail des prêts en cours par lecteur</entry>
+	<entry code="planificateur_loan_delay_reader_pdf">Génération pdf des retards par lecteur</entry>
+	<entry code="planificateur_loan_delay_reader_mail">Notification par mail des retards par lecteur</entry>
+	<entry code="planificateur_loan_running_group_pdf">Génération pdf des prêts par groupe</entry>
+	<entry code="planificateur_loan_running_group_mail">Notification par mail des prêts par groupe</entry>
+	<entry code="planificateur_loan_delay_group_pdf">Génération pdf des retards par groupe</entry>
+	<entry code="planificateur_loan_delay_group_mail">Notification par mail des retards par groupe</entry>		
+
+--></XMLlist>

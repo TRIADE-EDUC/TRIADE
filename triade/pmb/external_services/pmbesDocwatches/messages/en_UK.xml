@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- messages localisés en anglais
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: en_UK.xml,v 1.2 2016-07-07 08:40:58 tsamson Exp $ -->
+
+<!DOCTYPE XMLlist SYSTEM "../../../includes/XMLlist.dtd" >
+<XMLlist>
+  <entry code="update_description">Mise à jour automatique des veilles</entry>
+  <entry code="update_output_description"></entry>
+  <entry code="update_docwatchesUpdated">Retourne un tableau de veilles avec leurs sources de données</entry>
+</XMLlist>

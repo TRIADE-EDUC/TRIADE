@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le connecteur arteVOD
+****************************************************************************************
+© 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: en_UK.xml,v 1.2 2018-10-10 10:03:51 dgoron Exp $ -->
+
+<XMLlist>
+	<entry code="artevod_key">Login for the authentication</entry>
+	<entry code="artevod_secret_key">Password for the authentication</entry>
+	<entry code="artevod_search_in">Search in</entry>
+	<entry code="artevod_movies">Movies</entry>
+	<entry code="artevod_xslt_file">xslt file for the unimarc conversion (if empty, we use the default sheet)</entry>
+	<entry code="artevod_xslt_file_linked">An xslt file has been linked : %s</entry>
+	<entry code="artevod_error_auth">Login/Password incorrect</entry>
+	<entry code="artevod_vod">Vidéo à la demande</entry>
+	<entry code="artevod_source_field">Champ personnalisable à utiliser</entry>
+	<entry code="artevod_no_field">Aucun champ personnalisable de type entier</entry>
+	<entry code="artevod_enrichment_source">(source ArteVOD)</entry>
+	<entry code="artevod_enrichment_template">Template d'affichage de l'enrichissement</entry>
+	<entry code="artevod_private_key">Clé privée</entry>
+	<entry code="artevod_url_referer">URL référente</entry>
+</XMLlist>

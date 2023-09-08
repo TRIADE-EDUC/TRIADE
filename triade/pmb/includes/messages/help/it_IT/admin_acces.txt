@@ -1,0 +1,5 @@
+<h2>Gestione dei Diritti di accesso</h2>
+
+<p>La gestione dei diritti di accesso permette di definire in modo preciso i diritti di utilizzazione delle risorse del software.</p>
+<br />
+ 

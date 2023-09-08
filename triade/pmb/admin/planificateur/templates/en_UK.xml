@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- messages localisés en français pour la sauvegarde
+****************************************************************************************
+© 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: en_UK.xml,v 1.1 2015-06-15 12:55:34 pmbs Exp $ -->
+
+<XMLlist>
+	<entry code="planificateur_sync_liste">Repository list</entry>
+	<entry code="planificateur_sync_all">All repositories</entry>
+	<entry code="planificateur_sync_choice">Choose a repository</entry>
+	<entry code="task_sync_abort">Abort</entry>
+	<entry code="report_sync">Synchronise the source</entry>
+	<entry code="report_sync_false">Unknown source</entry>
+	<entry code="planificateur_stop_sync">Synchronisation stopped</entry>
+	<entry code="planificateur_abort_sync">Synchronisation aborted</entry>
+	<entry code="error_parameters">Task configuration error</entry>
+	<entry code="planificateur_sync_import">Automatic import of the synchronised records</entry>	
+	<!--<entry code="sync_report_error">Erreur durant l'exécution de la tâche</entry>
+	<entry code="sync_report_success">Tâche réalisée avec succès</entry>
+--></XMLlist>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- messages localisés en français pour la classe de fonctions search_functions
+****************************************************************************************
+© 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: fr_FR.xml,v 1.1 2018-06-08 08:10:26 vtouchard Exp $ -->
+
+<!DOCTYPE XMLlist SYSTEM "../../../includes/XMLlist.dtd" >
+<XMLlist>
+  <entry code="loanBook_description">Webservice permettant de réaliser un prêt numérique depuis l'OPAC</entry>
+  <entry code="loanBook_id_empr">Identifiant de l'emprunteur</entry>
+  <entry code="loanBook_record_id">Identifiant de la notice</entry>
+  <entry code="loanBook_user_agent">Identifiant du périphérique utilisé par l'emprunteur</entry>
+  <entry code="loanBook_output_description">Retour du prêt</entry>
+  <entry code="loanBook_input_description">Paramètres nécessaires à l'appel de la méthode</entry>
+  
+</XMLlist>

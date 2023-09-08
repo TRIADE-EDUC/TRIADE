@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le module Articleslist
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_sectionslist_view_carousel.xml,v 1.2 2017-07-27 14:50:32 tsamson Exp $ -->
+
+<XMLlist>
+	<entry code='cms_module_sectionslist_view_link'>Creation of a link to the rubric</entry>
+	<entry code='cms_module_sectionslist_view_carousel_link_desc'>Link to the rubric</entry>
+	<entry code='cms_module_sectionslist_view_carousel_sections_desc'>Table of the rubrics to display</entry>
+</XMLlist>

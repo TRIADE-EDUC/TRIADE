@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- messages localisés en français pour la classe de fonctions search_functions
+****************************************************************************************
+© 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: en_UK.xml,v 1.1 2015-06-15 12:55:33 pmbs Exp $ -->
+
+<!DOCTYPE XMLlist SYSTEM "../../../includes/XMLlist.dtd" >
+<XMLlist>
+<!-- 
+pmbesResas
+-->
+  <entry code="Resas_functions_description">Functions related to the reservations</entry>
+<!-- 
+listResas
+
+  <entry code="listResas_description">Liste des réservations à traiter</entry>
+  <entry code="listResas_input_description"></entry>
+  <entry code="listResas_idnotice">Identifiant de la notice</entry>
+  <entry code="listResas_idbulletin">Identifiant du bulletin</entry>
+  <entry code="listResas_idempr">Identifiant de l'emprunteur</entry>
+  <entry code="listResas_order">Critère de tri pour affichage de la liste</entry>
+  <entry code="listResas_condition">
+  condition de recherche sur les réservations que l'on souhaite récupérer:
+		(en_cours): les réservations en cours
+		(depassee): les réservations dépassées
+  </entry>
+  <entry code="listResas_montrerquoi">
+  		critère de recherche sur les réservations que l'on souhaite récupérer:
+		(validees): les réservations validées
+		(invalidees): les réservations en suspens
+		(valid_noconf): les réservations validées non confirmées
+		DEFAULT : toutes les réservations
+  </entry>
+  <entry code="listResas_f_loc">Identifiant de la localisation</entry>
+  <entry code="listResas_output_description"></entry>
+  <entry code="listResas_result">Retourne la liste des réservations à traiter</entry>
+--><!-- 
+confirmResaReader
+-->  
+  <entry code="confirmResaReader_description">Reservations to confirm</entry>
+  <entry code="confirmResaReader_input_description"></entry>
+  <entry code="confirmResaReader_id_resa">Identifier of the reservation</entry>
+  <entry code="confirmResaReader_id_empr_concerne">Identifier of the relevant borrower</entry>
+  <entry code="confirmResaReader_f_loc">Filter by reader's location</entry>
+  <entry code="confirmResaReader_output_description"></entry>
+  <entry code="confirmResaReader_result">Identifiers of unconfirmed reservation by e-mail (separator ",")</entry>	
+<!-- 
+generatePdfResasReaders
+-->
+  <entry code="generatePdfResasReaders_description">Construction of the PDF file</entry>
+  <entry code="generatePdfResasReaders_input_description"></entry>
+  <entry code="generatePdfResasReaders_tresas">Table of identifiers of borrowers</entry>
+  <entry code="generatePdfResasReaders_f_loc">Location of the structure for the generation of the document</entry>
+  <entry code="generatePdfResasReaders_output_description"></entry>
+  <entry code="generatePdfResasReaders_result">Content of the PDF format generated</entry> 
+<!-- 
+generatePdfResasReader
+
+  <entry code="generatePdfResasReader_description">Construction du fichier PDF</entry>
+  <entry code="generatePdfResasReader_input_description"></entry>
+  <entry code="generatePdfResasReader_id_empr">Identifiant de l'emprunteur</entry>
+  <entry code="generatePdfResasReader_output_description"></entry>
+  <entry code="generatePdfResasReader_result">Contenu du format PDF généré</entry>   
+-->
+<!-- 
+get_empr_information
+-->
+  <entry code="get_empr_information_description">Informations on the borrower</entry>
+  <entry code="get_empr_information_input_description"></entry>
+  <entry code="get_empr_information_idempr">Identifier of the borrower</entry>
+  <entry code="get_empr_information_output_description"></entry>
+  <entry code="get_empr_information_result">Informations about a borrower</entry>
+<!-- 
+list_empr_resas
+-->
+  <entry code="list_empr_resas_description">Reservations of a borrower</entry>
+  <entry code="list_empr_resas_input_description"></entry>
+  <entry code="list_empr_resas_empr_id">Identifier of the borrower</entry>
+  <entry code="list_empr_resas_output_description"></entry>
+  <entry code="list_empr_resas_resas_ids">Identifiers of the reservations about a borrower</entry>
+<!-- 
+get_empr_information_and_resas
+-->
+  <entry code="get_empr_information_and_resas_description">Informations about the borrower with his registration</entry>
+  <entry code="get_empr_information_and_resas_input_description"></entry>
+  <entry code="get_empr_information_and_resas_empr_id">Identifier of the borrower</entry>
+  <entry code="get_empr_information_and_resas_output_description"></entry>
+  <entry code="get_empr_information_and_resas_information">Informations about the borrower</entry>
+  <entry code="get_empr_information_and_resas_resas_ids">Identifiers of the reservations</entry>
+</XMLlist>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- Fichier manifest de description des méthodes disponibles
+****************************************************************************************
+© 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: manifest.xml,v 1.2 2016-07-07 08:40:58 tsamson Exp $ -->
+<manifest>
+	<name>pmbesDocwatches</name>
+	<methods>
+		<method name="update" rights="" version="1.0" comment="msg:update_description" language_independant="true">
+			<pmb_requirements>
+				<pmb_requirement start_path="class" file="/docwatch/selectors/docwatch_selector_articles_by_sections.class.php"/>
+				<pmb_requirement start_path="class" file="/docwatch/selectors/docwatch_selector_external_sources.class.php"/>
+				<pmb_requirement start_path="class" file="/docwatch/selectors/docwatch_selector_notices_caddie.class.php"/>
+				<pmb_requirement start_path="class" file="/docwatch/selectors/docwatch_selector_notices_dsi.class.php"/>
+				<pmb_requirement start_path="class" file="/docwatch/selectors/docwatch_selector_notices_equation.class.php"/>
+				<pmb_requirement start_path="class" file="/docwatch/selectors/docwatch_selector_notices.class.php"/>
+				<pmb_requirement start_path="class" file="/docwatch/selectors/docwatch_selector_parent_sections.class.php"/>
+				<pmb_requirement start_path="class" file="/docwatch/selectors/docwatch_selector_rss.class.php"/>
+				<pmb_requirement start_path="class" file="/docwatch/selectors/docwatch_selector.class.php"/>
+			</pmb_requirements>
+			<inputs/>
+			<outputs>
+				<description>msg:update_output_description</description>
+				<result name="docwatchesUpdated" type="scalar" dataType="array" description="msg:update_docwatchesUpdated"/>
+			</outputs>
+		</method>
+	</methods>
+</manifest>

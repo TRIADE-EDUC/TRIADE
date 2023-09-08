@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour la classe datasource
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_common_selector.xml,v 1.1 2012-10-09 12:19:40 ngantier Exp $ -->
+
+<XMLlist>
+	<entry code="cms_module_common_selector_sub_choice_label">Sous-sélecteurs</entry>
+	<entry code="cms_module_common_selector_sub_choice">Choisissez un sous-sélecteur</entry>
+	<entry code="cms_module_common_selector_confirm_change_selector">Vous êtes sur le point de changer de sélecteur. Voulez-vous continuer?</entry>
+</XMLlist>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le module Agenda
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_agenda_view_eventslist.xml,v 1.1 2015-06-16 10:24:25 pmbs Exp $ -->
+
+<XMLlist>
+	<entry code="cms_module_common_view_articleslist_build_article_link">Creation of the link for the events</entry>
+	<entry code="cms_module_agenda_view_evenslist_link_desc">Link towards the event</entry>
+	<entry code="cms_module_agenda_view_evenslist_title_desc">Title of the list</entry>
+</XMLlist>

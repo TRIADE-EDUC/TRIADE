@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!--
+****************************************************************************************
+© 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: fr_FR.xml,v 1.7 2015-10-05 10:12:21 vtouchard Exp $ -->
+
+<!DOCTYPE XMLlist SYSTEM "../../../includes/XMLlist.dtd" >
+<XMLlist>
+<entry code="selfservices_functions_description">Permet de faire le prêt, le retour, et la prolongation de prêt d'un document</entry>
+
+<entry code="self_checkout_description">Permet de faire le prêt d'un document</entry>
+<entry code="self_del_temp_pret">Permet de supprimer le pret temporaire</entry>
+<entry code="self_checkin_description">Permet de faire le retour d'un document</entry>
+<entry code="self_renew_description">Permet de faire la prolongation de prêt d'un document</entry>
+
+<entry code="self_checkout_inputs_description"></entry>
+<entry code="self_checkout_outputs_description"></entry>
+<entry code="self_checkout_expl_cb">Le code-barres du document</entry>
+<entry code="self_checkout_id_empr">l'id de l'emprunteur</entry>
+<entry code="self_checkout_pmbUserId">Id de l'utilisateur PMB</entry>
+
+<entry code="self_checkout_status">1: Le prêt du document est accepté. 0: Le prêt du document est refusé</entry>
+<entry code="self_checkout_message">Message du prêt</entry>
+<entry code="self_checkout_title">Titre du document</entry>
+<entry code="self_checkout_transaction_date">Date du prêt</entry>
+<entry code="self_checkout_due_date">Date de retour</entry>				
+<entry code="self_checkout_message_quota">Message de quotas</entry>
+<entry code="self_checkout_message_expl_comment">Message d'information sur les pièges</entry>				
+
+<entry code="self_del_temp_pret_description">Supression du prêt temporaire</entry>
+<entry code="self_del_temp_pret_input_description"></entry>
+<entry code="self_del_temp_pret_expl_cb">Le code-barres du document</entry>
+<entry code="self_del_temp_pret_output_description"></entry>
+<entry code="self_del_temp_pret_status">1: L'effacement est effectué. 0: Le document est inconnu</entry>
+
+<entry code="self_checkin_inputs_description"></entry>
+<entry code="self_checkin_outputs_description"></entry>
+<entry code="self_checkin_expl_cb">Le code-barres du document</entry>
+<entry code="self_checkin_pmbUserId">Id de l'utilisateur PMB</entry>
+
+<entry code="self_checkin_status">1: Le retour du document est accepté. 0: Le retour du document est refusé</entry>
+<entry code="self_checkin_message">Message du retour de prêt</entry>
+<entry code="self_checkin_title">Titre du document</entry>
+<entry code="self_checkin_transaction_date">Date du retour</entry>
+		
+<entry code="self_checkin_message_loc">Message concernant la localisation du document</entry>				
+<entry code="self_checkin_message_resa">Message concernant la réservation du document</entry>				
+<entry code="self_checkin_message_retard">Message si retard sur le retour du document</entry>				
+<entry code="self_checkin_message_amende">Message si l'emprunteur a une amende</entry>	
+
+<entry code="self_renew_inputs_description"></entry>
+<entry code="self_renew_outputs_description"></entry>
+<entry code="self_renew_expl_cb">Le code-barres du document</entry>
+<entry code="self_renew_pmbUserId">Id de l'utilisateur PMB</entry>
+
+<entry code="self_renew_status">1: La prolongation du prêt est acceptée. 0: La prolongation du prêt est refusée</entry>
+<entry code="self_renew_message">Message de la prolongation du prêt</entry>
+<entry code="self_renew_title">Titre du document</entry>
+<entry code="self_renew_transaction_date">Date de la prolongation</entry>
+<entry code="self_renew_due_date">Date de retour</entry>		
+<entry code="format_date">%d/%m/%Y</entry>	
+
+<entry code="self_checkout_bibloto_inputs_description"></entry>
+<entry code="self_checkout_bibloto_outputs_description"></entry>
+<entry code="self_checkout_bibloto_description">Permet de faire le prêt d'un document via l'application bibloto</entry>
+<entry code="self_checkout_bibloto_empr_cb">Le code-barres de l'emprunteur</entry>
+<entry code="self_checkout_bibloto_confirm">Confirme le prêt</entry>
+
+</XMLlist>

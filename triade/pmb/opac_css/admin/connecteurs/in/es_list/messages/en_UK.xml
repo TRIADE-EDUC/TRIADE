@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le connecteur OAI
+****************************************************************************************
+© 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: en_UK.xml,v 1.2 2015-06-26 12:31:14 pmbs Exp $ -->
+
+<XMLlist>
+	<entry code="es_list_no_preview">No preview available</entry>
+	<entry code="es_list_enrichment_source">(enrichment from %s)</entry>
+	<entry code="es_list_list">Selection of the sources</entry>
+	<entry code="es_list_use_in_a2z">Use in the AtoZ ?</entry>
+	<entry code="yes">Yes</entry>
+	<entry code="no">No</entry>
+</XMLlist>

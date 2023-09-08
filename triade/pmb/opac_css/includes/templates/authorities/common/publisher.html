@@ -1,0 +1,81 @@
+{% extends 'gabarit.html' %}
+
+<!-- $Id: publisher.html,v 1.4 2017-11-22 14:51:42 dgoron Exp $ -->
+
+{% block header %}
+	<h3><span>{{ msg.publisher_see_title }}</span></h3>
+{% endblock %}
+
+{% block aut_see %}
+	<div class="publisherlevel2">
+		{{block.super}}
+	</div>
+{% endblock %}
+	
+{% block title %}
+	<h3>
+		{{ authority.name }}{% if authority.web %} <a target="_blank" href="{{authority.web}}"><img src='{{ img.globe.gif }}'/></a>{% endif %}
+	</h3>
+{% endblock %} 
+
+{% block details %}
+	{% if authority.ed_comment %}
+		<div class="aut_display_row">
+			<div class="aut_display_cell">
+				<b>{{ msg.comment }} :</b>
+			</div>
+			<div class='aut_comment aut_display_cell'>
+				{{authority.ed_comment | nl2br }}
+			</div>
+		</div>
+	{% endif %}
+	{% if authority.ville %}
+		<div class="aut_display_row">
+			<div class="aut_display_cell">
+				<b>{{msg.publisher_details_location | printf "" }} :</b>
+			</div>
+			<div class='aut_display_cell'>
+				{{ authority.ville }}
+			</div>
+		</div>
+	{% endif %}
+	{% if authority.adr1 %}
+		{% if authority.cp %}
+			{% if authority.ville %}
+				<div class="aut_display_row">
+					<div class="aut_display_cell">
+						<b>{{ msg.empr_adresse }} :</b>
+					</div>
+					<div class="aut_display_cell">
+						{{authority.adr1}}
+						{% if authority.adr2 %}
+							<br />{{authority.adr2}}
+						{% endif %}	
+						<br />{{authority.cp}} {{authority.ville}}
+						{% if authority.pays %}
+							<br />{{authority.pays}}
+						{% endif %}
+					</div>
+				</div>
+			{% endif %}
+		{% endif %}
+	{% endif %}
+	{% if authority.collections %}
+		{% for collection in authority.collections %}
+			{% if loop.first %}
+				<div class="aut_display_row">
+					<div class="aut_display_cell">
+						<b>{{ msg.publishers_collections }} :</b>
+					</div>
+					<div class="aut_display_cell">
+			{% else %}
+				<br />
+			{% endif %}	
+						<a href="./index.php?lvl=coll_see&id={{collection.db_id}}">{{ collection.name }}</a>
+			{% if loop.last %}
+					</div>
+				</div>
+			{% endif %}	
+		{% endfor %}
+	{% endif %}
+{% endblock %}

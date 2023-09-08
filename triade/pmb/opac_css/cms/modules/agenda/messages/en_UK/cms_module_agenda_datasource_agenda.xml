@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le module Article
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_agenda_datasource_agenda.xml,v 1.1 2015-06-16 10:24:25 pmbs Exp $ -->
+
+<XMLlist>
+	<entry code="cms_module_common_selector_env_var">Event from an environment variable</entry>
+	<entry code="cms_module_agenda_selector_calendars">Calendars created in the administration interface</entry>
+	<entry code="cms_module_agenda_selector_calendars_date">Calendars created in the administration interface / Date</entry>
+	<entry code="cms_module_agenda_datasource_agenda_event_start_desc">Beginning date</entry>
+	<entry code="cms_module_agenda_datasource_agenda_event_start_format_value_desc">Formatted value of the beginning date</entry>
+	<entry code="cms_module_agenda_datasource_agenda_event_start_value_desc">Gross value of the beginning date</entry>
+	<entry code="cms_module_agenda_datasource_agenda_event_start_time_desc">Timestamp of the beginning date</entry>
+	<entry code="cms_module_agenda_datasource_agenda_event_end_desc">End date (optional)</entry>
+	<entry code="cms_module_agenda_datasource_agenda_event_end_format_value_desc">Formatted value of the end date</entry>
+	<entry code="cms_module_agenda_datasource_agenda_event_end_value_desc">Gross value of the end date</entry>
+	<entry code="cms_module_agenda_datasource_agenda_event_end_time_desc">Timestamp of the end date</entry>
+	<entry code="cms_module_agenda_datasource_agenda_id_type_desc">Identifier of the content type used for the event</entry>
+	<entry code="cms_module_agenda_datasource_agenda_color_desc">Colour of the linked calendar</entry>
+	<entry code="cms_module_agenda_datasource_agenda_calendar_desc">Name of the linked calendar</entry>
+	<entry code="cms_module_agenda_datasource_agenda_events_desc">Table of events</entry>
+</XMLlist>

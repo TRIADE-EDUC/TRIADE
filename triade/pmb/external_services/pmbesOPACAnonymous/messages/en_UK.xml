@@ -1,0 +1,305 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!--
+****************************************************************************************
+© 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: en_UK.xml,v 1.4 2016-09-20 15:17:15 dgoron Exp $ -->
+
+<!DOCTYPE XMLlist SYSTEM "../../../includes/XMLlist.dtd" >
+<XMLlist>
+  <!--
+pmbesOPACAnonymous
+-->
+  <entry code="pmbesOPACAnonymous_description">Interacts from an anonymous reader's point of view</entry>
+  <!--
+simpleSearch
+-->
+<entry code="simpleSearch_description">Do a simple search</entry>
+<entry code="simpleSearch_input_description"></entry>
+<entry code="simpleSearch_output_description"></entry>
+<entry code="simpleSearch_searchType">The type of research:
+  0 (SEARCH_ALL)=all the fields,
+  1 (SEARCH_TITLE)=title, 
+  2 (SEARCH_AUTHOR)=author, 
+  3 (SEARCH_EDITOR)=editor, 
+  4 (SEARCH_COLLECTION)=collection,
+  6 (SEARCH_CATEGORIES)=categories/subject heading words</entry>
+<entry code="simpleSearch_searchTerm">String to research</entry>
+<entry code="simpleSearch_searchId">Name of the result resource</entry>
+<entry code="simpleSearch_nbResults">Number of results</entry>
+  <!--
+getAdvancedSearchFields
+-->
+<entry code="getAdvancedSearchFields_description">Retrieves the list of searchable fields in advanced research</entry>
+<entry code="getAdvancedSearchFields_input_description"></entry>
+<entry code="getAdvancedSearchFields_output_description"></entry>
+<entry code="getAdvancedSearchFields_lang">The language</entry>
+<entry code="getAdvancedSearchFields_fetch_values">Specify if you also need to search the values of the fields, for a champ select for example</entry>
+<entry code="getAdvancedSearchFields_results">The different fields</entry>
+  <!--
+advancedSearch
+-->
+  
+  <entry code="advancedSearch_description">Do an advanced search</entry>
+  <entry code="advancedSearch_inputs_description"></entry>
+  <entry code="advancedSearch_outputs_description"></entry>
+  <entry code="advancedSearch_search">the search: a table of a search structure</entry>
+  <entry code="advancedSearch_search_inter">the operator between the field and the previous field</entry>
+  <entry code="advancedSearch_search_field">the id of the search field</entry>
+  <entry code="advancedSearch_search_operator">the search operator</entry>
+  <entry code="advancedSearch_search_value">the search values</entry>
+  <entry code="advancedSearch_searchId">name of the resource results</entry>
+  <entry code="advancedSearch_nbResults">number of results found</entry>
+  
+  <!--
+fetchSearchRecords
+-->
+  
+<entry code="fetchSearchRecords_description">Functions to retrieve the records found in search</entry>
+<entry code="fetchSearchRecords_input_description"></entry>
+<entry code="fetchSearchRecords_output_description"></entry>
+<entry code="fetchSearchRecords_searchId">The id returned by the search function</entry>
+<entry code="fetchSearchRecords_firstRecord">The number of the first record to retrieve</entry>
+<entry code="fetchSearchRecords_recordCount">Number of records to retrieve</entry>
+<entry code="fetchSearchRecords_recordFormat">Format of the results</entry>
+<entry code="fetchSearchRecords_recordCharset">Charset in which we want the results</entry>
+<entry code="fetchSearchRecords_results">The results</entry>
+<entry code="fetchSearchRecords_results_noticeId">The id of the record</entry>
+<entry code="fetchSearchRecords_results_noticeContent">The record in its format</entry>
+
+  <!--
+    fetchSearchRecordsSorted
+  -->
+  <entry code="fetchSearchRecordsSorted_description">Retrieve the records resulting of a search, applying the sorting rules</entry>
+  <entry code="fetchSearchRecordsSorted_input_description">
+    The SortType parameter builds itself the following way:
+    typedutri_nomdutri, with:
+    -typedutri: d or c for an ascending or descending sorting
+    -nomdutri: the id of the sorting (see the get_sort_types function).
+    
+    examples:
+    -c_text_1: sort by ascending title.
+    -d_num_7: sort by descending year of edition.
+    -c_text_5: sort by ascending call number.</entry>
+  <entry code="fetchSearchRecordsSorted_output_description"></entry>
+  <entry code="fetchSearchRecordsSorted_searchId">the id returned by the search function</entry>
+  <entry code="fetchSearchRecordsSorted_firstRecord">number of the first record to retrieve</entry>
+  <entry code="fetchSearchRecordsSorted_recordCount">number of records to retrieve</entry>
+  <entry code="fetchSearchRecordsSorted_recordFormat">results format</entry>
+  <entry code="fetchSearchRecordsSorted_recordCharset">the charset in which we want the results</entry>
+  <entry code="fetchSearchRecordsSorted_includeLinks">include the links between the records, issues and articles</entry>
+  <entry code="fetchSearchRecordsSorted_includeItems">include the copies in the zone 995</entry>
+  <entry code="fetchSearchRecordsSorted_sortType">the sorting rule to apply to the results</entry>
+  <entry code="fetchSearchRecordsSorted_results">A table of results</entry>
+  <entry code="fetchSearchRecordsSorted_results_noticeId">the id of the record</entry>
+  <entry code="fetchSearchRecordsSorted_results_noticeContent">the record in the requested format</entry>
+
+  <!--
+    fetchSearchRecordsArray
+  -->
+  <entry code="fetchSearchRecordsArray_description">Functions to retrieve the records resulting of a search</entry>
+  <entry code="fetchSearchRecordsArray_input_description"></entry>
+  <entry code="fetchSearchRecordsArray_output_description"></entry>
+  <entry code="fetchSearchRecordsArray_searchId">The id returned by the search function</entry>
+  <entry code="fetchSearchRecordsArray_firstRecord">Number of the first record to retrieve</entry>
+  <entry code="fetchSearchRecordsArray_recordCount">Number of records to retrieve</entry>
+  <entry code="fetchSearchRecordsArray_recordCharset">Charset in which we want the results</entry>
+  <entry code="fetchSearchRecordsArray_results">The results</entry>
+
+  <!--
+    fetchSearchRecordsArraySorted
+  -->
+  <entry code="fetchSearchRecordsArraySorted_description">Retrieve the records resulting of a search, applying the sorting rules</entry>
+  <entry code="fetchSearchRecordsArraySorted_input_description">
+    The sortType parameter builds itself the following way:
+    typedutri_nomdutri, with:
+    -typedutri: d or c for an ascending or descending sorting
+    -nomdutri: the id of the sorting (see the get_sort_types function).
+    
+    examples:
+    -c_text_1: sort by ascending title.
+    -d_num_7: sort by descending year of edition.
+    -c_text_5: sort by ascending call number.</entry>
+  <entry code="fetchSearchRecordsArraySorted_output_description"></entry>
+  <entry code="fetchSearchRecordsArraySorted_searchId">the id returned by the search function</entry>
+  <entry code="fetchSearchRecordsArraySorted_firstRecord">number of the first record to retrieve</entry>
+  <entry code="fetchSearchRecordsArraySorted_recordCount">number of records to retrieve</entry>
+  <entry code="fetchSearchRecordsArraySorted_recordCharset">the charset in which we want the results</entry>
+  <entry code="fetchSearchRecordsArraySorted_includeLinks">include the links between the records, issues and articles</entry>
+  <entry code="fetchSearchRecordsArraySorted_includeItems">include the copies in the zone 995</entry>
+  <entry code="fetchSearchRecordsArraySorted_sortType">the sort rule to apply to the results</entry>
+  <entry code="fetchSearchRecordsArraySorted_results">A table of results</entry>
+
+  <!--
+fetch_notice_items
+-->
+  
+<entry code="fetch_notice_items_description">Returns the different copies linked to a record if they exist</entry>
+<entry code="fetch_notice_items_input_description"></entry>
+<entry code="fetch_notice_items_output_description"></entry>
+<entry code="fetch_notice_items_session_id">The session number</entry>
+<entry code="fetch_notice_items_noticeid">The id of the record</entry>
+<entry code="fetch_notice_items_items">The copies</entry>
+  <!--
+listNoticeExplNums
+-->
+  
+<entry code="listNoticeExplNums_description">Lists the digital documents linked to a record</entry>
+<entry code="listNoticeExplNums_input_description"></entry>
+<entry code="listNoticeExplNums_output_description"></entry>
+<entry code="listNoticeExplNums_session_id">The number of session</entry>
+<entry code="listNoticeExplNums_noticeId">The id of the relevant record</entry>
+<entry code="listNoticeExplNums_results">The digital documents</entry>
+  <!--
+listBulletinExplNums
+-->
+  
+<entry code="listBulletinExplNums_description">Lists the digital documents linked to an issue</entry>
+<entry code="listBulletinExplNums_input_description"></entry>
+<entry code="listBulletinExplNums_output_description"></entry>
+<entry code="listBulletinExplNums_session_id">The session number</entry>
+<entry code="listBulletinExplNums_bulletinId">the id of the relevant issue</entry>
+<entry code="listBulletinExplNums_results">The digital documents</entry>
+  <!--
+fetchNoticeList
+-->
+
+<entry code="fetchNoticeList_description">Retrieves a list of records from their ids, in a specified format</entry>
+<entry code="fetchNoticeList_input_description">Care about the requirements of the protocols in terms of charset if you use this function. For example, if you use SOAP, you will have to manage the records in utf-8.</entry>
+<entry code="fetchNoticeList_output_description"></entry>
+<entry code="fetchNoticeList_session_id">The session number</entry>
+<entry code="fetchNoticeList_noticelist">The different records (id)</entry>
+<entry code="fetchNoticeList_recordFormat">The format in which we want these records</entry>
+<entry code="fetchNoticeList_recordCharset">the charset in which we want the results</entry>
+<entry code="fetchNoticeList_results">The different records</entry>
+<entry code="fetchNoticeList_results_noticeId">the id of the record</entry>
+<entry code="fetchNoticeList_results_noticeContent">the record in the requested format</entry>
+
+  <!--
+    fetchNoticeListArray
+  -->
+  <entry code="fetchNoticeListArray_description">Retrieves a list of records from their ids</entry>
+  <entry code="fetchNoticeListArray_input_description"></entry>
+  <entry code="fetchNoticeListArray_output_description"></entry>
+  <entry code="fetchNoticeListArray_noticelist">The different records (id)</entry>
+  <entry code="fetchNoticeListArray_recordCharset">the charset in which we want the results</entry>
+  <entry code="fetchNoticeListArray_results">The different records</entry>
+
+  <!--
+    get_sort_types
+  -->
+  <entry code="get_sort_types_description">Returns the list of different ways to sort</entry>
+  <entry code="get_sort_types_input_description"></entry>
+  <entry code="get_sort_types_output_description">
+    Example of return :
+    Array
+    (
+    [0] => Array
+    (
+    [sort_name] => text_1
+    [sort_caption] => Title
+    )
+    
+    [1] => Array
+    (
+    [sort_name] => num_2
+    [sort_caption] => Decimal indexation
+    )
+    
+    [2] => Array
+    (
+    [sort_name] => text_3
+    [sort_caption] => Author
+    )
+  ...
+)</entry>
+  <entry code="simple_search_localise_description">Do a simple search filtered by location and section</entry>
+  <entry code="simple_search_localise_inputs_description"></entry>
+  <entry code="simple_search_localise_inputs_description_searchType">The search type:  
+  0 (SEARCH_ALL)=All fields,
+  1 (SEARCH_TITLE)=title, 
+  2 (SEARCH_AUTHOR)=author, 
+  3 (SEARCH_EDITOR)=editor, 
+  4 (SEARCH_COLLECTION)=collection,
+  6 (SEARCH_CATEGORIES)=categories/Subject heading words</entry>
+  <entry code="simple_search_localise_inputs_description_searchTerm">string to search</entry>
+  <entry code="simple_search_localise_inputs_description_pmbUserId">the id of a pmb user, to filter the results depending on the access point. 
+-1: to not take it into account</entry>
+  <entry code="simple_search_localise_inputs_description_OPACUserId">the id of a borrower, to filter the results, depending on the access rights
+	-1: Do not take into account
+	0: anonymous borrower
+	x: id of the borrower</entry>
+  <entry code="simple_search_localise_outputs_description"></entry>
+  <entry code="simple_search_localise_outputs_description_searchId">name of the resource result</entry>
+  <entry code="simple_search_localise_outputs_description_nbResults">number of results found</entry>
+  <entry code="msg:simple_search_localise_inputs_description_localisation">Location</entry>
+  <entry code="msg:simple_search_localise_inputs_description_section">Section</entry>
+
+<!--
+fetchBulletinListFull
+-->
+	<entry code="fetchBulletinListFull_description">Alias for pmbesNotices_fetchBulletinListFull. See this entry for the documentation</entry>
+	<entry code="fetchBulletinListFull_input_description"></entry>
+	<entry code="fetchBulletinListFull_output_description"></entry>
+	<entry code="fetchBulletinListFull_bulletinlist"></entry>
+	<entry code="fetchBulletinListFull_recordFormat"></entry>
+	<entry code="fetchBulletinListFull_recordCharset"></entry>
+	<entry code="fetchBulletinListFull_results"></entry>
+	<entry code="fetchBulletinListFull_results_bulletin_id"></entry>
+	<entry code="fetchBulletinListFull_results_bulletin_bulletin"></entry>
+	<entry code="fetchBulletinListFull_results_bulletin_notice"></entry>
+	<entry code="fetchBulletinListFull_results_bulletin_items"></entry>
+	<entry code="fetchBulletinListFull_results_bulletin_doc_nums"></entry>
+
+<!--
+fetchNoticeListFull
+-->
+	<entry code="fetchNoticeListFull_description">Alias for pmbesNotices_fetchNoticeListFull. See this entry for the documentation</entry>
+	<entry code="fetchNoticeListFull_input_description"></entry>
+	<entry code="fetchNoticeListFull_output_description"></entry>
+	<entry code="fetchNoticeListFull_noticelist"></entry>
+	<entry code="fetchNoticeListFull_recordFormat"></entry>
+	<entry code="fetchNoticeListFull_recordCharset"></entry>
+	<entry code="fetchNoticeListFull_includeLinks"></entry>
+	<entry code="fetchNoticeListFull_results"></entry>
+	<entry code="fetchNoticeListFull_results_noticeId"></entry>
+	<entry code="fetchNoticeListFull_results_noticeContent"></entry>
+	<entry code="fetchNoticeListFull_results_noticeItems"></entry>
+	<entry code="fetchNoticeListFull_results_noticeDocNums"></entry>
+	<entry code="fetchNoticeListFull_results_noticeBulletins"></entry>
+
+<!--
+listFacets
+-->
+  <entry code="listFacets_description">Récupérer les facettes issues d'une recherche</entry>
+  <entry code="listFacets_input_description"></entry>
+  <entry code="listFacets_output_description"></entry>
+  <entry code="listFacets_searchId">l'id renvoyé par la fonction de recherche</entry>
+  <entry code="listFacets_inputs_description_fields">Un tableau de facettes à calculer</entry>
+  <entry code="listFacets_inputs_description_field_code_champ">Code champ</entry>
+  <entry code="listFacets_inputs_description_field_code_ss_champ">Code sous champ</entry>
+  <entry code="listFacets_inputs_description_filters">Un tableau de filtres (affinage : facettes déjà sélectionnées)</entry>
+  <entry code="listFacets_inputs_description_filter_code_champ">Code champ</entry>
+  <entry code="listFacets_inputs_description_filter_code_ss_champ">Code sous champ</entry>
+  <entry code="listFacets_inputs_description_filter_value">Valeur</entry>
+  <entry code="listFacets_results">Liste des facettes calculées</entry>
+  <entry code="listFacets_results_code_champ">Code champ</entry>
+  <entry code="listFacets_results_code_ss_champ">Code sous champ</entry>
+  <entry code="listFacets_results_count">Nombre de notices associées</entry>
+  
+<!--
+listRecordsFromFacets
+-->
+  <entry code="listRecordsFromFacets_description">Récupérer les notices issues d'une ou plusieurs facettes</entry>
+  <entry code="listRecordsFromFacets_input_description"></entry>
+  <entry code="listRecordsFromFacets_output_description"></entry>
+  <entry code="listRecordsFromFacets_searchId">l'id renvoyé par la fonction de recherche</entry>
+  <entry code="listRecordsFromFacets_inputs_description_filters">Un tableau de filtres (affinage : facettes déjà sélectionnées)</entry>
+  <entry code="listRecordsFromFacets_inputs_description_filter_code_champ">Code champ</entry>
+  <entry code="listRecordsFromFacets_inputs_description_filter_code_ss_champ">Code sous champ</entry>
+  <entry code="listRecordsFromFacets_inputs_description_filter_value">Valeur</entry>
+  <entry code="listRecordsFromFacets_results">Liste des notices</entry>
+  <entry code="listRecordsFromFacets_outputs_description_noticeId">Identifiant de la notice</entry>
+  
+</XMLlist>

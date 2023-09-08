@@ -1,0 +1,23 @@
+@font-face {
+    font-family: 'Open Sans Condensed';
+    src: url('./font/OpenSans-CondBold-webfont.eot');
+    src: url('./font/OpenSans-CondBold-webfont.eot?#iefix') format('embedded-opentype'),
+         url('./font/OpenSans-CondBold-webfont.woff2') format('woff2'),
+         url('./font/OpenSans-CondBold-webfont.woff') format('woff'),
+         url('./font/OpenSans-CondBold-webfont.ttf') format('truetype'),
+         url('./font/OpenSans-CondBold-webfont.svg#open_sans_condensedbold') format('svg');
+    font-weight: 600;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Open Sans Light';
+    src: url('./font/OpenSans-CondLight-webfont.eot');
+    src: url('./font/OpenSans-CondLight-webfont.eot?#iefix') format('embedded-opentype'),
+         url('./font/OpenSans-CondLight-webfont.woff2') format('woff2'),
+         url('./font/OpenSans-CondLight-webfont.woff') format('woff'),
+         url('./font/OpenSans-CondLight-webfont.ttf') format('truetype'),
+         url('./font/OpenSans-CondLight-webfont.svg#open_sanscondensed_light') format('svg');
+    font-weight: 300;
+    font-style: normal;
+}

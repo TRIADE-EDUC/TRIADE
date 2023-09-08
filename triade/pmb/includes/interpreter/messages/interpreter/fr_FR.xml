@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- messages localisés en français pour les méthodes externes de procédures
+***(?)***(?)***(?)***(?)***(?)***(?)***(?)***(?)***(?)***(?)***(?)***(?)***(?)***(?)***(?)***(?)***(?)***(?)***(?)***(?)***(?)***(?)***(?)***(?)***(?)***(?)***(?)***(?)***(?)*
+© 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+***(?)***(?)***(?)***(?)***(?)***(?)***(?)***(?)***(?)***(?)***(?)***(?)***(?)***(?)***(?)***(?)***(?)***(?)***(?)***(?)***(?)***(?)***(?)***(?)***(?)***(?)***(?)***(?)***(?)*
+$Id: fr_FR.xml,v 1.1 2015-07-24 12:52:42 vdesiles Exp $ -->
+
+<!DOCTYPE XMLlist SYSTEM "../../../../includes/XMLlist.dtd" >
+<XMLlist>
+
+ <!-- nom des catégoriesl -->
+  <entry code="classbib"> Liste fonction Interpreter</entry> 
+  
+  
+  <!-- #romain($param); -->
+  <entry code="romain_description">Affiche un chiffre Romain</entry>
+  <entry code="romain_input_description">param[0] = chiffre arabe</entry>
+  <entry code="romain_output_description">Exemple : le chiffre 11 donnera XI et 112 donnera CXII </entry>
+  
+  <!-- #roman($param); -->
+  <entry code="roman_description">Affiche un chiffre Romain (même code que #romain)</entry>
+  <entry code="roman_input_description">param[0] = chiffre arabe</entry>
+  <entry code="roman_output_description">Exemple : le chiffre 11 donnera XI et 112 donnera CXII</entry>
+  
+  <!-- #date($param); -->
+  <entry code="date_description">Affiche la date</entry>
+  <entry code="date_input_description">param[0] = date</entry>
+  <entry code="date_output_description">Exemple : on entre la date 2015-02-15 si le pmb est en français elle donnera 15/02/2015</entry>
+  
+  <!-- #day($param); -->
+  <entry code="day_description">Affiche le numéro du jour dans le mois</entry>
+  <entry code="day_input_description">Param[0] = date</entry>
+  <entry code="day_output_description">Exemple : 2006-05-21 donnera 21</entry>
+  
+  <!-- #dayofweek($param); -->
+  <entry code="dayofweek_description">Affiche le numéro du jour dans la semaine</entry>
+  <entry code="dayofweek_input_description">
+  param[0] = date
+  param[1] = 1 si le dimanche est le premier jour de la semaine et param[1] = 0 si le lundi est le premier jour de la semaine
+  </entry>
+  <entry code="dayofweek_output_description">Exemple: si param[0]=2007-03-01 et param[1] = 0 ou pas de param[1] alors on obtient 7, le 7ème jour de la semaine avec le lundi définie comme premier jour de la semaine</entry>
+  
+  <!-- #month($param); -->
+  <entry code="month_description">Affiche le mois</entry>
+  <entry code="month_input_description">param[0] = date</entry>
+  <entry code="month_output_description">Exemple : si param[0]=1997-10-22 alors on obtient 10 et si param[0]=1991-2-22 on obtiendra 2 </entry>
+  
+  <!-- #week($param); -->
+  <entry code="week_description">Affiche la semaine</entry>
+  <entry code="week_input_description">param[0] = date </entry>
+  <entry code="week_output_description">Exemple : si param[0]=2015-7-27 alors on obtient 31 et si param[0]=2015-1-1 on obtiendra 1</entry>
+  
+  <!-- #year($param); -->
+  <entry code="year_description">Affiche l'année</entry>
+  <entry code="year_input_description">param[0] = date</entry>
+  <entry code="year_output_description">Exemple : si param[0]=2015-27-7 alors on obtient 2015</entry>
+  
+  <!-- #str_day($param); -->
+  <entry code="str_day_description">Affiche le libellé du jour de la semaine</entry>
+  <entry code="str_day_input_description">
+  param[0] = date
+  param[1] = code de la langue
+  </entry>
+  <entry code="str_day_output_description">Exemple : si param[0]=2015-23-7 et param[1]=fr_FR alors on obtient Jeudi</entry>
+  
+  <!-- #str_month($param); -->
+  <entry code="str_month_description">Affiche le libellé du mois</entry>
+  <entry code="str_month_input_description">
+  param[0] = date
+  param[1] = code de la langue
+  </entry>
+  <entry code="str_month_output_description">Exemple : si param[0]=2015-23-7 et param[1]=fr_FR alors on obtient juillet</entry>
+  
+  <!-- #str_short_day($param); -->
+  <entry code="str_short_day_description">Affiche les 3 premières lettres du jour de la semaine</entry>
+  <entry code="str_short_day_input_description">
+  param[0] = date
+  param[1] = code de la langue
+  </entry>
+  <entry code="str_short_day_output_description">Exemple : si param[0]=2015-23-7 et param[1]=fr_FR alors on obtient Jeu</entry>
+  
+  <!-- #str_short_month($param); -->
+  <entry code="str_short_month_description">Affiche le libellé du mois</entry>
+  <entry code="str_short_month_input_description">
+  param[0] = date
+  param[1] = code de la langue
+  </entry>
+  <entry code="str_short_month_output_description">Exemple : si param[0]=2015-23-7 et param[1]=fr_FR alors on obtient juillet</entry>
+  
+  <!-- #season($param); -->
+  <entry code="season_description">Affiche le "numéro" (1,2,3,4) de la saison</entry>
+  <entry code="season_input_description">param[0] = date </entry>
+  <entry code="season_output_description">Exemple : si param[0]=2015-23-7 alors on obtient 2 (Été)</entry>
+  
+  <!-- #str_season($param); -->
+  <entry code="str_season_description">Affiche le libellé de la saison</entry>
+  <entry code="str_season_input_description">
+  param[0] = date
+  param[1] = code langue
+  </entry>
+  <entry code="str_season_output_description">Exemple : si param[0]=2015-23-7 et param[1]=fr_FR alors on obtient Eté</entry>
+  
+  <!-- #seasonS($param); -->
+  <entry code="seasonS_description">Affiche le "numéro" opposé de la saison</entry>
+  <entry code="seasonS_input_description">param[0] = date</entry>
+  <entry code="seasonS_output_description">Exemple : si param[0]=2015-23-7 la saison est normalement en 2 (Été) mais la fonction affichera 4 (Hiver)</entry>
+  
+  <!-- #str_seasonS($param); -->
+  <entry code="str_seasonS_description">Affiche le libellé de l'opposé de la saison</entry>
+  <entry code="str_seasonS_input_description">
+  param[0] = date
+  param[1] = code langue
+  </entry>
+  <entry code="str_seasonS_output_description">Exemple : si param[0]=2015-23-7 et param[1]=fr_FR la saison est normalement Été (2), la fonction affichera Hiver (4)</entry>
+  
+  <!-- #sql($param); -->
+  <entry code="sql_description">Affiche le résultat d'une requete SQL</entry>
+  <entry code="sql_input_description">param[0] = Requête SQL à exécuter (attention elle doit retourner une seule ligne et une seule colonne)</entry>
+  <entry code="sql_output_description">Exemple : si param[0]=SELECT CURDATE(), la fonction affichera la date du jour au format machine (2015-07-22)  </entry>
+  
+  <!-- #+($param); -->
+  <entry code="+_description">Affiche le résultat d'une addition</entry>
+  <entry code="+_input_description">
+  param[0] = Nombre
+  param[1] = Nombre
+  </entry>
+  <entry code="+_output_description">Exemple : si param[0]=1 et param[1]=2 alors on obtient 3</entry>
+  
+  <!-- #-($param); -->
+  <entry code="-_description">Affiche le résultat d'une soustraction</entry>
+  <entry code="-_input_description">
+  param[0] = Nombre
+  param[1] = Nombre
+  </entry>
+  <entry code="-_output_description">Exemple : si param[0]=1 et param[1]=2 alors on obtient -1</entry>
+  
+  <!-- #*($param); -->
+  <entry code="*_description">Affiche le résultat d'une multiplicaction</entry>
+  <entry code="*_input_description">
+  param[0] = Nombre
+  param[1] = Nombre
+  </entry>
+  <entry code="*_output_description">Exemple : si param[0]=5 et param[1]=2 alors on obtient 10</entry>
+  
+  <!-- #%($param); -->
+  <entry code="%_description">Affiche le résultat d'un modulo</entry>
+  <entry code="%_input_description">
+  param[0] = Nombre
+  param[1] = Nombre
+  </entry>
+  <entry code="%_output_description">Exemple : si param[0]=5 et param[1]=7 alors on obtient 5</entry>
+  
+  <!-- #/($param); -->
+  <entry code="/_description">Affiche le résultat d'une division</entry>
+  <entry code="/_input_description">
+  param[0] = Nombre
+  param[1] = Nombre
+  </entry>
+  <entry code="/_output_description">si param[0]=10 et param[1]=2 alors on obtient 5</entry>
+  
+  <!-- #+day($param); -->
+  <entry code="+day_description">Permet d'ajouter un nombre de jours à une date</entry>
+  <entry code="+day_input_description">
+  param[0] = date
+  param[1] = nombre de jours à ajouter
+  </entry>
+  <entry code="+day_output_description">Exemple : si param[0]=2015-7-23 et param[1]=5 alors on obtient 2015-7-28</entry>
+  
+  <!-- #+month($param); -->
+  <entry code="+month_description">Permet d'ajouter un nombre de mois à une date</entry>
+  <entry code="+month_input_description">
+  param[0] = date
+  param[1] = nombre de mois à ajouter
+  </entry>
+  <entry code="+month_output_description">Exemple : si param[0]=2015-7-23 et param[1]=5 alors on obtient 2015-12-23</entry>
+  
+  <!-- #+year($param); -->
+  <entry code="+year_description">Permet d'ajouter un nombre d'années à une date</entry>
+  <entry code="+year_input_description">
+  param[0] = date
+  param[1] = nombre d'années à ajouter
+  </entry>
+  <entry code="+year_output_description">Exemple : si param[0]=2015-7-23 et param[1]=5 alors on obtient 2020-7-23</entry>
+  
+  <!-- #-day($param); -->
+  <entry code="-day_description">Permet d'enlever un nombre de jour à une date</entry>
+  <entry code="-day_input_description">
+  param[0] = date
+  param[1] = nombre de jours à enlever
+  </entry>
+  <entry code="-day_output_description">Exemple : si param[0]=2015-7-23 et param[1]=5 alors on obtient 2015-7-18</entry>
+  
+  <!-- #-month($param); -->
+  <entry code="-month_description">Permet d'enlever un nombre de mois à une date</entry>
+  <entry code="-month_input_description">
+  param[0] = date
+  param[1] = nombre de mois à enlever
+  </entry>
+  <entry code="-month_output_description">Exemple : si param[0]=2015-7-23 et param[1]=5 alors on obtient 2015-2-23</entry>
+  
+  <!-- #-year($param); -->
+  <entry code="-year_description">Permet d'enlever un nombre d'année à une date</entry>
+  <entry code="-year_input_description">
+  param[0] = date
+  param[1] = nombre d'années à enlever
+  </entry>
+  <entry code="-year_output_description">Exemple : si param[0]=2015-7-23 et param[1]=5 alors on obtient 2010-7-23</entry>
+  
+  <!-- #quarter($param); -->
+  <entry code="quarter_description">Affiche le trimestre</entry>
+  <entry code="quarter_input_description">param[0] = date</entry>
+  <entry code="quarter_output_description">Exemple : si param[0]=2015-7-23 on obtient 3 pour le 3ème trimestre</entry>
+  
+  <!-- #dayofyear($param); -->
+  <entry code="dayofyear_description">Affiche le nombre de jour écoulé depuis le début de l'année</entry>
+  <entry code="dayofyear_input_description">param[0] = date</entry>
+  <entry code="dayofyear_output_description">Exemple : Si param[0]=2015-7-22 on aura 203 (le 203ème jour de l'année)</entry>
+  
+  <!-- #curdate($param); -->
+  <entry code="curdate_description">Affiche la date du jour (format machine)</entry>
+  <entry code="curdate_input_description">param[0] = date actuel</entry>
+  <entry code="curdate_output_description">Exemple : Si param[0]=2015-07-22 16:36:34, on aura 2015-07-22</entry>
+  
+  <!-- #0day($param); -->
+  <entry code="0day_description">Affiche le jour dans le mois sur deux chiffres</entry>
+  <entry code="0day_input_description">param[0] = date</entry>
+  <entry code="0day_output_description">Exemple : si param[0]=1997-10-22 alors on obtiendra 22 et si param[0]= 1991-10-2 on obtiendra 02</entry>
+  
+  <!-- #0month($param); -->
+  <entry code="0month_description">Affiche le mois dans l'année sur deux chiffres</entry>
+  <entry code="0month_input_description">param[0] = date</entry>
+  <entry code="0month_output_description">Exemple : si param[0]=1997-10-22 alors on obtiendra 10 et si param[0]= 1991-2-22 on obtiendra 02</entry>
+  
+  <!-- #1ucase($param); -->
+  <entry code="1ucase_description">Affiche un texte avec la première lettre en majuscule</entry>
+  <entry code="1ucase_input_description">param[0] = texte</entry>
+  <entry code="1ucase_output_description">Exemple : Si param[0]="logiciel pmb", on aura "Logiciel pmb"</entry>
+  
+  <!-- #ucase($param); -->
+  <entry code="ucase_description">Affiche un texte avec toutes les lettres en majuscules</entry>
+  <entry code="ucase_input_description">param[0] = texte</entry>
+  <entry code="ucase_output_description">Exemple : Si param[0]="logiciel pmb", on aura "LOGICIEL PMB"</entry>
+  
+  <!-- #1ucasew($param); -->
+  <entry code="1ucasew_description">Affiche un texte avec les premières lettres des mots en majuscule</entry>
+  <entry code="1ucasew_input_description">param[0] = texte</entry>
+  <entry code="1ucasew_output_description">Exemple : Si param[0]="logiciel pmb", on aura "Logiciel Pmb"</entry>
+  
+  <!-- #i2char($param); -->
+  <entry code="i2char_description">Permet de convertir un nombre en lettre</entry>
+  <entry code="i2char_input_description">
+  param[0] = nombre(compris entre 1 et 26)
+  param[1] = majuscule (0 si minuscule 1 si majuscule)
+  </entry>
+  <entry code="i2char_output_description">Exemple : Si param[0]=1 et param[1]=0, on aura la lettre "a" ou Si param[0]=5 et param[1]=1, on aura la lettre en majuscule "E"</entry>
+  
+  <!-- #semester($param); -->
+  <entry code="semester_description">Affiche le semestre d'une date</entry>
+  <entry code="semester_input_description">param[0] = date</entry>
+  <entry code="semester_output_description">Exemple : si param[0]=2015-1-2 on aura 2 car la date est au deuxième semestre</entry>
+  
+  <!-- #ordinal($param); -->
+  <entry code="ordinal_description">Affiche le trimestre (1er,2e,3e,4e)</entry>
+  <entry code="ordinal_input_description">
+  param[0] = trimestre (1,2,3,4)
+  param[1] = code langue
+  </entry>
+  <entry code="ordinal_output_description">Si param[0]=2 et param[1]=fr_FR, on aura "2e"</entry>
+  
+  <!-- #str_ordinal($param); -->
+  <entry code="str_ordinal_description">Affiche le trimestre (premier,deuxième,troisième,quatrième)</entry>
+  <entry code="str_ordinal_input_description">
+  param[0] = trimestre (1,2,3,4)
+  param[1] = code langue
+  </entry>
+  <entry code="str_ordinal_output_description">Si param[0]=2 et param[1]=fr_FR, on aura "deuxième"</entry>
+</XMLlist>

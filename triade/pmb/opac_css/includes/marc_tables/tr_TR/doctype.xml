@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE XMLlist SYSTEM "../../XMLlist.dtd">
+
+<!-- liste des type de documents en UNIMARC (français)
+$Id$ -->
+
+<XMLlist>
+	<entry code="a">basılı metin</entry>
+	<entry code="b">elyazması metin</entry>
+	<entry code="c">basılı müzik partisyonu</entry>
+	<entry code="d">elyazması müzik partisyonu</entry>
+	<entry code="e">basılı harita</entry>
+	<entry code="f">elyazması harita</entry>
+	<entry code="g">görüntü veya video</entry>
+	<entry code="i">müzik dışı ses kaydı</entry>
+	<entry code="j">müzik kaydı</entry>
+	<entry code="k">2 boyutlu grafik belge</entry>
+	<entry code="l">elektronik belge</entry>
+	<entry code="m">çoklu ortam belgesi</entry>
+	<entry code="r">3 boyutlu nesne, eser, ...</entry>
+</XMLlist>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le module Article
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_common_datasource_list.xml,v 1.4 2018-05-25 12:05:27 dgoron Exp $ -->
+
+<XMLlist>
+	<entry code="cms_module_common_datasource_list_limit">Maximum number of elements to return</entry>
+	<entry code="cms_module_common_datasource_list_sort_order">Sort order</entry>
+	<entry code="cms_module_common_datasource_list_sort_order_asc">Ascending</entry>
+	<entry code="cms_module_common_datasource_list_sort_order_desc">Descending</entry>
+	<entry code="cms_module_common_datasource_list_sort_by">Sort by</entry>
+	<entry code="cms_module_common_datasource_list_sort_by_publication_date">Publication date</entry>
+	<entry code="cms_module_common_datasource_list_sort_by_id_article">Identifier</entry>
+	<entry code="cms_module_common_datasource_list_sort_by_article_title">Title</entry>
+	<entry code="cms_module_common_datasource_list_sort_by_pert">Pertinence</entry>
+	<entry code="cms_module_common_datasource_list_sort_by_section_start_date">Publication date</entry>
+	<entry code="cms_module_common_datasource_list_sort_by_id_section">Identifier</entry>
+	<entry code="cms_module_common_datasource_list_sort_by_section_title">Title</entry>	
+	<entry code="cms_module_common_datasource_list_sort_by_section_order">Position in the editorial content tree</entry>
+	<entry code="cms_module_common_datasource_list_sort_by_article_order">Position in the editorial content tree</entry>
+	<entry code="cms_module_common_datasource_list_sort_by_item_publication_date">Publication date</entry>
+	<entry code="cms_module_common_datasource_list_sort_by_id_item">Identifier</entry>
+	<entry code="cms_module_common_datasource_list_sort_by_item_title">Title</entry>
+	<entry code="cms_module_common_datasource_list_sort_by_watch_last_date">Date of the last synchronization</entry>
+	<entry code="cms_module_common_datasource_list_sort_by_id_watch">Identifier</entry>
+	<entry code="cms_module_common_datasource_list_sort_by_watch_title">Title</entry>
+	<entry code="cms_module_common_datasource_list_sort_by_id_authority">Identifiant</entry>
+	<entry code="cms_module_common_datasource_list_sort_by_date_parution">Date de parution</entry>
+	<entry code="cms_module_common_datasource_list_sort_by_notice_id">Identifiant</entry>
+	<entry code="cms_module_common_datasource_list_sort_by_index_sew">Titre</entry>
+	<entry code="cms_module_common_datasource_list_sort_by_default">Défaut</entry>
+	<entry code="cms_module_common_datasource_list_sort_by_name">Libellé</entry>
+	<entry code="cms_module_common_datasource_list_sort_by_idetagere">Identifiant</entry>
+</XMLlist>

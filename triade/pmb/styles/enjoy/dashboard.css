@@ -1,0 +1,75 @@
+/* +--------------------------------------------------------------------------+
+// ? 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// +-------------------------------------------------+
+// $Id: dashboard.css,v 1.6 2016-03-09 13:59:54 mbertin Exp $ */
+
+#extra2{
+	background: rgba(255,255,255,0.7);
+	border-bottom-left-radius : 8px;
+	border-bottom-right-radius : 8px;
+}
+
+#extra2 .notification{
+	padding-left:5px;
+	padding-right:5px;
+}
+
+#navbar-dashboard img {
+	height: 22px;
+	position:relative;
+	bottom:2px;
+}
+
+#dashboards .dashboard {
+	border-radius : 10px;
+	box-shadow: 10px 10px 10px #aaa;
+}
+
+#dashboards .dashboard h3{
+	color : white;
+	padding :10px;
+	border-top-left-radius: 10px;
+	border-top-right-radius: 10px;
+	vertical-align: middle;
+	font-size: 15px;
+	font-variant: small-caps;
+	font-weight: normal;
+}
+
+#dashboards .dashboard.circ h3{
+	background-color : #1196CE;
+	background: linear-gradient(to bottom, #1096cb 0%,#1194ca 9%,#0e8abe 30%,#0e87b6 35%,#0c7fac 48%,#0e7aa8 57%,#0a75a1 65%,#0c719b 70%,#096688 100%);
+}
+#dashboards .dashboard.catalog h3{
+	background-color : #E2A502;
+	background: linear-gradient(to bottom, #e3a502 0%,#e09805 22%,#dc9100 30%,#d46b02 70%,#d06300 78%,#cd5300 100%);
+}
+#dashboards .dashboard.autorites h3{
+	background-color : #402FAB;
+	background: linear-gradient(to bottom, #3f2fab 0%,#3e2ea8 9%,#34259c 30%,#332197 35%,#1a0a77 78%,#11026b 100%);
+}
+#dashboards .dashboard.dsi h3{
+	background-color : #C379DB;
+	background: linear-gradient(to bottom, #c47adb 0%,#b96cd2 22%,#aa5dc7 39%,#8831a6 83%,#7f25a0 100%);
+}
+#dashboards .dashboard.acquisition h3{
+	background-color : #4FCE88;
+	background: linear-gradient(to bottom, #50cd89 0%,#47c281 17%,#37ab6e 39%,#238e58 61%,#228a57 65%,#157b4b 78%,#09653c 100%);
+}
+#dashboards .dashboard.demandes h3{
+	background-color : #D3C690;
+	background: linear-gradient(to bottom, #d2c590 0%,#cbba86 17%,#bead79 30%,#b9a372 39%,#b39d6c 43%,#aa8d63 57%,#9e7b53 70%,#936d46 83%,#876039 100%);
+}
+#dashboards .dashboard.cms h3{
+	background-color : #3187D9;
+	background: linear-gradient(to bottom, #b7dafa 0%,#a2cff9 30%,#6fb4f5 78%,#60adf5 100%);
+}
+#dashboards .dashboard.admin h3{
+	background: rgb(179,59,60);
+	background: -moz-linear-gradient(top,  rgba(179,59,60,1) 0%, rgba(167,51,51,1) 22%, rgba(151,37,37,1) 43%, rgba(131,21,20,1) 65%, rgba(114,8,8,1) 87%, rgba(107,3,2,1) 100%);
+	background: linear-gradient(to bottom,  rgba(179,59,60,1) 0%,rgba(167,51,51,1) 22%,rgba(151,37,37,1) 43%,rgba(131,21,20,1) 65%,rgba(114,8,8,1) 87%,rgba(107,3,2,1) 100%);
+}
+
+#dashboards .dashboard .alert {
+	max-width:120px;
+}

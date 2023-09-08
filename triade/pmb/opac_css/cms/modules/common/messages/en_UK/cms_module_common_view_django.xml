@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour la classe datasource
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_common_view_django.xml,v 1.2 2016-06-28 13:28:53 tsamson Exp $ -->
+
+<XMLlist>
+	<entry code="cms_module_common_view_django_add_template">Add a template</entry>
+	<entry code="cms_module_common_view_django_template_name">Name of the template</entry>
+	<entry code="cms_module_common_view_django_template_content">Content of the template</entry>
+	<entry code="cms_module_common_view_django_template_choice">Choose the template to use</entry>
+	<entry code="cms_module_common_view_django_delete_template">Are you sure you want to delete this template ?</entry>
+	<entry code="cms_module_common_view_error_template">Error on the template</entry>
+	<entry code="cms_module_common_view_django_get_vars_desc">GET variables (replace "&lt;variable&gt;" by the name of the variable)</entry>
+	<entry code="cms_module_common_view_django_post_vars_desc">POST variables (replace "&lt;variable&gt;" by the name of the variable)</entry>
+	<entry code="cms_module_common_view_django_session_vars_desc">Variables of sessions</entry>
+	<entry code="cms_module_common_view_django_session_vars_view_desc">Idenfier of the view</entry>
+	<entry code="cms_module_common_view_django_session_vars_id_empr_desc">Identifier of the borrower</entry>
+	<entry code="cms_module_common_view_django_env_vars_desc">Environment variables</entry>
+	<entry code="cms_module_common_view_django_session_vars_script_desc">Variable $_SERVER['SCRIPT_NAME']</entry>
+	<entry code="cms_module_common_view_django_session_vars_request_desc">Variable $_SERVER['REQUEST_URI']</entry>
+	<entry code='cms_module_common_view_django_id_desc'>Identifier of the frame</entry>
+	<entry code="cms_module_common_view_django_session_vars_opac_url_desc">Variable $opac_url_base</entry>
+	<entry code="cms_module_common_view_django_session_vars_platform_desc">Operating system name</entry>
+	<entry code="cms_module_common_view_django_session_vars_browser_desc">Browser name</entry>
+</XMLlist>

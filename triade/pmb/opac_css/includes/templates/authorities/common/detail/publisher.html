@@ -1,0 +1,67 @@
+{% extends 'gabarit.html' %}
+
+<!-- $Id: publisher.html,v 1.1 2018-04-05 10:39:42 dgoron Exp $ -->
+
+{% block detail %}
+	{% if element.link %}
+		<div class="aut_display_row">
+			<div class="aut_display_cell">
+				<b>{{msg.editeur_web}} :</b>
+			</div>
+			<div class="aut_display_cell">
+				{{ element.link}}
+			</div>
+		</div>
+	{% endif %}
+	{% if element.ed_comment %}
+		<div class="aut_display_row">
+			<div class="aut_display_cell">
+				<b>{{msg.707}} :</b>
+			</div>
+			<div class="aut_display_cell">
+				{{ element.ed_comment | nl2br }}
+			</div>
+		</div>
+	{% endif %}
+	{% if element.ville %}
+		<div class="aut_display_row">
+			<div class="aut_display_cell">
+				<b>{{ msg.publisher_details_location | printf "" }} :</b>
+			</div>
+			<div class='aut_display_cell'>
+				{{ element.ville }}
+			</div>
+		</div>
+	{% endif %}
+	{% if element.adr1 %}
+		{% if element.cp %}
+			{% if element.ville %}
+				<div class="aut_display_row">
+					<div class="aut_display_cell">
+						<b>{{ msg.adresse_empr }} :</b>
+					</div>
+					<div class="aut_display_cell">
+						{{ element.adr1 }}
+						{% if element.adr2 %}
+							<br />{{ element.adr2 }}
+						{% endif %}	
+						<br />{{ element.cp }} {{ element.ville }}
+						{% if element.pays %}
+							<br />{{ element.pays }}
+						{% endif %}
+					</div>
+				</div>
+			{% endif %}
+		{% endif %}
+	{% endif %}
+	{% if element.supplier.id_entite %}
+		<div class="aut_display_row">
+			<div class="aut_display_cell">
+				<b>{{ msg.acquisition_ach_fou2 }} :</b>
+			</div>
+			<div class='aut_display_cell'>
+				{{ element.supplier.raison_sociale }}
+			</div>
+		</div>
+	{% endif %}
+{% endblock detail %}

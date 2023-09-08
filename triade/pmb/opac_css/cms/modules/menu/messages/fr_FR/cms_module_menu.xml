@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le module Article
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_menu.xml,v 1.6 2012-10-09 07:49:20 arenou Exp $ -->
+
+<XMLlist>
+	<entry code='cms_module_menu_menu_name'>Nom du Menu</entry>
+	<entry code='cms_module_menu_menu_add_entry'>Ajouter une entrée</entry>
+	<entry code='cms_module_menu_menu_add_entry_choice'>Choisissez un type</entry>
+	<entry code='cms_module_menu_menu_add_entry_url'>URL</entry>
+	<entry code='cms_module_menu_menu_entry_url_label'>Libellé</entry>
+	<entry code='cms_module_menu_menu_entry_url_link'>Lien</entry>	
+	<entry code='cms_module_menu_menu_entry_button'>Ajouter</entry>
+	<entry code='cms_module_menu_view_menu'>Vue Générique</entry>
+	<entry code='cms_module_menu_view_menu_django'>Vue Django</entry>
+	<entry code='cms_module_menu_menu_add_entry_infopage'>Infopage</entry>
+	<entry code='cms_module_menu_menu_entry_infopage'>Infopage</entry>
+	<entry code='cms_module_menu_datasource_menu'>Menu créé dans l'interface d'administration</entry>
+	<entry code='cms_module_menu_datasource_menu_editorial'>Menu basé sur du contenu Editorial (Rubriques)</entry>
+	<entry code='cms_module_menu_delete_menu'>Etes-vous sur de vouloir supprimer ce menu ?</entry>
+	<entry code='cms_module_menu_menu_entry_button_modify'>Modifier</entry>
+	<entry code='cms_module_menu_menu_entry_button_delete'>Supprimer</entry>
+	<entry code='cms_module_menu_manage_form_advertisements'>NB : Toutes les modifications de l'arbre sont automatiquement enregistrées</entry>
+	<entry code='cms_module_menu_menu_add_entry_page'>Page de Portail</entry>
+	<entry code='cms_module_menu_menu_entry_page'>Page de Portail</entry>
+	<entry code='cms_module_menu_menu_entry_page_choice'>Choisir une page</entry>
+	<entry code='cms_module_menu_menu_entry_button_edit'>Editer</entry>
+</XMLlist>

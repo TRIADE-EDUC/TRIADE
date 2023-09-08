@@ -1,0 +1,223 @@
+@charset "utf-8";
+/* +--------------------------------------------------------------------------+
+// 2017 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// +-------------------------------------------------+
+// $Id: set-semantique-color\040.css,v 1.3 2018-04-17 15:21:19 wlair Exp $ */
+/*------------------------------------------------------------------------------------------*/
+/* ========================================================================
+	semantic
+   base :#602497
+   hover :#9340e0
+   active/focus :#4c1580	
+===========================================================================  */
+.uk-navbar-nav li#navbar-semantic a:after,
+.semantic .hmenu.uk-tab>*:hover>a{
+	border-bottom-color:#602497;
+}
+li#navbar-semantic.current,
+.semantic input[type="checkbox"]:checked, 
+.semantic input[type="checkbox"]:indeterminate, 
+.semantic input[type="radio"]:checked,
+.semantic input[type="checkbox"]:checked:focus, 
+.semantic input[type="checkbox"]:indeterminate:focus, 
+.semantic input[type="radio"]:checked:focus,
+.semantic div#extra2 span.uk-icon,
+.semantic div#extra2 .notification.ui-active {
+	background-color:#602497;	
+}
+.semantic input:focus, 
+.semantic select:focus, 
+.semantic textarea:focus,
+.semantic input[type="checkbox"]:focus, 
+.semantic input[type="radio"]:focus,
+.semantic.claro.pure .dijitButtonHover .dijitButtonNode,
+.semantic.claro.pure .dijitDropDownButtonHover .dijitButtonNode,
+.semantic.claro.pure .dijitComboButton .dijitButtonNodeHover,
+.semantic.claro.pure .dijitComboButton .dijitDownArrowButtonHover,
+.semantic.claro.pure .dijitToggleButtonHover .dijitButtonNode,
+.semantic.claro.pure .dijitTextBoxHover,
+.semantic #contenu .uk-button-default:focus,
+.semantic #contenu .uk-button-default:hover,
+.semantic .hmenu.uk-tab>.uk-active>a,
+.semantic  iframe {
+	border-color: #602497;
+}
+.uk-navbar-nav li#navbar-semantic a:hover,
+.semantic h1.section-title i,
+.semantic h1.section-sub-title ,
+.semantic .uk-link,
+.semantic a,
+.semantic .uk-link:hover,
+.semantic a:hover,
+.semantic h3:not(.section-sub-title),
+.semantic .article-title i,
+.semantic #menu .uk-nav>li>a i,
+.semantic #menu .uk-nav>li.uk-active>a,
+.semantic #menu .uk-nav>li>a i,
+.semantic #menu .uk-nav>li.uk-active>a,
+.semantic #menu .uk-nav>li>a:hover ,
+.semantic .h2-like i,
+.semantic #extra span.uk-icon:hover,
+.semantic #extra i:hover,
+.semantic #navbar .dashboard:hover,
+.pure .semantic .uk-tab > * > a:hover,
+.pure .semantic .uk-tab > * > a:focus,
+.semantic .categ_browser a,
+.semantic .categ_browser a:hover,
+.semantic .categ_browser a:focus,
+.semantic .categ_browser a:active,
+.semantic .hmenu.uk-tab>.uk-active>a{
+	color:#602497;
+}
+.semantic #contenu input.wyr-input[type='file']:focus{
+	outline-color: #602497;
+}
+.semantic .stat-child .uk-table th{
+	color: #602497;
+	font-weight: 500;
+}
+.semantic #menu ul.uk-nav{		
+	border-top: solid 2px #602497;		
+}
+.semantic #menu>h3 .uk-icon{		
+	background: #602497;		
+}
+.semantic.claro.pure .dijitMenu .dijitMenuItemHover td, 
+.semantic.claro.pure .dijitMenu .dijitMenuItemSelected td, 
+.semantic.claro.pure .dijitMenuItemHover, 
+.semantic.claro.pure .dijitComboBoxMenu .dijitMenuItemHover, 
+.semantic.claro.pure .dijitMenuItemSelected,
+.semantic.claro.pure .dojoDndItemOver {
+    background-color:rgba(70, 157, 225, 0.3);
+    border-color:#602497;
+    background-image: none;
+}
+.semantic form .form-contenu,
+.semantic .row.bkg-grey{
+	border-color:#9340e0;
+}
+.semantic input.wyr-input[type='submit'],
+.semantic .uk-button,
+.semantic .search_cancel>input,
+.semantic.claro.pure .dijitButton .dijitButtonNode,
+.semantic.claro.pure .dijitDropDownButton .dijitButtonNode,
+.semantic.claro.pure .dijitComboButton .dijitButtonNode,
+.semantic.claro.pure .dijitToggleButton .dijitButtonNode{
+	background-color: #602497;
+		
+}
+.semantic input.wyr-input[type='submit']:hover,
+.semantic .uk-button:hover,
+.semantic .search_cancel>input:hover,
+.semantic.claro.pure .dijitButton .dijitButtonNode:hover,
+.semantic.claro.pure .dijitDropDownButton .dijitButtonNode:hover,
+.semantic.claro.pure .dijitComboButton .dijitButtonNode:hover,
+.semantic.claro.pure .dijitToggleButton .dijitButtonNode:hover {
+	background-color: #602497;
+}
+.semantic input.wyr-input[type='submit']:focus,
+.semantic input.wyr-input[type='submit']:active,
+.semantic .uk-button:focus,
+.semantic .uk-button:active,
+.semantic .search_cancel>input:focus,
+.semantic .search_cancel>input:active,
+.semantic.claro.pure .dijitButton .dijitButtonNode:focus,
+.semantic.claro.pure .dijitDropDownButton .dijitButtonNode:focus,
+.semantic.claro.pure .dijitComboButton .dijitButtonNode:focus,
+.semantic.claro.pure .dijitToggleButton .dijitButtonNode:focus,
+.semantic.claro.pure .dijitButton .dijitButtonNode:active,
+.semantic.claro.pure .dijitDropDownButton .dijitButtonNode:active,
+.semantic.claro.pure .dijitComboButton .dijitButtonNode:active,
+.semantic.claro.pure .dijitToggleButton .dijitButtonNode:active {
+	background-color: #4c1580;
+}
+.semantic .uk-label,
+.semantic .uk-label:hover {
+	background: #602497;
+	color:#fff;		
+}
+.semantic  .search-result-item.notice-child[style*='block'],
+.semantic  .child[style*='block'],
+.semantic  div[startopen="Yes"] {
+	border-color: #9340e0;
+}
+.semantic select:focus{
+	outline-color: #4c1580;
+}
+/*
+*Aut color
+*/
+.semantic .saisie-5emr,
+.semantic .saisie-10emr,
+.semantic .saisie-15emr,
+.semantic .saisie-20emr,
+.semantic .saisie-30emr,
+.semantic .saisie-50emr,
+.semantic .saisie-80emr.pure,
+.semantic input[class^='saisie'][class*='emr']:hover,
+.pure .semantic input[class^='saisie'][class*='emr']:active,
+.pure .semantic input[class^='saisie'][class*='emr']:focus{
+  background: #8334cb;
+  color:#000;	
+}
+/*
+*Retours 
+*/
+
+.semantic .form-retour-expl .row {
+  background-color: rgb(229, 248, 255);
+  border: solid 1px #8334cb;
+}
+
+.semantic .form-retour-expl .uk-form-label.wyr-form-label {
+  color: #595959;
+}
+
+.semantic #contenu .form-retour-expl input.wyr-input {
+  border: solid 1px #8334cb;
+}
+
+/* ========================================================================
+inside menu //  button
+===========================================================================  */
+
+.pure.semantic .hmenu .wui-button.uk-active {
+    background: #602497;
+    border-color: #602497;
+}
+.pure.semantic .hmenu .wui-button.uk-active:hover  a,
+.pure.semantic .hmenu .wui-button:hover a,
+.pure.semantic .hmenu .wui-button.uk-active:hover ,
+.pure.semantic .hmenu .wui-button:hover,
+.pure.semantic .hmenu .wui-button.uk-active:active ,
+.pure.semantic .hmenu .wui-button:active
+.pure.semantic .hmenu .wui-button.uk-active:focus ,
+.pure.semantic .hmenu .wui-button:focus,
+.semantic #empr-name,
+.pure.semantic .hmenu .wui-button {
+    border-color: #602497;    
+}
+ 
+.semantic input[type='submit'],
+.semantic input[type='button'],
+.semantic .bouton{
+	background-color: #602497;
+}
+.semantic input[type='submit']:hover,
+.semantic input[type='button']:hover,
+.semantic .bouton:hover{
+	background-color: #9340e0;
+}
+
+.semantic input[type='submit']:focus,
+.semantic input[type='button']:focus,
+.semantic .bouton:focus,  
+.semantic input[type='submit']:active,
+.semantic input[type='button']:active,
+.semantic .bouton:active{
+	background-color: #4c1580;
+
+}
+
+
+

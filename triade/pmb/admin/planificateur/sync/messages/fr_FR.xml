@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- messages localisés en français pour la sauvegarde
+****************************************************************************************
+© 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: fr_FR.xml,v 1.5 2018-09-20 13:13:36 dgoron Exp $ -->
+
+<XMLlist>
+	<entry code="planificateur_sync_liste">Liste des entrepôts</entry>
+	<entry code="planificateur_sync_all">Tous les entrepôts</entry>
+	<entry code="planificateur_sync_choice">Choisir un entrepôt</entry>
+	<entry code="task_sync_abort">Annuler</entry>
+	<entry code="report_sync">Synchronisation de la source</entry>
+	<entry code="report_sync_false">Source inconnue</entry>
+	<entry code="planificateur_stop_sync">Synchronisation arrêtée</entry>
+	<entry code="planificateur_abort_sync">Synchronisation annulée</entry>
+	<entry code="error_parameters">Erreur de paramétrage de la tâche</entry>
+	<entry code="planificateur_sync_import">Import automatique des notices synchronisées</entry>
+	<entry code="planificateur_sync_delete">Suppression automatique des notices supprimées du serveur</entry>
+	<entry code="planificateur_sync_import_not_in_notices_externes">Ne pas inscrire les notices importées dans la table notices_externes</entry>
+	<entry code="planificateur_sync_empty">Vider l'entrepôt avant de démarrer la synchronisation</entry>
+	<entry code="planificateur_sync_empty_success">L'entrepôt a correctement été vidé</entry>
+	<entry code="planificateur_sync_empty_failed">L'entrepôt n'a pu être vidé</entry>
+	<!--<entry code="sync_report_error">Erreur durant l'exécution de la tâche</entry>
+	<entry code="sync_report_success">Tâche réalisée avec succès</entry>
+--></XMLlist>

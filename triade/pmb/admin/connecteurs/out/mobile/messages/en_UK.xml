@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../../../../../includes/XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français
+****************************************************************************************
+© 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: en_UK.xml,v 1.2 2015-06-19 13:14:05 pmbs Exp $ -->
+
+<XMLlist>
+<entry code="mobile_admin_menu">Mobile</entry>
+<entry code="mobile_admin_param">Global settings</entry>
+<entry code="mobile_admin_update">Registration has been done</entry>
+<entry code="mobile_admin_title">Configuration</entry>
+<entry code="mobile_admin_firstTab">First tab displayed</entry>
+<entry code="mobile_admin_firstInfoPage">Home Infopage</entry>
+<entry code="mobile_admin_heatShelf">Best picks shelf</entry>
+<entry code="mobile_admin_appTitle">Application title</entry>
+<entry code="mobile_admin_proxyUrl">Outgoing dedicated connector</entry>
+<entry code="mobile_admin_form_proxy_current">Current choice</entry>
+<entry code="mobile_admin_error_proxy">No connector configured, please configure one</entry>
+<entry code="mobile_admin_error_infopage">No infopage validated</entry>
+<entry code="mobile_admin_error_etageres">No valide shelf visible on the OPAC</entry>
+<entry code="mobile_admin_tabs">Tab selection</entry>
+<entry code="mobile_admin_tabs_title">Tabs available in the application</entry>
+<entry code="mobile_admin_form_tabs_label">Tab</entry>
+<entry code="mobile_admin_form_tabs_valid">Activate in the application</entry>
+<entry code="mobile_admin_form_tabs_desc">Description</entry>
+<entry code="mobile_admin_form_tabs_yes">Yes</entry>
+<entry code="mobile_admin_form_tabs_no">No</entry>
+<entry code="mobile_service_endpoint">Address of the webservice</entry>
+<entry code="mobile_service_endpoint_unrecorded">Register the source to have it</entry>
+<entry code="mobile_admin_nbResultsByPage">Number of records per page</entry>
+<entry code="mobile_admin_form_infoPagesTitle">Home settings</entry>
+<entry code="mobile_admin_form_shelfTitle">Best picks settings</entry>
+<entry code="mobile_admin_form_searchTitle">Simple search settings</entry>
+<entry code="mobile_admin_form_selfCheckTitle">Autonomous loan settings</entry>
+<entry code="mobile_admin_form_myAccountTitle">My account settings</entry>
+<entry code="mobile_admin_form_search_allowSearchByTypeDoc">All the filtering by document type</entry>
+<entry code="mobile_admin_form_search_allowSearchByTypeDoc_yes">Yes</entry>
+<entry code="mobile_admin_form_search_allowSearchByTypeDoc_no">No</entry>
+<entry code="mobile_admin_form_selfCheck_allowCheckIn">Activate the return of documents</entry>
+<entry code="mobile_admin_form_selfCheck_allowCheckIn_yes">Yes</entry>
+<entry code="mobile_admin_form_selfCheck_allowCheckIn_no">No</entry>
+<entry code="mobile_admin_form_needOneTab">You must activate at least one tab...</entry>
+<entry code="mobile_admin_form_paramsGen">General display settings</entry>
+<entry code="mobile_admin_form_bulletinsList_nbResultsByPage">Number of issues per page</entry>
+<entry code="mobile_admin_form_analysisList_nbResultsByPage">Number of examinations per page</entry>
+<entry code="mobile_admin_pickWSInList_yes">Choose in a list</entry>
+<entry code="mobile_admin_pickWSInList_no">Manually type in the URL</entry>
+<entry code="mobile_admin_writeWS">URL of the Webservices</entry>
+</XMLlist>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le module Article
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_carousel_view_carousel.xml,v 1.10 2013-01-24 14:50:15 apetithomme Exp $ -->
+
+<XMLlist>
+	<entry code='cms_module_carousel_view_carousel_mode'>Mode d'affichage</entry>
+	<entry code='cms_module_carousel_view_carousel'>Carrousel</entry>
+	<entry code='cms_module_carousel_view_carousel_mode_horizontal'>Horizontal</entry>
+	<entry code='cms_module_carousel_view_carousel_mode_vertical'>Vertical</entry>
+	<entry code='cms_module_carousel_view_carousel_mode_fade'>Fondu</entry>
+	<entry code='cms_module_carousel_view_carousel_speed'>Temps de la transition (en ms)</entry>
+	<entry code='cms_module_carousel_view_carousel_pause'>Temps de pause (en ms)</entry>
+	<entry code='cms_module_carousel_view_carousel_display_quantity'>Nombre d'éléments par page</entry>
+	<entry code='cms_module_carousel_view_carousel_slide_quantity'>Nombre d'éléments déplacés</entry>
+	<entry code='cms_module_carousel_view_carousel_autostart'>Démarrage automatique</entry>
+	<entry code='cms_module_carousel_view_carousel_autohover'>Pause au survol du curseur</entry>
+	<entry code='cms_module_carousel_view_carousel_pager'>Affichage des liens vers les éléments</entry>
+	<entry code='cms_module_carousel_view_carousel_yes'>Oui</entry>
+	<entry code='cms_module_carousel_view_carousel_no'>Non</entry>
+	<entry code='cms_module_carousel_manage_default_css'>CSS à appliquer par défaut</entry>
+	<entry code='cms_module_carousel_view_template_item'>Template d'un item</entry>
+	<entry code='cms_module_carousel_view_carousel_css'>CSS associée</entry>
+	<entry code='cms_module_carousel_view_carousel_id_desc'>Identifiant du cadre</entry>
+	<entry code='cms_module_carousel_view_carousel_record_content_desc'>Rendu d'un template de notice</entry>
+	<entry code='cms_module_common_view_django_template_record_content'>Template de notice à utiliser pour le content</entry>
+</XMLlist>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- 
+****************************************************************************************
+© 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: en_UK.xml,v 1.1 2015-06-15 12:55:33 pmbs Exp $ -->
+
+<!DOCTYPE XMLlist SYSTEM "../../../includes/XMLlist.dtd" >
+<XMLlist>
+	<entry code="pmbesIndex_description">Functions related to the index management in PMB</entry>
+	<entry code="reindexRecords_description">Function to reindex all the records</entry>
+	<entry code="reindexRecords_output_nb_reindexed_records">Number of processed record(s)</entry>
+	<entry code="reindexRecords_output_nb_total_records">Number of record(s) to process</entry>
+	<entry code="reindexRecords_input_description"></entry>
+	<entry code="reindexRecords_noticelist">A table containing the ids of the records we want to reindex if we don't want to reindex the whole base</entry>
+</XMLlist>

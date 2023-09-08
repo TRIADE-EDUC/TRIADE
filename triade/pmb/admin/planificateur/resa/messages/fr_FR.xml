@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- messages localisés en français pour la resa
+****************************************************************************************
+© 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: fr_FR.xml,v 1.1 2011-07-29 12:32:13 dgoron Exp $ -->
+
+<XMLlist>
+	<entry code="planificateur_resa_empr">Choix d'une ou plusieurs options</entry>
+	<!--<entry code="planificateur_resa_opt">Sous Options</entry>--><!--
+	<entry code="planificateur_resa_en_cours_noconf">Confirmation des réservations en cours non validées</entry>
+	<entry code="planificateur_resa_depassee_noconf">Confirmation des réservations dépassées non validées</entry>
+	-->
+	<entry code="planificateur_resa_loc">Choix de la localisation</entry>
+	<entry code="resa_confirm">Confirmation des réservations</entry>
+	<entry code="resa_en_cours_noconf">Réservations en cours non confirmées</entry>
+	<entry code="resa_depassee_noconf">Réservations dépassées non confirmées</entry>
+	<entry code="resa_error_parameters">Erreur de paramétrage de la tâche !</entry>
+	<entry code="resa_no_result">Aucune confirmation correspondant aux critères de recherche !</entry>
+	<entry code="resa_alerte_disabled">L'envoi de mail ou la lettre de confirmation de réservation est désactivée dans le paramétrage</entry>
+</XMLlist>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- Fichier manifest de description des méthodes disponibles
+****************************************************************************************
+© 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: manifest.xml,v 1.2 2012-06-20 09:18:56 dgoron Exp $ -->
+<manifest>
+	<name>pmbesProcs</name>
+	<description>msg:Procs_functions_description</description>
+	<requirements>
+		<requirement group="pmbesTypes"/>
+	</requirements>
+	<types>
+		<type name="proc" imported="true" imported_from="pmbesTypes"/>
+	</types>
+	<methods>
+		<method name="listProcs" rights="" version="1.0" comment="msg:listProcs_description" language_independant="true">
+			<inputs>
+				<description>msg:listProcs_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:listProcs_output_description</description>
+				<result name="result" type="scalar" dataType="proc" description="msg:listProcs_result"/>
+			</outputs>
+		</method>
+		<method name="executeProc" rights="" version="1.0" comment="msg:executeProc_description" language_independant="true">
+			<pmb_requirements>
+				<pmb_requirement start_path="class" file="parameters.class.php"/>
+			</pmb_requirements>
+			<inputs>
+				<description>msg:executeProc_input_description</description>
+				<param name="procedure" type="scalar" dataType="integer" description="msg:executeProc_procedure"/>
+				<param name="idProc" type="scalar" dataType="integer" description="msg:executeProc_idProc"/>
+				<param name="tparams" type="scalar" dataType="array" description="msg:executeProc_tparams"/>
+			</inputs>
+			<outputs>
+				<description>msg:executeProc_output_description</description>
+				<result type="array" name="result" description="msg:executeProc_result">
+					<result name="name" type="scalar" dataType="string"/>
+					<result name="report" type="scalar" dataType="string"/>
+				</result>
+			</outputs>
+		</method>
+	</methods>
+</manifest>
+

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour la classe racine d'un module
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: frbr_entity_concepts_datasource_entities_used_in_composed_concept.xml,v 1.1 2019-01-10 15:39:47 apetithomme Exp $ -->
+
+<XMLlist>
+	<entry code="frbr_entity_concepts_datasource_authors_used_in_composed_concept">Auteurs</entry>
+	<entry code="frbr_entity_concepts_datasource_works_used_in_composed_concept">Oeuvres</entry>
+</XMLlist>

@@ -1,0 +1,69 @@
+{% extends 'gabarit.html' %}
+
+<!-- $Id: author.html,v 1.12 2019-04-02 08:32:30 dgoron Exp $ -->
+
+{% block header %}
+	<h1><span>{{ msg.author_see_title }}</span></h1>
+{% endblock %}
+		<!-- {% if authority.type == 72 %}{{msg.congres_libelle}}: {% else %}{{msg.234}}{% endif %} -->
+{% block title %}
+	<h3 style='display:inline'>
+		{{ authority.header }} {% if authority.type == 70 %}{% if authority.date %} ({{authority.date}}){% endif %}{% endif %} {% if authority.author_web %} <a target="_blank" href="{{authority.author_web}}"><img src='{{ img.globe.gif }}'/></a>{% endif %}
+	</h3>
+	<script type="text/javascript">
+		document.title = "{{ authority.display }} {% if authority.date %} ({{authority.date}}){% endif %}";
+	</script>
+{% endblock %} 
+
+
+{% block details %}
+	{% if authority.author_comment %}
+		<div class="aut_display_row">
+			<div class="aut_display_cell">
+				<b>{{ msg.707 }} :</b>
+			</div>
+			<div class='aut_comment aut_display_cell'>{{authority.author_comment | nl2br }}</div>
+		</div>
+	{% endif %}
+	{% if authority.author_isni %}
+		<div class="aut_display_row">
+			<div class="aut_display_cell">
+				<b>{{ msg.author_isni }} :</b>
+			</div>
+			<div class='aut_isni aut_display_cell'>{{authority.author_isni }}</div>
+		</div>
+	{% endif %}
+	{% if authority.see %}
+		<div class="aut_display_row">
+			<div class="aut_display_cell">
+				<b>{{ msg.206 }} :</b>
+			</div>
+			<div class='aut_display_cell'>
+				<span class='number_results'><a href="./autorites.php?categ=see&sub=author&id={{ authority.see }}">{{authority.see_libelle}}</a></span>
+			</div>
+		</div>
+	{% endif %}
+{% endblock %}
+
+{% block enrichment %}
+{% endblock %}
+
+{% block aut_buttons %}
+	<div class='row'>
+		<div class='left'>
+			<input type='button' class='bouton' value='{{msg.62}}' onclick="document.location='./autorites.php?categ=auteurs&sub=author_form&id={{authority.num_object}}'"/>
+			<input type='button' class='bouton' value='{{msg.158}}' onclick="document.location='./autorites.php?categ=auteurs&sub=replace&id={{authority.num_object}}'"/>
+			<input type='button' class='bouton' value='{{msg.aut_duplicate}}' onclick="document.location='./autorites.php?categ=auteurs&sub=duplicate&id={{authority.num_object}}'"/>
+			{% if global.pmb_type_audit %}
+				<input type='button' class='bouton' value='{{msg.audit_button}}' onclick="openPopUp('./audit.php?type_obj={{authority.audit_type}}&object_id={{authority.num_object}}', 'audit_popup')"/>
+			{% endif %}	
+		</div>
+		<div class='right'>
+			<input type='button' class='bouton' value='{{msg.63}}' onclick="confirm_delete();" />
+		</div>
+	</div>
+{% endblock %}
+
+{% block aut_link_delete %}
+	document.location='./autorites.php?categ=auteurs&sub=delete&id={{authority.num_object}}';
+{% endblock %}

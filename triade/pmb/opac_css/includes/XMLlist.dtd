@@ -1,0 +1,9 @@
+<!ELEMENT XMLlist (entry+)>
+<!ELEMENT entry (#PCDATA)>
+<!ATTLIST entry 
+	code NMTOKEN #REQUIRED
+ 	order NMTOKEN #IMPLIED
+ 	js NMTOKEN #IMPLIED
+ 	nature NMTOKEN #IMPLIED
+ 	serial NMTOKEN #IMPLIED
+>

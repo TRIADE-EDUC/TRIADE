@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le module Article
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_bannette.xml,v 1.1 2015-10-05 15:57:52 dgoron Exp $ -->
+
+<XMLlist>
+	<entry code='cms_module_bannette_view_bannette'>Vue d'une bannette</entry>
+	<entry code='cms_module_bannette_view_bannette_from_tpl'>Vue d'une bannette à partir d'un template défini en édition</entry>
+</XMLlist>

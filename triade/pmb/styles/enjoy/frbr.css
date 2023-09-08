@@ -1,0 +1,102 @@
+/* ---------------------------------------------------------------------------*/
+/*                                 Semantique                                  */
+/* ---------------------------------------------------------------------------*/
+
+
+body.frbr h1, .frbr h1 {
+	background:#009688;
+	background: -moz-linear-gradient(top, #0fb2a1 1%, #009688 35%, #018477 100%);
+	background: -webkit-linear-gradient(top, #0fb2a1 1%,#009688 35%,#018477 100%); 
+	color: #ffffff;
+	padding-left: 15px;
+	padding-right: 15px;
+	padding-top: 3px;
+	padding-bottom: 3px;
+	margin-bottom: 15px;
+}
+
+body.frbr h2, body.frbr h3, .frbr h2, .frbr h3 {
+	color: #009688;
+}
+
+body.frbr #conteneur #menu li a:hover, .frbr #conteneur #menu li a:hover  {
+	background:#009688; 	
+	background: -moz-linear-gradient(top, #0fb2a1 1%, #009688 35%, #018477 100%); 	
+	background: -webkit-linear-gradient(top, #0fb2a1 1%,#009688 35%,#018477 100%); 
+	background-repeat: repeat-x;
+	background-position: left top;
+	background-color: #009688;
+	color: #ffffff;
+}
+
+body.frbr .hmenu span.selected a, .frbr .hmenu span.selected a{
+	background:#009688; 	
+	background: -moz-linear-gradient(top, #0fb2a1 1%, #009688 35%, #018477 100%); 	
+	background: -webkit-linear-gradient(top, #0fb2a1 1%,#009688 35%,#018477 100%); 
+	background-position: left bottom;
+	background-color: #009688;
+	color: #ffffff;
+}
+
+body.frbr table th, .frbr table th{
+	background-repeat: repeat-x;
+	background:#009688; 	
+	background: -moz-linear-gradient(top, #0fb2a1 1%, #009688 35%, #018477 100%); 	
+	background: -webkit-linear-gradient(top, #0fb2a1 1%,#009688 35%,#018477 100%); 
+	background-position: left bottom;
+	background-color: #009688;
+	color: #ffffff;
+	padding-left: 15px;
+	padding-right: 15px;
+	padding-top: 3px;
+	padding-bottom: 3px;
+	margin-bottom: 15px;
+}
+
+body.frbr table th h3, .frbr table th h3  {
+	color: #ffffff;
+}
+
+body.frbr table tr.surbrillance, .frbr .sortable tr:hover, .frbr table tr.surbrillance, .frbr .sortable tr:hover{
+	background:#009688; 	
+	background: -moz-linear-gradient(top, #0fb2a1 1%, #009688 35%, #018477 100%); 	
+	background: -webkit-linear-gradient(top, #0fb2a1 1%,#009688 35%,#018477 100%); 
+	background-repeat: repeat-x;
+	background-position: left top;
+	background-color: #018477;
+	color: #ffffff;
+}
+
+body.frbr input, body.frbr select, body.frbr textarea, .frbr input, .frbr select, .frbr textarea {
+	-moz-box-shadow: 1px 1px 1px #018477 inset;
+	-o-box-shadow: 1px 1px 1px #018477 inset;
+	-webkit-box-shadow: 1px 1px 1px #018477 inset;
+	box-shadow: 1px 1px 1px #018477 inset;
+}
+
+body.frbr .saisie-contenu, body.frbr .astuce,  .frbr .saisie-contenu, .frbr .astuce{
+	background-repeat: repeat-x;
+	background:#009688; 	
+	background: -moz-linear-gradient(top, #0fb2a1 1%, #009688 35%, #018477 100%); 	
+	background: -webkit-linear-gradient(top, #0fb2a1 1%,#009688 35%,#018477 100%); 
+	background-position: left bottom;
+	background-color: #009688;
+}
+
+body.frbr #content_onglet_perio span.onglet-perio-selected a, .frbr #content_onglet_perio span.onglet-perio-selected a{
+	background:#009688; 	
+	background: -moz-linear-gradient(top, #0fb2a1 1%, #009688 35%, #018477 100%); 	
+	background: -webkit-linear-gradient(top, #0fb2a1 1%,#009688 35%,#018477 100%); 
+	background-position: left bottom;
+	background-color: #009688;
+	color: #ffffff;
+}
+
+.frbr .saisie-5emr, .frbr .saisie-10emr, .frbr .saisie-15emr, .frbr .saisie-20emr, .frbr .saisie-30emr, .frbr .saisie-50emr, .frbr .saisie-80emr {
+	background-color: #009688;
+	color: #ffffff;
+	-moz-box-shadow: 1px 1px 10px #009688 inset;
+	-o-box-shadow: 1px 1px 10px #009688 inset;
+	-webkit-box-shadow: 1px 1px 10px #009688 inset;
+	box-shadow: 1px 1px 10px #009688 inset;
+}

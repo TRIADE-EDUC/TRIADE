@@ -1,0 +1,10 @@
+<h2>Administration des Etats de collections</h2>
+
+<p>La section <b>administration des &eacute;tats de collections</b> permet de d&eacute;finir les param&egrave;tres de l'application pour les collections de p&eacute;riodiques.
+<ul>
+<li><b>Emplacements</b> permet de d&eacute;finir les emplacements des collections dans la localisation.</li>
+<li><b>Supports</b> permet de d&eacute;finir les supports des collections.</li>
+<li><b>Statuts</b> permet de faire des distinctions de traitement pour les collections, ainsi que dans l'affichage dans l'OPAC.</li>
+<li><b>Personnalisables</b> champs personnalisables sur les &eacute;tats de collections.</li>
+</ul></p>
+ 

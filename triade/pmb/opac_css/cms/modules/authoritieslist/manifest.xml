@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+
+<!-- Declaration d'un module
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: manifest.xml,v 1.2 2016-05-12 16:31:43 apetithomme Exp $ -->
+
+<manifest>
+	<name lang="fr_FR">Liste d'autorités</name>
+	<name lang="en_UK">Authorities list</name>
+	<author>
+		<name>Alexis PETITHOMME</name>
+		<organisation>PMB Services</organisation>
+	</author>
+	<created_date>2016-04-18</created_date>
+	<version>1.0</version>
+	<default_language>fr_FR</default_language>
+	<managed>true</managed>
+	<use>
+		<datasources>
+			<datasource>cms_module_common_datasource_authorities</datasource>
+		</datasources>
+		<views>
+			<view>cms_module_common_view_authoritieslist</view>
+			<view>cms_module_common_view_authoritieslist_from_template_folder</view>
+		</views>
+		<conditions>
+			<condition>cms_module_common_condition_global_var</condition>
+		</conditions>
+	</use>
+</manifest>

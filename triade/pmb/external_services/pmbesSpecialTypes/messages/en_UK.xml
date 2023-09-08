@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<XMLlist>
+	<!--
+pmbesSpecialTypes
+-->
+	<entry code="pmbesSpecialTypes_description">Describes special types, that do not correspond to anything physical</entry>
+	<!--
+unimarc_notice
+-->
+	<entry code="unimarc_notice_description">Stands for a unimarc record</entry>
+	<entry code="unimarc_notice_id">The id of the record</entry>
+	<entry code="unimarc_notice_header">The unimarc header</entry>
+	<entry code="unimarc_notice_f">The f fields</entry>
+	<!--
+unimarc_header_field
+-->
+	<entry code="unimarc_header_field_description">A field of the header</entry>
+	<entry code="unimarc_header_field_name">The name of the field</entry>
+	<entry code="unimarc_header_field_value">The value of the field</entry>
+	<!--
+unimarc_f_field
+-->
+	<entry code="unimarc_f_field_description">Describes an f field</entry>
+	<entry code="unimarc_f_field_c"></entry>
+	<entry code="unimarc_f_field_ind"></entry>
+	<entry code="unimarc_f_field_id"></entry>
+	<entry code="unimarc_f_field_s"></entry>
+	<!--
+unimarc_s_field
+-->
+	<entry code="unimarc_s_field_description">Describes an s field</entry>
+	<entry code="unimarc_s_field_c"></entry>
+	<entry code="unimarc_s_field_value"></entry>
+</XMLlist>

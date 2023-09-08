@@ -1,0 +1,11 @@
+<!-- $Id: pnb_devices.tpl.html,v 1.2 2018-05-30 12:45:59 vtouchard Exp $ -->
+
+<form method="post" name="devices_list" action="./empr.php?tab=pnb_loan&lvl=pnb_devices&sub=save">
+	<h3 id="empr_pnb_devices_list_title">{{ msg.empr_pnb_devices_list }}</h3>
+	<select id="empr_pnb_devices_list" name="empr_pnb_devices_list[]" multiple="multiple" size="20">
+		{% for device in devices %}
+			<option {% if device.selected %} selected="selected" {% endif %} value="{{ device.userAgentId }}">{{ device.appName }}</option>
+		{% endfor %}
+	</select>
+	<input type="submit" class="bouton" value="{{ msg.77 }}"/>
+</form>

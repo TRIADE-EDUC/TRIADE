@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- messages localisés en français pour la classe de fonctions search_functions
+****************************************************************************************
+© 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: en_UK.xml,v 1.1 2015-06-15 12:55:33 pmbs Exp $ -->
+
+<!DOCTYPE XMLlist SYSTEM "../../../includes/XMLlist.dtd" >
+<XMLlist>
+<!--
+pmbesPublishers
+--><entry code="pmbesPublishers_description">Management of the publishers</entry>
+<!--
+get_publisher_information
+-->
+<entry code="get_publisher_information_description">Return the informations related to a publisher</entry>
+<entry code="get_publisher_information_input_description"></entry>
+<entry code="get_publisher_information_output_description"></entry>
+<entry code="get_publisher_information_publisher_id">Id of the publisher</entry>
+<entry code="get_publisher_information_result">The informations</entry>
+<!--
+list_publisher_notices
+-->
+<entry code="list_publisher_notices_description">Returns the ids of the records linked to a publisher</entry>
+<entry code="list_publisher_notices_input_description"></entry>
+<entry code="list_publisher_notices_output_description"></entry>
+<entry code="list_publisher_notices_publisher_id">The id of the publisher</entry>
+<entry code="list_publisher_notices_OPACUserId">the id of a borrower, to filter the results depending on the access rights
+	-1: Do not take into account
+	0: anonymous borrower
+	x: id of the borrower</entry>
+<entry code="list_publisher_notices_notice_ids">The ids of the records</entry>
+
+</XMLlist>

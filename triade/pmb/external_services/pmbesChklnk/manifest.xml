@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- Fichier manifest de description des méthodes disponibles
+****************************************************************************************
+© 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: manifest.xml,v 1.1 2017-10-26 10:16:36 dgoron Exp $ -->
+<manifest>
+	<name>pmbesChklnk</name>
+	<description>msg:chklnk_functions_description</description>
+
+	<methods>
+		<method name="check_records" rights="" version="1.0" comment="msg:check_records_description" language_independant="true">
+			<inputs>
+				<description>msg:check_records_input_description</description>
+				<param name="caddie_id" type="scalar" dataType="integer" description="msg:chklnk_caddie_id"/>
+			</inputs>
+			<outputs>
+				<description>msg:check_records_output_description</description>
+				<result name="result" type="scalar" dataType="string" description="msg:chklnk_result"/>
+			</outputs>
+		</method>
+		<method name="check_records_thumbnail" rights="" version="1.0" comment="msg:check_records_thumbnail_description" language_independant="true">
+			<inputs>
+				<description>msg:check_records_thumbnail_input_description</description>
+				<param name="caddie_id" type="scalar" dataType="integer" description="msg:chklnk_caddie_id"/>
+			</inputs>
+			<outputs>
+				<description>msg:check_records_thumbnail_output_description</description>
+				<result name="result" type="scalar" dataType="string" description="msg:chklnk_result"/>
+			</outputs>
+		</method>
+		<method name="check_records_custom_fields" rights="" version="1.0" comment="msg:check_records_custom_fields_description" language_independant="true">
+			<inputs>
+				<description>msg:check_records_custom_fields_input_description</description>
+				<param name="caddie_id" type="scalar" dataType="integer" description="msg:chklnk_caddie_id"/>
+			</inputs>
+			<outputs>
+				<description>msg:check_records_custom_fields_output_description</description>
+				<result name="result" type="scalar" dataType="string" description="msg:chklnk_result"/>
+			</outputs>
+		</method>
+		<method name="check_records_enum" rights="" version="1.0" comment="msg:check_records_enum_description" language_independant="true">
+			<inputs>
+				<description>msg:check_records_enum_input_description</description>
+				<param name="caddie_id" type="scalar" dataType="integer" description="msg:chklnk_caddie_id"/>
+			</inputs>
+			<outputs>
+				<description>msg:check_records_enum_output_description</description>
+				<result name="result" type="scalar" dataType="string" description="msg:chklnk_result"/>
+			</outputs>
+		</method>
+		<method name="check_bulletins" rights="" version="1.0" comment="msg:check_bulletins_description" language_independant="true">
+			<inputs>
+				<description>msg:check_bulletins_input_description</description>
+				<param name="caddie_id" type="scalar" dataType="integer" description="msg:chklnk_caddie_id"/>
+			</inputs>
+			<outputs>
+				<description>msg:check_bulletins_output_description</description>
+				<result name="result" type="scalar" dataType="string" description="msg:chklnk_result"/>
+			</outputs>
+		</method>
+		<method name="check_custom_fields_etatcoll" rights="" version="1.0" comment="msg:check_custom_fields_etatcoll_description" language_independant="true">
+			<inputs>
+				<description>msg:check_custom_fields_etatcoll_input_description</description>
+				<param name="caddie_id" type="scalar" dataType="integer" description="msg:chklnk_caddie_id"/>
+			</inputs>
+			<outputs>
+				<description>msg:check_custom_fields_etatcoll_output_description</description>
+				<result name="result" type="scalar" dataType="string" description="msg:chklnk_result"/>
+			</outputs>
+		</method>
+		<method name="check_authors" rights="" version="1.0" comment="msg:check_authors_description" language_independant="true">
+			<inputs>
+				<description>msg:check_authors_input_description</description>
+				<param name="caddie_id" type="scalar" dataType="integer" description="msg:chklnk_caddie_id"/>
+			</inputs>
+			<outputs>
+				<description>msg:check_authors_output_description</description>
+				<result name="result" type="scalar" dataType="string" description="msg:chklnk_result"/>
+			</outputs>
+		</method>
+		<method name="check_publishers" rights="" version="1.0" comment="msg:check_publishers_description" language_independant="true">
+			<inputs>
+				<description>msg:check_publishers_input_description</description>
+				<param name="caddie_id" type="scalar" dataType="integer" description="msg:chklnk_caddie_id"/>
+			</inputs>
+			<outputs>
+				<description>msg:check_publishers_output_description</description>
+				<result name="result" type="scalar" dataType="string" description="msg:chklnk_result"/>
+			</outputs>
+		</method>
+		<method name="check_collections" rights="" version="1.0" comment="msg:check_collections_description" language_independant="true">
+			<inputs>
+				<description>msg:check_collections_input_description</description>
+				<param name="caddie_id" type="scalar" dataType="integer" description="msg:chklnk_caddie_id"/>
+			</inputs>
+			<outputs>
+				<description>msg:check_collections_output_description</description>
+				<result name="result" type="scalar" dataType="string" description="msg:chklnk_result"/>
+			</outputs>
+		</method>
+		<method name="check_subcollections" rights="" version="1.0" comment="msg:check_subcollections_description" language_independant="true">
+			<inputs>
+				<description>msg:check_subcollections_input_description</description>
+				<param name="caddie_id" type="scalar" dataType="integer" description="msg:chklnk_caddie_id"/>
+			</inputs>
+			<outputs>
+				<description>msg:check_subcollections_output_description</description>
+				<result name="result" type="scalar" dataType="string" description="msg:chklnk_result"/>
+			</outputs>
+		</method>
+		<method name="check_authorities_thumbnail" rights="" version="1.0" comment="msg:check_authorities_thumbnail_description" language_independant="true">
+			<inputs>
+				<description>msg:check_authorities_thumbnail_input_description</description>
+				<param name="caddie_id" type="scalar" dataType="integer" description="msg:chklnk_caddie_id"/>
+			</inputs>
+			<outputs>
+				<description>msg:check_authorities_thumbnail_output_description</description>
+				<result name="result" type="scalar" dataType="string" description="msg:chklnk_result"/>
+			</outputs>
+		</method>
+		<method name="check_editorial_custom_fields" rights="" version="1.0" comment="msg:check_editorial_custom_fields_description" language_independant="true">
+			<inputs/>
+			<outputs>
+				<description>msg:check_editorial_custom_fields_output_description</description>
+				<result name="result" type="scalar" dataType="string" description="msg:chklnk_result"/>
+			</outputs>
+		</method>
+	</methods>
+</manifest>
+

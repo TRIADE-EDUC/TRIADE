@@ -1,0 +1,96 @@
+/* ---------------------------------------------------------------------------*/
+/*                                 Semantique                                  */
+/* ---------------------------------------------------------------------------*/
+
+
+body.semantic h1, .semantic h1 {
+	background:#6725a3;
+	background: -moz-linear-gradient(top, #8334cb 0%,#6725a3 49%,#602497 100%); 
+	background: linear-gradient(to bottom, #8334cb 0%,#6725a3 49%,#602497 100%); 
+	color: #ffffff;
+	padding-left: 15px;
+	padding-right: 15px;
+	padding-top: 3px;
+	padding-bottom: 3px;
+	margin-bottom: 15px;
+}
+
+body.semantic h2, body.semantic h3, .semantic h2, .semantic h3 {
+	color: #6725a3;
+}
+
+body.semantic #conteneur #menu li a:hover, .semantic #conteneur #menu li a:hover  {
+    background: -moz-linear-gradient(top, #8334cb 0%,#6725a3 49%,#602497 100%);  	
+    background: linear-gradient(to bottom, #8334cb 0%,#6725a3 49%,#602497 100%);
+	background-repeat: repeat-x;
+	background-position: left top;
+	background-color: #6725a3;
+	color: #ffffff;
+}
+
+body.semantic .hmenu span.selected a, .semantic .hmenu span.selected a{
+    background: -moz-linear-gradient(top, #8334cb 0%,#6725a3 49%,#602497 100%);  	
+    background: linear-gradient(to bottom, #8334cb 0%,#6725a3 49%,#602497 100%);
+	background-position: left bottom;
+	background-color: #6725a3;
+	color: #ffffff;
+}
+
+body.semantic table th, .semantic table th{
+	background-repeat: repeat-x;
+    background: -moz-linear-gradient(top, #8334cb 0%,#6725a3 49%,#602497 100%);  	
+    background: linear-gradient(to bottom, #8334cb 0%,#6725a3 49%,#602497 100%);
+	background-position: left bottom;
+	background-color: #6725a3;
+	color: #ffffff;
+	padding-left: 15px;
+	padding-right: 15px;
+	padding-top: 3px;
+	padding-bottom: 3px;
+	margin-bottom: 15px;
+}
+
+body.semantic table th h3, .semantic table th h3  {
+	color: #ffffff;
+}
+
+body.semantic table tr.surbrillance, .semantic .sortable tr:hover, .semantic table tr.surbrillance, .semantic .sortable tr:hover{
+    background: -moz-linear-gradient(top, #8334cb 0%,#6725a3 49%,#602497 100%);  	
+    background: linear-gradient(to bottom, #8334cb 0%,#6725a3 49%,#602497 100%);
+	background-repeat: repeat-x;
+	background-position: left top;
+	background-color: #602497;
+	color: #ffffff;
+}
+
+body.semantic input, body.semantic select, body.semantic textarea, .semantic input, .semantic select, .semantic textarea {
+	-moz-box-shadow: 1px 1px 1px #602497 inset;
+	-o-box-shadow: 1px 1px 1px #602497 inset;
+	-webkit-box-shadow: 1px 1px 1px #602497 inset;
+	box-shadow: 1px 1px 1px #602497 inset;
+}
+
+body.semantic .saisie-contenu, body.semantic .astuce,  .semantic .saisie-contenu, .semantic .astuce{
+	background-repeat: repeat-x;
+    background: -moz-linear-gradient(top, #8334cb 0%,#6725a3 49%,#602497 100%);  	
+    background: linear-gradient(to bottom, #8334cb 0%,#6725a3 49%,#602497 100%);
+	background-position: left bottom;
+	background-color: #6725a3;
+}
+
+body.semantic #content_onglet_perio span.onglet-perio-selected a, .semantic #content_onglet_perio span.onglet-perio-selected a{
+    background: -moz-linear-gradient(top, #8334cb 0%,#6725a3 49%,#602497 100%);  	
+    background: linear-gradient(to bottom, #8334cb 0%,#6725a3 49%,#602497 100%);
+	background-position: left bottom;
+	background-color: #6725a3;
+	color: #ffffff;
+}
+
+.semantic .saisie-5emr, .semantic .saisie-10emr, .semantic .saisie-15emr, .semantic .saisie-20emr, .semantic .saisie-30emr, .semantic .saisie-50emr, .semantic .saisie-80emr {
+	background-color: #6725a3;
+	color: #ffffff;
+	-moz-box-shadow: 1px 1px 10px #6725a3 inset;
+	-o-box-shadow: 1px 1px 10px #6725a3 inset;
+	-webkit-box-shadow: 1px 1px 10px #6725a3 inset;
+	box-shadow: 1px 1px 10px #6725a3 inset;
+}

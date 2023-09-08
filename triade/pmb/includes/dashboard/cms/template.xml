@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!-- 
+****************************************************************************************
+© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: template.xml,v 1.2 2015-06-15 12:55:34 pmbs Exp $ -->
+<template default_lang='fr_FR'>
+	<content lang='fr_FR'><![CDATA[
+		<div>{{nb_articles.0.total}} Articles dans le portail</div>
+		<div>{{nb_sections.0.total}} Rubriques dans le portail</div>
+		]]>
+	</content>
+	
+	<content lang='en_UK'><![CDATA[
+		<div>{{nb_articles.0.total}} Articles in the portal</div>
+		<div>{{nb_sections.0.total}} Rubrics in the portal</div>
+		]]>
+	</content>
+</template>

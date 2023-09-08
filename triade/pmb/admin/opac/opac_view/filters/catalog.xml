@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+
+<!-- Catalogue de connecteurs
+****************************************************************************************
+© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: catalog.xml,v 1.4 2016-12-05 16:17:12 dgoron Exp $ -->
+
+<catalog>
+	<item name="Etageres" path="etageres" active="1" id="1"/>
+	<item name="Recherches prédéfinies" active="1" path="search_perso" id="2"/>
+	<item name="Localisations visibles"  active="0" path="loc_visibility" id="3"/>  
+	<item name="Flux RSS sortants" active="0" path="flux_rss" id="4"/>
+	<item name="Infopages" active="1" path="infopages" id="5"/>
+	<item name="Navigation sections" active="1" path="nav_sections" id="6"/>
+	<item name="Navigation collections" active="1" path="nav_collections" id="7"/>
+	<item name="Flux RSS" active="1" path="flux_rss" id="8"/>
+	<item name="Facettes" active="1" path="facettes" id="9"/>
+	<item name="Facettes externes" active="1" path="facettes_external_filter" id="10"/>
+</catalog>

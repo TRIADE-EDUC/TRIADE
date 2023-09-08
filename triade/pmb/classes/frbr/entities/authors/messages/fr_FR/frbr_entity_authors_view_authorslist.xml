@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: frbr_entity_authors_view_authorslist.xml,v 1.1 2017-04-19 14:41:11 tsamson Exp $ -->
+
+<XMLlist>
+	<entry code="frbr_entity_authors_view_authorslist_page_var">Variable à utiliser</entry>
+	<entry code="frbr_entity_authors_view_title">Titre de la liste</entry>
+	<entry code="frbr_entity_authors_view_authors_desc">Auteurs</entry>	
+	<entry code="frbr_entity_authors_view_authorslist_title">Liste d'auteurs</entry>
+</XMLlist>

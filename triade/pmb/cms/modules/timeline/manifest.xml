@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+
+<!-- Declaration d'un module
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: manifest.xml,v 1.2 2017-09-29 12:51:31 arenou Exp $ -->
+
+<manifest>
+	<name lang="fr_FR">Frise Chronologique</name>
+	<name lang="en_UK">Timeline</name>
+	<author>
+		<name>Arnaud RENOU</name>
+		<organisation>PMB Services</organisation>
+	</author>
+	<created_date>2017-07-25</created_date>
+	<version>1.0</version>
+	<default_language>fr_FR</default_language>
+	<managed>true</managed>
+	<use>
+		<datasources>
+			<datasource>cms_module_timeline_datasource_multiple</datasource>
+		</datasources>
+		<views>
+			<view>cms_module_timeline_view_timeline</view>
+		</views>
+		<conditions>
+			<condition>cms_module_common_condition_global_var</condition>
+		</conditions>
+	</use>
+</manifest>

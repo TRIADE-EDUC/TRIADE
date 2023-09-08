@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="iso-8859-1" ?>
+
+<!-- Messages localisés en français
+****************************************************************************************
+© 2002-2010 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: ja_JP.xml,v 1.7 2017-05-24 07:59:17 arenou Exp $ -->
+<messages>
+	<entry code="close">Fermer</entry>
+	<entry code="fullscreen">Plein Ecran</entry>
+	<entry code="normal">Normal</entry>
+	<entry code="nothing_to_display">Aucun document disponible.</entry>
+	<entry code="forbidden_resources">Vous ne pouvez pas accéder à ce document.</entry>
+	<entry code="download_doc">Télécharger le document hors de la visionneuse</entry>
+	<entry code="zoom_in">Zoom in</entry>
+	<entry code="zoom_out">Zoom out</entry>
+	<entry code="onepg">One page view</entry>
+	<entry code="twopg">Two pages view</entry>
+	<entry code="thumb">Thumbnails</entry>
+	<entry code="print">Print this page</entry>
+	<entry code="embed">BookReader's export</entry>
+	<entry code="link">Link on this book (this page)</entry>
+	<entry code="bookmark">Bookmark this page</entry>
+	<entry code="read">Read</entry>
+	<entry code="share">Share</entry>
+	<entry code="info">About</entry>
+	<entry code="full">Full screen</entry>
+	<entry code="book_left">Turn over left</entry>
+	<entry code="book_right">Turn over right</entry>
+	<entry code="book_up">Page up</entry>
+	<entry code="book_down">Page down</entry>
+	<entry code="play">Read</entry>
+	<entry code="pause">Pause</entry>
+	<entry code="BRdn">Show/Hide</entry>
+	<entry code="BRup">Show/Hide</entry>
+	<entry code="book_top">First page</entry>
+	<entry code="book_bottom">Last page</entry>
+	<entry code="contrast">Set brightness/contrast</entry>
+</messages>

@@ -1,0 +1,1505 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<ranges>
+	<prefix id="978">
+		<zone id="0">
+			<range>00-19</range>
+			<range>200-699</range>
+			<range>7000-8499</range>
+			<range>85000-89999</range>
+			<range>900000-949999</range>
+			<range>9500000-9999999</range>
+		</zone>
+		<zone id="1">
+			<range>00-09</range>
+			<range>100-399</range>
+			<range>4000-5499</range>
+			<range>55000-86979</range>
+			<range>869800-998999</range>
+			<range>9990000-9999999</range>
+		</zone>
+		<zone id="2">
+			<range>00-19</range>
+			<range>200-349</range>
+			<range>35000-39999</range>
+			<range>400-699</range>
+			<range>7000-8399</range>
+			<range>84000-89999</range>
+			<range>900000-949999</range>
+			<range>9500000-9999999</range>
+		</zone>
+		<zone id="3">
+			<range>00-02</range>
+			<range>030-033</range>
+			<range>0340-0369</range>
+			<range>03700-03999</range>
+			<range>04-19</range>
+			<range>200-699</range>
+			<range>7000-8499</range>
+			<range>85000-89999</range>
+			<range>900000-949999</range>
+			<range>9500000-9539999</range>
+			<range>95400-96999</range>
+			<range>9700000-9899999</range>
+			<range>99000-99499</range>
+			<range>99500-99999</range>
+		</zone>
+		<zone id="4">
+			<range>00-19</range>
+			<range>200-699</range>
+			<range>7000-8499</range>
+			<range>85000-89999</range>
+			<range>900000-949999</range>
+			<range>9500000-9999999</range>
+		</zone>
+		<zone id="5">
+			<range>00000-00499</range>
+			<range>0050-0099</range>
+			<range>01-19</range>
+			<range>200-420</range>
+			<range>4210-4299</range>
+			<range>430-430</range>
+			<range>4310-4399</range>
+			<range>440-440</range>
+			<range>4410-4499</range>
+			<range>450-699</range>
+			<range>7000-8499</range>
+			<range>85000-89999</range>
+			<range>900000-909999</range>
+			<range>91000-91999</range>
+			<range>9200-9299</range>
+			<range>93000-94999</range>
+			<range>9500000-9500999</range>
+			<range>9501-9799</range>
+			<range>98000-98999</range>
+			<range>9900000-9909999</range>
+			<range>9910-9999</range>
+		</zone>
+		<zone id="600">
+			<range>00-09</range>
+			<range>100-499</range>
+			<range>5000-8999</range>
+			<range>90000-99999</range>
+		</zone>
+		<zone id="601">
+			<range>00-19</range>
+			<range>200-699</range>
+			<range>7000-7999</range>
+			<range>80000-84999</range>
+			<range>85-99</range>
+		</zone>
+		<zone id="602">
+			<range>00-07</range>
+			<range>0800-0899</range>
+			<range>0900-1099</range>
+			<range>1100-1199</range>
+			<range>1200-1399</range>
+			<range>14000-14999</range>
+			<range>1500-1699</range>
+			<range>17000-17999</range>
+			<range>18000-18999</range>
+			<range>19000-19999</range>
+			<range>200-699</range>
+			<range>70000-74999</range>
+			<range>7500-7999</range>
+			<range>8000-9499</range>
+			<range>95000-99999</range>
+		</zone>
+		<zone id="603">
+			<range>00-04</range>
+			<range>05-49</range>
+			<range>500-799</range>
+			<range>8000-8999</range>
+			<range>90000-99999</range>
+		</zone>
+		<zone id="604">
+			<range>0-4</range>
+			<range>50-89</range>
+			<range>900-979</range>
+			<range>9800-9999</range>
+		</zone>
+		<zone id="605">
+			<range>01-02</range>
+			<range>030-039</range>
+			<range>04-09</range>
+			<range>100-399</range>
+			<range>4000-5999</range>
+			<range>60000-89999</range>
+			<range>9000-9999</range>
+		</zone>
+		<zone id="606">
+			<range>0-0</range>
+			<range>10-49</range>
+			<range>500-799</range>
+			<range>8000-9199</range>
+			<range>92000-99999</range>
+		</zone>
+		<zone id="607">
+			<range>00-39</range>
+			<range>400-749</range>
+			<range>7500-9499</range>
+			<range>95000-99999</range>
+		</zone>
+		<zone id="608">
+			<range>0-0</range>
+			<range>10-19</range>
+			<range>200-449</range>
+			<range>4500-6499</range>
+			<range>65000-69999</range>
+			<range>7-9</range>
+		</zone>
+		<zone id="609">
+			<range>00-39</range>
+			<range>400-799</range>
+			<range>8000-9499</range>
+			<range>95000-99999</range>
+		</zone>
+		<zone id="612">
+			<range>00-29</range>
+			<range>300-399</range>
+			<range>4000-4499</range>
+			<range>45000-49999</range>
+			<range>50-99</range>
+		</zone>
+		<zone id="613">
+			<range>0-9</range>
+		</zone>
+		<zone id="614">
+			<range>00-39</range>
+			<range>400-799</range>
+			<range>8000-9499</range>
+			<range>95000-99999</range>
+		</zone>
+		<zone id="615">
+			<range>00-09</range>
+			<range>100-499</range>
+			<range>5000-7999</range>
+			<range>80000-89999</range>
+		</zone>
+		<zone id="616">
+			<range>00-19</range>
+			<range>200-699</range>
+			<range>7000-8999</range>
+			<range>90000-99999</range>
+		</zone>
+		<zone id="617">
+			<range>00-49</range>
+			<range>500-699</range>
+			<range>7000-8999</range>
+			<range>90000-99999</range>
+		</zone>
+		<zone id="618">
+			<range>00-19</range>
+			<range>200-499</range>
+			<range>5000-7999</range>
+			<range>80000-99999</range>
+		</zone>
+		<zone id="619">
+			<range>00-14</range>
+			<range>150-699</range>
+			<range>7000-8999</range>
+			<range>90000-99999</range>
+		</zone>
+		<zone id="620">
+			<range>0-9</range>
+		</zone>
+		<zone id="621">
+			<range>00-29</range>
+			<range>400-599</range>
+			<range>8000-8999</range>
+			<range>95000-99999</range>
+		</zone>
+		<zone id="7">
+			<range>00-09</range>
+			<range>100-499</range>
+			<range>5000-7999</range>
+			<range>80000-89999</range>
+			<range>900000-999999</range>
+		</zone>
+		<zone id="80">
+			<range>00-19</range>
+			<range>200-699</range>
+			<range>7000-8499</range>
+			<range>85000-89999</range>
+			<range>900000-999999</range>
+		</zone>
+		<zone id="81">
+			<range>00-19</range>
+			<range>200-699</range>
+			<range>7000-8499</range>
+			<range>85000-89999</range>
+			<range>900000-999999</range>
+		</zone>
+		<zone id="82">
+			<range>00-19</range>
+			<range>200-689</range>
+			<range>690000-699999</range>
+			<range>7000-8999</range>
+			<range>90000-98999</range>
+			<range>990000-999999</range>
+		</zone>
+		<zone id="83">
+			<range>00-19</range>
+			<range>200-599</range>
+			<range>60000-69999</range>
+			<range>7000-8499</range>
+			<range>85000-89999</range>
+			<range>900000-999999</range>
+		</zone>
+		<zone id="84">
+			<range>00-13</range>
+			<range>140-149</range>
+			<range>15000-19999</range>
+			<range>200-699</range>
+			<range>7000-8499</range>
+			<range>85000-89999</range>
+			<range>9000-9199</range>
+			<range>920000-923999</range>
+			<range>92400-92999</range>
+			<range>930000-949999</range>
+			<range>95000-96999</range>
+			<range>9700-9999</range>
+		</zone>
+		<zone id="85">
+			<range>00-19</range>
+			<range>200-549</range>
+			<range>5500-5999</range>
+			<range>60000-69999</range>
+			<range>7000-8499</range>
+			<range>85000-89999</range>
+			<range>900000-959999</range>
+			<range>96-97</range>
+			<range>98000-99999</range>
+		</zone>
+		<zone id="86">
+			<range>00-29</range>
+			<range>300-599</range>
+			<range>6000-7999</range>
+			<range>80000-89999</range>
+			<range>900000-999999</range>
+		</zone>
+		<zone id="87">
+			<range>00-29</range>
+			<range>400-649</range>
+			<range>7000-7999</range>
+			<range>85000-94999</range>
+			<range>970000-999999</range>
+		</zone>
+		<zone id="88">
+			<range>00-19</range>
+			<range>200-599</range>
+			<range>6000-8499</range>
+			<range>85000-89999</range>
+			<range>900000-909999</range>
+			<range>910-929</range>
+			<range>9300-9399</range>
+			<range>940000-949999</range>
+			<range>95000-99999</range>
+		</zone>
+		<zone id="89">
+			<range>00-24</range>
+			<range>250-549</range>
+			<range>5500-8499</range>
+			<range>85000-94999</range>
+			<range>950000-969999</range>
+			<range>97000-98999</range>
+			<range>990-999</range>
+		</zone>
+		<zone id="90">
+			<range>00-19</range>
+			<range>200-499</range>
+			<range>5000-6999</range>
+			<range>70000-79999</range>
+			<range>800000-849999</range>
+			<range>8500-8999</range>
+			<range>90-90</range>
+			<range>94-94</range>
+		</zone>
+		<zone id="91">
+			<range>0-1</range>
+			<range>20-49</range>
+			<range>500-649</range>
+			<range>7000-7999</range>
+			<range>85000-94999</range>
+			<range>970000-999999</range>
+		</zone>
+		<zone id="92">
+			<range>0-5</range>
+			<range>60-79</range>
+			<range>800-899</range>
+			<range>9000-9499</range>
+			<range>95000-98999</range>
+			<range>990000-999999</range>
+		</zone>
+		<zone id="93">
+			<range>00-09</range>
+			<range>100-499</range>
+			<range>5000-7999</range>
+			<range>80000-94999</range>
+			<range>950000-999999</range>
+		</zone>
+		<zone id="94">
+			<range>000-599</range>
+			<range>6000-8999</range>
+			<range>90000-99999</range>
+		</zone>
+		<zone id="950">
+			<range>00-49</range>
+			<range>500-899</range>
+			<range>9000-9899</range>
+			<range>99000-99999</range>
+		</zone>
+		<zone id="951">
+			<range>0-1</range>
+			<range>20-54</range>
+			<range>550-889</range>
+			<range>8900-9499</range>
+			<range>95000-99999</range>
+		</zone>
+		<zone id="952">
+			<range>00-19</range>
+			<range>200-499</range>
+			<range>5000-5999</range>
+			<range>60-65</range>
+			<range>6600-6699</range>
+			<range>67000-69999</range>
+			<range>7000-7999</range>
+			<range>80-94</range>
+			<range>9500-9899</range>
+			<range>99000-99999</range>
+		</zone>
+		<zone id="953">
+			<range>0-0</range>
+			<range>10-14</range>
+			<range>150-509</range>
+			<range>51-54</range>
+			<range>55000-59999</range>
+			<range>6000-9499</range>
+			<range>95000-99999</range>
+		</zone>
+		<zone id="954">
+			<range>00-28</range>
+			<range>2900-2999</range>
+			<range>300-799</range>
+			<range>8000-8999</range>
+			<range>90000-92999</range>
+			<range>9300-9999</range>
+		</zone>
+		<zone id="955">
+			<range>0000-1999</range>
+			<range>20-40</range>
+			<range>41000-43999</range>
+			<range>44000-44999</range>
+			<range>4500-4999</range>
+			<range>50000-54999</range>
+			<range>550-749</range>
+			<range>7500-7999</range>
+			<range>8000-9499</range>
+			<range>95000-99999</range>
+		</zone>
+		<zone id="956">
+			<range>00-19</range>
+			<range>200-699</range>
+			<range>7000-9999</range>
+		</zone>
+		<zone id="957">
+			<range>00-02</range>
+			<range>0300-0499</range>
+			<range>05-19</range>
+			<range>2000-2099</range>
+			<range>21-27</range>
+			<range>28000-30999</range>
+			<range>31-43</range>
+			<range>440-819</range>
+			<range>8200-9699</range>
+			<range>97000-99999</range>
+		</zone>
+		<zone id="958">
+			<range>00-56</range>
+			<range>57000-59999</range>
+			<range>600-799</range>
+			<range>8000-9499</range>
+			<range>95000-99999</range>
+		</zone>
+		<zone id="959">
+			<range>00-19</range>
+			<range>200-699</range>
+			<range>7000-8499</range>
+			<range>85000-99999</range>
+		</zone>
+		<zone id="960">
+			<range>00-19</range>
+			<range>200-659</range>
+			<range>6600-6899</range>
+			<range>690-699</range>
+			<range>7000-8499</range>
+			<range>85000-92999</range>
+			<range>93-93</range>
+			<range>9400-9799</range>
+			<range>98000-99999</range>
+		</zone>
+		<zone id="961">
+			<range>00-19</range>
+			<range>200-599</range>
+			<range>6000-8999</range>
+			<range>90000-94999</range>
+		</zone>
+		<zone id="962">
+			<range>00-19</range>
+			<range>200-699</range>
+			<range>7000-8499</range>
+			<range>85000-86999</range>
+			<range>8700-8999</range>
+			<range>900-999</range>
+		</zone>
+		<zone id="963">
+			<range>00-19</range>
+			<range>200-699</range>
+			<range>7000-8499</range>
+			<range>85000-89999</range>
+			<range>9000-9999</range>
+		</zone>
+		<zone id="964">
+			<range>00-14</range>
+			<range>150-249</range>
+			<range>2500-2999</range>
+			<range>300-549</range>
+			<range>5500-8999</range>
+			<range>90000-96999</range>
+			<range>970-989</range>
+			<range>9900-9999</range>
+		</zone>
+		<zone id="965">
+			<range>00-19</range>
+			<range>200-599</range>
+			<range>7000-7999</range>
+			<range>90000-99999</range>
+		</zone>
+		<zone id="966">
+			<range>00-12</range>
+			<range>130-139</range>
+			<range>14-14</range>
+			<range>1500-1699</range>
+			<range>170-199</range>
+			<range>2000-2789</range>
+			<range>279-289</range>
+			<range>2900-2999</range>
+			<range>300-699</range>
+			<range>7000-8999</range>
+			<range>90000-90999</range>
+			<range>910-949</range>
+			<range>95000-97999</range>
+			<range>980-999</range>
+		</zone>
+		<zone id="967">
+			<range>00-00</range>
+			<range>0100-0999</range>
+			<range>10000-19999</range>
+			<range>300-499</range>
+			<range>5000-5999</range>
+			<range>60-89</range>
+			<range>900-989</range>
+			<range>9900-9989</range>
+			<range>99900-99999</range>
+		</zone>
+		<zone id="968">
+			<range>01-39</range>
+			<range>400-499</range>
+			<range>5000-7999</range>
+			<range>800-899</range>
+			<range>9000-9999</range>
+		</zone>
+		<zone id="969">
+			<range>0-1</range>
+			<range>20-22</range>
+			<range>23000-23999</range>
+			<range>24-39</range>
+			<range>400-749</range>
+			<range>7500-9999</range>
+		</zone>
+		<zone id="970">
+			<range>01-59</range>
+			<range>600-899</range>
+			<range>9000-9099</range>
+			<range>91000-96999</range>
+			<range>9700-9999</range>
+		</zone>
+		<zone id="971">
+			<range>000-015</range>
+			<range>0160-0199</range>
+			<range>02-02</range>
+			<range>0300-0599</range>
+			<range>06-49</range>
+			<range>500-849</range>
+			<range>8500-9099</range>
+			<range>91000-95999</range>
+			<range>9600-9699</range>
+			<range>97-98</range>
+			<range>9900-9999</range>
+		</zone>
+		<zone id="972">
+			<range>0-1</range>
+			<range>20-54</range>
+			<range>550-799</range>
+			<range>8000-9499</range>
+			<range>95000-99999</range>
+		</zone>
+		<zone id="973">
+			<range>0-0</range>
+			<range>100-169</range>
+			<range>1700-1999</range>
+			<range>20-54</range>
+			<range>550-759</range>
+			<range>7600-8499</range>
+			<range>85000-88999</range>
+			<range>8900-9499</range>
+			<range>95000-99999</range>
+		</zone>
+		<zone id="974">
+			<range>00-19</range>
+			<range>200-699</range>
+			<range>7000-8499</range>
+			<range>85000-89999</range>
+			<range>90000-94999</range>
+			<range>9500-9999</range>
+		</zone>
+		<zone id="975">
+			<range>00000-01999</range>
+			<range>02-24</range>
+			<range>250-599</range>
+			<range>6000-9199</range>
+			<range>92000-98999</range>
+			<range>990-999</range>
+		</zone>
+		<zone id="976">
+			<range>0-3</range>
+			<range>40-59</range>
+			<range>600-799</range>
+			<range>8000-9499</range>
+			<range>95000-99999</range>
+		</zone>
+		<zone id="977">
+			<range>00-19</range>
+			<range>200-499</range>
+			<range>5000-6999</range>
+			<range>700-849</range>
+			<range>85000-89999</range>
+			<range>90-99</range>
+		</zone>
+		<zone id="978">
+			<range>000-199</range>
+			<range>2000-2999</range>
+			<range>30000-79999</range>
+			<range>8000-8999</range>
+			<range>900-999</range>
+		</zone>
+		<zone id="979">
+			<range>000-099</range>
+			<range>1000-1499</range>
+			<range>15000-19999</range>
+			<range>20-29</range>
+			<range>3000-3999</range>
+			<range>400-799</range>
+			<range>8000-9499</range>
+			<range>95000-99999</range>
+		</zone>
+		<zone id="980">
+			<range>00-19</range>
+			<range>200-599</range>
+			<range>6000-9999</range>
+		</zone>
+		<zone id="981">
+			<range>00-11</range>
+			<range>17000-19999</range>
+			<range>200-289</range>
+			<range>290-299</range>
+			<range>3000-3099</range>
+			<range>310-399</range>
+			<range>4000-9999</range>
+		</zone>
+		<zone id="982">
+			<range>00-09</range>
+			<range>100-699</range>
+			<range>70-89</range>
+			<range>9000-9799</range>
+			<range>98000-99999</range>
+		</zone>
+		<zone id="983">
+			<range>00-01</range>
+			<range>020-199</range>
+			<range>2000-3999</range>
+			<range>40000-44999</range>
+			<range>45-49</range>
+			<range>50-79</range>
+			<range>800-899</range>
+			<range>9000-9899</range>
+			<range>99000-99999</range>
+		</zone>
+		<zone id="984">
+			<range>00-39</range>
+			<range>400-799</range>
+			<range>8000-8999</range>
+			<range>90000-99999</range>
+		</zone>
+		<zone id="985">
+			<range>00-39</range>
+			<range>400-599</range>
+			<range>6000-8999</range>
+			<range>90000-99999</range>
+		</zone>
+		<zone id="986">
+			<range>00-11</range>
+			<range>120-559</range>
+			<range>5600-7999</range>
+			<range>80000-99999</range>
+		</zone>
+		<zone id="987">
+			<range>00-09</range>
+			<range>1000-1999</range>
+			<range>20000-29999</range>
+			<range>30-35</range>
+			<range>3600-3999</range>
+			<range>4000-4199</range>
+			<range>42-43</range>
+			<range>4400-4499</range>
+			<range>45000-48999</range>
+			<range>4900-4999</range>
+			<range>500-899</range>
+			<range>9000-9499</range>
+			<range>95000-99999</range>
+		</zone>
+		<zone id="988">
+			<range>00-11</range>
+			<range>12000-14999</range>
+			<range>15000-16999</range>
+			<range>17000-19999</range>
+			<range>200-799</range>
+			<range>8000-9699</range>
+			<range>97000-99999</range>
+		</zone>
+		<zone id="989">
+			<range>0-1</range>
+			<range>20-54</range>
+			<range>550-799</range>
+			<range>8000-9499</range>
+			<range>95000-99999</range>
+		</zone>
+		<zone id="9924">
+			<range>30-39</range>
+			<range>500-649</range>
+			<range>9000-9999</range>
+		</zone>
+		<zone id="9925">
+			<range>0-2</range>
+			<range>30-54</range>
+			<range>550-734</range>
+			<range>7350-9999</range>
+		</zone>
+		<zone id="9926">
+			<range>0-1</range>
+			<range>20-39</range>
+			<range>400-799</range>
+			<range>8000-9999</range>
+		</zone>
+		<zone id="9927">
+			<range>00-09</range>
+			<range>100-399</range>
+			<range>4000-4999</range>
+		</zone>
+		<zone id="9928">
+			<range>00-09</range>
+			<range>100-399</range>
+			<range>4000-4999</range>
+		</zone>
+		<zone id="9929">
+			<range>0-3</range>
+			<range>40-54</range>
+			<range>550-799</range>
+			<range>8000-9999</range>
+		</zone>
+		<zone id="9930">
+			<range>00-49</range>
+			<range>500-939</range>
+			<range>9400-9999</range>
+		</zone>
+		<zone id="9931">
+			<range>00-29</range>
+			<range>300-899</range>
+			<range>9000-9999</range>
+		</zone>
+		<zone id="9932">
+			<range>00-39</range>
+			<range>400-849</range>
+			<range>8500-9999</range>
+		</zone>
+		<zone id="9933">
+			<range>0-0</range>
+			<range>10-39</range>
+			<range>400-899</range>
+			<range>9000-9999</range>
+		</zone>
+		<zone id="9934">
+			<range>0-0</range>
+			<range>10-49</range>
+			<range>500-799</range>
+			<range>8000-9999</range>
+		</zone>
+		<zone id="9935">
+			<range>0-0</range>
+			<range>10-39</range>
+			<range>400-899</range>
+			<range>9000-9999</range>
+		</zone>
+		<zone id="9936">
+			<range>0-1</range>
+			<range>20-39</range>
+			<range>400-799</range>
+			<range>8000-9999</range>
+		</zone>
+		<zone id="9937">
+			<range>0-2</range>
+			<range>30-49</range>
+			<range>500-799</range>
+			<range>8000-9999</range>
+		</zone>
+		<zone id="9938">
+			<range>00-79</range>
+			<range>800-949</range>
+			<range>9500-9999</range>
+		</zone>
+		<zone id="9939">
+			<range>0-4</range>
+			<range>50-79</range>
+			<range>800-899</range>
+			<range>9000-9999</range>
+		</zone>
+		<zone id="9940">
+			<range>0-1</range>
+			<range>20-49</range>
+			<range>500-899</range>
+			<range>9000-9999</range>
+		</zone>
+		<zone id="9941">
+			<range>0-0</range>
+			<range>10-39</range>
+			<range>400-899</range>
+			<range>9000-9999</range>
+		</zone>
+		<zone id="9942">
+			<range>00-84</range>
+			<range>8500-8999</range>
+			<range>900-984</range>
+			<range>9850-9999</range>
+		</zone>
+		<zone id="9943">
+			<range>00-29</range>
+			<range>300-399</range>
+			<range>4000-9749</range>
+			<range>975-999</range>
+		</zone>
+		<zone id="9944">
+			<range>0000-0999</range>
+			<range>100-499</range>
+			<range>5000-5999</range>
+			<range>60-69</range>
+			<range>700-799</range>
+			<range>80-89</range>
+			<range>900-999</range>
+		</zone>
+		<zone id="9945">
+			<range>00-00</range>
+			<range>010-079</range>
+			<range>08-39</range>
+			<range>400-569</range>
+			<range>57-57</range>
+			<range>580-849</range>
+			<range>8500-9999</range>
+		</zone>
+		<zone id="9946">
+			<range>0-1</range>
+			<range>20-39</range>
+			<range>400-899</range>
+			<range>9000-9999</range>
+		</zone>
+		<zone id="9947">
+			<range>0-1</range>
+			<range>20-79</range>
+			<range>800-999</range>
+		</zone>
+		<zone id="9948">
+			<range>00-39</range>
+			<range>400-849</range>
+			<range>8500-9999</range>
+		</zone>
+		<zone id="9949">
+			<range>0-0</range>
+			<range>10-39</range>
+			<range>400-749</range>
+			<range>75-89</range>
+			<range>9000-9999</range>
+		</zone>
+		<zone id="9950">
+			<range>00-29</range>
+			<range>300-849</range>
+			<range>8500-9999</range>
+		</zone>
+		<zone id="9951">
+			<range>00-39</range>
+			<range>400-849</range>
+			<range>8500-9999</range>
+		</zone>
+		<zone id="9952">
+			<range>0-1</range>
+			<range>20-39</range>
+			<range>400-799</range>
+			<range>8000-9999</range>
+		</zone>
+		<zone id="9953">
+			<range>0-0</range>
+			<range>10-39</range>
+			<range>400-599</range>
+			<range>60-89</range>
+			<range>9000-9999</range>
+		</zone>
+		<zone id="9954">
+			<range>0-1</range>
+			<range>20-39</range>
+			<range>400-799</range>
+			<range>8000-9999</range>
+		</zone>
+		<zone id="9955">
+			<range>00-39</range>
+			<range>400-929</range>
+			<range>9300-9999</range>
+		</zone>
+		<zone id="9956">
+			<range>0-0</range>
+			<range>10-39</range>
+			<range>400-899</range>
+			<range>9000-9999</range>
+		</zone>
+		<zone id="9957">
+			<range>00-39</range>
+			<range>400-699</range>
+			<range>70-84</range>
+			<range>8500-8799</range>
+			<range>88-99</range>
+		</zone>
+		<zone id="9958">
+			<range>00-01</range>
+			<range>020-029</range>
+			<range>0300-0399</range>
+			<range>040-089</range>
+			<range>0900-0999</range>
+			<range>10-18</range>
+			<range>1900-1999</range>
+			<range>20-49</range>
+			<range>500-899</range>
+			<range>9000-9999</range>
+		</zone>
+		<zone id="9959">
+			<range>0-1</range>
+			<range>20-79</range>
+			<range>800-949</range>
+			<range>9500-9699</range>
+			<range>970-979</range>
+			<range>98-99</range>
+		</zone>
+		<zone id="9960">
+			<range>00-59</range>
+			<range>600-899</range>
+			<range>9000-9999</range>
+		</zone>
+		<zone id="9961">
+			<range>0-2</range>
+			<range>30-69</range>
+			<range>700-949</range>
+			<range>9500-9999</range>
+		</zone>
+		<zone id="9962">
+			<range>00-54</range>
+			<range>5500-5599</range>
+			<range>56-59</range>
+			<range>600-849</range>
+			<range>8500-9999</range>
+		</zone>
+		<zone id="9963">
+			<range>0-1</range>
+			<range>2000-2499</range>
+			<range>250-279</range>
+			<range>2800-2999</range>
+			<range>30-54</range>
+			<range>550-734</range>
+			<range>7350-7499</range>
+			<range>7500-9999</range>
+		</zone>
+		<zone id="9964">
+			<range>0-6</range>
+			<range>70-94</range>
+			<range>950-999</range>
+		</zone>
+		<zone id="9965">
+			<range>00-39</range>
+			<range>400-899</range>
+			<range>9000-9999</range>
+		</zone>
+		<zone id="9966">
+			<range>000-149</range>
+			<range>1500-1999</range>
+			<range>20-69</range>
+			<range>7000-7499</range>
+			<range>750-959</range>
+			<range>9600-9999</range>
+		</zone>
+		<zone id="9967">
+			<range>00-39</range>
+			<range>400-899</range>
+			<range>9000-9999</range>
+		</zone>
+		<zone id="9968">
+			<range>00-49</range>
+			<range>500-939</range>
+			<range>9400-9999</range>
+		</zone>
+		<zone id="9970">
+			<range>00-39</range>
+			<range>400-899</range>
+			<range>9000-9999</range>
+		</zone>
+		<zone id="9971">
+			<range>0-5</range>
+			<range>60-89</range>
+			<range>900-989</range>
+			<range>9900-9999</range>
+		</zone>
+		<zone id="9972">
+			<range>00-09</range>
+			<range>1-1</range>
+			<range>200-249</range>
+			<range>2500-2999</range>
+			<range>30-59</range>
+			<range>600-899</range>
+			<range>9000-9999</range>
+		</zone>
+		<zone id="9973">
+			<range>00-05</range>
+			<range>060-089</range>
+			<range>0900-0999</range>
+			<range>10-69</range>
+			<range>700-969</range>
+			<range>9700-9999</range>
+		</zone>
+		<zone id="9974">
+			<range>0-2</range>
+			<range>30-54</range>
+			<range>550-749</range>
+			<range>7500-9499</range>
+			<range>95-99</range>
+		</zone>
+		<zone id="9975">
+			<range>0-0</range>
+			<range>100-299</range>
+			<range>3000-3999</range>
+			<range>4000-4499</range>
+			<range>45-89</range>
+			<range>900-949</range>
+			<range>9500-9999</range>
+		</zone>
+		<zone id="9976">
+			<range>0-5</range>
+			<range>60-89</range>
+			<range>900-989</range>
+			<range>9900-9999</range>
+		</zone>
+		<zone id="9977">
+			<range>00-89</range>
+			<range>900-989</range>
+			<range>9900-9999</range>
+		</zone>
+		<zone id="9978">
+			<range>00-29</range>
+			<range>300-399</range>
+			<range>40-94</range>
+			<range>950-989</range>
+			<range>9900-9999</range>
+		</zone>
+		<zone id="9979">
+			<range>0-4</range>
+			<range>50-64</range>
+			<range>650-659</range>
+			<range>66-75</range>
+			<range>760-899</range>
+			<range>9000-9999</range>
+		</zone>
+		<zone id="9980">
+			<range>0-3</range>
+			<range>40-89</range>
+			<range>900-989</range>
+			<range>9900-9999</range>
+		</zone>
+		<zone id="9981">
+			<range>00-09</range>
+			<range>100-159</range>
+			<range>1600-1999</range>
+			<range>20-79</range>
+			<range>800-949</range>
+			<range>9500-9999</range>
+		</zone>
+		<zone id="9982">
+			<range>00-79</range>
+			<range>800-989</range>
+			<range>9900-9999</range>
+		</zone>
+		<zone id="9983">
+			<range>80-94</range>
+			<range>950-989</range>
+			<range>9900-9999</range>
+		</zone>
+		<zone id="9984">
+			<range>00-49</range>
+			<range>500-899</range>
+			<range>9000-9999</range>
+		</zone>
+		<zone id="9985">
+			<range>0-4</range>
+			<range>50-79</range>
+			<range>800-899</range>
+			<range>9000-9999</range>
+		</zone>
+		<zone id="9986">
+			<range>00-39</range>
+			<range>400-899</range>
+			<range>9000-9399</range>
+			<range>940-969</range>
+			<range>97-99</range>
+		</zone>
+		<zone id="9987">
+			<range>00-39</range>
+			<range>400-879</range>
+			<range>8800-9999</range>
+		</zone>
+		<zone id="9988">
+			<range>0-2</range>
+			<range>30-54</range>
+			<range>550-749</range>
+			<range>7500-9999</range>
+		</zone>
+		<zone id="9989">
+			<range>0-0</range>
+			<range>100-199</range>
+			<range>2000-2999</range>
+			<range>30-59</range>
+			<range>600-949</range>
+			<range>9500-9999</range>
+		</zone>
+		<zone id="99901">
+			<range>00-49</range>
+			<range>500-799</range>
+			<range>80-99</range>
+		</zone>
+		<zone id="99903">
+			<range>0-1</range>
+			<range>20-89</range>
+			<range>900-999</range>
+		</zone>
+		<zone id="99904">
+			<range>0-5</range>
+			<range>60-89</range>
+			<range>900-999</range>
+		</zone>
+		<zone id="99905">
+			<range>0-3</range>
+			<range>40-79</range>
+			<range>800-999</range>
+		</zone>
+		<zone id="99906">
+			<range>0-2</range>
+			<range>30-59</range>
+			<range>600-699</range>
+			<range>70-89</range>
+			<range>90-94</range>
+			<range>950-999</range>
+		</zone>
+		<zone id="99908">
+			<range>0-0</range>
+			<range>10-89</range>
+			<range>900-999</range>
+		</zone>
+		<zone id="99909">
+			<range>0-3</range>
+			<range>40-94</range>
+			<range>950-999</range>
+		</zone>
+		<zone id="99910">
+			<range>0-2</range>
+			<range>30-89</range>
+			<range>900-999</range>
+		</zone>
+		<zone id="99911">
+			<range>00-59</range>
+			<range>600-999</range>
+		</zone>
+		<zone id="99912">
+			<range>0-3</range>
+			<range>400-599</range>
+			<range>60-89</range>
+			<range>900-999</range>
+		</zone>
+		<zone id="99913">
+			<range>0-2</range>
+			<range>30-35</range>
+			<range>600-604</range>
+		</zone>
+		<zone id="99914">
+			<range>0-4</range>
+			<range>50-89</range>
+			<range>900-999</range>
+		</zone>
+		<zone id="99915">
+			<range>0-4</range>
+			<range>50-79</range>
+			<range>800-999</range>
+		</zone>
+		<zone id="99916">
+			<range>0-2</range>
+			<range>30-69</range>
+			<range>700-999</range>
+		</zone>
+		<zone id="99917">
+			<range>0-2</range>
+			<range>30-89</range>
+			<range>900-999</range>
+		</zone>
+		<zone id="99918">
+			<range>0-3</range>
+			<range>40-79</range>
+			<range>800-999</range>
+		</zone>
+		<zone id="99919">
+			<range>0-2</range>
+			<range>300-399</range>
+			<range>40-69</range>
+			<range>70-79</range>
+			<range>800-849</range>
+			<range>850-899</range>
+			<range>900-999</range>
+		</zone>
+		<zone id="99920">
+			<range>0-4</range>
+			<range>50-89</range>
+			<range>900-999</range>
+		</zone>
+		<zone id="99921">
+			<range>0-1</range>
+			<range>20-69</range>
+			<range>700-799</range>
+			<range>8-8</range>
+			<range>90-99</range>
+		</zone>
+		<zone id="99922">
+			<range>0-3</range>
+			<range>40-69</range>
+			<range>700-999</range>
+		</zone>
+		<zone id="99923">
+			<range>0-1</range>
+			<range>20-79</range>
+			<range>800-999</range>
+		</zone>
+		<zone id="99924">
+			<range>0-1</range>
+			<range>20-79</range>
+			<range>800-999</range>
+		</zone>
+		<zone id="99925">
+			<range>0-3</range>
+			<range>40-79</range>
+			<range>800-999</range>
+		</zone>
+		<zone id="99926">
+			<range>0-0</range>
+			<range>10-59</range>
+			<range>600-869</range>
+			<range>87-89</range>
+			<range>90-99</range>
+		</zone>
+		<zone id="99927">
+			<range>0-2</range>
+			<range>30-59</range>
+			<range>600-999</range>
+		</zone>
+		<zone id="99928">
+			<range>0-0</range>
+			<range>10-79</range>
+			<range>800-999</range>
+		</zone>
+		<zone id="99929">
+			<range>0-4</range>
+			<range>50-79</range>
+			<range>800-999</range>
+		</zone>
+		<zone id="99930">
+			<range>0-4</range>
+			<range>50-79</range>
+			<range>800-999</range>
+		</zone>
+		<zone id="99931">
+			<range>0-4</range>
+			<range>50-79</range>
+			<range>800-999</range>
+		</zone>
+		<zone id="99932">
+			<range>0-0</range>
+			<range>10-59</range>
+			<range>600-699</range>
+			<range>7-7</range>
+			<range>80-99</range>
+		</zone>
+		<zone id="99933">
+			<range>0-2</range>
+			<range>30-59</range>
+			<range>600-999</range>
+		</zone>
+		<zone id="99934">
+			<range>0-1</range>
+			<range>20-79</range>
+			<range>800-999</range>
+		</zone>
+		<zone id="99935">
+			<range>0-2</range>
+			<range>30-59</range>
+			<range>600-699</range>
+			<range>7-8</range>
+			<range>90-99</range>
+		</zone>
+		<zone id="99936">
+			<range>0-0</range>
+			<range>10-59</range>
+			<range>600-999</range>
+		</zone>
+		<zone id="99937">
+			<range>0-1</range>
+			<range>20-59</range>
+			<range>600-999</range>
+		</zone>
+		<zone id="99938">
+			<range>0-1</range>
+			<range>20-59</range>
+			<range>600-899</range>
+			<range>90-99</range>
+		</zone>
+		<zone id="99939">
+			<range>0-5</range>
+			<range>60-89</range>
+			<range>900-999</range>
+		</zone>
+		<zone id="99940">
+			<range>0-0</range>
+			<range>10-69</range>
+			<range>700-999</range>
+		</zone>
+		<zone id="99941">
+			<range>0-2</range>
+			<range>30-79</range>
+			<range>800-999</range>
+		</zone>
+		<zone id="99942">
+			<range>0-4</range>
+			<range>50-79</range>
+			<range>800-999</range>
+		</zone>
+		<zone id="99943">
+			<range>0-2</range>
+			<range>30-59</range>
+			<range>600-999</range>
+		</zone>
+		<zone id="99944">
+			<range>0-4</range>
+			<range>50-79</range>
+			<range>800-999</range>
+		</zone>
+		<zone id="99945">
+			<range>0-5</range>
+			<range>60-89</range>
+			<range>900-999</range>
+		</zone>
+		<zone id="99946">
+			<range>0-2</range>
+			<range>30-59</range>
+			<range>600-999</range>
+		</zone>
+		<zone id="99947">
+			<range>0-2</range>
+			<range>30-69</range>
+			<range>700-999</range>
+		</zone>
+		<zone id="99948">
+			<range>0-4</range>
+			<range>50-79</range>
+			<range>800-999</range>
+		</zone>
+		<zone id="99949">
+			<range>0-1</range>
+			<range>20-89</range>
+			<range>900-999</range>
+		</zone>
+		<zone id="99950">
+			<range>0-4</range>
+			<range>50-79</range>
+			<range>800-999</range>
+		</zone>
+		<zone id="99952">
+			<range>0-4</range>
+			<range>50-79</range>
+			<range>800-999</range>
+		</zone>
+		<zone id="99953">
+			<range>0-2</range>
+			<range>30-79</range>
+			<range>800-939</range>
+			<range>94-99</range>
+		</zone>
+		<zone id="99954">
+			<range>0-2</range>
+			<range>30-69</range>
+			<range>700-879</range>
+			<range>88-99</range>
+		</zone>
+		<zone id="99955">
+			<range>0-1</range>
+			<range>20-59</range>
+			<range>600-799</range>
+			<range>80-99</range>
+		</zone>
+		<zone id="99956">
+			<range>00-59</range>
+			<range>600-859</range>
+			<range>86-99</range>
+		</zone>
+		<zone id="99957">
+			<range>0-1</range>
+			<range>20-79</range>
+			<range>800-999</range>
+		</zone>
+		<zone id="99958">
+			<range>0-4</range>
+			<range>50-93</range>
+			<range>940-949</range>
+			<range>950-999</range>
+		</zone>
+		<zone id="99959">
+			<range>0-2</range>
+			<range>30-59</range>
+			<range>600-999</range>
+		</zone>
+		<zone id="99960">
+			<range>0-0</range>
+			<range>10-94</range>
+			<range>950-999</range>
+		</zone>
+		<zone id="99961">
+			<range>0-3</range>
+			<range>40-89</range>
+			<range>900-999</range>
+		</zone>
+		<zone id="99962">
+			<range>0-4</range>
+			<range>50-79</range>
+			<range>800-999</range>
+		</zone>
+		<zone id="99963">
+			<range>00-49</range>
+			<range>500-919</range>
+			<range>92-99</range>
+		</zone>
+		<zone id="99964">
+			<range>0-1</range>
+			<range>20-79</range>
+			<range>800-999</range>
+		</zone>
+		<zone id="99965">
+			<range>0-3</range>
+			<range>40-69</range>
+			<range>700-999</range>
+		</zone>
+		<zone id="99966">
+			<range>0-2</range>
+			<range>30-69</range>
+			<range>700-799</range>
+			<range>80-94</range>
+		</zone>
+		<zone id="99967">
+			<range>0-1</range>
+			<range>20-59</range>
+			<range>600-899</range>
+		</zone>
+		<zone id="99968">
+			<range>0-3</range>
+			<range>400-599</range>
+			<range>60-89</range>
+			<range>900-999</range>
+		</zone>
+		<zone id="99969">
+			<range>0-4</range>
+			<range>50-79</range>
+			<range>800-999</range>
+		</zone>
+		<zone id="99970">
+			<range>0-4</range>
+			<range>50-89</range>
+			<range>900-999</range>
+		</zone>
+		<zone id="99971">
+			<range>0-5</range>
+			<range>60-84</range>
+			<range>850-999</range>
+		</zone>
+		<zone id="99972">
+			<range>0-4</range>
+			<range>50-89</range>
+			<range>900-999</range>
+		</zone>
+		<zone id="99973">
+			<range>0-3</range>
+			<range>40-79</range>
+			<range>800-999</range>
+		</zone>
+		<zone id="99974">
+			<range>40-79</range>
+			<range>800-999</range>
+		</zone>
+		<zone id="99975">
+			<range>0-3</range>
+			<range>40-79</range>
+			<range>800-999</range>
+		</zone>
+		<zone id="99976">
+			<range>0-1</range>
+			<range>20-59</range>
+			<range>600-799</range>
+		</zone>
+		<zone id="99977">
+			<range>0-1</range>
+			<range>40-69</range>
+			<range>700-799</range>
+		</zone>
+	</prefix>
+	<prefix id="979">
+		<zone id="10">
+			<range>00-19</range>
+			<range>200-699</range>
+			<range>7000-8999</range>
+			<range>90000-97599</range>
+			<range>976000-999999</range>
+		</zone>
+		<zone id="11">
+			<range>00-24</range>
+			<range>250-549</range>
+			<range>5500-8499</range>
+			<range>85000-94999</range>
+			<range>950000-999999</range>
+		</zone>
+		<zone id="12">
+			<range>200-200</range>
+		</zone>
+	</prefix>
+</ranges>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le module Flux RSS
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_timeline_datasource_works.xml,v 1.1 2017-09-29 14:38:41 arenou Exp $ -->
+
+<XMLlist>
+	<entry code="cms_module_timeline_datasource_works_comment">Commentaire</entry>
+	<entry code="cms_module_timeline_datasource_works_date">Date de l'oeuvre</entry>
+	<entry code="cms_module_timeline_datasource_works_isbd">ISBD</entry>
+	<entry code="cms_module_timeline_datasource_works_thumbnail_url">Url de la vignette</entry>
+</XMLlist>

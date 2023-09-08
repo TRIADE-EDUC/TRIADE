@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le connecteur OAI
+****************************************************************************************
+© 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: fr_FR.xml,v 1.4 2017-01-05 15:37:23 jpermanne Exp $ -->
+
+<XMLlist>
+	<entry code="zotero_auth">Authentification</entry>
+	<entry code="zotero_userid">userID</entry>
+	<entry code="zotero_client_key">Private Key</entry>
+	<entry code="zotero_record_to_see_more">Enregistrer les paramètres d'authentification pour accéder aux collections disponibles.</entry>
+	<entry code="zotero_collections_restrict">Limiter aux collections</entry>
+	<entry code="zotero_no_collection">Aucune collection définie.</entry>
+	<entry code="zotero_error">Erreur d'accès, veuillez vérifier vos paramètres.</entry>
+	<entry code="zotero_xslt_subst">La synchronisation se base sur la feuille de transformation /admin/connecteurs/in/zotero/xslt/zotero_atom_json.xsl. Si nécessaire, ce fichier est substituable en créant le fichier zotero_atom_json_subst.xsl dans ce même répertoire.</entry>
+	<entry code="zotero_groups_collections_restrict">Limiter aux collections de groupes</entry>
+	<entry code="zotero_no_group_collection">Aucune collection de groupe définie.</entry>
+	<entry code="zotero_sync_groups">Synchroniser les groupes</entry>
+</XMLlist>

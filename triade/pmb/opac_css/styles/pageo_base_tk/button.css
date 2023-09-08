@@ -1,0 +1,469 @@
+/* +--------------------------------------------------------------------------+
+// 2013 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// +-------------------------------------------------+
+// $Id: button.css,v 1.3 2018-07-12 10:23:19 wlair Exp $ */
+/*------------------------------------------------------------------------------------------*/
+@charset "utf-8";/**/
+
+.uk-button,
+.ui-button,
+.form_liste_lecture>.row>input {
+    color:#fff;
+    font-family: 'Maven Pro', Arial, Helvetica, sans-serif;
+    font-size:14px;
+    text-transform:uppercase; 
+}
+
+.uk-button:not(:disabled) {
+}
+
+.uk-button:focus,.uk-button:hover {
+
+}
+
+.uk-button.uk-active,.uk-button:active {
+
+}
+a.wl-button:hover{
+  color:#fff;
+  text-decoration:none;
+}
+/* ========================================================================
+   Component: input bouton par defaut
+ ==========================================================================  */
+#resultatrech_liste>span{
+  display:inline-block;
+  float: left;
+}
+
+#resultatrech_liste>span>a,
+#perio_a2z ul.onglets_isbd_public div li>a,
+.links_for_serials a,
+.noticesEtagere>a,
+div[id="navigator"] a,
+.bouton_small,
+.mdp_forgotten,
+.empr_subtabs>li a,
+#empr_logout_lnk,
+input[type="submit"].bouton,
+input[type="button"].bouton{
+    -webkit-appearance: none;
+    margin: 0;
+    border: solid 1px;
+    overflow: visible;
+    font: inherit;
+    text-transform: none;
+    display: inline-block;
+    box-sizing: border-box;
+    padding: 0 12px;
+    background: #ffffff;
+    vertical-align: middle;
+    line-height: 30px;
+    min-height: 30px;
+    font-size: 1em;
+    text-decoration: none;
+    text-align: center;
+    color: #8e8e8e;
+    text-decoration:none;
+    text-shadow:1px 1px 1px rgba(0,0,0,.05);
+    font-weight: 400;
+    text-transform: none;
+    border-radius: 0px;
+}
+#resultatrech_liste>span>a:hover,
+#resultatrech_liste>span>a:focus,
+#perio_a2z ul.onglets_isbd_public div li>a:hover,
+#perio_a2z ul.onglets_isbd_public div li>a:focus,
+.links_for_serials a:hover,
+.links_for_serials a:focus,
+.noticesEtagere>a:focus,
+.noticesEtagere>a:hover,
+div[id="navigator"] a:focus,
+div[id="navigator"] a:hover,
+.bouton_small:hover,
+.bouton_small:focu{
+  background-color: #373737;
+  color: #fff;
+  /* 2 */
+  outline: none;
+  /* 3 */
+  text-decoration: none;
+  -ms-transition: background-color .3s ease 0s;
+  -webkit-transition-property: background-color .3s ease 0s;
+  transition: background-color .3s ease 0s;   
+}
+#resultatrech_liste>span>a[href*="All"],
+#resultatrech_liste>.print_search_result a,
+#resultatrech_liste .triSelector a {
+  padding:0 3px;
+  background:transparent;
+  border:none;
+}
+#resultatrech_liste>span>a,
+#resultatrech_liste>span>span>a{
+    margin-right: 7px;
+    margin-bottom:7px;
+}
+#search input.bouton{
+  
+}
+/* ========================================================================
+   form 1 bouton mixins button
+ ==========================================================================  */
+
+.searchbox input.bouton[type="submit"],
+.searchbox input[value="Aide"].bouton,
+#search .boutonrechercher,
+#search input[type="submit"],
+#search input[value="Aide"],
+#account #login_form input.bouton,
+.search_advanced_link a,
+.boutonrechercher,
+.Tglsearch.uk-button{
+    background-color: #ccc;
+    color: #fff;
+    font-style: normal;
+    border: solid 0px rgba(0, 0, 0, 0.12);
+    padding: 7px 8px;
+    transition-duration: 0.2s;
+    transition-timing-function: ease-out;
+    display: inline-block;
+    line-height: 1;
+    font-size: 1em;
+    height: 30px;
+    border-radius: 0;
+    font-weight: 400;
+    border-radius: 0px;
+}
+
+.searchbox input[type="submit"]:hover,
+#search .boutonrechercher:hover,
+#search input[type="submit"]:hover,
+#search input[value="Aide"]:hover,
+#account #login_form input.bouton:hover,
+.boutonrechercher:hover,
+.Tglsearch.uk-button:hover,
+ #search input.bouton:hover,
+input[type="submit"].bouton:hover,
+input[type="button"].bouton:hover,
+#search .boutonrechercher:hover,
+#search input[type="submit"]:hover,
+#search input[value="Aide"]:hover {
+    background-color: #aaa;
+    color: #fff;
+    text-shadow: 0 0 0 #fff;
+    text-decoration:none;
+}
+.searchbox input[type="submit"]:active,
+input[type="button"].bouton:active,
+#search .boutonrechercher:active,
+.bouton:active,
+#search input[type="submit"]:active,
+#search input[value="Aide"]:active,
+#account #login_form input.bouton:active,
+.boutonrechercher:active,
+.Tglsearch.uk-button:active  {
+    background-color:#777;
+    text-shadow: 0 0 0 #fff;
+}
+.searchbox input[type="submit"]:focus
+#search .boutonrechercher:focus,
+#search input[type="submit"]:focus,
+#search input[value="Aide"]:focus,
+#account #login_form input.bouton:focus,
+.boutonrechercher:focus,
+.Tglsearch.uk-button:focus   {
+    background-color: #eee;
+    text-shadow: 0 0 0 #fff;
+}
+#account #login_form input.bouton {
+    font-size: 1em;
+}
+
+/* ========================================================================
+   type bouton 2
+ ==========================================================================  */
+
+#connexion input[name="ok"]{
+  
+}
+.mdp_forgotten,
+#empr_logout_lnk,
+.wl-button,
+input[type="submit"].bouton,
+input[type="button"].bouton,
+#change-password-container input[type="button"].bouton{
+  -webkit-appearance: none;
+  margin: 0;
+  overflow: visible;
+  font: inherit;
+  text-transform: none;
+  display: inline-block;
+  padding: 0 12px;
+  vertical-align: middle;
+  line-height: 28px;
+  min-height: 30px;
+  min-width: 30px;
+  font-size: 1em;
+  text-decoration: none;
+  text-align: center;
+  border-radius: 0px;
+  background-color: #ccc;
+  color: #fff;
+  border: 0px solid #ccc;
+  /*
+  border-top-color: rgb(171, 204, 108);
+  background-image: -webkit-linear-gradient(top, rgba(255, 255, 255, 0.18), #b2d965);
+  background-image: linear-gradient(top, rgba(255, 255, 255, 0.18), #b2d965);
+  */
+  font-weight: 500;
+}
+#search input.bouton{
+
+}
+#search input.bouton:focus,
+#search input.bouton:hover,
+.mdp_forgotten:focus,
+.mdp_forgotten:hover,
+.empr_subtabs>li:focus a,
+.empr_subtabs>li:hover a,
+input[type="button"].bouton:hover,
+input[type="button"].bouton:active,
+input[type="submit"].bouton:hover,
+input[type="submit"].bouton:actives {
+  background-color: #fafafa;
+  color: #444;
+  outline: none;
+  text-decoration: none;
+  border-color: #999;    
+}
+/* ===============
+   Bouton formulaire
+ ================= */
+
+#make_sugg input[type="button"]:hover,
+#resultatrech_see>input[type="button"]:hover,
+#form_search_bull input[type="button"]:hover,
+#subs_form input[type="button"]:hover,
+#history_action input[type="button"]:hover,
+#frame_notice_preview input[type="button"]:hover,
+#frame_notice_preview input[type="submit"]:hover,
+.popup_connexion_empr input[type="submit"]:hover,
+#aut_details_liste>input:first-child:hover,
+form[name="bannette_abonn"] input[value="Enregistrer"]:hover,
+.bouton:focus,
+.mdp_forgotten:hover,
+#facette_wrapper input[type="button"]:hover {
+    background-image: -webkit-linear-gradient(top, #fff, #e0e0e0);
+    background-image: linear-gradient(to bottom, #fff, #e0e0e0);
+    color: #6a6a6a;
+    /* text-shadow: 0px 0px 0px; */
+    text-decoration:none;
+    color: #fff;
+    background: #69b4bb;
+}
+.mediaBib iframe {
+    background-color: #F5F5F5;
+    padding: 2px;
+    border: solid 1px #E1E1E1;
+}
+.form_liste_lecture div input[type="button"]:hover,
+.form_liste_lecture div input[type="submit"]:hover{
+    
+}
+/* 
+   type bouton 2 alternat
+ =================================================  */
+.empr_subtabs>li a{
+  font-size: 1.3rem; 
+  font-weight:500;
+}
+.empr_subtabs>li:focus a,
+.empr_subtabs>li:hover a{
+  color: #f16f61; 
+}
+
+li.subTabCurrent a{
+  background-color: #fff;
+  color: #373737;
+  text-shadow:none;
+}
+/* ========================================================================
+   type bouton 3
+ ==========================================================================  */
+#perio_a2z ul.onglets_isbd_public div li>a:hover,
+li.subTabCurrent a{
+  color: #f16f61; 
+}
+/* ========================================================================
+   Couleur 1 bouton
+ ==========================================================================  */
+.searchbox input.bouton[type="submit"],
+.uk-button-primary,
+.noticesEtagere>a,
+.mdp_forgotten,
+.wl-button{
+    background: #ccc;
+}
+.searchbox input.bouton[type="submit"]:hover,
+.uk-button-primary:focus,
+.uk-button-primary:hover,
+.noticesEtagere>a:focus,
+.noticesEtagere>a:hover,
+.searchbox input.bouton[type="submit"]:hover,
+.searchbox input.bouton[type="submit"]:focus,
+.wl-button:hover,
+.wl-button:focus,
+.mdp_forgotten:hover,
+input[type="submit"].bouton:hover,
+input[type="button"].bouton:hover,
+#empr_logout_lnk:hover,
+#change-password-container input[type="button"].bouton:hover {
+    background-color: #b1cee9;
+    text-decoration:none;
+    text-shadow: none;
+    color: #fff;
+}
+#connexion input[name="ok"]:hover{
+  
+}
+.uk-button-primary.uk-active,
+.uk-button-primary:active,
+.noticesEtagere>a:active,
+.searchbox input.bouton[type="submit"]:active,
+.wl-button:active,
+input[type="button"].bouton:active,
+#change-password-container input[type="button"].bouton:active {
+    background-color: #97b5d1;
+    text-decoration:none;
+    text-shadow: none;
+}
+/* ========================================================================
+   Couleur 2 bouton
+ =========================================================================  */
+.ui-button-secondary,
+input[type="submit"].bouton.ui-button-secondary,
+input[type="button"].bouton.ui-button-secondary{
+  background:#7796b3;
+}
+#search .boutonrechercher,
+#search input[type="submit"],
+#search input[value="Aide"]{
+}
+
+.ui-button-secondary:focus,
+.ui-button-secondary:hover,
+input[type="submit"].bouton.ui-button-secondary:focus,
+input[type="button"].bouton.ui-button-secondary:focus,
+input[type="submit"].bouton.ui-button-secondary:hover,
+input[type="button"].bouton.ui-button-secondary:hover{
+    background: #84a6c7;
+    color:#fff;
+}
+.searchbox input[type="submit"]:hover,
+#search .boutonrechercher:hover,
+#search input[type="submit"]:hover,
+#search input[value="Aide"]:hover,
+#account #login_form input.bouton:hover,
+.boutonrechercher:hover,
+.Tglsearch.uk-button:hover,
+ #search input.bouton:hover,
+#search .boutonrechercher:hover,
+#search input[type="submit"]:hover,
+#search input[value="Aide"]:hover  {
+  
+}
+
+.ui-button-secondary.uk-active
+.ui-button-secondary:active,
+input[type="submit"].bouton.ui-button-secondary:active,
+input[type="button"].bouton.ui-button-secondary:active{
+    background: #82a4c4;
+}
+.searchbox input[type="submit"]:focus
+#search .boutonrechercher:focus,
+#search input[type="submit"]:focus,
+#search input[value="Aide"]:focus,
+#account #login_form input.bouton:focus,
+.boutonrechercher:focus,
+.Tglsearch.uk-button:focus   {
+
+}
+.uk-button:focus,
+.uk-button:hover{
+    
+}
+/* ========================================================================
+   image dans bouton
+ ==========================================================================  */
+.uk-button img,
+.ui-button img{  
+  height: 11px;  
+  vertical-align: baseline;
+}
+
+/* ========================================================================
+   multi crit btn
+ ==========================================================================  */
+
+td input[type="button"].bouton {
+  -webkit-appearance: none;
+  margin: 0;
+  overflow: visible;
+  font: inherit;
+  text-transform: none;
+  display: inline-block;
+  padding: 0 12px;
+  vertical-align: middle;
+  line-height: 28px;
+  min-height: 30px;
+  min-width: 30px;
+  font-size: 1.25rem;
+  text-decoration: none;
+  text-align: center;
+  border-radius: 3px;
+  background: #fff;
+  color: #595959;
+  border: 1px solid #767676;
+  border-top-color: #999;
+  background-image: -webkit-linear-gradient(top, rgba(255, 255, 255, 0.18), #b2d965);
+  background-image: linear-gradient(top, rgba(255, 255, 255, 0.18), #b2d965);
+  font-weight: 500;
+}
+
+
+.form-contenu input[id^="delet"],
+input.vider,
+.form-contenu input[value="..."],
+.form-contenu input[value="+"],
+input[value="X"]{
+  font-size:0!important;
+  background-size: 16px;
+  padding: 0!important;
+}
+.form-contenu input[id^="delet"],
+input.vider,
+input[value="X"]{
+  background:url("./images/close.svg") #fff no-repeat 50% 50%!important;
+}
+input.vider{
+  background:url("./images/eraser-light.svg") #fff no-repeat 50% 50%!important;
+}
+.form-contenu input[value="..."]{
+  background:url("./images/more.svg") #fff no-repeat 50% 50%!important;
+}
+.form-contenu input[value="+"]{
+  background:url("./images/plus.svg") #fff no-repeat 50% 50%!important;
+}
+
+
+/* ========================================================================
+   Marge
+ ==========================================================================  */
+#search input[type="submit"]+input[value="Aide"]{
+  margin-left:10px;
+}
+#print_options input[type="submit"]:hover,
+#print_options input[type="button"]:hover{
+  
+}

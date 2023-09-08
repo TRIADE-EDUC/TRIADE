@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+
+<!-- Declaration d'un module
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: manifest.xml,v 1.10 2017-11-21 16:26:08 dgoron Exp $ -->
+
+<manifest>
+	<name lang="fr_FR">Liste de rubriques</name>
+	<name lang="en_UK">List of rubrics</name>
+	<author>
+		<name>Arnaud Renou</name>
+		<organisation>PMB Services</organisation>
+	</author>
+	<created_date>2012-10-05</created_date>
+	<version>1.0</version>
+	<default_language>fr_FR</default_language>
+	<managed>true</managed>
+	<use>
+		<datasources>
+		 	<datasource>cms_module_common_datasource_sections_sections</datasource>
+			<datasource>cms_module_common_datasource_all_sections</datasource>
+			<datasource>cms_module_common_datasource_sections</datasource>
+			<datasource>cms_module_common_datasource_sections_categories</datasource>
+			<datasource>cms_module_common_datasource_sections_by_categories</datasource>
+			<datasource conditionParam="thesaurus_concepts_active">cms_module_common_datasource_sections_by_concepts</datasource>
+			<datasource>cms_module_common_datasource_searchsections</datasource>
+			<datasource>cms_module_common_datasource_sections_by_section_categories</datasource>
+		</datasources>
+		<filters>
+			<filter>cms_module_common_filter_sections_by_all_cp</filter>
+			<filter>cms_module_common_filter_sections_by_cp</filter>
+			<filter>cms_module_common_filter_sections_by_type</filter>
+			<filter>cms_module_common_filter_sections_by_publication_state</filter>
+		</filters>
+		<views>
+			<view>cms_module_common_view_sectionslist</view>
+			<view>cms_module_sectionslist_view_carousel</view>
+			<view>cms_module_sectionslist_view_carousel_responsive</view>
+		</views>
+		<conditions>
+			<condition>cms_module_common_condition_global_var</condition>
+		</conditions>
+	</use>
+</manifest>

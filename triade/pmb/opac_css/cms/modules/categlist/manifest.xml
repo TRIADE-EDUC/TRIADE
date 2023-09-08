@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+
+<!-- Declaration d'un module
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: manifest.xml,v 1.1 2015-09-22 07:33:26 vtouchard Exp $ -->
+
+<manifest>
+	<name lang="fr_FR">Liste des renvois entre catégories</name>
+	<author>
+		<name>Vivien TOUCHARD</name>
+		<organisation>PMB Services</organisation>
+	</author>
+	<created_date>2015-09-16</created_date>
+	<version>1.0</version>
+	<default_language>fr_FR</default_language>
+	<managed>true</managed>
+	<use>
+		<datasources>
+			<datasource>cms_module_categlist_datasource_categs</datasource>
+		</datasources>
+		<views>
+			<view>cms_module_categlist_view_django</view>
+		</views>
+		<conditions>
+			<condition></condition>
+		</conditions>
+	</use>
+</manifest>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le connecteur OAI
+****************************************************************************************
+© 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: fr_FR.xml,v 1.1 2019-06-03 09:55:20 arenou Exp $ -->
+
+<XMLlist>
+	<entry code="mediawiki_url">URL du serveur mediawiki (avec api.php)</entry>
+        <entry code="mediawiki_limit">Nombre maximum de résultats</entry>
+        <entry code="mediawiki_label">Type de document affiché</entry>
+</XMLlist>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!-- 
+****************************************************************************************
+© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: infos.xml,v 1.2 2015-06-10 07:50:18 dgoron Exp $ -->
+<informations>
+	<information>
+		<name>nb_articles</name>
+		<query>select count(*) as total from cms_articles</query>	
+	</information>
+	<information>
+		<name>nb_sections</name>
+		<query>select count(*) as total from cms_sections</query>	
+	</information>
+	<!-- <information>
+		<name>nb_records</name>
+		<query>select count(*) as total from notices</query>	
+	</information>
+ 	<information>
+		<name>nb_relance</name>
+		<fonction>
+			<class name='notice'>
+				<contruct_param>136</contruct_param>
+			</class>
+			<param>18/03/1857</param>
+			<method>get_date_parution</method>
+		</fonction>
+		<action></action>	
+	</information>
+	<information>
+		<name>loc_emprs</name>
+		<variables>
+			<var type='global' name='deflt2docs_location' />
+		</variables>
+		<query>select count(*) as total, sum(if(empr_date_expiration&lt;CURDATE(),1,0)) as expired, location_libelle as title from empr join docs_location on empr_location=idlocation where empr_location in(!!deflt2docs_location!!)</query>	
+	</information>-->
+
+</informations>

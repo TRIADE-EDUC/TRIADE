@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!--Mapping classe/URI des objecs OpenURL
+****************************************************************************************
+© 2002-2010 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: openurl_mapping.xml,v 1.1 2011-08-02 12:36:00 arenou Exp $ -->
+
+<map>
+	<item uri="info:ofi" class="root"/>
+	<item uri="info:ofi/tsp" require_path='transport/openurl_transport.class.php' class="openurl_transport"/>
+	<item uri="info:ofi/tsp:http:openurl-by-ref" require_path='transport/openurl_transport_http.class.php' class="openurl_transport_byref_http"/>
+	<item uri="info:ofi/tsp:http:openurl-by-val" require_path='transport/openurl_transport_http.class.php' class="openurl_transport_byval_http"/>
+	<item uri="info:ofi/tsp:http:openurl-inline" require_path='transport/openurl_transport_http.class.php' class="openurl_transport_inline_http"/>
+	<item uri="info:ofi/tsp:https:openurl-by-ref" require_path='transport/openurl_transport_https.class.php' class="openurl_transport_byref_https"/>
+	<item uri="info:ofi/tsp:https:openurl-by-ref" require_path='transport/openurl_transport_https.class.php' class="openurl_transport_byval_https"/>
+	<item uri="info:ofi/tsp:https:openurl-by-ref" require_path='transport/openurl_transport_https.class.php' class="openurl_transport_inline_https"/>
+	<item uri="info:ofi/fmt:kev" class="openurl_serialize_kev_mtx"/>
+	<item uri="info:ofi/fmt:kev:mtx:ctx" require_path='context_object/openurl_context_object_kev_mtx_ctx.class.php' class="openurl_context_object_kev_mtx_ctx"/>
+	<item uri="info:ofi/fmt:kev:mtx:journal" require_path='descriptors/openurl_descriptor_kev_mtx.class.php' class="openurl_descriptor_byval_kev_mtx_journal"/>
+	<item uri="info:ofi/fmt:kev:mtx:book" require_path='descriptors/openurl_descriptor_kev_mtx.class.php' class="openurl_descriptor_byval_kev_mtx_book"/>
+	<item uri="info:ofi/fmt:kev:mtx:sch_svc" require_path='descriptors/openurl_descriptor_kev_mtx.class.php' class="openurl_descriptor_byval_kev_mtx_service_type"/>
+	<item uri="info:ofi/nam:urn:isbn" require_path='descriptors/openurl_descriptor_kev_mtx.class.php' class="openurl_descriptor_identifier_kev_mtx_isbn"/>
+	<item uri="info:ofi/nam:urn:issn" require_path='descriptors/openurl_descriptor_kev_mtx.class.php' class="openurl_descriptor_identifier_kev_mtx_issn"/>
+	<item uri="info:ofi/nam:info:doi" require_path='descriptors/openurl_descriptor_kev_mtx.class.php' class="openurl_descriptor_identifier_kev_mtx_doi"/>
+	<item uri="info:ofi/nam:info:pmid" require_path='descriptors/openurl_descriptor_kev_mtx.class.php' class="openurl_descriptor_identifier_kev_mtx_pmid"/>
+</map>

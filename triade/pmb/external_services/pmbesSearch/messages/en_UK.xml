@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- messages localisés en français pour la classe de fonctions search_functions
+****************************************************************************************
+© 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: en_UK.xml,v 1.4 2016-09-20 15:17:15 dgoron Exp $ -->
+
+<!DOCTYPE XMLlist SYSTEM "../../../includes/XMLlist.dtd" >
+<XMLlist>
+  <entry code="search_functions_description">Functions to make searches in the catalogue</entry>
+
+  <entry code="simple_search_description">Make a simple search</entry>
+  <entry code="simple_search_inputs_description"></entry>
+  <entry code="simple_search_inputs_description_searchType">The type of the search:  
+  0 (SEARCH_ALL)=all the fields,
+  1 (SEARCH_TITLE)=title, 
+  2 (SEARCH_AUTHOR)=author, 
+  3 (SEARCH_EDITOR)=editor, 
+  4 (SEARCH_COLLECTION)=collection,
+  6 (SEARCH_CATEGORIES)=categories/subject heading words</entry>
+  <entry code="simple_search_inputs_description_searchTerm">string to search</entry>
+  <entry code="simple_search_inputs_description_pmbUserId">the id of a pmb user, to filter the results depending on the access rights. 
+-1: Do not take into account</entry>
+  <entry code="simple_search_inputs_description_OPACUserId">the id of a borrower, to filter the results depending on the access rights
+	-1: Do not take into account
+	0: anonymous borrower
+	x: id of the borrower</entry>
+  <entry code="simple_search_outputs_description"></entry>
+  <entry code="simple_search_outputs_description_searchId">name of the result resource</entry>
+  <entry code="simple_search_outputs_description_nbResults">number of results found</entry>
+  <entry code="simpleSearch_typdocs"></entry> 
+
+  <entry code="get_advanced_sf_description">Retrieve the list of searchable fields in advanced search mode</entry>
+  <entry code="get_advanced_sf_inputs_description"></entry>
+  <entry code="get_advanced_sf_inputs_description_search_realm">in which research domain are we. example: search_simple_fields, opac|search_fields</entry>
+  <entry code="get_advanced_sf_inputs_description_lang">the language we want the results to be in</entry>
+  <entry code="get_advanced_sf_inputs_description_fetch_values">if we also want the different possible values of the fields, (for the select fields for example)</entry>
+  <entry code="get_advanced_sf_outputs_description"></entry>
+  <entry code="get_advanced_sf_outputs_description_results">A table of search fields</entry>
+  
+  <entry code="get_advanced_sfone_description">Retrieve the informagions of a search field</entry>
+  <entry code="get_advanced_sfone_inputs_description"></entry>
+  <entry code="get_advanced_sfone_inputs_description_field_id">the id of the field we want the informations from</entry>
+  <entry code="get_advanced_sfone_inputs_description_search_realm">search domain in which we are. example: search_simple_fields, opac|search_fields</entry>
+  <entry code="get_advanced_sfone_inputs_description_lang">The language in which we want to see the result</entry>
+  <entry code="get_advanced_sfone_inputs_description_fetch_values">if we also want the different possible values of the field (for the fields for example)</entry>
+  <entry code="get_advanced_sfone_outputs_description"></entry>
+  <entry code="get_advanced_sfone_outputs_description_search_field">a search field</entry>
+
+  <entry code="advancedSearch_description">Make an advanced search</entry>
+  <entry code="advancedSearch_inputs_description"></entry>
+  <entry code="advancedSearch_inputs_description_search_realm">search domain in which we are. example: search_simple_fields, opac|search_fields</entry>
+  <entry code="advancedSearch_inputs_description_search">the search: a table of a search structure</entry>
+  <entry code="advancedSearch_inputs_description_search_inter">the operator betweene the field and the previous field</entry>
+  <entry code="advancedSearch_inputs_description_search_field">the id of the research field</entry>
+  <entry code="advancedSearch_inputs_description_search_operator">the search operator</entry>
+  <entry code="advancedSearch_inputs_description_search_value">the search values</entry>
+  <entry code="advancedSearch_inputs_description_pmbUserId">the id of a pmb user, to filter the results depending on the access rights. -1: do not take into account.</entry>
+  <entry code="advancedSearch_inputs_description_OPACUserId">the id of a borrower, to filter the results, depending on the access rights
+	-1: Do not take into account
+	0: anonymous borrower
+	x: id of the borrower</entry>
+  <entry code="advancedSearch_outputs_description"></entry>
+  <entry code="advancedSearch_outputs_description_searchId">name of the result resource</entry>
+  <entry code="advancedSearch_outputs_description_nbResults">number of results found</entry>
+  <entry code="advancedSearch_typdocs"></entry> 
+  
+  <entry code="fetch_search_records_description">Retrieve the records resulting from a search</entry>
+  <entry code="fetch_search_records_inputs_description"></entry>
+  <entry code="fetch_search_records_inputs_description_searchId">the id returned by the search function</entry>
+  <entry code="fetch_search_records_inputs_description_firstRecord">number of the first record to retrieve</entry>
+  <entry code="fetch_search_records_inputs_description_recordCount">number of records to retrieve</entry>
+  <entry code="fetch_search_records_inputs_description_recordFormat">results format</entry>
+  <entry code="fetch_search_records_inputs_description_recordCharset">the charset in which we want the result</entry>
+  <entry code="fetch_search_records_inputs_description_includeLinks">include the links between the records, issues and articles</entry>
+  <entry code="fetch_search_records_inputs_description_includeItems">include the copies in the zone 995</entry>
+  <entry code="fetch_search_records_outputs_description"></entry>
+  <entry code="fetch_search_records_outputs_description_noticeId">the id of the record</entry>
+  <entry code="fetch_search_records_outputs_description_noticeContent">the record in the requested format</entry>
+  <entry code="fetch_search_records_outputs_description_results">A results table</entry>
+  
+  <!--
+    fetchSearchRecordsSorted
+  -->
+  <entry code="fetchSearchRecordsSorted_description">Retrieve the records resulting from a search, applying the sorting rules</entry>
+  <entry code="fetchSearchRecordsSorted_input_description">
+    The sortType parameter builds itself the following way:
+    typedutri_nomdutri, with:
+    -typedutri: d or c for an ascending or descending sorting
+    -nomdutri: the id of the sorting (see the function get_sort_types).
+    
+    examples:
+    -c_text_1: sorting by ascending title.
+    -d_num_7: sorting by descending publishing year.
+    -c_text_5: sorting by ascending call number.</entry>
+  <entry code="fetchSearchRecordsSorted_output_description"></entry>
+  <entry code="fetchSearchRecordsSorted_searchId">the id returned by the search function</entry>
+  <entry code="fetchSearchRecordsSorted_firstRecord">number of the first record to retrieve</entry>
+  <entry code="fetchSearchRecordsSorted_recordCount">number of records to retrieve</entry>
+  <entry code="fetchSearchRecordsSorted_recordFormat">format of the results</entry>
+  <entry code="fetchSearchRecordsSorted_recordCharset">the charset in which we want the results</entry>
+  <entry code="fetchSearchRecordsSorted_includeLinks">include the links between records, issues and articles</entry>
+  <entry code="fetchSearchRecordsSorted_includeItems">include the copies in the zone 995</entry>
+  <entry code="fetchSearchRecordsSorted_sortType">the sorting rules to apply to the results</entry>
+  <entry code="fetchSearchRecordsSorted_results">A table of results</entry>
+  <entry code="fetchSearchRecordsSorted_results_noticeId">the id of the record</entry>
+  <entry code="fetchSearchRecordsSorted_results_noticeContent">the record in the requested format</entry>
+ 
+  <!--
+    fetchSearchRecordsArray
+  -->
+  <entry code="fetchSearchRecordsArray_description">Retrieve the cords resulting from a search</entry>
+  <entry code="fetchSearchRecordsArray_input_description"></entry>
+  <entry code="fetchSearchRecordsArray_output_description"></entry>
+  <entry code="fetchSearchRecordsArray_searchId">the id returned by the research function</entry>
+  <entry code="fetchSearchRecordsArray_firstRecord">number of the first record to retrieve</entry>
+  <entry code="fetchSearchRecordsArray_recordCount">number of records to retrieve</entry>
+  <entry code="fetchSearchRecordsArray_recordCharset">the charset in which we want the results</entry>
+  <entry code="fetchSearchRecordsArray_includeLinks">include the links between records, issues and articles</entry>
+  <entry code="fetchSearchRecordsArray_includeItems">include the copies in the zone 995</entry>
+  <entry code="fetchSearchRecordsArray_results">A table of results</entry>
+
+  <!--
+    fetchSearchRecordsArraySorted
+  -->
+  <entry code="fetchSearchRecordsArraySorted_description">Retrieve the records resulting from a search, applying the sorting rules</entry>
+  <entry code="fetchSearchRecordsArraySorted_input_description">
+    The sortType parameter builds itself the following way:
+    typedutri_nomdutri, with:
+    -typedutri: d or c for an ascending or descending sorting
+    -nomdutri: the id of the sorting (see the function get_sort_types).
+    
+    examples:
+    -c_text_1: sorting by ascending title.
+    -d_num_7: sorting by descending publishing year.
+    -c_text_5: sorting by ascending call number.</entry>
+  <entry code="fetchSearchRecordsArraySorted_output_description"></entry>
+  <entry code="fetchSearchRecordsArraySorted_searchId">the id returned by the search function</entry>
+  <entry code="fetchSearchRecordsArraySorted_firstRecord">number of the first record to retrieve</entry>
+  <entry code="fetchSearchRecordsArraySorted_recordCount">number of records to retrieve</entry>
+  <entry code="fetchSearchRecordsArraySorted_recordCharset">le charset in which we want the results</entry>
+  <entry code="fetchSearchRecordsArraySorted_includeLinks">include the links between records, issues and articles</entry>
+  <entry code="fetchSearchRecordsArraySorted_includeItems">include the copies in the zone 995</entry>
+  <entry code="fetchSearchRecordsArraySorted_sortType">the sorting to apply to the results</entry>
+  <entry code="fetchSearchRecordsArraySorted_results">A table of results</entry>
+
+  <entry code="unknown_field">Unknown search standard</entry>
+  
+  <!--
+    get_sort_types
+  -->
+  <entry code="get_sort_types_description">Returns the list of the different possible sorting types</entry>
+  <entry code="get_sort_types_input_description"></entry>
+  <entry code="get_sort_types_output_description">
+    Example of return:
+    Array
+    (
+    [0] => Array
+    (
+    [sort_name] => text_1
+    [sort_caption] => Title
+    )
+    
+    [1] => Array
+    (
+    [sort_name] => num_2
+    [sort_caption] => Decimal indexation
+    )
+    
+    [2] => Array
+    (
+    [sort_name] => text_3
+    [sort_caption] => Author
+    )
+  ...
+)</entry>
+  <entry code="get_sort_types_results">The sorting types</entry>
+  <entry code="get_sort_types_results_sort_name">The id of a sorting type</entry>
+  <entry code="get_sort_types_results_sort_caption">The name of a sorting type</entry>
+  
+  
+  <entry code="simple_search_localise_description">Make a simple search filtered by location and section</entry>
+  <entry code="simple_search_localise_inputs_description"></entry>
+  <entry code="simple_search_localise_inputs_description_searchType">The type of search:  
+  0 (SEARCH_ALL)=all the fields,
+  1 (SEARCH_TITLE)=title, 
+  2 (SEARCH_AUTHOR)=author, 
+  3 (SEARCH_EDITOR)=editor, 
+  4 (SEARCH_COLLECTION)=collection,
+  6 (SEARCH_CATEGORIES)=categories/subject heading words</entry>
+  <entry code="simple_search_localise_inputs_description_searchTerm">string to search</entry>
+  <entry code="simple_search_localise_inputs_description_pmbUserId">the id of a pmb user, to filter the results depending on their access rights. 
+-1: Do not take into account</entry>
+  <entry code="simple_search_localise_inputs_description_OPACUserId">the id of a borrower, to filter the results depending on their access rights.
+	-1: Do not take into account
+	0: anonymous borrower
+	x: id of the borrower</entry>
+  <entry code="simple_search_localise_outputs_description"></entry>
+  <entry code="simple_search_localise_outputs_description_searchId">name of the result resource</entry>
+  <entry code="simple_search_localise_outputs_description_nbResults">number of results found</entry>
+  <entry code="simple_search_localise_inputs_description_localisation">Location</entry>
+  <entry code="simple_search_localise_inputs_description_section">Section</entry>
+  <entry code="simpleSearchLocalise_typdocs"></entry>
+  
+  <!--
+    listFacets
+  -->
+  <entry code="listFacets_description">Récupérer les facettes issues d'une recherche</entry>
+  <entry code="listFacets_input_description"></entry>
+  <entry code="listFacets_output_description"></entry>
+  <entry code="listFacets_searchId">l'id renvoyé par la fonction de recherche</entry>
+  <entry code="listFacets_inputs_description_fields">Un tableau de facettes à calculer</entry>
+  <entry code="listFacets_inputs_description_field_code_champ">Code champ</entry>
+  <entry code="listFacets_inputs_description_field_code_ss_champ">Code sous champ</entry>
+  <entry code="listFacets_inputs_description_filters">Un tableau de filtres (affinage : facettes déjà sélectionnées)</entry>
+  <entry code="listFacets_inputs_description_filter_code_champ">Code champ</entry>
+  <entry code="listFacets_inputs_description_filter_code_ss_champ">Code sous champ</entry>
+  <entry code="listFacets_inputs_description_filter_value">Valeur</entry>
+  <entry code="listFacets_results">Liste des facettes calculées</entry>
+  <entry code="listFacets_results_code_champ">Code champ</entry>
+  <entry code="listFacets_results_code_ss_champ">Code sous champ</entry>
+  <entry code="listFacets_results_count">Nombre de notices associées</entry>
+  
+  <!--
+    listRecordsFromFacets
+  -->
+  <entry code="listRecordsFromFacets_description">Récupérer les notices issues d'une ou plusieurs facettes</entry>
+  <entry code="listRecordsFromFacets_input_description"></entry>
+  <entry code="listRecordsFromFacets_output_description"></entry>
+  <entry code="listRecordsFromFacets_searchId">l'id renvoyé par la fonction de recherche</entry>
+  <entry code="listRecordsFromFacets_inputs_description_filters">Un tableau de filtres (affinage : facettes déjà sélectionnées)</entry>
+  <entry code="listRecordsFromFacets_inputs_description_filter_code_champ">Code champ</entry>
+  <entry code="listRecordsFromFacets_inputs_description_filter_code_ss_champ">Code sous champ</entry>
+  <entry code="listRecordsFromFacets_inputs_description_filter_value">Valeur</entry>
+  <entry code="listRecordsFromFacets_results">Liste des notices</entry>
+  <entry code="listRecordsFromFacets_outputs_description_noticeId">Identifiant de la notice</entry> 
+</XMLlist>

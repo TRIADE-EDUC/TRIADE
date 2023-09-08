@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le module Article
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_recordslist.xml,v 1.22 2018-02-26 10:45:34 arenou Exp $ -->
+
+<XMLlist>
+	<entry code='cms_module_common_datasource_similarrecords'>Notices similaires</entry>
+	<entry code='cms_module_common_datasource_records_categories'>Notices des catégories d'un article</entry>
+	<entry code='cms_module_common_datasource_records_section_categories'>Notices des catégories d'une rubrique</entry>
+	<entry code='cms_module_common_view_recordslist'>Vue Django</entry>
+	<entry code='cms_module_recordslist_view_carousel'>Vue en Carrousel</entry>
+	<entry code='cms_module_common_datasource_records'>Notices d'une étagère</entry>
+	<entry code='cms_module_common_datasource_records_author'>Notices du même auteur principal</entry>
+	<entry code='cms_module_common_datasource_records_similar_cote'>Notices avec une cote d'exemplaires proche</entry>
+	<entry code='cms_module_common_datasource_records_by_cp_val'>Notices par valeur d'un champ perso</entry>
+	<entry code='cms_module_common_datasource_records_bannette'>Notices d'une bannette</entry>
+	<entry code='cms_module_recordslist_view_carousel_responsive'>Vue en Carrousel responsive</entry>
+	<entry code='cms_module_recordslist_view_link'>Construction du lien vers une notice</entry>
+	<entry code='cms_module_recordslist_datasource_records_publisher'>Notices du même éditeur</entry>
+	<entry code='cms_module_recordslist_datasource_records_collection'>Notices de la même collection</entry>
+	<entry code='cms_module_recordslist_datasource_records_serie'>Notices de la même série</entry>
+	<entry code='cms_module_recordslist_datasource_records_indexint'>Notices avec la même indexation décimale</entry>
+	<entry code='cms_module_recordslist_datasource_records_categories'>Notices avec des catégories communes</entry>
+	<entry code='cms_module_recordslist_datasource_records_last_read'>Dernières notices lues</entry>
+	<entry code='cms_module_common_datasource_records_by_concepts'>Notices indexées par des concepts</entry>
+	<entry code='cms_module_common_datasource_records_used_by_composed_concepts'>Notices utilisées par des concepts composés</entry>
+	<entry code='cms_module_common_filter_records_by_doctype'>Par types de document</entry>
+	<entry code='cms_module_recordslist_view_django_directory'>Vue depuis un répertoire de templates</entry>
+	<entry code='cms_module_recordslist_datasource_records_category'>Notices d'une catégorie</entry>
+	<entry code='cms_module_common_datasource_records_by_categories'>Notices indexées par des catégories</entry>
+	<entry code='cms_module_common_filter_records_by_cp'>Par valeur de champs perso</entry>
+</XMLlist>

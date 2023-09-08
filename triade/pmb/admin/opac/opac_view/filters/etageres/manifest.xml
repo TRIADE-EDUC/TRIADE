@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+
+<!-- Declaration d'un connecteur
+****************************************************************************************
+© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: manifest.xml,v 1.1 2011-04-20 06:27:21 ngantier Exp $ -->
+
+<manifest>
+	<name>etageres</name>
+	<comment>Permet de paramétrer la visibilité des étagères en Opac.</comment>
+	<author>Nicolas Gantier</author>
+	<org>PMB Services</org>
+	<date>2011-04-05</date>
+	<status>open</status>
+	<url>http://www.sigb.net</url>
+</manifest>

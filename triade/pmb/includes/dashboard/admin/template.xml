@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!-- 
+****************************************************************************************
+© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: template.xml,v 1.2 2016-03-09 13:59:54 mbertin Exp $ -->
+<template default_lang='fr_FR'>
+	<content lang='fr_FR'><![CDATA[
+		<h2>Gestion des tâches</h2>
+		<div class='row'>
+			<div class='title'>Arrêtées : </div>
+			<div class='value'>{{nb_taches_arretees.0.total}}</div>
+		</div>
+		<div class='row'>
+			<div class='title'>En échec : </div>
+			<div class='value'>{{nb_taches_en_echec.0.total}}</div>
+		</div>
+		<div class='row'>
+			<div class='title'>En attente : </div>
+			<div class='value'>{{nb_taches_en_attente.0.total}}</div>
+		</div>
+		]]>
+	</content>
+	
+		<content lang='en_UK'><![CDATA[
+		<h2>Task management</h2>
+		<div class='row'>
+			<div class='title'>Stopped : </div>
+			<div class='value'>{{nb_taches_arretees.0.total}}</div>
+		</div>
+		<div class='row'>
+			<div class='title'>Failed : </div>
+			<div class='value'>{{nb_taches_en_echec.0.total}}</div>
+		</div>
+		<div class='row'>
+			<div class='title'>Waiting : </div>
+			<div class='value'>{{nb_taches_en_attente.0.total}}</div>
+		</div>
+		]]>
+	</content>
+</template>

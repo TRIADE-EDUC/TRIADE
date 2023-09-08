@@ -1,0 +1,45 @@
+/* +--------------------------------------------------------------------------+
+// ? 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// +-------------------------------------------------+
+// $Id: dashboard.css,v 1.3 2016-03-09 13:59:54 mbertin Exp $ */
+
+
+
+
+#dashboards .dashboard {
+	border-radius : 10px;
+	box-shadow: 10px 10px 10px #aaa; 
+}
+
+#dashboards .dashboard h3{
+	color : white;
+	padding :10px;
+	border-top-left-radius: 10px;
+	border-top-right-radius: 10px;
+	vertical-align: middle;
+}
+
+#dashboards .dashboard.circ h3{
+	background-color : #3594BB;
+}
+#dashboards .dashboard.catalog h3{
+	background-color : #F99C09;
+}
+#dashboards .dashboard.autorites h3{
+	background-color : #3840BE;
+}
+#dashboards .dashboard.dsi h3{
+	background-color : #D18C3B;
+}
+#dashboards .dashboard.acquisition h3{	
+	background-color : #90B636;
+}
+#dashboards .dashboard.demandes h3{
+	background-color : #444444;
+}
+#dashboards .dashboard.cms h3{
+	background-color : #444444;
+}
+#dashboards .dashboard.admin h3{
+    background-color : #a02c35;
+}

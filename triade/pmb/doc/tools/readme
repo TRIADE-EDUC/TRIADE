@@ -1,0 +1,8 @@
+gen_proxy.xsl
+Script permettant de générer un fichier de proxy javascript utilisé pour la rfid Nedap et Ident
+
+Exemple de commande:
+
+wget http://192.168.0.110/nedaprfidwebservice.asmx?wsdl
+mv nedaprfidwebservice.asmx\?wsdl nedaprfidwebservice.xml
+xml tr gen_proxy.xsl nedaprfidwebservice.xml > proxy.js

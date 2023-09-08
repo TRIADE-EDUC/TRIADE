@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- 
+****************************************************************************************
+© 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: en_UK.xml,v 1.2 2015-06-19 07:31:23 mbertin Exp $ -->
+
+<!DOCTYPE XMLlist SYSTEM "../../../includes/XMLlist.dtd" >
+<XMLlist>
+	<entry code="pmbesDatabase_description">Functions related to the PMB database management</entry>
+
+	<entry code="get_version_informations_description">Gives the informations about the version of PMB</entry>
+	<entry code="get_version_informations_output_description">Informations about the version of PMB</entry>
+	<entry code="get_version_informations_output_current_version">Current version of PMB database</entry>
+	<entry code="get_version_informations_output_shouldbe_version">Version the PMB database should be</entry>
+	<entry code="get_version_informations_output_current_subversion">Current sub-version of PMB database</entry>
+	<entry code="get_version_informations_output_shouldbe_subversion">Sub-version the PMB database should be</entry>
+
+	<entry code="need_update_description">Does the base need an update</entry>
+	<entry code="need_update_output_need">True : The base should be updated / False : The base is up to date</entry>
+	
+	<entry code="update_description">Update feature of the database</entry>
+	<entry code="update_output_result">Result of the update...</entry>
+	<entry code="update_output_informations">Informations on the result of the update</entry>
+	<entry code="update_msg_database_already_updated">The PMB database is already up to date</entry>
+	
+</XMLlist>

@@ -1,0 +1,112 @@
+{
+    "Autres": {
+        "code": false,
+        "legi": true,
+        "dalloz": false
+    },
+    "Conseil constitutionnel": {
+        "code": "conseilconstitutionnel",
+        "legi": false,
+        "dalloz": true
+    },
+    "Conseil d'\u00c9tat": {
+        "code": "conseiletat",
+        "legi": false,
+        "dalloz": true
+    },
+    "Conseil de la concurrence": {
+        "code": "conseilconcurrence",
+        "legi": false,
+        "dalloz": true
+    },
+    "Conseil de prud'hommes": {
+        "code": "conseilprudhommes",
+        "legi": true,
+        "dalloz": true
+    },
+    "Cour administrative d'appel": {
+        "code": "couradministrativeappel",
+        "legi": false,
+        "dalloz": true
+    },
+    "Cour d'appel": {
+        "code": "courappel",
+        "legi": true,
+        "dalloz": true
+    },
+    "Cour de cassation": {
+        "code": "courcassation",
+        "legi": true,
+        "dalloz": true
+    },
+    "Cour de justice de l'Union europ\u00e9enne": {
+        "code": "courjusticeunioneuropeenne",
+        "legi": false,
+        "dalloz": true
+    },
+    "Cour de justice des Communaut\u00e9s europ\u00e9ennes": {
+        "code": "courjusticecommunauteseuropeennes",
+        "legi": false,
+        "dalloz": true
+    },
+    "Cour europ\u00e9enne des droits de l'homme": {
+        "code": "coureuropeennedroitshomme",
+        "legi": false,
+        "dalloz": true
+    },
+    "Juridiction deproximit\u00e9": {
+        "code": "juridictiondeproximite",
+        "legi": false,
+        "dalloz": true
+    },
+    "Tribunal administratif": {
+        "code": "tribunaladministratif",
+        "legi": false,
+        "dalloz": true
+    },
+    "Tribunal correctionnel": {
+        "code": "tribunalcorrectionnel",
+        "legi": true,
+        "dalloz": true
+    },
+    "Tribunal d'instance": {
+        "code": "tribunalinstance",
+        "legi": true,
+        "dalloz": true
+    },
+    "Tribunal de commerce": {
+        "code": "tribunalcommerce",
+        "legi": false,
+        "dalloz": true
+    },
+    "Tribunal de grande instance": {
+        "code": "tribunalgrandeinstance",
+        "legi": true,
+        "dalloz": true
+    },
+    "Tribunal de l'Union europ\u00e9enne": {
+        "code": "tribunalunioneuropeenne",
+        "legi": false,
+        "dalloz": true
+    },
+    "Tribunal de premire instance": {
+        "code": "tribunalpremiereinstance",
+        "legi": true,
+        "dalloz": true
+    },
+    "Tribunal des affaires": {
+        "code": "tribunalaffaires",
+        "legi": true,
+        "dalloz": true
+    },
+    "Tribunal des affaires de s\u00e9curit\u00e9 sociale": {
+        "code": "tribunalaffairessecuritesociale",
+        "legi": true,
+        "dalloz": true
+    },
+    "Tribunal des conflits": {
+        "code": "tribunalconflits",
+        "legi": true,
+        "dalloz": true
+    }
+}

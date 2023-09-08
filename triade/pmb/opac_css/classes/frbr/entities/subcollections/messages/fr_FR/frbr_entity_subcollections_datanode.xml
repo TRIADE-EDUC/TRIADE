@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le module Articleslist
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: frbr_entity_subcollections_datanode.xml,v 1.2 2017-05-05 07:43:35 dgoron Exp $ -->
+
+<XMLlist>
+	<entry code='frbr_entity_subcollections_datasource_records'>Notices</entry>
+	<entry code='frbr_entity_subcollections_datasource_concepts'>Concepts</entry>
+</XMLlist>

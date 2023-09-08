@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- messages localisés en français pour la dsi
+****************************************************************************************
+© 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: fr_FR.xml,v 1.4 2016-06-01 10:34:58 jpermanne Exp $ -->
+
+<XMLlist>
+	<entry code="planificateur_dsi_bannette">Choix de la(des) bannette(s)</entry>
+	<entry code="planificateur_dsi_bannette_all">Toutes les bannettes</entry>
+	<entry code="planificateur_dsi_bannette_public">Toutes les bannettes publiques</entry>
+	<entry code="planificateur_dsi_bannette_private">Toutes les bannettes privées</entry>
+	<entry code="planificateur_dsi_action">Choix de l'(des) action(s) à réaliser</entry>
+	<entry code="task_dsi_flush">Vider</entry>
+	<entry code="task_dsi_fill">Remplir</entry>
+	<entry code="task_dsi_diffuse">Diffuser</entry>
+	<entry code="task_dsi_full">Vider, remplir et diffuser</entry>
+	<entry code="task_dsi_export">Exporter</entry>
+	<entry code="dsi_bannette_unknown">Aucune bannette à traiter</entry>
+	<entry code="dsi_action_unknown">Aucune action sélectionnée</entry>
+	<entry code="dsi_no_proceed">Aucun traitement pour le(s) bannette(s) suivante(s)</entry>
+	<entry code="dsi_report_header">Diffusion sélective d'informations</entry>
+	<entry code="dsi_report_action">Action(s) sur la bannette</entry>
+	<entry code="dsi_stopped">Tâche interrompue</entry>
+	<entry code="dsi_no_diffusable">Aucune action effectuée, la bannette n'est pas arrivée à échéance (périodicité : %s jour(s))</entry>
+</XMLlist>

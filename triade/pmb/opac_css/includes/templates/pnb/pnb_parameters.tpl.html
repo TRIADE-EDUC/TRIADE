@@ -1,0 +1,15 @@
+<!-- $Id: pnb_parameters.tpl.html,v 1.1 2018-06-05 08:31:02 vtouchard Exp $ -->
+
+<form method="post" name="parameters_list" action="./empr.php?tab=pnb_loan&lvl=pnb_parameters&sub=save">
+	<h3 id="empr_pnb_parameters_list_title">{{ msg.empr_pnb_parameters_list }}</h3>
+	
+	<div class="row">
+		<label for="password_hint">{{ msg.empr_pnb_parameters_hint }}</label>
+		<input type="text" name="password_hint" value="{{parameters.pnb_password_hint}}"/>
+	</div>	
+	<div class="row">
+		<label for="pnb_password">{{ msg.empr_pnb_parameters_password }}</label>
+		<input type="password" name="pnb_password" value="" required/>
+	</div>
+	<input type="submit" class="bouton" value="{{ msg.77 }}"/>
+</form>

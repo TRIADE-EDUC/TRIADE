@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_common_view_breadcrumb.xml,v 1.1 2015-06-16 10:24:25 pmbs Exp $ -->
+
+<XMLlist>
+	<entry code="cms_module_common_view_breadcrumb_build_section_link">Cration of the link for the rubrics</entry>
+	<entry code="cms_module_common_view_home_title_desc">label of the link ot the homepage</entry>
+	<entry code="cms_module_common_view_home_link_desc">Link to the homepage</entry>
+	<entry code="cms_module_common_view_section_desc">Table of the rubrics corresponding to the breadcrumb trail</entry>
+	<entry code="cms_module_common_view_section_link_desc">Link to the rubric</entry>
+</XMLlist>

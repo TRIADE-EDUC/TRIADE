@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le module de recherche
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_search_selector_dest.xml,v 1.2 2016-09-20 10:25:41 apetithomme Exp $ -->
+
+<XMLlist>
+	<entry code='cms_module_search_selector_search_dest_dests'>Possible types of research</entry>
+</XMLlist>

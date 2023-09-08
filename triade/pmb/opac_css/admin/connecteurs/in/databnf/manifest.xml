@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+<manifest>
+	<name>databnf</name>
+	<repository>no</repository>
+	<comment>data.bnf.fr</comment>
+	<author>Florent TETART</author>
+	<org>PMB Services</org>
+	<date>2014-02-02</date>
+	<status>open</status>
+	<url>http://www.sigb.net</url>
+	<enrichment>yes</enrichment>
+</manifest>

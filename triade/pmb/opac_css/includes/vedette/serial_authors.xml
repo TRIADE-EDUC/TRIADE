@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<composed_headings>
+	<heading>
+		<subdivision order="1" code="role_1" name="1er rôle"/>
+		<subdivision order="2" code="role_2" name="2ème rôle"/>
+		<subdivision order="3" code="role_3" name="3ème rôle"/>
+	</heading>
+	<available_fields>
+		<field num="2" type="author" class_name="vedette_authors" name="msg:vedette_authors"/>
+		<field num="3" type="category" class_name="vedette_categories" name="msg:vedette_categories"/>
+		<field num="7" type="serie" class_name="vedette_series" name="msg:vedette_series"/>
+		<field num="8" type="titre_uniforme" class_name="vedette_titres_uniformes" name="msg:vedette_titres_uniformes"/>
+		<field num="17" type="concept" class_name="vedette_concepts" name="msg:vedette_concepts"/>
+		<field num="1" type="records" class_name="vedette_records" name="msg:vedette_records"/>
+		<field num="1000" type="authperso" class_name="vedette_authpersos"/>
+	</available_fields>
+	<separator>:</separator>
+</composed_headings>

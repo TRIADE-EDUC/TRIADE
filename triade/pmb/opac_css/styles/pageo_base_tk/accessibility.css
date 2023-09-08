@@ -1,0 +1,52 @@
+/* +--------------------------------------------------------------------------+
+// 2017 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// +-------------------------------------------------+
+// $Id: accessibility.css,v 1.2 2018-01-08 13:33:34 wlair Exp $ */
+/*------------------------------------------------------------------------------------------*/
+/* ========================================================================
+   Accessibility
+ ==========================================================================  */
+#accessibility {
+	width: auto;
+	max-width: 1235px;
+	margin: 0 auto;
+	position:relative;
+	display: block;
+}
+#accessibility ul {
+	border: solid 1px #444444;
+	background: #000000;
+	position: absolute;
+	left:auto;
+	right: auto;
+	bottom: auto;
+	width: auto;
+	max-width: 1235px;
+	margin: 0 auto;
+	top: 20px;
+}
+.accessibility_font_size {
+}
+
+.accessibility_font_size li {
+
+}
+
+#accessibility .accessibility_font_size li a {
+	height: 2.6rem;
+	width: 2.6rem;
+	line-height: 2.6rem;
+	font-size: 1.05em;
+	font-weight: 400;
+	color: #999;
+	text-align: center;
+	cursor: pointer;
+	z-index: 666;
+	display: inline-block;
+	text-decoration: none;
+}
+
+#footer .accessibility_font_size li a:hover {
+	color: #bfbfbf;
+	text-decoration: none;
+}

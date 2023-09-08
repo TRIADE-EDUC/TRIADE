@@ -1,0 +1,4 @@
+<h2>Z39.50</h2>
+<p><b>Configurações do servidor Z39.50</b> para importar registros.</p>
+
+<b>Servers</b>, lista de servidores Z39.50 disponíveis. Novos servidores podem ser adicionados à lista, os desnecessários podem ser removidos.

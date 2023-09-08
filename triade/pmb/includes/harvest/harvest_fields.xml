@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- 
+****************************************************************************************
+© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: harvest_fields.xml,v 1.1 2012-01-25 15:20:35 ngantier Exp $ -->
+
+<harvest>
+	<field name="4050" comment="prix" id="1" unimarcField="010" unimarcSubfield="d" keepInd="yes" repeatable="no"  />
+	
+	<field name="537" comment="Langues de la publication" id="3" unimarcField="101"  keepInd="yes" repeatable="no"  />
+	
+	<field name="237" comment="tit1" id="5" unimarcField="200" unimarcSubfield="a" keepInd="yes" repeatable="no"  />	
+	<field name="238" comment="tit2" id="6" unimarcField="200" unimarcSubfield="c" keepInd="yes" repeatable="no"  />	
+	<field name="239" comment="tit3" id="7" unimarcField="200" unimarcSubfield="d" keepInd="yes" repeatable="no"  />			
+	<field name="240" comment="tit4" id="8" unimarcField="200" unimarcSubfield="e" keepInd="yes" repeatable="no"  />
+	
+	<field name="mention_edition" comment="mention edition" id="10" unimarcField="205" unimarcSubfield="a" keepInd="yes" repeatable="no"  />	
+
+	<field name="editeur_nom" comment="éditeur nom" id="13" unimarcField="210" keepInd="yes" repeatable="no"  />
+				
+	<field name="259" comment="collation npages" id="20" unimarcField="215" unimarcSubfield="a" keepInd="yes" repeatable="no"  />
+	<field name="260" comment="collation ill" id="21" unimarcField="215" unimarcSubfield="c" keepInd="yes" repeatable="no"  />
+	<field name="261" comment="collation size" id="22" unimarcField="215" unimarcSubfield="d" keepInd="yes" repeatable="no"  />
+	<field name="262" comment="collation accompagnement" id="23" unimarcField="215" unimarcSubfield="e" keepInd="yes" repeatable="no"  />
+		
+	<field name="136" comment="collection name" id="30" unimarcField="225" keepInd="yes" repeatable="no"  />
+		
+	<field name="265" comment="Note Générale" id="40" unimarcField="300"  keepInd="yes" repeatable="no"  />
+	<field name="266" comment="Note de contenu" id="41" unimarcField="327" keepInd="yes" repeatable="no"  />
+	<field name="267" comment="Résumé" id="42" unimarcField="330" keepInd="yes" repeatable="no"  />
+		
+	<field name="333" comment="Nom de la série" id="50" unimarcField="461"  keepInd="yes" repeatable="no"  />
+	
+	<field name="aut_titre_uniforme_form_nom" comment="titre uniforme name" id="60" unimarcField="500" keepInd="yes" repeatable="no"  />	
+	
+	<field name="324" comment="Mots-clés" id="80" unimarcField="610" unimarcSubfield="a" keepInd="yes" repeatable="yes"  />
+	
+	<field name="indexint_catal_title" comment="dewey: Libellé de l'indexation décimale" id="81" unimarcField="676" unimarcSubfield="a" keepInd="yes" repeatable="yes"  />
+		
+	<field name="244" comment="Auteur principal nom" id="100" unimarcField="700" keepInd="yes" repeatable="no"  />	
+	
+	<field name="export_other_author" comment="Autre auteur nom" id="110" unimarcField="701"  keepInd="yes" repeatable="no"  />
+	
+	<field name="export_secondary_author" comment="Auteur secondaire nom" id="120" unimarcField="702" keepInd="yes" repeatable="no"  />
+	
+	<field name="harvest_unimarc_field_710" comment="auteur collectif principal nom" id="130" unimarcField="710" keepInd="yes" repeatable="no"  />
+		
+	<field name="harvest_unimarc_field_711" comment="auteur collectif (coauteur) nom" id="150" unimarcField="711" keepInd="yes" repeatable="no"  />
+	
+	<field name="harvest_unimarc_field_712" comment="auteur collectif (secondaire) nom" id="170" unimarcField="712" keepInd="yes" repeatable="no"  />
+	
+	<field name="harvest_unimarc_field_801" comment="Pays origine de la notice" id="190" unimarcField="801" keepInd="yes" repeatable="no"  />		
+			
+	<field name="275" comment="URL associée" id="200" unimarcField="856" unimarcSubfield="u" keepInd="yes" repeatable="no"  />	
+	<field name="276" comment="Format électronique de la resource" id="201" unimarcField="856" unimarcSubfield="q" keepInd="yes" repeatable="no"  />		
+
+</harvest>

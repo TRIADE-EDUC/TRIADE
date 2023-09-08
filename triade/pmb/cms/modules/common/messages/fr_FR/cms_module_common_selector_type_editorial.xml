@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le module Article
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_common_selector_type_editorial.xml,v 1.1 2012-10-10 08:53:12 ngantier Exp $ -->
+
+<XMLlist>	
+	<entry code="cms_module_common_selector_sub_choice_label">Sélecteur d'article/rubrique</entry>
+</XMLlist>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le module Rubrique
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_sparql_datasource_sparql.xml,v 1.2 2014-02-20 17:03:44 dbellamy Exp $ -->
+
+<XMLlist>
+	<entry code='cms_module_sparql_datasource_sparql_add_store'>Ajouter un store</entry>	
+	<entry code='cms_module_sparql_selector_endpoint'>Serveur SPARQL distant</entry>
+	<entry code='cms_module_sparql_datasource_sparql_query'>Requête à exécuter</entry>
+	<entry code='cms_module_sparql_datasource_sparql_managed_storename'>Nom du Store</entry>
+	<entry code='cms_module_common_datasource_selector_choice'>Choisir le type de store</entry>
+</XMLlist>

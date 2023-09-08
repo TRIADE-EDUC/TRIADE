@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour la classe racine d'un module
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: frbr_entity_common_entity_page.xml,v 1.1 2017-04-27 15:05:58 dgoron Exp $ -->
+
+<XMLlist>
+	<entry code="frbr_entity_common_entity_page_edit">Modification de page - %s</entry>
+	<entry code="frbr_entity_common_entity_page_add">Création d'une nouvelle page</entry>
+	<entry code="frbr_entity_common_entity_page_name">Nom</entry>
+	<entry code="frbr_entity_common_entity_page_comment">Description</entry>
+	<entry code="frbr_entity_common_entity_page_confirm_delete">Voulez-vous vraiment supprimer cette page ?</entry>
+	<entry code="frbr_entity_common_entity_page_name_empty">Veuillez saisir le nom de la page.</entry>
+	<entry code="frbr_entity_common_entity_page_backbone_create">Créer une nouvelle condition d'affichage</entry>
+	<entry code="frbr_entity_common_entity_page_backbone_edit">Edition d'une condition d'affichage</entry>
+</XMLlist>

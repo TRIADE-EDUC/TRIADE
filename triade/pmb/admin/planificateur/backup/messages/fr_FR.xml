@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- messages localisés en français pour la sauvegarde
+****************************************************************************************
+© 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: fr_FR.xml,v 1.1 2011-07-29 12:32:13 dgoron Exp $ -->
+
+<XMLlist>
+	<entry code="planificateur_backup_choice">Choix du(des) jeu(x) de sauvegarde</entry>
+	<entry code="sauv_unknown_sets">Aucun jeu(x) choisi(s)</entry>
+	<entry code="sauv_sets">Jeu(x) de sauvegarde</entry>
+	<entry code="sauv_launch">Sauvegarde du jeu</entry>
+	<entry code="backup_no_proceed">Aucun traitement pour le(s) jeu(x) de sauvegarde suivant(s)</entry>
+	<entry code="backup_stopped">Tâche interrompue</entry>
+	<entry code="backup_abort">Tâche annulée</entry>
+	<entry code="backup_delete">Suppression de la sauvegarde</entry>
+	<entry code="backup_delete_error">Sauvegarde non supprimée</entry>
+</XMLlist>

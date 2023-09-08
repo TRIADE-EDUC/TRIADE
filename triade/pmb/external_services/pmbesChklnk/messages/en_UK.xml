@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- messages localisés en français pour les différentes méthodes
+****************************************************************************************
+© 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: en_UK.xml,v 1.1 2017-10-26 10:16:36 dgoron Exp $ -->
+
+<!DOCTYPE XMLlist SYSTEM "../../../includes/XMLlist.dtd" >
+<XMLlist>
+<!-- 
+pmbesChklnk
+ -->
+  <entry code="chklnk_functions_description">Fonctions relatives aux vérifications de liens</entry>
+  <entry code="chklnk_caddie_id">Identifiant du panier</entry>
+  <entry code="chklnk_result">Liste des liens cassés</entry>
+<!-- 
+check_records
+ --> 
+  <entry code="check_records_description">Vérifier les liens des notices </entry>
+<!-- 
+check_records_thumbnail
+ -->
+  <entry code="check_records_thumbnail_description">Vérifier les url des vignettes des notices</entry>  
+<!-- 
+check_records_custom_fields
+ -->
+  <entry code="check_records_custom_fields_description">Vérifier les liens des champs personnalisés résolveur et URL</entry>
+<!-- 
+check_records_enum
+ -->
+  <entry code="check_records_enum_description">Vérifier les liens des exemplaires numériques de notice</entry>    
+<!-- 
+check_bulletins
+ -->
+  <entry code="check_bulletins_description">Vérifier les liens des exemplaires numériques de bulletin</entry>
+<!-- 
+check_custom_fields_etatcoll
+ -->
+  <entry code="check_custom_fields_etatcoll_description">Vérifier les liens des champs personnalisés résolveur et URL dans les états des collections</entry>
+<!-- 
+check_authors
+ -->
+  <entry code="check_authors_description">Vérifier les liens des auteurs</entry>
+<!-- 
+check_publishers
+ -->
+  <entry code="check_publishers_description">Vérifier les liens des éditeurs</entry>
+<!-- 
+check_collections
+ -->
+  <entry code="check_collections_description">Vérifier les liens des collections</entry>      
+<!-- 
+check_subcollections
+ -->
+  <entry code="check_subcollections_description">Vérifier les liens des sous-collections</entry>      
+<!-- 
+check_authorities_thumbnail
+ -->
+  <entry code="check_authorities_thumbnail_description">Vérifier les url des vignettes d'autorités</entry>
+<!-- 
+check_editorial_custom_fields
+ -->
+  <entry code="check_editorial_custom_fields_description">Vérifier les liens des champs personnalisés résolveur et URL</entry>  
+</XMLlist>

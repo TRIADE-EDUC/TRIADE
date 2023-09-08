@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le module Article
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_common_view_bannetteslist.xml,v 1.3 2018-01-25 11:29:44 dgoron Exp $ -->
+
+<XMLlist>
+	<entry code="cms_module_common_view_bannetteslist_build_bannette_link">Creation of the link to an SDI basket</entry>
+	<entry code="cms_module_common_view_bannetteslist_build_record_link">Construction du lien vers une notice</entry>
+	<entry code='cms_module_common_view_django_template_record_content'>Record template to use for the content</entry>
+	<entry code="cms_module_common_view_bannetteslist_build_bannette_nb_notices">Number of records to display per SDI basket</entry>
+	<entry code="cms_module_bannetteslist_view_bannetteslist_css">Linked CSS</entry>
+	<entry code="cms_module_bannetteslist_view_bannettes_desc">List of the SDI baskets</entry>
+	<entry code="cms_module_bannetteslist_view_bannettes_id_desc">SDI basket ID</entry>
+	<entry code="cms_module_bannetteslist_view_bannettes_name_desc">Title</entry>
+	<entry code="cms_module_bannetteslist_view_bannettes_comment_desc">Public comment</entry>
+	<entry code="cms_module_bannetteslist_view_bannettes_record_number_desc">Number of records</entry>
+	<entry code="cms_module_bannetteslist_view_bannettes_link_desc">Lien vers la bannette</entry>
+	<entry code="cms_module_bannetteslist_view_records_desc">List of records</entry>
+	<entry code="cms_module_bannetteslist_view_record_id_desc">Record ID</entry>
+	<entry code="cms_module_bannetteslist_view_record_title_desc">Record title</entry>
+	<entry code="cms_module_bannetteslist_view_record_link_desc">Opac link of the record</entry>
+	<entry code="cms_module_bannetteslist_view_record_url_vign_desc">Url of the thumbnail</entry>
+	<entry code="cms_module_bannetteslist_view_notices_record_content_desc">Content of the record</entry>
+	<entry code="cms_module_bannetteslist_view_flux_rss_desc">List of RSS feeds</entry>
+	<entry code="cms_module_bannetteslist_view_flux_rss_id_desc">ID of the RSS feed</entry>
+	<entry code="cms_module_bannetteslist_view_flux_rss_name_desc">Name</entry>
+	<entry code="cms_module_bannetteslist_view_flux_rss_opac_link_desc"> linklink</entry>
+	<entry code="cms_module_bannetteslist_view_flux_rss_link_desc">Link of the RSS feed</entry>
+	<entry code="cms_module_bannetteslist_view_flux_rss_lang_desc">Language</entry>
+	<entry code="cms_module_bannetteslist_view_flux_rss_copy_desc">Copyright</entry>
+	<entry code="cms_module_bannetteslist_view_flux_rss_editor_mail_desc">E-mail of the editor</entry>
+	<entry code="cms_module_bannetteslist_view_flux_rss_webmaster_mail_desc">E-mail of the webmaster</entry>
+	<entry code="cms_module_bannetteslist_view_flux_rss_ttl_desc">Time to live</entry>
+	<entry code="cms_module_bannetteslist_view_flux_rss_img_url_desc">URL of the image</entry>
+	<entry code="cms_module_bannetteslist_view_flux_rss_img_title_desc">Titre of the image</entry>	
+	<entry code="cms_module_bannetteslist_view_flux_rss_img_link_desc">Link of the image</entry>
+	<entry code="cms_module_bannetteslist_view_flux_rss_format_desc">Format of the feed</entry>
+	<entry code="cms_module_bannetteslist_view_flux_rss_content_desc">Content of the feed</entry>
+	<entry code="cms_module_bannetteslist_view_flux_rss_date_last_desc">Date</entry>
+	<entry code="cms_module_bannetteslist_view_flux_rss_export_court_desc">Short export</entry>
+	<entry code="cms_module_bannetteslist_view_flux_rss_template_desc">Template</entry>
+</XMLlist>

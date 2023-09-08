@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- Fichier manifest de description des méthodes disponibles
+****************************************************************************************
+© 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: manifest.xml,v 1.1 2011-07-29 12:32:15 dgoron Exp $ -->
+<manifest>
+	<name>pmbesOPACStats</name>
+	<description>msg:OPACStats_functions_description</description>
+	<requirements>
+		<requirement group="pmbesTypes"/>
+	</requirements>
+	<types>
+		<type name="view" imported="true" imported_from="pmbesTypes"/>
+	</types>
+	<methods>
+		<method name="listView" rights="" version="1.0" comment="msg:listView_description" language_independant="true">
+			<inputs>
+				<description>msg:listView_input_description</description>
+				<param name="OPACUserId" type="scalar" dataType="integer" description="msg:listView_OPACUserId"/>
+			</inputs>
+			<outputs>
+				<description>msg:listView_output_description</description>
+				<result name="result" type="scalar" dataType="view" description="msg:listView_result"/>
+			</outputs>
+		</method>
+		<method name="getStatopacView" rights="" version="1.0" comment="msg:getStatopacView_description" language_independant="true">
+			<inputs>
+				<description>msg:getStatopacView_input_description</description>
+				<param name="id_view" type="scalar" dataType="integer" description="msg:getStatopacView_id_view"/>
+			</inputs>
+			<outputs>
+				<description>msg:getStatopacView_output_description</description>
+				<result name="result" type="scalar" dataType="string" description="msg:getStatopacView_result"/>
+			</outputs>
+		</method>
+		<method name="makeConsolidation" rights="" version="1.0" comment="msg:makeConsolidation_description" language_independant="true">
+			<pmb_requirements>
+				<pmb_requirement start_path="class" file="consolidation.class.php"/>
+			</pmb_requirements>
+			<inputs>
+				<description>msg:makeConsolidation_input_description</description>
+				<param name="conso" type="scalar" dataType="integer" description="msg:makeConsolidation_conso"/>
+				<param name="date_deb" type="scalar" dataType="date" description="msg:makeConsolidation_date_deb"/>
+				<param name="date_fin" type="scalar" dataType="date" description="msg:makeConsolidation_date_fin"/>
+				<param name="date_ech" type="scalar" dataType="date" description="msg:makeConsolidation_date_ech"/>
+				<param name="list_ck" type="scalar" dataType="array" description="msg:makeConsolidation_list_ck"/>
+			</inputs>
+			<outputs>
+				<description>msg:makeConsolidation_output_description</description>
+				<result name="result" type="scalar" dataType="string" description="msg:makeConsolidation_result"/>
+			</outputs>
+		</method>
+	</methods>
+</manifest>
+

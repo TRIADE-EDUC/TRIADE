@@ -1,0 +1,383 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- messages localisés en français pour la classe de fonctions search_functions
+****************************************************************************************
+© 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: fr_FR.xml,v 1.15 2015-01-07 11:01:22 pmbs Exp $ -->
+
+<!DOCTYPE XMLlist SYSTEM "../../../includes/XMLlist.dtd" >
+<XMLlist>
+<!--
+pmbesTypes
+-->
+	<entry code="pmbesTypes_description">Décrit des types de données utilisables par les autres groupes</entry>
+<!--
+item
+-->
+	<entry code="item_description">Décrit un exemplaire</entry>
+	<entry code="item_id">Id de l'exemplaire</entry>
+	<entry code="item_cb">Code-barres de l'exemplaire</entry>
+	<entry code="item_cote">Cote de l'exemplaire</entry>
+	<entry code="item_location_id">Id de la localisation de l'exemplaire</entry>
+	<entry code="item_location_caption">Libellé de la localisation de l'exemplaire</entry>
+	<entry code="item_section_id">Id de la section de l'exemplaire</entry>
+	<entry code="item_section_caption">Libellé de la section de l'exemplaire</entry>
+	<entry code="item_statut">Statut de l'exemplaire</entry>
+	<entry code="item_support">Support de l'exemplaire</entry>
+	<entry code="item_situation">Situation de l'exemplaire</entry>
+<!--
+reader
+-->
+	<entry code="reader_description">Décrit un emprunteur</entry>
+	<entry code="reader_id">id de l'emprunteur</entry>
+	<entry code="reader_cb">Code-barres</entry>
+	<entry code="reader_personal_information">Informations administratives de l'emprunteur</entry>
+	<entry code="reader_personal_information_firstname">Prénom</entry>
+	<entry code="reader_personal_information_lastname">Nom de famille</entry>
+	<entry code="reader_personal_information_address_part1">Adresse (ligne 1)</entry>
+	<entry code="reader_personal_information_address_part2">Adresse (ligne 2)</entry>
+	<entry code="reader_personal_information_address_cp">Code postal</entry>
+	<entry code="reader_personal_information_address_city">Ville</entry>
+	<entry code="reader_personal_information_phone_number1">Numéro de téléphone 1</entry>
+	<entry code="reader_personal_information_phone_number2">Numéro de téléphone 2</entry>
+	<entry code="reader_personal_information_email">Email</entry>
+	<entry code="reader_personal_information_birthyear">Année de naissance</entry>
+	<entry code="reader_personal_information_sex">Sexe</entry>
+	<entry code="reader_location_id">Id de la localisation</entry>
+	<entry code="reader_location_caption">Libellé de la localisation</entry>
+	<entry code="reader_adhesion_date">Date de création de l'abonnement</entry>
+	<entry code="reader_expiration_date">Date d'expiration de l'abonnement</entry>
+<!--
+loan
+-->
+	<entry code="loan_description">Décrit un prêt</entry>
+	<entry code="loan_empr_id">Id de l'emprunteur associé au prêt</entry>
+	<entry code="loan_notice_id">Id de la notice du document</entry>
+	<entry code="loan_bulletin_id">Id du bulletin si c'est un bulletin de périodique</entry>
+	<entry code="loan_expl_id">Id de l'exemplaire</entry>
+	<entry code="loan_expl_cb">Code-barres de l'exemplaire</entry>
+	<entry code="loan_expl_support">Support de l'exemplaire</entry>
+	<entry code="loan_expl_location_id">Id de la localisation de l'exemplaire</entry>
+	<entry code="loan_expl_location_caption">Libellé de la localisation</entry>
+	<entry code="loan_expl_section_id">Id de la section de l'exemplaire</entry>
+	<entry code="loan_expl_section_caption">Libellé de la section</entry>
+	<entry code="loan_expl_libelle">Libellé de l'exemplaire</entry>
+	<entry code="loan_loan_startdate">Date de prêt</entry>
+	<entry code="loan_loan_returndate">Date de retour du prêt</entry>
+<!--
+resa
+-->
+	<entry code="resa_description">Décrit une réservation</entry>
+	<entry code="resa_resa_id">Id de la réservation</entry>
+	<entry code="resa_empr_id">Id de l'emprunteur</entry>
+	<entry code="resa_notice_id">Id de la notice associée</entry>
+	<entry code="resa_bulletin_id">Id du bulletin associé</entry>
+	<entry code="resa_resa_rank">Rang de la réservation</entry>
+	<entry code="resa_resa_dateend">Date de fin de validité de la réservation</entry>
+	<entry code="resa_resa_retrait_location_id">Id de la localisation de retrait de la réservation</entry>
+	<entry code="resa_resa_retrait_location">Libellé de la localisation de retrait de la réservation</entry>
+<!--
+suggestion
+-->
+	<entry code="suggestion_description">Décrit une suggestion</entry>
+	<entry code="suggestion_sugg_date">Date de la suggestion</entry>
+	<entry code="suggestion_sugg_title">Titre de l'oeuvre de la suggestion</entry>
+	<entry code="suggestion_sugg_editor">Editeur de l'oeuvre de la suggestion</entry>
+	<entry code="suggestion_sugg_author">Auteur de l'oeuvre de la suggestion</entry>
+	<entry code="suggestion_sugg_state">Statut de la suggestion</entry>
+<!--
+location
+-->
+	<entry code="location_description">Décrit une localisation</entry>
+	<entry code="location_location_id">Id de la localisation</entry>
+	<entry code="location_location_caption">Libellé de la localisation</entry>
+<!--
+section
+--><entry code="section_description">Décrit une section</entry>
+   <entry code="section_section_id">Id de la section</entry>
+   <entry code="section_section_location">Localisation de la section</entry>
+   <entry code="section_section_caption">Libellé de la section</entry>
+   <entry code="section_section_image">Image associée à la section</entry>
+<!--
+abonnement
+-->
+	<entry code="abonnement_description">Décrit un abonnement (DSI)</entry>
+	<entry code="abonnement_abonnement_id">Id de l'abonnement</entry>
+	<entry code="abonnement_abonnement_type">Type de l'abonnement, PUBLIC ou PRIVATE</entry>
+	<entry code="abonnement_abonnement_title">Titre de l'abonnement</entry>
+	<entry code="abonnement_abonnement_lastsentdate">Date de dernier envoi</entry>
+	<entry code="abonnement_abonnement_equation_human">Equation de recherche</entry>
+	<entry code="abonnement_abonnement_notice_count">Nombre de notices</entry>
+	<entry code="abonnement_empr_subscriber">Précise si l'emprunteur est souscripteur de l'abonnement</entry>
+<!--
+search_field
+-->
+	<entry code="search_field_description">Décrit un champ de recherche</entry>
+	<entry code="search_field_id">Id du champ de recherche</entry>
+	<entry code="search_field_label">Description du champ</entry>
+	<entry code="search_field_type">Type du champ</entry>
+	<entry code="search_field_operators">Opérateurs du champ</entry>
+	<entry code="search_field_operators_id">Id de l'opération</entry>
+	<entry code="search_field_operators_label">Affichage de l'opérateur</entry>
+	<entry code="search_field_values">Si fetch_values est à true et si le type du champ propose des valeurs prédéfinies:</entry>
+	<entry code="search_field_values_value_id">Id de la valeur</entry>
+	<entry code="search_field_values_value_caption">Affichage de la valeur</entry>
+	<entry code="search_field_fieldvar">Si le champ contient des paramètres modifiables par l'utilisateur</entry>
+	<entry code="search_field_fieldvar_label">Description du paramètre</entry>
+	<entry code="search_field_fieldvar_name">Nom du paramètre</entry>
+	<entry code="search_field_fieldvar_type">Type du paramètre</entry>
+	<entry code="search_field_fieldvar_values">Si valeurs prédéfinies</entry>
+	<entry code="search_field_fieldvar_values_value_id">Valeur</entry>
+	<entry code="search_field_fieldvar_values_value_caption">Libellé</entry>
+<!--
+explNum
+-->
+	<entry code="explNum_description">Décrit un exemplaire numérique</entry>
+	<entry code="explNum_id">Id de l'exemplaire numérique</entry>
+	<entry code="explNum_noticeId">Id de la notice associée à l'exemplaire numérique</entry>
+	<entry code="explNum_bulletinId">Id du bulletin associé à l'exemplaire numérique</entry>
+	<entry code="explNum_name">Nom de l'exemplaire numérique</entry>
+	<entry code="explNum_mimetype">Mimetype de l'exemplaire numérique</entry>
+	<entry code="explNum_extension">Extension de l'exemplaire numérique</entry>
+	<entry code="explNum_filename">Nom du fichier de l'exemplaire numérique</entry>
+	<entry code="explNum_filesize">Taille de l'exemplaire numérique</entry>			
+	<entry code="explNum_url">URL de l'exemplaire numérique, si applicable</entry>
+	<entry code="explNum_downloadUrl">URL de téléchargement de l'exemplaire numérique</entry>
+<!--
+shelf
+-->
+	<entry code="shelf_description">Décrit une étagère</entry>
+	<entry code="shelf_id">Id de l'étagère</entry>
+	<entry code="shelf_name">Nom de l'étagère</entry>
+	<entry code="shelf_comment">Commentaire de l'étagère</entry>
+<!--
+author
+-->
+	<entry code="author_description">Décrit un auteur</entry>
+	<entry code="author_author_id">Id de l'auteur</entry>
+	<entry code="author_author_type">Type d'auteur (70 = personne physique, 71 = collectivité ou 72 = congrès)</entry>
+	<entry code="author_author_name">Nom de l'auteur</entry>
+	<entry code="author_author_see">Renvoi de l'auteur</entry>
+	<entry code="author_author_rejete">Elément rejeté de l'auteur</entry>
+	<entry code="author_author_date">Dates de l'auteur</entry>
+	<entry code="author_author_web">Site web de l'auteur</entry>
+	<entry code="author_author_comment">Commentaire de l'auteur</entry>
+	<entry code="author_author_lieu">Lieu du congrès</entry>
+	<entry code="author_author_ville">Ville du congrès</entry>
+	<entry code="author_author_pays">Pays du congrès</entry>
+	<entry code="author_author_subdivision">Information de subdivision pour les congrès ou les collectivités</entry>
+	<entry code="author_author_numero">Information de numérotation pour les congrès ou les collectivités</entry>
+<!--
+	publisher
+-->
+	<entry code="publisher_description">Décrit un éditeur</entry>
+	<entry code="publisher_publisher_id">Id de l'éditeur</entry>
+	<entry code="publisher_publisher_name">Nom de l'éditeur</entry>
+	<entry code="publisher_publisher_address1">Adresse de l'éditeur (ligne 1)</entry>
+	<entry code="publisher_publisher_address2">Adresse de l'éditeur (ligne 2)</entry>
+	<entry code="publisher_publisher_zipcode">Code postal de l'éditeur</entry>
+	<entry code="publisher_publisher_city">Ville de l'éditeur</entry>
+	<entry code="publisher_publisher_country">Pays de l'éditeur</entry>
+	<entry code="publisher_publisher_web">Site web de l'éditeur</entry>
+	<entry code="publisher_publisher_comment">Commentaire de l'éditeur</entry>
+<!--
+collection
+-->
+	<entry code="collection_description">Décrit une collection</entry>
+	<entry code="collection_collection_id">Id de la collection</entry>
+	<entry code="collection_collection_name">Nom de la collection</entry>
+	<entry code="collection_collection_parent">Id de l'éditeur de la collection</entry>
+	<entry code="collection_collection_issn">ISSN de la collection</entry>
+	<entry code="collection_collection_web">Site web de la collection</entry>
+<!--
+	sous_collection
+-->
+	<entry code="sous_collection_description">Décrit une sous-collection</entry>
+	<entry code="sous_collection_sous_collection_id">Id de la sous-collection</entry>
+	<entry code="sous_collection_sous_collection_name">Nom de la sous collection</entry>
+	<entry code="sous_collection_sous_collection_parent">Id de la collection associée</entry>
+	<entry code="sous_collection_sous_collection_issn">ISSN de la sous-collection</entry>
+	<entry code="sous_collection_sous_collection_web">Site web de la sous-collection</entry>
+<!--
+bulletin
+-->	
+	<entry code="bulletin_description">Décrit un bulletin</entry>
+	<entry code="bulletin_bulletin_id">Id du bulletin</entry>
+	<entry code="bulletin_serial_id">Id de la notice de périodique associée au bulletin</entry>
+	<entry code="bulletin_serial_title">Titre de la notice de périodique associée au bulletin</entry>
+	<entry code="bulletin_notice_id">Id de la notice du bulletin</entry>
+	<entry code="bulletin_bulletin_number">Numéro du bulletin</entry>
+	<entry code="bulletin_bulletin_date_caption">Libellé de la date du bulletin</entry>
+	<entry code="bulletin_bulletin_date">Date de parution du bulletin</entry>
+	<entry code="bulletin_bulletin_title">Titre du bulletin</entry>
+	<entry code="bulletin_bulletin_barcode">Code-barres du bulletin</entry>	
+<!--
+collstate
+-->
+	<entry code="collstate_description">Décrit un état de collection</entry>
+	<entry code="collstate_collstate_id">Id de l'état de collection</entry>
+	<entry code="collstate_collstate_location_libelle">Libellé de l'état de collection</entry>
+	<entry code="collstate_collstate_cote">Cote de l'état de collection</entry>
+	<entry code="collstate_collstate_type_libelle">Libelle du support de l'état de collection</entry>
+	<entry code="collstate_collstate_emplacement_libelle">Libellé de l'emplacement de l'état de collection</entry>
+	<entry code="collstate_collstate_statut_opac_libelle">Libellé du statut OPAC de l'état de collection</entry>
+	<entry code="collstate_collstate_origine">Origine de l'état de collection</entry>
+	<entry code="collstate_collstate_state_collections">Statut de l'état de collection</entry>
+	<entry code="collstate_collstate_lacune">Lacunes dans l'état de collection</entry>
+<!-- 
+planificateur
+-->
+	<entry code="planificateur_id_planificateur">Identifiant de la planification</entry>
+	<entry code="planificateur_num_type_tache">Identifiant du type de tâche</entry>
+	<entry code="planificateur_libelle_tache">Libellé de la planification</entry>
+	<entry code="planificateur_desc_tache">Description de la planification</entry>
+	<entry code="planificateur_num_user">Utilisateur externe associé</entry>
+	<entry code="planificateur_statut">Statut de la planification (enabled=1, disabled=0)</entry>
+	<entry code="planificateur_calc_next_date_deb">Date planifiée de la prochaine exécution</entry>
+	<entry code="planificateur_calc_next_heure_deb">Heure planifiée de la prochaine exécution</entry>
+<!-- 
+task
+-->	
+	<entry code="task_id_tache">Identifiant de la tâche</entry>
+	<entry code="task_libelle_tache">Libellé de la tâche</entry>
+	<entry code="task_desc_tache">Description de la tâche</entry>
+	<entry code="task_start_at">Démarré à</entry>
+	<entry code="task_end_at">Terminé à</entry>
+	<entry code="task_indicat_progress">Progression de l'exécution</entry>
+	<entry code="task_status">Statut de la tâche (WAITING,RUNNING,..)</entry>
+	
+<!-- 
+bannette
+-->
+	<entry code="bannette_description">Bannette automatique</entry>
+	<entry code="bannette_id_bannette">Id de la bannette</entry>
+	<entry code="bannette_nom_bannette">Nom de la bannette</entry>
+	<entry code="bannette_date_last_remplissage">Date du dernier remplissage de la bannette</entry>
+	<entry code="bannette_date_last_envoi">Date du dernier envoi de la bannette</entry>
+	<entry code="bannette_proprio_bannette">Propriétaire de la bannette</entry>
+	<entry code="bannette_bannette_auto">Bannette automatique (oui/non)</entry>
+	<entry code="bannette_nb_notices_diff">Nombre de notices prête à la diffusion</entry>
+
+<!-- 
+proc
+-->
+	<entry code="proc_description">Procédure</entry>
+	<entry code="proc_idproc">Identifiant de la procédure</entry>
+	<entry code="proc_name">Nom de la procédure</entry>
+	<entry code="proc_requete">Requête associée</entry>
+	<entry code="proc_comment">Commentaire de la procédure</entry>
+
+<!-- 
+sync
+-->
+	<entry code="sync_description">Synchronisation</entry>
+	<entry code="sync_source_id">Id de la source</entry>
+	<entry code="sync_id_connector">Id du connecteur entrant</entry>
+	<entry code="sync_comment">Commentaire de la source</entry>
+	<entry code="sync_name_connector_in">Nom de la synchronisation (connecteur source entrant)</entry>
+
+<!-- 
+resa_extend
+	
+	<entry code="resa_extend_description">Réservation</entry>
+	
+--><!-- 
+setBackup
+-->		
+	<entry code="setBackup_description">Jeu de sauvegarde</entry>
+	<entry code="setBackup_sauv_sauvegarde_id">Id de la sauvegarde</entry>
+	<entry code="setBackup_sauv_sauvegarde_nom">Nom de la sauvegarde</entry>
+	<entry code="setBackup_sauv_sauvegarde_file_prefix">Préfixe pour le fichier de sauvegarde</entry>
+	<entry code="setBackup_sauv_sauvegarde_tables">Groupe(s) de tables</entry>
+	<entry code="setBackup_sauv_sauvegarde_lieux">Lieu(x) de copie(s) de sauvegarde</entry>
+	<entry code="setBackup_sauv_sauvegarde_users">Utilisateur(s) autorisé(s)</entry>
+	<entry code="setBackup_sauv_sauvegarde_compress">Compression (oui/non)</entry>
+	<entry code="setBackup_sauv_sauvegarde_compress_command">Commande de compression</entry>
+	<entry code="setBackup_sauv_sauvegarde_crypt">Clé de cryptage (oui/non)</entry>
+	<!--<entry code="setBackup_sauv_sauvegarde_key1">Phrase de sécurité n°1</entry>
+	<entry code="setBackup_sauv_sauvegarde_key2">Phrase de sécurité n°2</entry>-->
+<!-- 
+groupTables
+-->
+	<entry code="groupTables_description">Groupe de tables</entry>
+	<entry code="groupTables_sauv_table_id">Identifiant du groupe de tables</entry>
+	<entry code="groupTables_sauv_table_nom">Nom du groupe de tables</entry>
+	<entry code="groupTables_sauv_table_tables">Liste des tables (séparateur ",")</entry>
+<!-- 
+backupPerformed
+-->	
+	<entry code="backupPerformed_description">Sauvegarde effectuée</entry>
+	<entry code="backupPerformed_sauv_log_id">Sauvegarde effectuée</entry>
+	<entry code="backupPerformed_sauv_log_start_date">Début de la sauvegarde</entry>
+	<entry code="backupPerformed_sauv_log_file">Fichier de sauvegarde</entry>
+	<entry code="backupPerformed_sauv_log_succeed">Succès de la sauvegarde (oui/non)</entry>
+	<entry code="backupPerformed_sauv_log_messages">Messages</entry>
+	<entry code="backupPerformed_name">Utilisateur</entry>
+<!-- 
+view
+-->	
+	<entry code="view_description">Vue</entry>
+	<entry code="view_id_vue">Id de la vue</entry>
+	<entry code="view_date_consolidation">Date de dernière consolidation</entry>
+	<entry code="view_nom_vue">Nom de la vue</entry>
+	<entry code="view_comment">Commentaire de la vue</entry>
+<!-- 
+readerSubscription
+ -->
+	<entry code="readerSubscription_description">Abonnement lecteur</entry>
+	<entry code="readerSubscription_id_empr">Id de l'emprunteur</entry>
+	<entry code="readerSubscription_empr_cb">Code-Barre de l'emprunteur</entry>
+	<entry code="readerSubscription_empr_nom">Nom de l'emprunteur</entry>
+	<entry code="readerSubscription_empr_prenom">Prénom de l'emprunteur</entry>
+	<entry code="readerSubscription_empr_adr1">Adresse de l'emprunteur (Ligne 1)</entry>
+	<entry code="readerSubscription_empr_adr2">Adresse de l'emprunteur (Ligne 1)</entry>
+	<entry code="readerSubscription_empr_ville">Ville de l'emprunteur</entry>
+	<entry code="readerSubscription_empr_year">Année de naissance de l'emprunteur</entry>
+	<entry code="readerSubscription_aff_empr_date_expiration">Date d'expiration de l'abonnement</entry>
+	<entry code="readerSubscription_statut_libelle">Statut de l'emprunteur</entry>
+<!-- 
+sendMailing
+ -->
+	<entry code="sendMailing_description">Diffusion template de mail</entry>
+	<entry code="sendMailing_name">Nom du template de mail</entry>
+	<entry code="sendMailing_object_mail">Objet du mail</entry>
+	<entry code="sendMailing_nb_mail">Nombre de mail(s) prévu(s)</entry>
+	<entry code="sendMailing_nb_mail_sended">Envoi(s) réussi(s)</entry>
+	<entry code="sendMailing_nb_mail_failed">Envoi(s) non réussi(s)</entry>
+<!-- 
+noticeAdministrative
+ -->
+	<entry code="noticeAdministrative_description">Informations de gestion d'une notice</entry>
+	<entry code="noticeAdministrative_statut_id">Id du statut</entry>
+	<entry code="noticeAdministrative_statut_lib">Libellé Opac du statut</entry>
+	<entry code="noticeAdministrative_comment_admin">Commentaire de gestion</entry>
+	<entry code="noticeAdministrative_thumbnail_url">URL de la vignette</entry>
+<!-- 
+links	
+ -->
+	<entry code="links_description">Informations sur les liens entre autorités</entry>
+	<entry code="links_autlink_to">Type de l'autorité liée:
+1 -&gt; Auteur,
+2 -&gt; Catégorie,
+3 -&gt; Editeur,
+4 -&gt; Collection,
+5 -&gt; Sous-collection,
+6 -&gt; Titre de série,
+7 -&gt; Titre uniforme,
+8 -&gt; Indexation
+	</entry>
+	<entry code="links_autlink_to_id">Id de l'autorité liée</entry>
+	<entry code="links_autlink_to_libelle">Libellé de l'autorité liée</entry>
+	<entry code="links_autlink_type">Code du type de lien</entry>
+	<entry code="links_autlink_reciproc">Le lien est-il réciproque (0 ou 1) ?</entry>
+	<entry code="links_autlink_comment">Commentaire associé au lien</entry>
+<!-- 
+cms_article	
+ -->
+	<entry code="cms_article_description">Décrit un article éditorial</entry>
+	<entry code="cms_id_article">Id de l'article</entry>
+	<entry code="cms_article_title">Titre de l'article</entry>
+	<entry code="cms_article_resume">Résumé de l'article</entry>
+	<entry code="cms_article_contenu">Contenu de article</entry>
+</XMLlist>

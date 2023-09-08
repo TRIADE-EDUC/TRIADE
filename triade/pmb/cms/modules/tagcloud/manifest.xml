@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+
+<!-- Declaration d'un module
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: manifest.xml,v 1.4 2015-06-22 14:38:24 pmbs Exp $ -->
+
+<manifest>
+	<name lang="fr_FR">Nuage de Tags</name>
+	<name lang="en_UK">Tag cloud</name>
+	<author>
+		<name>Arnaud RENOU / Nicolas Gantier</name>
+		<organisation>PMB Services</organisation>
+	</author>
+	<created_date>2014-06-19</created_date>
+	<version>1.0</version>
+	<default_language>fr_FR</default_language>
+	<managed>true</managed>
+	<use>
+		<datasources>
+			<datasource>cms_module_tagcloud_datasource_tagcloud_records</datasource>
+			<datasource>cms_module_tagcloud_datasource_tagcloud_manuel</datasource>
+		</datasources>
+		<views>
+			<view>cms_module_tagcloud_view_tagcloud</view>
+			<view>cms_module_tagcloud_view_tagcloud_3d</view>		
+		</views>
+		<conditions>
+			<condition>cms_module_common_condition_global_var</condition>
+		</conditions>
+	</use>
+</manifest>

@@ -1,0 +1,448 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- Fichier manifest de description des méthodes disponibles
+****************************************************************************************
+© 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: manifest.xml,v 1.18 2018-03-14 17:24:34 dbellamy Exp $ -->
+<manifest>
+	<name>pmbesSearch</name>
+	<description>msg:search_functions_description</description>
+	<requirements>
+		<requirement group="pmbesTypes"/>
+	</requirements>
+	<types>
+		<type name="search_field" imported="true" imported_from="pmbesTypes" description="msg:search_field_description"/>
+		<type name="unimarc_notice" imported="true" imported_from="pmbesSpecialTypes" description="msg:unimarc_notice_description"/>
+	</types>
+	<methods>
+		<method name="simpleSearch" comment="msg:simple_search_description" rights="" version="1.0" language_independant="true">
+			<pmb_requirements>
+				<pmb_requirement start_path="class" file="external_services_searchcache.class.php"/>
+			</pmb_requirements>
+			<inputs>
+				<description>msg:simple_search_inputs_description</description>
+				<param name="searchType" type="scalar" dataType="integer" description="msg:simple_search_inputs_description_searchType"/>
+				<param name="searchTerm" type="scalar" dataType="string" description="msg:simple_search_inputs_description_searchTerm"/>
+				<param name="pmbUserId" type="scalar" dataType="integer" description="msg:simple_search_inputs_description_pmbUserId"/>
+				<param name="OPACUserId" type="scalar" dataType="integer" description="msg:simple_search_inputs_description_OPACUserId"/>
+			</inputs>
+			<outputs>
+				<description>msg:simple_search_outputs_description</description>
+				<result name="searchId"  type="scalar" dataType="string" description="msg:simple_search_outputs_description_searchId"/>
+				<result name="nbResults" type="scalar" dataType="integer" description="msg:simple_search_outputs_description_nbResults"/>
+				<result name="typdocs" type="array" description="msg:simpleSearch_typdocs">
+					<result name="typdoc" type="scalar" dataType="string" description=""/>
+				</result>
+			</outputs>
+		</method>
+		<method name="simpleSearchLocalise" comment="msg:simple_search_localise_description" rights="" version="1.0" language_independant="true">
+			<pmb_requirements>
+				<pmb_requirement start_path="class" file="external_services_searchcache.class.php"/>
+			</pmb_requirements>
+			<inputs>
+				<description>msg:simple_search_localise_inputs_description</description>
+				<param name="searchType" type="scalar" dataType="integer" description="msg:simple_search_localise_inputs_description_searchType"/>
+				<param name="searchTerm" type="scalar" dataType="string" description="msg:simple_search_localise_inputs_description_searchTerm"/>
+				<param name="pmbUserId" type="scalar" dataType="integer" description="msg:simple_search_localise_inputs_description_pmbUserId"/>
+				<param name="OPACUserId" type="scalar" dataType="integer" description="msg:simple_search_localise_inputs_description_OPACUserId"/>
+				<param name="localisation" type="scalar" dataType="integer" description="msg:simple_search_localise_inputs_description_localisation"/>
+				<param name="section" type="scalar" dataType="integer" description="msg:simple_search_localise_inputs_description_section"/>				
+			</inputs>
+			<outputs>
+				<description>msg:simple_search_localise_outputs_description</description>
+				<result name="searchId" type="scalar" dataType="string" description="msg:simple_search_localise_outputs_description_searchId"/>
+				<result name="nbResults" type="scalar" dataType="integer" description="msg:simple_search_localise_outputs_description_nbResults"/>
+				<result name="typdocs" type="array" description="msg:simpleSearchLocalise_typdocs">
+					<result name="typdoc" type="scalar" dataType="string" description=""/>
+				</result>
+			</outputs>
+		</method>
+		<method name="getAdvancedSearchFields" comment="msg:get_advanced_sf_description" version="1.0" language_independant="false">
+			<requirements>
+		  		<requirement group="pmbesSearch" name="getAdvancedSearchField" version="1.0"/>
+			</requirements>
+			<pmb_requirements>
+				<pmb_requirement start_path="class" file="external_services_caches.class.php"/>
+				<pmb_requirement start_path="class" file="search.class.php"/>
+			</pmb_requirements>
+			<inputs>
+				<description>msg:get_advanced_sf_inputs_description</description>
+				<param name="search_realm" type="scalar" dataType="string" description="msg:get_advanced_sf_inputs_description_search_realm"/>
+				<param name="lang" type="scalar" dataType="string" description="msg:get_advanced_sf_inputs_description_lang"/>
+				<param name="fetch_values" type="scalar" dataType="boolean" description="msg:get_advanced_sf_inputs_description_fetch_values"/>
+			</inputs>
+			<outputs>
+				<description>msg:get_advanced_sf_outputs_description</description>
+				<result name="results" type="array" description="msg:get_advanced_sf_outputs_description_results">
+					<result name="search_field" type="scalar" dataType="search_field"/>
+				</result>
+			</outputs>
+		</method>
+		<method name="getAdvancedSearchField" comment="msg:get_advanced_sfone_description" version="1.0" language_independant="false">
+			<pmb_requirements>
+				<pmb_requirement start_path="class" file="external_services_caches.class.php"/>
+				<pmb_requirement start_path="class" file="search.class.php"/>
+				<pmb_requirement start_path="class" file="marc_table.class.php"/>
+			</pmb_requirements>
+			<inputs>
+				<description>msg:get_advanced_sfone_inputs_description</description>
+				<param name="field_id" type="scalar" dataType="string" description="msg:get_advanced_sfone_inputs_description_field_id"/>
+				<param name="search_realm" type="scalar" dataType="string" description="msg:get_advanced_sfone_inputs_description_search_realm"/>
+				<param name="lang" type="scalar" dataType="string" description="msg:get_advanced_sfone_inputs_description_lang"/>
+				<param name="fetch_values" type="scalar" dataType="boolean" description="msg:get_advanced_sfone_inputs_description_fetch_values"/>
+			</inputs>
+			<outputs>
+				<description>msg:get_advanced_sfone_outputs_description</description>
+				<result name="search_field" type="scalar" dataType="search_field" description="msg:get_advanced_sfone_outputs_description_search_field"/>
+			</outputs>
+		</method>
+		<method name="advancedSearch" comment="msg:advancedSearch_description" rights="" version="1.0" language_independant="false">
+			<pmb_requirements>
+				<pmb_requirement start_path="class" file="external_services_searchcache.class.php"/>
+			</pmb_requirements>
+			<inputs>
+				<description>msg:advancedSearch_inputs_description</description>
+				<param name="search_realm" type="scalar" dataType="string"  description="msg:advancedSearch_inputs_description_search_realm"/>
+				<param name="search" type="array" description="msg:advancedSearch_inputs_description_search">
+					<param name="inter" type="scalar" dataType="string" description="msg:advancedSearch_inputs_description_search_inter"/>
+					<param name="field" type="scalar" dataType="string" description="msg:advancedSearch_inputs_description_search_field"/>
+					<param name="operator" type="scalar" dataType="string" description="msg:advancedSearch_inputs_description_search_operator"/>
+					<param name="value" type="array">
+						<param name="a_value" type="scalar" dataType="string" description="msg:advancedSearch_inputs_description_search_value"/>
+					</param>
+					<param name="fieldvar" type="structure" optional="yes"  >
+						<param name="id_thesaurus" type="array" optional="yes" >
+							<param name="a_id_thesaurus" type="scalar" dataType="string" description="msg:advancedSearch_inputs_description_search_value" />
+						</param>
+						<param name="operator_between_multiple_authorities" type="array" optional="yes" >
+							<param name="a_operator_between_multiple_authorities" type="scalar" dataType="string" description="msg:advancedSearch_inputs_description_search_value" />
+						</param>
+					</param>
+				</param>
+				<param name="pmbUserId" type="scalar" dataType="integer" description="msg:advancedSearch_inputs_description_pmbUserId"/>
+				<param name="OPACUserId" type="scalar" dataType="integer" description="msg:advancedSearch_inputs_description_OPACUserId"/>
+			</inputs>
+			<outputs>
+				<description>msg:advancedSearch_outputs_description</description>
+				<result name="searchId"  type="scalar" dataType="string" description="msg:advancedSearch_outputs_description_searchId"/>
+				<result name="nbResults" type="scalar" dataType="integer" description="msg:advancedSearch_outputs_description_nbResults"/>
+				<result name="typdocs" type="array" description="msg:advancedSearch_typdocs">
+					<result name="typdoc" type="scalar" dataType="string" description=""/>
+				</result>
+			</outputs>
+		</method>
+		<method name="get_sort_types" rights="" version="1.0" language_independant="false" comment="msg:get_sort_types_description">
+			<pmb_requirements>
+				
+			</pmb_requirements>
+			<inputs>
+				<description>msg:get_sort_types_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:get_sort_types_output_description</description>
+				<result type="array" name="results" description="msg:get_sort_types_results">
+					<result name="sort_name" type="scalar" dataType="string" description="msg:get_sort_types_results_sort_name"/>
+					<result name="sort_caption" type="scalar" dataType="string" description="msg:get_sort_types_results_sort_caption"/>
+				</result>
+			</outputs>
+		</method>
+		<method name="fetchSearchRecords" comment="msg:fetch_search_records_description" rights="" version="1.0" language_independant="true">
+			<requirements>
+		  		<requirement group="pmbesSearch" name="fetchSearchRecordsSorted" version="1.0"/>
+			</requirements>
+			<pmb_requirements>
+				<pmb_requirement start_path="class" file="external_services_searchcache.class.php"/>
+				<pmb_requirement start_path="class" file="external_services_converters.class.php"/>
+			</pmb_requirements>
+			<inputs>
+				<description>msg:fetch_search_records_inputs_description</description>
+				<param name="searchId" type="scalar" dataType="string" description="msg:fetch_search_records_inputs_description_searchId"/>
+				<param name="firstRecord" type="scalar" dataType="integer" description="msg:fetch_search_records_inputs_description_firstRecord"/>
+				<param name="recordCount" type="scalar" dataType="integer" description="msg:fetch_search_records_inputs_description_recordCount"/>
+				<param name="recordFormat" type="scalar" dataType="string" description="msg:fetch_search_records_inputs_description_recordFormat"/>
+				<param name="recordCharset" type="scalar" dataType="string" description="msg:fetch_search_records_inputs_description_recordCharset"/>
+				<param name="includeLinks" type="scalar" dataType="boolean" description="msg:fetch_search_records_inputs_description_includeLinks"/>
+				<param name="includeItems" type="scalar" dataType="boolean" description="msg:fetch_search_records_inputs_description_includeItems"/>
+			</inputs>
+			<outputs>
+				<description>msg:fetch_search_records_outputs_description</description>
+				<result type="array" name="results" description="msg:fetch_search_records_outputs_description_results">
+					<result name="noticeId"  type="scalar" dataType="integer" description="msg:fetch_search_records_outputs_description_noticeId"/>
+					<result name="noticeContent" type="scalar" dataType="string" description="msg:fetch_search_records_outputs_description_noticeContent"/>
+				</result>
+			</outputs>
+		</method>
+		<method name="fetchSearchRecordsSorted" rights="" version="1.0" language_independant="true" comment="msg:fetchSearchRecordsSorted_description">
+			<pmb_requirements>
+				<pmb_requirement start_path="class" file="external_services_searchcache.class.php"/>
+				<pmb_requirement start_path="class" file="external_services_converters.class.php"/>
+			</pmb_requirements>
+			<inputs>
+				<description>msg:fetchSearchRecordsSorted_input_description</description>
+				<param name="searchId" type="scalar" dataType="string" description="msg:fetchSearchRecordsSorted_searchId"/>
+				<param name="firstRecord" type="scalar" dataType="integer" description="msg:fetchSearchRecordsSorted_firstRecord"/>
+				<param name="recordCount" type="scalar" dataType="integer" description="msg:fetchSearchRecordsSorted_recordCount"/>
+				<param name="recordFormat" type="scalar" dataType="string" description="msg:fetchSearchRecordsSorted_recordFormat"/>
+				<param name="recordCharset" type="scalar" dataType="string" description="msg:fetchSearchRecordsSorted_recordCharset"/>
+				<param name="includeLinks" type="scalar" dataType="boolean" description="msg:fetchSearchRecordsSorted_includeLinks"/>
+				<param name="includeItems" type="scalar" dataType="boolean" description="msg:fetchSearchRecordsSorted_includeItems"/>
+				<param name="sortType" type="scalar" dataType="string" description="msg:fetchSearchRecordsSorted_sortType"/>
+			</inputs>
+			<outputs>
+				<description>msg:fetchSearchRecordsSorted_output_description</description>
+				<result type="array" name="results" description="msg:fetchSearchRecordsSorted_results">
+					<result name="noticeId" type="scalar" dataType="integer" description="msg:fetchSearchRecordsSorted_results_noticeId"/>
+					<result name="noticeContent" type="scalar" dataType="string" description="msg:fetchSearchRecordsSorted_results_noticeContent"/>
+				</result>
+			</outputs>
+		</method>
+		
+		<method name="fetchSearchRecordsArray" rights="" version="1.0" language_independant="true" comment="msg:fetchSearchRecordsArray_description">
+			<requirements>
+		  		<requirement group="pmbesSearch" name="fetchSearchRecordsArraySorted" version="1.0"/>
+			</requirements>
+			<pmb_requirements>
+				<pmb_requirement start_path="class" file="external_services_searchcache.class.php"/>
+				<pmb_requirement start_path="class" file="external_services_converters.class.php"/>
+			</pmb_requirements>
+			<inputs>
+				<description>msg:fetchSearchRecordsArray_input_description</description>
+				<param name="searchId" type="scalar" dataType="string" description="msg:fetchSearchRecordsArray_searchId"/>
+				<param name="firstRecord" type="scalar" dataType="integer" description="msg:fetchSearchRecordsArray_firstRecord"/>
+				<param name="recordCount" type="scalar" dataType="integer" description="msg:fetchSearchRecordsArray_recordCount"/>
+				<param name="recordCharset" type="scalar" dataType="string" description="msg:fetchSearchRecordsArray_recordCharset"/>
+				<param name="includeLinks" type="scalar" dataType="boolean" description="msg:fetchSearchRecordsArray_includeLinks"/>
+				<param name="includeItems" type="scalar" dataType="boolean" description="msg:fetchSearchRecordsArray_includeItems"/>
+			</inputs>
+			<outputs>
+				<description>msg:fetchSearchRecordsArray_output_description</description>
+				<result type="array" name="results" description="msg:fetchSearchRecordsArray_results">
+					<result name="uneNotice" type="scalar" dataType="unimarc_notice"/>
+				</result>
+			</outputs>
+		</method>
+		
+		<method name="fetchSearchRecordsArraySorted" rights="" version="1.0" language_independant="true" comment="msg:fetchSearchRecordsArraySorted_description">
+			<pmb_requirements>
+				<pmb_requirement start_path="class" file="external_services_searchcache.class.php"/>
+				<pmb_requirement start_path="class" file="external_services_converters.class.php"/>
+			</pmb_requirements>
+			<inputs>
+				<description>msg:fetchSearchRecordsArraySorted_input_description</description>
+				<param name="searchId" type="scalar" dataType="string" description="msg:fetchSearchRecordsArraySorted_searchId"/>
+				<param name="firstRecord" type="scalar" dataType="integer" description="msg:fetchSearchRecordsArraySorted_firstRecord"/>
+				<param name="recordCount" type="scalar" dataType="integer" description="msg:fetchSearchRecordsArraySorted_recordCount"/>
+				<param name="recordCharset" type="scalar" dataType="string" description="msg:fetchSearchRecordsArraySorted_recordCharset"/>
+				<param name="includeLinks" type="scalar" dataType="boolean" description="msg:fetchSearchRecordsArraySorted_includeLinks"/>
+				<param name="includeItems" type="scalar" dataType="boolean" description="msg:fetchSearchRecordsArraySorted_includeItems"/>
+				<param name="sortType" type="scalar" dataType="string" description="msg:fetchSearchRecordsArraySorted_sortType"/>
+			</inputs>
+			<outputs>
+				<description>msg:fetchSearchRecordsArraySorted_output_description</description>
+				<result type="array" name="results" description="msg:fetchSearchRecordsArraySorted_results">
+					<result name="uneNotice" type="scalar" dataType="unimarc_notice"/>
+				</result>
+			</outputs>
+		</method>
+		<method name="fetchSearchRecordsFull" comment="msg:fetchSearchRecords_description" rights="" version="1.0" language_independant="true">
+			<requirements>
+		  		<requirement group="pmbesSearch" name="fetchSearchRecordsFullSorted" version="1.0"/>
+			</requirements>
+			<pmb_requirements>
+				<pmb_requirement start_path="class" file="external_services_searchcache.class.php"/>
+				<pmb_requirement start_path="class" file="external_services_converters.class.php"/>
+			</pmb_requirements>
+			<inputs>
+				<description>msg:fetch_search_records_inputs_description</description>
+				<param name="searchId" type="scalar" dataType="string" description="msg:fetchSearchRecords_searchId"/>
+				<param name="firstRecord" type="scalar" dataType="integer" description="msg:fetchSearchRecords_firstRecord"/>
+				<param name="recordCount" type="scalar" dataType="integer" description="msg:fetchSearchRecords_recordCount"/>
+				<param name="recordCharset" type="scalar" dataType="string" description="msg:fetchSearchRecords_recordCharset"/>
+				<param name="includeLinks" type="scalar" dataType="boolean" description="msg:fetchSearchRecords_includeLinks"/>
+				<param name="includeItems" type="scalar" dataType="boolean" description="msg:fetchSearchRecords_includeItems"/>
+			</inputs>
+			<outputs>
+				<description>msg:fetch_search_records_outputs_description</description>
+ 				<result type="array" name="results" description="msg:fetchNoticeListFull_results">                                                                                       
+					<result name="noticeId" type="scalar" dataType="integer" description="msg:fetchNoticeListFull_results_noticeId"/>                                                                                                 
+					<result name="noticeContent" type="scalar" dataType="string" description="msg:fetchNoticeListFull_results_noticeContent"/>                                                                                        
+					<result name="noticeItems" type="array" description="msg:fetchNoticeListFull_results_noticeItems">                                                                                                                
+						<result name="aItem" type="scalar" dataType="item"/>                         
+					</result>                                                                            
+					<result name="noticesExplNum" type="array" description="msg:fetchNoticeListFull_results_noticeDocNums">                                                                                                            
+						<result name="aExplNum" type="scalar" dataType="explNum"/>                    
+					</result>                                                                            
+					<result name="noticeBulletins" type="array" description="msg:fetchNoticeListFull_results_noticeBulletins">                                                                                                        
+						<result name="aBulletin" type="scalar" dataType="bulletin"/>                 
+					</result>                                                                            
+				</result>                                                                                    
+			</outputs>
+		</method>
+		<method name="fetchSearchRecordsFullSorted" comment="msg:fetchSearchRecords_description" rights="" version="1.0" language_independant="true">
+			<requirements>
+		  		<requirement group="pmbesNotices" name="fetchNoticeListFull" version="1.0"/>
+			</requirements>
+			<pmb_requirements>
+				<pmb_requirement start_path="class" file="external_services_searchcache.class.php"/>
+				<pmb_requirement start_path="class" file="external_services_converters.class.php"/>
+			</pmb_requirements>
+			<inputs>
+				<description>msg:fetch_search_records_inputs_description</description>
+				<param name="searchId" type="scalar" dataType="string" description="msg:fetchSearchRecords_searchId"/>
+				<param name="firstRecord" type="scalar" dataType="integer" description="msg:fetchSearchRecords_firstRecord"/>
+				<param name="recordCount" type="scalar" dataType="integer" description="msg:fetchSearchRecords_recordCount"/>
+				<param name="recordCharset" type="scalar" dataType="string" description="msg:fetchSearchRecords_recordCharset"/>
+				<param name="includeLinks" type="scalar" dataType="boolean" description="msg:fetchSearchRecords_includeLinks"/>
+				<param name="includeItems" type="scalar" dataType="boolean" description="msg:fetchSearchRecords_includeItems"/>
+				<param name="sortType" type="scalar" dataType="string" description="msg:fetchSearchRecordsArraySorted_sortType"/>
+			</inputs>
+			<outputs>                                                                                            
+				<description>msg:fetchNoticeListFull_output_description</description>                        
+				<result type="array" name="results" description="msg:fetchNoticeListFull_results">                                                                                       
+					<result name="noticeId" type="scalar" dataType="integer" description="msg:fetchNoticeListFull_results_noticeId"/>                                                                                                 
+					<result name="noticeContent" type="scalar" dataType="string" description="msg:fetchNoticeListFull_results_noticeContent"/>                                                                                        
+					<result name="noticeItems" type="array" description="msg:fetchNoticeListFull_results_noticeItems">                                                                                                                
+						<result name="aItem" type="scalar" dataType="item"/>                         
+					</result>                                                                            
+					<result name="noticeExplNums" type="array" description="msg:fetchNoticeListFull_results_noticeDocNums">                                                                                                            
+						<result name="aExplNum" type="scalar" dataType="explNum"/>                    
+					</result>                                                                            
+					<result name="noticeBulletins" type="array" description="msg:fetchNoticeListFull_results_noticeBulletins">                                                                                                        
+						<result name="aBulletin" type="scalar" dataType="bulletin"/>                 
+					</result>                                                                            
+				</result>                                                                                    
+			</outputs> 
+		</method>	
+		<method name="fetchSearchRecordsFullWithBullId" comment="msg:fetchSearchRecords_description" rights="" version="1.0" language_independant="true">
+			<requirements>
+		  		<requirement group="pmbesSearch" name="fetchSearchRecordsFullWithBullIdSorted" version="1.0"/>
+			</requirements>
+			<pmb_requirements>
+				<pmb_requirement start_path="class" file="external_services_searchcache.class.php"/>
+				<pmb_requirement start_path="class" file="external_services_converters.class.php"/>
+			</pmb_requirements>
+			<inputs>
+				<description>msg:fetch_search_records_inputs_description</description>
+				<param name="searchId" type="scalar" dataType="string" description="msg:fetchSearchRecords_searchId"/>
+				<param name="firstRecord" type="scalar" dataType="integer" description="msg:fetchSearchRecords_firstRecord"/>
+				<param name="recordCount" type="scalar" dataType="integer" description="msg:fetchSearchRecords_recordCount"/>
+				<param name="recordCharset" type="scalar" dataType="string" description="msg:fetchSearchRecords_recordCharset"/>
+				<param name="includeLinks" type="scalar" dataType="boolean" description="msg:fetchSearchRecords_includeLinks"/>
+				<param name="includeItems" type="scalar" dataType="boolean" description="msg:fetchSearchRecords_includeItems"/>
+			</inputs>
+			<outputs>
+				<description>msg:fetch_search_records_outputs_description</description>
+ 				<result type="array" name="results" description="msg:fetchNoticeListFull_results">                                                                                       
+					<result name="noticeId" type="scalar" dataType="integer" description="msg:fetchNoticeListFull_results_noticeId"/>                                                                                                 
+					<result name="noticeContent" type="scalar" dataType="string" description="msg:fetchNoticeListFull_results_noticeContent"/>                                                                                        
+					<result name="noticeItems" type="array" description="msg:fetchNoticeListFull_results_noticeItems">                                                                                                                
+						<result name="aItem" type="scalar" dataType="item"/>                         
+					</result>                                                                            
+					<result name="noticeExplNums" type="array" description="msg:fetchNoticeListFull_results_noticeDocNums">                                                                                                            
+						<result name="aExplNum" type="scalar" dataType="explNum"/>                    
+					</result>                                                                            
+					<result name="noticeBulletins" type="array" description="msg:fetchNoticeListFull_results_noticeBulletins">                                                                                                        
+						<result name="aBulletin" type="scalar" dataType="bulletin"/>                 
+					</result>                                                                            
+				</result>                                                                                    
+			</outputs>
+		</method>
+		<method name="fetchSearchRecordsFullWithBullIdSorted" comment="msg:fetchSearchRecords_description" rights="" version="1.0" language_independant="true">
+			<requirements>
+		  		<requirement group="pmbesNotices" name="fetchNoticeListFullWithBullId" version="1.0"/>
+			</requirements>
+			<pmb_requirements>
+				<pmb_requirement start_path="class" file="external_services_searchcache.class.php"/>
+				<pmb_requirement start_path="class" file="external_services_converters.class.php"/>
+			</pmb_requirements>
+			<inputs>
+				<description>msg:fetch_search_records_inputs_description</description>
+				<param name="searchId" type="scalar" dataType="string" description="msg:fetchSearchRecords_searchId"/>
+				<param name="firstRecord" type="scalar" dataType="integer" description="msg:fetchSearchRecords_firstRecord"/>
+				<param name="recordCount" type="scalar" dataType="integer" description="msg:fetchSearchRecords_recordCount"/>
+				<param name="recordCharset" type="scalar" dataType="string" description="msg:fetchSearchRecords_recordCharset"/>
+				<param name="includeLinks" type="scalar" dataType="boolean" description="msg:fetchSearchRecords_includeLinks"/>
+				<param name="includeItems" type="scalar" dataType="boolean" description="msg:fetchSearchRecords_includeItems"/>
+				<param name="sortType" type="scalar" dataType="string" description="msg:fetchSearchRecordsArraySorted_sortType"/>
+			</inputs>
+			<outputs>                                                                                            
+				<description>msg:fetchNoticeListFull_output_description</description>                        
+				<result type="array" name="results" description="msg:fetchNoticeListFull_results">                                                                                       
+					<result name="noticeId" type="scalar" dataType="integer" description="msg:fetchNoticeListFull_results_noticeId"/>                                                                                                 
+					<result name="noticeContent" type="scalar" dataType="string" description="msg:fetchNoticeListFull_results_noticeContent"/>                                                                                        
+					<result name="noticeItems" type="array" description="msg:fetchNoticeListFull_results_noticeItems">                                                                                                                
+						<result name="aItem" type="scalar" dataType="item"/>                         
+					</result>                                                                            
+					<result name="noticeExplNums" type="array" description="msg:fetchNoticeListFull_results_noticeDocNums">                                                                                                            
+						<result name="aExplNum" type="scalar" dataType="explNum"/>                    
+					</result>                                                                            
+					<result name="noticeBulletins" type="array" description="msg:fetchNoticeListFull_results_noticeBulletins">                                                                                                        
+						<result name="aBulletin" type="scalar" dataType="bulletin"/>                 
+					</result>                                                                            
+				</result>                                                                                    
+			</outputs> 
+		</method>
+		<method name="listExternalSources" rights="" version="1.0" language_independant="false">
+			<inputs>
+				<param name="OPACUserId" type="scalar" dataType="integer"/>
+			</inputs>
+			<outputs>
+				<result type="array" name="results">
+					<result name="category_caption" type="scalar" dataType="string"/>
+					<result type="array" name="sources">
+						<result name="source_id" type="scalar" dataType="string"/>
+						<result name="source_caption" type="scalar" dataType="string"/>
+						<result name="source_comment" type="scalar" dataType="string"/>
+					</result>					
+				</result>
+			</outputs>
+		</method>
+		<method name="listFacets" comment="msg:listFacets_description" rights="" version="1.0" language_independant="true">
+			<pmb_requirements>
+				<pmb_requirement start_path="class" file="external_services_searchcache.class.php"/>
+			</pmb_requirements>
+			<inputs>
+				<description>msg:listFacets_inputs_description</description>
+				<param name="searchId" type="scalar" dataType="string" description="msg:listFacets_searchId"/>
+				<param name="fields" type="array" description="msg:listFacets_inputs_description_fields">
+					<param name="code_champ" type="scalar" dataType="integer" description="msg:listFacets_inputs_description_field_code_champ"/>
+					<param name="code_ss_champ" type="scalar" dataType="integer" description="msg:listFacets_inputs_description_field_code_ss_champ"/>
+				</param>
+				<param name="filters" type="array" description="msg:listFacets_inputs_description_filters">
+					<param name="code_champ" type="scalar" dataType="integer" description="msg:listFacets_inputs_description_filter_code_champ"/>
+					<param name="code_ss_champ" type="scalar" dataType="integer" description="msg:listFacets_inputs_description_filter_code_ss_champ"/>
+					<param name="value" type="scalar" dataType="string" description="msg:listFacets_inputs_description_filter_value"/>
+				</param>
+			</inputs>
+			<outputs>                                                                                            
+				<description>msg:listFacets_output_description</description>                        
+				<result type="array" name="results" description="msg:listFacets_results">
+					<result name="code_champ" type="scalar" dataType="integer" description="msg:listFacets_results_code_champ"/>
+					<result name="code_ss_champ" type="scalar" dataType="integer" description="msg:listFacets_results_code_ss_champ"/>
+					<result name="value" type="scalar" dataType="string" description="msg:listFacets_results_value"/>
+					<result name="count" type="scalar" dataType="integer" description="msg:listFacets_results_count"/>
+				</result>                                                                                    
+			</outputs> 
+		</method>
+		<method name="listRecordsFromFacets" comment="msg:listRecordsFromFacets_description" rights="" version="1.0" language_independant="true">
+			<pmb_requirements>
+				<pmb_requirement start_path="class" file="external_services_searchcache.class.php"/>
+			</pmb_requirements>
+			<inputs>
+				<description>msg:listRecordsFromFacets_inputs_description</description>
+				<param name="searchId" type="scalar" dataType="string" description="msg:listRecordsFromFacets_searchId"/>
+				<param name="filters" type="array" description="msg:listRecordsFromFacets_inputs_description_filters">
+					<param name="code_champ" type="scalar" dataType="integer" description="msg:listRecordsFromFacets_inputs_description_filter_code_champ"/>
+					<param name="code_ss_champ" type="scalar" dataType="integer" description="msg:listRecordsFromFacets_inputs_description_filter_code_ss_champ"/>
+					<param name="value" type="scalar" dataType="string" description="msg:listRecordsFromFacets_inputs_description_filter_value"/>
+				</param>
+			</inputs>
+			<outputs>                                                                                            
+				<description>msg:listRecordsFromFacets_output_description</description>                        
+				<result type="array" name="results" description="msg:listRecordsFromFacets_results">
+					<result name="noticeId"  type="scalar" dataType="integer" description="msg:listRecordsFromFacets_outputs_description_noticeId"/>
+				</result>                                                                                       
+			</outputs> 
+		</method>
+	</methods>
+</manifest>

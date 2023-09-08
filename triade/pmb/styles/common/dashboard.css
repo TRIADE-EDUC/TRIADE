@@ -1,0 +1,96 @@
+/* +--------------------------------------------------------------------------+
+// ? 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// +-------------------------------------------------+
+// $Id: dashboard.css,v 1.8 2017-11-06 15:19:00 wlair Exp $ */
+
+#extra2{
+	position: absolute;
+	height: 35px;
+	left: 15px;
+	top:5px;
+	z-index: 100;
+}
+
+#extra2 div{
+	display: inline;
+	
+} 
+
+#navbar ul {
+	position:relative;
+	left:60px;
+	width: calc(100% - 60px);
+}
+
+
+#notification_zone {
+	position: absolute;
+	display : none;
+	top: 50px;
+	left: 5px;
+	background-color : white;
+	z-index : 999;
+	padding: 5px;
+	border-radius : 8px;
+	border : 1px solid black;
+	min-width: 250px;
+}
+
+#notification_zone.zone_active {
+	display : block;
+}
+
+#notification_zone form{
+	width:auto;
+}
+
+#dashboards .dashboard {
+	margin: 10px;
+}
+
+#dashboards .dashboard .dashboard_content {
+	padding : 10px;
+	min-height: 180px;
+
+}
+
+#dashboards .dashboard .dashboard_content .row{
+	clear : left;
+}
+
+#dashboards .dashboard .dashboard_content .title, #notifications .title{
+	text-align: right;
+	width: auto;
+	float:left;
+}
+#dashboards .dashboard .dashboard_content .value, #notifications .value{
+	text-align: left;
+}
+
+
+#dashboards .dashboard .alert {
+	padding : 10px;
+	min-height: 150px;
+	float : right;
+	max-width : 165px;
+}
+
+#dashboards .colonne2 {
+	width:calc(50% - 20px);
+}
+
+#dashboards .colonne3 {
+	width:calc(33% - 20px);
+}
+
+#dashboards .colonne4 {
+	width:calc(25% - 20px);
+}
+
+#notification_zone .ui-flex-between>div+div{
+	flex: 1 1 auto;
+}
+
+#notification_zone .ui-flex-between>div.ui-flex-grow{
+	flex: 0 1 auto;	
+}

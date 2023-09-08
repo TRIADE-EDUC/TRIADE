@@ -1,0 +1,16 @@
+<br />
+<b>WARNING, this tool adds records and authorities <u> only if necessary</u>.
+<br />It makes no updates to existing records.</b>
+<br /><br />
+
+The file must be in UNIMARC format<br />
+<ul>
+<li>The <i>import</i> is done in <b>three steps</b>:
+<OL>
+<LI><b>Upload</b> your file,</LI>
+<LI><b>Preload</b> your file,</LI>
+<LI><b>Transfer</b> it into the database.</LI>
+</OL></li>
+<br /><li>Instead of uploading your file, you may send it directly to the server by other means (FTP for example). The file <b>must be named</b> <i>"!!nom_fic!!"</i>, and, in this case, you should jump right to the <b>"!!nom_bouton!!."</b>.</li>
+</ul>
+<br />

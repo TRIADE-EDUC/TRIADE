@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le module Article
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_itemslist_selector_itemstags.xml,v 1.1 2015-02-26 16:02:03 dgoron Exp $ -->
+
+<XMLlist>
+	<entry code="cms_module_itemslist_selector_items_tags">Choisissez un ou plusieurs tags</entry>
+	<entry code="cms_module_itemslist_selector_items_no_tags">Pas de tags disponibles</entry>
+	<entry code="cms_module_itemslist_selector_items_generic">Sélection depuis un ou plusieurs items</entry>
+	<entry code="cms_module_item_selector_item_generic">Sélection depuis un item</entry>
+	<entry code="cms_module_common_selector_env_var">Sélecteur depuis une variable d'environnement</entry>
+</XMLlist>

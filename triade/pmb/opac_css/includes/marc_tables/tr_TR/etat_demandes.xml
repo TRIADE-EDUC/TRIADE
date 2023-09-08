@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+/*************************************************************************
+ *																		 * 
+ * Fichier qui regroupe les différents états d'une demande de recherche  *
+ *																		 *		
+ *************************************************************************/
+-->
+<XMLlist>
+	<entry code="1">Onay Bekliyor</entry>
+	<entry code="2">Onaylandı</entry>
+	<entry code="3">Reddedildi</entry>
+	<entry code="4">Bitti</entry>
+	<entry code="5">Vazgeçildi</entry>
+	<entry code="6">Arşivlendi</entry>
+</XMLlist>

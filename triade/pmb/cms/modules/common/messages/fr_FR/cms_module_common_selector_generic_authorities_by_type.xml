@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le module Article
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_common_selector_generic_authorities_by_type.xml,v 1.2 2016-04-22 07:59:45 apetithomme Exp $ -->
+
+<XMLlist>
+	<entry code="cms_module_common_selector_sub_choice_label">Type d'autorité</entry>
+	<entry code="cms_module_common_selector_sub_choice">Choisissez un type</entry>
+	<entry code="cms_module_common_selector_generic_authorities_authors">Auteurs</entry>
+	<entry code="cms_module_common_selector_generic_authorities_categories">Catégories</entry>
+	<entry code="cms_module_common_selector_generic_authorities_publishers">Editeurs</entry>
+	<entry code="cms_module_common_selector_generic_authorities_collections">Collections</entry>
+	<entry code="cms_module_common_selector_generic_authorities_subcollections">Sous-collections</entry>
+	<entry code="cms_module_common_selector_generic_authorities_series">Titres de série</entry>
+	<entry code="cms_module_common_selector_generic_authorities_uniform_titles">Oeuvres</entry>
+	<entry code="cms_module_common_selector_generic_authorities_indexint">Index. décimales</entry>
+	<entry code="cms_module_common_selector_generic_authorities_concepts">Concepts</entry>
+	<entry code="cms_module_common_selector_generic_authorities_authpersos">Autorités personnalisées</entry>
+</XMLlist>

@@ -1,0 +1,205 @@
+@charset "utf-8";
+/* +--------------------------------------------------------------------------+
+// 2017 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// +-------------------------------------------------+
+// $Id: set-edit-color.css,v 1.6 2018-04-17 15:21:19 wlair Exp $ */
+/*------------------------------------------------------------------------------------------*/
+/* ========================================================================
+   edit
+ ==========================================================================  */
+/* Color :
+base :#9f3874
+hover :#be3986
+active/focus :#982c6b
+*/
+.uk-navbar-nav li#navbar-edit a:after,
+.edit .hmenu.uk-tab>*:hover>a {
+  border-bottom-color: #9f3874;
+}
+
+li#navbar-edit.current,
+.edit input[type="checkbox"]:checked,
+.edit input[type="checkbox"]:indeterminate,
+.edit input[type="radio"]:checked,
+.edit input[type="checkbox"]:checked:focus,
+.edit input[type="checkbox"]:indeterminate:focus,
+.edit input[type="radio"]:checked:focus,
+.edit div#extra2 span.uk-icon,
+.edit div#extra2 .notification.ui-active {
+  background-color: #9f3874;
+}
+
+.edit input:focus,
+.edit select:focus,
+.edit textarea:focus,
+.edit input[type="checkbox"]:focus,
+.edit input[type="radio"]:focus,
+.edit.claro.pure .dijitButtonHover .dijitButtonNode,
+.edit.claro.pure .dijitDropDownButtonHover .dijitButtonNode,
+.edit.claro.pure .dijitComboButton .dijitButtonNodeHover,
+.edit.claro.pure .dijitComboButton .dijitDownArrowButtonHover,
+.edit.claro.pure .dijitToggleButtonHover .dijitButtonNode,
+.edit.claro.pure .dijitTextBoxHover,
+.edit #contenu .uk-button-default:focus,
+.edit #contenu .uk-button-default:hover,
+.edit .hmenu.uk-tab>.uk-active>a,
+.edit iframe {
+  border-color: #9f3874;
+}
+
+.uk-navbar-nav li#navbar-edit a:hover,
+.edit h1.section-title i,
+.edit h1.section-sub-title,
+.edit .uk-link,
+.edit a,
+.edit .uk-link:hover,
+.edit a:hover,
+.edit h3:not(.section-sub-title),
+.edit .article-title i,
+.edit #menu .uk-nav>li>a i,
+.edit #menu .uk-nav>li.uk-active>a,
+.edit #menu .uk-nav>li>a i,
+.edit #menu .uk-nav>li.uk-active>a,
+.edit #menu .uk-nav>li>a:hover,
+.edit .h2-like i,
+.edit #extra span.uk-icon:hover,
+.edit #extra i:hover,
+.edit #navbar .dashboard:hover,
+.pure .edit .uk-tab > * > a:hover,
+.pure .edit .uk-tab > * > a:focus,
+.edit .categ_browser a,
+.edit .categ_browser a:hover,
+.edit .categ_browser a:focus,
+.edit .categ_browser a:active,
+.edit .hmenu.uk-tab>.uk-active>a {
+  color: #9f3874;
+}
+
+.edit #contenu input.wyr-input[type='file']:focus {
+  outline-color: #9f3874;
+}
+
+.edit .stat-child .uk-table th {
+  color: #9f3874;
+  font-weight: 500;
+}
+
+.edit #menu ul.uk-nav {
+  border-top: solid 2px #9f3874;
+}
+
+.edit #menu>h3 .uk-icon {
+  background: #9f3874;
+}
+
+.edit.claro.pure .dijitMenu .dijitMenuItemHover td,
+.edit.claro.pure .dijitMenu .dijitMenuItemSelected td,
+.edit.claro.pure .dijitMenuItemHover,
+.edit.claro.pure .dijitComboBoxMenu .dijitMenuItemHover,
+.edit.claro.pure .dijitMenuItemSelected,
+.edit.claro.pure .dojoDndItemOver {
+  background-color: #9f3874;
+  border-color: #9f3874;
+  background-image: none;
+}
+
+.edit form .form-contenu,
+.edit .row.bkg-grey {
+  border-color: #842b5f;
+}
+
+.edit input.wyr-input[type='submit'],
+.edit .uk-button,
+.edit .search_cancel>input,
+.edit.claro.pure .dijitButton .dijitButtonNode,
+.edit.claro.pure .dijitDropDownButton .dijitButtonNode,
+.edit.claro.pure .dijitComboButton .dijitButtonNode,
+.edit.claro.pure .dijitToggleButton .dijitButtonNode {
+  background-color: #9f3874;
+}
+
+.edit input.wyr-input[type='submit']:hover,
+.edit .uk-button:hover,
+.edit .search_cancel>input:hover,
+.edit.claro.pure .dijitButton .dijitButtonNode:hover,
+.edit.claro.pure .dijitDropDownButton .dijitButtonNode:hover,
+.edit.claro.pure .dijitComboButton .dijitButtonNode:hover,
+.edit.claro.pure .dijitToggleButton .dijitButtonNode:hover {
+  background-color: #be3986;
+}
+
+.edit input.wyr-input[type='submit']:focus,
+.edit input.wyr-input[type='submit']:active,
+.edit .uk-button:focus,
+.edit .uk-button:active,
+.edit .search_cancel>input:focus,
+.edit .search_cancel>input:active,
+.edit.claro.pure .dijitButton .dijitButtonNode:focus,
+.edit.claro.pure .dijitDropDownButton .dijitButtonNode:focus,
+.edit.claro.pure .dijitComboButton .dijitButtonNode:focus,
+.edit.claro.pure .dijitToggleButton .dijitButtonNode:focus,
+.edit.claro.pure .dijitButton .dijitButtonNode:active,
+.edit.claro.pure .dijitDropDownButton .dijitButtonNode:active,
+.edit.claro.pure .dijitComboButton .dijitButtonNode:active,
+.edit.claro.pure .dijitToggleButton .dijitButtonNode:active {
+  background-color: #982c6b;
+}
+
+.edit .uk-label,
+.edit .uk-label:hover {
+  background: #9f3874;
+  color: #fff;
+}
+
+.edit .search-result-item.notice-child[style*='block'],
+.edit .child[style*='block'],
+.edit div[startopen="Yes"] {
+  border-color: #dc79b3;
+}
+
+.edit select:focus {
+  outline-color: #dc79b3;
+}
+
+/* ========================================================================
+inside menu //  button
+===========================================================================  */
+
+.pure.edit .hmenu .wui-button.uk-active {
+    background: #9f3874;
+    border-color: #9f3874;
+}
+.pure.edit .hmenu .wui-button.uk-active:hover  a,
+.pure.edit .hmenu .wui-button:hover a,
+.pure.edit .hmenu .wui-button.uk-active:hover ,
+.pure.edit .hmenu .wui-button:hover,
+.pure.edit .hmenu .wui-button.uk-active:active ,
+.pure.edit .hmenu .wui-button:active
+.pure.edit .hmenu .wui-button.uk-active:focus ,
+.pure.edit .hmenu .wui-button:focus,
+.edit #empr-name,
+.pure.edit .hmenu .wui-button {
+    border-color: #9f3874;    
+}
+ 
+.edit input[type='submit'],
+.edit input[type='button'],
+.edit .bouton{
+	background-color: #9f3874;
+}
+.edit input[type='submit']:hover,
+.edit input[type='button']:hover,
+.edit .bouton:hover{
+	background-color: #be3986;
+}
+
+.edit input[type='submit']:focus,
+.edit input[type='button']:focus,
+.edit .bouton:focus,  
+.edit input[type='submit']:active,
+.edit input[type='button']:active,
+.edit .bouton:active{
+	background-color: #982c6b;
+
+}
+

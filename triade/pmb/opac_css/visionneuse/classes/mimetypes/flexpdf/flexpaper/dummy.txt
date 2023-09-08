@@ -1,0 +1,9 @@
+Décompresser dans ce répertoire la visionneuse FlexPaper (http://flexpaper.devaldi.com)
+
+Attention, vous devez mettre à jour flexpaper en 2.0
+
+Pour convertir le pdf en swf vous devez installer pdf2swf disponible sur http://www.swftools.org/. 
+
+Le paramètre pdf2swf_cmd de la visionneuse doit contenir la commande suivante : 
+
+chemin_absolu_de_pdf2swf/pdf2swf -f -T 9 -t -s storeallcharacters %1s -o %2s

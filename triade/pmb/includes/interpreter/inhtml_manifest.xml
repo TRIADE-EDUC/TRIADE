@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- Fichier manifest de description des méthodes disponibles
+****************************************************************************************
+© 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: inhtml_manifest.xml,v 1.1 2015-07-24 14:23:02 mbertin Exp $ -->
+<manifest>
+	<name>inhtml</name>
+	<description>msg:inhtml_functions_description</description>
+	<methods>
+		<method name="#if_logged($param);" rights="" version="1.0" comment="msg:if_logged_description" language_independant="true">
+			<inputs>
+				<description>msg:if_logged_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:if_logged_output_description</description>
+			</outputs>
+		</method>
+		<method name="#if_logged_lang($param);" rights="" version="1.0" comment="msg:if_logged_lang_description" language_independant="true">
+			<inputs>
+				<description>msg:if_logged_lang_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:if_logged_lang_output_description</description>
+			</outputs>
+		</method>
+		<method name="#message_lang($param);" rights="" version="1.0" comment="msg:message_lang_description" language_independant="true">
+			<inputs>
+				<description>msg:message_lang_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:message_lang_output_description</description>
+			</outputs>
+		</method>
+		<method name="#if_param($param);" rights="" version="1.0" comment="msg:if_param_description" language_independant="true">
+			<inputs>
+				<description>msg:if_param_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:if_param_output_description</description>
+			</outputs>
+		</method>
+		<method name="#eval_php($param);" rights="" version="1.0" comment="msg:eval_php_description" language_independant="true">
+			<inputs>
+				<description>msg:eval_php_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:eval_php_output_description</description>
+			</outputs>
+		</method>
+		<method name="#perio_a2z($param);" rights="" version="1.0" comment="msg:perio_a2z_description" language_independant="true">
+			<inputs>
+				<description>msg:perio_a2z_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:perio_a2z_output_description</description>
+			</outputs>
+		</method>
+		<method name="#if_session_param($param);" rights="" version="1.0" comment="msg:if_session_param_description" language_independant="true">
+			<inputs>
+				<description>msg:if_session_param_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:if_session_param_output_description</description>
+			</outputs>
+		</method>
+	</methods>		
+</manifest>

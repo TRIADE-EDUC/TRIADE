@@ -1,0 +1,305 @@
+
+/*****************************************************************************************
+	Note explicative
+
+	Les contenus decrits ici ont pour but de renseigner les parametres
+	dans la partie gestion de l'opac PMB. Les valeurs sont a renseigner 
+	suivant les directives #obligatoire #recommande...
+
+	Il est possible que certains parametres non decrits ci-dessous n'aient pas l'affichage 
+	souhaite, auquel cas il vous faudra contacter le realisateur de cette charte pour
+	implementer le parametre en question.
+	
+	Une sauvegarde des valeurs est toujours souhaitee avant modification, 
+	communement en collant le contenu du champ "Valeur" dans le champ "Explication"
+	
+*****************************************************************************************/
+
+
+/*********************************
+      default_style_addon
+*********************************/
+body#pmbopac, #intro #intro_bibli .p2 ul li, .cms_menu_deep0 li, ul.search_tabs li, #onglets_list ul.list_tabs li,
+#empr_onglet ul.empr_tabs li, input.bouton, input.boutonrechercher, #subs_form table td input,
+.carroussel_bulletin .current_bull_carroussel, .carroussel_bulletin .active, th, ul.empr_subtabs li, .authorities {
+	background-color : #d0c6b4;
+}
+
+#intro_message .p1 {
+	color : #d0c6b4;
+}
+
+#footer {
+    border-top: 8px solid #D0C6B4;
+}
+
+.notice-child {
+    border-bottom: 5px solid #D0C6B4;
+}
+
+ul.onglets_isbd_public, #categories-container ul, #actualites .bloc_actu, #facette #facette_list a {
+    border-bottom: 1px solid #D0C6B4;
+}
+
+#navigator, #search, #categories-container, #perio_a2z, #location-container, #last_entries, #etagere-container,
+input, select, textarea, .carroussel_bulletin, .current_bull_carroussel, .carroussel_bulletin .active,
+ul.empr_subtabs li, .listedescription {
+	border: 1px solid #58585c;
+}
+
+#intro #intro_bibli .p1, #facette h3, #bandeau #post_adress h3, #bandeau #accueil #lang_select, .bg-grey, #visionneuseBackground {
+	background-color: #58585c;
+}
+
+body, #intro_message .p1 p, #main #search ul.search_tabs li#current, #onglets_list ul.list_tabs li#current,
+#empr_onglet ul.empr_tabs li#current a, a, input.login, input.password, input.subsform, select, textarea,
+.carroussel_bulletin, .current_bull_carroussel, #onglets_list ul.list_tabs li a.current,
+#search_onglet ul.search_tabs li.current a {
+	color : #58585c;
+}
+
+
+/*********************************
+      biblio_main header
+*********************************/
+<h3>Nom de la Bibliothèque</h3>
+
+
+/*********************************
+      biblio_important_p1
+*********************************/
+<p>Nom de la Bibliothèque</p>
+Un système intégré de gestion de bibliothèque est un logiciel destiné à la gestion informatique des différentes tâches d’une bibliothèque.
+Ses différentes fonctions vont de la gestion courante de prêt aux statistiques, la gestion des achats et des recettes, en passant par la gestion courante des fonds.
+
+
+/*********************************
+      biblio_post_adress
+*********************************/
+<h3>Horaires de la bibliothèque&nbsp;:</h3>
+
+Lundi : 14 h - 17 h
+<br />
+Mardi : 8 h - 12 h et 14 h - 16 h
+<br />
+Jeudi : 15 h -17 h
+<br />
+Samedi : 14 h - 17 h
+<br />
+Dimanche : 10 h - 12 h
+
+
+/*********************************
+      biblio_preamble_p1
+*********************************/
+<img src="./styles/genbib/images/image1.jpg" />
+<img src="./styles/genbib/images/image2.jpg" />
+<img src="./styles/genbib/images/image3.jpg" />
+
+
+/*********************************
+      biblio_preamble_p2
+*********************************/
+<ul id="menuDeroulant">
+
+<li>
+<a href='./index.php'>Accueil</a>
+</li>
+
+<li>
+<a href='http://'>Infopage 1</a>
+<ul class="sousMenu">             <!-- Premier sous menu -->
+<li>
+<a href='http://'>Infopage 11</a>
+</li>
+<li>
+<a href='http://'>Infopage 12</a>
+<ul class="sousMenu2">            <!-- Deuxième sous menu -->
+<li>
+<a href='http://'>Infopage 121</a>
+</li>
+<li>
+<a href='http://'>Infopage 122</a>
+</li>
+<li>
+<a href='http://'>Infopage 123</a>
+</li>
+</ul>
+</li>
+<li>
+<a href='http://'>Infopage 13</a>
+</li>
+</ul>
+</li>
+
+<li>
+<a href='http://'>Infopage 2</a>
+</li>
+
+<li>
+<a href='http://'>Infopage 3</a>
+</li>
+
+</ul>
+
+
+/*********************************
+       infopage actualites
+*********************************/
+<div id="actualites">
+<h1>Les Actualit&eacute;s</h1>
+<div class="bloc_actu">
+<h3>Le titre de l'actu</h3>
+<table border="0">
+<tbody>
+<tr>
+<td>
+Une actualit&eacute; est g&eacute;n&eacute;ralement une information r&eacute;cente, communiqu&eacute;e par les m&eacute;dias. Au sens strict, l'actualit&eacute; est l'&eacute;tat de ce qui est actuelle. On emploie aussi le terme pour parler de l'actualit&eacute; d'une id&eacute;e, d'une doctrine ou d'un syst&egrave;me de pens&eacute;e.
+Une actualit&eacute; est g&eacute;n&eacute;ralement une information r&eacute;cente, communiqu&eacute;e par les m&eacute;dias. Au sens strict, l'actualit&eacute; est l'&eacute;tat de ce qui est actuelle. On emploie aussi le terme pour parler de l'actualit&eacute; d'une id&eacute;e, d'une doctrine ou d'un syst&egrave;me de pens&eacute;e. Une actualit&eacute; est g&eacute;n&eacute;ralement une information r&eacute;cente, communiqu&eacute;e par les m&eacute;dias. Au sens strict, l'actualit&eacute; est l'&eacute;tat de ce qui est actuelle. On emploie aussi le terme pour parler de l'actualit&eacute; d'une id&eacute;e, d'une doctrine ou d'un syst&egrave;me de pens&eacute;e.
+</td>
+<td class="image">
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="bloc_actu">
+<h3>Le titre de l'actu</h3>
+<table border="0">
+<tbody>
+<tr>
+<td>
+Une actualit&eacute; est g&eacute;n&eacute;ralement une information r&eacute;cente, communiqu&eacute;e par les m&eacute;dias. Au sens strict, l'actualit&eacute; est l'&eacute;tat de ce qui est actuelle. On emploie aussi le terme pour parler de l'actualit&eacute; d'une id&eacute;e, d'une doctrine ou d'un syst&egrave;me de pens&eacute;e.
+Une actualit&eacute; est g&eacute;n&eacute;ralement une information r&eacute;cente, communiqu&eacute;e par les m&eacute;dias. Au sens strict, l'actualit&eacute; est l'&eacute;tat de ce qui est actuelle. On emploie aussi le terme pour parler de l'actualit&eacute; d'une id&eacute;e, d'une doctrine ou d'un syst&egrave;me de pens&eacute;e. Une actualit&eacute; est g&eacute;n&eacute;ralement une information r&eacute;cente, communiqu&eacute;e par les m&eacute;dias. Au sens strict, l'actualit&eacute; est l'&eacute;tat de ce qui est actuelle. On emploie aussi le terme pour parler de l'actualit&eacute; d'une id&eacute;e, d'une doctrine ou d'un syst&egrave;me de pens&eacute;e.
+</td>
+<td class="image">
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="bloc_actu">
+<h3>Le titre de l'actu</h3>
+<table border="0">
+<tbody>
+<tr>
+<td>
+Une actualit&eacute; est g&eacute;n&eacute;ralement une information r&eacute;cente, communiqu&eacute;e par les m&eacute;dias. Au sens strict, l'actualit&eacute; est l'&eacute;tat de ce qui est actuelle. On emploie aussi le terme pour parler de l'actualit&eacute; d'une id&eacute;e, d'une doctrine ou d'un syst&egrave;me de pens&eacute;e.
+Une actualit&eacute; est g&eacute;n&eacute;ralement une information r&eacute;cente, communiqu&eacute;e par les m&eacute;dias. Au sens strict, l'actualit&eacute; est l'&eacute;tat de ce qui est actuelle. On emploie aussi le terme pour parler de l'actualit&eacute; d'une id&eacute;e, d'une doctrine ou d'un syst&egrave;me de pens&eacute;e. Une actualit&eacute; est g&eacute;n&eacute;ralement une information r&eacute;cente, communiqu&eacute;e par les m&eacute;dias. Au sens strict, l'actualit&eacute; est l'&eacute;tat de ce qui est actuelle. On emploie aussi le terme pour parler de l'actualit&eacute; d'une id&eacute;e, d'une doctrine ou d'un syst&egrave;me de pens&eacute;e.
+</td>
+<td class="image">
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+/*********************************
+       infopage horaires
+*********************************/
+<div id="horaires">
+<h1>Les Horaires</h1>
+<table border="0">
+<tbody>
+<tr>
+<td>
+Lundi
+</td>
+<td>
+9 h 30 - 12 h et 14 h 30 - 17 h 30
+</td>
+</tr>
+<tr>
+<td>
+Mardi
+</td>
+<td>
+9 h 30 - 12 h et 14 h 30 - 17 h 30
+</td>
+</tr>
+<tr>
+<td>
+Mercredi
+</td>
+<td>
+9 h 30 - 12 h et 14 h 30 - 17 h 30
+</td>
+</tr>
+<tr>
+<td>
+Jeudi
+</td>
+<td>
+9 h 30 - 12 h et 14 h 30 - 17 h 30
+</td>
+</tr>
+<tr>
+<td>
+Vendredi
+</td>
+<td>
+9 h 30 - 12 h et 14 h 30 - 17 h 30
+</td>
+</tr>
+<tr>
+<td>
+Samedi
+</td>
+<td>
+9 h 30 - 12 h et 14 h 30 - 17 h 30
+</td>
+</tr>
+</tbody>
+</table>
+<h1>Les Tarifs</h1>
+<table border="0">
+<tbody>
+<tr>
+<td>
+Enfant de moins de 15ans
+</td>
+<td>
+Gratuit
+</td>
+<td>
+1 livres + 1 CD audio par mois
+</td>
+</tr>
+<tr>
+<td>
+Lyc&eacute;en et &eacute;tudiant
+</td>
+<td>
+10 &euro; &agrave; l'ann&eacute;e
+</td>
+<td>
+3 livres + 1 CD audio + 1 CD-rom par semaine
+</td>
+</tr>
+<tr>
+<td>
+Retrait&eacute;s, Demandeurs d'emploi
+</td>
+<td>
+Gratuit
+</td>
+<td>
+1 livres + 1 CD audio par mois
+</td>
+</tr>
+<tr>
+<td>
+Adultes
+</td>
+<td>
+10 &euro; trimestriel
+</td>
+<td>
+illimit&eacute;
+</td>
+</tr>
+</tbody>
+</table>
+</div>

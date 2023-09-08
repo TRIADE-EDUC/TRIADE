@@ -1,0 +1,377 @@
+
+/*****************************************************************************************
+	Note explicative
+
+	Les contenus decrits ici ont pour but de renseigner les parametres
+	dans la partie gestion de l'opac PMB. Les valeurs sont a renseigner 
+	suivant les directives #obligatoire #recommande...
+
+	Il est possible que certains parametres non decrits ci-dessous n'aient pas l'affichage 
+	souhaite, auquel cas il vous faudra contacter le realisateur de cette charte pour
+	implementer le parametre en question.
+	
+	Une sauvegarde des valeurs est toujours souhaitee avant modification, 
+	communement en collant le contenu du champ "Valeur" dans le champ "Explication"
+	
+*****************************************************************************************/
+
+
+/*********************************
+      default_style_addon
+*********************************/
+body#pmbopac, #intro #intro_bibli .p2 ul li, .cms_menu_deep0 li, ul.search_tabs li, #onglets_list ul.list_tabs li,
+#empr_onglet ul.empr_tabs li, input.bouton, input.boutonrechercher, #subs_form table td input,
+.carroussel_bulletin .current_bull_carroussel, .carroussel_bulletin .active, th, ul.empr_subtabs li, .authorities {
+	background-color : #d0c6b4;
+}
+
+#intro_message .p1 {
+	color : #d0c6b4;
+}
+
+#footer {
+    border-top: 8px solid #D0C6B4;
+}
+
+.notice-child {
+    border-bottom: 5px solid #D0C6B4;
+}
+
+ul.onglets_isbd_public, #categories-container ul, #actualites .bloc_actu, #facette #facette_list a {
+    border-bottom: 1px solid #D0C6B4;
+}
+
+#navigator, #search, #categories-container, #perio_a2z, #location-container, #last_entries, #etagere-container,
+input, select, textarea, .carroussel_bulletin, .current_bull_carroussel, .carroussel_bulletin .active,
+ul.empr_subtabs li, .listedescription {
+	border: 1px solid #58585c;
+}
+
+#intro #intro_bibli .p1, #facette h3, #bandeau #post_adress h3, #bandeau #accueil #lang_select, .bg-grey, #visionneuseBackground {
+	background-color: #58585c;
+}
+
+body, #intro_message .p1 p, #main #search ul.search_tabs li#current, #onglets_list ul.list_tabs li#current,
+#empr_onglet ul.empr_tabs li#current a, a, input.login, input.password, input.subsform, select, textarea,
+.carroussel_bulletin, .current_bull_carroussel, #onglets_list ul.list_tabs li a.current,
+#search_onglet ul.search_tabs li.current a {
+	color : #58585c;
+}
+
+
+/*********************************
+      biblio_main header
+*********************************/
+<h3>Nom de la Bibliothèque</h3>
+
+
+/*********************************
+      biblio_important_p1
+*********************************/
+<p>Nom de la Bibliothèque</p>
+Un système intégré de gestion de bibliothèque est un logiciel destiné à la gestion informatique des différentes tâches d’une bibliothèque.
+Ses différentes fonctions vont de la gestion courante de prêt aux statistiques, la gestion des achats et des recettes, en passant par la gestion courante des fonds.
+
+
+/*********************************
+      biblio_post_adress
+*********************************/
+<h3>Horaires de la bibliothèque&nbsp;:</h3>
+
+Lundi : 14 h - 17 h
+<br />
+Mardi : 8 h - 12 h et 14 h - 16 h
+<br />
+Jeudi : 15 h -17 h
+<br />
+Samedi : 14 h - 17 h
+<br />
+Dimanche : 10 h - 12 h
+
+
+/*********************************
+      biblio_preamble_p1
+*********************************/
+<img src="./styles/genbib/images/image1.jpg" />
+<img src="./styles/genbib/images/image2.jpg" />
+<img src="./styles/genbib/images/image3.jpg" />
+
+
+/*********************************
+      biblio_preamble_p2
+*********************************/
+<ul id="menuDeroulant">
+
+<li>
+<a href='./index.php'>Accueil</a>
+</li>
+
+<li>
+<a href='http://'>Infopage 1</a>
+<ul class="sousMenu">             <!-- Premier sous menu -->
+<li>
+<a href='http://'>Infopage 11</a>
+</li>
+<li>
+<a href='http://'>Infopage 12</a>
+<ul class="sousMenu2">            <!-- Deuxième sous menu -->
+<li>
+<a href='http://'>Infopage 121</a>
+</li>
+<li>
+<a href='http://'>Infopage 122</a>
+</li>
+<li>
+<a href='http://'>Infopage 123</a>
+</li>
+</ul>
+</li>
+<li>
+<a href='http://'>Infopage 13</a>
+</li>
+</ul>
+</li>
+
+<li>
+<a href='http://'>Infopage 2</a>
+</li>
+
+<li>
+<a href='http://'>Infopage 3</a>
+</li>
+
+</ul>
+
+
+/*********************************
+       infopage actualites
+*********************************/
+<div id="actualites">
+<h1>Les Actualit&eacute;s</h1>
+<div class="bloc_actu">
+<h3>Le titre de l'actu</h3>
+<table border="0">
+<tbody>
+<tr>
+<td>
+Une actualit&eacute; est g&eacute;n&eacute;ralement une information r&eacute;cente, communiqu&eacute;e par les m&eacute;dias. Au sens strict, l'actualit&eacute; est l'&eacute;tat de ce qui est actuelle. On emploie aussi le terme pour parler de l'actualit&eacute; d'une id&eacute;e, d'une doctrine ou d'un syst&egrave;me de pens&eacute;e.
+Une actualit&eacute; est g&eacute;n&eacute;ralement une information r&eacute;cente, communiqu&eacute;e par les m&eacute;dias. Au sens strict, l'actualit&eacute; est l'&eacute;tat de ce qui est actuelle. On emploie aussi le terme pour parler de l'actualit&eacute; d'une id&eacute;e, d'une doctrine ou d'un syst&egrave;me de pens&eacute;e. Une actualit&eacute; est g&eacute;n&eacute;ralement une information r&eacute;cente, communiqu&eacute;e par les m&eacute;dias. Au sens strict, l'actualit&eacute; est l'&eacute;tat de ce qui est actuelle. On emploie aussi le terme pour parler de l'actualit&eacute; d'une id&eacute;e, d'une doctrine ou d'un syst&egrave;me de pens&eacute;e.
+</td>
+<td class="image">
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="bloc_actu">
+<h3>Le titre de l'actu</h3>
+<table border="0">
+<tbody>
+<tr>
+<td>
+Une actualit&eacute; est g&eacute;n&eacute;ralement une information r&eacute;cente, communiqu&eacute;e par les m&eacute;dias. Au sens strict, l'actualit&eacute; est l'&eacute;tat de ce qui est actuelle. On emploie aussi le terme pour parler de l'actualit&eacute; d'une id&eacute;e, d'une doctrine ou d'un syst&egrave;me de pens&eacute;e.
+Une actualit&eacute; est g&eacute;n&eacute;ralement une information r&eacute;cente, communiqu&eacute;e par les m&eacute;dias. Au sens strict, l'actualit&eacute; est l'&eacute;tat de ce qui est actuelle. On emploie aussi le terme pour parler de l'actualit&eacute; d'une id&eacute;e, d'une doctrine ou d'un syst&egrave;me de pens&eacute;e. Une actualit&eacute; est g&eacute;n&eacute;ralement une information r&eacute;cente, communiqu&eacute;e par les m&eacute;dias. Au sens strict, l'actualit&eacute; est l'&eacute;tat de ce qui est actuelle. On emploie aussi le terme pour parler de l'actualit&eacute; d'une id&eacute;e, d'une doctrine ou d'un syst&egrave;me de pens&eacute;e.
+</td>
+<td class="image">
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="bloc_actu">
+<h3>Le titre de l'actu</h3>
+<table border="0">
+<tbody>
+<tr>
+<td>
+Une actualit&eacute; est g&eacute;n&eacute;ralement une information r&eacute;cente, communiqu&eacute;e par les m&eacute;dias. Au sens strict, l'actualit&eacute; est l'&eacute;tat de ce qui est actuelle. On emploie aussi le terme pour parler de l'actualit&eacute; d'une id&eacute;e, d'une doctrine ou d'un syst&egrave;me de pens&eacute;e.
+Une actualit&eacute; est g&eacute;n&eacute;ralement une information r&eacute;cente, communiqu&eacute;e par les m&eacute;dias. Au sens strict, l'actualit&eacute; est l'&eacute;tat de ce qui est actuelle. On emploie aussi le terme pour parler de l'actualit&eacute; d'une id&eacute;e, d'une doctrine ou d'un syst&egrave;me de pens&eacute;e. Une actualit&eacute; est g&eacute;n&eacute;ralement une information r&eacute;cente, communiqu&eacute;e par les m&eacute;dias. Au sens strict, l'actualit&eacute; est l'&eacute;tat de ce qui est actuelle. On emploie aussi le terme pour parler de l'actualit&eacute; d'une id&eacute;e, d'une doctrine ou d'un syst&egrave;me de pens&eacute;e.
+</td>
+<td class="image">
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+/*********************************
+       infopage horaires
+*********************************/
+<div id="horaires">
+<h1>Les Horaires</h1>
+<table border="0">
+<tbody>
+<tr>
+<td>
+Lundi
+</td>
+<td>
+9 h 30 - 12 h et 14 h 30 - 17 h 30
+</td>
+</tr>
+<tr>
+<td>
+Mardi
+</td>
+<td>
+9 h 30 - 12 h et 14 h 30 - 17 h 30
+</td>
+</tr>
+<tr>
+<td>
+Mercredi
+</td>
+<td>
+9 h 30 - 12 h et 14 h 30 - 17 h 30
+</td>
+</tr>
+<tr>
+<td>
+Jeudi
+</td>
+<td>
+9 h 30 - 12 h et 14 h 30 - 17 h 30
+</td>
+</tr>
+<tr>
+<td>
+Vendredi
+</td>
+<td>
+9 h 30 - 12 h et 14 h 30 - 17 h 30
+</td>
+</tr>
+<tr>
+<td>
+Samedi
+</td>
+<td>
+9 h 30 - 12 h et 14 h 30 - 17 h 30
+</td>
+</tr>
+</tbody>
+</table>
+<h1>Les Tarifs</h1>
+<table border="0">
+<tbody>
+<tr>
+<td>
+Enfant de moins de 15ans
+</td>
+<td>
+Gratuit
+</td>
+<td>
+1 livres + 1 CD audio par mois
+</td>
+</tr>
+<tr>
+<td>
+Lyc&eacute;en et &eacute;tudiant
+</td>
+<td>
+10 &euro; &agrave; l'ann&eacute;e
+</td>
+<td>
+3 livres + 1 CD audio + 1 CD-rom par semaine
+</td>
+</tr>
+<tr>
+<td>
+Retrait&eacute;s, Demandeurs d'emploi
+</td>
+<td>
+Gratuit
+</td>
+<td>
+1 livres + 1 CD audio par mois
+</td>
+</tr>
+<tr>
+<td>
+Adultes
+</td>
+<td>
+10 &euro; trimestriel
+</td>
+<td>
+illimit&eacute;
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+
+/*********************************
+    infopage mentions légales
+*********************************/
+<h1>Mentions Légales</h1>
+
+<br /><br />
+
+<h2>1. Présentation de notre site web</h2>
+
+<p>Conformément à la loi n° 2004-2005 du 21 juin 2004 pour la confiance dans l'économie numérique, notre site web créé par <a href="<-- Url du site internet du créateur -->" title="<--Créateur du site internet -->"><--Créateur du site internet --></a>, propriétaire du site <a href="<-- Url du site internet du créateur -->" title="<--Créateur du site internet -->"><-- Url du site internet du créateur --></a>, met à disposition du public les informations concernant notre entreprise.<br />
+Eventuellement modifiables, nous vous invitons donc à consulter nos mentions légales le plus souvent possible, de manière à en prendre connaissance fréquemment</p>
+
+<p>Le site <a href="<--Url du site-->" title="<--Propriétaire du site -->"><--Url du site--></a> appartient à <--Propriétaire du site --> - , dont le siège social est situé à l'adresse suivante : <--Adresse postale du propriétaire-->.<br />
+Personne physique ou morale, <-- Nom du responsable de publication--> est responsable de la publication, dont l'adresse e-mail est la suivante : <a href="mailto:<--Contact du responsable de publication -->"><--Contact du responsable de publication --></a><br />
+Le webmaster, <--Nom du webmaster -->, est responsable de l'administration du site, dont l'adresse e-mail est la suivante : <a href="mailto:<--Contact du webmaster -->"><--Contact du webmaster --></a>.<br />
+Les mentions légales présentes sur ce site Internet ont été générées et offertes par <a href="http://www.g7design.fr" title="G7design | Web & Print Agency">l'agence de communication web G7design</a>, situé au 11 rue Parmentier à Nice, et rédigées par <a href="http://www.redacteur-contenu-web.com" title="Agence redacteur-contenu-web.com">Alexandre Montenon</a>, de l'agence <a href="http://www.redacteur-contenu-web.com">redacteur-contenu-web.com</a>.<br />
+Le site <a href="<--Url du site-->" title="<--Propriétaire du site -->"><--Url du site--></a> est hébergé par <--Nom de l\'hébergeur -->, dont le siège social est localisé à l'adresse suivante : <--Adresse postale de l\'hebergeur -->.</p>
+
+<br /><br />
+
+<h2>2. Conditions générales d’utilisation du site et des services proposés.</h2>
+
+<p>En utilisant notre site web <a href="<--Url du site-->" title="<--Propriétaire du site -->"><--Url du site--></a>, vous acceptez pleinement et entièrement les conditions générales d'utilisation précisées dans nos mentions légales. Accessible à tout type de visiteurs, il est important de préciser toutefois qu'une interruption pour maintenance du site web peut-être décidée par <--Propriétaire du site -->. Les dates et heures d'interruptions seront néanmoins précisées à l'avance aux utilisateurs.</p>
+
+<br /><br />
+
+<h2>3. Les produits ou services proposés par <a href="<--Url du site-->" title="<--Propriétaire du site -->"><--Url du site--></a></h2>
+
+<p>En accord avec sa politique de communication, le site <a href="<--Url du site-->" title="<--Propriétaire du site -->"><--Url du site--></a> a pour vocation d'informer les utilisateurs sur les services proposés par <--Propriétaire du site -->, qui s'efforce alors de fournir des informations précises sur son activité. Cependant, des inexactitudes ou des omissions peuvent exister : la société ne pourra en aucun cas être tenue pour responsable pour toute erreur présente sur le site <a href="<--Url du site-->" title="<--Propriétaire du site -->"><--Url du site--></a>.</p>
+
+<br /><br />
+
+<h2>4.  Limitations contractuelles</h2>
+
+<p>Les informations retranscrites sur notre site web <a href="<--Url du site-->" title="<--Propriétaire du site -->"><--Url du site--></a> font l’objet de démarches qualitatives, en vue de nous assurer de leur fiabilité. Cependant, nous ne pourrons encourir de responsabilités en cas d’inexactitudes techniques lors de nos explications.<br />
+Si vous constatez une erreur concernant des informations que nous auront pu omettre, n’hésitez pas à nous le signaler par mail à <a href="mailto:<--Contact du responsable de publication -->"><--Contact du responsable de publication --></a>.</p>
+
+<p>Les liens reliés directement ou indirectement à notre site web <a href="<--Url du site-->" title="<--Propriétaire du site -->"><--Url du site--></a> ne sont pas sous le contrôle de notre société. Par conséquent, nous ne pouvons nous assurer de l’exactitude des informations présentes sur ces autres sites Internet.</p>
+
+<p>Utilisant la technologie JavaScript, le site <a href="<--Url du site-->" title="<--Propriétaire du site -->"><--Url du site--></a> ne pourra être tenu pour responsable en cas de dommages matériels liés à son utilisation. Par ailleurs, toute autre type de conséquence liée à l'exploitation du site <a href="<--Url du site-->" title="<--Propriétaire du site -->"><--Url du site--></a>, qu'elle soit direct ou indirect (bug, incompatibilité, virus, perte de marché, etc.).</p>
+
+<br /><br />
+
+<h2>5. Propriété intellectuelle et contenu du site Internet</h2>
+
+<p>Le contenu rédactionnel du site web <a href="<--Url du site-->" title="<--Propriétaire du site -->"><--Url du site--></a> appartient exclusivement à <--Propriétaire du site -->. Toute violation des droits d’auteur est sanctionnée par l’article L.335-2 du Code de la Propriété Intellectuelle, avec une peine encourue de 2 ans d’emprisonnement et de 150 000€ d’amende</p>
+
+<p>Le site <a href="<--Url du site-->" title="<--Propriétaire du site -->"><--Url du site--></a> ne pourra être mis en cause en cas de propos injurieux, à caractère raciste, diffamant ou pornographique, échangés sur les espaces interactifs. La société se réserve également le droit de supprimer tout contenu contraire aux valeurs de l'entreprise ou à la législation applicable en France.</p>
+
+<p>En naviguant sur le site <a href="<--Url du site-->" title="<--Propriétaire du site -->"><--Url du site--></a>, l'utilisateur accepte également l'installation de cookies éventuelle sur son ordinateur.</p>
+
+<br /><br />
+
+<h2>6. Données personnelles, respect de votre vie privée et de vos libertés</h2>
+
+<p>Toute informations recueillie sur le site web <a href="<--Url du site-->" title="<--Propriétaire du site -->"><--Url du site--></a> se font dans le cadre des besoins liés à l'utilisation de notre plateforme, tels que le formulaire de commande ou la demande d'inscription à la Newsletter. Par ailleurs, le désabonnement de la Newsletter se fait grâce au lien situé en pied de page.<br />
+<--Propriétaire du site --> s'engage à ne céder en aucun cas les informations concernant les utilisateurs du site Internet, de quelque façon qu'il soit (vente, échange, prêt, location, don).</p>
+
+<p>Conformément à la loi « informatique et libertés » du 6 janvier 1978 modifiée en 2004, l’utilisateur bénéficie d’un droit d’accès et de rectification aux informations le concernant, droit qu’il peut exercer à tout moment en adressant un mail à l’adresse <a href="mailto:<--Contact du webmaster -->"><--Contact du webmaster --></a>, ou en effectuant sa demande par courrier, à l’adresse suivante : <--Adresse postale du propriétaire-->.</p>
+
+<p>Le site web concerné est déclaré à la CNIL sous le numéro : <-- Numéro CNIL --><br /><br />
+Les bases de données sont protégées par les dispositions de la loi du 1er juillet 1998 transposant la directive 96/9 du 11 mars 1996 relative à la protection juridique des bases de données.</p>
+
+<br /><br />
+
+<h2>7. Droit applicable et lois concernées</h2>
+
+<p>Soumis au droit français, le site web <a href="<--Url du site-->" title="<--Propriétaire du site -->"><--Url du site--></a> est encadré par la loi n° 2004-2005 du 21 juin 2004 pour la confiance dans l'économie numérique, l’article L.335-2 du Code de la Propriété Intellectuelle et la loi « informatique et libertés » du 6 janvier 1978 modifiée en 2004.</p>
+
+

@@ -1,0 +1,36 @@
+#
+#	Note explicative
+#
+#	Les contenus decrits ici ont pour but de renseigner les parametres
+#	dans la partie gestion de l'opac PMB. Les valeurs sont a renseigner 
+#	suivant les directives #obligatoire #recommande...
+#
+#	Il est possible que certains parametres non decrits ci-dessous n'aient pas l'affichage 
+#	souhaite, auquel cas il vous faudra contacter le realisateur de cette charte pour
+#	implementer le parametre en question.
+#	
+#	Une sauvegarde des valeurs est toujours souhaitee avant modification, 
+#	communement en collant le contenu du champ "Valeur" dans le champ "Explication"
+#
+
+/*************************
+biblio_important_p1
+*************************/
+<h3>Catalogue en ligne du Centre National du Livre</h3>
+L’intégralité des documents conservés par le Cnl sous l’appellation « Bibliothèque de référence » est aujourd’hui consultable sur ce catalogue, vitrine des <a href="http://www.centrenationaldulivre.fr/spip.php?rubrique195">aides à l'édition</a>  depuis 1946. Les éditeurs qui ont bénéficié d'une aide adressent leurs ouvrages, à parution, au Cnl.<br> <b>A ce stade, les recherches par « Commission » ne peuvent s’effectuer qu’à partir de 2001.</b><br> Pour <b>consulter ou acquérir</b> ces ouvrages nous vous invitons à vous renseigner auprès d’une <b>bibliothèque ou d’un libraire près de chez vous</b>.
+
+
+/*************************
+biblio_name
+#obligatoire
+*************************/
+Centre National du Livre
+
+
+/*************************
+biblio_preamble_p1
+*************************/
+<a href="./index.php"><img src="./styles/cnl/images/bandeau.jpg" /></a>
+
+
+

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+<!-- messages localisés en français pour le module Article
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_menu_view_menu_django.xml,v 1.1 2012-11-15 09:47:40 arenou Exp $ -->
+
+<XMLlist>
+	<entry code='cms_module_menu_view_menu_django'>Booléen, si vrai , cela signifie qu'on est sur la page correspondant au lien</entry>
+</XMLlist>

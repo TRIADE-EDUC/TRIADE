@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le module Article
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_common_selector_generic_section.xml,v 1.2 2014-06-11 08:15:16 arenou Exp $ -->
+
+<XMLlist>
+	<entry code="cms_module_common_selector_sub_choice_label">Récupérer la rubrique  via</entry>
+	<entry code="cms_module_common_selector_sub_choice">Choisissez une méthode</entry>
+	<entry code="cms_module_common_selector_section">Sélection manuelle</entry>
+	<entry code="cms_module_common_selector_env_var">Sélection via une variable d'environnement</entry>
+	<entry code="cms_module_common_selector_global_var">Sélection via une variable globale</entry>
+</XMLlist>

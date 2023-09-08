@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- messages localisés en français pour la maintenance mySQL
+****************************************************************************************
+© 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: en_UK.xml,v 1.1 2015-06-15 12:55:35 pmbs Exp $ -->
+
+<XMLlist>
+	<entry code="planificateur_mysql_maintenance">MySQL maintenance</entry>
+	<entry code="planificateur_mysql_checkTable">Check the tables</entry>
+	<entry code="planificateur_mysql_analyzeTable">Analyze the tables</entry>
+	<entry code="planificateur_mysql_repairTable">Repair the tables</entry>
+	<entry code="planificateur_mysql_optimizeTable">Optimize the tables</entry>
+	<entry code="mysql_operation">MYSQL operation</entry>
+	<entry code="mysql_action_unknown">No operation chosen</entry>
+	<!--<entry code="mysql_report_error">Erreur durant l'exécution de la tâche</entry>
+	<entry code="mysql_report_success">Tâche réalisée avec succès</entry>
+--></XMLlist>

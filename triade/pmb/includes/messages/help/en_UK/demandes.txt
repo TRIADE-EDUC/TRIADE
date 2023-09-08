@@ -1,0 +1,8 @@
+<h2>Module of research and information requests</h2>
+<p>Research and information requests are a service that allows a reader to contact a librarian to exchange, look for precisions and ask some informations in 
+order to result in an accurate record that fits what the reader needs.</p>
+
+<h2>Lists</h2>
+Allows to see the research requests through different types of filters.<br />
+<h2>Actions</h2>
+Allows to see all the active actions of the current user (Conversation threading, Appointments, ...).<br />

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le module Article
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_common_selector_articles_from_type.xml,v 1.2 2017-10-17 10:22:10 apetithomme Exp $ -->
+
+<XMLlist>
+	<entry code="cms_module_common_selector_articles_from_type">Type de contenu</entry>
+	<entry code="cms_module_common_selector_articles_from_type_all_articles">Tous les articles</entry>
+</XMLlist>

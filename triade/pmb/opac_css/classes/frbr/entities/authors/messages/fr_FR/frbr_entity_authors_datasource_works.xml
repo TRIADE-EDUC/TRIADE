@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le module Articleslist
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: frbr_entity_authors_datasource_works.xml,v 1.1 2019-01-10 10:04:39 apetithomme Exp $ -->
+
+<XMLlist>
+	<entry code='frbr_entity_authors_datasource_authors_function'>Fonctions d'auteur</entry>
+</XMLlist>

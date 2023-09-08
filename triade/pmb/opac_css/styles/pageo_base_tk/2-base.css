@@ -1,0 +1,1471 @@
+@charset "utf-8";
+
+/* CSS Document */
+
+
+/* +--------------------------------------------------------------------------+
+// 2013 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// +-------------------------------------------------+
+// $Id: 2-base.css,v 1.2 2018-01-08 13:33:34 wlair Exp $ */
+
+
+/*------------------------------------------------------------------------------------------*/
+
+
+/*--------------------------------------------------------------------------*/
+
+
+/*--------------------------------------------------------------------------*/
+
+
+/* ========================================================================
+   Component: import 
+ ==========================================================================  */
+
+
+/* ========================================================================
+   Component: Base
+ ========================================================================== */
+
+html,
+body,
+div,
+span,
+applet,
+object,
+iframe,
+p,
+blockquote,
+pre,
+a,
+abbr,
+acronym,
+address,
+big,
+cite,
+code,
+del,
+dfn,
+em,
+font,
+img,
+ins,
+kbd,
+q,
+s,
+samp,
+small,
+strike,
+strong,
+sub,
+sup,
+tt,
+var,
+b,
+u,
+i,
+center,
+dl,
+dt,
+dd,
+ol,
+ul,
+li,
+fieldset,
+form,
+label,
+legend,
+table,
+caption,
+tbody,
+tfoot,
+thead,
+tr,
+th,
+td,
+figure {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	outline: 0;
+	background: transparent;
+}
+
+html {
+	font-family: sans-serif;
+	-webkit-text-size-adjust: 100%;
+	-ms-text-size-adjust: 100%;
+	font-size: 10px;
+}
+
+body {
+	line-height: normal;
+	font-size: 1.4em;
+}
+
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+nav,
+section {
+	display: block;
+}
+
+audio,
+canvas,
+video {
+	display: inline-block;
+	*display: inline;
+	*zoom: 1;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.h1,
+.h2,
+.h3,
+.h4,
+.h5,
+.h6 {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	outline: 0;
+	vertical-align: baseline;
+}
+
+a:focus {
+	outline: thin dotted #333;
+	outline: 5px auto -webkit-focus-ring-color;
+	outline-offset: -2px;
+}
+
+ol,
+ul {
+	list-style: none;
+}
+
+ul,
+ol {
+	padding: 0;
+	margin: 0;
+}
+
+ul ul,
+ul ol,
+ol ol,
+ol ul {
+	margin-bottom: 0;
+}
+
+li {}
+
+blockquote,
+q {
+	quotes: none;
+}
+
+blockquote:before,
+blockquote:after,
+q:before,
+q:after {
+	content: '';
+	content: none;
+}
+
+
+/* remember to define focus styles! */
+
+:focus {
+	outline: 0;
+}
+
+
+/* remember to highlight inserts somehow! */
+
+ins {
+	text-decoration: none;
+}
+
+del {
+	text-decoration: line-through;
+}
+
+
+/* tables still need 'cellspacing="0"' in the markup */
+
+table {
+	border-collapse: collapse;
+}
+
+#iframe_resume_panier html,
+body html {
+	background-color: transparent;
+	background-image: none;
+}
+
+
+/* font-sizing for content */
+
+p,
+ul,
+ol,
+dl,
+blockquote,
+pre,
+td,
+th,
+label,
+textarea,
+caption,
+details,
+figure {}
+
+
+/* alternate font-sizing */
+
+.smaller {
+	font-size: .7143em;
+	/* equiv 10px */
+	;
+}
+
+.small {
+	font-size: .8571em;
+	/* equiv 12px */
+	;
+}
+
+.big {
+	font-size: 1.1429em;
+	/* equiv 16px */
+	;
+}
+
+.bigger {
+	font-size: 1.2857em;
+	/* equiv 18px */
+	;
+}
+
+.biggest {
+	font-size: 1.4286em;
+	/* equiv 20px */
+}
+
+
+/* soft reset */
+
+html,
+body,
+textarea,
+figure,
+label {
+	margin: 0;
+	padding: 0;
+}
+
+ul,
+ul.unstyled {
+	list-style: none;
+}
+
+code,
+pre,
+samp,
+kbd {
+	white-space: pre-wrap;
+	line-height: 1em;
+}
+
+code,
+kbd,
+mark {
+	border-radius: 2px;
+}
+
+em {
+	font-style: italic;
+}
+
+strong {
+	font-weight: 600;
+}
+
+kbd {
+	padding: 0 2px;
+	border: 1px solid #999;
+}
+
+code {
+	padding: 2px 4px;
+	background: rgba(0, 0, 0, .04);
+	color: #b11;
+}
+
+mark {
+	padding: 2px 4px;
+	background: #ff0;
+}
+
+sup,
+sub {
+	vertical-align: 0;
+	position: relative;
+}
+
+sup {
+	bottom: 1ex;
+}
+
+sub {
+	top: .5ex;
+}
+
+table {
+	margin: 0 0px;
+}
+
+.clear {
+	clear: both;
+}
+
+cite {
+	font-style: normal;
+}
+
+form {
+	margin: 0 auto;
+	width: auto;
+}
+
+fieldset {
+	padding: 0;
+	margin: 0;
+	border: 0;
+}
+
+legend {
+	display: block;
+	width: 100%;
+	padding: 0;
+	margin-bottom: 20px;
+	line-height: 40px;
+	color: #333333;
+	border: 0;
+	border-bottom: 1px solid #e5e5e5;
+}
+
+legend small {
+	font-size: 15px;
+	color: #999999;
+}
+
+* {
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+*:before,
+*:after {
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+.espaceResultSearch {
+	display: none!important;
+}
+
+
+/* ========================================================================
+  Popup
+==========================================================================  */
+
+body#pmbopac.popup {
+	background: #fff;
+}
+
+.popup form[name="search_form"] input[type="text"] {
+	margin: 0px
+}
+
+.popup a[onmouseover*="zoom_statut"] img {
+	background-color: #797979;
+	border-radius: 2px;
+}
+
+.popup div[id^="zoom_statut"] {
+	border: 1px solid #ddd!important;
+	background-color: #f5f5f5!important;
+	box-shadow: 1px 1px 0 0 rgba(0, 0, 0, 0.21);
+	padding: 2px 7px;
+	border-radius: 4px;
+}
+
+
+/* ========================================================================
+  Zone-pmb grid
+ ========================================================================== */
+
+
+/*
+Width zone color
+-----------------*/
+
+
+/*
+Default medium gutter
+*/
+
+.colored #main.is-on-right-side #main_hors_footer.uk-grid-medium {
+	margin-left: 25px;
+	padding-right: 25px;
+	padding-left: 0;
+}
+
+.colored #main.is-on-left-side #main_hors_footer.uk-grid-medium {
+	margin-left: 0px;
+	margin-right: 25px;
+	padding-right: 25px;
+	padding-left: 0;
+}
+
+
+/*
+ small gutter
+*/
+
+.colored #main.is-on-right-side #main_hors_footer.uk-grid-small {
+	margin-left: 10px;
+	padding-right: 10px;
+	padding-left: 0;
+}
+
+.colored #main.is-on-left-side #main_hors_footer.uk-grid-small {
+	margin-left: 0px;
+	margin-right: 10px;
+	padding-right: 10px;
+	padding-left: 0;
+}
+
+.colored .is-on-left-side #main_hors_footer,
+.colored .is-on-right-side #main_hors_footer,
+.colored #main.uk-width-1-1 {
+	border: solid 1px #dedede;
+	box-shadow: 0 3px 6px rgba(160, 166, 168, .15);
+	background-color: #fff;
+}
+
+.colored #main {
+	border: solid 0px #dedede;
+	box-shadow: none;
+	background-color: transparent;
+}
+
+.colored #main.is-on-left-side {
+	padding: 0px 25px 0px 0px;
+}
+
+.colored #main.is-on-right-side {
+	padding: 0px 0px 0px 25px;
+}
+
+.colored #main.padding-custom {
+	padding: 0px 0px 0px 0px;
+	background: transparent;
+	border: 0px;
+	box-shadow: none;
+}
+
+.colored #main #main_hors_footer {
+	padding-left: 25px;
+	padding-right: 25px;
+}
+
+.colored #main.padding-custom #main_hors_footer {}
+
+#bandeau_2 {
+}
+
+#main,
+#bandeau {
+	/* margin-top: 0px; */
+}
+
+#main_hors_footer {
+	padding-top: 0px;
+	padding-bottom: 25px;
+}
+
+
+/*
+Widthout bandeau color and home
+-------------------------------*/
+
+.no-bkg#container>div,
+.no-bkg #main_hors_footer {
+	background-color: transparent;
+	box-shadow: none;
+	border: none;
+}
+
+.uncolored .is-on-right-side#bandeau {
+	padding-left: 25px;
+}
+
+.uncolored .is-on-left-side#bandeau {
+	padding-right: 25px;
+}
+
+#main {}
+
+#main>div {}
+
+#main.on-home {
+	border: none;
+	box-shadow: none;
+	background-color: transparent;
+	padding: 0;
+}
+
+#main.on-home>#main_hors_footer>div>div>div {
+}
+div[id^="cms_module_"]>div{
+	background: #fff;
+}
+
+/* ========================================================================
+  Bandeaux set-up
+ ========================================================================== */
+
+#bandeau_2 {
+	background-color: transparent;
+	width: 100%;
+	margin: 0 auto;
+}
+
+
+/* ========================================================================
+  OLD opac disabled
+ ========================================================================== */
+
+#intro_message {
+	display: none;
+}
+#intro_bibli, 
+#adresse,
+#accueil, 
+#footer_link_sup, 
+#footer_link_pmb {
+	display: none!important;
+}
+
+div[id^="cms_module"]:empty,
+div:empty:not(.clear),
+.espaceCartAction,
+#resultatrech_liste>script {
+	display: none;
+	width:0;
+	height:0;
+	border: none!important;
+}
+
+
+/* ========================================================================
+  Construction part
+ ========================================================================== */
+
+input[name="cms_module_common_module_css_class"] {
+	width: 100%;
+}
+
+
+/* ========================================================================
+   Classe kit
+ ========================================================================== */
+
+.wk-magrin-bottom {
+	margin-bottom: 20px;
+}
+
+.wk-img {
+	padding: 10px;
+	text-align: center;
+}
+
+.wk-relative {
+	position: relative;
+}
+
+
+/* ========================================================================
+   Aside Nav 
+ ========================================================================== */
+
+.no-ico {}
+
+.uk-nav-parent-icon>.uk-parent>a.no-ico:after {
+	content: none;
+}
+
+.picto-custom {
+	z-index: 1;
+}
+
+.uk-nav-parent-icon>.uk-parent>a.picto-custom:after {}
+
+
+/* ========================================================================
+   Thumb nav
+ ========================================================================== */
+
+.logosBandeau .uk-thumbnav-custom {
+	background-color: transparent;
+}
+
+
+/* ========================================================================
+   Component: link
+ ========================================================================== */
+
+a {
+	text-decoration: underline;
+}
+
+a:hover {
+	text-decoration: underline;
+	text-shadow: 0px 0px 0px;
+}
+
+.over-link {
+	display: block;
+	position: relative;
+}
+
+
+/* ========================================================================
+   First lettre
+ ========================================================================== */
+
+#bandeau div>h3:first-letter,
+.liensExtrn li:first-letter {}
+
+.itemSolo .resume:first-letter,
+.listArticlesGen .itemContent .resume:first-letter,
+.listeSameArticle .itemContent .resume:first-letter,
+.listItemsEvent .itemContent .resume:first-letter,
+.listResultArticles .itemContent .resume:first-letter {}
+
+.itemSolo .resume+.resume:first-letter {}
+
+.listArticlesGen>h3:first-letter,
+.listeSameArticle>h3:first-letter,
+.listItemsEvent>h3:first-letter,
+.listResultArticles>h3:first-letter,
+.infosBib>h3:first-letter,
+.listArticlesGen .itemAbrege>h3:first-letter .listeSameArticle .itemAbrege>h3:first-letter,
+.listItemsEvent .itemAbrege>h3:first-letter,
+.listResultArticles .itemAbrege>h3:first-letter,
+#lvl1>h3:first-letter,
+#facette_wrapper>h3:first-letter,
+.infosRub>h3:first-letter {
+	text-transform: capitalize;
+}
+
+
+/* ========================================================================
+   Clear Fix
+ ========================================================================== */
+
+#cart_info_iframe_content:after,
+ul.onglets_isbd_public:after,
+#intro:after,
+.MenuHoriz .Nav:after,
+#search ul.search_tabs:after,
+.searchbox:after,
+.SliderNot ul:after,
+.listBibli .itemVign:after,
+.SliderArt .itemContent:after,
+.planFooter>.sousNavPlan:after,
+.listEtageres .noticesEtagere:after,
+ul.menuPreDef:after,
+#empr-resa:after,
+.listRubs:after,
+ul.menuPreDefpub:after,
+#facette form:after,
+#search .onglets_isbd_public .row:after,
+.Rub:after,
+#titrePortail:after,
+#footer:after,
+.prodDoc:after,
+.authorlevel2>ul:after,
+.logosFooter:after,
+.search_tabs:after,
+#blocNotice_descr:after,
+.links_for_serials ul:after,
+div[id^="ongletSub"]:after,
+div[id^="div_detail"]:after,
+#navigator tr:after,
+#connexion:after,
+.empr_subtabs:after,
+#cart_action:after {
+	content: " ";
+	display: block;
+	clear: both;
+}
+
+
+/*Zone portail
+-------------------------------------------------------------------------
+--------------------------------------------------------------------------
+---------------------------------------------------------------------------*/
+
+body {
+	line-height: normal;
+	font-weight: 400;
+	position: static;
+	font-style: normal;
+	background: #f2f2f2;
+}
+
+#container {
+	margin: 0 auto;
+}
+
+#intro {
+	margin-bottom: 30px;
+	background-color: #fff;
+	position: relative;
+}
+
+
+/*   Titre h2 to h6       
+-------------------------------------------------------------------------
+--------------------------------------------------------------------------
+---------------------------------------------------------------------------*/
+
+#pmbopac h1,
+#pmbopac h2,
+#pmbopac h3,
+#pmbopac h4,
+#pmbopac h5,
+#pmbopac h6,
+#pmbopac .h1,
+#pmbopac .h2,
+#pmbopac .h3,
+#pmbopac .h4,
+#pmbopac .h5,
+#pmbopac .h6 {
+	font-family: "Open Sans", Helvetica, Arial, sans-serif;
+}
+
+
+/* ========================================================================
+   Contenu redactionnel
+ ========================================================================== */
+
+.itemSolo .resume:last-child,
+.itemSolo .resume {}
+
+.itemArticle .resume {
+	font-size: 0.95em;
+}
+
+.itemSolo .resume ul li,
+.resume ul li,
+.resume {
+	list-style-type: initial;
+	list-style-position: inside;
+}
+
+.resume {
+	line-height: 24px;
+}
+
+.resume+.resume {}
+
+.resume h3 {}
+
+.resume li {}
+
+.itemAbrege .resume img {
+	max-width: 100%;
+}
+
+.listBreves>.resume,
+.listBibli>.resume,
+.listEtageres>.resume,
+.fluxRSS>.resume {}
+
+.listBreves>.itemAbrege .resume,
+.listBibli>.itemAbrege .resume,
+.listEtageres>.itemAbrege .resume,
+.fluxRSS>.itemAbrege .resume {
+	font-size: 1.145em;
+}
+
+.Rub .infosRub .resume,
+a .resume,
+.itemContent a:hover,
+.itemAbrege a:hover {
+	color: #333;
+	text-decoration:none;
+}
+
+.resume pre {
+	background-color: #C0DAF3;
+	font-family: Helvetica, Helvetica, Arial, sans-serif;
+	font-size: 1em;
+}
+
+.resume+.resume {
+	margin-top: 10px;
+	padding-bottom: 10px;
+}
+
+.chapeau p,
+.resume p {
+	margin-bottom: 15px;
+}
+/*lire plus
+========================================================================== */
+.AllRecords.lirePlus i,
+.lirePlus i{
+	margin-right:5px;
+}
+
+/*Tableau
+========================================================================== */
+
+#a2z_perio>div .exemplaires td:empty {
+	content: none;
+	padding: 0;
+	border: none;
+	height: 0;
+	min-height: 0;
+	overflow: hidden;
+}
+
+#a2z_perio>div .exemplaires td:empty:before {
+	content: none;
+	padding: 0;
+	border: none;
+	height: 0;
+	min-height: 0;
+}
+
+#a2z_perio>div .exemplaires td:before {
+	content: attr(data);
+}
+
+#a2z_perio>div .exemplaires,
+#a2z_perio>div .exemplaires tbody,
+#a2z_perio>div .exemplaires th,
+#a2z_perio>div .exemplaires td,
+#a2z_perio>div .exemplaires tr {
+	display: block;
+}
+
+#a2z_perio>div .exemplaires th {
+	display: none;
+}
+
+#a2z_perio>div .exemplaires tr+tr td:first-child {}
+
+#a2z_perio>div .exemplaires td:first-child {
+	border-top: solid 1px #d3d3d3;
+}
+
+#a2z_perio>div .exemplaires tr:last-child td:last-child {
+	border-bottom: solid 1px #d3d3d3;
+}
+
+#a2z_perio>div .exemplaires td {
+	position: relative;
+	border: 0px solid transparent;
+	padding-left: 34%!important;
+	white-space: normal;
+	text-align: right;
+	border-top: solid 0px #f9f9f9;
+	overflow: hidden;
+	min-height: 30px;
+}
+
+#a2z_perio>div .exemplaires td+td {
+	border-top: solid 1px #d3d3d3;
+}
+
+#a2z_perio>div .exemplaires td:before {
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	width: 33%;
+	height: 100%;
+	white-space: nowrap;
+	text-overflow: ellipsis !important;
+	overflow: hidden !important;
+	text-align: left;
+	background-color: #efefef;
+	padding: 0px;
+	margin-top: 0px;
+	display: block;
+	font-weight: 600;
+	padding: 5px 0px 0px 4px;
+	text-indent: 5px;
+}
+
+
+/* Navigator 
+---------------------------------------------------------------------------------------                                         
+------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------*/
+
+#navigator {
+	margin-bottom: 0px;
+	width: 100%;
+	margin: 0 auto;
+	height: auto;
+	width: auto;
+	margin: auto;
+	padding: 0px 0px 15px 0px;
+	display: none;
+}
+
+#navigator table * {
+	display: block;
+}
+
+#navigator table tr>td {
+	float: left;
+}
+
+#navigator table {}
+
+#navigator strong {
+	display: none;
+}
+
+#navigator a {
+	display: inline-block;
+	padding-left: 5px;
+}
+
+#navigator a:hover {}
+
+#navigator td {
+	width: auto;
+}
+
+#navigator td+td {
+	border-left: solid 4px #fff;
+}
+
+#navigator a:hover {}
+
+#navigator a span:before,
+#navigator a span:after {}
+
+.navig_empr_bt_show_compte a span:before {
+	content: "\f007";
+}
+
+.navig_actions_last_page a span:before {
+	content: "\f002";
+}
+
+.navig_actions_history a span:before {
+	content: "\f017";
+}
+
+.navig_actions_last_search a span:before {
+	content: "\f0e2";
+}
+
+.navig_actions_first_screen a span:before {
+	content: "\f00e";
+}
+
+
+/*Alertes 
+========================================================================== */
+
+#resultatrech_see {
+	margin-bottom: 15px;
+}
+
+form[name="creer_dsi"]>table {
+	margin-bottom: 15px;
+}
+
+
+/*Compte empr 
+========================================================================== */
+#empr_onglet{
+	background:#f1f1f1;
+}
+
+ul.empr_subtabs li.subTabCurrent,
+ul.empr_subtabs li:hover,
+#empr-resa small form input[type="button"]:hover,
+#onglets_list ul.list_tabs li:hover,
+#onglets_list ul.list_tabs li.current,
+#change-password input[type="button"]:hover,
+#empr-all input.bouton:hover {}
+
+ul.empr_subtabs li.subTabCurrent {
+
+}
+
+.empr_subtabs>li {
+	float: left;
+	position: relative;	
+}
+.empr_subtabs>li+li{
+	margin-left:7px;
+}
+.empr_subtabs{
+	padding:15px 20px;
+	border-left: solid 1px #ddd;
+	border-right: solid 1px #ddd;
+}
+div[id^="empr"]+div[id^="empr"]{
+	border-top: solid 0px #ddd!important;
+}
+#fiche-empr,
+#empr-all,
+#empr-late,
+#empr-old,
+#empr-resa,
+#empr-dsi,
+#empr-sugg,
+#empr-list,
+#empr-dema,
+#change-password,
+.form_liste_lecture>h3,
+.form_liste_lecture>.form-contenu {
+  margin: 0 auto;
+  clear: both;
+  width: 100%;
+  padding: 0px 10px 15px;
+  background-color: #f1f1f1;
+  position: relative;
+  padding-left: 15px;
+  padding-right: 15px;
+  padding-bottom: 10px;
+  padding-top: 5px;
+  border-radius: 0px 0px 0px 0px;
+  border: solid 1px #ddd;
+  background-repeat: no-repeat;
+  background-position: 100% 100%;
+}
+#fiche-empr-container{}
+div[id^="empr"]>br{
+	display:none;
+}
+div[id="empr_onglet"]+div[id="aut_details"]{
+	background-color:#f1f1f1;
+	padding:5px 9px;
+}
+
+#login_form{
+
+}
+#login_form b,
+#login_form select{
+	display:block;
+	margin-bottom:10px;
+}
+/*tris
+========================================================================== */
+
+#tris input {
+	margin: 10px 0px
+}
+
+
+/* Recherche 
+========================================================================== */
+#resultatrech_liste blockquote{
+	clear:both;
+}
+#search br {
+	display: none;
+}
+
+#search>p>span,
+#search>div,
+#search>form {
+	position: relative;
+	z-index: 1;
+	margin: 0!important;
+	display: block;
+	background-color: #f8f4f5;
+	border-left:solid 1px #ddd;
+	border-right: solid 1px #ddd;
+	padding: 5px 10px;
+}
+#search>div.row:after{
+	content:"";
+	display:block;
+	border-bottom:solid 1px #ddd;
+	margin-left:-10px;
+	margin-right:-10px;
+}
+#search>*>form {
+	padding-bottom:15px;
+
+}
+#search:after {}
+
+ul.search_tabs,
+ul.empr_tabs {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	background: #fff;
+}
+
+#search p.p1 {
+	margin: 0;
+}
+
+div[id="search"]+div[id="search_result"] {
+	margin-top: 15px;
+}
+
+#search_result>h3>span>b {
+	font-style: italic;
+	font-weight: 400;
+	font-family: 'Maven Pro', Arial, Helvetica, sans-serif;
+}
+/*
+Facette*/
+#facette_wrapper input[type="button"]+input[type="button"] {
+	margin-left:7px;
+}
+table[id^="facette_list"]{
+	margin-top:15px;
+}
+/* Surlignage 
+========================================================================== */
+
+
+/* surlignage des mots recherches */
+
+.text_search0,
+.text_search1,
+.text_search2,
+.text_search3,
+.text_search4,
+.text_search5 {
+	text-decoration: underline;
+}
+
+.text_search0 {
+	background-color: #ffa;
+	text-decoration: underline;
+}
+
+.text_search1 {
+	background-color: #ffe9aa;
+	text-decoration: underline;
+}
+
+.text_search2 {
+	background-color: #aaf3ff;
+	text-decoration: underline;
+}
+
+.text_search3 {
+	background-color: #ffbaaa;
+	text-decoration: underline;
+}
+
+.text_search4 {
+	background-color: #ffa;
+	text-decoration: underline;
+}
+
+.text_search5 {
+	background-color: #ffa;
+	text-decoration: underline;
+	display: inline-block;
+}
+
+
+/* ========================================================================
+  Etagere
+ ==========================================================================  */
+
+#aut_see {}
+
+#aut_see>br {
+	display: none;
+}
+
+.noticesEtagere>a {
+	margin: 10px 0!important;
+}
+
+
+/* ========================================================================
+  Cookies
+ ==========================================================================  */
+
+#script_analytics_content {
+	text-align: center;
+	padding: 10px;
+	font-size: 16px;
+	color: white;
+	background-color: rgba(0, 0, 0, 0.74);
+	position: fixed;
+	bottom: 0;
+	z-index: 5000;
+	width: 100%;
+}
+
+#script_analytics_content button+button {
+	margin-left: 10px;
+}
+
+
+/* ========================================================================
+  Footer
+ ==========================================================================  */
+
+#footer {
+	position: relative;
+	text-align: left;
+	margin: 0 auto;
+	font-size: 1em;
+	margin-top: 30px;
+	border-top: solid 0px #666666;
+	background: #000;
+}
+
+
+/* ========================================================================
+   listes d item
+ ========================================================================== */
+
+.Rub a:hover {
+	text-decoration: none;
+}
+
+.Rub.even,
+.Rub.odd {
+	padding: 10px 15px 15px 10px;
+}
+
+.Rub.even {
+	background: #f7f7f7;
+}
+
+.Rub.odd {
+	background: #fff;
+}
+
+
+/* ========================================================================
+   cms margin
+ ========================================================================== */
+
+#main_hors_footer div.uk-width-1-1[class^="cms_module"]+div.uk-width-1-1[class^="cms_module"] {
+	margin-top: 35px;
+}
+#main_hors_footer div.uk-width-1-1[class*="ui-empty-item"]+div.uk-width-1-1[class^="cms_module"] {
+	margin-top: 0px;
+}
+
+/* ========================================================================
+   Periodique
+ ========================================================================== */
+
+#perio_a2z .onglets_isbd_public {
+	margin: 10px 0px;
+}
+
+#perio_a2z-container>ul.onglets_isbd_public>li:first-child {
+	margin: 0px 4px 5px 0px;
+	background-color: transparent;
+	border-color: transparent;
+	font-weight: 500;
+}
+
+#search .onglets_isbd_public .row {
+	clear: none;
+}
+
+ul.onglets_isbd_public>li {
+	display: block;
+	float: left;
+}
+
+#perio_a2z ul.onglets_isbd_public div li,
+.links_for_serials ul li {
+	padding: 0 0px;
+	display: block;
+	float: left;
+	position: relative;
+	text-align: center;
+	font-size: 1em
+}
+
+#perio_a2z ul.onglets_isbd_public div li[id^="onglet"]+li[id^="onglet"],
+.links_for_serials ul li+li {
+	margin-left: 5px;
+}
+
+#perio_a2z ul.onglets_isbd_public div li[id^="onglet"]>a {
+	padding: 0 7px;
+	margin-bottom: 7px;
+}
+
+#perio_a2z-container>label {
+	display: inline-block;
+	line-height: 30px;
+	padding: 0 10px 0 0;
+}
+
+div[id^="ongletSub"] {
+	margin: 5px 0px;
+}
+
+div[id^="ongletSub"] li {
+	margin-right: 7px!important;
+	margin-left: 0px!important;
+	margin-bottom: 7px;
+}
+
+
+/*
+Bar laterale */
+
+table.a2z_contens>tbody>tr>td:first-child,
+.a2z_perio_list {
+	width: 210px;
+}
+
+table.a2z_perio_list {
+	height: auto !important;
+	line-height: 18px;
+	padding: 10px 0px;
+}
+
+table.a2z_perio_list tr td {
+	border-bottom: 1px solid #cfcdcb;
+	padding-bottom: 3px;
+}
+
+.a2z_contens div.a2z_perio_list {
+	height: auto;
+	overflow: visible;
+	z-index: 1000;
+	background-color: transparent;
+	overflow-x: auto;
+	overflow-y: auto;
+	border-radius: 12px;
+}
+
+table.a2z_perio_list a {
+	display: block;
+	line-height: 16px;
+	padding: 7px 0px;
+	text-transform: none;
+	font-size: 0.91em;
+	color: #333;
+}
+
+
+/*
+Exemplaire */
+
+#titre_exemplaires {
+	display: block;
+	margin-bottom: 10px;
+}
+
+#a2z_perio>table {
+	background-color: #f3f3f3;
+	padding: 5px;
+	border: solid 1px #E7E7E7;
+	box-shadow: 0px 0px 0px 2px #fff inset;
+}
+
+#a2z_perio>table tr:nth-child(even) {
+	background-color: #fdfdfd;
+}
+
+
+/*
+Search bull */
+
+#form_search_bull {
+	margin-bottom: 15px;
+}
+
+#form_search_bull td[rowspan="2"] {
+	background: #f8f4f5;
+	text-align: center;
+	border-left: solid 1px #eee;
+	vertical-align: middle;
+}
+
+
+/* ========================================================================
+  Rss footer
+ ========================================================================== */
+
+#footer_rss {
+	width: 100%;
+}
+
+#footer_rss a {
+	float: right;
+	margin-right: 20px;
+}
+
+/* ========================================================================
+  liste de lecture
+ ========================================================================== */
+
+.form_liste_lecture{
+
+}
+.form_liste_lecture .row>div[class^="left"]{
+	padding-right:7px;
+	margin-bottom:10px
+}
+.form_liste_lecture .row>div[class^="left"]+div[class^="right"]{
+	margin-left:7px;
+}
+.form_liste_lecture .row>div[class^="left"] input+input,
+.form_liste_lecture .row>div[class^="right"] input+input{
+	margin-left:7px;
+}
+#inscrit_list{
+	background:#f8f8f8;
+}
+
+.form_liste_lecture blockquote>div[id^="record_container"]{
+	background-color:#fbfbfb;
+	padding:10px 5px 5px 5px;
+}
+
+/* ========================================================================
+  Notices
+ ========================================================================== */
+.search_result blockquote{
+	font-style:normal;
+}

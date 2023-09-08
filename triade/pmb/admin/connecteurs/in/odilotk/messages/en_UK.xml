@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le connecteur arteVOD
+****************************************************************************************
+© 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: en_UK.xml,v 1.4 2017-11-30 15:23:04 apetithomme Exp $ -->
+
+<XMLlist>
+	<entry code="odilotk_endpoint_url">Endpoint URL</entry>
+	<entry code="odilotk_api_endpoint_url">API Endpoint URL</entry>
+	<entry code="odilotk_api_endpoint_url_placeholder">For example : EndpointUrl/api/v2</entry>
+	<entry code="odilotk_client_id">Client ID</entry>
+	<entry code="odilotk_client_secret">Client Secret</entry>
+	<entry code="odilotk_source_field">Custom field</entry>
+	<entry code="odilotk_no_field">No custom field of small text type</entry>
+	<entry code="odilotk_authentication_failed">Authentication failed</entry>
+	<entry code="odilotk_shared_secret_key">Shared secret key for SSO</entry>
+	<entry code="odilotk_records_inactive">inactive</entry>
+	<entry code="odilotk_nonotice_sync">No record found</entry>
+	<entry code="odilotk_get_notices">Get active records from OdiloTK</entry>
+	<entry code="odilotk_last_sync">Since last synchronization</entry>
+	<entry code="odilotk_sync_from">Since </entry>
+	<entry code="odilotk_syncinfo_date_baserecent">Date of the last record: %s</entry>
+	<entry code="odilotk_form_from_select">Select</entry>
+</XMLlist>

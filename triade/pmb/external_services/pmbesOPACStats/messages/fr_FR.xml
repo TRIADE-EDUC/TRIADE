@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- messages localisés en français pour la classe de fonctions search_functions
+****************************************************************************************
+© 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: fr_FR.xml,v 1.1 2011-07-29 12:32:15 dgoron Exp $ -->
+
+<!DOCTYPE XMLlist SYSTEM "../../../includes/XMLlist.dtd" >
+<XMLlist>
+<!--
+pmbesOPACStats
+-->
+  <entry code="OPACStats_functions_description">Fonctions relatives aux statistiques</entry>
+<!--
+listView
+-->
+  <entry code="listView_description">Liste des vues</entry>
+  <entry code="listView_input_description"></entry>
+  <entry code="listView_OPACUserId">Identifiant de l'utilisateur PMB</entry>
+  <entry code="listView_output_description"></entry>
+  <entry code="listView_result">Retourne la liste des vues</entry>   
+<!--
+getStatopacView
+-->  
+  <entry code="getStatopacView_description">Renvoie les informations d'une consolidation</entry>
+  <entry code="getStatopacView_input_description"></entry>
+  <entry code="getStatopacView_id_view">Identifiant de la vue</entry>
+  <entry code="getStatopacView_output_description"></entry>
+  <entry code="getStatopacView_result">
+  Tableau de résultats
+  Les noms de colonnes varient en fonction de la vue choisie</entry> 
+
+<!--
+makeConsolidation
+-->  
+  <entry code="makeConsolidation_description">Lancement d'une consolidation</entry>
+  <entry code="makeConsolidation_input_description"></entry>
+  <entry code="makeConsolidation_conso">
+  	Mode de consolidation :
+  	1 : Depuis la dernière consolidation
+  	2 : Entre une date de début et une date de fin
+  	3 : Depuis le début jusqu'à une date d'échéance</entry>
+  <entry code="makeConsolidation_date_deb">Date de début</entry>
+  <entry code="makeConsolidation_date_fin">Date de fin</entry>
+  <entry code="makeConsolidation_date_ech">Date d'échéance</entry>
+  <entry code="makeConsolidation_list_ck">Liste de vues à consolider</entry>
+  <entry code="makeConsolidation_output_description"></entry>
+  <entry code="makeConsolidation_result">Aucun résultat de retour pour le moment</entry>
+  
+</XMLlist>

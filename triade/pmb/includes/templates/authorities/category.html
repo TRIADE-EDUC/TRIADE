@@ -1,0 +1,140 @@
+{% extends 'gabarit.html' %}
+
+<!-- $Id: category.html,v 1.14 2018-10-01 14:12:04 dgoron Exp $ -->
+
+{% block header %}
+	<h1><span>{{ msg.category_see_title }}</span></h1>
+{% endblock %}
+	
+{% block title %}
+	<h3 style='display:inline'>
+		{% if global.thesaurus_mode_pmb %}
+			[{{ authority.thes.libelle_thesaurus }}]
+		{% endif %}
+		{{ authority.libelle }}
+	</h3>
+	<script type="text/javascript">
+		document.title = "{{ authority.libelle }}";
+	</script>
+{% endblock %}
+
+{% block details %}
+	{% if authority.has_parent %}
+		<div class="aut_display_row">
+			<div class="aut_display_cell">
+				<b>{{ msg.categ_parent }} :</b>
+			</div>
+			<div class="aut_display_cell" id="parent_categ">
+				<a href="./autorites.php?categ=see&sub=category&id={{ authority.parent_id }}">{{ authority.parent_libelle  }}</a>
+			</div>
+		</div>
+	{% endif %}
+	
+	{% if authority.has_child %}
+		<div class="aut_display_row">
+			<div class="aut_display_cell">
+				<b>{{msg.aut_categs_children}} :</b>
+			</div>
+			<div class="aut_display_cell" id="childs_categs">
+				{% for child in authority.listchilds %}
+					{% if global.thesaurus_categories_categ_in_line %}
+					  {% if !loop.first %}
+						  {{ global.pmb_keyword_sep }}
+					  {% endif %}
+					  <span><a href="./autorites.php?categ=see&sub=category&id={{ child.id }}">{{ child.libelle }}</a></span>
+				 	{% else %}
+					  <a href="./autorites.php?categ=see&sub=category&id={{ child.id }}">{{ child.libelle }}</a><br/>
+				  	{% endif %}
+				{% endfor %}
+			</div>
+		</div>
+	{% endif %}
+	
+	{% if authority.commentaire %}
+		<div class="aut_display_row">
+			<div class="aut_display_cell">
+				<b>{{ msg.categ_na }} :</b>
+			</div>
+			<div id="categ_see_comment" class="aut_display_cell">
+				{{ authority.commentaire | nl2br }}
+			</div>
+		</div>
+	{% endif %}
+	
+	{% for synonym in authority.listsynonyms %}
+		{% if loop.first %}
+			<div id="categ_see_synonyme" class="aut_display_row">
+				<div class="aut_display_cell">
+					<b>{{ msg.categ_see_synonyme }}</b>
+				</div>
+				<div class="aut_display_cell">
+					{% if global.thesaurus_categories_categ_in_line %}
+						<span><a href="./autorites.php?categ=see&sub=category&id={{ synonym.id }}">{{ synonym.libelle }}</a></span>
+					{% else %}
+						<a href="./autorites.php?categ=see&sub=category&id={{ synonym.id }}">{{ synonym.libelle }}</a><br/>
+					{% endif %}
+		{% else %}
+			{% if global.thesaurus_categories_categ_in_line %}
+				{{ global.pmb_keyword_sep }} <span><a href="./autorites.php?categ=see&sub=category&id={{ synonym.id }}">{{ synonym.libelle }}</a></span>
+			{% else %}
+				<a href="./autorites.php?categ=see&sub=category&id={{ synonym.id }}">{{ synonym.libelle }}</a><br/>
+			{% endif %}
+		{% endif %}
+		{% if loop.last %}
+			</div>
+		</div>
+		{% endif %}
+	{% endfor %}
+	
+	{% if authority.voir %}
+		<div id="categ_see_renvoi_voir" class="categ_see_title">
+			<h5><span>{{ msg.term_show_see }}</span></h5>
+			<a href="./autorites.php?categ=see&sub=category&id={{ authority.voir.id }}">{{ authority.voir.libelle_categorie  }}</a>
+		</div>
+	{% endif %}
+	{% if authority.see_also %}
+		<div id="categ_see_also" class="categ_see_also">
+			<h5><span>{{ msg.term_show_see_also }}</span></h5>
+			{% for see_also in authority.see_also %}
+				{% if loop.first %}
+					<ul>
+				{% endif %}
+				<li>
+					<a href="./autorites.php?categ=see&sub=category&id={{ see_also.num_noeud }}">
+						{% if see_also.has_notice %}
+							<img src="{{ img.folder_search.gif }}" border=0 align="absmiddle">
+						{% else %}
+							<img src="{{ img.folder_search.gif }}" border=0 align="absmiddle">
+						{% endif %}
+					</a>
+					<a href="./autorites.php?categ=see&sub=category&id={{ see_also.num_noeud }}{{ see_also.zoom.java_com }}">{{ see_also.libelle_categorie }}</a>
+					{{ see_also.zoom.zoom }}
+	 			</li>		
+				{% if loop.last %}
+					</ul>
+				{% endif %}
+			{% endfor %}
+		</div>
+	{% endif %}
+{% endblock %}
+
+{% block aut_buttons %}
+	{% if authority.right %}
+	<div class='row'>
+		<div class='left'>
+			<input type='button' class='bouton' value='{{msg.62}}' onclick="document.location='./autorites.php?categ=categories&sub=categ_form&id={{authority.num_object}}'"/>
+			<input type='button' class='bouton' value='{{msg.158}}' onclick="document.location='./autorites.php?categ=categories&sub=categ_replace&id={{authority.num_object}}'"/>
+			{% if global.pmb_type_audit %}
+				<input type='button' class='bouton' value='{{msg.audit_button}}' onclick="openPopUp('./audit.php?type_obj={{authority.audit_type}}&object_id={{authority.num_object}}', 'audit_popup')"/>
+			{% endif %}	
+		</div>
+		<div class='right'>
+			<input type='button' class='bouton' value='{{msg.63}}' onclick="confirm_delete();" />
+		</div>
+	</div>
+	{% endif %}
+{% endblock %}
+
+{% block aut_link_delete %}
+	document.location='./autorites.php?categ=categories&sub=delete&id={{authority.num_object}}';
+{% endblock %}

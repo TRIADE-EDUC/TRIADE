@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour la classe racine d'un module
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: frbr_entity_common_entity_datanode.xml,v 1.10 2018-08-22 16:23:31 tsamson Exp $ -->
+
+<XMLlist>
+	<entry code="frbr_entity_common_entity_datanode_edit">Modification de jeu de données - %s</entry>
+	<entry code="frbr_entity_common_entity_datanode_add">Création d'un nouveau jeu de données</entry>
+	<entry code="frbr_entity_common_entity_datanode_parent">Parent</entry>
+	<entry code="frbr_entity_common_entity_datanode_name">Nom</entry>
+	<entry code="frbr_entity_common_entity_datanode_comment">Description</entry>
+	<entry code="frbr_entity_common_entity_datanode_datasource_choice">Choisissez une source de donnée</entry>
+	<entry code="frbr_entity_common_entity_datanode_confirm_delete">Voulez-vous vraiment supprimer ce jeu de données ?</entry>
+	<entry code="frbr_entity_common_entity_datanode_name_empty">Veuillez saisir le nom du jeu de données.</entry>
+	<entry code="frbr_entity_common_entity_datanode_filter_choice">Choisissez un filtre</entry>
+	<entry code="frbr_entity_common_entity_datanode_sort_choice">Choisissez un tri</entry>
+	<entry code="frbr_entity_common_entity_datanode_filter_create">Créer un nouveau filtre</entry>
+	<entry code="frbr_entity_common_entity_datanode_sort_create">Créer un nouveau tri</entry>
+	<entry code="frbr_entity_common_entity_datanode_filter_edit">Edition d'un filtre</entry>
+	<entry code="frbr_entity_common_entity_datanode_sort_edit">Edition d'un tri</entry>
+	<entry code='frbr_entity_common_datasource_aut_link'>Autorités liées</entry>
+	<entry code="frbr_entity_common_entity_datanode_datasource_empty">Veuillez sélectionner une source de données.</entry>
+	<entry code="frbr_entity_common_entity_datanode_sub_datasource_empty">Veuillez sélectionner un choix dans le sous-sélecteur.</entry>
+	<entry code="frbr_entity_common_entity_datanode_filter_unavailable">Aucun filtre disponible.</entry>
+	<entry code="frbr_entity_common_entity_datanode_sort_unavailable">Aucun tri disponible.</entry>
+	<entry code='frbr_entity_common_datasource_custom_fields'>Champs personnalisés</entry>
+	<entry code='frbr_entity_common_datasource_composed_concepts'>Concepts composés</entry>
+	<entry code='frbr_entity_common_entity_datanode_children_filter'>Filtres sur les sources de données filles</entry>
+	<entry code='frbr_entity_common_entity_datanode_children_filter_not_used'>Ne pas utiliser</entry>
+	<entry code='frbr_entity_common_entity_datanode_children_filter_not_empty'>Ne doit pas être vide</entry>
+	<entry code='frbr_entity_common_entity_datanode_children_filter_empty'>Doit être vide</entry>
+	<entry code='frbr_entity_common_datasource_used_in_custom_fields'>Entité parent utilisée dans un champs personnalisé</entry>
+	<entry code='frbr_entity_common_datanode_operator_and'>Et</entry>
+	<entry code='frbr_entity_common_datanode_operator_or'>Ou</entry>
+</XMLlist>

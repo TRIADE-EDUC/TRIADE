@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- messages localisés en français pour le connecteur OAI
+****************************************************************************************
+© 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: en_UK.xml,v 1.3 2015-06-15 12:55:33 pmbs Exp $ -->
+
+<XMLlist>
+	<entry code="pmb_site">Address of the webservice</entry>
+	<entry code="pmb_max_return">Maximum number of results</entry>
+	<entry code="pmb_title">Titles</entry>
+	<entry code="pmb_authors">Authors</entry>
+	<entry code="pmb_editors">Editors</entry>
+	<entry code="pmb_title_uniforme">Uniform titles</entry>
+	<entry code="pmb_category">Categories</entry>
+	<entry code="pmb_index">Decimal indexations</entry>
+	<entry code="pmb_keywords">Keywords</entry>
+	<entry code="pmb_summary">Recap and notes</entry>
+	<entry code="pmb_all">All the fields</entry>
+	<entry code="pmb_protocole">Protocol in use</entry>
+	<entry code="pmb_prtcl_soap">SOAP</entry>
+	<entry code="pmb_prtcl_json">Json-RPC</entry>
+	<entry code="pmb_display_items">Retrieve the copies ?</entry>
+	<entry code="pmb_authentification">Is an authentication necessary ?</entry>
+	<entry code="pmb_username">Username for the authentication</entry>
+	<entry code="pmb_password">Password for the authentication</entry>
+</XMLlist>

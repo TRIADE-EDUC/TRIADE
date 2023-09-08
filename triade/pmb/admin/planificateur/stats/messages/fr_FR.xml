@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- messages localisés en français pour les statistiques
+****************************************************************************************
+© 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: fr_FR.xml,v 1.1 2011-07-29 12:32:14 dgoron Exp $ -->
+
+<XMLlist>
+	<entry code="planificateur_stats_listView">Liste des vues</entry>
+	<entry code="planificateur_stats_options">Options de consolidation</entry>
+	<entry code="stats_conso">Consolidation des statistiques</entry>
+	<entry code="stats_no_view">Aucune vue sélectionnée</entry>
+	<entry code="stats_select_view_unknown">Vue(s) sélectionnée(s) inéxistante(s)</entry>
+</XMLlist>

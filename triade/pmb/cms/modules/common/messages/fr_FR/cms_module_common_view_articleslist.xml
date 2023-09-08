@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_common_view_articleslist.xml,v 1.6 2012-11-15 09:47:39 arenou Exp $ -->
+
+<XMLlist>
+	<entry code="cms_module_common_view_articleslist_used_template">Choix du template</entry>
+	<entry code="cms_module_common_view_articleslist_page_var">Variable à utiliser</entry>
+	<entry code="cms_module_common_view_articleslist_build_article_link">Construction du lien pour les articles</entry>
+	<entry code="cms_module_common_view_title">Titre de la liste</entry>
+	<entry code="cms_module_common_view_articles_desc">Articles</entry>
+	<entry code="cms_module_common_view_article_link_desc">Lien vers l'article</entry>	
+</XMLlist>

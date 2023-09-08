@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+
+<manifest>
+	<name lang="fr_FR">Eléments de l'opac</name>
+	<name lang="en_UK">Elements of the OPAC</name>
+	<author>
+		<name>Adrien BACARISSE</name>
+		<organisation>PMB Services</organisation>
+	</author>
+	<created_date>2014-07-02</created_date>
+	<version>1.0</version>
+	<default_language>fr_FR</default_language>
+	<managed>true</managed>
+	<use>
+		<datasources>
+			<datasource>cms_module_opacitem_datasource_opacitem</datasource>
+		</datasources>
+		<views>
+			<view>cms_module_opacitem_view_opacitem</view>
+		</views>
+	</use>
+</manifest>

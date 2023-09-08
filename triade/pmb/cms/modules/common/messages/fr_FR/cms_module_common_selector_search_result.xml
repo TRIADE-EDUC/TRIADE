@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français 
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_common_selector_search_result.xml,v 1.1 2012-05-24 14:30:20 dgoron Exp $ -->
+
+<XMLlist>
+	<entry code="cms_module_common_selector_search_result_help">Basé sur la recherche simple</entry>
+</XMLlist>

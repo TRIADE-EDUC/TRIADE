@@ -1,0 +1,223 @@
+@charset "utf-8";
+/* +--------------------------------------------------------------------------+
+// 2017 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// +-------------------------------------------------+
+// $Id: set-frbr-color.css,v 1.3 2018-04-17 15:21:19 wlair Exp $ */
+/*------------------------------------------------------------------------------------------*/
+/* ========================================================================
+   frbr
+   base :#009688
+   hover :#0aaf9f
+   active/focus :#008477     
+ ==========================================================================  */
+
+
+.uk-navbar-nav li#navbar-frbr a:after,
+.frbr .hmenu.uk-tab>*:hover>a{
+	border-bottom-color:#009688;
+}
+li#navbar-frbr.current,
+.frbr input[type="checkbox"]:checked, 
+.frbr input[type="checkbox"]:indeterminate, 
+.frbr input[type="radio"]:checked,
+.frbr input[type="checkbox"]:checked:focus, 
+.frbr input[type="checkbox"]:indeterminate:focus, 
+.frbr input[type="radio"]:checked:focus,
+.frbr div#extra2 span.uk-icon,
+.frbr div#extra2 .notification.ui-active {
+	background-color:#009688;	
+}
+.frbr input:focus, 
+.frbr select:focus, 
+.frbr textarea:focus,
+.frbr input[type="checkbox"]:focus, 
+.frbr input[type="radio"]:focus,
+.frbr.claro.pure .dijitButtonHover .dijitButtonNode,
+.frbr.claro.pure .dijitDropDownButtonHover .dijitButtonNode,
+.frbr.claro.pure .dijitComboButton .dijitButtonNodeHover,
+.frbr.claro.pure .dijitComboButton .dijitDownArrowButtonHover,
+.frbr.claro.pure .dijitToggleButtonHover .dijitButtonNode,
+.frbr.claro.pure .dijitTextBoxHover,
+.frbr #contenu .uk-button-default:focus,
+.frbr #contenu .uk-button-default:hover,
+.frbr .hmenu.uk-tab>.uk-active>a,
+.frbr  iframe {
+	border-color: #009688;
+}
+.uk-navbar-nav li#navbar-frbr a:hover,
+.frbr h1.section-title i,
+.frbr h1.section-sub-title ,
+.frbr .uk-link,
+.frbr a,
+.frbr .uk-link:hover,
+.frbr a:hover,
+.frbr h3:not(.section-sub-title),
+.frbr .article-title i,
+.frbr #menu .uk-nav>li>a i,
+.frbr #menu .uk-nav>li.uk-active>a,
+.frbr #menu .uk-nav>li>a i,
+.frbr #menu .uk-nav>li.uk-active>a,
+.frbr #menu .uk-nav>li>a:hover ,
+.frbr .h2-like i,
+.frbr #extra span.uk-icon:hover,
+.frbr #extra i:hover,
+.frbr #navbar .dashboard:hover,
+.pure .frbr .uk-tab > * > a:hover,
+.pure .frbr .uk-tab > * > a:focus,
+.frbr .categ_browser a,
+.frbr .categ_browser a:hover,
+.frbr .categ_browser a:focus,
+.frbr .categ_browser a:active,
+.frbr .hmenu.uk-tab>.uk-active>a{
+	color:#009688;
+}
+.frbr #contenu input.wyr-input[type='file']:focus{
+	outline-color: #009688;
+}
+.frbr .stat-child .uk-table th{
+	color: #009688;
+	font-weight: 500;
+}
+.frbr #menu ul.uk-nav{		
+	border-top: solid 2px #009688;		
+}
+.frbr #menu>h3 .uk-icon{		
+	background: #009688;		
+}
+.frbr.claro.pure .dijitMenu .dijitMenuItemHover td, 
+.frbr.claro.pure .dijitMenu .dijitMenuItemSelected td, 
+.frbr.claro.pure .dijitMenuItemHover, 
+.frbr.claro.pure .dijitComboBoxMenu .dijitMenuItemHover, 
+.frbr.claro.pure .dijitMenuItemSelected,
+.frbr.claro.pure .dojoDndItemOver {
+    background-color:rgba(70, 157, 225, 0.3);
+    border-color:#009688;
+    background-image: none;
+}
+.frbr form .form-contenu,
+.frbr .row.bkg-grey{
+	border-color:#0aaf9f;
+}
+.frbr input.wyr-input[type='submit'],
+.frbr .uk-button,
+.frbr .search_cancel>input,
+.frbr.claro.pure .dijitButton .dijitButtonNode,
+.frbr.claro.pure .dijitDropDownButton .dijitButtonNode,
+.frbr.claro.pure .dijitComboButton .dijitButtonNode,
+.frbr.claro.pure .dijitToggleButton .dijitButtonNode{
+	background-color: #009688;
+		
+}
+.frbr input.wyr-input[type='submit']:hover,
+.frbr .uk-button:hover,
+.frbr .search_cancel>input:hover,
+.frbr.claro.pure .dijitButton .dijitButtonNode:hover,
+.frbr.claro.pure .dijitDropDownButton .dijitButtonNode:hover,
+.frbr.claro.pure .dijitComboButton .dijitButtonNode:hover,
+.frbr.claro.pure .dijitToggleButton .dijitButtonNode:hover {
+	background-color: #009688;
+}
+.frbr input.wyr-input[type='submit']:focus,
+.frbr input.wyr-input[type='submit']:active,
+.frbr .uk-button:focus,
+.frbr .uk-button:active,
+.frbr .search_cancel>input:focus,
+.frbr .search_cancel>input:active,
+.frbr.claro.pure .dijitButton .dijitButtonNode:focus,
+.frbr.claro.pure .dijitDropDownButton .dijitButtonNode:focus,
+.frbr.claro.pure .dijitComboButton .dijitButtonNode:focus,
+.frbr.claro.pure .dijitToggleButton .dijitButtonNode:focus,
+.frbr.claro.pure .dijitButton .dijitButtonNode:active,
+.frbr.claro.pure .dijitDropDownButton .dijitButtonNode:active,
+.frbr.claro.pure .dijitComboButton .dijitButtonNode:active,
+.frbr.claro.pure .dijitToggleButton .dijitButtonNode:active {
+	background-color: #009688;
+}
+.frbr .uk-label,
+.frbr .uk-label:hover {
+	background: #009688;
+	color:#fff;		
+}
+.frbr  .search-result-item.notice-child[style*='block'],
+.frbr  .child[style*='block'],
+.frbr  div[startopen="Yes"] {
+	border-color: #0aaf9f;
+}
+.frbr select:focus{
+	outline-color: #009688;
+}
+/*
+*Aut color
+*/
+.frbr .saisie-5emr,
+.frbr .saisie-10emr,
+.frbr .saisie-15emr,
+.frbr .saisie-20emr,
+.frbr .saisie-30emr,
+.frbr .saisie-50emr,
+.frbr .saisie-80emr.pure,
+.frbr input[class^='saisie'][class*='emr']:hover,
+.pure .frbr input[class^='saisie'][class*='emr']:active,
+.pure .frbr input[class^='saisie'][class*='emr']:focus{
+  background: #0aaf9f;
+  color:#000;	
+}
+/*
+*Retours 
+*/
+
+.frbr .form-retour-expl .row {
+  background-color: rgb(229, 248, 255);
+  border: solid 1px #0aaf9f;
+}
+
+.frbr .form-retour-expl .uk-form-label.wyr-form-label {
+  color: #595959;
+}
+
+.frbr #contenu .form-retour-expl input.wyr-input {
+  border: solid 1px #0aaf9f;
+}
+/* ========================================================================
+inside menu //  button
+===========================================================================  */
+
+.pure.frbr .hmenu .wui-button.uk-active {
+    background: #009688;
+    border-color: #009688;
+}
+.pure.frbr .hmenu .wui-button.uk-active:hover  a,
+.pure.frbr .hmenu .wui-button:hover a,
+.pure.frbr .hmenu .wui-button.uk-active:hover ,
+.pure.frbr .hmenu .wui-button:hover,
+.pure.frbr .hmenu .wui-button.uk-active:active ,
+.pure.frbr .hmenu .wui-button:active
+.pure.frbr .hmenu .wui-button.uk-active:focus ,
+.pure.frbr .hmenu .wui-button:focus,
+.frbr #empr-name,
+.pure.frbr .hmenu .wui-button {
+    border-color: #009688;    
+}
+ 
+.frbr input[type='submit'],
+.frbr input[type='button'],
+.frbr .bouton{
+	background-color: #009688;
+}
+.frbr input[type='submit']:hover,
+.frbr input[type='button']:hover,
+.frbr .bouton:hover{
+	background-color: #0aaf9f;
+}
+
+.frbr input[type='submit']:focus,
+.frbr input[type='button']:focus,
+.frbr .bouton:focus,  
+.frbr input[type='submit']:active,
+.frbr input[type='button']:active,
+.frbr .bouton:active{
+	background-color: #008477;
+
+}
+
+

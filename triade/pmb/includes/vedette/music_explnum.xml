@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<composed_headings>
+	<heading>
+		<subdivision order="1" code="subdivision_execution" min="1" max="1" name="msg:vedette_subdivision_execution"/>
+		<subdivision order="2" code="subdivision_moment" min="1" max="1" name="msg:vedette_subdivision_moment"/>
+	</heading>
+	<available_fields>
+		<field num="8" type="titre_uniforme" class_name="vedette_titres_uniformes" name="msg:vedette_titres_uniformes"/>
+		<field num="17" type="concept" class_name="vedette_concepts" name="msg:vedette_concepts"/>
+	</available_fields>
+	<separator> -- </separator>
+</composed_headings>

@@ -1,0 +1,119 @@
+/* +--------------------------------------------------------------------------+
+// 2013 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// +-------------------------------------------------+
+// $Id: navbar.css,v 1.2 2018-01-08 13:33:34 wlair Exp $ */
+/*------------------------------------------------------------------------------------------*/
+.uk-navbar{
+	background: transparent;
+	z-index: 99;
+	position: relative;
+	margin: 0 auto;
+}
+.ui-prime-nav>div,
+div[class*="ui-prime-nav"]>div{
+	background:transparent;
+}
+.uk-navbar-nav > li > a{
+	font-weight: 400;
+	text-transform: none;
+	font-size: 16px;
+	line-height: 50px;
+	height: 50px;
+	font-family: "Open sans",Helvetica,Arial,sans-serif;
+}
+.uk-navbar-nav > li+li{
+
+}
+
+/*
+navbar hover
+*/
+
+.uk-navbar-nav>li.uk-open>a,
+.uk-navbar-nav>li:hover>a,
+.uk-navbar-nav>li>a:focus {
+	 text-shadow:none;
+}
+.uk-navbar-nav>li:first-child:hover>a,
+.uk-navbar-nav>li:first-child>a:focus {
+	 text-shadow:none;
+}
+/*
+navbar active
+*/
+.uk-navbar-nav>li:active>a{
+}
+
+/*
+nav narnav-navbar
+*/
+.uk-nav-navbar>li>a{
+	text-transform: none;
+	font-size: 14px;
+	font-family: "Open sans",Helvetica,Arial,sans-serif;
+	text-align:left;
+}
+/*
+navbar hover
+*/
+.uk-nav-navbar>li>a:focus,
+.uk-nav-navbar>li>a:hover {
+	background:#000;
+	color:#ffffff;
+	outline: 0;
+	text-shadow:none;
+
+}
+.uk-open>.uk-dropdown-navbar {
+	box-shadow:1px 2px 0px 0px rgba(0,0,0,0);
+	background: #f2f2f2;
+}
+
+/* ========================================================================
+   Elements hover
+ =========================================================================  */
+
+.uk-dropdown-navbar {
+	margin-top: 0;
+	background: transparent;
+}
+/* ========================================================================
+   Overlay display
+ =========================================================================  */
+.uk-position-relative{
+	margin-left: auto;
+	margin-right: auto;
+}
+.uk-dropdown-overlay.uk-block-primary.absolute-overlay{
+	display:block;
+	background: #c9ebed;
+	z-index: 200;
+	width: 100%;
+	position: absolute;
+	max-width: 1050px;
+}
+/* ========================================================================
+   Centered Nav-bar 
+ =========================================================================  */
+.ui-nav-bar .uk-navbar-center{
+	max-width: 1050px;
+	background: #fff;
+	border-bottom: 1px solid #eeeeee;
+	margin-top: -25px;
+}
+/* ========================================================================
+   Nav-bar empr & search
+ =========================================================================  */
+/*
+navbar spacer
+*/
+.uk-navbar-nav.ui-navbar-ex > li+li:before {
+	content:none;
+}
+/* ========================================================================
+   navbar-child
+ =========================================================================  */
+.upper-navbar .uk-button img{
+	height:20px;
+	vertical-align: middle;
+}

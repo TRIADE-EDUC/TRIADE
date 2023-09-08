@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!-- 
+****************************************************************************************
+© 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: params.xml,v 1.4 2017-02-09 13:55:40 jpermanne Exp $ -->
+
+<params>
+	<!-- Nom de l'import -->
+	<importname>Base PMB -&gt; XML MARC</importname>
+	
+	<!-- Nombre de notices traitées par passe -->
+	<nperpass>200</nperpass>
+	
+	<!-- Type de l'entrée -->
+	<input type="xml" rootelement="*" noticeelement="notice"/>
+
+	<!-- Type de la sortie -->
+	<output importable="no" type="xml" suffix="xml" charset='utf-8'>
+		<rootelement>collection</rootelement>
+	</output>
+	
+	<step type="xmltransform">
+		<xslfile>marc.xsl</xslfile>
+		<rootelement>pmbmarc</rootelement>
+		<noticeelement>notice</noticeelement>
+		<trootelement>collection</trootelement>
+		<tnoticeelement>record</tnoticeelement>
+	</step>
+</params>

@@ -1,0 +1,862 @@
+<?php
+// +-------------------------------------------------+
+// | 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// +-------------------------------------------------+
+// $Id: pmbesSearch.class.php,v 1.36 2019-06-13 15:26:51 btafforeau Exp $
+
+if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
+
+require_once($class_path."/external_services.class.php");
+
+define("SEARCH_ALL",0);
+define("SEARCH_TITLE",1);
+define("SEARCH_AUTHOR",2);
+define("SEARCH_EDITOR",3);
+define("SEARCH_COLLECTION",4);
+define("SEARCH_CATEGORIES",5);
+
+define("ERROR_SEARCH_UNKNOWN_FIELD",1);
+
+
+class pmbesSearch extends external_services_api_class {
+
+	public function restore_general_config() {
+		
+	}
+	
+	public function form_general_config() {
+		return false;
+	}
+	
+	public function save_general_config() {
+		
+	}
+	
+	public function update_session_date($session_id) {
+		global $dbh;
+		$sql = "UPDATE es_searchsessions SET es_searchsession_lastseendate = NOW() WHERE es_searchsession_id = '".addslashes($session_id)."'";
+		pmb_mysql_query($sql, $dbh);
+	}
+	
+	public function noticeids_to_recordformats($noticesids, $record_format, $recordcharset='iso-8859-1', $includeLinks=true, $includeItems=false) {
+		$converter = new external_services_converter_notices(1, 600);
+		$converter->set_params(array("map" => true, "include_links" => $includeLinks, "include_items" => $includeItems, "include_authorite_ids" => true));
+		return $converter->convert_batch($noticesids, $record_format, $recordcharset);
+	}
+
+	public function external_noticeids_to_recordformats($noticesids, $record_format, $recordcharset='iso-8859-1') {
+		$converter = new external_services_converter_external_notices(4, 600);
+		$converter->set_params(array());
+		return $converter->convert_batch($noticesids, $record_format, $recordcharset);
+	}
+	
+	public function make_search($search_realm, $PMBUserId, $OPACEmprId) {
+		global $dbh;
+		global $pmb_external_service_session_duration;
+		$pmb_external_service_session_duration+=0;
+		$PMBUserId+=0;
+		$OPACEmprId+=0;
+
+		$search_cache = new external_services_searchcache($search_realm, '', $PMBUserId, $OPACEmprId);
+		$search_cache->update();
+		$search_unique_name = $search_cache->search_unique_id;
+		$result_count = $search_cache->get_result_count();
+		$result_typdoc_list = $search_cache->get_typdoc_list();
+
+		if (!$search_unique_name) {
+			return array("searchId"=>0,"nbResults"=>0,"nPerPages"=>20);
+		}
+		
+		//Deletons les sessions trop vieilles
+		$sql = "DELETE FROM es_searchsessions WHERE es_searchsession_lastseendate + INTERVAL ".$pmb_external_service_session_duration." SECOND <= NOW()";
+		pmb_mysql_query($sql, $dbh);
+		
+		//Générons un numéro de session
+		$session_id = md5(microtime());
+		$sql = "INSERT INTO es_searchsessions (es_searchsession_id, es_searchsession_searchnum, es_searchsession_searchrealm, es_searchsession_pmbuserid, es_searchsession_opacemprid, es_searchsession_lastseendate) VALUES ('".$session_id."', '".$search_unique_name."', '".addslashes($search_realm)."', ".$PMBUserId.", ".$OPACEmprId.", NOW())";
+		pmb_mysql_query($sql, $dbh);
+
+		return array("searchId"=>$session_id,"nbResults"=>$result_count,"typdocs"=>$result_typdoc_list);
+	}
+	
+
+	public function simpleSearch($searchType=0,$searchTerm="",$PMBUserId=-1, $OPACEmprId=-1) {
+		
+		global $charset;
+		if ($this->proxy_parent->input_charset!='utf-8' && $charset == 'utf-8') {
+			$searchTerm = utf8_encode($searchTerm);
+		}
+		else if ($this->proxy_parent->input_charset=='utf-8' && $charset != 'utf-8') {
+			$searchTerm = utf8_decode($searchTerm);	
+		}
+		
+		switch ($searchType) {
+			case SEARCH_ALL:
+				$searchId=7;
+				break;
+			case SEARCH_TITLE:
+				$searchId=6;
+				break;
+			case SEARCH_AUTHOR:
+				$searchId=8;
+				break;
+			case SEARCH_EDITOR:
+				$searchId=3;
+				break;
+			case SEARCH_COLLECTION:
+				$searchId=4;
+				break;
+			case SEARCH_CATEGORIES:
+				$searchId=1;
+				break;
+			default:
+				$this->error=ERROR_SEARCH_UNKNOWN_FIELD;
+				$this->error_message=$this->msg["unknown_field"];
+				$searchId=0;
+				break;
+		}
+		if ($searchId) {
+			global $search;
+			$search=array();
+			$search[0]="f_".$searchId;
+			$field="field_0_".$search[0];
+			global ${$field};
+			${$field}=array($searchTerm);
+			$op="op_0_".$search[0];
+			global ${$op};
+			${$op}="BOOLEAN";
+			
+			return $this->make_search('search_simple_fields', $PMBUserId, $OPACEmprId);
+			
+		} else return "";
+
+	}
+	
+	public function simpleSearchLocalise($searchType=0,$searchTerm="",$PMBUserId=-1, $OPACEmprId=-1,$location,$section=0) {
+		global $dbh;
+		
+		global $charset;
+		if ($this->proxy_parent->input_charset!='utf-8' && $charset == 'utf-8') {
+			$searchTerm = utf8_encode($searchTerm);
+		}
+		else if ($this->proxy_parent->input_charset=='utf-8' && $charset != 'utf-8') {
+			$searchTerm = utf8_decode($searchTerm);	
+		}
+		
+		$req = "select count(1) from docsloc_section where num_section='".$section."' and num_location='".$location."'";
+		$res = pmb_mysql_query($req,$dbh);
+		
+		$sec_valide = false;
+		if(pmb_mysql_num_rows($res)){
+			$sec_valide = true;
+		}
+		
+		switch ($searchType) {
+			case SEARCH_ALL:
+				$searchId=(($section && $sec_valide) ? 25 : 20);
+				break;
+			case SEARCH_TITLE:
+				$searchId=(($section&& $sec_valide) ? 24 : 19);
+				break;
+			case SEARCH_AUTHOR:
+				$searchId=(($section && $sec_valide) ? 26 : 21);
+				break;
+			case SEARCH_EDITOR:
+				$searchId=(($section && $sec_valide) ? 22 : 17);
+				break;
+			case SEARCH_COLLECTION:
+				$searchId=(($section && $sec_valide) ? 23 : 18);
+				break;
+			case SEARCH_CATEGORIES:
+				$searchId=(($section && $sec_valide) ? 28 : 27);
+				break;
+			default:
+				$this->error=ERROR_SEARCH_UNKNOWN_FIELD;
+				$this->error_message=$this->msg["unknown_field"];
+				$searchId=0;
+				break;
+		}
+		if ($searchId) {
+			global $search;
+			$search=array();
+			$search[0]="f_".$searchId;
+			$field="field_0_".$search[0];
+			global ${$field};
+			${$field}=array($searchTerm);
+			$op="op_0_".$search[0];
+			global ${$op};
+			${$op}="BOOLEAN";
+			$fieldvar="fieldvar_0_".$search[0];
+			global ${$fieldvar};
+			${$fieldvar}["location"][0] = $location;
+			if($section){
+				${$fieldvar}["section"][0] = $section;
+			}
+			
+			
+			return $this->make_search('search_simple_fields', $PMBUserId, $OPACEmprId);
+			
+		} else return "";
+
+	}
+	
+	public function getAdvancedSearchFields($search_realm, $vlang, $fetch_values) {
+		global $dbh, $msg, $lang, $include_path, $class_path;
+
+		//Allons chercher les infos dans le cache si elles existent
+		if ($fetch_values) {
+			$cache_ref = "getAdvancedSearchFields_results_valued_".$lang."_".$search_realm;
+		}
+		else {
+			$cache_ref = "getAdvancedSearchFields_results_".$lang."_".$search_realm;
+		}
+		$es_cache = new external_services_cache('es_cache_blob', 86400);
+		$cached_result = $es_cache->decache_single_object($cache_ref, CACHE_TYPE_MISC);
+		if ($cached_result !== false) {
+			$cached_result = unserialize(base64_decode($cached_result));
+			return $cached_result;
+		}
+		
+		$opac_realm=false;
+		$full_path='';
+		if (substr($search_realm, 0, 5) == 'opac|') {
+			$search_realm = substr($search_realm, 5);
+			global $base_path;
+			$full_path = $base_path."/includes/search_queries/";
+			$opac_realm = true;
+		}
+		
+		//Ajoutant la langue demandée à l'environnement
+		if ($opac_realm) {
+			if (file_exists("$base_path/includes/messages/$vlang.xml")) {
+				//Allons chercher les messages
+				include_once("$class_path/XMLlist.class.php");
+				$messages = new XMLlist("$base_path/includes/messages/$vlang.xml", 0);
+				$messages->analyser();
+				global $msg;
+				$msg = $messages->table;
+			}
+		}
+		else {
+			if ($vlang != $lang && file_exists("$include_path/messages/$vlang.xml")) {
+				//Allons chercher les messages
+				include_once("$class_path/XMLlist.class.php");
+				$messages = new XMLlist("$include_path/messages/$vlang.xml", 0);
+				$messages->analyser();
+				global $msg;
+				$msg = $messages->table;
+			}
+		}
+
+		$s=new search(false, $search_realm, $full_path);
+		$results=array();
+		//les champs statiques
+		foreach ($s->fixedfields as $id => $content) {
+			$results[] = $this->getAdvancedSearchField($id, $search_realm, $vlang, $fetch_values, $s, true);
+		}
+		//les champs dynamiques
+		foreach ($s->dynamicfields as $prefix => $content) {
+			$pp = new parametres_perso($content['TYPE']);
+			foreach($pp->t_fields as $id=>$field){
+				if((!$opac_realm || ($opac_realm && $field['OPAC_SHOW'])) && $field['SEARCH']) {
+					$results[] = $this->getAdvancedSearchField($prefix.$id, $search_realm, $vlang, $fetch_values, $s, true);
+				}
+			}
+		}
+		
+		//Mettons le resultat dans le cache
+		$es_cache = new external_services_cache('es_cache_blob', 86400);
+		$es_cache->encache_single_object($cache_ref, CACHE_TYPE_MISC, base64_encode(serialize($results)));
+		
+		return $results;
+	}
+	
+	public function getAdvancedSearchField($field_id, $search_realm, $vlang, $fetch_values, $search_object=NULL, $nocache=false) {
+		global $dbh, $msg, $lang, $include_path, $class_path;
+		if (!$nocache) {
+			//Allons chercher les infos dans le cache si elles existent
+			$cache_ref = "getAdvancedSearchField_result_".$field_id."_".$lang."_".$search_realm;
+			$es_cache = new external_services_cache('es_cache_blob', 86400);
+			$cached_result = $es_cache->decache_single_object($cache_ref, CACHE_TYPE_MISC);
+			if ($cached_result !== false) {
+				$cached_result = unserialize(base64_decode($cached_result));
+				return $cached_result;
+			}
+		}
+		
+		//Si on nous passe le $search_object, c'est que tout l'environnement est prêt
+		if (!$search_object) {
+
+			$opac_realm=false;
+			$full_path='';
+			if (substr($search_realm, 0, 5) == 'opac|') {
+				$search_realm = substr($search_realm, 5);
+				global $base_path;
+				$full_path = $base_path."/includes/search_queries/";
+				$opac_realm = true;
+			}
+			
+			//Ajoutant la langue demandée à l'environnement
+			if ($opac_realm) {
+				if (file_exists("$base_path/includes/messages/$vlang.xml")) {
+					//Allons chercher les messages
+					include_once("$class_path/XMLlist.class.php");
+					$messages = new XMLlist("$base_path/includes/messages/$vlang.xml", 0);
+					$messages->analyser();
+					global $msg;
+					$msg = $messages->table;
+				}
+			} else {
+				if ($vlang != $lang && file_exists("$include_path/messages/$vlang.xml")) {
+					//Allons chercher les messages
+					include_once("$class_path/XMLlist.class.php");
+					$messages = new XMLlist("$include_path/messages/$vlang.xml", 0);
+					$messages->analyser();
+					global $msg;
+					$msg = $messages->table;
+				}
+			}
+			
+			$search_object=new search(false, $search_realm, $full_path);
+		}
+
+		
+		if (isset($search_object->fixedfields[$field_id])){
+			$content = $search_object->fixedfields[$field_id];
+			$aresult = array("operators" => array());
+			$aresult["id"] = $field_id;
+			$aresult["label"] = utf8_normalize($content["TITLE"]);
+			$aresult["type"] = $content["INPUT_TYPE"];
+			foreach($content["QUERIES"] as $aquery) {
+				$aresult["operators"][] = array("id" => $aquery["OPERATOR"], "label" =>utf8_normalize($search_object->operators[$aquery["OPERATOR"]]));
+			}
+			$aresult["values"] = array();
+			$aresult["fieldvar"] = array();
+				
+			if ($fetch_values) {
+				switch ($content["INPUT_TYPE"]) {
+					case "query_list":
+						$aresult["values"] = array();
+		   				$requete=$content["INPUT_OPTIONS"]["QUERY"][0]["value"];
+		   				$resultat=pmb_mysql_query($requete, $dbh);
+		   				while ($opt=pmb_mysql_fetch_row($resultat)) {
+							$aresult["values"][] = array(
+								"value_id" => $opt[0],
+								"value_caption" => utf8_normalize($opt[1])
+							);
+		   				}
+						break;
+					case "list":
+						if (!isset($content["INPUT_OPTIONS"]["OPTIONS"][0]["OPTION"]))
+							break;
+						foreach ($content["INPUT_OPTIONS"]["OPTIONS"][0]["OPTION"] as $aoption) {
+							if (substr($aoption["value"],0,4)=="msg:") {
+								$aoption["value"] = $msg[substr($aoption["value"],4)];
+							}
+							$aresult["values"][] = array(
+								"value_id" => $aoption["VALUE"],
+								"value_caption" => utf8_normalize($aoption["value"])
+							);						
+						}
+						break;
+					case "marc_list":
+		   				$options=new marc_list($content["INPUT_OPTIONS"]["NAME"][0]["value"]);
+		   				asort($options->table);
+		   				reset($options->table);
+		
+		 		  			// gestion restriction par code utilise.
+		 		  			if ($content["INPUT_OPTIONS"]["RESTRICTQUERY"][0]["value"]) {
+		 		  				$restrictquery=pmb_mysql_query($content["INPUT_OPTIONS"]["RESTRICTQUERY"][0]["value"], $dbh);
+					  		if ($restrictqueryrow=@pmb_mysql_fetch_row($restrictquery)) {
+					  			if ($restrictqueryrow[0]) {
+					  				$restrictqueryarray=explode(",",$restrictqueryrow[0]);
+					  				$existrestrict=true;
+					  			} else $existrestrict=false;
+					  		} else $existrestrict=false;
+		 		  			} else $existrestrict=false;
+		
+		 		  		foreach ($options->table as $key => $val) {
+		   					if ($existrestrict && array_search($key,$restrictqueryarray)!==false) {
+								$aresult["values"][] = array(
+									"value_id" => $key,
+									"value_caption" => utf8_normalize($val)
+								);
+		   					} elseif (!$existrestrict) {
+								$aresult["values"][] = array(
+									"value_id" => $key,
+									"value_caption" => utf8_normalize($val)
+								);
+		   					}    						
+		   				}
+		   				$r.="</select>";
+						break;
+					case "text":
+					case "authoritie":
+					default:
+						$aresult["values"] = array();
+						break;
+				}
+			}
+			if($content['VAR']){
+				$params = array();
+				foreach($content['VAR'] as $variable){
+					if($variable['TYPE'] == "input"){
+	   		 			$input=$variable['OPTIONS']['INPUT'][0];
+	   		 			$values = array();
+			  		  	switch ($input['TYPE']) {
+			  		  		case "query_list":
+			  		  			$concat = "";
+			  		  			$query_list_result=@pmb_mysql_query($input['QUERY'][0]['value']);
+			  		  			while ($value=pmb_mysql_fetch_array($query_list_result)) {
+									if($concat)$concat.=",";
+			  		  				$concat.=$value[0];
+									$values[]=array(
+										'value_id' => $value[0],
+										'value_caption' => utf8_normalize($value[1])
+									);
+			  		  			}
+			  		  			if($input['QUERY'][0]['ALLCHOICE'] == "yes"){
+			  		  				$values[]=array(
+			  		  					'value_id' => $concat,
+			  		  					'value_caption' =>utf8_normalize($msg[substr($input['QUERY'][0]['TITLEALLCHOICE'],4,strlen($input['QUERY'][0]['TITLEALLCHOICE'])-4)])
+			  		  				);
+			  		  			}
+			  		  			break;
+			  		  		case "checkbox" :
+			  		  		case "hidden" :
+				  		  		$values = array($input["VALUE"][0]["value"]);
+			  		  			break;
+			  		  	}
+			  		 	$params[]=array(
+							'label'=>utf8_normalize($variable['COMMENT']),
+							'name'=>$variable['NAME'],
+							'type'=>$input['TYPE'],
+							'values'=>$values, 	
+						);
+					}
+					$aresult['fieldvar']=$params;
+				}
+			}
+		}else{
+			$aresult = array();
+			foreach ($search_object->dynamicfields as $prefix => $content) {
+				$pp = new parametres_perso($content['TYPE']);
+				foreach($pp->t_fields as $id=>$field){
+					if($field_id == $prefix.$id){
+						if ((!$opac_realm || ($opac_realm && $field['OPAC_SHOW'])) && $field['SEARCH']){
+							$field['ident']=$field_id;
+							$field['ID']=$id;
+							$field['PREFIX']="notices";
+							$aresult= utf8_normalize(aff_empr_search($field));	
+							$aresult['id']=$prefix."_".$id;
+							foreach($content['FIELD'] as $field_spec){
+								if($field_spec['DATATYPE'] == $field['DATATYPE'])
+									$queries = $field_spec['QUERIES'];
+							}
+							foreach($queries as $aquery) {
+								$aresult['operators'][]= array("id" => $aquery["OPERATOR"], "label" => utf8_normalize($search_object->operators[$aquery["OPERATOR"]]));
+							}
+						}
+						break;
+					}
+				}
+			}
+		}
+		
+		if(!isset($aresult['values'])) {
+		    $aresult['values'] = array();
+		}
+	   if(!isset($aresult['fieldvar'])) {
+	       $aresult['fieldvar'] = array();
+	   }
+		if (!$nocache) {
+			//Mettons le resultat dans le cache
+			$es_cache = new external_services_cache('es_cache_blob', 86400);
+			$es_cache->encache_single_object($cache_ref, CACHE_TYPE_MISC, base64_encode(serialize($aresult)));
+		}
+		
+		return $aresult;
+
+	}
+	
+	public function advancedSearch($search_realm, $search_description, $PMBUserId=-1, $OPACEmprId=-1) {
+		global $search;
+
+		object_to_array($search_description);
+		
+		global $charset;
+		if ($this->proxy_parent->input_charset!='utf-8' && $charset == 'utf-8') {
+			foreach ($search_description as $index => $afield_s) {
+				if (!is_array($search_description[$index]["value"]))
+					$search_description[$index]["value"] = utf8_encode($search_description[$index]["value"]);
+				else {
+					foreach($search_description[$index]["value"] as $value_index => $value) {
+						$search_description[$index]["value"][$value_index] = utf8_encode($search_description[$index]["value"][$value_index]);
+					}
+				}
+			}
+		}
+		else if ($this->proxy_parent->input_charset=='utf-8' && $charset != 'utf-8') {
+			foreach ($search_description as $index => $afield_s) {
+				if (!is_array($search_description[$index]["value"]))
+					$search_description[$index]["value"] = utf8_decode($search_description[$index]["value"]);
+				else {
+					foreach($search_description[$index]["value"] as $value_index => $value) {
+						$search_description[$index]["value"][$value_index] = utf8_decode($search_description[$index]["value"][$value_index]);
+					}
+				}
+			}	
+		}
+
+		$count=0;
+		foreach ($search_description as $afield_s) {
+			if(preg_match("/^[a-z]/",$afield_s['field'])){
+				$search[$count]=$afield_s["field"];	
+			}else{
+				$search[$count]="f_".$afield_s["field"];
+			}
+			$field="field_".$count."_".$search[$count];
+			$var[]=$field;
+			global ${$field};
+			if (is_array($afield_s["value"])) {
+				${$field}=$afield_s["value"];
+			} else {
+				${$field}=array($afield_s["value"]);
+			}
+			$op="op_".$count."_".$search[$count];
+			global ${$op};
+			${$op}=$afield_s["operator"];
+			if ($count) {
+				$inter="inter_".$count."_".$search[$count];
+				global ${$inter};
+				${$inter} = $afield_s["inter"];
+			}
+			$fieldvar ="fieldvar_".$count."_".$search[$count];
+			global ${$fieldvar};
+			${$fieldvar}=$afield_s["fieldvar"];
+			
+			global $explicit_search;
+			$explicit_search=1;
+			$count++;
+		}
+		return $this->make_search($search_realm, $PMBUserId, $OPACEmprId);
+	}
+	
+	public function get_sort_types() {
+		$result = array();
+		
+		global $include_path, $msg;
+		$nomfichier = $include_path . "/sort/" . "notices". "/sort.xml";
+
+		if (file_exists($nomfichier)) {
+			$fp = fopen($nomfichier, "r");
+		}
+
+		if ($fp) {
+			//un fichier est ouvert donc on le lit
+			$xml = fread($fp, filesize($nomfichier));
+			//on le ferme
+			fclose($fp);
+			//on le parse pour le transformer en tableau
+			$params = _parser_text_no_function_($xml, "SORT",$nomfichier);
+			
+			foreach ($params["FIELD"] as $aparam) {
+				$result[] = array(
+					"sort_name" => $aparam["TYPE"]."_".$aparam["ID"],
+					"sort_caption" =>  utf8_normalize($msg[$aparam["NAME"]])
+				);
+			}
+		} 
+		return $result;
+	}
+	
+	public function fetchSearchRecords($searchId, $firstRecord, $recordCount, $recordFormat, $recordCharset='iso-8859-1', $includeLinks=true, $includeItems=false) {
+		//On tri par défaut selon la pertinence des résultats
+		return $this->proxy_parent->pmbesSearch_fetchSearchRecordsSorted($searchId, $firstRecord, $recordCount, $recordFormat, $recordCharset, $includeLinks, $includeItems, "d_num_6");
+	}
+
+	public function fetchSearchRecordsSorted($searchId, $firstRecord, $recordCount, $recordFormat, $recordCharset='iso-8859-1', $includeLinks=true, $includeItems=false, $sort_type="") {
+		global $dbh;
+		$firstRecord+=0;
+		$recordCount+=0;
+
+		//Cherchons la session
+		$sql = "SELECT * FROM es_searchsessions WHERE es_searchsession_id = '".addslashes($searchId)."'";
+		$res = pmb_mysql_query($sql, $dbh);
+		if (!pmb_mysql_num_rows($res)) {
+			return array();
+		}
+		$row = pmb_mysql_fetch_assoc($res);
+		$this->update_session_date($searchId);
+
+		$search_unique_id = $row["es_searchsession_searchnum"];
+		$search_realm = $row["es_searchsession_searchrealm"];
+		$pmbuserid = $row["es_searchsession_pmbuserid"];
+		$opacemprid = $row["es_searchsession_opacemprid"];
+		
+		if (!$search_unique_id) {
+			return array();
+		}
+
+		$search_cache = new external_services_searchcache($search_realm, $search_unique_id, $pmbuserid, $opacemprid);
+		$notice_ids = $search_cache->get_results($firstRecord, $recordCount, $sort_type);
+
+		if ($search_cache->external_search) {
+			$records = $this->external_noticeids_to_recordformats($notice_ids, $recordFormat, $recordCharset);
+		}
+		else {
+			$records = $this->noticeids_to_recordformats($notice_ids, $recordFormat, $recordCharset, $includeLinks, $includeItems);
+		}
+		
+		$results = array();
+		foreach ($records as $notice_id => $record_value) {
+			$results[] = array(
+				"noticeId" => $notice_id,
+				"noticeContent" => $record_value
+			);
+		}
+
+		return $results;
+	}
+	
+	public function fetchSearchRecordsArray($searchId, $firstRecord, $recordCount, $recordCharset='iso-8859-1', $includeLinks=true, $includeItems=false) {
+		//On tri par défaut selon la pertinence des résultats
+		return $this->proxy_parent->pmbesSearch_fetchSearchRecordsArraySorted($searchId, $firstRecord, $recordCount, $recordCharset, $includeLinks, $includeItems, "d_num_6");
+	}
+	
+	public function fetchSearchRecordsArraySorted($searchId, $firstRecord, $recordCount, $recordCharset='iso-8859-1', $includeLinks=true, $includeItems=false, $sort_type="") {
+		global $dbh;
+		$firstRecord+=0;
+		$recordCount+=0;
+
+		//Cherchons la session
+		$sql = "SELECT * FROM es_searchsessions WHERE es_searchsession_id = '".addslashes($searchId)."'";
+		$res = pmb_mysql_query($sql, $dbh);
+		if (!pmb_mysql_num_rows($res)) {
+			return array();
+		}
+		$row = pmb_mysql_fetch_assoc($res);
+		$this->update_session_date($searchId);
+
+		$search_unique_id = $row["es_searchsession_searchnum"];
+		$search_realm = $row["es_searchsession_searchrealm"];
+		$pmbuserid = $row["es_searchsession_pmbuserid"];
+		$opacemprid = $row["es_searchsession_opacemprid"];
+		
+		if (!$search_unique_id) {
+			return array();
+		}
+
+		$search_cache = new external_services_searchcache($search_realm, $search_unique_id, $pmbuserid, $opacemprid);
+		$notice_ids = $search_cache->get_results($firstRecord, $recordCount, $sort_type);
+		
+		$records = $this->noticeids_to_recordformats($notice_ids, "raw_array", $recordCharset, $includeLinks, $includeItems);
+		$array_results = array_values($records);
+		
+		return $array_results;
+	}
+	
+	public function listExternalSources($OPACUserId=-1) {
+		global $dbh, $msg;
+		$sql = 'SELECT connectors_sources.source_id, connectors_sources.name, connectors_sources.comment, connectors_categ.connectors_categ_name FROM connectors_sources LEFT JOIN connectors_categ_sources ON (connectors_categ_sources.num_source = connectors_sources.source_id) LEFT JOIN connectors_categ ON (connectors_categ.connectors_categ_id = connectors_categ_sources.num_categ) WHERE 1 '.($OPACUserId != -1 ? 'AND connectors_sources.opac_allowed = 1' : '').' ORDER BY connectors_categ.connectors_categ_name, connectors_sources.name';
+		$res = pmb_mysql_query($sql, $dbh);
+		$results = array();
+		$categs = array();
+		while($row = pmb_mysql_fetch_assoc($res)) {
+			$categs[$row['connectors_categ_name'] ? $row['connectors_categ_name'] : $msg['source_no_category']][] = array(
+				'source_id' => $row['source_id'],
+				'source_caption' => utf8_normalize($row['name']),
+				'source_comment' => utf8_normalize($row['comment']),
+			);
+		}
+		foreach($categs as $categ_name => $categ_content) {
+			$results[] = array(
+				'category_caption' => utf8_normalize($categ_name),
+				'sources' => $categ_content,
+			);
+		}
+		return $results;
+	}
+	
+	public function fetchSearchRecordsFull($searchId, $firstRecord, $recordCount, $recordCharset='iso-8859-1', $includeLinks=true, $includeItems=false) {
+		//On tri par défaut selon la pertinence des résultats
+		return $this->proxy_parent->pmbesSearch_fetchSearchRecordsFullSorted($searchId, $firstRecord, $recordCount, $recordCharset, $includeLinks, $includeItems, "d_num_6");
+	}
+	
+	public function fetchSearchRecordsFullSorted($searchId, $firstRecord, $recordCount, $recordCharset='iso-8859-1', $includeLinks=true, $includeItems=false,$sort_type='') {
+		global $dbh;
+		$firstRecord+=0;
+		$recordCount+=0;
+
+		//Cherchons la session
+		$sql = "SELECT * FROM es_searchsessions WHERE es_searchsession_id = '".addslashes($searchId)."'";
+		$res = pmb_mysql_query($sql, $dbh);
+		if (!pmb_mysql_num_rows($res)) {
+			return array();
+		}
+		$row = pmb_mysql_fetch_assoc($res);
+		$this->update_session_date($searchId);
+
+		$search_unique_id = $row["es_searchsession_searchnum"];
+		$search_realm = $row["es_searchsession_searchrealm"];
+		$pmbuserid = $row["es_searchsession_pmbuserid"];
+		$opacemprid = $row["es_searchsession_opacemprid"];
+		
+		if (!$search_unique_id) {
+			return array();
+		}
+
+		$search_cache = new external_services_searchcache($search_realm, $search_unique_id, $pmbuserid, $opacemprid);
+		$notice_ids = $search_cache->get_results($firstRecord, $recordCount, $sort_type);
+		
+		
+		$records = $this->proxy_parent->pmbesNotices_fetchNoticeListFull($notice_ids,"raw_array_assoc", $recordCharset, $includeLinks, $includeItems);	
+		return $records;
+		$array_results = array_values($records);
+		
+		return $array_results;
+	}
+	
+	public function fetchSearchRecordsFullWithBullId($searchId, $firstRecord, $recordCount, $recordCharset='iso-8859-1', $includeLinks=true, $includeItems=false) {
+		//On tri par défaut selon la pertinence des résultats
+		return $this->proxy_parent->pmbesSearch_fetchSearchRecordsFullWithBullIdSorted($searchId, $firstRecord, $recordCount, $recordCharset, $includeLinks, $includeItems, "d_num_6");
+	}
+	
+	public function fetchSearchRecordsFullWithBullIdSorted($searchId, $firstRecord, $recordCount, $recordCharset='iso-8859-1', $includeLinks=true, $includeItems=false,$sort_type='') {
+		global $dbh;
+		$firstRecord+=0;
+		$recordCount+=0;
+
+		//Cherchons la session
+		$sql = "SELECT * FROM es_searchsessions WHERE es_searchsession_id = '".addslashes($searchId)."'";
+		$res = pmb_mysql_query($sql, $dbh);
+		if (!pmb_mysql_num_rows($res)) {
+			return array();
+		}
+		$row = pmb_mysql_fetch_assoc($res);
+		$this->update_session_date($searchId);
+
+		$search_unique_id = $row["es_searchsession_searchnum"];
+		$search_realm = $row["es_searchsession_searchrealm"];
+		$pmbuserid = $row["es_searchsession_pmbuserid"];
+		$opacemprid = $row["es_searchsession_opacemprid"];
+		
+		if (!$search_unique_id) {
+			return array();
+		}
+
+		$search_cache = new external_services_searchcache($search_realm, $search_unique_id, $pmbuserid, $opacemprid);
+		$notice_ids = $search_cache->get_results($firstRecord, $recordCount, $sort_type);
+		
+		
+		$records = $this->proxy_parent->pmbesNotices_fetchNoticeListFullWithBullId($notice_ids,"raw_array_assoc", $recordCharset, $includeLinks, $includeItems);	
+		return $records;
+		$array_results = array_values($records);
+		
+		return $array_results;
+	}
+	
+	public function listFacets($searchId, $fields = array(), $filters = array()) {
+		object_to_array($fields);
+ 		object_to_array($filters);
+		$facets = array();
+		if(is_array($fields) && count($fields)) {
+			if(is_array($filters) && count($filters)) {
+				$notice_ids = $this->listRecordsFromFacets($searchId, $filters);
+			} else {
+				//Cherchons la session
+				$sql = "SELECT * FROM es_searchsessions WHERE es_searchsession_id = '".addslashes($searchId)."'";
+				$res = pmb_mysql_query($sql);
+				if (!pmb_mysql_num_rows($res)) {
+					return array();
+				}
+				$row = pmb_mysql_fetch_assoc($res);
+				$this->update_session_date($searchId);
+				
+				$search_unique_id = $row["es_searchsession_searchnum"];
+				$search_realm = $row["es_searchsession_searchrealm"];
+				$pmbuserid = $row["es_searchsession_pmbuserid"];
+				$opacemprid = $row["es_searchsession_opacemprid"];
+					
+				if (!$search_unique_id) {
+					return array();
+				}
+				
+				$search_cache = new external_services_searchcache($search_realm, $search_unique_id, $pmbuserid, $opacemprid);
+				$notice_ids = $search_cache->get_results();
+			}
+			if(is_array($notice_ids) && count($notice_ids)) {
+				foreach ($fields as $field) {
+				    $code_champ = (int) $field['code_champ'];
+				    $code_ss_champ = (int) $field['code_ss_champ'];
+					if($code_champ) {
+						$query = "select count(distinct id_notice) as nb_records, value from notices_fields_global_index where code_champ = '".$code_champ."'";
+						if($code_ss_champ) {
+							$query .= " and code_ss_champ = '".$code_ss_champ."'";
+						}
+						$query .= " and id_notice in (".implode(',', $notice_ids).") group by value";
+						$result = pmb_mysql_query($query);
+						while($row = pmb_mysql_fetch_object($result)) {
+							$facets[] = array(
+									'code_champ' => $code_champ,
+									'code_ss_champ' => $code_ss_champ,
+									'value' => utf8_normalize($row->value),
+									'count' => $row->nb_records
+							);
+						}
+					}
+				}
+			}
+		}
+		return $facets;
+	}
+	
+	public function listRecordsFromFacets($searchId, $filters = array()) {
+		object_to_array($filters);
+		$notice_ids = array();
+		//Cherchons la session
+		$sql = "SELECT * FROM es_searchsessions WHERE es_searchsession_id = '".addslashes($searchId)."'";
+		$res = pmb_mysql_query($sql);
+		if (!pmb_mysql_num_rows($res)) {
+			return array();
+		}
+		$row = pmb_mysql_fetch_assoc($res);
+		$this->update_session_date($searchId);
+			
+		$search_unique_id = $row["es_searchsession_searchnum"];
+		$search_realm = $row["es_searchsession_searchrealm"];
+		$pmbuserid = $row["es_searchsession_pmbuserid"];
+		$opacemprid = $row["es_searchsession_opacemprid"];
+		
+		if (!$search_unique_id) {
+			return array();
+		}
+		$search_cache = new external_services_searchcache($search_realm, $search_unique_id, $pmbuserid, $opacemprid);
+		$notice_ids = $search_cache->get_results();
+		if(count($notice_ids) && is_array($filters) && count($filters)) {
+			foreach ($filters as $filter) {
+			    $code_champ = (int) $filter['code_champ'];
+			    $code_ss_champ = (int) $filter['code_ss_champ'];
+				if($code_champ) {
+					$query = "select distinct id_notice from notices_fields_global_index where code_champ = '".$code_champ."'";
+					if($code_ss_champ) {
+						$query .= " and code_ss_champ = '".$code_ss_champ."'";
+					}
+					$query .= " and value = '".addslashes($filter['value'])."'";
+					$query .= " and id_notice in (".implode(',', $notice_ids).")";
+					$result = pmb_mysql_query($query);
+					
+					$notice_ids = array();
+					while($row = pmb_mysql_fetch_object($result)) {
+						$notice_ids[] = $row->id_notice;
+					}
+				}
+			}
+		}
+		return $notice_ids;
+	}
+}
+
+
+
+?>

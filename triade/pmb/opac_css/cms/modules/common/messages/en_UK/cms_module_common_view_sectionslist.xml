@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_common_view_sectionslist.xml,v 1.2 2016-09-21 09:56:04 dgoron Exp $ -->
+
+<XMLlist>
+	<entry code="cms_module_common_view_sectionslist_used_template">Choice of the template</entry>
+	<entry code="cms_module_common_view_sectionslist_page_var">Variable to use</entry>
+	<entry code="cms_module_common_view_sectionslist_build_section_link">Creation of the link for the rubrics</entry>
+	<entry code="cms_module_common_view_title">Title of the list</entry>
+	<entry code="cms_module_common_view_section_desc">Rubrics</entry>
+	<entry code="cms_module_common_view_section_link_desc">Link to the rubric</entry>
+	<entry code="cms_module_common_view_sectionslist_build_article_link">Creation of the link for the articles</entry>
+	<entry code="cms_module_common_view_article_link_desc">Link to article</entry>
+</XMLlist>

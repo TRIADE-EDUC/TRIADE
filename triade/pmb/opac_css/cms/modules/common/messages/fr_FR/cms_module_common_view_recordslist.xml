@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour la classe datasource
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_common_view_recordslist.xml,v 1.6 2016-08-22 13:30:50 vtouchard Exp $ -->
+
+<XMLlist>
+	<entry code="cms_module_common_view_recordslist_used_template">Choix du template</entry>
+	<entry code="cms_module_common_view_title">Titre</entry>
+	<entry code="cms_module_commom_view_records_desc">Notices</entry>
+	<entry code="cms_module_common_view_record_id_desc">Identifiant de la notice</entry>
+	<entry code="cms_module_common_view_record_header_desc">En-tête</entry>
+	<entry code="cms_module_common_view_record_content_desc">Contenu</entry>
+	<entry code="cms_module_common_view_record_link_desc">Lien</entry>
+	<entry code="cms_module_common_view_record_title_desc">Titre</entry>
+	<entry code="cms_module_common_view_record_vign_desc">Vignette</entry>
+	<entry code='cms_module_recordslist_view_link'>Construction du lien vers une notice</entry>
+	<entry code='cms_module_recordslist_view_add_cart_link'>Ajouter au panier</entry>
+	<entry code='cms_module_recordslist_view_add_cart_link_desc'>Lien d'ajout des éléments dans un panier</entry>
+</XMLlist>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le module Article
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_common_datasource_sections.xml,v 1.2 2016-05-06 10:24:01 arenou Exp $ -->
+
+<XMLlist>
+	<entry code="cms_module_common_selector_sections">Sélection manuelle</entry>
+<entry code="cms_module_common_selector_sections_by_parent_and_cp">Rubrique(s) parente(s)/Valeur d'un champ d'un type de contenu</entry>
+</XMLlist>

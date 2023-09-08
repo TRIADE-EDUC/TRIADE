@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- Fichier manifest de description des méthodes disponibles
+****************************************************************************************
+© 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: manifest.xml,v 1.1 2011-07-29 12:32:14 dgoron Exp $ -->
+<manifest>
+	<name>pmbesBackup</name>
+	<description>msg:Backup_functions_description</description>
+	<requirements>
+		<requirement group="pmbesTypes"/>
+	</requirements>
+	<types>
+		<type name="setBackup" imported="true" imported_from="pmbesTypes"/>
+		<type name="groupTables" imported="true" imported_from="pmbesTypes"/>
+		<type name="backupPerformed" imported="true" imported_from="pmbesTypes"/>
+	</types>
+	<methods>
+		<method name="listGroupsTables" rights="" version="1.0" comment="msg:listGroupsTables_description" language_independant="true">
+			<inputs/>
+			<outputs>
+				<description>msg:listGroupsTables_output_description</description>
+				<result name="result" type="scalar" dataType="groupTables" description="msg:listGroupsTables_result"/>
+			</outputs>
+		</method>
+		<method name="listTablesUnsaved" rights="" version="1.0" comment="msg:listTablesUnsaved_description" language_independant="true">
+			<inputs/>
+			<outputs>
+				<description>msg:listTablesUnsaved_output_description</description>
+				<result name="unsavedTables" type="scalar" dataType="array" description="msg:listTablesUnsaved_unsavedTables"/>
+			</outputs>
+		</method>
+		<method name="launchBackup" rights="" version="1.0" comment="msg:launchBackup_description" language_independant="true">
+			<pmb_requirements>
+				<pmb_requirement start_path="class" file="crypt.class.php"/>
+				<pmb_requirement start_path="base" file="admin/sauvegarde/lib/api.inc.php"/>
+			</pmb_requirements>
+			<inputs>
+				<description>msg:launchBackup_input_description</description>
+				<param name="id_sauvegarde" type="scalar" dataType="integer" description="msg:launchBackup_id_sauvegarde"/>
+			</inputs>
+			<outputs>
+				<description>msg:launchBackup_output_description</description>
+				<result name="result" type="scalar" dataType="string" description="msg:launchBackup_result"/>
+			</outputs>
+		</method>
+		<method name="listSetBackup" rights="" version="1.0" comment="msg:listSetBackup_description" language_independant="true">
+			<inputs>
+				<description>msg:listSetBackup_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:listSetBackup_output_description</description>
+				<result name="result" type="scalar" dataType="setBackup" description="msg:listSetBackup_result"/>
+			</outputs>
+		</method>
+		<method name="listSauvPerformed" rights="" version="1.0" comment="msg:listSauvPerformed_description" language_independant="true">
+			<inputs/>
+			<outputs>
+				<description>msg:listSauvPerformed_output_description</description>
+				<result name="result" type="scalar" dataType="backupPerformed" description="msg:listSauvPerformed_result"/>
+			</outputs>
+		</method>
+		<method name="deleteSauvPerformed" rights="" version="1.0" comment="msg:deleteSauvPerformed_description" language_independant="true">
+			<inputs>
+				<description>msg:deleteSauvPerformed_input_description</description>
+				<param name="ids_log" type="scalar" dataType="string" description="msg:deleteSauvPerformed_ids_log"/>
+			</inputs>
+			<outputs>
+				<description>msg:deleteSauvPerformed_output_description</description>
+				<result name="result" type="scalar" dataType="boolean" description="msg:deleteSauvPerformed_result"/>
+			</outputs>
+		</method>
+	</methods>
+</manifest>
+

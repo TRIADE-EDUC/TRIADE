@@ -1,0 +1,84 @@
+{% extends 'gabarit.html' %}
+
+<!-- $Id: category.html,v 1.4 2017-11-22 14:51:42 dgoron Exp $ -->
+
+{% block header %}
+	<h3><span>{{ msg.categ_see_tpl_categ }}</span></h3>
+{% endblock %}
+	
+{% block title %}
+{% endblock %}
+
+{% block aut_linked %}
+	{% if aut_link.display %}
+		<div id="categ_see_aut_link" class="categ_see_aut_link">
+			<h5><span>{{ msg.categ_see_aut_link }}</span></h5>
+			{{aut_link.display }}
+		</div>
+	{% endif %}
+{% endblock %}
+
+{% block details %}
+	{% if authority.breadcrumb %}
+		{{ authority.breadcrumb }}
+	{% endif %}
+	{% if authority.has_child %}
+		{{ authority.child_list }}
+	{% endif %}
+	<h4 class="title_categ"><span>{{ authority.libelle }}</span></h4>
+	{% if authority.comment %}
+		<div class="aut_display_row">
+			<div class="aut_display_cell">
+				<b>{{ msg.comment }} :</b>
+			</div>
+			<div id="categ_see_comment" class="aut_display_cell">
+				{{ authority.comment | nl2br }}
+			</div>
+		</div>
+	{% endif %}
+	{% if authority.synonyms %}
+		<div id="categ_see_synonyme" class="categ_see_title">
+			<h5><span>{{ msg.categ_see_synonyme }}</span></h5>
+			{% for synonym in authority.synonyms %}
+				{% if loop.first %}
+					{{ synonym }}
+				{% else %}
+					{% if loop.last %}
+						{{ synonym }}
+					{% else %};{{ synonym }}{% endif %}
+				{% endif %}
+				
+			{% endfor %}
+		</div>
+	{% endif %}	
+	{% if authority.categ_see %}
+		<div id="categ_see_renvoi_voir" class="categ_see_title">
+			<h5><span>{{ msg.term_show_see }}</span></h5>
+			<a href="./index.php?lvl=categ_see&id={{ authority.categ_see.db_id }}">{{ authority.categ_see.libelle  }}</a>
+		</div>
+	{% endif %}
+	{% if authority.see_also %}
+		<div id="categ_see_also" class="categ_see_also">
+			<h5><span>{{ msg.term_show_see_also }}</span></h5>
+			{% for see_also in authority.see_also %}
+				{% if loop.first %}
+					<ul>
+				{% endif %}
+				<li>
+					<a href="./index.php?lvl=categ_see&id={{ see_also.num_noeud }}">
+						{% if see_also.has_notice %}
+							<img src="{{ img.folder_search.gif }}" border=0 align="absmiddle">
+						{% else %}
+							<img src="{{ img.folder_search.gif }}" border=0 align="absmiddle">
+						{% endif %}
+					</a>
+					<a href="./index.php?lvl=categ_see&id={{ see_also.num_noeud }}{{ see_also.zoom.java_com }}">{{ see_also.libelle_categorie }}</a>
+					{{ see_also.zoom.zoom }}
+	 			</li>		
+				{% if loop.last %}
+					</ul>
+				{% endif %}
+			{% endfor %}
+		</div>
+	{% endif %}
+{% endblock %}

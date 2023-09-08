@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- messages localisés en français pour la dsi
+****************************************************************************************
+© 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: en_UK.xml,v 1.3 2016-06-01 10:34:57 jpermanne Exp $ -->
+
+<XMLlist>
+	<entry code="planificateur_dsi_bannette">Selection of the SDI basket(s)</entry>
+	<entry code="planificateur_dsi_bannette_all">All the SDI baskets</entry>
+	<entry code="planificateur_dsi_bannette_public">All the public SDI baskets</entry>
+	<entry code="planificateur_dsi_bannette_private">All the private SDI baskets</entry>
+	<entry code="planificateur_dsi_action">Selection of the action(s) to do</entry>
+	<entry code="task_dsi_flush">Empty</entry>
+	<entry code="task_dsi_fill">Fill</entry>
+	<entry code="task_dsi_diffuse">Disseminate</entry>
+	<entry code="task_dsi_full">Empty, fill and then disseminate</entry>
+	<entry code="task_dsi_export">Export</entry>
+	<entry code="dsi_bannette_unknown">No SDI basket to process</entry>
+	<entry code="dsi_action_unknown">No action selected</entry>
+	<entry code="dsi_no_proceed">No processing for the following SDI basket(s)</entry>
+	<entry code="dsi_report_header">Selective dissemination of informations</entry>
+	<entry code="dsi_report_action">Action(s) on the SDI basket</entry>
+	<entry code="dsi_stopped">Stopped task</entry>
+	<entry code="dsi_no_diffusable">No action made, basket deadline didn't occure (periodicity : %s day(s))</entry>
+</XMLlist>

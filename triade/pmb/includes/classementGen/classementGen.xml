@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<pmbclassement>
+	<types>
+
+		<type name="etagere">
+			<table>etagere</table>
+			<table_id>idetagere</table_id>
+			<table_classement_field>etagere_classement</table_classement_field>
+			<autorisation_where>((autorisations='!!id!!') OR (autorisations LIKE '!!id!! %') OR (autorisations LIKE '% !!id!! %') OR (autorisations LIKE '% !!id!!'))</autorisation_where>
+		</type>
+		
+		<type name="caddie">
+			<table>caddie</table>
+			<table_id>idcaddie</table_id>
+			<table_classement_field>caddie_classement</table_classement_field>
+			<autorisation_where>((autorisations='!!id!!') OR (autorisations LIKE '!!id!! %') OR (autorisations LIKE '% !!id!! %') OR (autorisations LIKE '% !!id!!'))</autorisation_where>
+		</type>
+		
+		<type name="empr_caddie">
+			<table>empr_caddie</table>
+			<table_id>idemprcaddie</table_id>
+			<table_classement_field>empr_caddie_classement</table_classement_field>
+			<autorisation_where>((autorisations='!!id!!') OR (autorisations LIKE '!!id!! %') OR (autorisations LIKE '% !!id!! %') OR (autorisations LIKE '% !!id!!'))</autorisation_where>
+		</type>
+		
+		<type name="authorities_caddie">
+			<table>authorities_caddie</table>
+			<table_id>idcaddie</table_id>
+			<table_classement_field>caddie_classement</table_classement_field>
+			<autorisation_where>((autorisations='!!id!!') OR (autorisations LIKE '!!id!! %') OR (autorisations LIKE '% !!id!! %') OR (autorisations LIKE '% !!id!!'))</autorisation_where>
+		</type>
+		
+		<type name="infopages">
+			<table>infopages</table>
+			<table_id>id_infopage</table_id>
+			<table_classement_field>infopage_classement</table_classement_field>
+			<autorisation_where></autorisation_where>
+		</type>
+
+	</types>
+</pmbclassement>

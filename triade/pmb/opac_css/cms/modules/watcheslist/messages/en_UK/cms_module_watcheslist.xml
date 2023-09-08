@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le module Articleslist
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_watcheslist.xml,v 1.1 2015-06-16 10:25:29 pmbs Exp $ -->
+
+<XMLlist>
+<entry code='cms_module_watcheslist_view_django'>Django view</entry>
+<entry code='cms_module_watcheslist_view_django_by_categories'>Django view by sorting</entry>
+</XMLlist>

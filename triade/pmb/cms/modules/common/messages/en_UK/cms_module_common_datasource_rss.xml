@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le module Article
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_common_datasource_rss.xml,v 1.2 2016-10-04 11:19:02 dgoron Exp $ -->
+
+<XMLlist>
+	<entry code="cms_module_common_datasource_rss_limit">Maximum number of elements to return</entry>
+	<entry code="cms_module_common_datasource_rss_title_desc">Title</entry>
+	<entry code="cms_module_common_datasource_rss_subtitle_desc">Subtitle</entry>
+	<entry code="cms_module_common_datasource_rss_description_desc">Feed description</entry>
+	<entry code="cms_module_common_datasource_rss_generator_desc">Name of the feed generator</entry>
+	<entry code="cms_module_common_datasource_rss_link_desc">Link to the site</entry>
+	<entry code="cms_module_common_datasource_rss_items_desc">Table of the elements</entry>
+	<entry code="cms_module_common_datasource_rss_item_title_desc">Title of the elements</entry>
+	<entry code="cms_module_common_datasource_rss_item_description_desc">Description of the element</entry>
+	<entry code="cms_module_common_datasource_rss_item_link_desc">Link to the element on the site</entry>
+	<entry code="cms_module_common_datasource_rss_item_guid_desc">Unique identifier on the website</entry>
+	<entry code="cms_module_common_datasource_rss_item_date_desc">Date of the element</entry>
+	<entry code="cms_module_common_datasource_rss_item_creator_desc">Creator of the element</entry>
+	<entry code="cms_module_common_datasource_rss_item_subject_desc">Subjects (in a table) of the element</entry>
+	<entry code="cms_module_common_datasource_rss_item_format_desc">Format of the element</entry>
+	<entry code="cms_module_common_datasource_rss_item_language_desc">Language of the element</entry>
+	<entry code="cms_module_common_selector_rss">Manual set up</entry>
+	<entry code="cms_module_common_selector_type_article">Selection from the content type's field of an article</entry>
+	<entry code="cms_module_common_selector_type_section">Selection from the content type's field of a rubric</entry>
+	<entry code="cms_module_common_selector_type_article_generic">Selection from the value of a generic field of an article</entry>
+	<entry code="cms_module_common_selector_type_section_generic">Selection from the value of a generic field of a rubric</entry>
+	
+</XMLlist>

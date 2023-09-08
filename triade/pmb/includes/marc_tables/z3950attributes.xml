@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!DOCTYPE XMLlist SYSTEM "../../XMLlist.dtd">
+
+<!-- attributes labels for z3950 servers 
+$Id: z3950attributes.xml,v 1.2 2018-05-23 08:57:08 plmrozowski Exp $ -->
+
+<XMLlist>
+<entry code="auteur">auteur</entry>
+<entry code="isbn">isbn</entry>
+<entry code="sujet">sujet</entry>
+<entry code="titre">titre</entry>
+<entry code="mots">mots</entry>
+<entry code="issn">issn</entry>
+<entry code="ismn">ismn</entry>
+<entry code="isrn">isrn</entry>
+<entry code="resume">resume</entry>
+<entry code="type_doc">type_doc</entry>
+<entry code="cbsonores">cbsonores</entry>
+<entry code="ean">ean</entry>
+<entry code="notice_id">notice_id</entry>
+<entry code="allfields">allfields</entry>
+</XMLlist>

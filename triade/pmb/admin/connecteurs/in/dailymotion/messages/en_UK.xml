@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le connecteur Dalymotion
+****************************************************************************************
+© 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: en_UK.xml,v 1.1 2015-06-15 12:55:35 pmbs Exp $ -->
+
+<XMLlist>
+	<entry code="dailymotion">Dailymotion</entry>
+	<entry code="dailymotion_no_information">Cannot see the video now</entry>
+	<entry code="dailymotion_enrichment_source">(enrichment from Dailymotion)</entry>
+	<entry code="dailymotion_api_key">API key</entry>
+	<entry code="dailymotion_secret_key">Secret key</entry>
+<entry code="dailymotion_callback_url">URL to fill in in Callback URL when registering to Dailymotion</entry>
+	<entry code="dailymotion_no_source">Save the source to have the URL!</entry>
+	<entry code="dailymotion_code">Allow the application on Dailymotion</entry>
+	<entry code="dailymotion_link_allow_ws">Click to allow</entry>
+	<entry code="dailymotion_ws_allow_in_progress">You have to save the source to validate</entry>
+	<entry code="dailymotion_ws_allowed">Allowed</entry>
+	<entry code="dailymotion_allow_need_api_key">You have to fill in the keys before asking for authorization</entry>
+	<entry code="dailymotion_go_to_result_page">See all the results on Dailymotion</entry>
+	<entry code="dailymotion_partial_results">%s results out of %s.</entry>
+	<entry code="dailymotion_all_results">%s results.</entry>
+</XMLlist>

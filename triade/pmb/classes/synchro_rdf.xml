@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd">
+
+<!-- 
+****************************************************************************************
+© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: synchro_rdf.xml,v 1.3 2014-04-02 14:08:47 jpermanne Exp $ -->
+
+<mapping>
+	
+	<!-- entités -->
+	<object name="oeuvre" target="m" type="entite">
+		<definitionTriplet dt1="rdf:type" dT2="frbr-rda:Work" idRow="26_1_" idField="authority_num"/>
+		
+		<rdffield name="dc:title" function="" distinct="0">
+			<field code_champ="26" code_ss_champ="1" ordre="1" />
+		</rdffield>
+		
+		<rdffield name="dc:description" function="" distinct="0">
+			<field code_champ="26" code_ss_champ="3" ordre="1" />
+		</rdffield>
+	
+		<rdffield name="dc:date" function="dateIso8601" distinct="0">
+			<field code_champ="26" code_ss_champ="10" ordre="1" />
+		</rdffield>
+		
+		<rdffield name="bnf-onto:subject" function="" distinct="0">
+			<field code_champ="26" code_ss_champ="11" ordre="1" />
+		</rdffield>
+		
+		<link target="manifestation" type="rdarelationships:workManifested" />
+		
+		<authors>
+			<field code_champ="27" code_ss_champ="1" link="dc:contributor" idField="authority_num" />
+			<field code_champ="28" code_ss_champ="1" link="dc:contributor" idField="authority_num" />
+		</authors>
+	</object>
+	
+	<object name="manifestation" target="a,b,m" type="entite">
+		<definitionTriplet dt1="rdf:type" dT2="frbr-rda:Manifestation" idRow="1_0_1" idField="id_notice"/>
+		
+		<rdffield name="dc:title" function="doIsbdTitle" distinct="0">
+			<field code_champ="1" code_ss_champ="0" ordre="1" />
+			<field code_champ="2" code_ss_champ="0" ordre="1" />
+			<field code_champ="3" code_ss_champ="0" ordre="1" />
+			<field code_champ="4" code_ss_champ="0" ordre="1" />
+		</rdffield>
+		
+		<rdffield name="dc:date" function="dateIso8601" distinct="0">
+			<field code_champ="7" code_ss_champ="0" ordre="1" />
+		</rdffield>
+		
+		<rdffield name="rdagroup1elements:designationOfEdition" function="" distinct="0">
+			<field code_champ="8" code_ss_champ="0" ordre="1" />
+		</rdffield>
+		
+		<rdffield name="dc:description" function="" distinct="0">
+			<field code_champ="9" code_ss_champ="0" ordre="1" />
+		</rdffield>
+		
+		<rdffield name="rdagroup1elements:Note" function="" distinct="0">
+			<field code_champ="12" code_ss_champ="0" ordre="1" />
+		</rdffield>
+		
+		<rdffield name="rdagroup1elements:publishersName" function="" distinct="0">
+			<field code_champ="19" code_ss_champ="1" ordre="1" />
+		</rdffield>
+		
+		<rdffield name="rdagroup1elements:placeOfPublication" function="" distinct="0">
+			<field code_champ="19" code_ss_champ="5" ordre="1" />
+		</rdffield>
+		
+		<rdffield name="dc:publisher" function="" distinct="0">
+			<field code_champ="19" code_ss_champ="9" ordre="1" />
+		</rdffield>
+			
+		<rdffield name="bnf-onto:ISBN" function="" distinct="0">
+			<field code_champ="30" code_ss_champ="0" ordre="1" />
+		</rdffield>
+		
+		<rdffield name="dc:subject" function="addUriConcept" lang="fr_FR" distinct="1">
+			<field code_champ="25" code_ss_champ="1" />
+		</rdffield>
+	</object>
+	
+	<object name="expression" target="a,b,m" type="entite">
+		<definitionTriplet dt1="rdf:type" dT2="frbr-rda:Expression" idRow="1_0_1" idField="id_notice"/>
+		
+		<rdffield name="dc:type" function="typeDocBnf" lang="fr_FR" distinct="0">
+			<field code_champ="31" code_ss_champ="0" />
+		</rdffield>
+		
+		<rdffield name="dc:language" function="" lang="fr_FR" distinct="1">
+			<field code_champ="34" code_ss_champ="1" />
+		</rdffield>
+		
+		<link target="manifestation" type="rdarelationships:expressionManifested" />
+		
+		<authors>
+			<field code_champ="29" code_ss_champ="1" link="dc:contributor" idField="authority_num" />
+		</authors>
+	</object>
+	
+	<!-- auteurs et bulletins : structure différente car traités à part -->
+	<object name="auteur" type="auteur" table="authors" key="author_id" authortype="author_type">
+		<definitionTriplet70 dt1="rdf:type" dT2="foaf:Person" idField="authority_num"/>
+		<definitionTriplet71 dt1="rdf:type" dT2="foaf:Organization" idField="authority_num"/>
+		
+		<rdffield70 name="foaf:name" function="authorName" distinct="0">
+			<field name="author_name" />
+			<field name="author_rejete" />
+		</rdffield70>
+		<rdffield70 name="foaf:familyName" function="" distinct="0">
+			<field name="author_name" />
+		</rdffield70>
+		<rdffield70 name="foaf:givenName" function="" distinct="0">
+			<field name="author_rejete" />
+		</rdffield70>
+		<rdffield70 name="rdagroup2elements:biographicalInformation" function="" distinct="0">
+			<field name="author_comment" />
+		</rdffield70>
+		<rdffield70 name="dc:date" function="dateIso8601" distinct="0">
+			<field name="author_date" />
+		</rdffield70>
+		
+		<rdffield71 name="skos:prefLabel" function="" distinct="0">
+			<field name="author_name" />
+		</rdffield71>
+		<rdffield71 name="rdagroup2elements:corporateHistory" function="" distinct="0">
+			<field name="author_comment" />
+		</rdffield71>
+		<rdffield71 name="rdagroup2elements:dateOfEstablishment" function="" distinct="0">
+			<field name="author_date" />
+		</rdffield71>
+		<rdffield71 name="foaf:homepage" function="" distinct="0">
+			<field name="author_web" />
+		</rdffield71>
+	</object>
+	
+	<object name="bulletin" type="bulletin">
+		<definitionTriplet dt1="rdf:type" dT2="frbr-rda:Work" />
+		
+		<rdffield name="dc:title" function="concatTitreBulletin" distinct="0">
+			<field name="bulletin_numero" />
+			<field name="mention_date" />			
+		</rdffield>
+		<rdffield name="dc:date" function="dateIso8601" distinct="0">
+			<field name="date_date" />
+		</rdffield>
+		<rdffield name="dc:description" function="" distinct="0">
+			<field name="bulletin_titre" />
+		</rdffield>
+	</object>
+	
+	<!-- objectBis : se substituent pour les cas particuliers -->
+	<objectBis name="oeuvre" target="a,s" type="entite">
+		<definitionTriplet dt1="rdf:type" dT2="frbr-rda:Work" idRow="1_0_1" idField="id_notice"/>
+		
+		<rdffield name="dc:title" function="doIsbdTitle" distinct="0">
+			<field code_champ="1" code_ss_champ="0" ordre="1" />
+			<field code_champ="2" code_ss_champ="0" ordre="1" />
+			<field code_champ="3" code_ss_champ="0" ordre="1" />
+			<field code_champ="4" code_ss_champ="0" ordre="1" />
+		</rdffield>
+		
+		<rdffield name="dc:description" function="" distinct="0">
+			<field code_champ="9" code_ss_champ="0" ordre="1" />
+		</rdffield>
+		
+		<rdffield name="rdagroup1elements:Note" function="" distinct="0">
+			<field code_champ="12" code_ss_champ="0" ordre="1" />
+		</rdffield>
+	
+		<rdffield name="dc:date" function="dateIso8601" distinct="0">
+			<field code_champ="7" code_ss_champ="0" ordre="1" />
+		</rdffield>
+		
+		<rdffield name="dc:subject" function="addUriConcept" lang="fr_FR" distinct="1">
+			<field code_champ="25" code_ss_champ="1" />
+		</rdffield>
+		
+		<link target="manifestation" type="rdarelationships:workManifested" />
+		
+		<authors>
+			<field code_champ="27" code_ss_champ="1" link="dc:contributor" idField="authority_num" />
+			<field code_champ="28" code_ss_champ="1" link="dc:contributor" idField="authority_num" />
+		</authors>
+	</objectBis>
+	
+</mapping>

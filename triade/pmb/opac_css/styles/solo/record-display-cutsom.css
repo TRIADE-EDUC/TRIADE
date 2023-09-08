@@ -1,0 +1,92 @@
+/* +--------------------------------------------------------------------------+
+// 2013 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// +-------------------------------------------------+
+// $Id: record-display-cutsom.css,v 1.1 2017-01-06 16:28:09 wlair Exp $ */
+/*------------------------------------------------------------------------------------------*/
+
+
+/* Avis
+ ========================================================================== */
+.avisN {
+	display: -ms-flexbox;
+	display: -webkit-flex;
+	display: flex;
+	-ms-flex-align: center;
+	-webkit-align-items: center;
+	align-items: center;
+	flex: 1 1 0%;
+	-ms-flex: 1 1 0%;
+	-webkit-flex: 1 1 0%;
+}
+
+.avisN a {
+	text-decoration: none;
+	font-weight: inherit;
+	color: inherit;
+	padding: 2px 7px 2px 7px;
+	background-color: #e9ebee;
+}
+.avisN a:hover,
+.avisNCourte a:hover{
+	text-decoration: none;	
+}
+span.avisN {
+	margin: inherit;
+	background-color: #e9ebee!important;
+
+}
+
+/* details
+ ========================================================================== */
+.resume_notCourte span {
+}
+
+.infoCompl_notCourte {
+	font-weight: 500;
+}
+
+.infoCompl_notCourte span {
+	font-size: 1em;
+	color: inherit;
+}
+
+.title_notCourte h3 {
+	font-size: 1.3em;
+	font-weight: 500;
+}
+
+.title_notCourte h3 a {
+}
+.plusN a{
+	font-weight:600;
+}
+/* Smart display
+ ========================================================================== */
+.parentNotCourte:last-child {
+	padding: 20px 5px 0px;
+	border-bottom: 0px solid #e7e7e7;
+}
+/* Panier
+ ========================================================================== */
+div[class='onglet_basketNot'] a.img_basketNot{
+	flex: 1 1 0%;
+	-ms-flex: 1 1 0%;
+	-webkit-flex: 1 1 0%;	
+}
+.onglet_basketNot .img_basketNot img{
+	margin:0;
+}
+a.img_basketNotCourte:hover{
+	text-decoration:inherit;
+}
+/* grid reset
+ ========================================================================== */
+.record-footer:after {
+	content:"";
+	display:block;
+	margin-top:10px;
+	border-bottom: 1px solid #e7e7e7;
+}
+.parentNotCourt:last-child :after {
+	border-bottom:0px solid #e7e7e7;
+}

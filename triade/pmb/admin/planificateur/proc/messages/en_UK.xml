@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- messages localisés en français pour les procédures
+****************************************************************************************
+© 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: en_UK.xml,v 1.1 2015-06-15 12:55:33 pmbs Exp $ -->
+
+<XMLlist>
+	<entry code="planificateur_proc_type">Internal or distant procedure</entry>
+	<entry code="planificateur_proc_internal">Internal procedure</entry>
+	<entry code="planificateur_proc_remote">Distant procedure</entry>
+	<entry code="planificateur_proc_perso">Selection of a customized procedure</entry>
+	<entry code="planificateur_proc_choice">Select a procedure</entry>
+	<entry code="proc_error">Configuration error</entry>
+	<entry code="proc_unknown">Unknown procedure</entry>
+	<entry code="proc_execution">Execution of the procedure</entry>
+	<entry code="proc_execution_remote">Execution of the external procedure</entry>
+</XMLlist>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+
+<!-- Declaration d'un module
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: manifest.xml,v 1.4 2017-02-02 10:59:48 ngantier Exp $ -->
+
+<manifest>
+	<name lang="fr_FR">Agenda</name>
+	<name lang="en_UK">Diary</name>
+	<author>
+		<name>Arnaud RENOU</name>
+		<organisation>PMB Services</organisation>
+	</author>
+	<created_date>2012-05-31</created_date>
+	<version>1.0</version>
+	<default_language>en_UK</default_language>
+	<managed>true</managed>
+	<use>
+		<datasources>
+			<datasource>cms_module_agenda_datasource_agenda</datasource>
+		</datasources>
+		<views>
+			<view>cms_module_agenda_view_calendar</view>
+			<view>cms_module_agenda_view_eventslist</view>
+			<view>cms_module_agenda_view_event</view>
+			<view>cms_module_agenda_view_calendar_django</view>
+			<view>cms_module_agenda_view_carousel</view>
+			<view>cms_module_agenda_view_carousel_responsive</view>
+		</views>
+		<conditions>
+			<condition></condition>	
+		</conditions>
+	</use>
+</manifest>

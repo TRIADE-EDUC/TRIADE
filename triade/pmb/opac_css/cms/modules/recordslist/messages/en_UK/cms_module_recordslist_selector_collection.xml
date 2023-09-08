@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français 
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_recordslist_selector_collection.xml,v 1.1 2015-06-16 10:24:25 pmbs Exp $ -->
+
+<XMLlist>
+	<entry code="cms_module_common_selector_record">Manual record selection</entry>
+	<entry code="cms_module_common_selector_env_var">Selection of a record from an environment variable</entry>
+	<entry code="cms_module_common_selector_record_permalink">Selection of a record from the permalink</entry>
+	<entry code="cms_module_common_selector_sub_choice_label">Harvesting of the record</entry>
+</XMLlist>

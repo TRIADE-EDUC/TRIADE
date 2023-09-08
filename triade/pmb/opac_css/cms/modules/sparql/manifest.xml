@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+
+<!-- Declaration d'un module
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: manifest.xml,v 1.4 2016-09-20 10:25:42 apetithomme Exp $ -->
+
+<manifest>
+	<name lang="fr_FR">Interrogation SPARQL</name>
+	<name lang="en_UK">SPARQL Interrogation</name>
+	<author>
+		<name>Arnaud RENOU</name>
+		<organisation>PMB Services</organisation>
+	</author>
+	<created_date>2013-09-09</created_date>
+	<version>1.0</version>
+	<default_language>fr_FR</default_language>
+	<managed>true</managed>
+	<use>
+		<datasources>
+			<datasource>cms_module_sparql_datasource_sparql</datasource>
+		</datasources>
+		<views>
+			<view>cms_module_sparql_view_django</view>
+			<view>cms_module_sparql_view_carousel</view>
+			<view>cms_module_sparql_view_carousel_responsive</view>
+			
+		</views>
+		<conditions>
+			<condition></condition>	
+		</conditions>
+	</use>
+</manifest>

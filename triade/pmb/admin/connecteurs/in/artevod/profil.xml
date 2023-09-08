@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+
+<!-- Profil d'un connecteur
+****************************************************************************************
+© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: profil.xml,v 1.2 2017-07-04 15:22:37 ngantier Exp $ -->
+
+<ArteVODConfig>
+	<searchIndexes>
+		<searchIndex url="https://vod.mediatheque-numerique.com/api/v1/films" comment="msg:artevod_movies" />
+	</searchIndexes>
+</ArteVODConfig>

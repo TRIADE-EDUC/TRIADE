@@ -1,0 +1,605 @@
+<?xml version="1.0" encoding="UTF-8"?><!-- Fichier manifest de description des méthodes disponibles
+****************************************************************************************
+© 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: manifest.xml,v 1.6 2018-10-19 10:21:25 vtouchard Exp $ -->
+<manifest>
+	<name>pmbesEmpr</name>
+	<description>msg:pmbesEmpr_description</description>
+	<requirements>		
+	</requirements>
+	<types>		
+	</types>
+	<methods>	    	    
+		<method name="fetch_empr" rights="" version="1.0" language_independant="false" comment="msg:fetch_empr">
+			<pmb_requirements>
+			    <pmb_requirement start_path="class" file="emprunteur.class.php"/>
+			</pmb_requirements>
+			<inputs>
+				<description>msg:fetch_empr_input_description</description>
+				<param name="empr_cb" type="scalar" dataType="string" description="msg:fetch_empr_empr_cb"/>
+				<param name="empr_id" type="scalar" dataType="integer" description="msg:fetch_empr_empr_id"/>
+			</inputs>
+			<outputs>
+				<description>msg:fetch_empr_output_description</description>
+				<result name="status" type="scalar" dataType="boolean" description="msg:status"/>
+				<result name="status_msg" type="scalar" dataType="string" description="msg:status_msg"/>
+				<result type="structure" name="data" description="msg:fetch_empr_empr_data">
+					<result name="empr_id" type="scalar" dataType="integer" description="msg:fetch_empr_empr_id"/>
+					<result name="empr_cb" type="scalar" dataType="string" description="msg:fetch_empr_empr_cb"/>
+					<result name="nom" type="scalar" dataType="string" description="msg:fetch_empr_nom"/>
+					<result name="prenom" type="scalar" dataType="string" description="msg:fetch_empr_prenom"/>
+					<result name="sexe" type="scalar" dataType="integer" description="msg:fetch_empr_sexe"/>
+					<result name="birth" type="scalar" dataType="string" description="msg:fetch_empr_birth"/>
+					<result name="adr1" type="scalar" dataType="string" description="msg:fetch_empr_adr1"/>
+					<result name="adr2" type="scalar" dataType="string" description="msg:fetch_empr_adr2"/>
+					<result name="cp" type="scalar" dataType="string" description="msg:fetch_empr_cp"/>
+					<result name="ville" type="scalar" dataType="string" description="msg:fetch_empr_ville"/>
+					<result name="pays" type="scalar" dataType="string" description="msg:fetch_empr_pays"/>
+					<result name="mail" type="scalar" dataType="string" description="msg:fetch_empr_mail"/>
+					<result name="tel1" type="scalar" dataType="string" description="msg:fetch_empr_tel1"/>
+					<result name="sms" type="scalar" dataType="boolean" description="msg:fetch_empr_sms"/>
+					<result name="tel2" type="scalar" dataType="string" description="msg:fetch_empr_tel2"/>
+					<result name="prof" type="scalar" dataType="string" description="msg:fetch_empr_prof"/>
+					<result name="categ" type="scalar" dataType="string" description="msg:fetch_empr_categ"/>
+					<result name="cat_l" type="scalar" dataType="string" description="msg:fetch_empr_cat_l"/>
+					<result name="cstat" type="scalar" dataType="string" description="msg:fetch_empr_cstat"/>
+					<result name="cstat_l" type="scalar" dataType="string" description="msg:fetch_empr_cstat_l"/>
+					<result name="cdate" type="scalar" dataType="string" description="msg:fetch_empr_cdate"/>
+					<result name="mdate" type="scalar" dataType="string" description="msg:fetch_empr_mdate"/>
+					<result name="login" type="scalar" dataType="string" description="msg:fetch_empr_login"/>
+					<result name="pwd" type="scalar" dataType="string" description="msg:fetch_empr_pwd"/>
+					<result name="type_abt" type="scalar" dataType="integer" description="msg:fetch_empr_type_abt"/>
+					<result name="location" type="scalar" dataType="integer" description="msg:fetch_empr_location"/>
+					<result name="location_l" type="scalar" dataType="string" description="msg:fetch_empr_location_l"/>
+					<result name="date_blocage" type="scalar" dataType="string" description="msg:fetch_empr_date_blocage"/>
+					<result name="statut" type="scalar" dataType="integer" description="msg:fetch_empr_statut"/>
+					<result name="statut_libelle" type="scalar" dataType="string" description="msg:fetch_empr_statut_libelle"/>
+					<result name="total_loans" type="scalar" dataType="integer" description="msg:fetch_empr_total_loans"/>
+					<result name="allow_loan" type="scalar" dataType="boolean" description="msg:fetch_empr_allow_loan"/>
+					<result name="allow_book" type="scalar" dataType="boolean" description="msg:fetch_empr_allow_book"/>
+					<result name="allow_opac" type="scalar" dataType="boolean" description="msg:fetch_empr_allow_opac"/>
+					<result name="allow_dsi" type="scalar" dataType="boolean" description="msg:fetch_empr_allow_dsi"/>
+					<result name="allow_dsi_priv" type="scalar" dataType="boolean" description="msg:fetch_empr_allow_dsi_priv"/>
+					<result name="allow_sugg" type="scalar" dataType="boolean" description="msg:fetch_empr_allow_sugg"/>
+					<result name="allow_prol" type="scalar" dataType="boolean" description="msg:fetch_empr_allow_prol"/>
+					<result name="date_adhesion" type="scalar" dataType="string" description="msg:fetch_empr_date_adhesion"/>
+					<result name="date_expiration" type="scalar" dataType="string" description="msg:fetch_empr_date_expiration"/>
+					<result name="last_loan_date" type="scalar" dataType="string" description="msg:fetch_empr_last_loan_date"/>
+					<result name="nb_pret" type="scalar" dataType="integer" description="msg:fetch_empr_nb_pret"/>
+					<result name="msg" type="scalar" dataType="string" description="msg:fetch_empr_msg"/>
+					<result name="ldap" type="scalar" dataType="boolean" description="msg:fetch_empr_ldap"/>
+					<result type="array" name="pperso_list" description="msg:fetch_empr_pperso_list">
+						<result name="id" type="scalar" dataType="integer" description="msg:fetch_empr_pperso_id"/>
+						<result name="name" type="scalar" dataType="string" description="msg:fetch_empr_pperso_name"/>
+						<result name="libelle" type="scalar" dataType="string" description="msg:fetch_empr_pperso_libelle"/>
+						<result name="aff" type="scalar" dataType="string" description="msg:fetch_empr_pperso_value"/>
+					</result>
+					<result type="array" name="groupe_list" description="msg:fetch_empr_groupe_list">
+						<result name="id" type="scalar" dataType="integer" description="msg:fetch_empr_groupe_id"/>
+						<result name="libelle" type="scalar" dataType="string" description="msg:fetch_empr_groupe_libelle"/>
+					</result>
+					<result type="array" name="prets" description="msg:fetch_empr_pret_list">
+						<result name="cb" type="scalar" dataType="string" description="msg:fetch_empr_pret_cb"/>
+						<result name="id" type="scalar" dataType="integer" description="msg:fetch_empr_pret_id"/>
+						<result name="libelle" type="scalar" dataType="string" description="msg:fetch_empr_pret_libelle"/>
+						<result name="typdoc" type="scalar" dataType="string" description="msg:fetch_empr_pret_typdoc"/>
+						<result name="section" type="scalar" dataType="string" description="msg:fetch_empr_pret_section"/>
+						<result name="location" type="scalar" dataType="string" description="msg:fetch_empr_pret_location"/>
+						<result name="idlocation" type="scalar" dataType="integer" description="msg:fetch_empr_pret_idlocation"/>
+						<result name="date_pret" type="scalar" dataType="string" description="msg:fetch_empr_pret_date_pret"/>
+						<result name="date_retour" type="scalar" dataType="string" description="msg:fetch_empr_pret_date_retour"/>
+						<result name="short_loan_flag" type="scalar" dataType="boolean" description="msg:fetch_empr_pret_short_loan_flag"/>
+						<result name="sql_date_retour" type="scalar" dataType="string" description="msg:fetch_empr_pret_sql_date_retour"/>
+						<result name="org_ret_date" type="scalar" dataType="string" description="msg:fetch_empr_pret_org_ret_date"/>
+						<result name="pret_retard" type="scalar" dataType="integer" description="msg:fetch_empr_pret_pret_retard"/>
+						<result name="retour_initial" type="scalar" dataType="string" description="msg:fetch_empr_pret_retour_initial"/>
+						<result name="cpt_prolongation" type="scalar" dataType="integer" description="msg:fetch_empr_pret_cpt_prolongation"/>
+						<result name="sur_location" type="scalar" dataType="string" description="msg:fetch_empr_pret_sur_location"/>
+					</result>
+					<result type="array" name="reservations">
+						<result name="title" type="scalar" dataType="string" />
+						<result name="typdoc" type="scalar" dataType="string" />
+						<result name="date" type="scalar" dataType="string" />
+						<result name="date_debut" type="scalar" dataType="string" />
+						<result name="date_fin" type="scalar" dataType="string" />
+						<result name="cb" type="scalar" dataType="string" />
+						<result name="confirmee" type="scalar" dataType="string" />
+						<result name="perimee" type="scalar" dataType="string" />
+						<result name="id" type="scalar" dataType="string" />
+					</result>
+					<result name="nb_retard" type="scalar" dataType="integer" description="msg:fetch_empr_nb_retard"/>
+					<result name="nb_resa" type="scalar" dataType="integer" description="msg:fetch_empr_nb_resa"/>
+					<result name="nb_previsions" type="scalar" dataType="integer" description="msg:fetch_empr_nb_previsions"/>
+				</result>
+			</outputs>
+		</method>		
+	    
+		<method name="delete_empr" rights="" version="1.0" language_independant="false" comment="msg:delete_empr">
+			<pmb_requirements>
+			    <pmb_requirement start_path="class" file="emprunteur.class.php"/>
+			</pmb_requirements>
+			<inputs>
+				<description>msg:delete_empr_input_description</description>
+				<param name="empr_cb" type="scalar" dataType="string" description="msg:fetch_empr_empr_cb"/>
+				<param name="empr_id" type="scalar" dataType="integer" description="msg:fetch_empr_empr_id"/>
+			</inputs>
+			<outputs>
+				<description>msg:fetch_empr_output_description</description>
+				<result name="status" type="scalar" dataType="boolean" description="msg:status"/> 		
+				<result name="status_msg" type="scalar" dataType="string" description="msg:status_msg"/>		   
+			</outputs>
+		</method>	
+	    
+		<method name="create_empr" rights="" version="1.0" language_independant="false" comment="msg:create_empr">
+			<pmb_requirements>
+			    <pmb_requirement start_path="class" file="emprunteur.class.php"/>
+			</pmb_requirements>
+			<inputs>
+				<description>msg:create_empr_input_description</description>
+				<param name="empr_cb" type="scalar" dataType="string" description="msg:create_empr_empr_cb"/>
+				<param name="data_empr" type="structure" description="msg:create_empr_empr_data">  
+					<param name="nom" type="scalar" dataType="string" description="msg:fetch_empr_nom"/>	
+					<param name="prenom" type="scalar" dataType="string" description="msg:fetch_empr_prenom"/>	
+					<param name="adr1" type="scalar" dataType="string" description="msg:fetch_empr_adr1"/>	
+					<param name="adr2" type="scalar" dataType="string" description="msg:fetch_empr_adr2"/>	
+					<param name="cp" type="scalar" dataType="string" description="msg:fetch_empr_cp"/>	
+					<param name="ville" type="scalar" dataType="string" description="msg:fetch_empr_ville"/>	
+					<param name="pays" type="scalar" dataType="string" description="msg:fetch_empr_pays"/>	
+					<param name="mail" type="scalar" dataType="string" description="msg:fetch_empr_mail"/>	
+					<param name="tel1" type="scalar" dataType="string" description="msg:fetch_empr_tel1"/>	
+					<param name="sms" type="scalar" dataType="string" description="msg:fetch_empr_sms"/>	
+					<param name="tel2" type="scalar" dataType="string" description="msg:fetch_empr_tel2"/>	
+					<param name="prof" type="scalar" dataType="string" description="msg:fetch_empr_prof"/>	
+					<param name="birth" type="scalar" dataType="string" description="msg:fetch_empr_birth"/>	
+					<param name="categ" type="scalar" dataType="integer" description="msg:fetch_empr_categ"/>	
+					<param name="cstat" type="scalar" dataType="integer" description="msg:fetch_empr_cstat"/>	
+					<param name="sexe" type="scalar" dataType="integer" description="msg:fetch_empr_sexe"/>	
+					<param name="login" type="scalar" dataType="string" description="msg:fetch_empr_login"/>	
+					<param name="pwd" type="scalar" dataType="string" description="msg:fetch_empr_pwd"/>	
+					<param name="type_abt" type="scalar" dataType="integer" description="msg:fetch_empr_type_abt"/>	
+					<param name="location" type="scalar" dataType="integer" description="msg:fetch_empr_location"/>	
+					<param name="statut" type="scalar" dataType="integer" description="msg:fetch_empr_statut"/>	
+					<param name="date_adhesion" type="scalar" dataType="string" description="msg:fetch_empr_date_adhesion"/>	
+					<param name="date_expiration" type="scalar" dataType="string" description="msg:fetch_empr_date_expiration"/>	
+					<param name="msg" type="scalar" dataType="string" description="msg:fetch_empr_msg"/>
+					<param name="ldap" type="scalar" dataType="boolean" description="msg:fetch_empr_ldap"/>							    	
+					<param name="groupe_list" type="array" description="msg:fetch_empr_groupe_list">  										
+						<param name="id" type="scalar" dataType="integer" description="msg:fetch_empr_groupe_id"/>								
+					</param>						
+					<param type="array" name="pperso_list" description="msg:fetch_empr_pperso_list">  	 				
+						<param name="name" type="scalar" dataType="string" description="msg:fetch_empr_pperso_name"/>	
+						<param name="value_list" type="array" description="msg:fetch_empr_pperso_value">  			
+							<param name="aff" type="scalar" dataType="string" description="msg:fetch_empr_pperso_value"/>				
+						</param>									
+					</param>	    	
+				</param>  
+			</inputs>
+			<outputs>
+				<description>msg:fetch_empr_output_description</description>
+				<result name="status" type="scalar" dataType="boolean" description="msg:status"/> 		
+				<result name="status_msg" type="scalar" dataType="string" description="msg:status_msg"/>		
+				<result type="structure" name="data" description="msg:fetch_empr_empr_data">
+					<result name="empr_cb" type="scalar" dataType="string" description="msg:fetch_empr_empr_cb"/>
+					<result name="empr_id" type="scalar" dataType="integer" description="msg:fetch_empr_empr_id"/>
+				</result>
+			</outputs>
+		</method>
+	    
+		<method name="update_empr" rights="" version="1.0" language_independant="false" comment="msg:update_empr">
+			<pmb_requirements>
+			    <pmb_requirement start_path="class" file="emprunteur.class.php"/>
+			</pmb_requirements>
+			<inputs>
+				<description>msg:update_empr_input_description</description>
+				<param name="empr_cb" type="scalar" dataType="string" description="msg:fetch_empr_empr_cb"/>
+				<param name="empr_id" type="scalar" dataType="integer" description="msg:fetch_empr_empr_id"/>
+				<param name="data_empr" type="structure" description="msg:create_empr_empr_data"> 
+					<param name="nom" type="scalar" dataType="string" description="msg:fetch_empr_nom"/>	
+					<param name="prenom" type="scalar" dataType="string" description="msg:fetch_empr_prenom"/>	
+					<param name="adr1" type="scalar" dataType="string" description="msg:fetch_empr_adr1"/>	
+					<param name="adr2" type="scalar" dataType="string" description="msg:fetch_empr_adr2"/>	
+					<param name="cp" type="scalar" dataType="string" description="msg:fetch_empr_cp"/>	
+					<param name="ville" type="scalar" dataType="string" description="msg:fetch_empr_ville"/>	
+					<param name="pays" type="scalar" dataType="string" description="msg:fetch_empr_pays"/>	
+					<param name="mail" type="scalar" dataType="string" description="msg:fetch_empr_mail"/>	
+					<param name="tel1" type="scalar" dataType="string" description="msg:fetch_empr_tel1"/>	
+					<param name="sms" type="scalar" dataType="string" description="msg:fetch_empr_sms"/>	
+					<param name="tel2" type="scalar" dataType="string" description="msg:fetch_empr_tel2"/>	
+					<param name="prof" type="scalar" dataType="string" description="msg:fetch_empr_prof"/>	
+					<param name="birth" type="scalar" dataType="string" description="msg:fetch_empr_birth"/>	
+					<param name="categ" type="scalar" dataType="integer" description="msg:fetch_empr_categ"/>	
+					<param name="cstat" type="scalar" dataType="integer" description="msg:fetch_empr_cstat"/>	
+					<param name="sexe" type="scalar" dataType="integer" description="msg:fetch_empr_sexe"/>	
+					<param name="login" type="scalar" dataType="string" description="msg:fetch_empr_login"/>	
+					<param name="pwd" type="scalar" dataType="string" description="msg:fetch_empr_pwd"/>	
+					<param name="type_abt" type="scalar" dataType="integer" description="msg:fetch_empr_type_abt"/>	
+					<param name="location" type="scalar" dataType="integer" description="msg:fetch_empr_location"/>	
+					<param name="statut" type="scalar" dataType="integer" description="msg:fetch_empr_statut"/>	
+					<param name="date_adhesion" type="scalar" dataType="string" description="msg:fetch_empr_date_adhesion"/>	
+					<param name="date_expiration" type="scalar" dataType="string" description="msg:fetch_empr_date_expiration"/>	
+					<param name="msg" type="scalar" dataType="string" description="msg:fetch_empr_msg"/>
+					<param name="ldap" type="scalar" dataType="boolean" description="msg:fetch_empr_ldap"/>							    	
+					<param name="groupe_list" type="array" description="msg:fetch_empr_groupe_list">  										
+						<param name="id" type="scalar" dataType="integer" description="msg:fetch_empr_groupe_id"/>								
+					</param>						
+					<param type="array" name="pperso_list" description="msg:fetch_empr_pperso_list">  	 				
+						<param name="name" type="scalar" dataType="string" description="msg:fetch_empr_pperso_name"/>	
+						<param name="value_list" type="array" description="msg:fetch_empr_pperso_value">  			
+							<param name="aff" type="scalar" dataType="string" description="msg:fetch_empr_pperso_value"/>				
+						</param>									
+					</param>	    	
+                </param>  
+			</inputs>
+			<outputs>
+			<description>msg:fetch_empr_output_description</description>
+				<result name="status" type="scalar" dataType="boolean" description="msg:status"/> 		
+				<result name="status_msg" type="scalar" dataType="string" description="msg:status_msg"/>	
+			</outputs>
+		</method>	
+			
+		<method name="empr_list" rights="" version="1.0" language_independant="false" comment="msg:empr_list">
+			<pmb_requirements>
+			</pmb_requirements>
+			<inputs>
+				<description>msg:empr_list_input_description</description>						
+				<param type="array" name="filters" description="msg:empr_list_filters">  	 						
+					<param name="separator" type="scalar" dataType="string" description="msg:empr_list_separator"/>	
+					<param name="field" type="scalar" dataType="string" description="msg:empr_list_field"/>	 				
+					<param name="operator" type="scalar" dataType="string" description="msg:empr_list_operator"/>					
+					<param name="value" type="scalar" dataType="string" description="msg:empr_list_value"/>	
+				</param>	
+			</inputs>
+			<outputs>
+				<description>msg:empr_list_output_description</description>
+				<result name="status" type="scalar" dataType="boolean" description="msg:status"/> 		
+				<result name="status_msg" type="scalar" dataType="string" description="msg:status_msg"/>						  
+				<result type="array" name="data" description="msg:fetch_empr_empr_data"> 			
+					<result name="empr_cb" type="scalar" dataType="string" description="msg:fetch_empr_empr_cb"/>					
+					<result name="empr_id" type="scalar" dataType="integer" description="msg:fetch_empr_empr_id"/> 								
+				</result>  							
+			</outputs>
+		</method>		
+		<method name="statut_list" rights="" version="1.0" language_independant="false" comment="msg:statut_list">
+			<pmb_requirements>
+			</pmb_requirements>
+			<inputs>
+				<description>msg:statut_list_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:statut_list_output_description</description>
+				<result name="status" type="scalar" dataType="boolean" description="msg:status"/> 		
+				<result name="status_msg" type="scalar" dataType="string" description="msg:status_msg"/>						  
+				<result type="array" name="data" description="msg:fetch_empr_empr_data">  
+					<result name="id" type="scalar" dataType="integer" description="msg:statut_list_id"/> 		
+					<result name="libelle" type="scalar" dataType="string" description="msg:statut_list_libelle"/>	 
+					<result name="allow_loan" type="scalar" dataType="boolean" description="msg:statut_list_allow_loan"/> 	
+					<result name="allow_loan_hist" type="scalar" dataType="boolean" description="msg:statut_list_allow_loan_hist"/> 	
+					<result name="allow_book" type="scalar" dataType="boolean" description="msg:statut_list_allow_book"/> 	
+					<result name="allow_opac" type="scalar" dataType="boolean" description="msg:statut_list_allow_opac"/> 	
+					<result name="allow_dsi" type="scalar" dataType="boolean" description="msg:statut_list_allow_dsi"/> 	
+					<result name="allow_dsi_priv" type="scalar" dataType="boolean" description="msg:statut_list_allow_dsi_priv"/> 	
+					<result name="allow_sugg" type="scalar" dataType="boolean" description="msg:statut_list_allow_sugg"/> 	
+					<result name="allow_dema" type="scalar" dataType="boolean" description="msg:statut_list_allow_dema"/> 	
+					<result name="allow_prol" type="scalar" dataType="boolean" description="msg:statut_list_allow_prol"/> 	
+					<result name="allow_avis" type="scalar" dataType="boolean" description="msg:statut_list_allow_avis"/> 	
+					<result name="allow_tag" type="scalar" dataType="boolean" description="msg:statut_list_allow_tag"/> 	
+					<result name="allow_pwd" type="scalar" dataType="boolean" description="msg:statut_list_allow_pwd"/> 	
+					<result name="allow_liste_lecture" type="scalar" dataType="boolean" description="msg:statut_list_allow_liste_lecture"/> 	
+					<result name="allow_self_checkout" type="scalar" dataType="boolean" description="msg:statut_list_allow_self_checkout"/> 		
+					<result name="allow_self_checkin" type="scalar" dataType="boolean" description="msg:statut_list_allow_self_checkin"/> 	
+					<result name="allow_serialcirc" type="scalar" dataType="boolean" description="msg:statut_list_allow_serialcirc"/> 		
+				</result>  		 		        		
+			</outputs>
+		</method>			
+		
+		<method name="categ_list" rights="" version="1.0" language_independant="false" comment="msg:categ_list">
+			<pmb_requirements>
+			</pmb_requirements>
+			<inputs>
+				<description>msg:categ_list_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:categ_list_output_description</description>
+				<result name="status" type="scalar" dataType="boolean" description="msg:status"/> 		
+				<result name="status_msg" type="scalar" dataType="string" description="msg:status_msg"/> 
+				<result type="array" name="data" description="msg:fetch_empr_empr_data"> 	
+					<result name="id" type="scalar" dataType="integer" description="msg:categ_list_id"/> 		
+					<result name="libelle" type="scalar" dataType="string" description="msg:categ_list_libelle"/> 
+					<result name="duree_adhesion" type="scalar" dataType="integer" description="msg:categ_list_duree_adhesion"/> 
+					<result name="tarif_abt" type="scalar" dataType="string" description="msg:categ_list_tarif_abt"/> 
+					<result name="age_min" type="scalar" dataType="integer" description="msg:categ_list_age_min"/> 
+					<result name="age_max" type="scalar" dataType="integer" description="msg:categ_list_age_max"/> 
+				</result>  				      		
+			</outputs>
+		</method>			
+				
+		<method name="codestat_list" rights="" version="1.0" language_independant="false" comment="msg:codestat_list">
+			<pmb_requirements>
+			</pmb_requirements>
+			<inputs>
+				<description>msg:codestat_list_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:codestat_list_output_description</description>
+				<result name="status" type="scalar" dataType="boolean" description="msg:status"/> 		
+				<result name="status_msg" type="scalar" dataType="string" description="msg:status_msg"/>	
+				<result type="array" name="data" description="msg:fetch_empr_empr_data"> 
+					<result name="id" type="scalar" dataType="integer" description="msg:codestat_list_id"/> 		
+					<result name="libelle" type="scalar" dataType="string" description="msg:codestat_list_libelle"/>	
+				</result>      				
+			</outputs>
+		</method>			
+
+						
+		<method name="lang_list" rights="" version="1.0" language_independant="false" comment="msg:lang_list">
+			<pmb_requirements>
+			</pmb_requirements>
+			<inputs>
+				<description>msg:codestat_list_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:codestat_list_output_description</description>
+				<result name="status" type="scalar" dataType="boolean" description="msg:status"/> 		
+				<result name="status_msg" type="scalar" dataType="string" description="msg:status_msg"/>	
+				<result type="array" name="data" description="msg:fetch_empr_empr_data">										
+					<result name="codelang" type="scalar" dataType="string" description="msg:lang_list_codelang"/> 		
+					<result name="libelle" type="scalar" dataType="string" description="msg:lang_list_libelle"/>	
+				</result>      				
+			</outputs>
+		</method>			
+					
+		<method name="groupe_list" rights="" version="1.0" language_independant="false" comment="msg:groupe_list">
+			<pmb_requirements>
+			</pmb_requirements>
+			<inputs>
+				<description>msg:groupe_list_input_description</description>
+			</inputs>
+			<outputs>
+			<description>msg:groupe_list_output_description</description>
+				<result name="status" type="scalar" dataType="boolean" description="msg:status"/> 		
+				<result name="status_msg" type="scalar" dataType="string" description="msg:status_msg"/>	
+				<result type="array" name="data" description="msg:fetch_empr_empr_data"> 
+					<result name="id" type="scalar" dataType="integer" description="msg:groupe_list_id"/> 		
+					<result name="libelle" type="scalar" dataType="string" description="msg:groupe_list_libelle"/>	  						
+					<result name="resp_groupe" type="scalar" dataType="integer" description="msg:groupe_list_resp_groupe"/> 									
+					<result name="lettre_rappel" type="scalar" dataType="boolean" description="msg:groupe_list_lettre_rappel"/> 							
+					<result name="mail_rappel" type="scalar" dataType="boolean" description="msg:groupe_list_mail_rappel"/> 							
+					<result name="lettre_rappel_show_nomgroup" type="scalar" dataType="boolean" description="msg:groupe_list_lettre_rappel_show_nomgroup"/> 
+				</result>  		 		        		
+			</outputs>
+		</method>			
+		
+		<method name="abt_list" rights="" version="1.0" language_independant="false" comment="msg:abt_list">
+			<pmb_requirements>
+			</pmb_requirements>
+			<inputs>
+				<description>msg:abt_list_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:abt_list_output_description</description>
+				<result name="status" type="scalar" dataType="boolean" description="msg:status"/> 		
+				<result name="status_msg" type="scalar" dataType="string" description="msg:status_msg"/>	
+				<result type="array" name="data" description="msg:fetch_empr_empr_data"> 
+					<result name="id" type="scalar" dataType="integer" description="msg:abt_list_id"/> 		
+					<result name="libelle" type="scalar" dataType="string" description="msg:abt_list_libelle"/>						
+					<result name="commentaire" type="scalar" dataType="string" description="msg:abt_list_commentaire"/> 		  						
+					<result name="prepay" type="scalar" dataType="integer" description="msg:abt_list_prepay"/> 									
+					<result name="prepay_deflt_mnt" type="scalar" dataType="string" description="msg:abt_list_prepay_deflt_mnt"/> 										
+					<result name="tarif" type="scalar" dataType="string" description="msg:abt_list_tarif"/> 													
+					<result name="caution" type="scalar" dataType="string" description="msg:abt_list_caution"/> 												
+					<result name="localisations" type="scalar" dataType="string" description="msg:abt_list_localisations"/> 	
+				</result>  			        		
+			</outputs>
+		</method>		
+				
+		<method name="location_list" rights="" version="1.0" language_independant="false" comment="msg:location_list">
+			<pmb_requirements>
+			</pmb_requirements>
+			<inputs>
+				<description>msg:location_list_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:location_list_output_description</description>
+				<result name="status" type="scalar" dataType="boolean" description="msg:status"/> 		
+				<result name="status_msg" type="scalar" dataType="string" description="msg:status_msg"/>	
+				<result type="array" name="data" description="msg:fetch_empr_empr_data"> 
+						<result name="id" type="scalar" dataType="integer" description="msg:location_list_id"/> 		
+						<result name="libelle" type="scalar" dataType="string" description="msg:location_list_libelle"/>	
+						<result name="visible_opac" type="scalar" dataType="integer" description="msg:location_list_visible_opac"/>	
+						<result name="codage_import" type="scalar" dataType="string" description="msg:location_list_codage_import"/>	
+						<result name="name" type="scalar" dataType="string" description="msg:location_list_name"/>	
+						<result name="adr1" type="scalar" dataType="string" description="msg:location_list_adr1"/>	
+						<result name="adr2" type="scalar" dataType="string" description="msg:location_list_adr2"/>	
+						<result name="cp" type="scalar" dataType="string" description="msg:location_list_cp"/>	
+						<result name="town" type="scalar" dataType="string" description="msg:location_list_town"/>	
+						<result name="state" type="scalar" dataType="string" description="msg:location_list_state"/>	
+						<result name="country" type="scalar" dataType="string" description="msg:location_list_country"/>	
+						<result name="phone" type="scalar" dataType="string" description="msg:location_list_phone"/>	
+						<result name="email" type="scalar" dataType="string" description="msg:location_list_email"/>	
+						<result name="website" type="scalar" dataType="string" description="msg:location_list_website"/>	
+						<result name="logo" type="scalar" dataType="string" description="msg:location_list_logo"/>	
+						<result name="commentaire" type="scalar" dataType="string" description="msg:location_list_commentaire"/>	
+						<result name="surloc_num" type="scalar" dataType="integer" description="msg:location_list_surloc_num"/>	
+						<result name="surloc_used" type="scalar" dataType="boolean" description="msg:location_list_surloc_used"/>	
+				</result>  	  		        		
+			</outputs>
+		</method>			
+				
+		<method name="surlocation_list" rights="" version="1.0" language_independant="false" comment="msg:surlocation_list">
+			<pmb_requirements>
+			</pmb_requirements>
+			<inputs>
+				<description>msg:surlocation_list_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:surlocation_list_output_description</description>				 				
+				<result name="status" type="scalar" dataType="boolean" description="msg:status"/> 		
+				<result name="status_msg" type="scalar" dataType="string" description="msg:status_msg"/>	
+				<result type="array" name="data" description="msg:fetch_empr_empr_data"> 
+						<result name="id" type="scalar" dataType="integer" description="msg:surlocation_list_id"/> 		
+						<result name="libelle" type="scalar" dataType="string" description="msg:surlocation_list_libelle"/>	
+						<result name="visible_opac" type="scalar" dataType="integer" description="msg:surlocation_list_visible_opac"/>	
+						<result name="name" type="scalar" dataType="string" description="msg:surlocation_list_name"/>	
+						<result name="adr1" type="scalar" dataType="string" description="msg:surlocation_list_adr1"/>	
+						<result name="adr2" type="scalar" dataType="string" description="msg:surlocation_list_adr2"/>	
+						<result name="cp" type="scalar" dataType="string" description="msg:surlocation_list_cp"/>	
+						<result name="town" type="scalar" dataType="string" description="msg:surlocation_list_town"/>	
+						<result name="state" type="scalar" dataType="string" description="msg:surlocation_list_state"/>	
+						<result name="country" type="scalar" dataType="string" description="msg:surlocation_list_country"/>	
+						<result name="phone" type="scalar" dataType="string" description="msg:surlocation_list_phone"/>	
+						<result name="email" type="scalar" dataType="string" description="msg:surlocation_list_email"/>	
+						<result name="website" type="scalar" dataType="string" description="msg:surlocation_list_website"/>	
+						<result name="logo" type="scalar" dataType="string" description="msg:surlocation_list_logo"/>	
+						<result name="commentaire" type="scalar" dataType="string" description="msg:surlocation_list_commentaire"/>	
+				</result>  								
+			</outputs>
+		</method>	
+		
+		<method name="caddie_list" rights="" version="1.0" language_independant="false" comment="msg:caddie_list">
+			<pmb_requirements>
+			</pmb_requirements>
+			<inputs>
+				<description>msg:caddie_list_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:caddie_list_output_description</description>
+				<result name="status" type="scalar" dataType="boolean" description="msg:status"/> 		
+				<result name="status_msg" type="scalar" dataType="string" description="msg:status_msg"/>		
+				<result type="array" name="data" description="msg:fetch_empr_empr_data"> 		    				
+					<result name="id" type="scalar" dataType="integer" description="msg:caddie_list_id"/>
+					<result name="libelle" type="scalar" dataType="string" description="msg:caddie_list_libelle"/>	
+					<result name="comment" type="scalar" dataType="string" description="msg:caddie_list_comment"/>	
+					<result name="autorisations" type="scalar" dataType="string" description="msg:caddie_list_autorisations"/>		
+				</result>  
+			</outputs>
+		</method>		
+		
+		<method name="caddie_empr_list" rights="" version="1.0" language_independant="false" comment="msg:caddie_empr_list">
+			<pmb_requirements>
+			</pmb_requirements>
+			<inputs>
+				<description>msg:caddie_list_input_description</description>
+				<param name="caddie_id" type="scalar" dataType="integer" description="msg:caddie_id"/>
+			</inputs>
+			<outputs>
+				<description>msg:caddie_list_output_description</description>
+				<result name="status" type="scalar" dataType="boolean" description="msg:status"/> 		
+				<result name="status_msg" type="scalar" dataType="string" description="msg:status_msg"/>		
+				<result type="array" name="data" description="msg:fetch_empr_empr_data"> 		    				
+					<result name="empr_id" type="scalar" dataType="integer" description="msg:empr_id"/>
+					<result name="empr_cb" type="scalar" dataType="string" description="msg:empr_cb"/>	
+					<result name="flag" type="scalar" dataType="boolean" description="msg:caddie_empr_list_flag"/>		
+				</result>  
+			</outputs>
+		</method>		
+		
+		<method name="add_in_caddie" rights="" version="1.0" language_independant="false" comment="msg:add_in_caddie">
+			<pmb_requirements>
+			</pmb_requirements>
+			<inputs>
+				<description>msg:cadd_in_caddie_input_description</description>
+				<param name="empr_cb" type="scalar" dataType="string" description="msg:empr_cb"/>
+				<param name="empr_id" type="scalar" dataType="integer" description="msg:empr_id"/>
+				<param name="caddie_id" type="scalar" dataType="integer" description="msg:caddie_id"/>
+			</inputs>
+			<outputs>
+				<description>msg:add_in_caddie_output_description</description>
+				<result name="status" type="scalar" dataType="boolean" description="msg:status"/> 		
+				<result name="status_msg" type="scalar" dataType="string" description="msg:status_msg"/>
+			</outputs>
+		</method>			
+		
+		<method name="pointe_in_caddie" rights="" version="1.0" language_independant="false" comment="msg:pointe_in_caddie">
+			<pmb_requirements>
+			</pmb_requirements>
+			<inputs>
+				<description>msg:cadd_in_caddie_input_description</description>
+				<param name="empr_cb" type="scalar" dataType="string" description="msg:fetch_empr_empr_cb"/>
+				<param name="empr_id" type="scalar" dataType="integer" description="msg:fetch_empr_empr_id"/>
+				<param name="caddie_id" type="scalar" dataType="integer" description="msg:caddie_id"/>
+			</inputs>
+			<outputs>
+				<description>msg:add_in_caddie_output_description</description>
+				<result name="status" type="scalar" dataType="boolean" description="msg:status"/> 		
+				<result name="status_msg" type="scalar" dataType="string" description="msg:status_msg"/>
+			</outputs>
+		</method>			    
+		
+		<method name="is_in_caddie" rights="" version="1.0" language_independant="false" comment="msg:is_in_caddie">
+			<pmb_requirements>
+			</pmb_requirements>
+			<inputs>
+				<description>msg:is_in_caddie_input_description</description>
+				<param name="empr_cb" type="scalar" dataType="string" description="msg:fetch_empr_empr_cb"/>
+				<param name="empr_id" type="scalar" dataType="integer" description="msg:fetch_empr_empr_id"/>
+				<param name="caddie_id" type="scalar" dataType="integer" description="msg:caddie_id"/>
+			</inputs>
+			<outputs>
+				<description>msg:is_in_caddie_output_description</description>
+				<result name="status" type="scalar" dataType="boolean" description="msg:status"/> 		
+				<result name="status_msg" type="scalar" dataType="string" description="msg:status_msg"/>		
+				<result type="structure" name="data" description="msg:fetch_empr_empr_data"> 	    				
+					<result name="status" type="scalar" dataType="boolean" description="msg:is_in_caddie_status"/>			    				
+					<result name="flag" type="scalar" dataType="boolean" description="msg:is_in_caddie_flag"/>	
+				</result>  		        		
+			</outputs>
+		</method>		
+		
+		<method name="caddie_pointage_raz" rights="" version="1.0" language_independant="false" comment="msg:caddie_pointage_raz">
+			<pmb_requirements>
+			</pmb_requirements>
+			<inputs>
+				<description>msg:is_in_caddie_input_description</description>
+				<param name="caddie_id" type="scalar" dataType="integer" description="msg:caddie_id"/>
+			</inputs>
+			<outputs>
+				<description>msg:is_in_caddie_output_description</description>							
+				<result name="status" type="scalar" dataType="boolean" description="msg:status"/> 		
+				<result name="status_msg" type="scalar" dataType="string" description="msg:status_msg"/>										        		
+			</outputs>
+		</method>	
+		
+		<method name="pperso_list_type_values" rights="" version="1.0" language_independant="false" comment="msg:pperso_list_type_values">
+			<pmb_requirements>
+			</pmb_requirements>
+			<inputs>
+				<description>msg:codestat_list_input_description</description>
+				<param name="pperso_name" type="scalar" dataType="string" description="msg:pperso_name"/>
+			</inputs>
+			<outputs>
+				<description>msg:codestat_list_output_description</description>
+				<result name="status" type="scalar" dataType="boolean" description="msg:status"/> 		
+				<result name="status_msg" type="scalar" dataType="string" description="msg:status_msg"/>	
+				<result type="array" name="data" description="msg:fetch_empr_empr_data">										
+					<result name="value" type="scalar" dataType="string" description="msg:pperso_list_type_values_value"/> 		
+					<result name="libelle" type="scalar" dataType="string" description="msg:pperso_list_type_values_libelle"/>	
+				</result>      				
+			</outputs>
+		</method>	
+		<method name="bibloto_empr_list" rights="" version="1.0" language_independant="false" comment="msg:bibloto_empr_list">
+			<pmb_requirements>
+			</pmb_requirements>
+			<inputs>
+				<description>msg:empr_list_input_description</description>						
+				<param type="array" name="filters" description="msg:empr_list_filters">  	 						
+					<param name="separator" type="scalar" dataType="string" description="msg:empr_list_separator"/>	
+					<param name="field" type="scalar" dataType="string" description="msg:empr_list_field"/>	 				
+					<param name="operator" type="scalar" dataType="string" description="msg:empr_list_operator"/>					
+					<param name="value" type="scalar" dataType="string" description="msg:empr_list_value"/>	
+				</param>	
+			</inputs>
+			<outputs>
+				<description>msg:empr_list_output_description</description>
+				<result name="status" type="scalar" dataType="boolean" description="msg:status"/> 		
+				<result name="status_msg" type="scalar" dataType="string" description="msg:status_msg"/>						  
+				<result type="array" name="data" description="msg:fetch_empr_empr_data"> 			
+					<result name="empr_cb" type="scalar" dataType="string" description="msg:fetch_empr_empr_cb"/>					
+					<result name="empr_id" type="scalar" dataType="integer" description="msg:fetch_empr_empr_id"/>
+					<result name="empr_prenom" type="scalar" dataType="string" description="msg:fetch_empr_prenom"/>
+					<result name="empr_nom" type="scalar" dataType="string" description="msg:fetch_empr_nom"/>
+				</result>  							
+			</outputs>
+		</method>				
+	</methods>
+</manifest>

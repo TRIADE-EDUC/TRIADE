@@ -1,0 +1,26 @@
+<?php
+
+// $Id: import_empr.txt,v 0.1 2003/11/21 9:44:264 Jonathan charest
+
+// Documentation sur l'utilisation de l'import
+
+$content = "
+  <p><b>PMB : import-mini-howto</b> </p>
+  <p><strong>Dans la colonne de  gauche</strong> sont pr&eacute;sents le nom des champs de la base de donn&eacute;es pour y ins&eacute;rer les informations des lecteurs &agrave; importer.</p>
+  <p><strong>Dans la colonne du centre</strong> figure la position du champ dans
+    le fichier ex:<br />
+    &quot;12527&quot;,&quot;Archambault&quot;,&quot;rue de... <br />
+    &quot;12528&quot;,&quot;Baudin&quot;,&quot;rue de... <br />
+    12527 est la 1&egrave;re position,
+    c'est le code-barres du lecteur, la 2e position est le nom de famille du lecteur, la 3e son adresse, etc..</p>
+  <p><strong>La colonne de droite</strong> correspond au d&eacute;coupage de la premi&egrave;re
+    ligne du fichier.</p>
+  <p><strong>Les champs en rouge</strong>, sont des champ non modifiables par
+    l'utilisateur, ils 
+    vont se remplir tout seul.</p>
+  <p>Les champs marqu&eacute;s du signe * doivent &ecirc;tre imp&eacute;rativement renseign&eacute;s.</p>
+";
+
+print $content;
+
+?>

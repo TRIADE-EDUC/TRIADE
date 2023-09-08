@@ -1,0 +1,1747 @@
+/* +--------------------------------------------------------------------------+
+// 2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// +-------------------------------------------------+
+// $Id: genbib.css,v 1.86 2017-06-21 12:39:16 wlair Exp $ */
+
+
+/* ---------------------------------------------------------------------------*/
+/* ---------------------------------------------------------------------------*/
+/*                         ATTRIBUTS GENERAUX                                 */
+/*                                                                            */
+/*                             COULEURS                                       */
+/* ---------------------------------------------------------------------------*/
+/* ---------------------------------------------------------------------------*/
+
+html,body{
+	height:100%;
+
+}
+
+body#pmbopac, #intro #intro_bibli .p2 ul li, .cms_menu_deep0 li, ul.search_tabs li, #onglets_list ul.list_tabs li,
+#empr_onglet ul.empr_tabs li, input.bouton, input.boutonrechercher, #subs_form table td input,
+.carroussel_bulletin .current_bull_carroussel, .carroussel_bulletin .active, th, ul.empr_subtabs li, .authorities {
+	background-color : #d0c6b4;
+}
+
+#intro_message .p1 {
+	color : #d0c6b4;
+}
+
+#footer {
+    border-top: 8px solid #D0C6B4;
+}
+
+.notice-child {
+    border-bottom: 5px solid #D0C6B4;
+}
+
+ul.onglets_isbd_public, #categories-container ul, #actualites .bloc_actu, #facette #facette_list a {
+    border-bottom: 1px solid #D0C6B4;
+}
+
+#navigator, #search, #categories-container, #perio_a2z, #location-container, #last_entries, #etagere-container,
+input, select, textarea, .carroussel_bulletin, .current_bull_carroussel, .carroussel_bulletin .active,
+ul.empr_subtabs li, .listedescription {
+	border: 1px solid #58585c;
+}
+
+#intro #intro_bibli .p1, #facette h3, #bandeau #post_adress h3, #bandeau #accueil #lang_select, .bg-grey, #visionneuseBackground {
+	background-color: #58585c;
+}
+
+body, #intro_message .p1 p, #main #search ul.search_tabs li#current, #onglets_list ul.list_tabs li#current,
+#empr_onglet ul.empr_tabs li#current a, a, input.login, input.password, input.subsform, select, textarea,
+.carroussel_bulletin, .current_bull_carroussel, #onglets_list ul.list_tabs li a.current,
+#search_onglet ul.search_tabs li.current a {
+	color : #58585c;
+}
+
+
+/* ---------------------------------------------------------------------------*/
+/* ---------------------------------------------------------------------------*/
+/*                         ATTRIBUTS GENERAUX                                 */
+/*                                                                            */
+/*                     attrbitus generaux de la page                          */
+/* ---------------------------------------------------------------------------*/
+/* ---------------------------------------------------------------------------*/
+
+
+* {
+	margin: 0px;
+	padding: 0px;	
+}
+
+body {
+	font-family : Arial, Verdana, Helvetica, sans-serif;
+	font-size: 75%;
+}
+
+#container {
+	margin : 0px auto;
+	width: 985px;
+	background-color : #ffffff;
+	position: relative;
+	min-height: 100%;
+	box-shadow: 0px 0px 0px 1px rgba(0, 0, 0, 0.34);
+}
+
+#main #main_hors_footer {
+	min-height: 600px;
+	padding-top: 280px;
+}
+
+
+/* ---------------------------------------------------------------------------*/
+/* ---------------------------------------------------------------------------*/
+/*                                  IFRAME                                    */
+/* ---------------------------------------------------------------------------*/
+/* ---------------------------------------------------------------------------*/
+
+
+/* -----------------------------------------------------*/
+/*                         Panier                       */
+/* -----------------------------------------------------*/
+
+
+body.cart_info_body {
+	background-color: #ffffff;
+}
+
+iframe#iframe_resume_panier {
+	width: 100%;
+	height: 35px;
+	border: none;
+}
+
+
+/* ---------------------------------------------------------------------------*/
+/* ---------------------------------------------------------------------------*/
+/*                            Intro_bibli                                     */
+/* ---------------------------------------------------------------------------*/
+/* ---------------------------------------------------------------------------*/
+
+
+#intro {
+	position: absolute;
+	top: 0px;
+	width: 985px;
+}
+
+#intro #intro_bibli h3 {
+	display: none;
+}
+
+
+/* -----------------------------------------------------*/
+/*                 biblio_preamble_p1                   */
+/* -----------------------------------------------------*/
+
+
+#intro #intro_bibli .p1 {
+	height: 220px;
+	padding-left: 3px;
+	padding-right: 3px;
+	display: block;
+	text-align: center;
+	overflow: hidden;
+}
+
+#intro #intro_bibli .p1 img {
+	border-top: none;
+	border-bottom: none;
+	overflow: hidden;
+	max-height: 211px;
+	height: auto !important;
+	height: 211px;
+	height: expression(this.height > 211px ? "211px" : true);
+	display: inline;
+	margin-right: 2px;
+	margin-left: 2px;
+}
+
+
+/* -----------------------------------------------------*/
+/*                 biblio_preamble_p2                   */
+/* -----------------------------------------------------*/
+
+
+#intro #intro_bibli .p2 {
+	margin-left: 200px;
+	display: block;
+	height: 40px;
+	/* position: absolute; */
+	top: auto;
+}
+
+#intro_bibli .p2 ul, #intro_bibli .p2 #menuDeroulant, .cms_menu_deep0 {
+    position: absolute;
+    z-index: 10;
+    vertical-align: bottom;
+   	list-style-type: none;
+}
+
+#intro_bibli .p2 ul li, #intro_bibli .p2 #menuDeroulant li, .cms_menu_deep0 li {
+    display: block;
+    float: left;
+	margin-right: 5px;
+	padding-top: 5px;
+	padding-left: 10px;
+	padding-right: 10px;
+	padding-bottom: 5px;
+	position: relative;
+}
+
+#intro_bibli .p2 ul li:hover, #intro_bibli .p2 #menuDeroulant li:hover, .cms_menu_deep0 li:hover {
+	padding-bottom: 10px;
+	height: 31px;
+	padding-bottom: 0px;
+}
+
+#intro_bibli .p2 ul li a, #intro_bibli .p2 #menuDeroulant li a, .cms_menu_deep0 li a {
+    color: #ffffff;
+	font-size: 18px;
+	text-decoration: none;
+}
+
+
+/******************* sous-menu ********************/
+
+
+#intro_bibli .p2 #menuDeroulant .sousMenu, .cms_menu_deep1 {
+    display: none;
+    width: 150px;
+    position: absolute;
+    left: 0px;
+    top: 36px;
+}
+
+#intro_bibli .p2 #menuDeroulant .sousMenu li, .cms_menu_deep1 li {
+    display: block;
+    width: 100%;
+    opacity : 0.9;
+    filter : alpha(opacity=90);
+    margin-right: 0px;
+}
+
+#intro_bibli .p2 #menuDeroulant .sousMenu li:hover, .cms_menu_deep1 li:hover {
+    opacity : 1;
+    filter : alpha(opacity=100);
+    height: auto;
+    padding-bottom: 5px;
+}
+
+#intro_bibli .p2 #menuDeroulant .sousMenu li a, .cms_menu_deep1 li a {
+    text-decoration: none;
+    font-size: 16px;
+}
+
+#intro_bibli .p2 #menuDeroulant .sousMenu li a:hover, .cms_menu_deep1 li a:hover {
+}
+
+#intro_bibli .p2 #menuDeroulant li:hover > .sousMenu, .cms_menu_deep0 li:hover > .cms_menu_deep1 {
+    display: block;
+}
+
+
+/****************** sous-menu 2 *******************/
+
+
+#intro_bibli .p2 #menuDeroulant .sousMenu2, .cms_menu_deep2 {
+    display: none;
+    width: 150px;
+    position: absolute;
+    margin-left: 160px;
+    top: 0px;
+}
+
+#intro_bibli .p2 #menuDeroulant li:hover > .sousMenu2, .cms_menu_deep1 li:hover > .cms_menu_deep2 {
+    display: block;
+}
+
+
+/* ---------------------------------------------------------------------------*/
+/* ---------------------------------------------------------------------------*/
+/*                            Contenu du Bandeau                              */
+/* ---------------------------------------------------------------------------*/
+/* ---------------------------------------------------------------------------*/
+
+
+#bandeau {
+	 width: 170px;
+	 padding-left: 10px;
+	 background-color: #ffffff;
+	 float: left;
+	 margin-top: 220px;
+	 z-index: 2;
+	 position: relative;
+}
+
+#bandeau div {
+	 margin-bottom: 20px;
+}
+
+#bandeau div div {
+	 margin-bottom: 0px;
+}
+
+#bandeau_2{
+	clear:both;
+	
+}
+/* -----------------------------------------------------*/
+/*                        Accueil                       */
+/* -----------------------------------------------------*/
+
+
+#bandeau #accueil h3 {
+	display: none;
+}
+
+#bandeau #accueil p.centered {
+	text-align: center;
+	margin-top: 0px;
+	z-index: 100;
+}
+
+#bandeau #accueil p.centered img {
+	border: none;
+	max-width: 150px;
+	margin-bottom: 10px;
+}
+
+
+/* ------------lang_select------------*/
+
+
+#bandeau #accueil #lang_select {
+	margin-left: -10px;
+	padding-left: 10px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	width: 160px;
+}
+
+#bandeau #accueil #lang_select form {
+	margin: 0px;
+	padding: 0px;
+}
+
+#bandeau #accueil #lang_select select {
+	border: none;
+}
+
+
+/* -----------------------------------------------------*/
+/*                      Connexion                       */
+/* -----------------------------------------------------*/
+
+
+#connexion {
+}
+
+#connexion h3 {
+	margin-bottom: 5px;
+	margin-top: 10px;
+	font-size: 13px;
+}
+
+#connexion #login_form form {
+	margin: 0px;
+	padding: 0px;
+}
+
+
+/* ---------------Input---------------*/
+
+
+#connexion #login_form input.login, #connexion #login_form input.password {
+	width: 110px;
+	margin-top: 5px;
+	margin-bottom: 5px;
+}
+
+#connexion #login_form input.bouton {
+	color: #ffffff;
+	font-weight: bold;
+	text-transform: uppercase;
+	padding-left: 2px;
+	padding-right: 2px;
+	text-align: center;
+}
+
+
+/* -----------------------------------------------------*/
+/*                        Meteo                         */
+/* -----------------------------------------------------*/
+
+
+#meteo {
+}
+
+
+/* -----------------------------------------------------*/
+/*                       Adresse                        */
+/* -----------------------------------------------------*/
+
+
+#adresse h3 {
+	margin-bottom: 5px;
+	margin-top: 20px;
+	font-size: 13px;
+}
+
+#adresse #opac_biblio_email {
+	font-weight: bold;
+	font-style: italic;
+	font-size: 13px;
+}
+
+
+/* -----------------------------------------------------*/
+/*                 biblio_post_adress                   */
+/* -----------------------------------------------------*/
+
+
+#bandeau #post_adress h3 {
+	color: #ffffff;
+	padding-left: 10px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	margin-top: 10px;
+	margin-bottom: 5px;
+	margin-left: -10px;
+}
+
+
+/* ---------------------------------------------------------------------------*/
+/* ---------------------------------------------------------------------------*/
+/*                            Contenu du Main                                 */
+/* ---------------------------------------------------------------------------*/
+/* ---------------------------------------------------------------------------*/
+
+
+#main {
+	margin-right: 20px;
+	float: right;
+	width: 765px;
+}
+
+#main h3 {
+	margin-bottom: 0px;
+	font-size: 1.33333em;
+}
+
+
+/* ---------------------------------------------------------------------------*/
+/*                                Main_header                                 */
+/* ---------------------------------------------------------------------------*/
+
+
+#main_header h3 {
+	background-color: #ffffff;
+	opacity: 0.5;
+	-ms-filter: "alpha(opacity=50)";/* IE 8 */
+	filter : alpha(opacity=50);/* IE < 8 */
+	position: absolute;
+	top: 100px;
+	margin-left: -200px;
+	z-index: 10;
+	font-size: 30px;
+	padding-left: 10px;
+	padding-right: 10px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+}
+
+
+/* -----------------------------------------------------*/
+/*                     Intro_message                    */
+/* -----------------------------------------------------*/
+
+
+/* --------biblio_important_p1-----------*/
+
+
+#intro_message .p1 {
+	font-size: 16px;
+	font-weight: bold;
+	margin-bottom: 15px;
+	overflow: hidden;
+}
+
+#intro_message .p1 p {
+	font-size: 21px;
+	font-weight: bold;
+	margin-top: 0px;
+	margin-bottom: 10px;
+}
+
+
+/* --------biblio_important_p2-----------*/
+
+
+#intro_message .p2 {
+	margin-bottom: 10px;
+}
+
+
+/* -----------------------------------------------------*/
+/*                        Navigator                     */
+/* -----------------------------------------------------*/
+
+
+#navigator {
+	margin-bottom: 20px;
+	padding-left: 10px;
+	padding-top: 5px;
+}
+
+
+/* -----------------------------------------------------*/
+/*                        Search                        */
+/* -----------------------------------------------------*/
+
+
+#search {
+    padding-left: 15px;
+    padding-bottom: 15px;
+    padding-right: 15px;
+    margin-top: 25px;
+    margin-bottom: 15px;
+}
+	
+#main #search ul.search_tabs, #onglets_list ul.list_tabs {
+    margin-top: -23px;
+    margin-left: -16px;
+    font-size: 1.166666em;
+}
+
+#main #search ul.search_tabs li, #onglets_list ul.list_tabs li, #empr_onglet ul.empr_tabs li {
+	display: block;
+	float: left;
+	padding-top: 3px;
+	padding-bottom: 3px;
+	padding-left: 10px;
+	padding-right: 10px;
+    margin-right: 5px;
+    margin-bottom: 5px;
+  
+}
+
+#main #search ul.search_tabs li:hover, #onglets_list ul.list_tabs li:hover, #empr_onglet ul.empr_tabs li:hover {
+	padding-bottom: 5px;
+	padding-top: 5px;
+	margin-top: -4px;
+}
+
+#main #search ul.search_tabs li#current:hover, #onglets_list ul.list_tabs li#current:hover,
+#empr_onglet ul.empr_tabs li#current:hover {
+	padding-top: 3px;
+	padding-bottom: 3px;
+	margin-top: 0px;
+}
+
+#main #search ul.search_tabs li a, #onglets_list ul.list_tabs li a, #empr_onglet ul.empr_tabs li a {
+	text-decoration:none;
+	color: #ffffff;
+}
+
+#search #search_crl {
+	clear: both;
+	float: none;
+}
+
+#search p.p1 {
+	margin: 0px;
+	padding-top: 5px;
+	*padding-top: 10px;  /* Hack pour IE6 et IE7 */
+	clear: left;
+	display: block;
+}
+
+#search form {
+	margin-top: 10px;
+}
+
+#search form select {
+	margin-right: 10px;
+	margin-bottom: 10px;
+}
+
+#search form input.text_query {
+	width: 437px;
+}
+
+input.bouton, input.boutonrechercher {
+	color: #ffffff;
+	margin-left: 5px;
+	cursor: pointer;
+}
+
+#search form #simple_search_zone {
+	margin-top: 10px;
+}
+
+#search #zsimplesChild {
+	border-bottom: none;
+	margin-bottom: 0px!important;
+}
+
+
+/*-----Recherche par termes-----*/
+
+
+#search .form- .form-contenu {
+	padding-top: 20px;
+}
+
+
+/*---Recherche multi-critères---*/
+
+
+.ext_search_txt {
+	width:330px;
+}
+
+#external_simple_search_zone {
+	margin-top:15px;
+}
+
+
+/*-----Onglets de Recherche-----*/
+
+
+#search_onglet ul.search_tabs {
+	list-style: none;
+	padding-left: 0px;
+	margin-left: 0px;
+	margin-bottom: 15px;
+	margin-top: 10px;
+}
+
+#search_onglet ul.search_tabs li {
+	display: inline;
+	padding-top: 3px;
+	padding-bottom: 3px;
+	padding-left: 10px;
+	padding-right: 10px;
+}
+
+#search_onglet ul.search_tabs li:hover {
+	padding-top: 6px;
+	padding-bottom: 5px;
+	position: relative;
+	top: -2px;
+}
+
+#search_onglet ul.search_tabs li a {
+	color: #ffffff;
+	text-decoration: none;
+}
+
+#search_onglet ul.search_tabs li.current:hover {
+	padding-top: 3px;
+	padding-bottom: 3px;
+	padding-left: 10px;
+	padding-right: 10px;
+	top: 0px;
+}
+
+#resultatrech_see h3 {
+	margin-bottom: 10px;
+	margin-top: 10px;
+}
+
+#resultatrech_liste blockquote {
+	margin-top: 20px;
+}
+
+
+/* -----------------------------------------------------*/
+/*                 Liste periodiques                    */
+/* -----------------------------------------------------*/
+
+
+#perio_a2z {
+	margin-top: 20px;
+}
+
+#perio_a2z h3 span {
+	background-color: #FFFFFF;
+    margin-left: 10px;
+    margin-top: -10px;
+    padding-left: 10px;
+    padding-right: 10px;
+    position: absolute;
+}
+
+#perio_a2z label {
+	margin-left: 5px;
+	margin-right: 5px;
+}
+
+#perio_a2z #perio_a2z_search {
+	margin-top: 20px;
+	width :	50%;
+}
+
+#perio_a2z ul.onglets_isbd_public {
+	margin-top: 15px;
+	padding-left: 5px;
+}
+
+#perio_a2z .parent ul.onglets_isbd_public {
+	padding-bottom: 5px;
+}
+
+#perio_a2z ul.onglets_isbd_public li {
+	float: none;
+	display: inline;
+}
+   
+#a2z_contens {
+	clear: both; 
+}
+
+table.a2z_contens {
+	margin-top: 10px; 
+}
+
+table.a2z_contens td {
+	vertical-align: top;
+}
+
+table.a2z_perio_list {
+	width: 200px;
+}
+
+table.a2z_perio_list tr td {
+    padding-bottom: 3px;
+    padding-top: 3px;
+}
+
+#a2z_perio b .header_title {
+	font-size: 16px;
+	text-transform: uppercase;
+}
+
+#a2z_perio h3 span#titre_exemplaires {
+    margin-left: 0px;
+    margin-top: 0px;
+    margin-bottom: 5px;
+    padding-left: 0px;
+    padding-right: 0px;
+    position: relative;
+}
+
+#a2z_perio .navbar {
+	margin-top: 20px;
+}
+
+input#a2z_abt_actif {
+	vertical-align: middle;
+	margin-left: 2px;
+	margin-right: 2px;
+}
+
+#form_search_bull form {
+	margin-top: 10px;
+}
+
+#form_search_bull form table td {
+	vertical-align: middle;
+}
+
+
+/*-----Search périodiques-----*/
+
+#search #perio_a2z {
+	margin-top: 0px;
+	border: none;
+}
+
+#search #perio_a2z h3 span {
+	background-color: none;
+    margin-left: 10px;
+    margin-top: 0px;
+    padding-left: 0px;
+    padding-right: 0px;
+    position: relative;
+}
+
+
+/* -----------------------------------------------------*/
+/*                       Categories                     */
+/* -----------------------------------------------------*/
+
+
+#categories {
+	margin-top: 40px;
+	position: relative;
+}
+
+#categories ul.search_tabs {
+	right: 0px;
+	margin-top: -20px;
+	position: absolute;
+}
+
+#categories ul.search_tabs li {
+	display: block;
+	float: left;
+	padding-top: 3px;
+	padding-bottom: 3px;
+	padding-left: 10px;
+	padding-right: 10px;
+	margin-left: 3px;
+}
+
+#categories ul.search_tabs li:hover {
+	padding-top: 6px;
+	padding-bottom: 5px;
+	top: -5px;
+	position: relative;
+}
+
+#categories ul.search_tabs li#current:hover  {
+	padding-top: 3px;
+	padding-bottom: 3px;
+	top: 0px;
+}
+
+#categories ul.search_tabs li a {
+	text-decoration: none;
+	color: #ffffff;
+}
+
+#categories h3 span {
+	background-color: #FFFFFF;
+    margin-left: 10px;
+    margin-top: -10px;
+    padding-left: 10px;
+    padding-right: 10px;
+    position: absolute;
+}
+
+#categories-container {
+    padding-left: 40px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    padding-right: 40px;
+    margin-bottom: 15px;
+}
+
+#categories-container a {
+    text-decoration: none;
+}
+
+#categories-container h2 {
+	font-size: 13px;
+	margin-top: 5px;
+}
+
+#categories-container h2 img {
+	display: none;
+}
+		
+#categories-container ul {
+	margin-top: 2px;
+	padding-bottom: 5px;
+}
+
+#categories-container li  {
+	display: inline;
+}
+
+#aut_see {
+   	margin-top: 10px;
+}
+
+
+/* -----------------------------------------------------*/
+/*                    Localisations                     */
+/* -----------------------------------------------------*/
+
+
+#location {
+	margin-top: 40px;
+}
+
+#location h3 span {
+	background-color: #ffffff;
+	padding-left: 10px;
+    padding-right: 10px;
+	margin-left: 10px;
+	position: absolute;
+	margin-top: -10px;
+}
+
+#location-container {
+    padding-left: 15px;
+    padding-bottom: 10px;
+    padding-right: 15px;
+    padding-top: 10px;
+    margin-bottom: 15px;
+}
+
+#location-container table tr td a b {
+    font-weight: normal;
+    font-size: 1.166666em;
+}
+
+
+/* -----------------------------------------------------*/
+/*               Dernieres Acquisitions                 */
+/* -----------------------------------------------------*/
+
+
+#last_entries {
+	margin-top: 30px;
+	padding-left: 37px;
+	padding-right: 15px;
+	padding-bottom: 15px;
+}
+
+#last_entries h3 {
+	margin-top: -10px;
+	margin-bottom: 10px;
+	margin-left: -27px;
+}
+
+#last_entries h3 span {
+	background-color: #ffffff;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+#last_entries .notice-child h3 {
+	margin-top: 5px;
+	margin-bottom: 0px;
+	margin-left: 0px;
+	background-color: inherit;
+	margin-left: 0px;
+}
+
+#last_entries .notice-child h3 span {
+	padding: 0px;
+}
+
+/* notices format Neuf*/
+#last_entries .title_notCourte > h3,
+#last_entries .title_notCourte > h3 span {
+	margin:0px;
+	padding:0px;
+}
+/* -----------------------------------------------------*/
+/*                        Etageres                      */
+/* -----------------------------------------------------*/
+
+
+#etageres {
+	margin-top: 40px;
+}
+
+#etagere-container {
+    padding-left: 15px;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    padding-right: 15px;
+    margin-bottom: 15px;
+}
+
+.etagere {
+    margin-top: 15px;
+}
+
+#titre_etagere {
+	background-color: #ffffff;
+	padding-left: 10px;
+    padding-right: 10px;
+	margin-left: 10px;
+	position: absolute;
+	margin-top: -10px;
+}
+
+#etagere-container #etagere-titre h1 {
+	margin: 0px;
+	font-size: 15px;
+}
+
+#etagere-container #etagere-comment h2 {
+	text-align: right;
+	font-style: italic;
+	font-size: 12px;
+	margin: 0px;
+}
+
+
+/* -----------------------------------------------------*/
+/*                        Footer                        */
+/* -----------------------------------------------------*/
+
+
+#footer {
+	margin-top: 15px;
+	margin-left: 0px;
+	margin-bottom: 0px;
+	padding: 5px;
+	text-align: center;
+	clear: both;
+}
+	
+
+/* ---------------------------------------------------------------------------*/
+/* ---------------------------------------------------------------------------*/
+/*                                  Facettes                                  */
+/* ---------------------------------------------------------------------------*/
+/* ---------------------------------------------------------------------------*/
+
+
+#facette {
+	max-height: 200px;
+	overflow-y: scroll;
+}
+
+#facette h3 {
+	color: #FFFFFF;
+    margin-left: -10px;
+    padding-bottom: 5px;
+    padding-left: 10px;
+    padding-top: 5px;
+}
+
+#facette #facette_list {
+	border-collapse: collapse;
+}
+
+#facette #facette_list th {
+	padding-bottom: 2px;
+    padding-left: 5px;
+    padding-right: 5px;
+    padding-top: 2px;
+}
+
+#facette #facette_list a {
+	display: block;
+	padding-bottom: 2px;
+    padding-left: 5px;
+    padding-right: 5px;
+    padding-top: 2px;
+}
+	
+
+/* ---------------------------------------------------------------------------*/
+/* ---------------------------------------------------------------------------*/
+/*                               Liens Sociaux                                */
+/* ---------------------------------------------------------------------------*/
+/* ---------------------------------------------------------------------------*/
+
+
+table td div.addthis_toolbox {
+	margin-bottom: 10px;
+	margin-top: 10px;
+}
+
+a.addthis_button_facebook_like iframe {
+	height: 20px !important;
+    width: 60px !important;
+}
+
+a.addthis_button_tweet iframe {
+    width: 80px !important;
+}
+
+
+/* ---------------------------------------------------------------------------*/
+/* ---------------------------------------------------------------------------*/
+/*                                  Infopages                                 */
+/* ---------------------------------------------------------------------------*/
+/* ---------------------------------------------------------------------------*/
+
+
+/*--------page reglement--------*/
+
+
+#reglement h1 {
+	margin-bottom: 25px;
+	margin-top: 0px;
+}
+
+#reglement h3 {
+	text-decoration: underline;
+	margin-top: 15px;
+	margin-bottom: 5px;
+	font-weight: normal;
+}
+
+
+/*--------page actualites--------*/
+
+
+#actualites h1 {
+	margin-bottom: 25px;
+	margin-top: 0px;
+}
+
+#actualites .bloc_actu {
+	margin-bottom: 10px;
+	margin-top: 10px;
+}
+
+#actualites .bloc_actu h3 {
+	margin-bottom: 10px;
+	margin-top: 5px;
+}
+
+#actualites .bloc_actu table td {
+	padding: 0px;
+	text-align: justify
+}
+
+#actualites .bloc_actu table td.image {
+	padding-left: 10px;
+	text-align: justify
+}
+
+#actualites .bloc_actu table td.image img {
+	max-width: 200px;
+    max-height: 140px;
+    width: expression(this.width > 200 ? "200px" : true);
+    height: expression(this.height > 140 ? "140px" : true);
+}
+
+
+/*--------page horaires--------*/
+
+
+#horaires h1 {
+	margin-bottom: 5px;
+	margin-top: 15px;
+}
+	
+
+
+/* ---------------------------------------------------------------------------*/
+/* ---------------------------------------------------------------------------*/
+/*                                  Carroussel                                */
+/* ---------------------------------------------------------------------------*/
+/* ---------------------------------------------------------------------------*/
+
+
+#infopage_carrousel h3 span {
+    background-color: #FFFFFF;
+    margin-left: 10px;
+    margin-top: -10px;
+    padding-left: 10px;
+    padding-right: 10px;
+    position: absolute;
+}
+
+#infopage_carrousel .bx-window {
+	width: inherit !important;
+}
+
+#infopage_carrousel .bx-wrapper {
+	width: inherit !important;
+}
+
+#infopage_carrousel ul {
+	margin-top: 15px;
+	margin-bottom: 15px;
+}
+
+#infopage_carrousel ul li {
+	width: 245px !important;
+}
+
+#infopage_carrousel ul li a {
+	display: block;
+	width: 150px;
+	margin: 0 auto;
+	text-align: center;
+	text-decoration: none;
+}
+
+#infopage_carrousel ul li a img {
+	height: 150px;
+	background-repeat: no-repeat;
+	background-image: url("../../images/no_image.jpg");
+	display: block;
+	text-indent: -9999px;
+}
+
+/*next button*/
+.bx-next {
+	position: absolute;
+	z-index: 1000;
+	width: 32px;
+	height: 32px;
+	right: 10px;
+	top: 75px;
+	background-image: url("../../images/next.png");
+	background-repeat: no-repeat;
+	background-position: 0 0px;
+}
+
+/*previous button*/
+.bx-prev {
+	position: absolute;
+	z-index: 1000;
+	width: 32px;
+	height: 32px;
+	top: 75px;
+	left: 10px;
+	background-image: url("../../images/prev.png");
+	background-repeat: no-repeat;
+	background-position: 0 0px;
+}
+
+
+/* ---------------------------------------------------------------------------*/
+/* ---------------------------------------------------------------------------*/
+/*                              Page Inscription                              */
+/* ---------------------------------------------------------------------------*/
+/* ---------------------------------------------------------------------------*/
+
+
+
+#websubscribe h1 {
+	font-size: 16px;
+	margin-bottom: 5px;
+}
+
+#websubscribe #subs_form table td h4 {
+	margin: 0px;
+}
+
+#websubscribe #subs_form table td h4 {
+	margin: 0px;
+}
+
+#websubscribe #subs_form table td input.subsform {
+	width: 195px;
+	background-color: #ffffff;
+}
+
+
+/* ---------------------------------------------------------------------------*/
+/* ---------------------------------------------------------------------------*/
+/*                           Carroussel bulletin                              */
+/* ---------------------------------------------------------------------------*/
+/* ---------------------------------------------------------------------------*/
+
+
+.carroussel_bulletin {
+	text-align : center;
+}
+
+.carroussel_bulletin img {
+	border: none;
+}
+
+.carroussel_bulletin .active a {
+	color: #ffffff;
+	cursor : pointer;
+}
+
+.carroussel_bulletin .current_bull_carroussel {
+	font-weight : bold;
+}
+
+
+/* ---------------------------------------------------------------------------*/
+/* ---------------------------------------------------------------------------*/
+/*                         Balises HTML de base                               */
+/* ---------------------------------------------------------------------------*/
+/* ---------------------------------------------------------------------------*/
+
+
+a {
+	text-decoration: underline;
+}
+
+a:hover {
+	text-decoration: none;
+}
+
+blockquote {
+	margin-top: 5px;
+	margin-bottom: 10px;
+	margin-left: 0px;
+	margin-right: 0px;
+}
+
+ul {
+	margin-top: 0px;
+	margin-bottom: 0px;
+	margin-left: 0px;
+	padding-left: 0px;
+}
+
+img {
+	border: none;
+}
+
+.row {
+	clear: both;	
+}
+
+input[type=checkbox] {
+	border: none;
+}
+
+input.bouton, input.boutonrechercher {
+	/*--CSS3--*/
+	-webkit-text-shadow: 1px 1px 2px #000000;
+	-moz-text-shadow: 1px 1px 2px #000000;
+	text-shadow: 1px 1px 2px #000000;
+}
+
+input.imp_bouton {
+	/*--CSS3--*/
+	-webkit-text-shadow: 1px 1px 2px #000000;
+	-moz-text-shadow: 1px 1px 2px #000000;
+	text-shadow: 1px 1px 2px #000000;
+	background-color: #A52727;
+	color: #ffffff;
+	font-size: 11px;
+}
+
+input, select, textarea {
+	padding: 1px;
+}
+
+
+/* ---------------------------------------------------------------------------*/
+/* ---------------------------------------------------------------------------*/
+/*                                   Tableaux                                 */
+/* ---------------------------------------------------------------------------*/
+/* ---------------------------------------------------------------------------*/
+
+
+table {
+	border-collapse: separate;
+	width: 100%;
+	clear: both;
+}
+
+.exemplaires { 
+	border-collapse: separate;
+}
+
+th {
+	text-align: left ;
+}
+
+td {
+	vertical-align: top;
+}
+
+
+/* ---------------------------------------------------------------------------*/
+/* ---------------------------------------------------------------------------*/
+/*                  Mise en forme de la fiche emprunteur	                  */
+/* ---------------------------------------------------------------------------*/
+/* ---------------------------------------------------------------------------*/
+
+
+#empr_onglet ul.empr_tabs {
+	list-style:none;
+	font-size:14px;
+}
+
+ul.empr_subtabs {
+	list-style:none;
+    padding-left: 0px;
+    padding-top: 20px;
+}
+
+ul.empr_subtabs li {
+	display:inline-block;
+	margin-bottom: 5px;
+	margin-right: 5px;
+	padding: 0.4em;
+}
+
+ul.empr_subtabs li a {
+	text-decoration:none;
+}
+
+#fiche-empr,#empr-all, #empr-late, #empr-old, #empr-resa, #empr-dsi, #empr-sugg,
+#empr-list, #empr-dema {
+	margin-top: 25px;
+} 
+
+#list_cadre {
+	border: none !important;
+	padding-top: 15px !important;
+	overflow: visible ! important;
+	height: auto ! important;
+}
+
+#list_cadre img {
+	vertical-align: bottom;
+}
+
+.listedescription {
+	background-color: #ffffff;
+	padding-top: 1px;
+	padding-bottom: 1px;
+	padding-left: 5px;
+	padding-right: 5px;
+	position: absolute;
+	visibility:hidden;
+	z-index: 2000;
+}
+
+#empr-list h3 {
+	margin-top: -10px;
+}
+
+#empr-list #onglets_list {
+	margin-top: 25px;
+}
+
+#onglets_list ul.list_tabs {
+	margin-left: 0px;
+}
+
+.form_liste_lecture .form-contenu .row .colonne2 .row textarea {
+	max-width: 290px;	
+}
+
+.form_liste_lecture .row .right {
+	margin-top: 15px;
+	margin-bottom: 10px;
+}
+
+
+/* ---------------------------------------------------------------------------*/
+/* ---------------------------------------------------------------------------*/
+/*                               Notices affichage                            */
+/* ---------------------------------------------------------------------------*/
+/* ---------------------------------------------------------------------------*/
+
+
+.bg-grey {
+	padding-right: 0.2em;
+	width: 150px;
+	color: #ffffff;
+}
+
+#resultatrech_liste tbody tr td table, #resultatrech_liste tbody {
+	padding-top:5px;
+}
+
+.notice-heada {
+    font-size: 100%;
+    font-weight: bold;
+}
+
+.notice-parent {
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.notice-parent img {
+    vertical-align: bottom;
+    margin-right: 2px;
+}
+
+.parent {
+    margin-bottom: 15px;
+}
+
+.parent h3 {
+	font-size: 13px;
+}
+
+.notice-child {
+    margin-left: 20px;
+    text-align: justify;
+    margin-bottom: 20px!important;
+}
+
+.notice-child table {
+    margin-left: -2px;
+}
+
+.notice-child h3 {
+    margin-top: 10px;
+    font-size: 13px!important;
+}
+
+.notice-child table td div table tr td {
+    padding-bottom: 3px;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+.notice-child table td div table td a {
+    text-decoration: underline;
+}
+
+.notice-child table.exemplaires td a {
+    text-decoration: underline;
+}
+
+.vignetteimg {
+  max-width: 140px;
+  max-height: 200px;
+  width: expression(this.width > 140 ? "140px" : true);
+  height: expression(this.height > 200 ? "200px" : true);
+}
+
+.child {
+    margin-left: 25px;
+    padding-left: 4px;
+    padding-right: 4px;
+    text-align: justify;
+    border-bottom-style: solid;
+    border-bottom-width: 1px;
+    border-bottom-color: #c0c0c0;
+    border-left-style: solid;
+    border-left-width: 1px;
+    border-left-color: #c0c0c0;
+    border-right-style: none;
+    border-top-style: none;
+}
+
+.liste_bulletins {
+    padding-left: 3px;
+    padding-right: 3px;
+}
+
+.colonne_suite {
+  float: left;
+}
+
+
+/* ---------------------------------------------------------------------------*/
+/* ---------------------------------------------------------------------------*/
+/*                       Onglets de l'affichage public/ISBD                   */
+/* ---------------------------------------------------------------------------*/
+/* ---------------------------------------------------------------------------*/
+
+ul.onglets_isbd_public {
+    padding-bottom: 20px;
+}
+
+ul.onglets_isbd_public li {
+    display: block;
+    float: left;
+    border-right: 1px solid #000000;
+}
+
+ul.onglets_isbd_public li:last-child, ul.onglets_isbd_public li.onglet_basket {
+    border-right: none;
+}
+
+ul.onglets_isbd_public li.isbd_public_active {
+    font-weight: bold;
+}
+
+ul.onglets_isbd_public a {
+    text-decoration: none;
+    padding: 4px;
+    cursor: pointer;
+    height: 15px;
+}
+
+
+/* ---------------------------------------------------------------------------*/
+/* ---------------------------------------------------------------------------*/
+/*                                   Pop-up                                   */
+/* ---------------------------------------------------------------------------*/
+/* ---------------------------------------------------------------------------*/
+
+
+#att #serialcirc_ask_copy {
+	z-index: 100;
+}
+
+#titre-popup {
+	font-size: 16px;
+	font-weight: bold;
+	margin-top: 10px;
+	margin-bottom: 10px;
+	margin-left: 10px;
+}
+
+form#f {
+	margin-left: 10px;
+}
+
+.echelle_avis {
+	padding: 7px;
+}
+
+.alerte {
+	color: #ff0000;
+	font-size:14px;
+}
+
+
+/* ---------------------------------------------------------------------------*/
+/* ---------------------------------------------------------------------------*/
+/*                            CLASSES GENERIQUES                              */
+/*                 divers pour les affichages simples de texte                */
+/* ---------------------------------------------------------------------------*/
+/* ---------------------------------------------------------------------------*/
+
+
+.right, .right-50, .right-15, .right-85 {
+	float: right;
+}
+
+.right-50 {
+	width: 50%;
+}
+
+.right-15 {
+	width: 15%;
+}
+
+.right-85 {
+	width: 85%;
+}
+
+.right-clear-right, .right-50-clear-right {
+	float: right;
+	clear: right;
+}
+
+.left-clear-left, .left-50-clear-left {
+	float: left;
+	clear: left;
+}
+
+.left, .left-50, .left-15 {
+	float: left;
+}
+
+.left-50 {
+	width: 50%;
+}
+
+.left-15 {
+	width: 15%;
+}
+
+.left-85 {
+	width: 85%;
+}
+
+.spacer {
+	clear: both;
+	visibility: hidden;
+	display: none;
+	margin-bottom: -10px;
+	margin-top: -10px;
+}
+
+
+/* Bannettes */
+#bannette { 
+	padding:5px;
+}
+
+.bannette-container { 
+	margin-bottom: 20px;
+}
+
+#etagere-notice-list {
+	margin-left: 22px;
+	margin-bottom: 5px;	
+	margin-top: 5px;	
+}
+
+.bannette-titre h1 {
+	margin:0px;
+	font-size:13px;
+	font-weight:bold;
+}
+
+.bannette-titre h1 a {
+	margin-right: 5px;
+}
+
+.text_search0 {
+	background-color: yellow;
+	text-decoration: underline;
+}
+
+.text_search1 {
+	background-color: #dd9797;
+	text-decoration: underline;
+}
+
+.text_search2 {
+	background-color: #ddb397;
+	text-decoration: underline;
+}
+
+.text_search3 {
+	background-color: #cd97dd;
+	text-decoration: underline;
+}
+
+.text_search4 {
+	background-color: #97c2dd;
+	text-decoration: underline;
+}
+
+.text_search5 {
+	background-color: #97ddae;
+	text-decoration: underline;
+}
+
+.etiq_champ {
+	font-weight:bold;
+}
+
+/*Suggestion Multiple*/
+
+.tab_sug{
+	table-layout: fixed;
+}
+
+.tab_sug th, .tab_sug td{
+	border:1px solid #CCCCCC;
+	border-collapse:collapse;
+	overflow:hidden;	
+	vertical-align:center;
+	text-align: center;
+	width : 100%;
+}
+
+.tab_sug  input, .tab_sug textarea{
+   width:95%;
+   height:100%;
+}
+.tab_sug select{
+	width:95%;
+}
+
+.erreur_saisie {
+	background-color: #ff0000;
+}
+
+.categmouseout {
+	border: solid 2px #555555;
+	position: absolute;
+	visibility:hidden;
+	background-color: #ffffff;
+	z-index: 2000;
+}
+.categmouseover {
+	border: solid 2px #555555;
+	position: absolute;
+	visibility:visible;
+	background-color: #ffffff;
+	z-index: 2000;
+	margin-top: 2px;
+}
+
+
+

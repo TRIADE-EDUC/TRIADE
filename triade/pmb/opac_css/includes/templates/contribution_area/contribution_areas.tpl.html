@@ -1,0 +1,44 @@
+<!-- $Id: contribution_areas.tpl.html,v 1.4 2017-09-04 12:47:43 tsamson Exp $ -->
+
+{% if areas | length %}
+<style type="text/css">
+	.contribution_area_table {
+		display: table;
+		text-align: center;
+		width:100%;
+		border-spacing: 10px;
+		table-layout: fixed;
+	}
+	
+	.contribution_area_table_row {
+		display: table-row;
+	}
+	
+	.contribution_area_table_cell {
+		display: table-cell;
+		vertical-align: middle;
+		height: 200px;
+		font-weight: bold;
+	}
+	
+	.contribution_area_table_cell:hover {
+		text-shadow: initial;
+	}
+</style>
+
+<div class='contribution_area_table'>
+	<div class='contribution_area_table_row'>
+		{% for area in areas %}
+			<a class='contribution_area_table_cell' style='border: 5px solid {{ area.color }};' href='./index.php?lvl=contribution_area&sub=area&id={{ area.id }}'>
+				<p class='contribution_area_table_title'>{{ area.title }}</p>
+				<p class='contribution_area_table_comment'>{{ area.comment }}</p>
+			</a>
+			{% if !loop.last %}
+				{% cycle "", "", "</div><div class='contribution_area_table_row'>" %}
+			{% endif %}
+		{% endfor %}
+	</div>
+</div>
+{% else %}
+	{{ msg.empr_contribution_area_no_area }}
+{% endif %}

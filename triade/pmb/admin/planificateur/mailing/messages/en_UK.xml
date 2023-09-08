@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- messages localisés en français pour le mailing
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: en_UK.xml,v 1.3 2019-03-14 10:36:01 tsamson Exp $ -->
+
+<XMLlist>
+	<entry code="planificateur_mailing_template">E-mail template</entry>
+	<entry code="planificateur_mailing_caddie_empr">Recipient borrower's basket</entry>
+	<entry code="mailing_unknown">E-mail template or basket of unknown borrowers</entry>
+	<entry code="planificateur_mailing_email_cc">Additional recipient in hidden copy</entry>
+	<entry code="planificateur_mailing_empr_search_perso">Predefined search for recipient borrowers</entry>
+	<entry code="planificateur_mailing_empr_choice">Select your borrowers</entry>
+</XMLlist>

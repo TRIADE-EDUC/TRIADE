@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<!-- Fichier manifest de description des méthodes disponibles
+****************************************************************************************
+© 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: manifest.xml,v 1.3 2015-06-19 07:31:23 mbertin Exp $ -->
+<manifest>
+	<name>pmbesDatabase</name>
+	<description>msg:pmbesDatabase_description</description>
+	<requirements/>
+	<methods>
+		<method name="get_version_informations" rights="" version="1.0" language_independant="false" comment="msg:get_version_informations_description">
+			<inputs />
+			<outputs>
+				<description>msg:get_version_informations_output_description</description>
+				<result name="currentVersion" type="scalar" dataType="string" description="msg:get_version_informations_output_current_version"/>
+				<result name="currentSubVersion" type="scalar" dataType="string" description="msg:get_version_informations_output_current_subversion"/>
+				<result name="shouldbeVersion" type="scalar" dataType="string" description="msg:get_version_informations_output_shouldbe_version"/>
+				<result name="shouldbeSubVersion" type="scalar" dataType="string" description="msg:get_version_informations_output_shouldbe_subversion"/>
+			</outputs>
+		</method>		
+		<method name="need_update" rights="" version="1.0" language_independant="false" comment="msg:need_update_description">
+			<inputs />
+			<outputs>
+				<result name="need" type="scalar" dataType="boolean" description="msg:need_update_output_need"/>
+			</outputs>
+		</method>
+		<method name="update" rights="" version="1.0" language_independant="false" comment="msg:update_description">
+			<inputs />
+			<outputs>
+				<result name="result" type="scalar" dataType="boolean" description="msg:update_output_result"/>
+				<result name="informations" type="scalar" dataType="string" description="msg:update_output_informations"/>
+			</outputs>
+		</method>
+	</methods>
+</manifest>

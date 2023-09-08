@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- messages localisés en français pour le nettoyage de la base PMB
+****************************************************************************************
+© 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: fr_FR.xml,v 1.3 2018-11-13 12:14:03 dgoron Exp $ -->
+
+<XMLlist>
+	<entry code="scheduler_caddie_type">Choisissez un type de panier</entry>
+	<entry code="scheduler_caddie_list">Sélectionner un ou plusieurs paniers</entry>
+	<entry code="scheduler_caddie_action">Choisissez une action</entry>
+	<entry code="scheduler_caddie_proc_no_rights">Vous n'avez pas le droit d'exécuter cette procédure</entry>
+	<entry code="scheduler_caddie_action_no_caddie">Aucun panier sélectionné</entry>
+</XMLlist>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le module Article
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_common_selector_type_article.xml,v 1.4 2015-03-05 15:12:06 arenou Exp $ -->
+
+<XMLlist>	
+	<entry code="cms_module_common_selector_type_editorial_label">Type de contenu d'articles</entry>	
+	<entry code="cms_module_common_selector_type_editorial_fields_label">Liste des champs</entry>
+	<entry code="cms_module_common_selector_env_var">Depuis une variable d'environnement</entry>
+	<entry code="cms_module_common_selector_article">Sélection manuelle</entry>
+	<entry code="cms_module_common_selector_sub_choice_label">Sélecteur pour l'article</entry>
+</XMLlist>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le module Article
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_docnumslist_datasource_docnumslist.xml,v 1.2 2017-04-25 09:23:01 arenou Exp $ -->
+
+<XMLlist>
+	<entry code='cms_module_docnumslist_datasource_docnumslist_facette_form'>Grouper selon des facettes de notices</entry>
+	<entry code='cms_module_docnumslist_datasource_docnumslist_facette_crit'>Critère Principal</entry>
+	<entry code='cms_module_docnumslist_datasource_docnumslist_facette_active'>Groupement(s) Actif(s)</entry>
+	<entry code='cms_module_docnumslist_datasource_docnumslist_facette_ss_crit'>Sous critère</entry>
+	<entry code='cms_module_docnumslist_datasource_docnumslist_unknown'>Inconnu</entry>
+</XMLlist>

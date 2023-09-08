@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le module Article
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_docnumslist_view_docnumslist.xml,v 1.3 2015-12-03 14:01:27 arenou Exp $ -->
+
+<XMLlist>
+	<entry code='cms_module_docnumslist_view_fullsceen'>Plein Ecran</entry>
+	<entry code='cms_module_docnumslist_view_reduce'>Retour</entry>
+	<entry code='cms_module_docnumslist_view_pager_previous'>&lt; Précédent</entry>
+	<entry code='cms_module_docnumslist_view_pager_next'>Suivant &gt;</entry>
+</XMLlist>

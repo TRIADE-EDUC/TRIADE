@@ -1,0 +1,11 @@
+<!-- $Id: explnum_in_list.tpl.html,v 1.5 2017-11-22 14:47:47 dgoron Exp $ -->
+<div class="notice-parent" id="el{{list_element.explnum_id}}Parent">
+	<span class="notice-heada">
+		{% if list_element.explnum_notice %}
+			<a href="./catalog.php?categ=edit_explnum&id={{ list_element.explnum_notice }}&explnum_id={{ list_element.explnum_id }}">{{ list_element.explnum_nom }}</a>
+		{% else %}
+			<a href="./catalog.php?categ=serials&sub=bulletinage&action=explnum_form&bul_id={{ list_element.explnum_bulletin }}&explnum_id={{ list_element.explnum_id }}">{{ list_element.explnum_nom }}</a>
+		{% endif %}
+		<a href="./doc_num.php?explnum_id={{ list_element.explnum_id }}" target="__LINK__"><img src="{{ img.globe_orange.png }}" alt="doc" title="doc" style="border:0px; margin:3px 3px" class="align_middle"></a>
+	</span>
+</div>

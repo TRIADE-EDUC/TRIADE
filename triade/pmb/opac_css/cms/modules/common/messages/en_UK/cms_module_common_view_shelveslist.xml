@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le module Article
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_common_view_shelveslist.xml,v 1.3 2018-02-12 15:56:01 dgoron Exp $ -->
+
+<XMLlist>
+	<entry code="cms_module_common_view_shelveslist_build_shelve_link">Creation of the link to a shelf</entry>
+	<entry code="cms_module_common_view_shelveslist_build_shelve_nb_notices">Number of records to display per shelf</entry>
+	<entry code="cms_modulecommon_view_shelveslist_desc">List of shelves</entry>
+	<entry code="cms_modulecommon_view_shelveslist_id_desc">ID</entry>
+	<entry code="cms_modulecommon_view_shelveslist_name_desc">Name</entry>
+	<entry code="cms_modulecommon_view_shelveslist_link_desc">Link to a shelf</entry>
+	<entry code="cms_modulecommon_view_shelveslist_link_rss_desc">Link of the RSS feed</entry>
+	<entry code="cms_modulecommon_view_shelveslist_comment_desc">Comment</entry>
+	<entry code="cms_modulecommon_view_shelveslist_records_desc">List of records</entry>
+	<entry code="cms_modulecommon_view_shelveslist_link_add_to_cart">Link to add shelf content to basket</entry>
+	<entry code='cms_module_common_view_shelveslist_django_directory'>Répertoire de templates à utiliser</entry>
+</XMLlist>

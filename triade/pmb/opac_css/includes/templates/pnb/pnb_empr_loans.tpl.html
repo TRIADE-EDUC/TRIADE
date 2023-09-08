@@ -1,0 +1,29 @@
+<!-- $Id: pnb_empr_loans.tpl.html,v 1.3 2018-06-29 15:19:21 vtouchard Exp $ -->
+
+<h3><span>{{ msg.empr_pnb_current_loans_list }}</span></h3>
+
+{% if loans | length %} 
+	<table class="liste-expl-empr-all" style="width: 100%">
+		<tbody>
+			<tr>
+				<th>{{ msg.title }}</th>
+				<th>{{ msg.empr_sugg_aut }}</th>
+				<th class="center">{{ msg.date_loan }}</th>
+				<th class="center">{{ msg.date_back }}</th>
+				<th class="center">{{ msg.opac_titre_champ_nb_prolongation }}</th>
+			</tr>
+			{% for loan in loans %}
+				<tr class="even " onmouseover="this.className='surbrillance '" onmouseout="this.className='even '">
+					<td onmousedown="document.location='./index.php?lvl=notice_display&id={{ loan.num_notice_mono }}&seule=1';"	style="cursor: pointer" column_name="{{ msg.title }}">{{ loan.tit }}</td>
+					<td column_name="{{ msg.empr_sugg_aut }}">{{ loan.author }}</td>
+					<td column_name="{{ msg.date_loan }}" class="center">{{ loan.aff_pret_date }}</td>
+					<td column_name="{{ msg.date_back }}" class="center">{{ loan.aff_pret_retour }}</td>
+					<td column_name="{{ msg.opac_titre_champ_nb_prolongation }}" class="center"><input type="button" class="bouton" value="{{ msg.empr_pnb_loan_extend }}" data-attribute-expl="{{ loan.expl_id }}"/></td>
+					<td column_name="{{ msg.opac_titre_champ_nb_prolongation }}" class="center"><input type="button" class="bouton" value="{{ msg.empr_pnb_loan_redownload }}" onclick="window.open('{{ loan.epub_link }}', '_blank')" data-attribute-expl="{{ loan.expl_id }}"/></td>
+				</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+{% else %} 
+	{{ msg.empr_pnb_no_current_loans }} 	
+{% endif %}

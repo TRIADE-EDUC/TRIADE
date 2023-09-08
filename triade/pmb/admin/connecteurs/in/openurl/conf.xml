@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- configuration du connecteurs entrant OpenURL
+****************************************************************************************
+© 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: conf.xml,v 1.1 2011-08-02 12:35:58 arenou Exp $ -->
+
+<configuration>
+	<transport>
+		<protocole>http</protocole>
+		<method>inline</method>
+		<parameters></parameters>
+	</transport>
+	<serialization>kev</serialization>
+	<entities>
+		<entity type='referent'>
+			<identifiers>
+				<identifier name='issn' allow='yes'/>
+				<identifier name='isbn' allow='yes'/>
+				<identifier name='pmid' allow='no'/>
+				<identifier name='doi' allow='no'/>
+			</identifiers>
+			<byvalue allow='yes'/>
+			<byreference allow='no'/>
+			<private allow='no'/>
+		</entity>
+		<entity type='referring_entity' allow='yes'>
+			<identifiers>
+				<identifier name='issn' allow='yes'/>
+				<identifier name='isbn' allow='yes'/>
+				<identifier name='pmid' allow='yes'/>
+				<identifier name='doi' allow='yes'/>
+			</identifiers>
+			<byvalue allow='no'/>
+			<byreference allow='no'/>
+			<private allow='no'/>		
+		</entity>
+		<entity type='requester' allow='no'>
+			<parameter>mailto:pmb@sigb.net</parameter>
+		</entity>
+		<entity type='service_type' allow='yes'>
+			<service name='abstract' default_value='1'/>
+			<service name='citation' default_value='1'/>
+			<service name='fulltext' default_value='1'/>
+			<service name='holdings' default_value='0'/>
+			<service name='ill' default_value='1'/>
+			<service name='any' default_value='1'/>
+		</entity>
+		<entity type='resolver' allow='no'>
+			<parameter></parameter>
+		</entity>
+		<entity type='referrer' allow='yes'>
+			<parameter>http://sigb.net</parameter>
+		</entity>
+	</entities>
+</configuration>

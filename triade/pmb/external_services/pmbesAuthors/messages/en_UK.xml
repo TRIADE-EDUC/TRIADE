@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- messages localisés en français pour la classe de fonctions search_functions
+****************************************************************************************
+© 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: en_UK.xml,v 1.2 2015-06-26 12:36:50 pmbs Exp $ -->
+
+<!DOCTYPE XMLlist SYSTEM "../../../includes/XMLlist.dtd" >
+<XMLlist>
+
+<!--
+pmbesAuthor
+-->
+	<entry code="pmbesAuthors_description">Functions related to the authors</entry>
+<!--
+get_author_information
+-->
+<entry code="get_author_information_description">Returns informations of an author from his id</entry>
+<entry code="get_author_information_input_description"></entry>
+<entry code="get_author_information_output_description"></entry>
+<entry code="get_author_information_author_id">Author id</entry>
+<entry code="get_author_information_result">Informations</entry>
+<!--
+list_author_notices
+-->
+<entry code="list_author_notices_description">List an author's records</entry>
+<entry code="list_author_notices_input_description"></entry>
+<entry code="list_author_notices_output_description"></entry>
+<entry code="list_author_notices_author_id">Author id</entry>
+<entry code="list_author_notices_OPACUserId">A borrower's id, to filter the results by access rights
+	-1: Do not take into account
+	0: anonymous borrower
+	x: Borrower's id</entry>
+<entry code="list_author_notices_notice_ids">Ids of records related to the author</entry>
+
+<!--
+get_author_information_and_notices
+-->
+<entry code="get_author_information_and_notices_description"><![CDATA[Combines the functions get_author_information & list_author_notices]]></entry>
+<entry code="get_author_information_and_notices_input_description">See the input of combined functions</entry>
+<entry code="get_author_information_and_notices_output_description">See the output of combined functions</entry>
+<entry code="get_author_information_and_notices_author_id"></entry>
+<entry code="get_author_information_and_notices_OPACUserId"></entry>
+<entry code="get_author_information_and_notices_information"></entry>
+<entry code="get_author_information_and_notices_notice_ids"></entry>
+
+</XMLlist>

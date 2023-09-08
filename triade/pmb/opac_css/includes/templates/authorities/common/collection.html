@@ -1,0 +1,65 @@
+{% extends 'gabarit.html' %}
+
+<!-- $Id: collection.html,v 1.5 2017-11-22 14:51:42 dgoron Exp $ -->
+
+{% block header %}
+	<h3><span>{{ msg.detail_coll }}</span></h3>
+{% endblock %}
+
+{% block aut_see %}
+	<div class="collectionlevel2">
+		{{ block.super }}
+	</div>
+{% endblock %}
+	
+{% block title %}
+	<h3>
+		{{ authority.name }} {% if authority.collection_web %} <a target="_blank" href="{{ authority.collection_web }}"><img src='{{ img.globe.gif }}'/></a>{% endif %}
+	</h3>
+{% endblock %}
+
+{% block details %}
+	<div class="aut_display_row">
+		<div class="aut_display_cell">
+			<b>{{ msg.collection_tpl_publisher }} :</b>
+		</div>
+		<div class="aut_display_cell">
+			<a href="./index.php?lvl=publisher_see&id={{ authority.parent }}">{{ authority.publisher_libelle }}</a>
+		</div>
+	</div>
+	<div class="aut_display_row">
+		<div class="aut_display_cell">
+			<b>{{ msg.collection_tpl_issn }} :</b>
+		</div>
+		<div class="aut_display_cell">
+			{% if authority.issn %}{{ authority.issn }}{% else %}{{ msg.collection_tpl_no_issn }}{% endif %}
+		</div>
+	</div>
+	{% if authority.comment %}
+		<div class="aut_display_row">
+			<div class="aut_display_cell">
+				<b>{{ msg.comment }} :</b>
+			</div>
+			<div class='aut_comment aut_display_cell'>
+				{{ authority.comment | nl2br }}
+			</div>
+		</div>
+	{% endif %}
+	{% for subcollection in authority.subcollections %}
+		{% if loop.first %}
+			<div class="aut_display_row">
+				<div class="aut_display_cell">
+					<b>{{ msg.subcollection_attached }} :</b>
+				</div>
+				<div class='aut_comment aut_display_cell'>
+					<ul>
+		{% endif %}	
+				<li><a href="./index.php?lvl=subcoll_see&id={{ subcollection.db_id }}">{{ subcollection.name }}</a></li>
+		{% if loop.last %}
+					</ul>
+				</div>
+			</div>
+			<div class='row'></div>
+		{% endif %}
+	{% endfor %}
+{% endblock %}

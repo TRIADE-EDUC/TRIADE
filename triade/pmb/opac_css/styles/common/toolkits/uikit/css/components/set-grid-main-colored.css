@@ -1,0 +1,16 @@
+@charset "utf-8";
+/* CSS Document */
+
+body#pmbopac{
+	visibility:hidden;
+}
+body.popup,
+body#pmbopac.ready{
+	visibility:visible;
+	
+}
+.ui-empty-item,
+.ui-empty-item *{
+	padding: 0!important;
+	margin: 0!important;
+}

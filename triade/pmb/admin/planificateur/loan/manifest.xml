@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- gestion des commandes pour les prêts
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: manifest.xml,v 1.2 2012-07-31 10:12:16 dgoron Exp $ -->
+
+<manifest>
+	<capacities>
+		<nostates>
+			<state name="STOPPED"/>
+		</nostates>
+		<states>
+			<state name="STOPPED">
+				<nocommand commands="RESUME"/>
+			</state>
+			<state name="SUSPENDED">
+				<nextState commands="FLUSH">SUSPENDED</nextState>
+			</state>
+		</states>
+		<commands/>
+	</capacities>
+	<directory_upload>1</directory_upload>
+</manifest>

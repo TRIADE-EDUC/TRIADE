@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour la classe datasource
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_common_view_authority_from_template_folder.xml,v 1.1 2016-05-12 16:31:43 apetithomme Exp $ -->
+
+<XMLlist>
+	<entry code="cms_module_common_view_authority_content_desc">Contenu du template de l'autorité</entry>
+	<entry code="cms_module_common_view_authority_used_template_folder">Dossier de templates à utiliser</entry>
+</XMLlist>

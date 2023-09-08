@@ -1,0 +1,156 @@
+/* +--------------------------------------------------------------------------+
+// 2013 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// +-------------------------------------------------+
+// $Id: record-display-cutsom.css,v 1.3 2017-05-23 12:17:15 wlair Exp $ */
+/*------------------------------------------------------------------------------------------*/
+
+
+/* Avis
+ ========================================================================== */
+.avisN {
+	display: -ms-flexbox;
+	display: -webkit-flex;
+	display: flex;
+	-ms-flex-align: center;
+	-webkit-align-items: center;
+	align-items: center;
+	flex: 1 1 0%;
+	-ms-flex: 1 1 0%;
+	-webkit-flex: 1 1 0%;
+}
+
+.avisN a {
+	text-decoration: none;
+	font-weight: inherit;
+	padding: 2px 7px 2px 7px;
+	background-color: #ffffff;
+}
+.avisN a:hover,
+.avisNCourte a:hover{
+	text-decoration: none;	
+}
+span.avisN {
+	margin: inherit;
+	background-color: #f9f9f9!important;
+}
+div.lienP,
+div[class='onglet_basketNotCourte'],
+div[class='avisNCourte'],
+div[class='tagsNCourte'],
+div[class='listeLectureNCourte'] a,
+div[class='suggestNCourte'],
+div[class='onglet_basketNot'] a.img_basketNot,
+div[class='tagsN'],
+div[class='suggestN'],
+div[class='docnumNCourte docnumNCourtePermalink'],
+div[class='docnumNCourte'],
+div[class='listeLectureN'] a,
+div[class='avisN'],
+span.imgComment,
+span.imgStatutPartN,
+span.imgDocNum,
+div[class='onglet_basketNotCourte'] a span:nth-child(1) img,
+div[class='avisNCourte']  span:nth-child(1) img,
+a[class='img_basketNot']  span:nth-child(1) img,
+span.img_permalink,
+span.imgTag,
+span.imgSuggest,
+.listeLectureN a span:first-child,
+span.ExtnotCom.imgListeLecture {
+	background-color: #4180b5;
+}
+.lienP span.label_permalink,
+div[class='onglet_basketNotCourte'] a span:nth-child(2),
+div[class='avisNCourte'] span:nth-child(2),
+div[class='tagsNCourte'] span:nth-child(2),
+div[class='suggestNCourte'] span:nth-child(2),
+div[class='listeLectureNCourte'] a span:nth-child(2),
+div[class='onglet_basketNot'] a span:nth-child(2),
+div[class='tagsN'] span:nth-child(2),
+div[class='suggestN'] span:nth-child(2),
+div[class='docnumNCourte docnumNCourtePermalink'] span:nth-child(2),
+div[class='docnumNCourte'] span:nth-child(2),
+div[class='listeLectureN'] a span:nth-child(2),
+.lienP,
+span.avisN>a {
+	background-color: #ffffff;
+	box-shadow: none;
+}
+span.avisN>a{
+	width:100%;
+}
+.wyr #blocNotice_descr ul.onglets_isbd_publicNot .isbd_public_active a{
+	display:block;
+	margin:0;
+}
+#blocNotice_descr ul.onglets_isbd_publicNot li{
+	padding:0;
+	margin:0;
+}
+/* details
+ ========================================================================== */
+.resume_notCourte span {
+}
+
+.infoCompl_notCourte {
+	font-weight: 500;
+}
+
+.infoCompl_notCourte span {
+	font-size: 1em;
+	color: inherit;
+}
+
+.title_notCourte h3 {
+	font-size: 1.15em;
+	font-weight: 500;
+}
+
+.title_notCourte h3 a {
+}
+.plusN a{
+	font-weight:600;
+}
+/* Smart display
+ ========================================================================== */
+.parentNotCourte:last-child {
+	padding: 20px 5px 0px;
+	border-bottom: 0px solid #e7e7e7;
+}
+/* Panier
+ ========================================================================== */
+div[class='onglet_basketNot'] a.img_basketNot{
+	flex: 1 1 0%;
+	-ms-flex: 1 1 0%;
+	-webkit-flex: 1 1 0%;	
+}
+.onglet_basketNot .img_basketNot img{
+	margin:0;
+	background-color: #4180b5;
+}
+a.img_basketNotCourte:hover{
+	text-decoration:inherit;
+}
+/* grid reset
+ ========================================================================== */
+.record-footer:after {
+	content:"";
+	display:block;
+	margin-top:10px;
+	border-bottom: 1px solid #e7e7e7;
+}
+.parentNotCourt:last-child :after {
+	border-bottom:0px solid #e7e7e7;
+}
+/* Permalink
+ ========================================================================== */
+.lienP {
+	border:none;
+}
+div.lienP a{
+	-webkit-flex:1 1 auto;
+	-moz-flex:1 1 auto;
+	-ms-flex:1 1 auto;
+	flex:1 1 auto;
+	background-color: transparent;
+}

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+
+<!-- Declaration d'un connecteur
+****************************************************************************************
+© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: manifest.xml,v 1.1 2018-05-04 10:01:53 ngantier Exp $ -->
+
+<manifest>
+	<name>fluxrss</name>
+	<repository>yes</repository>
+	<comment>Flux RSS</comment>
+	<author>Nicolas Gantier</author>
+	<org>PMB Services</org>
+	<date>2018-04-26</date>
+	<status>open</status>
+	<url>http://www.sigb.net</url>
+	<enrichment>yes</enrichment>
+</manifest>

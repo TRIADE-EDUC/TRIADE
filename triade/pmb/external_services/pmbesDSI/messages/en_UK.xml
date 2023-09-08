@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- messages localisés en français pour la classe de fonctions search_functions
+****************************************************************************************
+© 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: en_UK.xml,v 1.1 2015-06-15 12:55:34 pmbs Exp $ -->
+
+<!DOCTYPE XMLlist SYSTEM "../../../includes/XMLlist.dtd" >
+<XMLlist>
+<!-- 
+pmbesDSI
+-->
+  <entry code="DSI_functions_description">Functions related to the SDI</entry>
+<!-- 
+listBannettesAuto
+-->
+  <entry code="listBannettesAuto_description">List of automatic SDI baskets</entry>
+  <entry code="listBannettesAuto_input_description"></entry>
+  <entry code="listBannettesAuto_filtre_search">Search filter</entry>  
+  <entry code="listBannettesAuto_id_classement">Sorting identifier</entry>  
+  <entry code="listBannettesAuto_output_description"></entry>
+  <entry code="listBannettesAuto_result">Returns the list of SDI baskets</entry>   
+<!-- 
+diffuseBannettesFullAuto
+-->  
+  <entry code="diffuseBannettesFullAuto_description">Dissemination of the list of automatic SDI baskets</entry>
+  <entry code="diffuseBannettesFullAuto_input_description"></entry>
+  <entry code="diffuseBannettesFullAuto_lst_bannettes">List of SDI baskets</entry>
+  <entry code="diffuseBannettesFullAuto_output_description"></entry>  
+  <entry code="diffuseBannettesFullAuto_result">Returns the dissemination report</entry>  
+ <!-- 
+diffuseBannetteFullAuto
+-->
+  <entry code="diffuseBannetteFullAuto_description">Dissemination of an automatic SDI basket</entry>
+  <entry code="diffuseBannetteFullAuto_input_description"></entry>
+  <entry code="diffuseBannetteFullAuto_id_bannette">Identifier of the SDI basket</entry>
+  <entry code="diffuseBannetteFullAuto_output_description"></entry>  
+  <entry code="diffuseBannetteFullAuto_result">Returns the dissemination report</entry>
+<!-- 
+flushBannette
+-->
+  <entry code="flushBannette_description">Emptying of an automatic SDI basket</entry>
+  <entry code="flushBannette_input_description"></entry>
+  <entry code="flushBannette_id_bannette">Identifier of the SDI basket</entry> 
+  <entry code="flushBannette_output_description"></entry>
+  <entry code="flushBannette_result">Returns the emptying report</entry>
+<!-- 
+fillBannette
+-->
+  <entry code="fillBannette_description">Filling of an automatic SDI basket</entry>
+  <entry code="fillBannette_input_description"></entry>
+  <entry code="fillBannette_id_bannette">Identifier of the SDI basket</entry>  
+  <entry code="fillBannette_output_description"></entry>
+  <entry code="fillBannette_result">Returns the filling report</entry>
+<!-- 
+diffuseBannette
+-->
+  <entry code="diffuseBannette_description">Dissemination of an automatic SDI basket</entry>
+  <entry code="diffuseBannette_input_description"></entry>
+  <entry code="diffuseBannette_id_bannette">Identifier of the SDI basket</entry>
+  <entry code="diffuseBannette_output_description"></entry> 
+  <entry code="diffuseBannette_result">Returns the dissemination report</entry>
+<!-- 
+exportBannette
+-->
+  <entry code="exportBannette_description">Export of an automatic SDI basket</entry>
+  <entry code="exportBannette_input_description"></entry>
+  <entry code="exportBannette_id_bannette">Identifier of the SDI basket</entry>
+  <entry code="exportBannette_output_description"></entry> 
+  <entry code="exportBannette_result">Returns the export result</entry>    
+</XMLlist>

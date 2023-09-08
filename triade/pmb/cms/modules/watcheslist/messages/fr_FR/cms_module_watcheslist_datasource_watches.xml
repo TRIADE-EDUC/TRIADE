@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour la classe datasource
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_watcheslist_datasource_watches.xml,v 1.4 2015-03-11 16:27:25 arenou Exp $ -->
+
+<XMLlist>
+	<entry code='cms_module_watcheslist_selector_watches_generic'>Sélection directe des veilles</entry>
+	<entry code='cms_module_watcheslist_view_watches_desc'>Tableau des veilles</entry>
+</XMLlist>

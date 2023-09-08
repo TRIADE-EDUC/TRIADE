@@ -1,0 +1,131 @@
+<!-- $Id: frbr_cataloging_links_form.html,v 1.3 2018-02-22 15:19:36 tsamson Exp $ -->
+
+<form class="form-'.$current_module.'" style="height:100%" name="addEntityLink" method="post" id="addEntityLink">
+	<h3>
+	{% if not scheme.id %}
+		{{ msg.frbr_cataloging_scheme_new }}
+	{% endif %}
+	{% if scheme.id %}
+		{{ scheme.name }}
+	{% endif %}
+	</h3>
+	
+	<div class="form-contenu">
+		<input type="hidden" id="source_type" name="source[type]" value="{{source.type}}" />
+		<input type="hidden" id="source_id" name="source[id]" value="{{source.id}}" />
+		<input type="hidden" id="target_type" name="target[type]" value="{{target.type}}" />
+		<input type="hidden" id="target_id" name="target[id]" value="{{target.id}}" />
+		<div class='row'>
+			<div class='colonne3'>
+				<label>{{ msg.frbr_cataloging_scheme_entity }} source: </label>
+			</div>
+			<div class='colonne-suite'>
+				<span>{{ source.label }}</span>
+			</div>
+		</div>
+		
+		<div class='row' id='scheme_entities'>
+			<div class='colonne3'>
+				<label>{{ msg.frbr_cataloging_scheme_entity }} destination: </label>
+			</div>
+			<div class='colonne-suite'>
+				<span>{{ target.label }}</span>
+			</div>
+		</div>
+		
+		<input type="hidden" id="current_index" value="0">
+		<div class='row'>
+			<div class='colonne3'>
+				&nbsp;
+			</div>
+		</div>
+	</div>
+	<div class="right">
+		<input type="button" class="bouton" value="{{msg.resa_planning_bt_val}}" id="button_validate"/>
+	</div>
+</form>
+<script type='text/javascript'>
+	require(["dojo/dom-construct", "dojo/dom", "dojo/on", "dojo/_base/lang", "dojo/request/iframe", "dojo/topic"],
+	function(domConstruct, dom, on, lang, iframe, topic){
+		var entitiesLinks = {{ entities_links }};
+		var sourceEntity = dom.byId('source_type');
+		var entityDroppedId = {{ source.id }}
+		var entityDroppedType = '{{ source.type }}';
+		
+		
+		domConstruct.create('hr', {}, 'scheme_entities');
+		var colonne3 = domConstruct.create('div', {'class' : 'colonne3'}, 'scheme_entities');
+		domConstruct.create('label', {innerHTML : '{{ msg.frbr_cataloging_scheme_entity_link }}' }, colonne3);
+		var colonneSuite = domConstruct.create('div', {'class' : 'colonne-suite'}, 'scheme_entities');
+		var subSelect = domConstruct.create('select', {name : 'link', id : 'link'}, colonneSuite);
+		domConstruct.create('option', {innerHTML : '{{msg.frbr_cataloging_scheme_choose_entity_link}}', value : 0}, subSelect);
+		
+		on(dom.byId('button_validate'), 'click', function(){
+			iframe('./ajax.php?module=frbr&categ=cataloging&sub=graph&action=add_link',{
+					form: dom.byId('addEntityLink'),
+					handleAs: 'json',
+			}).then(lang.hitch(this, function(data){
+				topic.publish('PopupAddLink', 'linkCreated', {data: data, entity:{id:entityDroppedId, type: entityDroppedType}}); 
+			}));
+		});
+			
+		for (var link in entitiesLinks[sourceEntity.value]) {
+			domConstruct.create('option', {innerHTML : entitiesLinks[sourceEntity.value][link].label, value : link}, subSelect);
+		}
+
+		on(subSelect, 'change', function(e) {
+			removeParentNodeNextSiblings(e.target);
+			var linkType = entitiesLinks[sourceEntity.value][e.target.value].type;
+			createDomLinkType(linkType);
+			createDomEntitiesLinked(entitiesLinks[sourceEntity.value][subSelect.value].linked_entities);
+		});
+		
+		function createDomLinkType(linkType) {
+			if (linkType) {
+				var colonne3 = domConstruct.create('div', {'class' : 'colonne3'}, 'scheme_entities');
+				domConstruct.create('label', {innerHTML : '{{ msg.frbr_cataloging_scheme_entity_link_type }}' }, colonne3);
+				var colonneSuite = domConstruct.create('div', {'class' : 'colonne-suite'}, 'scheme_entities');
+				var subSelect = domConstruct.create('select', {name : 'link_type[' + linkType.type_name + ']', id : 'link_type_' + linkType.type_name}, colonneSuite);
+				
+				domConstruct.create('option', {innerHTML : '{{msg.frbr_cataloging_scheme_choose_entity_link_type}}', value : 0}, subSelect);
+				if (Object.keys(linkType.type_kinds).length) {
+					for(var key in linkType.type_kinds) {
+						if ((typeof linkType.type_kinds[key] == "object") || (typeof linkType.type_kinds[key] == "Array")) {
+							var optgroup = domConstruct.create('optgroup', {label : key}, subSelect);
+							for(var key2 in linkType.type_kinds[key]) {
+								domConstruct.create('option', {innerHTML : linkType.type_kinds[key][key2], value : key2}, optgroup);
+							}
+						} else {
+							domConstruct.create('option', {innerHTML : linkType.type_kinds[key], value : key}, subSelect);
+						}
+					}
+				}
+			}
+		}
+		
+		function createDomEntitiesLinked(sourceEntity) {
+			dom.byId('current_index').value = parseInt(dom.byId('current_index').value) + 1;
+			var current_index = dom.byId('current_index').value;
+			var colonne3 = domConstruct.create('div', {'class' : 'colonne3'}, 'scheme_entities');
+			domConstruct.create('label', {innerHTML : '{{ msg.frbr_cataloging_scheme_linked_entity }}' }, colonne3);
+			var colonneSuite = domConstruct.create('div', {'class' : 'colonne-suite'}, 'scheme_entities');
+			if (sourceEntity.length > 1) {
+				var subSelect = domConstruct.create('select', {name : 'source_entity', id : 'source_entity'}, colonneSuite);
+				domConstruct.create('option', {innerHTML : '{{msg.frbr_cataloging_scheme_choose_entity}}', value : 0}, subSelect);
+				for (var i = 0; i < sourceEntity.length; i++) {
+					domConstruct.create('option', {innerHTML : (sourceEntity[0].label ? sourceEntity[0].label : sourceEntity[0].name), value : sourceEntity[i].name}, subSelect);	
+				}
+			} else if (sourceEntity.length == 1) {
+				domConstruct.create('span', {innerHTML : (sourceEntity[0].label ? sourceEntity[0].label : sourceEntity[0].name) }, colonneSuite);
+			}
+		}
+
+		function removeParentNodeNextSiblings(node) {
+			while (node.parentNode.nextSibling) {
+				domConstruct.destroy(node.parentNode.nextSibling);
+			}
+			var res = node.id.split('_')
+			dom.byId('current_index').value = parseInt(res[res.length-1]);
+		}
+	});
+</script>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le module Articleslist
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_articleslist.xml,v 1.14 2019-05-20 10:28:43 arenou Exp $ -->
+
+<XMLlist>
+	<entry code='cms_module_common_datasource_articles_sections'>Rubriques</entry>
+	<entry code='cms_module_common_datasource_all_articles'>Tous les articles</entry>
+	<entry code='cms_module_common_datasource_articles'>Articles</entry>
+	<entry code='cms_module_common_datasource_articles_categories'>Articles des catégories d'une notice</entry>
+	<entry code='cms_module_common_datasource_searcharticles'>Recherche dans les articles</entry>
+	<entry code='cms_module_common_view_articleslist'>Liste d'articles - template Django avec lien</entry>
+	<entry code='cms_module_articleslist_view_carousel'>Vue en Carrousel</entry>
+	<entry code='cms_module_articleslist_view_carousel_responsive'>Vue en Carrousel responsive</entry>
+	<entry code='cms_module_common_datasource_articles_by_article_categories'>Articles des catégories d'un article</entry>
+	<entry code='cms_module_common_datasource_articles_by_section_categories'>Articles des catégories d'une rubrique</entry>
+	<entry code='cms_module_common_datasource_articles_by_concepts'>Articles indexés par des concepts</entry>
+	<entry code='cms_module_common_datasource_articles_by_categories'>Articles indexés par des catégories</entry>
+	<entry code='cms_module_common_datasource_articles_by_section_cp'>Articles cités en CP d'une rubrique</entry>
+</XMLlist>

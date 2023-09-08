@@ -1,0 +1,59 @@
+/* $Id: dijit-custom.css,v 1.5 2018-04-18 08:40:19 wlair Exp $ */
+.dijitEditor{
+    min-width: 100%;
+}
+
+.dojoxGridArrowButtonChar{
+    max-width: 15px;
+    float: left;
+}
+.dojoxGridColCaption{
+    width: calc(100% - 15px);
+}
+.dojoxGrid .dojoxGridCell{
+    min-height:100%;
+}
+.pure .dijitTextBox input.dijitArrowButtonInner{
+    margin: 0px!important;
+    border-color: transparent;
+}
+.dijitComboBox .dijitButtonNode.dijitArrowButton.dijitDownArrowButton.dijitArrowButtonContainer{
+    height: 32px;
+    box-sizing: border-box;
+    background: #fff;
+}
+/* Claro
+ ========================================================================== */
+.claro.pure .dijitTreeRowSelected .dijitTreeLabel {
+	background: transparent;
+}
+
+.claro.pure .dojoDndHandle{
+	text-align:center;
+}
+
+
+.pure.claro .dijitButton .dijitButtonNode, 
+.pure.claro .dijitDropDownButton .dijitButtonNode, 
+.pure.claro .dijitComboButton .dijitButtonNode, 
+.pure.claro .dijitToggleButton .dijitButtonNode{
+	background-image: none;
+}
+
+.pure.claro .dijitArrowButtonInner {
+	background-color:#fff;
+	border-radius:2px;
+}
+
+.pure.claro .dijitSelect, 
+.pure.claro .dijitTextBox {
+	max-height: 32px;
+}
+/* calendar
+ ========================================================================== */
+.pure.claro  .dijitCalendarArrow.dijitCalendarDecrementArrow {	
+	float: left;
+}
+.pure.claro  .dijitCalendarArrow.dijitCalendarIncrementArrow {	
+	float: right;
+}

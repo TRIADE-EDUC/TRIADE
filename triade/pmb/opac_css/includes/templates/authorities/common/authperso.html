@@ -1,0 +1,22 @@
+{% extends 'gabarit.html' %}
+
+{% block header %}
+	<h3><span>{{ msg.authperso_see_title }}</span></h3>
+{% endblock %}
+
+{% block aut_see %}
+	<div class="authpersolevel2">
+		{{block.super}}
+	</div>
+{% endblock %}
+	
+{% block title %}
+{% endblock %} 
+
+{% block details %}
+	{% if authority.info.view %}
+		{{ authority.info.view }}
+	{% else %}
+		{{ authority.info.name }} : {{ authority.info.isbd }}
+	{% endif%}
+{% endblock %} 

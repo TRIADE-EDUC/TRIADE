@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le module Article
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_recordslist.xml,v 1.9 2017-07-27 12:51:28 ngantier Exp $ -->
+
+<XMLlist>
+	<entry code='cms_module_common_datasource_similarrecords'>Similar records</entry>
+	<entry code='cms_module_common_datasource_records_categories'>Records of an article's categories</entry>
+	<entry code='cms_module_common_datasource_records_section_categories'>Records of a rubric's categories</entry>
+	<entry code='cms_module_common_view_recordslist'>Django view</entry>
+	<entry code='cms_module_recordslist_view_carousel'>Carousel view</entry>
+	<entry code='cms_module_common_datasource_records'>Records of a shelf</entry>
+	<entry code='cms_module_common_datasource_records_author'>Records of the same main author</entry>
+	<entry code='cms_module_common_datasource_records_similar_cote'>Records with a similar call number</entry>
+	<entry code='cms_module_common_datasource_records_by_cp_val'>Records by custom field value</entry>
+	<entry code='cms_module_common_datasource_records_bannette'>Records of an SDI basket</entry>
+	<entry code='cms_module_recordslist_view_carousel_responsive'>View in responsive carousel</entry>
+	<entry code='cms_module_recordslist_view_link'>Creation of a link to a record</entry>
+	<entry code='cms_module_recordslist_datasource_records_publisher'>Records from the same publisher</entry>
+	<entry code='cms_module_recordslist_datasource_records_collection'>Records of the same collection</entry>
+	<entry code='cms_module_recordslist_datasource_records_serie'>Records of the same serie</entry>
+	<entry code='cms_module_recordslist_datasource_records_indexint'>Records with the same decimal insexation</entry>
+	<entry code='cms_module_recordslist_datasource_records_categories'>Records with common categories</entry>
+	<entry code='cms_module_recordslist_datasource_records_last_read'>Last read records</entry>
+	<entry code='cms_module_common_datasource_records_by_concepts'>Notices indexées par des concepts</entry>
+	<entry code='cms_module_common_datasource_records_used_by_composed_concepts'>Notices utilisées par des concepts composés</entry>
+	<entry code='cms_module_common_filter_records_by_doctype'>Par types de document</entry>
+	<entry code='cms_module_recordslist_view_django_directory'>Vue depuis un répertoire de templates</entry>
+	<entry code='cms_module_recordslist_datasource_records_category'>Notices d'une catégorie</entry>
+	<entry code='cms_module_common_datasource_records_by_categories'>Notices indexées par des catégories</entry>
+</XMLlist>

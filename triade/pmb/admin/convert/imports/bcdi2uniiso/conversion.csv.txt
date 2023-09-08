@@ -1,0 +1,53 @@
+"Champ","Chemin","Unimarc","Conditions","Correspondance",,"Champ","BCDI","PMB"
+"COLLATION_N","MEMO_NOTICES/NOTICES/","464 $ p ou 215 $ a","Si SUPPORT_D <> de Périodique => 215 $a sinon dans 464 $ p","(Collation) Importance matérielle",,"dt","TYPE_DOC_D","dt"
+"DATE_EDITION_N_N","MEMO_NOTICES/NOTICES/","210 $ d","Si SUPPORT_D <> de Périodique","(Éditeurs,collection) Année",,,"Document projeté, vidéo","g"
+"DATE_SAISIE_N_N","MEMO_NOTICES/NOTICES/","100 $ a",,,,,"Texte imprimé","a"
+"DESCRIPTEURS_N","MEMO_NOTICES/NOTICES/","606 $ a",,,,,"Enregistrement sonore","i"
+"DISCIPLINES_N_N","MEMO_NOTICES/NOTICES/","902 $ a",,,,,"Texte manuscrit","b"
+"DIVERS_N","MEMO_NOTICES/NOTICES/","327 $ a",,"Note de contenu",,,"Document cartographique","e"
+"FONCTIONS_N","MEMO_NOTICES/NOTICES/","700 $ 4 puis 701 et 702 $4","Pas de reprise d'un auteur ayant plusieurs fonctions","(Responsabilité) Fonction ",,,"Ressource électronique","l"
+"IDENTITE_N_N","MEMO_NOTICES/NOTICES/","001",,,,,"Ressource en ligne","l"
+"LANGUE_N","MEMO_NOTICES/NOTICES/","101 $ a",,"Langues de la publication",,,"Document graphique","k"
+"MOTS_CLES_N","MEMO_NOTICES/NOTICES/","610 $ a",,"(Indexation) Mots-clés",,,"Document multisupport","m"
+"NATURES_N","MEMO_NOTICES/NOTICES/","901 $ a",,,,,"Objet 3 dimensions","r"
+"NIVEAUX_N","MEMO_NOTICES/NOTICES/","906 $ a",,,,,"Autre","m"
+"NOTES_N","MEMO_NOTICES/NOTICES/","300 $ a",,"(Notes) Note générale",,,,
+"RESUME_N","MEMO_NOTICES/NOTICES/","330 $ a",,"(Notes) Résumé",,,,
+"SIGNIFICATIF_N","MEMO_NOTICES/NOTICES/",,,,,"7XX $ 4","FONCTIONS_N","7XX $ 4"
+"TITRE_N","MEMO_NOTICES/NOTICES/","200 $ a","Indice calculé en fonction du champs « SIGNIFICATIF_N »","Titre propre",,,"Auteur","070"
+"TYPE_NOTICE_N","MEMO_NOTICES/NOTICES/","bl et hl",,"Niveaux hiérarchique et bibliographique",,,"Chef d&apos;orchestre","250"
+"TYPES_NATURE_N","MEMO_NOTICES/NOTICES/","905 $ a et 995 $ t","Création 995 si champs EXEMPLAIRES",,,,"Compositeur","230"
+"GENRES_N","MEMO_NOTICES/NOTICES/","900 $ a",,,,,"Directeur de la publication","651"
+"DATE_PER_N_N","MEMO_NOTICES/NOTICES/","903 $ a",,,,,"Graphiste","410"
+"DATE_DE_NAISSANCE_A","MEMO_NOTICES/NOTICES/AUTEURS/","700 $ f puis 701 $ f","concat(../DATE_DE_NAISSANCE_A,'-',../DATE_DE_DECES_A)","(Autorité Auteurs ""Personne Physique"") Dates",,,"Illustrateur","440"
+"DATE_DE_DECES_A","MEMO_NOTICES/NOTICES/AUTEURS/","700 $ f puis 701 $ f","concat(../DATE_DE_NAISSANCE_A,'-',../DATE_DE_DECES_A)","(Autorité Auteurs ""Personne Physique"") Dates",,,"Interprète","590"
+"AUTEUR_A","MEMO_NOTICES/NOTICES/AUTEURS/","700 $ a $b puis 701 $a $b",,"(Autorité Auteurs ""Personne Physique"") Élément d'entrée ou nom (Autorité Auteurs ""Personne Physique"") Élément rejeté ou prénom",,,"Interviewé","460"
+"COUT_D_D","MEMO_NOTICES/NOTICES/DOCUMENTS/","010 $ d",,"(Collation) Prix",,,"Intervieweur","470"
+"DATE_DE_PARUTION_D","MEMO_NOTICES/NOTICES/DOCUMENTS/","464 $ d","Si SUPPORT_D  = Périodique",,,,"Parolier","520"
+"DATE_DE_SAISIE_D","MEMO_NOTICES/NOTICES/DOCUMENTS/","904 $ a",,,,,"Photographe","600"
+"DOCUMENT_D","MEMO_NOTICES/NOTICES/DOCUMENTS/","464 $ o","Si SUPPORT_D  = Périodique",,,,"Réalisateur","370"
+"IDENTITE_D_D","MEMO_NOTICES/NOTICES/DOCUMENTS/","463 $ 9","Si TYPE_NOTICE_N= Partie  et DOCUMENTS/IDENTITE_D_D != IDENTITE_N_N",,,,"Traducteur","730"
+"DOCUMENT_D","MEMO_NOTICES/NOTICES/DOCUMENTS/","463 $ t","Si TYPE_NOTICE_N= Partie  et DOCUMENTS/IDENTITE_D_D != IDENTITE_N_N",,,,,
+"ISSN_D","MEMO_NOTICES/NOTICES/DOCUMENTS/","463 $ y","Si TYPE_NOTICE_N= Partie  et DOCUMENTS/IDENTITE_D_D != IDENTITE_N_N","ISBN,EAN ou no.commercial",,,,
+"ISSN_D","MEMO_NOTICES/NOTICES/DOCUMENTS/","011 $a / 464 $x","Si SUPPORT_D  = Périodique alors 464 $x en plus du 011 $a","ISBN,EAN ou no.commercial",,,,
+"NO_COLLECTION_D","MEMO_NOTICES/NOTICES/DOCUMENTS/","464 $ v ou 225 $ v","Si SUPPORT_D <> de Périodique => 225 $ v sinon dans 464 $ v ",,,,,
+"STANDARD_D","MEMO_NOTICES/NOTICES/DOCUMENTS/","215 $ d","Si COLLATION_N ou SUPPORT_D <> de Périodique",,,"bl","TYPE_NOTICE_N","bl"
+"SUPPORT_D","MEMO_NOTICES/NOTICES/DOCUMENTS/","995 $ r","Création 995 si champs EXEMPLAIRES",,,,"Notice générale","m"
+"TYPE_DOC_D","MEMO_NOTICES/NOTICES/DOCUMENTS/","dt",,"dt",,,"Autres","a"
+"COTE_D","MEMO_NOTICES/NOTICES/DOCUMENTS/","676 $ a",,"(Autorité indexation décimale) Libellé de l'indexation décimale",,,,
+"CODE_BARRE_D","MEMO_NOTICES/NOTICES/DOCUMENTS/","345 $ b et 995 $ f","Dans 995 $ f si pas de CODE_EXEMPLAIRE_X","ISBN,EAN ou no.commercial",,,,
+"ISBN_D","MEMO_NOTICES/NOTICES/DOCUMENTS/","010 $ a",,"ISBN,EAN ou no.commercial",,,,
+"EDITION_D","MEMO_NOTICES/NOTICES/DOCUMENTS/","205 $ a",,"(Éditeurs,collection) Mention d'édition",,"hl","TYPE_NOTICE_N","hl"
+"PUBLICS_N","MEMO_NOTICES/NOTICES/DOCUMENTS/","995 $ q","Création 995 si champs EXEMPLAIRES","(Exemplaire) Section / (Exemplaire) Code statistique",,,"Article","2"
+"COLLECTION_C","MEMO_NOTICES/NOTICES/DOCUMENTS/COLLECTIONS/","464 $ t ou 225 $ a","Si SUPPORT_D <> de Périodique => 225 $ v sinon dans 464 $ t ","(Autorité collection) Nom",,,"Autres","0"
+"ISSN_C_C","MEMO_NOTICES/NOTICES/DOCUMENTS/COLLECTIONS/","225 $ x",,"(Autorité collection) ISSN",,,,
+"RESPONSABLE_C","MEMO_NOTICES/NOTICES/DOCUMENTS/COLLECTIONS/","225 $ f",,,,,,
+"VILLE_E","MEMO_NOTICES/NOTICES/DOCUMENTS/EDITEURS/","210 $ a",,"(Autorité éditeur) Ville",,,,
+"EDITEUR_E","MEMO_NOTICES/NOTICES/DOCUMENTS/EDITEURS/","210 $ c",,"Éditeur du bulletin",,,,
+"ADRESSE_L","MEMO_NOTICES/NOTICES/RESSOURCES/","856 $ u",,"(Lien) URL associée",,,,
+"RESSOURCE_L","MEMO_NOTICES/NOTICES/RESSOURCES/","856 $ u","Si pas ADRESSE_L reprendre en 856 $ u","(Lien) URL associée",,,,
+"EMPLACEMENT_X","MEMO_NOTICES/NOTICES/EXEMPLAIRES/","995 $ a","Création 995 si champs EXEMPLAIRES","(Exemplaire) Localisation",,,,
+"COTE_E_X","MEMO_NOTICES/NOTICES/EXEMPLAIRES/","995 $ k","Création 995 si champs EXEMPLAIRES","(Exemplaire) Cote",,,,
+"DIVERS_E_X","MEMO_NOTICES/NOTICES/EXEMPLAIRES/","995 $ u","Création 995 si champs EXEMPLAIRES","(Exemplaire) Message exemplaire",,,,
+"CODE_EXEMPLAIRE_X","MEMO_NOTICES/NOTICES/EXEMPLAIRES/","995 $ f","Création 995 si champs EXEMPLAIRES","(Exemplaire) No. exemplaire",,,,
+"CODE_BARRE_D","MEMO_NOTICES/NOTICES/EXEMPLAIRES/","995 $ f","Création 995 si champs EXEMPLAIRES","(Exemplaire) No. exemplaire",,,,

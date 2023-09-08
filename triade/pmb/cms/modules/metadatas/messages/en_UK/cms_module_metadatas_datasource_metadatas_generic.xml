@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour la classe datasource
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_metadatas_datasource_metadatas_generic.xml,v 1.2 2017-11-28 15:33:39 dgoron Exp $ -->
+
+<XMLlist>
+	<entry code="cms_module_metadatas_datasource_metadatas_generic_def_metadatas">Creation of the Meta-data</entry>
+	<entry code="cms_module_metadatas_datasource_metadatas_generic_active">Activate</entry>
+	<entry code="cms_module_metadatas_datasource_metadatas_generic_django_template_content">Content of the template</entry>
+	
+	<entry code="cms_module_metadatas_datasource_django_add_template">Add a template</entry>
+	<entry code="cms_module_metadatas_datasource_django_template_name">Name of the template</entry>
+	<entry code="cms_module_metadatas_datasource_django_template_content">Content of the template</entry>
+	<entry code="cms_module_metadatas_datasource_django_template_choice">Choose the template to use</entry>
+	<entry code="cms_module_metadatas_datasource_django_delete_template">Are you sure you want to delete this template ?</entry>
+	<entry code="cms_module_metadatas_datasource_django_error_template">Error on the template</entry>
+	
+	<entry code="cms_module_metadatas_datasource_django_get_vars_desc">GET variables (replace "&lt;variable&gt;" by the name of the variable)</entry>
+	<entry code="cms_module_metadatas_datasource_django_post_vars_desc">POST variables (replace "&lt;variable&gt;" by the name of the variable)</entry>
+	<entry code="cms_module_metadatas_datasource_django_session_vars_desc">Variables of sessions</entry>
+	<entry code="cms_module_metadatas_datasource_django_session_vars_view_desc">View identifier</entry>
+	<entry code="cms_module_metadatas_datasource_django_session_vars_id_empr_desc">Identifier of the borrower</entry>
+	<entry code="cms_module_metadatas_datasource_django_env_vars_desc">Environment variables</entry>
+	<entry code="cms_module_metadatas_datasource_django_session_vars_script_desc">Variable $_SERVER['SCRIPT_NAME']</entry>
+	<entry code="cms_module_metadatas_datasource_django_session_vars_request_desc">Variable $_SERVER['REQUEST_URI']</entry>
+	<entry code='cms_module_metadatas_datasource_django_id_desc'>Frame identifier</entry>
+	<entry code='cms_module_metadatas_datasource_django_title_desc'>Title</entry>
+	<entry code='cms_module_metadatas_datasource_django_resume_desc'>Recap</entry>
+	<entry code='cms_module_metadatas_datasource_django_logo_desc'>Link of the logo</entry>
+	<entry code='cms_module_metadatas_datasource_django_link_desc'>Link</entry>
+	<entry code='cms_module_metadatas_datasource_django_type_desc'>Type</entry>
+</XMLlist>

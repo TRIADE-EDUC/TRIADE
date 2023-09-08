@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+
+<!-- Declaration d'un module
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: manifest.xml,v 1.4 2017-06-05 09:56:07 vtouchard Exp $ -->
+
+<manifest>
+	<name lang="fr_FR">Liste d'items (Veille documentaire)</name>
+	<name lang="en_UK">Items list (Documentary watch)</name>
+	<author>
+		<name>Dimitri GORON</name>
+		<organisation>PMB Services</organisation>
+	</author>
+	<created_date>2015-02-25</created_date>
+	<version>1.0</version>
+	<default_language>fr_FR</default_language>
+	<managed>true</managed>
+	<use>
+		<datasources>
+			<datasource>cms_module_itemslist_datasource_items</datasource>
+		</datasources>
+		<views>
+			<view>cms_module_itemslist_view_django</view>
+			<view>cms_module_itemslist_view_django_by_tags</view>
+		</views>
+		<filters>
+			<filter>cms_module_itemslist_filter_by_interest</filter>
+		</filters>
+		<conditions>
+			<condition>cms_module_common_condition_global_var</condition>
+		</conditions>
+	</use>
+</manifest>

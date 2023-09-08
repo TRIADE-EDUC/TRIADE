@@ -1,0 +1,16 @@
+<br />
+<b>ATEN&Ccedil;&Atilde;O, esta funcionalidade adiciona registos e autoriza&ccedil;&otilde;es <u> apenas se necess&aacute;rio</u>.
+<br />N&atilde;o faz altera&ccedil;&otilde;es nos registos existentes.</b>
+<br /><br />
+
+O ficheiro tem de estar no formato UNIMARC t<br />
+<ul>
+<li>A <i>importa&ccedil;&atilde;o</i> &eacute; feita em <b>tr&ecirc;s passos</b>:
+<OL>
+<LI><b>Carregar</b> o seu ficheiro,</LI>
+<LI><b>Pr&eacute;-carregar</b> o seu ficheiro,</LI>
+<LI><b>Transferir</b> para a base de dados.</LI>
+</OL></li>
+<br /><li>Em vez de carregar o seu ficheiro, poder&aacute; envi&aacute;-lo directamente para o servidor por outros meios (FTP por exemplo). O ficheiro <b>ter&aacute; de ser renomeado</b> <i>"!!nom_fic!!"</i>, e, neste caso,  sever&aacute; saltar directamente para o <b>"!!nom_bouton!!"</b>.</li>
+</ul>
+<br />

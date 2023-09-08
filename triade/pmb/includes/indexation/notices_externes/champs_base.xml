@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd">
+
+<!-- 
+****************************************************************************************
+© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: champs_base.xml,v 1.3 2018-10-19 09:40:16 dgoron Exp $ -->
+
+<indexation>
+
+	<!-- Table d'origine (référence)-->
+	<reference>entrepot_source_</reference>
+	<!-- Clé primaire de la table de référence -->
+	<referencekey>recid</referencekey>
+
+	<field name="237" id="001">
+		<table>
+			<tablefield unimarcField="200$a">tit1</tablefield>
+		</table>
+	</field>
+
+	<field name="238" id="002">
+		<table>
+			<tablefield unimarcField="200$c">tit2</tablefield>
+		</table>
+	</field>
+
+	<field name="239" id="003">
+		<table>
+			<tablefield unimarcField="200$d">tit3</tablefield>
+		</table>
+	</field>
+
+	<field name="240" id="004">
+		<table>
+			<tablefield unimarcField="200$e">tit4</tablefield>
+		</table>
+	</field>
+
+	<field name="242" id="006">
+		<table>
+			<tablefield unimarcField="200$h,461$t">tnvol</tablefield>
+		</table>
+	</field>
+
+	<field name="admin_opac_facette_annee_saisie" id="007">
+		<table>
+			<tablefield unimarcField="210$d">year</tablefield>
+		</table>		
+	</field>
+
+	<field name="mention_edition" id="008" >
+		<table>
+			<tablefield unimarcField="205$a">mention_edition</tablefield>
+		</table>
+	</field>
+
+	<field name="259" id="009" pond="20">
+		<table>
+			<tablefield unimarcField="215$a">npages</tablefield>
+		</table>		
+	</field>
+
+	<field name="260" id="010" pond="20">
+		<table>
+			<tablefield unimarcField="215$c">ill</tablefield>
+		</table>
+	</field>
+
+	<field name="262" id="011" pond="20">
+		<table>	
+			<tablefield unimarcField="215$e">accomp</tablefield>
+		</table>
+	</field>
+
+	<field name="265" id="012">
+		<table>
+			<tablefield unimarcField="300$a">n_gen</tablefield>
+		</table>
+	</field>
+
+	<field name="266" id="013">
+		<table>
+			<tablefield unimarcField="327$a">n_contenu</tablefield>
+		</table>	
+	</field>
+
+	<field name="267" id="014">
+		<table>
+			<tablefield unimarcField="330$a">n_resume</tablefield>
+		</table>
+	</field>
+
+	<field name="275" id="015">
+		<table>
+			<tablefield unimarcField="856$u">lien</tablefield>
+		</table>
+	</field>
+
+	<field name="276" id="016">
+		<table>	
+			<tablefield unimarcField="856$q">eformat</tablefield>
+		</table>
+	</field>
+	
+	<field name="324" id="017">
+		<table>
+			<tablefield unimarcField="610$a" use_global_separator="pmb_keyword_sep">index_l</tablefield>
+		</table>
+	</field>
+		
+	<!-- publishers -->	
+	<field name="searcher_publisher" id="019" datatype="publisher" keepEmptyWord="yes">
+		<table>
+			<tablefield id="01" unimarcField="210$c" name="editeur_nom">ed_name</tablefield>
+			<tablefield id="02" unimarcField="210$b" name="editeur_adr1">ed_adr1</tablefield>
+			<tablefield id="05" unimarcField="210$a" name="editeur_ville">ed_ville</tablefield>
+		</table>
+		<isbd id="09" name="isbd" class_name="editeur"/>
+	</field>
+
+	<!-- indexint -->	
+	<field name="indexint_catal_title" id="020" datatype="indexint" keepEmptyWord="yes" >
+		<table>
+			<tablefield id="01" unimarcField="676$a,686$a" name="indexint_nom">indexint_name</tablefield>
+			<tablefield id="02" unimarcField="676$l,686$l" name="indexint_comment">indexint_comment</tablefield>
+		</table>
+		<isbd id="03" name="isbd" class_name="indexint"/>
+	</field>
+
+	<!-- collections -->	
+	<field name="136" id="021" datatype="collection" keepEmptyWord="yes">
+		<table>
+			<tablefield id="01" unimarcField="225$a,410$t" name="lib_coll">collection_name</tablefield>
+			<tablefield id="03" unimarcField="225$x" name="issn_coll">collection_issn</tablefield>
+		</table>
+		<isbd id="02" name="isbd" class_name="collection"/>
+	</field>
+	
+	<!-- series -->
+	<field name="serie_query" id="023" datatype="serie" keepEmptyWord="yes">
+		<table>
+			<tablefield id="01" unimarcField="200$i,461$t" name="lib_serie">serie_name</tablefield>
+		</table>
+		<isbd id="02" name="isbd" class_name="serie"/>
+	</field>
+
+	<!-- sub_collections -->	
+	<field name="137" id="024" datatype="subcollection" keepEmptyWord="yes">
+		<table>
+			<tablefield id="01" unimarcField="225$i,411$t" name="intit_sub_col">sub_coll_name</tablefield>
+			<tablefield id="03" unimarcField="225$i,411$x" name="intit_sub_col_issn">sub_coll_issn</tablefield>
+		</table>
+		<isbd id="02" name="isbd" class_name="subcollection"/>
+	</field>
+	
+	<!-- table titres uniformes -->	
+	<field name="aut_menu_titre_uniforme" id="026" datatype="uniformtitle" keepEmptyWord="yes">
+		<table>
+			<tablefield id="01" unimarcField="500$a" name="aut_titre_uniforme_form_nom">tu_name</tablefield>
+			<tablefield id="02" unimarcField="500$u" name="aut_titre_uniforme_form_tonalite">tu_tonalite</tablefield>
+			<tablefield id="03" unimarcField="500$n" name="aut_titre_uniforme_commentaire">tu_comment</tablefield>
+			<tablefield id="04" unimarcField="500$i" name="catal_titre_uniforme_titre_section">ntu_titre</tablefield>
+			<tablefield id="05" unimarcField="500$l" name="catal_titre_uniforme_sous_vedette">ntu_sous_vedette</tablefield>
+			<tablefield id="06" unimarcField="500$q" name="catal_titre_uniforme_version">ntu_version</tablefield>
+			<tablefield id="07" unimarcField="500$w" name="catal_titre_uniforme_mention">ntu_mention</tablefield>
+			<tablefield id="10" unimarcField="500$k" name="aut_oeuvre_form_date">tu_date</tablefield>
+		</table>
+		<isbd id="08" name="isbd" class_name="titre_uniforme"/>
+	</field>
+	<!-- auteur principal-->	
+	<field name="234" id="027" datatype="author" keepEmptyWord="yes">
+		<table>
+			<tablefield id="01" unimarcField="700$a,710$a" name="201">author_name</tablefield>
+			<tablefield id="02" unimarcField="700$b" name="202">author_rejete</tablefield>
+			<tablefield id="03" unimarcField="700$f,710$f" name="713">author_date</tablefield>
+			<tablefield id="04" unimarcField="710$n" name="147">author_web</tablefield>
+			<tablefield id="05" unimarcField="700$c,700$d,710$c" name="707">author_comment</tablefield>
+		</table>
+		<isbd id="06" name="isbd" class_name="author" type="0"/>
+	</field>
+	<!-- autres auteurs-->	
+	<field name="export_other_author" id="028" datatype="author" keepEmptyWord="yes">
+		<table>
+			<tablefield id="01" unimarcField="701$a,711$a" name="201">author_name</tablefield>
+			<tablefield id="02" unimarcField="701$b" name="202">author_rejete</tablefield>
+			<tablefield id="03" unimarcField="701$f,711$f" name="713">author_date</tablefield>
+			<tablefield id="04" unimarcField="711$n" name="147">author_web</tablefield>
+			<tablefield id="05" unimarcField="701$c,701$d,711$c" name="707">author_comment</tablefield>
+		</table>		
+		<isbd id="06" name="isbd" class_name="author" type="1"/>
+	</field>
+	<!-- auteurs secondaires-->	
+	<field name="export_secondary_author" id="029" datatype="author" keepEmptyWord="yes" >
+		<table>
+			<tablefield id="01" unimarcField="702$a,712$a" name="201">author_name</tablefield>
+			<tablefield id="02" unimarcField="702$b" name="202">author_rejete</tablefield>
+			<tablefield id="03" unimarcField="702$f,712$f" name="713">author_date</tablefield>
+			<tablefield id="04" unimarcField="712$n" name="147">author_web</tablefield>
+			<tablefield id="05" unimarcField="702$c,702$d,712$c" name="707">author_comment</tablefield>
+		</table>
+		<isbd id="06" name="isbd" class_name="author" type="2"/>
+	</field>
+	
+	<field name="isbn_query" id="030">
+		<table>
+			<tablefield unimarcField="010$a">code</tablefield>
+		</table>
+	</field>
+	<field name="type_doc_sort" id="031" datatype="marclist">
+		<table>
+			<tablefield unimarcField="dt" marctype="doctype">typdoc</tablefield>
+		</table>
+	</field>
+	<field name="doc_perio_art_query" id="032" datatype="marclist">
+		<table>
+			<tablefield unimarcField="bl" marctype="nivbiblio">niveau_biblio</tablefield>
+		</table>
+	</field>
+	
+	<!-- Langue de publication -->
+	<field name="710" id="034" datatype="marclist">
+		<table>
+			<tablefield id="01" unimarcField="101$a" name="710" marctype="lang">code_langue</tablefield>
+		</table>
+	</field>
+	
+	<!-- Langues originales -->
+	<field name="711" id="035" datatype="marclist">
+		<table>
+			<tablefield id="01" unimarcField="101$c" name="711" marctype="lang">code_langue</tablefield>
+		</table>
+	</field>
+	
+	<!-- Libellé de la source -->
+	<field name="connecteurs_source_label" id="036">
+		<table>
+			<tablefield unimarcField="801$b">origine</tablefield>
+		</table>
+	</field>
+		
+	<!-- Infos d'exemplaires -->
+	<field name="search_exemplaire" id="090" datatype="expl">
+		<table>
+			<tablefield id="01" unimarcField="995$f" name="extexpl_codebar">expl_cb</tablefield>
+			<tablefield id="02" unimarcField="995$k" name="extexpl_cote">expl_cote</tablefield>
+		</table>
+	</field>
+</indexation>

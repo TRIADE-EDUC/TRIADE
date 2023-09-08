@@ -1,0 +1,55 @@
+/*
+ * Checked
+ */
+
+.pure.end_import input[type="radio"]:checked,
+.pure.end_import input[type="checkbox"]:checked,
+.pure.end_import input[type="checkbox"]:indeterminate {
+	background-color: #0073b9;
+	border-color: transparent;
+}
+
+
+/* Focus */
+
+.pure.end_import input[type="radio"]:checked:focus,
+.pure.end_import input[type="checkbox"]:checked:focus,
+.pure.end_import input[type="checkbox"]:indeterminate:focus {
+	background-color: #0073b9;
+}
+
+.pure.end_import .bouton {
+	background-color: #0280cc;
+}
+
+div[class^='dijit'] input[class^='bouton'] {
+	background-color: #0280cc;
+}
+
+.pure.end_import .bouton:hover,
+div[class^='dijit'] input[class^='bouton']:hover,
+#quick_actions .bouton:hover {
+	background-color: #0c8dda;
+}
+
+.pure.end_import .bouton:focus,
+.pure.end_import .bouton:active,
+div[class^='dijit'] input[class^='bouton']:focus div[class^='dijit'] input[class^='bouton']:active,
+#quick_actions .bouton:focus,
+#quick_actions .bouton:active {
+	background-color: #0073b9;
+}
+
+.pure.abonnement_parution_edition .bouton,
+#quick_actions .bouton {
+	background-color: #0280cc;
+}
+
+.pure.abonnement_parution_edition .bouton:hover {
+	background-color: #0c8dda;
+}
+
+.pure.abonnement_parution_edition .bouton:focus,
+.pure.abonnement_parution_edition .bouton:active {
+	background-color: #0073b9;
+}

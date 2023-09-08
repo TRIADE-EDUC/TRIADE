@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour la vue calendrier du module Agenda
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_agenda_view_calendar_django.xml,v 1.2 2017-06-07 14:32:16 dgoron Exp $ -->
+
+<XMLlist>
+	<entry code='cms_module_agenda_view_calendar_django_nb_displayed_events_under'>Nombre d'évènements à afficher sous le calendrier</entry>
+	<entry code='cms_module_agenda_view_calendar_django_link_event'>Construction du lien vers un évènement</entry>
+	<entry code='cms_module_agenda_view_calendar_django_link_eventslist'>Construction du lien vers une liste d'évènements</entry>
+	<entry code='cms_module_agenda_view_calendar_django_calendar_desc'>Affichage du calendrier</entry>
+	<entry code='cms_module_agenda_view_calendar_django_legends_desc'>Tableau des calendriers (légendes)</entry>
+	<entry code='cms_module_agenda_view_calendar_django_legend_calendar_desc'>Libellé d'un calendrier</entry>
+	<entry code='cms_module_agenda_view_calendar_django_legend_color_desc'>Couleur associée au calendrier</entry>
+	<entry code='cms_module_agenda_view_calendar_django_link_desc'>Lien vers l'évènement</entry>
+</XMLlist>

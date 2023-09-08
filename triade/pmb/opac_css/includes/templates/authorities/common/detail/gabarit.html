@@ -1,0 +1,61 @@
+<!-- $Id: gabarit.html,v 1.4 2019-04-19 12:28:25 ngantier Exp $ -->
+
+<style type="text/css">
+	.aut_display_row {
+		display: table-row;
+	}
+	
+	.aut_display_cell {
+		display: table-cell;
+		padding-right: 5px;
+	}
+</style>
+
+
+<td style='vertical-align:top'>
+	{% block isbd %}{{ element.isbd }}{% endblock isbd %}<br/>
+	{% block detail %}
+	{% endblock detail %}
+	{% block aut_linked %}
+		{% if element.aut_link.display %}
+			<div class="aut_linked aut_display_row">
+				<div class="aut_display_cell">
+					<b>{{ msg.aut_link }} :</b>
+				</div>
+				<div class="aut_display_cell">
+					{{ element.aut_link.display }}
+				</div>
+			</div>
+		{% endif %}
+	{% endblock %}
+	{% block indexing_concept %}
+		{% for concept in element.indexing_concepts %}
+			{% if loop.first %}
+				<div class="indexing_concepts aut_display_row">
+					<div class="aut_display_cell">
+						<b>{{ msg.ontology_skos_concept }} :</b>
+					</div>
+					<div class="aut_display_cell">
+			{% endif %}
+						<a href="./index.php?lvl=concept_see&id={{ concept.id }}">{{ concept.display_label }}</a><br/>
+			{% if loop.last %}
+					</div>
+				</div>
+			{% endif %}
+		{% endfor %}
+	{% endblock indexing_concept %}
+	{% block pperso %}
+		{% for pperso in element.p_perso %}
+			{% if pperso.AFF %}
+				<div class="aut_display_row">
+					<div class="aut_display_cell">
+						<b>{{ pperso.TITRE }}</b>
+					</div>
+					<div class="aut_display_cell">
+						{{ pperso.AFF }}
+					</div>
+				</div>
+			{% endif %}
+		{% endfor %}
+	{% endblock pperso %}
+</td>

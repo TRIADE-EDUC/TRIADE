@@ -1,0 +1,2 @@
+<h2>Gestion de la borne de pr&ecirc;t</h2>
+<p>Permet de g&eacute;rer le comportement d'une borne de pr&ecirc;t et de d&eacute;finir les messages &agrave; afficher selon ce comportement. </p>

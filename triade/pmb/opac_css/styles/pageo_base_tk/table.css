@@ -1,0 +1,45 @@
+/* +--------------------------------------------------------------------------+
+// 2013 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// +-------------------------------------------------+
+// $Id: table.css,v 1.2 2018-01-08 13:33:34 wlair Exp $ */
+/*------------------------------------------------------------------------------------------*/
+@charset "utf-8";/**/
+/* border table display
+ ========================================================================== */
+.uk-table td,
+.uk-table th,
+#a2z_perio>table td,
+#a2z_perio>table th,
+.notice_contenu>table td,
+.notice_contenu>table th,
+table.fiche-lecteur th,
+table.fiche-lecteur td{
+	padding: 8px 8px;
+	border-bottom: 1px solid #E5E5E5
+}
+#td_search_submit{
+	border-bottom: 0px solid #E5E5E5;
+	background: #f8f4f5;
+}
+
+.uk-table-hover tbody tr:hover,
+.surbrillance {
+	background: #ffd!important;
+}
+#a2z_perio>table,
+.notice_contenu>table{
+	border-collapse: collapse;
+	border-spacing: 0;
+	width: 100%;
+	margin-bottom: 15px;	
+}
+
+.uk-table-striped tbody tr:nth-of-type(odd),
+.notice_contenu>table tr:nth-of-type(odd),
+#a2z_perio>table>tbody>tr:nth-of-type(odd),
+table.fiche-lecteur>tbody>tr:nth-of-type(odd){
+	background: #ffffff;
+}
+#change-password td{
+	padding: 8px 8px;
+}

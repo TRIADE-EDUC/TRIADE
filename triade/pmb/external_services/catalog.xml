@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- Catalogue des classes de fonctions
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: catalog.xml,v 1.21 2018-06-08 08:10:27 vtouchard Exp $ -->
+
+<catalog>
+	<item name="pmbesSearch" id="1"/>
+	<item name="pmbesItems" id="2"/>
+	<item name="pmbesNotices" id="3"/>
+	<item name="pmbesOPACEmpr" id="4"/>
+	<item name="pmbesTypes" id="5"/>
+	<item name="pmbesOPACAnonymous" id="6"/>
+    <item name="pmbesOPACGeneric" id="7"/>
+    <item name="pmbesAuthors" id="8"/>
+    <item name="pmbesPublishers" id="9"/>
+    <item name="pmbesCollections" id="10"/>
+    <item name="pmbesSpecialTypes" id="11"/>
+    <item name="pmbesSelfServices" id="12"/>
+    <item name="pmbesRepositories" id="13"/>
+    <item name="pmbesThesauri" id="14"/>
+    <item name="pmbesAutLinks" id="15"/>
+    <item name="pmbesTasks" id="16"/>
+    <item name="pmbesDSI" id="17"/>
+    <item name="pmbesBackup" id="18"/>
+    <item name="pmbesSync" id="19"/>
+    <item name="pmbesClean" id="20"/>
+    <item name="pmbesOPACStats" id="21"/>
+    <item name="pmbesMySQL" id="22"/>
+    <item name="pmbesProcs" id="23"/>
+    <!-- <item name="pmbesResas" id="24"/>
+    <item name="pmbesLoans" id="25"/>
+    <item name="pmbesReaders" id="26"/> -->
+    <item name="pmbesCommons" id="27"/>
+    <item name="pmbesConvertImport" id="28"/>
+    <item name="pmbesMailing" id="29"/>
+    <item name="pmbesEmpr" id="30"/>
+    <item name="pmbesDatabase" id="31"/>
+    <item name="pmbesIndex" id="32"/>
+    <item name="pmbesScanDocnum" id="33"/>
+    <item name="pmbesDocwatches" id="34"/>
+    <item name="pmbesCairn" id="35"/>
+    <item name="pmbesContributions" id="36"/>
+    <item name="pmbesChklnk" id="37"/>
+    <item name="pmbesPNB" id="38"/>
+</catalog>

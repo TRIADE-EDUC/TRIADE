@@ -1,0 +1,220 @@
+@charset "utf-8";
+/* +--------------------------------------------------------------------------+
+// 2017 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// +-------------------------------------------------+
+// $Id: set-acquisition-color.css,v 1.6 2018-04-17 15:21:19 wlair Exp $ */
+/*------------------------------------------------------------------------------------------*/
+/* ========================================================================
+   acquisition
+   base :#6eab50
+   hover :#72c14c
+   active/focus :#558e39
+ ==========================================================================  */
+
+.uk-navbar-nav li#navbar-acquisition a:after,
+.acquisition .hmenu.uk-tab>*:hover>a {
+  border-bottom-color: #6eab50;
+}
+
+li#navbar-acquisition.current,
+.acquisition input[type="checkbox"]:checked,
+.acquisition input[type="checkbox"]:indeterminate,
+.acquisition input[type="radio"]:checked,
+.acquisition input[type="checkbox"]:checked:focus,
+.acquisition input[type="checkbox"]:indeterminate:focus,
+.acquisition input[type="radio"]:checked:focus,
+.acquisition div#extra2 span.uk-icon,
+.acquisition div#extra2 .notification.ui-active {
+  background-color: #6eab50;
+}
+
+.acquisition input:focus,
+.acquisition select:focus,
+.acquisition textarea:focus,
+.acquisition input[type="checkbox"]:focus,
+.acquisition input[type="radio"]:focus,
+.acquisition.claro.pure .dijitButtonHover .dijitButtonNode,
+.acquisition.claro.pure .dijitDropDownButtonHover .dijitButtonNode,
+.acquisition.claro.pure .dijitComboButton .dijitButtonNodeHover,
+.acquisition.claro.pure .dijitComboButton .dijitDownArrowButtonHover,
+.acquisition.claro.pure .dijitToggleButtonHover .dijitButtonNode,
+.acquisition.claro.pure .dijitTextBoxHover,
+.acquisition #contenu .uk-button-default:focus,
+.acquisition #contenu .uk-button-default:hover,
+.acquisition .hmenu.uk-tab>.uk-active>a,
+.acquisition iframe {
+  border-color: #6eab50;
+}
+
+.uk-navbar-nav li#navbar-acquisition a:hover,
+.acquisition h1.section-title i,
+.acquisition h1.section-sub-title,
+.acquisition .uk-link,
+.acquisition a,
+.acquisition .uk-link:hover,
+.acquisition a:hover,
+.acquisition h3:not(.section-sub-title),
+.acquisition .article-title i,
+.acquisition #menu .uk-nav>li>a i,
+.acquisition #menu .uk-nav>li.uk-active>a,
+.acquisition #menu .uk-nav>li>a i,
+.acquisition #menu .uk-nav>li.uk-active>a,
+.acquisition #menu .uk-nav>li>a:hover,
+.acquisition .h2-like i,
+.acquisition #extra span.uk-icon:hover,
+.acquisition #extra i:hover,
+.acquisition #navbar .dashboard:hover,
+.pure .acquisition .uk-tab > * > a:hover,
+.pure .acquisition .uk-tab > * > a:focus,
+.acquisition .categ_browser a,
+.acquisition .categ_browser a:hover,
+.acquisition .categ_browser a:focus,
+.acquisition .categ_browser a:active,
+.acquisition .hmenu.uk-tab>.uk-active>a {
+  color: #6eab50;
+}
+
+.acquisition #contenu input.wyr-input[type='file']:focus {
+  outline-color: #6eab50;
+}
+
+.acquisition .stat-child .uk-table th {
+  color: #6eab50;
+  font-weight: 500;
+}
+
+.acquisition #menu ul.uk-nav {
+  border-top: solid 2px #6eab50;
+}
+
+.acquisition #menu>h3 .uk-icon {
+  background: #6eab50;
+}
+
+.acquisition.claro.pure .dijitMenu .dijitMenuItemHover td,
+.acquisition.claro.pure .dijitMenu .dijitMenuItemSelected td,
+.acquisition.claro.pure .dijitMenuItemHover,
+.acquisition.claro.pure .dijitComboBoxMenu .dijitMenuItemHover,
+.acquisition.claro.pure .dijitMenuItemSelected,
+.acquisition.claro.pure .dojoDndItemOver,
+.acquisition #tableau_multi_sugg .bouton {
+  background-color: #6eab50;
+  border-color: #6eab50;
+  background-image: none;
+}
+
+.acquisition form .form-contenu,
+.acquisition .row.bkg-grey {
+  border-color: #6eab50;
+}
+
+.acquisition input.wyr-input[type='submit'],
+.acquisition .uk-button,
+.acquisition .search_cancel>input,
+.acquisition.claro.pure .dijitButton .dijitButtonNode,
+.acquisition.claro.pure .dijitDropDownButton .dijitButtonNode,
+.acquisition.claro.pure .dijitComboButton .dijitButtonNode,
+.acquisition.claro.pure .dijitToggleButton .dijitButtonNode {
+  background-color: #6eab50;
+}
+
+.acquisition input.wyr-input[type='submit']:hover,
+.acquisition .uk-button:hover,
+.acquisition .search_cancel>input:hover,
+.acquisition.claro.pure .dijitButton .dijitButtonNode:hover,
+.acquisition.claro.pure .dijitDropDownButton .dijitButtonNode:hover,
+.acquisition.claro.pure .dijitComboButton .dijitButtonNode:hover,
+.acquisition.claro.pure .dijitToggleButton .dijitButtonNode:hover,
+.acquisition #tableau_multi_sugg .bouton:hover {
+  background-color: #72c14c;
+}
+
+.acquisition input.wyr-input[type='submit']:focus,
+.acquisition input.wyr-input[type='submit']:active,
+.acquisition .uk-button:focus,
+.acquisition .uk-button:active,
+.acquisition .search_cancel>input:focus,
+.acquisition .search_cancel>input:active,
+.acquisition.claro.pure .dijitButton .dijitButtonNode:focus,
+.acquisition.claro.pure .dijitDropDownButton .dijitButtonNode:focus,
+.acquisition.claro.pure .dijitComboButton .dijitButtonNode:focus,
+.acquisition.claro.pure .dijitToggleButton .dijitButtonNode:focus,
+.acquisition #tableau_multi_sugg .bouton:focus,
+.acquisition.claro.pure .dijitButton .dijitButtonNode:active,
+.acquisition.claro.pure .dijitDropDownButton .dijitButtonNode:active,
+.acquisition.claro.pure .dijitComboButton .dijitButtonNode:active,
+.acquisition.claro.pure .dijitToggleButton .dijitButtonNode:active,
+.acquisition #tableau_multi_sugg .bouton:active {
+  background-color: #558e39;
+}
+
+.acquisition .uk-label,
+.acquisition .uk-label:hover {
+  background: #6eab50;
+  color: #fff;
+}
+
+.acquisition .search-result-item.notice-child[style*='block'],
+.acquisition .child[style*='block'],
+.acquisition div[startopen="Yes"] {
+  border-color: #6eab50;
+}
+
+.acquisition select:focus {
+  outline-color: #6eab50;
+}
+.acquisition .saisie-5emr,
+.acquisition .saisie-10emr,
+.acquisition .saisie-15emr,
+.acquisition .saisie-20emr,
+.acquisition .saisie-30emr,
+.acquisition .saisie-50emr,
+.acquisition .saisie-80emr,
+.pure .acquisition input[class^='saisie'][class*='emr']:hover,
+.pure .acquisition input[class^='saisie'][class*='emr']:active,
+.pure .acquisition input[class^='saisie'][class*='emr']:focus {
+	background-color: rgba(89, 205, 32, 0.4);
+}
+
+/* ========================================================================
+inside menu //  button
+===========================================================================  */
+
+.pure.acquisition .hmenu .wui-button.uk-active {
+    background: #6eab50;
+    border-color: #6eab50;
+}
+.pure.acquisition .hmenu .wui-button.uk-active:hover  a,
+.pure.acquisition .hmenu .wui-button:hover a,
+.pure.acquisition .hmenu .wui-button.uk-active:hover ,
+.pure.acquisition .hmenu .wui-button:hover,
+.pure.acquisition .hmenu .wui-button.uk-active:active ,
+.pure.acquisition .hmenu .wui-button:active
+.pure.acquisition .hmenu .wui-button.uk-active:focus ,
+.pure.acquisition .hmenu .wui-button:focus,
+.acquisition #empr-name,
+.pure.acquisition .hmenu .wui-button {
+    border-color: #6eab50;    
+}
+ 
+.acquisition input[type='submit'],
+.acquisition input[type='button'],
+.acquisition .bouton{
+	background-color: #6eab50;
+}
+.acquisition input[type='submit']:hover,
+.acquisition input[type='button']:hover,
+.acquisition .bouton:hover{
+	background-color: #72c14c;
+}
+
+.acquisition input[type='submit']:focus,
+.acquisition input[type='button']:focus,
+.acquisition .bouton:focus,  
+.acquisition input[type='submit']:active,
+.acquisition input[type='button']:active,
+.acquisition .bouton:active{
+	background-color: #558e39;
+
+}
+

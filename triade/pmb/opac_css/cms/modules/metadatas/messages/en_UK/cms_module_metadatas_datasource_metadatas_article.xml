@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour la classe datasource
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_metadatas_datasource_metadatas_article.xml,v 1.1 2015-06-16 10:24:26 pmbs Exp $ -->
+
+<XMLlist>
+	<entry code='cms_module_common_selector_article'>Manual selection of an article</entry>
+	<entry code='cms_module_metadatas_datasource_metadatas_article_link_desc'>Link to the article</entry>
+	<entry code='cms_module_metadatas_datasource_metadatas_article_article_desc'>Description of the article</entry>
+</XMLlist>

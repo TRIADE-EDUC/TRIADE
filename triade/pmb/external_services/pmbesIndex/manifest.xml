@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- Fichier manifest de description des méthodes disponibles
+****************************************************************************************
+© 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: manifest.xml,v 1.3 2014-02-07 14:05:12 mbertin Exp $ -->
+<manifest>
+	<name>pmbesIndex</name>
+	<description>msg:pmbesIndex_description</description>
+	<methods>
+		<method name="reindexRecords" rights="" version="1.0" comment="msg:reindexRecords_description" language_independant="false">
+			<pmb_requirements>
+				<pmb_requirement start_path="class" file="notice.class.php"/>
+			</pmb_requirements>
+			<inputs>
+				<description>msg:reindexRecords_input_description</description>
+				  <param name="noticelist" type="array" description="msg:reindexRecords_noticelist">
+						  <param name="notice_id" type="scalar" dataType="integer"/>
+				  </param> 
+			</inputs>
+			<outputs>
+				<description>msg:reindexRecords_output_description</description>
+				<result name="nb_total_records" type="scalar" dataType="integer" description="msg:reindexRecords_output_nb_total_records"/>
+				<result name="nb_reindexed_records" type="scalar" dataType="integer" description="msg:reindexRecords_output_nb_reindexed_records"/>
+			</outputs>
+		</method>
+	</methods>
+</manifest>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le connecteur aligastore
+****************************************************************************************
+© 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: en_UK.xml,v 1.1 2015-06-15 12:55:34 pmbs Exp $ -->
+
+<XMLlist>
+	<entry code="aliga_base_url">Base URL of the Aligastore server</entry>
+	<entry code="aliga_username">Username</entry>
+	<entry code="aliga_password">Password</entry>
+	<entry code="aliga_syncbase">Synchronize the entire base</entry>
+	<entry code="aliga_sync_noticecaddie">Synchronize the records of a basket of records</entry>
+	<entry code="aliga_sync_explcaddie">Synchronize the records of a basket of copies</entry>
+	<entry code="aliga_caddie_element">elements</entry>
+	<entry code="aliga_fetch_images">Fetch the images linked to the records</entry>
+	<entry code="aliga_image_folder">Folder in which will be stocked the images of the records</entry>
+	<entry code="aliga_image_folder_public">Public URL of the folder containing the images of the records</entry>
+	<entry code="aliga_image_thumburl">URL of the thumbnail</entry>
+	<entry code="aliga_image_front">URL of the Recto</entry>
+	<entry code="aliga_image_back">URL of the Verso</entry>
+	<entry code="aliga_cover_front">Recto</entry>
+	<entry code="aliga_cover_back">Verso</entry>
+	<entry code="aliga_enrichment_source">(source Aligastore)</entry>
+	<entry code="aliga_enrichment_no_resume">No recap available.</entry>
+	<entry code="aliga_enrichment_no_bio">No biography available.</entry>
+	<entry code="aliga_enrichment_no_sommaire">No table of contents available.</entry>
+</XMLlist>

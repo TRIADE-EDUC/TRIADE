@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd">
+
+<!-- 
+****************************************************************************************
+© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: question.xml,v 1.3 2018-05-25 11:54:55 dgoron Exp $ -->
+
+<indexation>
+	<!-- Table d'origine (référence)-->
+	<reference>faq_questions</reference>
+	<!-- Clé primaire de la table de référence -->
+	<referencekey>id_faq_question</referencekey>
+
+	<!-- question -->
+	<field name="faq_question_question" id="001" pond="130" >
+		<table>
+			<tablefield>faq_question_question</tablefield>
+		</table>
+	</field>
+
+	<!-- réponse -->
+	<field name="faq_question_answer" id="002" pond="100" >
+		<table>
+			<tablefield>faq_question_answer</tablefield>
+		</table>
+	</field>
+	
+	<!-- thème -->	
+	<field name="faq_question_theme_label" external="yes" id="003" datatype="theme" keepEmptyWord="yes">
+		<table name="faq_themes">
+			<tablefield id="01" name="faq_question_theme_label" pond="110">libelle_theme</tablefield>
+			<tablekey>id_theme</tablekey>
+			<idkey>id_theme</idkey>
+			<link type="1n">
+				<referencefield>faq_question_num_theme</referencefield>
+			</link>
+		</table>
+	</field>	
+	
+	<!-- type -->	
+	<field name="faq_question_type_label" external="yes" id="004" datatype="type" keepEmptyWord="yes">
+		<table name="faq_types">
+			<tablefield id="01" name="faq_question_type_label" pond="110">libelle_type</tablefield>
+			<tablekey>id_type</tablekey>
+			<idkey>id_type</idkey>
+			<link type="1n">
+				<referencefield>faq_question_num_type</referencefield>
+			</link>
+		</table>
+	</field>	
+	
+	<!-- Catégories -->	
+	<field name="134" external="yes" id="006" datatype="categories">
+		<table name="categories">
+			<tablefield id="01" name="lib_categ" pond="130">libelle_categorie</tablefield>
+			<language alias="lang">categories.langue</language>
+			<tablekey>num_noeud</tablekey>
+			<idkey>num_noeud</idkey>
+			<link type="nn">
+				<table>faq_questions_categories</table>
+				<referencefield>num_faq_question</referencefield>
+				<externalfield>num_categ</externalfield>
+			</link>
+		</table>
+	</field>
+	
+	<field name="faq_question_question_date" id="007" pond="100" >
+		<table>
+			<tablefield>faq_question_question_date</tablefield>
+		</table>
+	</field>
+	
+	<field name="faq_question_answer_date" id="008" pond="100" >
+		<table>
+			<tablefield>faq_question_answer_date</tablefield>
+		</table>
+	</field>
+	
+	<!-- Facette sur la date de la réponse -->
+	<field name="faq_question_answer_date" id="009" pond="0" >
+		<table>
+			<tablefield>year(faq_question_answer_date)</tablefield>
+		</table>
+	</field>				 
+	<!-- les CPs pas encore développé...
+	<field name="notice_champs_perso" external="yes" id="100" datatype="custom_field" >
+		<table>cms_editorial</table>
+	</field>
+	 -->
+</indexation>

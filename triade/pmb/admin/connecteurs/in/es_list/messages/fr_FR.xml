@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le connecteur OAI
+****************************************************************************************
+© 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: fr_FR.xml,v 1.2 2013-11-22 16:51:37 arenou Exp $ -->
+
+<XMLlist>
+	<entry code="es_list_no_preview">Aucune visualisation disponible</entry>
+	<entry code="es_list_enrichment_source">(source Externe)</entry>
+	<entry code="es_list_list">Choix des sources</entry>
+	<entry code="es_list_use_in_a2z">Utiliser dans le AtoZ ?</entry>
+	<entry code="yes">Oui</entry>
+	<entry code="no">Non</entry>
+	<entry code="es_list_libelle">Libellé de l'onglet affiché en OPAC</entry>
+	<entry code="es_list_source_name">Nom de la source (visible en OPAC)</entry>
+	<entry code="es_list_infobulle">Infobulle de l'onglet affichée en OPAC</entry>
+	<entry code="es_list_source_as_origine">Source à utiliser à l'affichage</entry>
+	<entry code="es_list_source_as_origine_this">Celle-ci</entry>
+	<entry code="es_list_source_as_origine_record">Celle de la notice trouvée</entry>
+	
+</XMLlist>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_menu_datasource_menu_editorial.xml,v 1.2 2016-09-20 10:25:42 apetithomme Exp $ -->
+
+<XMLlist>
+	<entry code='cms_module_menu_datasource_menu_editorial_max_depth'>Maximum depth of the menu</entry>
+	<entry code='cms_module_menu_datasource_menu_editorial_link_constructor'>Creation of the link to a rubric</entry>
+	<entry code='cms_module_menu_selector_section'>Manual selection of a root rubric</entry>
+	<entry code='cms_module_common_selector_env_var'>Root rubric selection through an environment variable</entry>
+</XMLlist>

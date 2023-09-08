@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!-- 
+****************************************************************************************
+© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: infos.xml,v 1.4 2015-06-10 07:50:18 dgoron Exp $ -->
+<informations>
+	<information>
+		<name>nb_records</name>
+		<query>select count(*) as total from notices</query>	
+	</information>
+	<information>
+		<name>nb_records_perio</name>
+		<query>select count(*) as total from notices where niveau_biblio='s'</query>	
+	</information>
+	<information>
+		<name>nb_records_articles</name>
+		<query>select count(*) as total from notices where niveau_biblio='a'</query>	
+	</information>		
+	<information>
+		<name>nb_records_recevoir</name>
+		<fonction type='internal'>
+			<method>get_records_recevoir</method>
+		</fonction>
+		<action></action>
+	</information>		
+	<information>
+		<name>nb_records_prochain</name>
+		<fonction type='internal'>
+			<method>get_records_prochain</method>
+		</fonction>
+		<action></action>
+	</information>	
+	<information>
+		<name>nb_records_retard</name>
+		<fonction type='internal'>
+			<method>get_records_retard</method>
+		</fonction>
+		<action></action>
+	</information>	
+	<information>
+		<name>nb_records_alerte</name>
+		<fonction type='internal'>
+			<method>get_records_alerte</method>
+		</fonction>
+		<action></action>
+	</information>		
+	<information>
+		<name>nb_abon_renouv</name>
+		<query>SELECT count(*) as total FROM abts_abts WHERE date_fin BETWEEN CURDATE() AND  DATE_ADD(CURDATE(), INTERVAL 30 DAY)</query>	
+	</information>	
+	<information>
+		<name>nb_abon_depass</name>
+		<query>SELECT count(*) as total FROM abts_abts WHERE date_fin &lt; CURDATE()</query>	
+	</information>
+					
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<!-- <information>
+		<name>nb_records</name>
+		<query>select count(*) as total from notices</query>	
+	</information>
+ 	<information>
+		<name>nb_relance</name>
+		<fonction>
+			<class name='notice'>
+				<contruct_param>136</contruct_param>
+			</class>
+			<param>18/03/1857</param>
+			<method>get_date_parution</method>
+		</fonction>
+		<action></action>	
+	</information>
+	<information>
+		<name>loc_emprs</name>
+		<variables>
+			<var type='global' name='deflt2docs_location' />
+		</variables>
+		<query>select count(*) as total, sum(if(empr_date_expiration&lt;CURDATE(),1,0)) as expired, location_libelle as title from empr join docs_location on empr_location=idlocation where empr_location in(!!deflt2docs_location!!)</query>	
+	</information>-->
+
+</informations>

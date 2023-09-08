@@ -1,0 +1,7 @@
+<h2>Administration of the editorial content</h2>
+
+<p>The <b>administration of the editorial content</b> section allows to set the parameters of the application for the editorial content.
+<ul>
+<li><b>Publication states</b> allows to set the states, in order to set the viewing rights in the OPAC</li>
+</ul></p>
+ 

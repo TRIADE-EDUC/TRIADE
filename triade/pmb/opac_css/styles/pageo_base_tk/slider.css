@@ -1,0 +1,168 @@
+/* +--------------------------------------------------------------------------+
+// 2017 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// +-------------------------------------------------+
+// $Id: slider.css,v 1.2 2018-01-08 13:33:34 wlair Exp $ */
+/*------------------------------------------------------------------------------------------*/
+@charset "utf-8";/**/
+
+/*  General
+ ========================================================================== */
+
+#pmbopac .bx-wrapper{
+	border-top: solid 14px #f2f2f2;
+}
+
+/*  images slider
+ ========================================================================== */
+.ui-slide-fade-thumb {
+	height: 345px;
+	overflow: hidden;
+	padding-right: 25px;
+}
+.ui-slide-fade-thumb img{
+	min-height: 315px;
+	width: 100%;
+	object-fit: cover;
+	height: 345px;
+}
+/*  Dates
+ ========================================================================== */
+.dateEvent {
+	position: absolute;
+	bottom: 30px;
+	left: 20px;
+	width: auto;
+	padding: 7px 18px;
+	font-size: 16px;
+	z-index: 25;
+	letter-spacing: 0.07em;
+	font-weight: 600;
+}
+.datesEven {
+	color:#7acad1;
+}
+
+
+/*  Controles
+ ========================================================================== */
+.SliderArt .bx-wrapper .bx-prev {
+	left: 0px;
+	background: url(images/controls.png) no-repeat 0 -32px;
+}
+
+.SliderArt .bx-wrapper .bx-next {
+	right: 0px;
+	background: url(images/controls.png) no-repeat -43px -32px;
+}
+
+.SliderArt .bx-wrapper .bx-prev:hover {
+	background-position: 0 0;
+}
+
+.SliderArt .bx-wrapper .bx-next:hover {
+	background-position: -43px 0;
+}
+
+.SliderArt .bx-wrapper .bx-next, .SliderArt .bx-wrapper .bx-prev {
+	border-radius: 50%;
+	display: block;
+	box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 0.12);
+	opacity: 1;
+	transition-property: opacity;
+	transition-duration: 0.3s;
+	transition-timing-function: ease-in;
+	transition-delay: 0.5s;
+	z-index: 90!important;
+}
+
+.SliderArt:hover .bx-wrapper .bx-next, .SliderArt:hover .bx-wrapper .bx-prev {
+	opacity: 1;
+}
+
+/*  pagination
+ ========================================================================== */
+.Slider .bx-wrapper .bx-pager {
+	position: absolute;
+	top: auto;
+	bottom: 110%;
+	padding: 0;
+	text-align: right;
+	font-size: 0;
+	padding: 0px;
+	width: 50%;
+	right: 0;
+	left: auto;
+	overflow: hidden;
+	height: 30px;
+	padding: 10px 0px;
+	z-index: 2;
+	background: transparent;
+}
+
+.Slider .bx-wrapper .bx-controls.bx-has-controls-auto.bx-has-pager .bx-pager {
+	text-align: right;
+}
+
+.SliderArt .bx-wrapper .bx-pager.bx-default-pager a {
+	background: #ffffff;
+	border: solid 0px #fff;
+	box-shadow: none;
+	width: 15px;
+	height: 15px;
+	border-radius: 50%;
+	box-shadow: 1px 1px 2px -1px rgba(0, 0, 0, 0.16);
+}
+.Slider .bx-wrapper .bx-pager.bx-default-pager a:hover,
+.Slider .bx-wrapper .bx-pager.bx-default-pager a.active {
+	background: #f86163;
+}
+
+/*  In slider
+ ========================================================================== */
+.wl-slider .resume {
+	background: #ffffff;
+	color: #1d1d1d;
+	font-weight: 500;
+	height: 100%;
+}
+
+.wl-slider .sub-title {
+	color: #f86163;
+	font-size: 24px;
+	line-height: 1;
+	font-weight: 400;
+	margin-bottom: 15px;
+	border-left: solid 5px transparent;
+	border-image: url(images/hack-0-red.svg) 0% 100% repeat;
+	border-image-repeat: repeat;
+	text-transform: uppercase;
+	padding-left: 10px;
+	border-image-outset: 0px;
+	border-image-width: 3px 0px 2px 5px;
+}
+
+.ui-preview-article {
+	min-height: 100%;
+}
+
+.wl-slider .itemContent{
+	padding:20px;
+}
+/* Responsive
+ ========================================================================== */
+@media screen and (max-device-width: 960px) {
+	.ui-slide-fade-thumb img{
+		margin-left: 15%;
+		min-height: 5px;
+		max-width: 100%;
+		width: auto;
+		max-height: 200px;
+		display: inline!important;
+	}
+	.ui-slide-fade-thumb {
+		height: auto;
+		overflow: hidden;
+		text-align:right;
+		background-color: #7acad1;
+	}
+}

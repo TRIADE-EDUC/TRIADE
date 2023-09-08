@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!--
+****************************************************************************************
+© 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: fr_FR.xml,v 1.2 2013-02-25 10:34:03 mbertin Exp $ -->
+
+<!DOCTYPE XMLlist SYSTEM "../../../includes/XMLlist.dtd" >
+<XMLlist>
+  <entry code="pmbesCommon_description">Fonctions communes de PMB</entry>
+  <entry code="get_uniumarc_labels_description">Récupère un tableau sérialisé des libellés UNIMARC</entry>
+  <entry code="get_unimarc_labels_input_description">Aucun paramètre</entry>
+  <entry code="get_unimarc_labels_output_description">Tableau des libellés unimarc_label sérialisé</entry>
+  <entry code="unimarc_labels_description">Type unimarc_label sérialisé : array(code champ =&gt; array("label"=&gt;libellé champ,"subfields"=>array(code sous champ=&gt;libellé sous champ)))</entry>
+</XMLlist>

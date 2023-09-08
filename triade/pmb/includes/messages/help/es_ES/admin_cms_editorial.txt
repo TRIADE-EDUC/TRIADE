@@ -1,0 +1,7 @@
+<h2>Administration du contenu &eacute;ditorial</h2>
+
+<p>La section <b>administration du contenu &eacute;ditorial</b> permet de d&eacute;finir les param&egrave;tres de l&apos;application pour le contenu &eacute;ditorial.
+<ul>
+<li><b>Statuts de publication</b> permet de d&eacute;finir les statuts, afin de distinguer les droits de visibilit&eacute; dans l&apos;OPAC</li>
+</ul></p>
+ 

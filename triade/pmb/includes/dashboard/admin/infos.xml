@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!-- 
+****************************************************************************************
+© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: infos.xml,v 1.2 2016-03-09 13:59:54 mbertin Exp $ -->
+<informations>
+	<information>
+		<name>nb_taches_arretees</name>
+		<query>select count(*) as total from taches where status=5</query>
+	</information>
+	<information>
+		<name>nb_taches_en_echec</name>
+		<query>select count(*) as total from taches where status=6</query>	
+	</information>
+	<information>
+		<name>nb_taches_en_attente</name>
+		<query>select count(*) as total from taches where status=1</query>	
+	</information>
+</informations>

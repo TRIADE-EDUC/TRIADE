@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour la classe datasource
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_common_view.xml,v 1.1 2015-06-16 10:24:25 pmbs Exp $ -->
+
+<XMLlist>
+	<entry code="cms_module_common_view_template_choice">Choose a template</entry>
+	<entry code="cms_module_common_view_default_template">Default template</entry>
+	<entry code="cms_module_common_view_edit_template">Edit this template</entry>
+	<entry code="cms_module_common_view_new_template">Create a new template</entry>
+	<entry code="cms_module_common_view_template_label">Name of the template</entry>
+	<entry code="cms_module_common_view_template_content">Content of the template</entry>
+</XMLlist>

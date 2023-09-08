@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le module Article
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_common_selector_type_section_generic.xml,v 1.2 2014-12-30 16:26:33 dgoron Exp $ -->
+
+<XMLlist>
+	<entry code="cms_module_common_selector_section_generic_type_no">Pas de champ générique</entry>
+	<entry code="cms_module_common_selector_section_generic_type_select">Sélecteur d'un champ générique</entry>
+	<entry code="cms_module_common_selector_section_generic_type_select_invit">Choisissez un champ générique</entry>
+	<entry code="cms_module_common_selector_generic_section">Sélection de rubrique</entry>
+	<entry code="cms_module_common_selector_generic_parent_section">Sélection de rubrique parente</entry>
+</XMLlist>

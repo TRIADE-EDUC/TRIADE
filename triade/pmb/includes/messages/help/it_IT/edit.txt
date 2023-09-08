@@ -1,0 +1,4 @@
+<h2><img src="./images/icone_editions.gif" hspace="6" vspace="6" align="middle"> module d'&eacute;ditions</h2>
+<p>Questo è il modulo di monitoraggio del programma PMB.</p>
+<div align="right">Il gruppo di sviluppo</div>
+ 

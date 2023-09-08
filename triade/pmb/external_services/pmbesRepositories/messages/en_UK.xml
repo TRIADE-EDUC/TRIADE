@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?><XMLlist><!--
+pmbesRepositories
+--><entry code="pmbesRepositories_description">a</entry>
+<!--
+list_agnostic_repositories
+-->
+<entry code="list_agnostic_repositories_description">Lists the repository sources of the agnostic connector.</entry>
+<entry code="list_agnostic_repositories_input_description"></entry>
+<entry code="list_agnostic_repositories_output_description"></entry>
+<entry code="list_agnostic_repositories_repositories">The sources</entry>
+<entry code="list_agnostic_repositories_repositories_id">The id of the source</entry>
+<entry code="list_agnostic_repositories_repositories_name">The name of the source</entry>
+<entry code="list_agnostic_repositories_repositories_comment">The comment of the source</entry>
+<!--
+add_unimarc_notice_to_repository
+-->
+<entry code="add_unimarc_notice_to_repository_description">Adds a unimarc record in an repository of the agnostic connector</entry>
+<entry code="add_unimarc_notice_to_repository_input_description"></entry>
+<entry code="add_unimarc_notice_to_repository_output_description"></entry>
+<entry code="add_unimarc_notice_to_repository_source_id">The id of the source in which we want to add the record</entry>
+<entry code="add_unimarc_notice_to_repository_notice">The record</entry>
+</XMLlist>
