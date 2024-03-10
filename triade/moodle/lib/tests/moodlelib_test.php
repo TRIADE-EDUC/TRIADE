@@ -179,6 +179,7 @@ class moodlelib_test extends \advanced_testcase {
 
         // Invalid utf8 string.
         $this->assertSame('aš', fix_utf8('a'.chr(130).'š'), 'This fails with buggy iconv() when mbstring extenstion is not available as fallback.');
+        $this->assertSame('Hello ', fix_utf8('Hello ￿'));
     }
 
     public function test_optional_param() {
@@ -474,40 +475,32 @@ class moodlelib_test extends \advanced_testcase {
         $this->assertSame(
             '#()*#,9789\'".,<42897></?$(*DSFMO#$*)(SDJ)($*)',
             clean_param('#()*#,9789\'".,<42897></?$(*DSFMO#$*)(SDJ)($*)', PARAM_RAW));
-        $this->assertSame(null, clean_param(null, PARAM_RAW));
     }
 
     public function test_clean_param_trim() {
         $this->assertSame('Frog toad', clean_param("   Frog toad   \r\n  ", PARAM_RAW_TRIMMED));
-        $this->assertSame('', clean_param(null, PARAM_RAW_TRIMMED));
     }
 
     public function test_clean_param_clean() {
         // PARAM_CLEAN is an ugly hack, do not use in new code (skodak),
         // instead use more specific type, or submit sothing that can be verified properly.
         $this->assertSame('xx', clean_param('xx<script>', PARAM_CLEAN));
-        $this->assertSame('', clean_param(null, PARAM_CLEAN));
-        $this->assertSame('', clean_param(null, PARAM_CLEANHTML));
     }
 
     public function test_clean_param_alpha() {
         $this->assertSame('DSFMOSDJ', clean_param('#()*#,9789\'".,<42897></?$(*DSFMO#$*)(SDJ)($*)', PARAM_ALPHA));
-        $this->assertSame('', clean_param(null, PARAM_ALPHA));
     }
 
     public function test_clean_param_alphanum() {
         $this->assertSame('978942897DSFMOSDJ', clean_param('#()*#,9789\'".,<42897></?$(*DSFMO#$*)(SDJ)($*)', PARAM_ALPHANUM));
-        $this->assertSame('', clean_param(null, PARAM_ALPHANUM));
     }
 
     public function test_clean_param_alphaext() {
         $this->assertSame('DSFMOSDJ', clean_param('#()*#,9789\'".,<42897></?$(*DSFMO#$*)(SDJ)($*)', PARAM_ALPHAEXT));
-        $this->assertSame('', clean_param(null, PARAM_ALPHAEXT));
     }
 
     public function test_clean_param_sequence() {
         $this->assertSame(',9789,42897', clean_param('#()*#,9789\'".,<42897></?$(*DSFMO#$*)(SDJ)($*)', PARAM_SEQUENCE));
-        $this->assertSame('', clean_param(null, PARAM_SEQUENCE));
     }
 
     public function test_clean_param_component() {
@@ -536,7 +529,6 @@ class moodlelib_test extends \advanced_testcase {
         $this->assertSame('', clean_param('_user', PARAM_COMPONENT));
         $this->assertSame('', clean_param('2rating', PARAM_COMPONENT));
         $this->assertSame('', clean_param('user_', PARAM_COMPONENT));
-        $this->assertSame('', clean_param(null, PARAM_COMPONENT));
     }
 
     public function test_clean_param_localisedfloat() {
@@ -553,7 +545,6 @@ class moodlelib_test extends \advanced_testcase {
         $this->assertSame(false, clean_param('1X000X5', PARAM_LOCALISEDFLOAT));
         $this->assertSame(false, clean_param('nan', PARAM_LOCALISEDFLOAT));
         $this->assertSame(false, clean_param('10.6blah', PARAM_LOCALISEDFLOAT));
-        $this->assertSame(null, clean_param(null, PARAM_LOCALISEDFLOAT));
 
         // Tests with a localised decimal separator.
         $this->define_local_decimal_separator();
@@ -603,7 +594,6 @@ class moodlelib_test extends \advanced_testcase {
         $this->assertSame('', clean_param('Xx', PARAM_PLUGIN));
         $this->assertSame('', clean_param('_xx', PARAM_PLUGIN));
         $this->assertSame('', clean_param('xx_', PARAM_PLUGIN));
-        $this->assertSame('', clean_param(null, PARAM_PLUGIN));
     }
 
     public function test_clean_param_area() {
@@ -620,7 +610,6 @@ class moodlelib_test extends \advanced_testcase {
         $this->assertSame('', clean_param('some-thing', PARAM_AREA));
         $this->assertSame('', clean_param('somethííng', PARAM_AREA));
         $this->assertSame('', clean_param('something.x', PARAM_AREA));
-        $this->assertSame('', clean_param(null, PARAM_AREA));
     }
 
     public function test_clean_param_text() {
@@ -642,7 +631,6 @@ class moodlelib_test extends \advanced_testcase {
         $this->assertSame('<lang lang="en">a>a</lang>', clean_param('<lang lang="en">a>a</lang>', PARAM_TEXT)); // Standard strip_tags() behaviour.
         $this->assertSame('a', clean_param('<lang lang="en">a<a</lang>', PARAM_TEXT));
         $this->assertSame('<lang lang="en">aa</lang>', clean_param('<lang lang="en">a<br>a</lang>', PARAM_TEXT));
-        $this->assertSame('', clean_param(null, PARAM_TEXT));
     }
 
     public function test_clean_param_url() {
@@ -668,7 +656,6 @@ class moodlelib_test extends \advanced_testcase {
         $this->assertSame('', clean_param('mailto:support@moodle.org', PARAM_URL));
         $this->assertSame('', clean_param('mailto:support@moodle.org?subject=Hello%20Moodle', PARAM_URL));
         $this->assertSame('', clean_param('mailto:support@moodle.org?subject=Hello%20Moodle&cc=feedback@moodle.org', PARAM_URL));
-        $this->assertSame('', clean_param(null, PARAM_URL));
     }
 
     public function test_clean_param_localurl() {
@@ -709,9 +696,6 @@ class moodlelib_test extends \advanced_testcase {
         $this->assertSame('', clean_param('http://www.example.com.evil.net/hack.php', PARAM_LOCALURL));
         $CFG->wwwroot = 'https://www.example.com';
         $this->assertSame('', clean_param('https://www.example.com.evil.net/hack.php', PARAM_LOCALURL));
-
-        $this->assertSame('', clean_param('', PARAM_LOCALURL));
-        $this->assertSame('', clean_param(null, PARAM_LOCALURL));
     }
 
     public function test_clean_param_file() {
@@ -736,7 +720,6 @@ class moodlelib_test extends \advanced_testcase {
         $this->assertSame(' . .dontltrim.me', clean_param(' . .dontltrim.me', PARAM_FILE));
         $this->assertSame('here is a tab.txt', clean_param("here is a tab\t.txt", PARAM_FILE));
         $this->assertSame('here is a linebreak.txt', clean_param("here is a line\r\nbreak.txt", PARAM_FILE));
-        $this->assertSame('', clean_param(null, PARAM_FILE));
 
         // The following behaviours have been maintained although they seem a little odd.
         $this->assertSame('funnything', clean_param('funny:thing', PARAM_FILE));
@@ -764,13 +747,6 @@ class moodlelib_test extends \advanced_testcase {
         $this->assertSame('/..b../.../myfile.txt', clean_param('/..b../.../myfile.txt', PARAM_PATH));
         $this->assertSame('..b../.../myfile.txt', clean_param('..b../.../myfile.txt', PARAM_PATH));
         $this->assertSame('/super/slashes/', clean_param('/super//slashes///', PARAM_PATH));
-        $this->assertSame('', clean_param(null, PARAM_PATH));
-    }
-
-    public function test_clean_param_safepath() {
-        $this->assertSame('folder/file', clean_param('folder/file', PARAM_SAFEPATH));
-        $this->assertSame('folder//file', clean_param('folder/../file', PARAM_SAFEPATH));
-        $this->assertSame('', clean_param(null, PARAM_SAFEPATH));
     }
 
     public function test_clean_param_username() {
@@ -792,7 +768,6 @@ class moodlelib_test extends \advanced_testcase {
         $this->assertSame(clean_param('john#$%&() ', PARAM_USERNAME), 'john');
         $this->assertSame('johnd', clean_param('JOHNdóé ', PARAM_USERNAME));
         $this->assertSame(clean_param('john.,:;-_/|\ñÑ[]A_X-,D {} ~!@#$%^&*()_+ ?><[] ščřžžý ?ýá?ý??doe ', PARAM_USERNAME), 'john.-_a_x-d@_doe');
-        $this->assertSame('', clean_param(null, PARAM_USERNAME));
 
         // Test success condition, if extendedusernamechars == ENABLE;.
         $CFG->extendedusernamechars = true;
@@ -822,7 +797,6 @@ class moodlelib_test extends \advanced_testcase {
         $this->assertSame('', clean_param('0numeric', PARAM_STRINGID));
         $this->assertSame('', clean_param('*', PARAM_STRINGID));
         $this->assertSame('', clean_param(' ', PARAM_STRINGID));
-        $this->assertSame('', clean_param(null, PARAM_STRINGID));
     }
 
     public function test_clean_param_timezone() {
@@ -857,35 +831,12 @@ class moodlelib_test extends \advanced_testcase {
             '13.5'                           => '',
             '+13.5'                          => '',
             '-13.5'                          => '',
-            '0.2'                            => '',
-            ''                               => '',
-            null                             => '',
-        );
+            '0.2'                            => '');
 
         foreach ($testvalues as $testvalue => $expectedvalue) {
             $actualvalue = clean_param($testvalue, PARAM_TIMEZONE);
             $this->assertEquals($expectedvalue, $actualvalue);
         }
-    }
-
-    public function test_clean_param_null_argument() {
-        $this->assertEquals(0, clean_param(null, PARAM_INT));
-        $this->assertEquals(0, clean_param(null, PARAM_FLOAT));
-        $this->assertEquals(0, clean_param(null, PARAM_LOCALISEDFLOAT));
-        $this->assertEquals(false, clean_param(null, PARAM_BOOL));
-        $this->assertEquals('', clean_param(null, PARAM_NOTAGS));
-        $this->assertEquals('', clean_param(null, PARAM_SAFEDIR));
-        $this->assertEquals('', clean_param(null, PARAM_HOST));
-        $this->assertEquals('', clean_param(null, PARAM_PEM));
-        $this->assertEquals('', clean_param(null, PARAM_BASE64));
-        $this->assertEquals('', clean_param(null, PARAM_TAG));
-        $this->assertEquals('', clean_param(null, PARAM_TAGLIST));
-        $this->assertEquals('', clean_param(null, PARAM_CAPABILITY));
-        $this->assertEquals(0, clean_param(null, PARAM_PERMISSION));
-        $this->assertEquals('', clean_param(null, PARAM_AUTH));
-        $this->assertEquals('', clean_param(null, PARAM_LANG));
-        $this->assertEquals('', clean_param(null, PARAM_THEME));
-        $this->assertEquals('', clean_param(null, PARAM_EMAIL));
     }
 
     public function test_validate_param() {
@@ -4003,6 +3954,7 @@ EOF;
             [2, "one\ftwo"],
             [1, "SO<sub>4</sub><sup>2-</sup>"],
             [6, '4+4=8 i.e. O(1) a,b,c,d I’m black&blue_really'],
+            [1, '<span>a</span><span>b</span>'],
         ];
     }
 
@@ -4592,24 +4544,26 @@ EOF;
     public function test_unserialize_array() {
         $a = [1, 2, 3];
         $this->assertEquals($a, unserialize_array(serialize($a)));
-        $this->assertEquals($a, unserialize_array(serialize($a)));
         $a = ['a' => 1, 2 => 2, 'b' => 'cde'];
-        $this->assertEquals($a, unserialize_array(serialize($a)));
         $this->assertEquals($a, unserialize_array(serialize($a)));
         $a = ['a' => 1, 2 => 2, 'b' => 'c"d"e'];
         $this->assertEquals($a, unserialize_array(serialize($a)));
         $a = ['a' => 1, 2 => ['c' => 'd', 'e' => 'f'], 'b' => 'cde'];
         $this->assertEquals($a, unserialize_array(serialize($a)));
-
-        // Can not unserialize if any string contains semicolons.
+        $a = ['a' => 1, 2 => ['c' => 'd', 'e' => ['f' => 'g']], 'b' => 'cde'];
+        $this->assertEquals($a, unserialize_array(serialize($a)));
         $a = ['a' => 1, 2 => 2, 'b' => 'c"d";e'];
-        $this->assertEquals(false, unserialize_array(serialize($a)));
+        $this->assertEquals($a, unserialize_array(serialize($a)));
 
         // Can not unserialize if there are any objects.
         $a = (object)['a' => 1, 2 => 2, 'b' => 'cde'];
-        $this->assertEquals(false, unserialize_array(serialize($a)));
+        $this->assertFalse(unserialize_array(serialize($a)));
         $a = ['a' => 1, 2 => 2, 'b' => (object)['a' => 'cde']];
-        $this->assertEquals(false, unserialize_array(serialize($a)));
+        $this->assertFalse(unserialize_array(serialize($a)));
+        $a = ['a' => 1, 2 => 2, 'b' => ['c' => (object)['a' => 'cde']]];
+        $this->assertFalse(unserialize_array(serialize($a)));
+        $a = ['a' => 1, 2 => 2, 'b' => ['c' => new lang_string('no')]];
+        $this->assertFalse(unserialize_array(serialize($a)));
 
         // Array used in the grader report.
         $a = array('aggregatesonly' => [51, 34], 'gradesonly' => [21, 45, 78]);
@@ -5412,85 +5366,67 @@ EOF;
     }
 
     /**
-     * Tests the get_performance_info function with regard to locks.
+     * Provider for is_proxybypass
      *
-     * @covers ::get_performance_info
+     * @return array of test cases.
      */
-    public function test_get_performance_info_locks(): void {
-        global $PERF;
+    public function is_proxybypass_provider(): array {
 
-        // Unset lock data just in case previous tests have set it.
-        unset($PERF->locks);
-
-        // With no lock data, there should be no information about locks in the results.
-        $result = get_performance_info();
-        $this->assertStringNotContainsString('Lock', $result['html']);
-        $this->assertStringNotContainsString('Lock', $result['txt']);
-
-        // Rather than really do locks, just fill the array with fake data in the right format.
-        $PERF->locks = [
-            (object) [
-                'type' => 'phpunit',
-                'resource' => 'lock1',
-                'wait' => 0.59,
-                'success' => true,
-                'held' => '6.04'
-            ], (object) [
-                'type' => 'phpunit',
-                'resource' => 'lock2',
-                'wait' => 0.91,
-                'success' => false
-            ]
+        return [
+            'Proxybypass contains the same IP as the beginning of the URL' => [
+                'http://192.168.5.5-fake-app-7f000101.nip.io',
+                '192.168.5.5, 127.0.0.1',
+                false
+            ],
+            'Proxybypass contains the last part of the URL' => [
+                'http://192.168.5.5-fake-app-7f000101.nip.io',
+                'app-7f000101.nip.io',
+                false
+            ],
+            'Proxybypass contains the last part of the URL 2' => [
+                'http://store.mydomain.com',
+                'mydomain.com',
+                false
+            ],
+            'Proxybypass contains part of the url' => [
+                'http://myweb.com',
+                'store.myweb.com',
+                false
+            ],
+            'Different IPs used in proxybypass' => [
+                'http://192.168.5.5',
+                '192.168.5.3',
+                false
+            ],
+            'Proxybypass and URL matchs' => [
+                'http://store.mydomain.com',
+                'store.mydomain.com',
+                true
+            ],
+            'IP used in proxybypass' => [
+                'http://192.168.5.5',
+                '192.168.5.5',
+                true
+            ],
         ];
-        $result = get_performance_info();
-
-        // Extract HTML table rows.
-        $this->assertEquals(1, preg_match('~<table class="locktimings.*?</table>~s',
-                $result['html'], $matches));
-        $this->assertEquals(3, preg_match_all('~<tr[> ].*?</tr>~s', $matches[0], $matches2));
-        $rows = $matches2[0];
-
-        // Check header.
-        $this->assertMatchesRegularExpression('~Lock.*Waited.*Obtained.*Held~s', $rows[0]);
-        // Check both locks.
-        $this->assertMatchesRegularExpression('~phpunit/lock1.*0\.6.*&#x2713;.*6\.0~s', $rows[1]);
-        $this->assertMatchesRegularExpression('~phpunit/lock2.*0\.9.*&#x274c;.*-~s', $rows[2]);
-
-        $this->assertStringContainsString('Locks (waited/obtained/held): ' .
-                'phpunit/lock1 (0.6/y/6.0) phpunit/lock2 (0.9/n/-).', $result['txt']);
     }
 
     /**
-     * Tests the get_performance_info function with regard to session wait time.
+     * Check if $url matches anything in proxybypass list
      *
-     * @covers ::get_performance_info
+     * Test function {@see is_proxybypass()}.
+     * @dataProvider is_proxybypass_provider
+     * @param string $url url to check
+     * @param string $proxybypass
+     * @param bool $expected Expected value.
      */
-    public function test_get_performance_info_session_wait(): void {
-        global $PERF;
+    public function test_is_proxybypass(string $url, string $proxybypass, bool $expected): void {
+        $this->resetAfterTest();
 
-        // With no session lock data, there should be no session wait information in the results.
-        unset($PERF->sessionlock);
-        $result = get_performance_info();
-        $this->assertStringNotContainsString('Session wait', $result['html']);
-        $this->assertStringNotContainsString('sessionwait', $result['txt']);
+        global $CFG;
+        $CFG->proxyhost = '192.168.5.5'; // Test with a fake proxy.
+        $CFG->proxybypass = $proxybypass;
 
-        // With suitable data, it should be included in the result.
-        $PERF->sessionlock = ['wait' => 4.2];
-        $result = get_performance_info();
-        $this->assertStringContainsString('Session wait: 4.200 secs', $result['html']);
-        $this->assertStringContainsString('sessionwait: 4.200 secs', $result['txt']);
-    }
-
-    /**
-     * Test the html_is_blank() function.
-     *
-     * @covers ::html_is_blank
-     */
-    public function test_html_is_blank() {
-        $this->assertEquals(true, html_is_blank(null));
-        $this->assertEquals(true, html_is_blank(''));
-        $this->assertEquals(true, html_is_blank('<p> </p>'));
-        $this->assertEquals(false, html_is_blank('<p>.</p>'));
-        $this->assertEquals(false, html_is_blank('<img src="#">'));
+        $this->assertEquals($expected, is_proxybypass($url));
     }
 }

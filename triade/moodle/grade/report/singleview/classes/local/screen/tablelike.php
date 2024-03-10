@@ -24,10 +24,10 @@
 
 namespace gradereport_singleview\local\screen;
 
-use gradereport_singleview\local\ui\be_readonly;
 use html_table;
 use html_writer;
 use stdClass;
+use grade_item;
 use grade_grade;
 use gradereport_singleview\local\ui\bulk_insert;
 
@@ -40,47 +40,38 @@ defined('MOODLE_INTERNAL') || die;
  * @copyright 2014 Moodle Pty Ltd (http://moodle.com)
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-abstract class tablelike extends screen implements be_readonly {
+abstract class tablelike extends screen {
 
-    /**
-     * A list of table headers
-     * @var array $headers
-     */
-    protected $headers = [];
+    /** @var array $headers A list of table headers */
+    protected $headers = array();
 
-    /**
-     * A list of errors that mean we should not show the table
-     * @var array $initerrors
-     */
-    protected $initerrors = [];
+    /** @var array $initerrors A list of errors that mean we should not show the table */
+    protected $initerrors = array();
 
-    /**
-     * Describes the columns in the table
-     * @var array $definition
-     */
-    protected $definition = [];
+    /** @var array $definition Describes the columns in the table */
+    protected $definition = array();
 
     /**
      * Format a row of the table
      *
-     * @var mixed $item
-     * @return array
+     * @param mixed $item
+     * @return string
      */
-    abstract public function format_line($item): array;
+    public abstract function format_line($item);
 
     /**
      * Get the summary for this table.
      *
      * @return string
      */
-    abstract public function summary(): string;
+    public abstract function summary();
 
     /**
      * Get the table headers
      *
      * @return array
      */
-    public function headers(): array {
+    public function headers() {
         return $this->headers;
     }
 
@@ -90,7 +81,7 @@ abstract class tablelike extends screen implements be_readonly {
      * @param array $overwrite New headers
      * @return tablelike This
      */
-    public function set_headers(array $overwrite): tablelike {
+    public function set_headers($overwrite) {
         $this->headers = $overwrite;
         return $this;
     }
@@ -100,7 +91,7 @@ abstract class tablelike extends screen implements be_readonly {
      *
      * @return array
      */
-    public function init_errors(): array {
+    public function init_errors() {
         return $this->initerrors;
     }
 
@@ -109,7 +100,7 @@ abstract class tablelike extends screen implements be_readonly {
      *
      * @param string $mesg
      */
-    public function set_init_error(string $mesg) {
+    public function set_init_error($mesg) {
         $this->initerrors[] = $mesg;
     }
 
@@ -118,7 +109,7 @@ abstract class tablelike extends screen implements be_readonly {
      *
      * @return array The definition.
      */
-    public function definition(): array {
+    public function definition() {
         return $this->definition;
     }
 
@@ -128,18 +119,18 @@ abstract class tablelike extends screen implements be_readonly {
      * @param array $overwrite New definition
      * @return tablelike This
      */
-    public function set_definition(array $overwrite): tablelike {
+    public function set_definition($overwrite) {
         $this->definition = $overwrite;
         return $this;
     }
 
     /**
      * Get a element to generate the HTML for this table row
+     * @param array $line This is a list of lines in the table (modified)
      * @param grade_grade $grade The grade.
-     * @return array
+     * @return string
      */
-    public function format_definition(grade_grade $grade): array {
-        $line = [];
+    public function format_definition($line, $grade) {
         foreach ($this->definition() as $i => $field) {
             // Table tab index.
             $tab = ($i * $this->total) + $this->index;
@@ -147,16 +138,16 @@ abstract class tablelike extends screen implements be_readonly {
             $html = new $classname($grade, $tab);
 
             if ($field == 'finalgrade' and !empty($this->structure)) {
-                $html .= $this->structure->get_grade_action_menu($grade);
+                $html .= $this->structure->get_grade_analysis_icon($grade);
             }
 
             // Singleview users without proper permissions should be presented
             // disabled checkboxes for the Exclude grade attribute.
-            if ($field == 'exclude' && !has_capability('moodle/grade:manage', $this->context)) {
+            if ($field == 'exclude' && !has_capability('moodle/grade:manage', $this->context)){
                 $html->disabled = true;
             }
 
-            $line[$field] = $html;
+            $line[] = $html;
         }
         return $line;
     }
@@ -165,7 +156,7 @@ abstract class tablelike extends screen implements be_readonly {
      * Get the HTML for the whole table
      * @return string
      */
-    public function html(): string {
+    public function html() {
         global $OUTPUT;
 
         if (!empty($this->initerrors)) {
@@ -197,23 +188,28 @@ abstract class tablelike extends screen implements be_readonly {
             $this->index++;
         }
 
+        $underlying = get_class($this);
+
         $data = new stdClass();
         $data->table = $table;
         $data->instance = $this;
 
-        $buttonattr = ['class' => 'singleview_buttons submit'];
-        $buttonhtml = implode(' ', $this->buttons($this->is_readonly()));
+        $buttonattr = array('class' => 'singleview_buttons submit');
+        $buttonhtml = implode(' ', $this->buttons());
+
         $buttons = html_writer::tag('div', $buttonhtml, $buttonattr);
+        $selectview = new select($this->courseid, $this->itemid, $this->groupid);
 
         $sessionvalidation = html_writer::empty_tag('input',
-            ['type' => 'hidden', 'name' => 'sesskey', 'value' => sesskey()]);
+            array('type' => 'hidden', 'name' => 'sesskey', 'value' => sesskey()));
 
-        $html = html_writer::tag('form',
-            html_writer::table($table)  . $this->bulk_insert() . $buttons . $sessionvalidation,
-            ['method' => 'POST']
+        $html = $selectview->html();
+        $html .= html_writer::tag('form',
+            $buttons . html_writer::table($table) . $this->bulk_insert() . $buttons . $sessionvalidation,
+            array('method' => 'POST')
         );
-
-        return html_writer::div($html, 'reporttable');
+        $html .= $selectview->html();
+        return $html;
     }
 
     /**
@@ -225,32 +221,23 @@ abstract class tablelike extends screen implements be_readonly {
         return html_writer::tag(
             'div',
             (new bulk_insert($this->item))->html(),
-            ['class' => 'singleview_bulk', 'hidden' => true]
+            array('class' => 'singleview_bulk')
         );
     }
 
     /**
-     * Return true if this is read-only.
-     *
-     * @return bool
-     */
-    public function is_readonly(): bool {
-        global $USER;
-        return empty($USER->editing);
-    }
-
-    /**
      * Get the buttons for saving changes.
-     * @param bool $disabled If button is disabled
      *
      * @return array
      */
-    public function buttons(bool $disabled = false): array {
+    public function buttons() {
         global $OUTPUT;
-        $params = ['type' => 'submit', 'value' => get_string('save', 'gradereport_singleview')];
-        if ($disabled) {
-            $params['disabled'] = 'disabled';
-        }
-        return [$OUTPUT->render_from_template('gradereport_singleview/button', $params)];
+
+        $save = $OUTPUT->render_from_template('gradereport_singleview/button', [
+            'type' => 'submit',
+            'value' => get_string('save', 'gradereport_singleview'),
+        ]);
+
+        return array($save);
     }
 }

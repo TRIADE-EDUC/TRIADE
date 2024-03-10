@@ -6,8 +6,8 @@ error_reporting(0);
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
- *   Site                 : http://www.triade-educ.com
+ *   copyright            : (C) 2000 E. TAESCH 
+ *   Site                 : http://www.triade-educ.org
  *
  *
  ***************************************************************************/
@@ -571,7 +571,7 @@ for($j=$dep;$j<$nbEleveT;$j++) {  // premiere ligne de la creation PDF
 		                                $grade="E";
 		                        }elseif (($note >= 6) && ($note <= 9.99))  {
 		                                $grade="FX";
-		                        }elseif ($note <= 5.99)  {
+		                        }elseif (($note <= 5.99) && ($note >= 0) && ($note != ""))  {
 		                                $grade="F";
 		                        }else{
 		                                $grade="";
@@ -828,10 +828,11 @@ for($j=$dep;$j<$nbEleveT;$j++) {  // premiere ligne de la creation PDF
 				$grade="E";
 			}elseif (($note >= 6) && ($note <= 9.99))  {
 				$grade="FX";
-			}elseif ($note <= 5.99)  {
+			}elseif (($note <= 5.99) && ($note >= 0) && ($note != ''))  {
 				$grade="F";
 			}else{
 				$grade="";
+				$ects="0";
 			}
 
 			if ($rattrapageprovisoire == "oui") { if ($noterattrapage != "") { $grade="E"; } } 
@@ -908,7 +909,7 @@ for($j=$dep;$j<$nbEleveT;$j++) {  // premiere ligne de la creation PDF
 			$gradeUE="E";
                 }elseif (($moyenneUE >= 6) && ($moyenneUE <= 9.99))  {
 			$gradeUE="FX";
-                }elseif ($moyenneUE <= 5.99)  {
+                }elseif (($moyenneUE <= 5.99) && ($moyenneUE >= 0) && ($moyenneUE != '')) {
 			$gradeUE="F";
                 }else{
 			$gradeUE="";
@@ -979,7 +980,7 @@ if (($moyenneGenerale >= 17) && ($moyenneGenerale <= 20))  {
 	$gradeGeneral="E";
 }elseif (($moyenneGenerale >= 6) && ($moyenneGenerale <= 9.99))  {
 	$gradeGeneral="FX";
-}elseif ($moyenneGenerale <= 5.99)  {
+}elseif (($moyenneGenerale <= 5.99) && ($moyenneGenerale >= 0) && ($moyenneGenerale != ''))  {
 	$gradeGeneral="F";
 }else{
 	$gradeGeneral="";
@@ -1008,7 +1009,7 @@ if (($moyenneGeneraleAff >= 17) && ($moyenneGeneraleAff <= 20))  {
         $gradeGeneral="E";
 }elseif (($moyenneGeneraleAff >= 6) && ($moyenneGeneraleAff <= 9.99))  {
         $gradeGeneral="FX";
-}elseif ($moyenneGeneraleAff <= 5.99)  {
+}elseif (($moyenneGeneraleAff <= 5.99) && ($moyenneGeneraleAff >= 0) &&  ($moyenneGeneraleAff != '')) {
         $gradeGeneral="F";
 }else{
         $gradeGeneral="";

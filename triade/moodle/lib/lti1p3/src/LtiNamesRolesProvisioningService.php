@@ -14,9 +14,8 @@ class LtiNamesRolesProvisioningService extends LtiAbstractService
     public function getMembers(): array
     {
         $request = new ServiceRequest(
-            ServiceRequest::METHOD_GET,
-            $this->getServiceData()['context_memberships_url'],
-            ServiceRequest::TYPE_GET_MEMBERSHIPS
+            LtiServiceConnector::METHOD_GET,
+            $this->getServiceData()['context_memberships_url']
         );
         $request->setAccept(static::CONTENTTYPE_MEMBERSHIPCONTAINER);
 

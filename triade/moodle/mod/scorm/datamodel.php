@@ -24,26 +24,26 @@ $attempt = required_param('attempt', PARAM_INT);  // attempt number.
 
 if (!empty($id)) {
     if (! $cm = get_coursemodule_from_id('scorm', $id)) {
-        throw new \moodle_exception('invalidcoursemodule');
+        print_error('invalidcoursemodule');
     }
     if (! $course = $DB->get_record("course", array("id" => $cm->course))) {
-        throw new \moodle_exception('coursemisconf');
+        print_error('coursemisconf');
     }
     if (! $scorm = $DB->get_record("scorm", array("id" => $cm->instance))) {
-        throw new \moodle_exception('invalidcoursemodule');
+        print_error('invalidcoursemodule');
     }
 } else if (!empty($a)) {
     if (! $scorm = $DB->get_record("scorm", array("id" => $a))) {
-        throw new \moodle_exception('invalidcoursemodule');
+        print_error('invalidcoursemodule');
     }
     if (! $course = $DB->get_record("course", array("id" => $scorm->course))) {
-        throw new \moodle_exception('coursemisconf');
+        print_error('coursemisconf');
     }
     if (! $cm = get_coursemodule_from_instance("scorm", $scorm->id, $course->id)) {
-        throw new \moodle_exception('invalidcoursemodule');
+        print_error('invalidcoursemodule');
     }
 } else {
-    throw new \moodle_exception('missingparameter');
+    print_error('missingparameter');
 }
 
 $PAGE->set_url('/mod/scorm/datamodel.php', array('scoid' => $scoid, 'attempt' => $attempt, 'id' => $cm->id));

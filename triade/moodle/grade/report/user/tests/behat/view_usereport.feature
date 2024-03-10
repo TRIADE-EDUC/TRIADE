@@ -5,13 +5,10 @@ Feature: We can use the user report
 
   Background:
     Given the following "courses" exist:
-      | fullname | shortname | category |
-      | Course 1 | C1 | 0 |
+      | fullname | shortname | category | groupmode |
+      | Course 1 | C1        | 0        | 1         |
 
-  @javascript
   Scenario: Verify we can view a user grade report with no users enrolled.
-    Given I log in as "admin"
-    And I am on "Course 1" course homepage
-    And I navigate to "View > User report" in the course gradebook
-    And I click on "All users (0)" in the "user" search widget
+    When I am on the "Course 1" "grades > User report > View" page logged in as "admin"
+    And I select "All users (0)" from the "Select all or one user" singleselect
     Then I should see "There are no students enrolled in this course."

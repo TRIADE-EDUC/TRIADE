@@ -8,7 +8,7 @@
     $PAGE->set_url('/mod/choice/index.php', array('id'=>$id));
 
     if (!$course = $DB->get_record('course', array('id'=>$id))) {
-        throw new \moodle_exception('invalidcourseid');
+        print_error('invalidcourseid');
     }
 
     require_course_login($course);

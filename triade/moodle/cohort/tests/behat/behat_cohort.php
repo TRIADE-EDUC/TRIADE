@@ -47,8 +47,8 @@ class behat_cohort extends behat_base {
     public function i_add_user_to_cohort_members($user, $cohortidnumber) {
 
         // If we are not in the cohorts management we should move there before anything else.
-        $cohortsurl = new moodle_url('/cohort/index.php');
-        if (strpos($this->getSession()->getCurrentUrl(), $cohortsurl->out(false)) !== 0) {
+        if (!$this->getSession()->getPage()->find('css', 'input#cohort_search_q')) {
+
             // With JS enabled we should expand a few tree nodes.
             $parentnodes = get_string('users', 'admin') . ' > ' .
                 get_string('accounts', 'admin');
@@ -59,8 +59,9 @@ class behat_cohort extends behat_base {
             );
         }
 
-        $this->execute('behat_reportbuilder::i_press_action_in_the_report_row',
-            [get_string('assign', 'cohort'), $this->escape($cohortidnumber)]);
+        $this->execute('behat_general::i_click_on_in_the',
+            array(get_string('assign', 'cohort'), "link", $this->escape($cohortidnumber), "table_row")
+        );
 
         $this->execute("behat_forms::i_set_the_field_to",
             array(get_string('potusers', 'cohort'), $this->escape($user))

@@ -122,5 +122,3 @@ class SimplePie_Copyright
 		return null;
 	}
 }
-
-class_alias('SimplePie_Copyright', 'SimplePie\Copyright', false);

@@ -6,7 +6,7 @@
     require_once("../../config.php");
 
     if (!filter_is_enabled('algebra')) {
-        throw new \moodle_exception('filternotenabled');
+        print_error('filternotenabled');
     }
 
     require_once($CFG->libdir.'/filelib.php');

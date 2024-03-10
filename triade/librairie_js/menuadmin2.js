@@ -143,6 +143,8 @@ if (rubriqueannexe != "non") {
 	if (lan == "oui") {
 		if (moduleadminfourniture == "oui") document.write("<img src='./image/cube.gif' width='4' height='4'> <a id='menumodule0' href='#' onClick=\"open('http://support.triade-educ.com/support/triade-shop.php','triadeshop','width=1024,height=760,resizable=yes,personalbar=no,toolbar=no,statusbar=no,locationbar=no,menubar=no,scrollbars=yes');\" >"+langmenuadmin526+"</a><br>");
 	}
+	
+	document.write("<img src='./image/cube.gif' width='4' height='4'> <a id='menumodule0' href='https://www.triade-educ.org/accueil/triade-sign.php?key="+SIGNKEY+"' target='_blank' >Triade-Sign</a><br>");
 
 	if (moduleelearning == "dokeos") {
 		document.write("<img src='./image/cube.gif' width='4' height='4'> <a id='menumodule0' href='./acces_dokeos.php' target='_blank' >"+langmenuadmin103+"</a><br>");

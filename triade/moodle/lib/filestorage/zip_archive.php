@@ -364,7 +364,7 @@ class zip_archive extends file_archive {
      *
      * @return int number of files
      */
-    public function count(): int {
+    public function count() {
         if (!isset($this->za)) {
             return false;
         }
@@ -460,7 +460,7 @@ class zip_archive extends file_archive {
             $this->close();
             $res = $this->open($this->archivepathname, file_archive::OPEN, $this->encoding);
             if ($res !== true) {
-                throw new \moodle_exception('cannotopenzip');
+                print_error('cannotopenzip');
             }
         }
         $this->usedmem += strlen($contents);
@@ -509,7 +509,6 @@ class zip_archive extends file_archive {
      *
      * @return stdClass
      */
-    #[\ReturnTypeWillChange]
     public function current() {
         if (!isset($this->za)) {
             return false;
@@ -523,7 +522,6 @@ class zip_archive extends file_archive {
      *
      * @return int current file index
      */
-    #[\ReturnTypeWillChange]
     public function key() {
         return $this->pos;
     }
@@ -531,14 +529,14 @@ class zip_archive extends file_archive {
     /**
      * Moves forward to next file.
      */
-    public function next(): void {
+    public function next() {
         $this->pos++;
     }
 
     /**
      * Rewinds back to the first file.
      */
-    public function rewind(): void {
+    public function rewind() {
         $this->pos = 0;
     }
 
@@ -547,7 +545,7 @@ class zip_archive extends file_archive {
      *
      * @return bool
      */
-    public function valid(): bool {
+    public function valid() {
         if (!isset($this->za)) {
             return false;
         }

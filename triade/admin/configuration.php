@@ -913,6 +913,8 @@ if ( file_exists($fichier)) {
 
 	if (AFFICHAGEIA == "oui")    { $affichageIAOui="checked='checked'"; }
 	if (AFFICHAGEIA == "non")    { $affichageIANon="checked='checked'"; }
+	if (AFFICHAGESIGN == "oui")    { $affichageSIGNOui="checked='checked'"; }
+	if (AFFICHAGESIGN == "non")    { $affichageSIGNNon="checked='checked'"; }
 
 
 
@@ -1324,6 +1326,39 @@ if ((file_exists($file1)) || (file_exists($file2)) || (file_exists($file3))) {
   			}
 			fclose($handle);
 		}
+		print "<optgroup label='Haiti' >";
+		if (file_exists("./lib/weather.haiti")) {
+			$handle=fopen("./lib/weather.haiti","r");
+			while (!feof($handle)) {
+				$ligne=fgets($handle, 1000); 
+				list($code,$ville)= preg_split ("/:/", $ligne, 2);
+				$ville=trim($ville);
+				$ville2=trim(trunchaine($ville,15));
+				$code=trim($code);
+				if (($ville2 != "") && ($code != "")){
+					print "<option value=\"$code:$ville\" class='bouton2' title=\"$ville\"  >$ville2</option>";
+				}
+  			}
+			fclose($handle);
+		}
+		print "<optgroup label='Tunisie' >";
+		if (file_exists("./lib/weather.tu")) {
+			$handle=fopen("./lib/weather.tu","r");
+			while (!feof($handle)) {
+				$ligne=fgets($handle, 1000); 
+				list($code,$ville)= preg_split ("/:/", $ligne, 2);
+				$ville=trim($ville);
+				$ville2=trim(trunchaine($ville,15));
+				$code=trim($code);
+				if (($ville2 != "") && ($code != "")){
+					print "<option value=\"$code:$ville\" class='bouton2' title=\"$ville\"  >$ville2</option>";
+				}
+  			}
+			fclose($handle);
+		}
+
+		
+	
 		?>
 
 		</select>
@@ -2423,6 +2458,7 @@ $selectedFC="";
 if (MONNAIE == "euro") 	{ $selectedeuro="selected='selected'"; }
 if (MONNAIE == "dollar"){ $selecteddollar="selected='selected'"; }
 if (MONNAIE == "dinars"){ $selecteddinars="selected='selected'"; }
+if (MONNAIE == "CHF"){ $selectedchf="selected='selected'"; }
 if (MONNAIE == "livre") { $selectedlivre="selected='selected'"; }
 if (MONNAIE == "yen") 	{ $selectedyen="selected='selected'"; }
 if (MONNAIE == "dirham") { $selecteddirham="selected='selected'"; }
@@ -2441,7 +2477,7 @@ if (MONNAIE == "FC") { $selectedFC="selected='selected'"; }
 <option value="dollarCAD" class=bouton2 <?php print $selecteddollarCAD ?> >Dollar CAD (&#36;) </option>
 <option value="dirham" 	class=bouton2 <?php print $selecteddirham ?> >Dirham (Dh) </option>
 <option value="dinars" 	class=bouton2 <?php print $selecteddinars ?> >Dinars (Dt)</option>
-<option value="CHF" 	class=bouton2 <?php print $selecteddinars ?> >Franc Suisse (CHF)</option>
+<option value="CHF" 	class=bouton2 <?php print $selectedchf ?> >Franc Suisse (CHF)</option>
 <option value="FC" 	class=bouton2 <?php print $selectedFC ?> >Franc Congolais (FC)</option>
 <option value="FCFA" 	class=bouton2 <?php print $selectedFCFA ?> >Franc CFA (FCFA) </option>
 <option value="CFP" 	class=bouton2 <?php print $selectedCFP ?> >Francs Pacifiques (CFP)</option>
@@ -2898,6 +2934,12 @@ if (file_exists("../common/config-messenger.php")) {
 <td align=left>
 <input type=radio <?php print $affichageIAOui ?> name="affichageia" value="oui" class=btradio1  > oui &nbsp;&nbsp;&nbsp;
 <input type=radio <?php print $affichageIANon ?> name="affichageia" value="non" class=btradio1  > non 
+</tr>
+
+<tr><td align=right >Autoriser TRIADE-SIGN : </td>
+<td align=left>
+<input type=radio <?php print $affichageSIGNOui ?> name="affichagesign" value="oui" class=btradio1  > oui &nbsp;&nbsp;&nbsp;
+<input type=radio <?php print $affichageSIGNNon ?> name="affichagesign" value="non" class=btradio1  > non 
 </tr>
 
 <!-------------------------------- -- -->

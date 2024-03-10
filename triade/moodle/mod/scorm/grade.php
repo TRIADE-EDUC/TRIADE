@@ -28,15 +28,15 @@ require_once("../../config.php");
 $id = required_param('id', PARAM_INT); // Course module ID.
 
 if (! $cm = get_coursemodule_from_id('scorm', $id)) {
-    throw new \moodle_exception('invalidcoursemodule');
+    print_error('invalidcoursemodule');
 }
 
 if (! $scorm = $DB->get_record('scorm', array('id' => $cm->instance))) {
-    throw new \moodle_exception('invalidcoursemodule');
+    print_error('invalidcoursemodule');
 }
 
 if (! $course = $DB->get_record('course', array('id' => $scorm->course))) {
-    throw new \moodle_exception('coursemisconf');
+    print_error('coursemisconf');
 }
 
 require_login($course, false, $cm);

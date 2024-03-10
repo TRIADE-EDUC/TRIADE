@@ -117,7 +117,6 @@ class contextlist_collection implements \Iterator, \Countable {
      *
      * @return  \context
      */
-    #[\ReturnTypeWillChange]
     public function current() {
         $key = $this->get_key_from_position();
         return $this->contextlists[$key];
@@ -128,7 +127,6 @@ class contextlist_collection implements \Iterator, \Countable {
      *
      * @return  mixed
      */
-    #[\ReturnTypeWillChange]
     public function key() {
         return $this->get_key_from_position();
     }
@@ -136,7 +134,7 @@ class contextlist_collection implements \Iterator, \Countable {
     /**
      * Move to the next context in the list.
      */
-    public function next(): void {
+    public function next() {
         ++$this->iteratorposition;
     }
 
@@ -145,7 +143,7 @@ class contextlist_collection implements \Iterator, \Countable {
      *
      * @return  bool
      */
-    public function valid(): bool {
+    public function valid() {
         return ($this->iteratorposition < count($this->contextlists));
     }
 
@@ -155,7 +153,7 @@ class contextlist_collection implements \Iterator, \Countable {
      * The list of contexts is uniqued during the rewind.
      * The rewind is called at the start of most iterations.
      */
-    public function rewind(): void {
+    public function rewind() {
         $this->iteratorposition = 0;
     }
 
@@ -176,7 +174,7 @@ class contextlist_collection implements \Iterator, \Countable {
     /**
      * Return the number of contexts.
      */
-    public function count(): int {
+    public function count() {
         return count($this->contextlists);
     }
 }

@@ -82,6 +82,7 @@ class ADODB_pdo extends ADOConnection {
 	var $_errormsg = false;
 	var $_errorno = false;
 
+	var $dsnType = '';
 	var $stmt = false;
 	var $_driver;
 
@@ -237,26 +238,6 @@ class ADODB_pdo extends ADOConnection {
 		return call_user_func_array('parent::Concat', $args);
 	}
 
-	/**
-	 * Triggers a driver-specific request for a bind parameter
-	 *
-	 * @param string $name
-	 * @param string $type
-	 *
-	 * @return string
-	 */
-	public function param($name,$type='C') {
-
-		$args = func_get_args();
-		if(method_exists($this->_driver, 'param')) {
-			// Return the driver specific entry, that mimics the native driver
-			return call_user_func_array(array($this->_driver, 'param'), $args);
-		}
-
-		// No driver specific method defined, use mysql format '?'
-		return call_user_func_array('parent::param', $args);
-	}
-
 	// returns true or false
 	function _pconnect($argDSN, $argUsername, $argPassword, $argDatabasename)
 	{
@@ -313,19 +294,18 @@ class ADODB_pdo extends ADOConnection {
 	}
 
 	/**
-	 * Returns a list of Foreign Keys associated with a specific table.
+	 * Returns a list of Foreign Keys for a specified table.
 	 *
 	 * @param string   $table
-	 * @param string   $owner      (optional) not used in this driver
+	 * @param bool     $owner      (optional) not used in this driver
 	 * @param bool     $upper
 	 * @param bool     $associative
 	 *
-	 * @return string[]|false An array where keys are tables, and values are foreign keys;
-	 *                        false if no foreign keys could be found.
+	 * @return string[] where keys are tables, and values are foreign keys
 	 */
-	public function metaForeignKeys($table, $owner = '', $upper = false, $associative = false) {
+	public function metaForeignKeys($table, $owner=false, $upper=false,$associative=false) {
 		if (method_exists($this->_driver,'metaForeignKeys'))
-			return $this->_driver->metaForeignKeys($table, $owner, $upper, $associative);
+			return $this->_driver->metaForeignKeys($table,$owner,$upper,$associative);
 	}
 
 	/**
@@ -585,7 +565,6 @@ class ADODB_pdo extends ADOConnection {
 				$this->_driver->debug = $this->debug;
 			}
 			if ($inputarr) {
-
 				/*
 				* inputarr must be numeric
 				*/

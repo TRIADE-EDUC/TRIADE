@@ -5,9 +5,9 @@ document.write("<table border='0' cellpadding='0' cellspacing='0' width='100%' h
 document.write("<tr id='coulBar0' >");
 document.write("<td height='20' width='20%'>");
 if (lienassist == '0' ) {
-	document.write("<div align='center'><a href='#' onclick=\"open('http://doc.triade-educ.org','_blank','')\" class='m'>"+langtitre0+"</a></div>");
+        document.write("<div align='center'><a href='./besoin_daide.php' class='m'>"+langtitre0+"</a></div>");
 }else{
-	document.write("<div align='center'><a href='"+lienassist+"' class='m' target='_blank' >"+langtitre0+"</a></div>");
+        document.write("<div align='center'><a href='"+lienassist+"' class='m' target='_blank' >"+langtitre0+"</a></div>");
 }
 document.write("</td>");
 document.write("<td height='20' width='20%'>");
@@ -59,7 +59,7 @@ document.write("<p style='margin-left: 2px; margin-top:5px; margin-bottom:5px'>"
 document.write("<img src='./image/cube.gif' width='4' height='4'> <a href='gescompte.php' id='menumodule0'  >"+langmenugeneral01+"</a><br>");
 document.write("<img src='./image/cube.gif' width='4' height='4'> <a href='memo.php' id='menumodule0'  >"+langmenugeneral01a+"</a><br>");
 if (modulestockageviescolaire == "oui") {  document.write("<img src='./image/cube.gif' width='4' height='4'> <a href='#' onclick=\"open('stockage.php','stockage','scrollbars=yes,resizable=yes,width=850,height=500')\" id='menumodule0' >"+langmenuadmin06+"</a><br>"); }
-//if (moduleintramsnviescolaire == "oui") { document.write("<img src='./image/cube.gif' width='4' height='4'> <a href='./intra-msn.php' id='menumodule0' >"+langmenuadmin100+"</a><br>"); }
+if (moduleintramsnviescolaire == "oui") { document.write("<img src='./image/cube.gif' width='4' height='4'> <a href='./intra-msn.php' id='menumodule0' >"+langmenuadmin100+"</a><br>"); }
 if (moduleagendaviescolaire == "oui") { document.write("<img src='./image/cube.gif' width='4' height='4'> <a href='#' id='menumodule0' onclick=\"open('./agenda/phenix/index.php','timecop','');\" >"+langmenuadmin00+"</a><br>"); }
 document.write("<img src='./image/cube.gif' width='4' height='4'> <a id='menumodule0' href='./parametrage.php' >"+langmenuadmin46+"</a><br>");
 if (modulefluxrssviescolaire == "oui") { document.write("<img src='./image/cube.gif' width='4' height='4'> <a id='menumodule0' href='./flux.php' >"+langmenuadmin521+"</a><br>"); }

@@ -208,21 +208,28 @@ class sqlsrv_native_moodle_database extends moodle_database {
 
         $this->store_settings($dbhost, $dbuser, $dbpass, $dbname, $prefix, $dboptions);
 
+        $options = [
+            'UID' => $this->dbuser,
+            'PWD' => $this->dbpass,
+            'Database' => $this->dbname,
+            'CharacterSet' => 'UTF-8',
+            'MultipleActiveResultSets' => true,
+            'ConnectionPooling' => !empty($this->dboptions['dbpersist']),
+            'ReturnDatesAsStrings' => true,
+        ];
+
         $dbhost = $this->dbhost;
         if (!empty($dboptions['dbport'])) {
             $dbhost .= ',' . $dboptions['dbport'];
         }
 
-        $this->sqlsrv = sqlsrv_connect($dbhost, array
-         (
-          'UID' => $this->dbuser,
-          'PWD' => $this->dbpass,
-          'Database' => $this->dbname,
-          'CharacterSet' => 'UTF-8',
-          'MultipleActiveResultSets' => true,
-          'ConnectionPooling' => !empty($this->dboptions['dbpersist']),
-          'ReturnDatesAsStrings' => true,
-         ));
+        // The sqlsrv_connect() has a lot of connection options to be used.
+        // Users can add any supported options with the 'extrainfo' key in the dboptions.
+        if (isset($this->dboptions['extrainfo'])) {
+            $options = array_merge($options, $this->dboptions['extrainfo']);
+        }
+
+        $this->sqlsrv = sqlsrv_connect($dbhost, $options);
 
         if ($this->sqlsrv === false) {
             $this->sqlsrv = null;
@@ -978,11 +985,10 @@ class sqlsrv_native_moodle_database extends moodle_database {
         $results = array();
 
         foreach ($rs as $row) {
-            $rowarray = (array)$row;
-            $id = reset($rowarray);
+            $id = reset($row);
 
             if (isset($results[$id])) {
-                $colname = key($rowarray);
+                $colname = key($row);
                 debugging("Did you remember to make the first column something unique in your call to get_records? Duplicate value '$id' found in column '$colname'.", DEBUG_DEVELOPER);
             }
             $results[$id] = (object)$row;
@@ -1007,8 +1013,7 @@ class sqlsrv_native_moodle_database extends moodle_database {
         $results = array ();
 
         foreach ($rs as $row) {
-            $rowarray = (array)$row;
-            $results[] = reset($rowarray);
+            $results[] = reset($row);
         }
         $rs->close();
 

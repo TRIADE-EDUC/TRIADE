@@ -66,7 +66,7 @@ if ($nomGrp != "") {
 // creation de la requete
 if ($choix_tri != "") {
 
-$data=recherche_intervalle_trimestre_via_classe($choix_tri,$cid);
+$data=recherche_intervalle_trimestre_via_classe($choix_tri,$cid,$anneeScolaire);
 for($i=0;$i<count($data);$i++){
 	$date_debut=$data[$i][0];
 	$date_fin=$data[$i][1];
@@ -74,7 +74,7 @@ for($i=0;$i<count($data);$i++){
 }
 
 if ($choix_tri == "trimestre2")
-$data=recherche_intervalle_trimestre_via_classe("trimestre1",$cid);
+$data=recherche_intervalle_trimestre_via_classe("trimestre1",$cid,$anneeScolaire);
 for($i=0;$i<count($data);$i++){
 	$date_debutP=$data[$i][0];
 	$date_finP=$data[$i][1];
@@ -82,7 +82,7 @@ for($i=0;$i<count($data);$i++){
 
 
 if ($choix_tri == "trimestre3")
-$data=recherche_intervalle_trimestre_via_classe("trimestre2",$cid);
+$data=recherche_intervalle_trimestre_via_classe("trimestre2",$cid,$anneeScolaire);
 for($i=0;$i<count($data);$i++){
 	$date_debutP=$data[$i][0];
 	$date_finP=$data[$i][1];

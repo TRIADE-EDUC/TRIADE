@@ -147,5 +147,3 @@ class SimplePie_Author
 		return null;
 	}
 }
-
-class_alias('SimplePie_Author', 'SimplePie\Author', false);

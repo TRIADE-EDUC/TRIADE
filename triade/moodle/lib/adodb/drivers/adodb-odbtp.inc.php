@@ -393,7 +393,7 @@ class ADODB_odbtp extends ADOConnection{
 		return $arr2;
 	}
 
-	public function metaForeignKeys($table, $owner = '', $upper = false, $associative = false)
+	function MetaForeignKeys($table, $owner='', $upper=false)
 	{
 	global $ADODB_FETCH_MODE;
 

@@ -38,23 +38,23 @@ interface selectable_items {
      * Get the description of this list
      * @return string
      */
-    public function description(): string;
+    public function description();
 
     /**
      * Get the label for the select box that chooses items for this page.
      * @return string
      */
-    public function select_label(): string;
+    public function select_label();
 
     /**
      * Get the list of options to show.
      * @return array
      */
-    public function options(): array;
+    public function options();
 
     /**
      * Get type of things in the list (gradeitem or user)
      * @return string
      */
-    public function item_type(): string;
+    public function item_type();
 }

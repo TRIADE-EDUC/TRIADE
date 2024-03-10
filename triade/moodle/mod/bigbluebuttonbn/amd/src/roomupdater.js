@@ -26,69 +26,74 @@ import Templates from "core/templates";
 import {exception as displayException} from 'core/notification';
 import {getMeetingInfo} from './repository';
 
+const timeout = 5000;
+const maxFactor = 10;
+
+let updateCount = 0;
+let updateFactor = 1;
 let timerReference = null;
 let timerRunning = false;
-let pollInterval = 0;
-let pollIntervalFactor = 1;
-const MAX_POLL_INTERVAL_FACTOR = 10;
 
 const resetValues = () => {
-    timerRunning = false;
-    timerReference = null;
-    pollInterval = 0;
-    pollIntervalFactor = 1;
+    updateCount = 0;
+    updateFactor = 1;
 };
 
 /**
  * Start the information poller.
- * @param {Number} interval interval in miliseconds between each poll action.
  */
-export const start = (interval) => {
-    resetValues();
+export const start = () => {
     timerRunning = true;
-    pollInterval = interval;
-    poll();
+    timerReference = setTimeout(() => poll(), timeout);
 };
 
 /**
  * Stop the room updater.
  */
 export const stop = () => {
+    timerRunning = false;
     if (timerReference) {
-        clearTimeout(timerReference);
+        clearInterval(timerReference);
+        timerReference = null;
     }
+
     resetValues();
 };
 
-/**
- * Start the information poller.
- */
 const poll = () => {
-    if (!timerRunning || !pollInterval) {
+    if (!timerRunning) {
         // The poller has been stopped.
         return;
     }
-    updateRoom()
-        .then((updateOk) => {
-            if (!updateOk) {
-                pollIntervalFactor = (pollIntervalFactor < MAX_POLL_INTERVAL_FACTOR) ?
-                    pollIntervalFactor + 1 : MAX_POLL_INTERVAL_FACTOR;
-                // We make sure if there is an error that we do not try too often.
+    if ((updateCount % updateFactor) === 0) {
+        updateRoom()
+        .then(() => {
+            if (updateFactor >= maxFactor) {
+                updateFactor = 1;
+            } else {
+                updateFactor++;
             }
-            timerReference = setTimeout(() => poll(), pollInterval * pollIntervalFactor);
-            return true;
+
+            return;
+
+        })
+        .catch()
+        .then(() => {
+            timerReference = setTimeout(() => poll(), timeout);
+            return;
         })
         .catch();
+    }
 };
 
 /**
  * Update the room information.
  *
- * @param {boolean} [updatecache=false] should we update cache
+ * @param {boolean} [updatecache=false]
  * @returns {Promise}
  */
 export const updateRoom = (updatecache = false) => {
-    const bbbRoomViewElement = document.getElementById('bigbluebuttonbn-room-view');
+    const bbbRoomViewElement = document.getElementById('bbb-room-view');
     if (bbbRoomViewElement === null) {
         return Promise.resolve(false);
     }
@@ -101,10 +106,13 @@ export const updateRoom = (updatecache = false) => {
     return getMeetingInfo(bbbId, groupId, updatecache)
         .then(data => {
             // Just make sure we have the right information for the template.
-            data.haspresentations = !!(data.presentations && data.presentations.length);
+            data.haspresentations = false;
+            if (data.presentations && data.presentations.length) {
+                data.haspresentations = true;
+            }
             return Templates.renderForPromise('mod_bigbluebuttonbn/room_view', data);
         })
-        .then(({html, js}) => Templates.replaceNode(bbbRoomViewElement, html, js))
+        .then(({html, js}) => Templates.replaceNodeContents(bbbRoomViewElement, html, js))
         .then(() => pendingPromise.resolve())
         .catch(displayException);
 };

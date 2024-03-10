@@ -37,11 +37,11 @@ $PAGE->set_url($url);
 require_login();
 
 if (isguestuser()) {
-    throw new \moodle_exception('guestnoeditmessage', 'message');
+    print_error('guestnoeditmessage', 'message');
 }
 
 if (!$user = $DB->get_record('user', ['id' => $userid])) {
-    throw new \moodle_exception('invaliduserid');
+    print_error('invaliduserid');
 }
 
 $personalcontext = context_user::instance($user->id);

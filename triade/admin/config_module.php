@@ -1474,7 +1474,7 @@ if (MODULEDELEGUEPARENT == "non") {$moduledelegueparentnon="checked"; }
                <input type=radio <?php print $moduleadmincdinon ?> name="moduleadmincdi" value="non" class=btradio1  > non </td>
 </tr>
 
-<tr><td align=right >Module Prof P./Institeur : </td>
+<tr><td align=right >Module Prof P. / Instituteur : </td>
 <td align=left><input type=radio <?php print $moduleprofPoui ?> name="moduleadminprofP" value="oui" class=btradio1  > oui &nbsp;&nbsp;&nbsp;
                <input type=radio <?php print $moduleprofPnon ?> name="moduleadminprofP" value="non" class=btradio1  > non </td>
 </tr>

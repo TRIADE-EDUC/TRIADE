@@ -8,6 +8,8 @@ if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
 require_once($base_path."/includes/init.inc.php");
 
+
+
 //fichiers nécessaires au bon fonctionnement de l'environnement
 require_once($base_path."/includes/common_includes.inc.php");
 

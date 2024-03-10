@@ -64,9 +64,12 @@ if(isset($_POST["modif"])):
 	$saisie_classe_long=$_POST["saisie_classe_long"];
 	$saisie_classe_long=str_replace("\"","",$saisie_classe_long);
 	$specification=$_POST["specification"];
+	$offline=0;
+        if ($_POST["offline"] == "1") $offline=1 ;
 	$id=$_POST["id"];
         $cr=modif_classe22($classenom,$id,$saisie_classe_long,$_POST["saisie_site"],$saisie_langue,$saisie_niveau,$specification);
         if($cr):
+		modifOffline($id,$offline);
                 alertJs(LANGCLAS2);
         else:
               	alertJs(LANGCLAS3); 
@@ -88,6 +91,7 @@ $idsite=chercherIdSiteClasse($id);
 $langue=chercherLangueClasse($id);
 $niveau=chercherNiveauClasse($id);
 $specification=chercherSpecificationClasse($id);
+$offline=chercherOfflineClasse($id);
 
 ?>
 <BR>
@@ -117,6 +121,8 @@ $specification=chercherSpecificationClasse($id);
                                                                         <option value="cycle 4" id='select1' <?php if ($niveau == "cycle 4") print "selected='selected'" ?> >Cycle 4</option>
 
                                                                      </select><br><br>
+<?php if ($offline == "1") $offline="checked='checked'"; ?>
+&nbsp;&nbsp;<font class=T2>Bloquer l'accès des comptes utilisateurs assujetti à cette classe : <input type='checkbox' value='1' name='offline'  <?php print $offline ?>  /><br /><br/></font>
 
 <BR><bR>
 <input type=hidden name="id" value="<?php print $id?>" />

@@ -167,8 +167,9 @@ class user_picture implements renderable {
     public $link = true;
 
     /**
-     * @var int Size in pixels. Special values are (true/1 = 100px) and (false/0 = 35px) for backward compatibility.
-     * Recommended values (supporting user initials too): 16, 35, 64 and 100.
+     * @var int Size in pixels. Special values are (true/1 = 100px) and
+     * (false/0 = 35px)
+     * for backward compatibility.
      */
     public $size = 35;
 
@@ -920,13 +921,11 @@ class single_button implements renderable {
         }
 
         // Form parameters.
-        $params = $this->url->params();
+        $actionurl = new moodle_url($this->url);
         if ($this->method === 'post') {
-            $params['sesskey'] = sesskey();
+            $actionurl->param('sesskey', sesskey());
         }
-        $data->params = array_map(function($key) use ($params) {
-            return ['name' => $key, 'value' => $params[$key]];
-        }, array_keys($params));
+        $data->params = $actionurl->export_params_for_template();
 
         // Button actions.
         $actions = $this->actions;
@@ -1128,13 +1127,11 @@ class single_select implements renderable, templatable {
         }, array_keys($attributes));
 
         // Form parameters.
-        $params = $this->url->params();
+        $actionurl = new moodle_url($this->url);
         if ($this->method === 'post') {
-            $params['sesskey'] = sesskey();
+            $actionurl->param('sesskey', sesskey());
         }
-        $data->params = array_map(function($key) use ($params) {
-            return ['name' => $key, 'value' => $params[$key]];
-        }, array_keys($params));
+        $data->params = $actionurl->export_params_for_template();
 
         // Select options.
         $hasnothing = false;
@@ -2352,7 +2349,7 @@ class html_writer {
         if (!is_null($for)) {
             $attributes = array_merge($attributes, array('for' => $for));
         }
-        $text = trim($text ?? '');
+        $text = trim($text);
         $label = self::tag('label', $text, $attributes);
 
         // TODO MDL-12192 $colonize disabled for now yet
@@ -3502,7 +3499,10 @@ class custom_menu_item implements renderable, templatable {
      */
     public function __construct($text, moodle_url $url = null, $title = null, $sort = null, custom_menu_item $parent = null,
                                 array $attributes = []) {
-        $this->text = $text;
+
+        // Use class setter method for text to ensure it's always a string type.
+        $this->set_text($text);
+
         $this->url = $url;
         $this->title = $title;
         $this->sort = (int)$sort;
@@ -3779,7 +3779,7 @@ class custom_menu extends custom_menu_item {
             $settings = explode('|', $line);
             foreach ($settings as $i => $setting) {
                 $setting = trim($setting);
-                if (!empty($setting)) {
+                if ($setting !== '') {
                     switch ($i) {
                         case 0: // Menu text.
                             $itemtext = ltrim($setting, '-');
@@ -4565,19 +4565,6 @@ class action_menu implements renderable, templatable {
             }
         } else if ($value) {
             // The value is true and the class has not been set yet. Add it.
-            $this->attributes['class'] = $class;
-        }
-    }
-
-    /**
-     * Add classes to the action menu for an easier styling.
-     *
-     * @param string $class The class to add to attributes.
-     */
-    public function set_additional_classes(string $class = '') {
-        if (!empty($this->attributes['class'])) {
-            $this->attributes['class'] .= " ".$class;
-        } else {
             $this->attributes['class'] = $class;
         }
     }

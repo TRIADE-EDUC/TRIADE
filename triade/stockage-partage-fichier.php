@@ -9,7 +9,9 @@ if (empty($_SESSION["nom"]))  {
 
 $disabled2="";
 include_once("./librairie_php/lib_licence.php");
+include_once("./common/config.inc.php");
 include_once("./librairie_php/db_triade.php");
+$cnx=cnx();
 
 function mimetype($fichier,$quoi) {
 	global $mess,$HTTP_USER_AGENT;
@@ -66,7 +68,6 @@ function taille($fichier) {
 	return $taille;
 }
 
-$cnx=cnx();
 
 $fic=$_GET["fic"];
 $fichier=$_GET["fichier"];
@@ -110,7 +111,7 @@ echo "</head>\n";
 echo "<body id='coulfond1' >";
 echo "<br>\n";
 ?>
-<div style="position:absolute; left:400px; top:35px; border: 2px solid #CCCCCC; background-color: #FFFFEE; border-radius: 10px 10px 10px 10px; width:300px; height:150px"  >
+<div style="position:absolute; left:400px; top:35px; border: 2px solid #CCCCCC; background-color: #FFFFFF; border-radius: 10px 10px 10px 10px; width:300px; height:150px"  >
 <br>
 &nbsp;&nbsp;Fichier : <?php print trunchaine($fichier,25)." <img src='image/stockage/".mimetype("./data/stockage/$membreS/$idpersS/$chemin","image")."' align='bottom' /> " ?>&nbsp;&nbsp;<br><br>
 &nbsp;&nbsp;Taille : <?php print taille("./data/stockage/$membreS/$idpersS/$chemin") ?><br><br>
@@ -142,11 +143,11 @@ if ($saisie_classe > 0) {
 ?>
 <form method='post' name='form1' >
 <UL>
-<table border='1' >
+<table border='1' style='border-collapse: collapse;' width='30%' >
 <tr>
-<td bgcolor='yellow' ><font class='T2'>&nbsp;Nom&nbsp;</font></td>
-<td bgcolor='yellow' ><font class='T2'>&nbsp;Prénom&nbsp;</font></td>
-<td bgcolor='yellow' ><font class='T2'>&nbsp;Autorisé&nbsp;</font><input type="checkbox" onclick="validecase();" name="tous" value="1" id='checkbox1'  class="css-checkbox" /><label for='checkbox1' name='checkbox1_lbl' class='css-label lite-red-check'></label>&nbsp;</td>
+<td bgcolor='white' ><font class='T2'>&nbsp;Nom&nbsp;</font></td>
+<td bgcolor='white' ><font class='T2'>&nbsp;Prénom&nbsp;</font></td>
+<td bgcolor='white' width='30%' ><font class='T2'>&nbsp;Autorisé&nbsp;</font><input type="checkbox" onclick="validecase();" name="tous" value="1" id='checkbox1'  class="css-checkbox" /><label for='checkbox1' name='checkbox1_lbl' class='css-label lite-red-check'></label>&nbsp;</td>
 </tr>
 <?php
 	$sql="SELECT libelle,elev_id,nom,prenom FROM ${prefixe}eleves ,${prefixe}classes  WHERE classe='$saisie_classe' AND code_class='$saisie_classe' ORDER BY nom";
@@ -168,13 +169,15 @@ if ($saisie_classe > 0) {
 		}else{ 
 			$checked=""; 
 		}
-		print "<td><input type='checkbox' name='ideleve[]' value='$membre$idperseleve' $checked /></td>";
+		print "<td align='center' ><input type='checkbox' name='ideleve[]' value='$membre$idperseleve' $checked /></td>";
 		print "</tr>";
 		$ii++;
 	}
 
 ?>
-<tr><td colspan='3' id='bordure' height='20' align='center' ><input type='submit' class='BUTTON' value="<?php print VALIDER ?>" name='create' /></td></tr>
+</table>
+<table border=0>
+<tr> <td height='20' align='center' ><br><input type='submit' class='BUTTON' value="<?php print VALIDER ?>" name='create' /></td></tr>
 </table>
 <input type='hidden' name='saisie_nb' value='<?php print count($data) ?>' />
 <input type='hidden' name='fichier' value='<?php print $fichier ?>' />

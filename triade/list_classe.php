@@ -73,7 +73,10 @@ for($i=0;$i<count($data);$i++)
 	if ($data[$i][3] == 1) {
 		print "<img src='./image/commun/img_ssl_mini.png' alt='Inactif' /> ";
 	}
-	print "<b>".$data[$i][1]."</b> <font color=green>$niveau</font> <i>".$description_long."</i>&nbsp;<font size=1>(rattach&eacute;e au site : $site)</font> </td>\n";
+	print "<b>".$data[$i][1]."</b> <font color=green>$niveau</font> <i>".$description_long."</i>&nbsp;<font size=1>(rattach&eacute;e au site : $site)</font> \n";
+	if ($data[$i][6] == "1") print "<font color=red size=1><i>Connexion impossible des &eacute;tudiants de cette classe</i></font>";
+        print "</td>\n";
+
 	print "<td width=5><input type=button class=button value=\"".LANGPER30."\" onclick=\"open('modif_classe.php?id=".$data[$i][0]."','_parent','');\" $disabled ></td>\n";
 	print "</tr>\n";
 	$description_long="";

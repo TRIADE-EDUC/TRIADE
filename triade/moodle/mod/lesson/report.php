@@ -366,7 +366,7 @@ if ($action === 'delete') {
         echo html_writer::table($table);
     }
 } else {
-    throw new \moodle_exception('unknowaction');
+    print_error('unknowaction');
 }
 
 /// Finish the page

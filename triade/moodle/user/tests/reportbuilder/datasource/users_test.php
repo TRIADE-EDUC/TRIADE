@@ -24,9 +24,8 @@ use core_reportbuilder_generator;
 use core_reportbuilder\local\filters\boolean_select;
 use core_reportbuilder\local\filters\date;
 use core_reportbuilder\local\filters\select;
-use core_reportbuilder\local\filters\tags;
 use core_reportbuilder\local\filters\text;
-use core_reportbuilder\local\filters\user as user_filter;
+use core_reportbuilder\local\helpers\user_filter_manager;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -42,6 +41,7 @@ require_once("{$CFG->dirroot}/reportbuilder/tests/helpers.php");
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class users_test extends core_reportbuilder_testcase {
+
 
     /**
      * Test default datasource
@@ -78,7 +78,6 @@ class users_test extends core_reportbuilder_testcase {
             'idnumber' => 'U0001',
             'city' => 'London',
             'country' => 'GB',
-            'interests' => ['Horses'],
         ]);
 
         /** @var core_reportbuilder_generator $generator */
@@ -94,7 +93,6 @@ class users_test extends core_reportbuilder_testcase {
         $generator->create_column(['reportid' => $report->get('id'), 'uniqueidentifier' => 'user:lastname']);
         $generator->create_column(['reportid' => $report->get('id'), 'uniqueidentifier' => 'user:city']);
         $generator->create_column(['reportid' => $report->get('id'), 'uniqueidentifier' => 'user:country']);
-        $generator->create_column(['reportid' => $report->get('id'), 'uniqueidentifier' => 'user:description']);
         $generator->create_column(['reportid' => $report->get('id'), 'uniqueidentifier' => 'user:firstnamephonetic']);
         $generator->create_column(['reportid' => $report->get('id'), 'uniqueidentifier' => 'user:lastnamephonetic']);
         $generator->create_column(['reportid' => $report->get('id'), 'uniqueidentifier' => 'user:middlename']);
@@ -109,11 +107,6 @@ class users_test extends core_reportbuilder_testcase {
         $generator->create_column(['reportid' => $report->get('id'), 'uniqueidentifier' => 'user:suspended']);
         $generator->create_column(['reportid' => $report->get('id'), 'uniqueidentifier' => 'user:confirmed']);
         $generator->create_column(['reportid' => $report->get('id'), 'uniqueidentifier' => 'user:moodlenetprofile']);
-        $generator->create_column(['reportid' => $report->get('id'), 'uniqueidentifier' => 'user:timecreated']);
-
-        // Tags.
-        $generator->create_column(['reportid' => $report->get('id'), 'uniqueidentifier' => 'tag:name']);
-        $generator->create_column(['reportid' => $report->get('id'), 'uniqueidentifier' => 'tag:namewithlink']);
 
         $content = $this->get_custom_report_content($report->get('id'));
         $this->assertCount(2, $content);
@@ -139,24 +132,20 @@ class users_test extends core_reportbuilder_testcase {
         $this->assertEquals($user->lastname, $userrow[5]);
         $this->assertEquals($user->city, $userrow[6]);
         $this->assertEquals('United Kingdom', $userrow[7]);
-        $this->assertEquals($user->description, $userrow[8]);
-        $this->assertEquals($user->firstnamephonetic, $userrow[9]);
-        $this->assertEquals($user->lastnamephonetic, $userrow[10]);
-        $this->assertEquals($user->middlename, $userrow[11]);
-        $this->assertEquals($user->alternatename, $userrow[12]);
-        $this->assertEquals($user->idnumber, $userrow[13]);
-        $this->assertEquals($user->institution, $userrow[14]);
-        $this->assertEquals($user->department, $userrow[15]);
-        $this->assertEquals($user->phone1, $userrow[16]);
-        $this->assertEquals($user->phone2, $userrow[17]);
-        $this->assertEquals($user->address, $userrow[18]);
-        $this->assertEmpty($userrow[19]);
-        $this->assertEquals('No', $userrow[20]);
-        $this->assertEquals('Yes', $userrow[21]);
-        $this->assertEquals($user->moodlenetprofile, $userrow[22]);
-        $this->assertNotEmpty($userrow[23]);
-        $this->assertEquals('Horses', $userrow[24]);
-        $this->assertStringContainsString('Horses', $userrow[25]);
+        $this->assertEquals($user->firstnamephonetic, $userrow[8]);
+        $this->assertEquals($user->lastnamephonetic, $userrow[9]);
+        $this->assertEquals($user->middlename, $userrow[10]);
+        $this->assertEquals($user->alternatename, $userrow[11]);
+        $this->assertEquals($user->idnumber, $userrow[12]);
+        $this->assertEquals($user->institution, $userrow[13]);
+        $this->assertEquals($user->department, $userrow[14]);
+        $this->assertEquals($user->phone1, $userrow[15]);
+        $this->assertEquals($user->phone2, $userrow[16]);
+        $this->assertEquals($user->address, $userrow[17]);
+        $this->assertEmpty($userrow[18]);
+        $this->assertEquals('No', $userrow[19]);
+        $this->assertEquals('Yes', $userrow[20]);
+        $this->assertEquals($user->moodlenetprofile, $userrow[21]);
     }
 
     /**
@@ -167,10 +156,6 @@ class users_test extends core_reportbuilder_testcase {
     public function datasource_filters_provider(): array {
         return [
             // User.
-            'Filter user' => ['user:userselect', [
-                'user:userselect_operator' => user_filter::USER_SELECT,
-                'user:userselect_value' => [-1],
-            ], false],
             'Filter fullname' => ['user:fullname', [
                 'user:fullname_operator' => text::CONTAINS,
                 'user:fullname_value' => 'Zoe',
@@ -276,22 +261,6 @@ class users_test extends core_reportbuilder_testcase {
                 'user:country_operator' => select::EQUAL_TO,
                 'user:country_value' => 'AU',
             ], false],
-            'Filter description' => ['user:description', [
-                'user:description_operator' => text::CONTAINS,
-                'user:description_value' => 'Hello there',
-            ], true],
-            'Filter description (no match)' => ['user:description', [
-                'user:description_operator' => text::CONTAINS,
-                'user:description_value' => 'Goodbye',
-            ], false],
-            'Filter auth' => ['user:auth', [
-                'user:auth_operator' => select::EQUAL_TO,
-                'user:auth_value' => 'manual',
-            ], true],
-            'Filter auth (no match)' => ['user:auth', [
-                'user:auth_operator' => select::EQUAL_TO,
-                'user:auth_value' => 'ldap',
-            ], false],
             'Filter username' => ['user:username', [
                 'user:username_operator' => text::IS_EQUAL_TO,
                 'user:username_value' => 'zoe1',
@@ -344,15 +313,6 @@ class users_test extends core_reportbuilder_testcase {
             'Filter confirmed (no match)' => ['user:confirmed', [
                 'user:confirmed_operator' => boolean_select::NOT_CHECKED,
             ], false],
-            'Filter timecreated' => ['user:timecreated', [
-                'user:timecreated_operator' => date::DATE_RANGE,
-                'user:timecreated_from' => 1622502000,
-            ], true],
-            'Filter timecreated (no match)' => ['user:timecreated', [
-                'user:timecreated_operator' => date::DATE_RANGE,
-                'user:timecreated_from' => 1619823600,
-                'user:timecreated_to' => 1622502000,
-            ], false],
             'Filter lastaccess' => ['user:lastaccess', [
                 'user:lastaccess_operator' => date::DATE_EMPTY,
             ], true],
@@ -361,15 +321,6 @@ class users_test extends core_reportbuilder_testcase {
                 'user:lastaccess_from' => 1619823600,
                 'user:lastaccess_to' => 1622502000,
             ], false],
-
-            // Tags.
-            'Filter tag name' => ['tag:name', [
-                'tag:name_operator' => tags::EQUAL_TO,
-                'tag:name_value' => [-1],
-            ], false],
-            'Filter tag name not empty' => ['tag:name', [
-                'tag:name_operator' => tags::NOT_EMPTY,
-            ], true],
         ];
     }
 
@@ -404,7 +355,6 @@ class users_test extends core_reportbuilder_testcase {
             'country' => 'ES',
             'description' => 'Hello there',
             'moodlenetprofile' => '@zoe1@example.com',
-            'interests' => ['Horses'],
         ]);
 
         /** @var core_reportbuilder_generator $generator */
@@ -416,7 +366,9 @@ class users_test extends core_reportbuilder_testcase {
 
         // Add filter, set it's values.
         $generator->create_filter(['reportid' => $report->get('id'), 'uniqueidentifier' => $filtername]);
-        $content = $this->get_custom_report_content($report->get('id'), 0, $filtervalues);
+        user_filter_manager::set($report->get('id'), $filtervalues);
+
+        $content = $this->get_custom_report_content($report->get('id'));
 
         if ($expectmatch) {
             $this->assertNotEmpty($content);

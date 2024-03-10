@@ -30,26 +30,26 @@ $displaymode = optional_param('display', '', PARAM_ALPHA);
 
 if (!empty($id)) {
     if (! $cm = get_coursemodule_from_id('scorm', $id, 0, true)) {
-        throw new \moodle_exception('invalidcoursemodule');
+        print_error('invalidcoursemodule');
     }
     if (! $course = $DB->get_record("course", array("id" => $cm->course))) {
-        throw new \moodle_exception('coursemisconf');
+        print_error('coursemisconf');
     }
     if (! $scorm = $DB->get_record("scorm", array("id" => $cm->instance))) {
-        throw new \moodle_exception('invalidcoursemodule');
+        print_error('invalidcoursemodule');
     }
 } else if (!empty($a)) {
     if (! $scorm = $DB->get_record("scorm", array("id" => $a))) {
-        throw new \moodle_exception('invalidcoursemodule');
+        print_error('invalidcoursemodule');
     }
     if (! $course = $DB->get_record("course", array("id" => $scorm->course))) {
-        throw new \moodle_exception('coursemisconf');
+        print_error('coursemisconf');
     }
     if (! $cm = get_coursemodule_from_instance("scorm", $scorm->id, $course->id, true)) {
-        throw new \moodle_exception('invalidcoursemodule');
+        print_error('invalidcoursemodule');
     }
 } else {
-    throw new \moodle_exception('missingparameter');
+    print_error('missingparameter');
 }
 
 // PARAM_RAW is used for $currentorg, validate it against records stored in the table.

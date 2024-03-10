@@ -75,7 +75,7 @@
 /// Get and sort the existing blocks
 
     if (!$blocks = $DB->get_records('block', array(), 'name ASC')) {
-        throw new \moodle_exception('noblocks', 'error');  // Should never happen.
+        print_error('noblocks', 'error');  // Should never happen
     }
 
     $incompatible = array();

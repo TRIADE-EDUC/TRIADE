@@ -69,7 +69,8 @@ if ( (!empty($fichier)) &&  ($size <= 2000000)) {
 		$fic_xls="data/imp_grp.xls";
 		include_once('./librairie_php/reader.php');
 		$data = new Spreadsheet_Excel_Reader();
-		$data->setOutputEncoding('CP1251');
+//		$data->setOutputEncoding('CP1251');
+		$data->setOutputEncoding('UTF-8');
 		$data->read($fic_xls);
 		
 		$params[nomgr]=trim($_POST["saisie_intitule"]);

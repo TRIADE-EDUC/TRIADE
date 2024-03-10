@@ -329,7 +329,7 @@ class PEAR_Exception extends Exception
         foreach ($causes as $i => $cause) {
             $html .= '<tr><td colspan="3" style="background: #ff9999">'
                . str_repeat('-', $i) . ' <b>' . $cause['class'] . '</b>: '
-               . htmlspecialchars($cause['message'], ENT_COMPAT) . ' in <b>' . $cause['file'] . '</b> '
+               . htmlspecialchars($cause['message']) . ' in <b>' . $cause['file'] . '</b> '
                . 'on line <b>' . $cause['line'] . '</b>'
                . "</td></tr>\n";
         }
@@ -355,7 +355,7 @@ class PEAR_Exception extends Exception
                     elseif (is_int($arg) || is_double($arg)) $args[] = $arg;
                     else {
                         $arg = (string)$arg;
-                        $str = htmlspecialchars(substr($arg, 0, 16), ENT_COMPAT);
+                        $str = htmlspecialchars(substr($arg, 0, 16));
                         if (strlen($arg) > 16) $str .= '&hellip;';
                         $args[] = "'" . $str . "'";
                     }

@@ -44,31 +44,31 @@ $compare = required_param('compare', PARAM_INT);
 $comparewith = required_param('comparewith', PARAM_INT);
 
 if (!$page = wiki_get_page($pageid)) {
-    throw new \moodle_exception('incorrectpageid', 'wiki');
+    print_error('incorrectpageid', 'wiki');
 }
 
 if (!$subwiki = wiki_get_subwiki($page->subwikiid)) {
-    throw new \moodle_exception('incorrectsubwikiid', 'wiki');
+    print_error('incorrectsubwikiid', 'wiki');
 }
 
 if (!$wiki = wiki_get_wiki($subwiki->wikiid)) {
-    throw new \moodle_exception('incorrectwikiid', 'wiki');
+    print_error('incorrectwikiid', 'wiki');
 }
 
 if (!$cm = get_coursemodule_from_instance('wiki', $wiki->id)) {
-    throw new \moodle_exception('invalidcoursemodule');
+    print_error('invalidcoursemodule');
 }
 
 $course = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
 
 if ($compare >= $comparewith) {
-    throw new \moodle_exception('cannotcomparenewerversion', 'wiki');
+    print_error('cannotcomparenewerversion', 'wiki');
 }
 
 require_course_login($course, true, $cm);
 
 if (!wiki_user_can_view($subwiki, $wiki)) {
-    throw new \moodle_exception('cannotviewpage', 'wiki');
+    print_error('cannotviewpage', 'wiki');
 }
 
 $wikipage = new page_wiki_diff($wiki, $subwiki, $cm, 'modulepage');

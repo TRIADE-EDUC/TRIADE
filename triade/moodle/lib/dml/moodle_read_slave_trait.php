@@ -57,9 +57,8 @@ defined('MOODLE_INTERNAL') || die();
  *   in the $written array and microtime() the event. For those queries master
  *   write handle is used.
  * - SQL_QUERY_AUX queries will always use the master write handle because they
- *   are used for transaction start/end, locking etc. In that respect, query_start() and
+ *   are used for transactionstart/end, locking etc. In that respect, query_start() and
  *   query_end() *must not* be used during the connection phase.
- * - SQL_QUERY_AUX_READONLY queries will use the master write handle if in a transaction.
  * - SELECT queries will use the master write handle if:
  *   -- any of the tables involved is a temp table
  *   -- any of the tables involved is listed in the 'exclude_tables' option
@@ -92,7 +91,6 @@ trait moodle_read_slave_trait {
     private $wantreadslave = false;
     private $readsslave = 0;
     private $slavelatency = 1;
-    private $structurechange = false;
 
     private $written = []; // Track tables being written to.
     private $readexclude = []; // Tables to exclude from using dbhreadonly.
@@ -327,10 +325,6 @@ trait moodle_read_slave_trait {
 
         // Transactions are done as AUX, we cannot play with that.
         switch ($type) {
-            case SQL_QUERY_AUX_READONLY:
-                // SQL_QUERY_AUX_READONLY may read the structure data.
-                // We don't have a way to reliably determine whether it is safe to go to readonly if the structure has changed.
-                return !$this->structurechange;
             case SQL_QUERY_SELECT:
                 if ($this->transactions) {
                     return false;
@@ -364,7 +358,6 @@ trait moodle_read_slave_trait {
                 }
                 return false;
             case SQL_QUERY_STRUCTURE:
-                $this->structurechange = true;
                 foreach ($this->table_names($sql) as $tablename) {
                     if (!in_array($tablename, $this->readexclude)) {
                         $this->readexclude[] = $tablename;

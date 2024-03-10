@@ -64,7 +64,7 @@ class editor extends edit_content {
 
         if (empty($id) && empty($library)) {
             $returnurl = new \moodle_url('/contentbank/index.php', ['contextid' => $this->_customdata['contextid']]);
-            throw new \moodle_exception('invalidcontentid', 'error', $returnurl);
+            print_error('invalidcontentid', 'error', $returnurl);
         }
 
         $this->h5peditor = new h5peditor();

@@ -109,9 +109,11 @@ function my_copy_page(
     $blockinstances = $DB->get_records('block_instances', array('parentcontextid' => $systemcontext->id,
                                                                 'pagetypepattern' => $pagetype,
                                                                 'subpagepattern' => $systempage->id));
+    $roles = get_all_roles();
     $newblockinstanceids = [];
     foreach ($blockinstances as $instance) {
         $originalid = $instance->id;
+        $originalcontext = context_block::instance($originalid);
         unset($instance->id);
         $instance->parentcontextid = $usercontext->id;
         $instance->subpagepattern = $page->id;
@@ -125,6 +127,22 @@ function my_copy_page(
             debugging("Unable to copy block-specific data for original block
                 instance: $originalid to new block instance: $instance->id for
                 block: $instance->blockname", DEBUG_DEVELOPER);
+        }
+        // Check if there are any overrides on this block instance.
+        // We check against all roles, not just roles assigned to the user.
+        // This is so any overrides that are applied to the system default page
+        // will be applied to the user's page as well, even if their role assignment changes in the future.
+        foreach ($roles as $role) {
+            $rolecapabilities = get_capabilities_from_role_on_context($role, $originalcontext);
+            // If there are overrides, then apply them to the new block instance.
+            foreach ($rolecapabilities as $rolecapability) {
+                role_change_permission(
+                    $rolecapability->roleid,
+                    $blockcontext,
+                    $rolecapability->capability,
+                    $rolecapability->permission
+                );
+            }
         }
     }
 
@@ -244,7 +262,7 @@ function my_reset_page_for_all_users(
                   JOIN {context} ctx ON ctx.instanceid = p.userid AND ctx.contextlevel = :usercontextlevel
                   JOIN {block_instances} bi ON bi.parentcontextid = ctx.id
                    AND bi.pagetypepattern = :pagetypepattern
-                   AND (bi.subpagepattern IS NULL OR bi.subpagepattern = " . $DB->sql_cast_to_char('p.id') . ")
+                   AND (bi.subpagepattern IS NULL OR bi.subpagepattern = " . $DB->sql_concat(':empty', 'p.id') . ")
                  WHERE p.private = :private
                    AND p.name = :name
                    AND p.userid $infragment";
@@ -253,6 +271,7 @@ function my_reset_page_for_all_users(
             'private' => $private,
             'usercontextlevel' => CONTEXT_USER,
             'pagetypepattern' => $pagetype,
+            'empty' => '',
             'name' => $pagename
         ], $inparams);
         $blockids = $DB->get_fieldset_sql($sql, $params);

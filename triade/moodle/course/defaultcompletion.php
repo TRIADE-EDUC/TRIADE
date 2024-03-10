@@ -34,18 +34,18 @@ if ($id) {
 
     if ($id == SITEID) {
         // Don't allow editing of 'site course' using this form.
-        throw new \moodle_exception('cannoteditsiteform');
+        print_error('cannoteditsiteform');
     }
 
     if (!$course = $DB->get_record('course', array('id' => $id))) {
-        throw new \moodle_exception('invalidcourseid');
+        print_error('invalidcourseid');
     }
     require_login($course);
     require_capability('moodle/course:manageactivities', context_course::instance($course->id));
 
 } else {
     require_login();
-    throw new \moodle_exception('needcourseid');
+    print_error('needcourseid');
 }
 
 // Set up the page.

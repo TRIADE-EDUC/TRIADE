@@ -332,6 +332,8 @@ class DB_mysql extends DB_common
         return DB_OK;
     }
 
+
+
     // }}}
     // {{{ nextResult()
 

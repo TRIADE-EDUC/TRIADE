@@ -53,7 +53,7 @@ class page_helper {
 
         require_login();
         if (isguestuser()) {
-            throw new \moodle_exception('noguest');
+            print_error('noguest');
         }
 
         // TODO Check that data privacy is enabled.

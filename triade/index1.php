@@ -63,8 +63,8 @@ if (! file_exists($fichier)) {
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
- *   Site                 : http://www.triade-educ.com
+ *   copyright            : (C) 2000 E. TAESCH 
+ *   Site                 : http://www.triade-educ.org
  *
  *
  ***************************************************************************/
@@ -90,7 +90,6 @@ if (! file_exists($fichier)) {
      <link rel="stylesheet" type="text/CSS" href="./librairie_css/css.css" media="screen" />
      <link rel="shortcut icon" href="./favicon.ico" type="image/icon" />
    <title>Triade</title>
-<?php include("./librairie_php/googleanalyse.php"); ?>
 </head>
 <body id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" >
 	<noscript><meta http-equiv="Refresh" content="0; URL=noscript.php"></noscript>
@@ -181,7 +180,7 @@ if (! file_exists($fichier)) {
 	<script type="text/javascript" src="./librairie_js/menudepart1.js"></script>
 	<table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
 	<tr id='coulBar0' ><td height="2" align="center"><b><font id='menumodule1'><?php print LANGTMESS482 ?></font></b></td></tr>
-	<tr id='cadreCentral0'><td >
+	<tr id='cadreCentral0'><td bgcolor='#FFFFFF'  >
 	<?php  if ((LAN == "non") || (preg_match('/demo.triade-educ.net/',WEBROOT))) { ?>
 	<div id="introduction"><br>
       	<p class="center" style="color: #000; font-size:12px;">TRIADE
@@ -237,7 +236,6 @@ if (! file_exists($fichier)) {
 	        $text=preg_replace('/&nbsp;/'," ",$text);
        		$text=stripslashes($text);
         	//$text=filtreUFT8($text);
-
 ?>
         <table align='center' width='98%' border='0' height='80%' bordercolor='#000000' >
         <tr><td width=90% height=15 id='bordure' >&nbsp;&nbsp;<font size=2><b><?php print stripslashes($titre) ?></b></font></td>
@@ -245,19 +243,18 @@ if (! file_exists($fichier)) {
         <tr><td colspan=2 valign=top id='bordure' > 
 		<?php
 		$text=preg_replace('#(\\\\r|\\\\r\\\\n|\\\\n)#', "\n",$text);
-		$text=preg_replace('#\n\n\n\n#', "<br />",$text);
-		$text=nl2br($text);
+	//	$text=preg_replace('#\n\n\n\n#', "<br />",$text);
+	//	$text=nl2br($text);
+		$text=stripslashes($text);
 		?>
 		<br><table border=0 width=98%  cellpadding=5 ><tr><td><?php print $text ?></td></tr></table>
         </td>
 	</tr></table>
-		
 <?php
 	}elseif (defined("HTTPS")) {
 		print "<script type='text/javascript' src='https://www.triade-educ.org/sponsor/accueil_js.php?aff=tous'></script>\n";
 	}else{
-		print "<script type='text/javascript' src='http://www.triade-educ.org/sponsor/accueil_js.php?aff=tous'></script>\n";
-		include_once('librairie_php/xiti-actu.php');
+		print "<script type='text/javascript' src='https://www.triade-educ.org/sponsor/accueil_js.php?aff=tous'></script>\n";
 	}
 } 
 ?>

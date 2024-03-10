@@ -25,8 +25,6 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-use mod_data\manager;
-
 defined('MOODLE_INTERNAL') || die();
 
 /**
@@ -60,8 +58,6 @@ defined('MOODLE_INTERNAL') || die();
         if (!rss_enabled_for_mod('data', $data, false, true)) {
             return null;
         }
-
-        $manager = manager::create_from_instance($data);
 
         $sql = data_rss_get_sql($data);
 
@@ -97,18 +93,16 @@ defined('MOODLE_INTERNAL') || die();
                 $recordarray = array();
                 array_push($recordarray, $record);
 
-                $item = new stdClass();
+                $item = null;
 
                 // guess title or not
                 if (!empty($data->rsstitletemplate)) {
-                    $parser = $manager->get_template('rsstitletemplate');
-                    $item->title = $parser->parse_entries($recordarray);
+                    $item->title = data_print_template('rsstitletemplate', $recordarray, $data, '', 0, true);
                 } else { // else we guess
                     $item->title   = strip_tags($DB->get_field('data_content', 'content',
                                                       array('fieldid'=>$firstfield->id, 'recordid'=>$record->id)));
                 }
-                $parser = $manager->get_template('rsstemplate');
-                $item->description = $parser->parse_entries($recordarray);
+                $item->description = data_print_template('rsstemplate', $recordarray, $data, '', 0, true);
                 $item->pubdate = $record->timecreated;
                 $item->link = $CFG->wwwroot.'/mod/data/view.php?d='.$data->id.'&rid='.$record->id;
 
@@ -196,3 +190,4 @@ defined('MOODLE_INTERNAL') || die();
 
         rss_delete_file('mod_data', $data);
     }
+

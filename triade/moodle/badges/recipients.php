@@ -35,7 +35,7 @@ $page       = optional_param('page', 0, PARAM_INT);
 require_login();
 
 if (empty($CFG->enablebadges)) {
-    throw new \moodle_exception('badgesdisabled', 'badges');
+    print_error('badgesdisabled', 'badges');
 }
 
 if (!in_array($sortby, array('firstname', 'lastname', 'dateissued'))) {
@@ -54,9 +54,11 @@ $badge = new badge($badgeid);
 $context = $badge->get_context();
 $navurl = new moodle_url('/badges/index.php', array('type' => $badge->type));
 
+require_capability('moodle/badges:viewawarded', $context);
+
 if ($badge->type == BADGE_TYPE_COURSE) {
     if (empty($CFG->badges_allowcoursebadges)) {
-        throw new \moodle_exception('coursebadgesdisabled', 'badges');
+        print_error('coursebadgesdisabled', 'badges');
     }
     require_login($badge->courseid);
     $course = get_course($badge->courseid);

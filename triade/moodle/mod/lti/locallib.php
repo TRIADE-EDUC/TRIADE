@@ -116,7 +116,6 @@ function lti_get_jwt_message_type_mapping() {
         'basic-lti-launch-request' => 'LtiResourceLinkRequest',
         'ContentItemSelectionRequest' => 'LtiDeepLinkingRequest',
         'LtiDeepLinkingResponse' => 'ContentItemSelection',
-        'LtiSubmissionReviewRequest' => 'LtiSubmissionReviewRequest',
     );
 }
 
@@ -262,12 +261,6 @@ function lti_get_jwt_claim_mapping() {
             'group' => 'context',
             'claim' => 'type',
             'isarray' => true
-        ],
-        'for_user_id' => [
-            'suffix' => '',
-            'group' => 'for_user',
-            'claim' => 'user_id',
-            'isarray' => false
         ],
         'lis_course_offering_sourcedid' => [
             'suffix' => '',
@@ -478,9 +471,9 @@ function lti_get_instance_type(object $instance) : ?object {
  * @return array the endpoint URL and parameters (including the signature)
  * @since  Moodle 3.0
  */
-function lti_get_launch_data($instance, $nonce = '', $messagetype = 'basic-lti-launch-request', $foruserid = 0) {
-    global $PAGE, $USER;
-    $messagetype = $messagetype ? $messagetype : 'basic-lti-launch-request';
+function lti_get_launch_data($instance, $nonce = '') {
+    global $PAGE, $CFG, $USER;
+
     $tool = lti_get_instance_type($instance);
     if ($tool) {
         $typeid = $tool->id;
@@ -553,21 +546,16 @@ function lti_get_launch_data($instance, $nonce = '', $messagetype = 'basic-lti-l
 
     $course = $PAGE->course;
     $islti2 = isset($tool->toolproxyid);
-    $allparams = lti_build_request($instance, $typeconfig, $course, $typeid, $islti2, $messagetype, $foruserid);
+    $allparams = lti_build_request($instance, $typeconfig, $course, $typeid, $islti2);
     if ($islti2) {
         $requestparams = lti_build_request_lti2($tool, $allparams);
     } else {
         $requestparams = $allparams;
     }
-    $requestparams = array_merge($requestparams, lti_build_standard_message($instance, $orgid, $ltiversion, $messagetype));
+    $requestparams = array_merge($requestparams, lti_build_standard_message($instance, $orgid, $ltiversion));
     $customstr = '';
     if (isset($typeconfig['customparameters'])) {
         $customstr = $typeconfig['customparameters'];
-    }
-    $services = lti_get_services();
-    foreach ($services as $service) {
-        [$endpoint, $customstr] = $service->override_endpoint($messagetype,
-            $endpoint, $customstr, $instance->course, $instance);
     }
     $requestparams = array_merge($requestparams, lti_build_custom_parameters($toolproxy, $tool, $instance, $allparams, $customstr,
         $instance->instructorcustomparameters, $islti2));
@@ -660,13 +648,12 @@ function lti_get_launch_data($instance, $nonce = '', $messagetype = 'basic-lti-l
 /**
  * Launch an external tool activity.
  *
- * @param stdClass $instance the external tool activity settings
- * @param int $foruserid for user param, optional
+ * @param  stdClass $instance the external tool activity settings
  * @return string The HTML code containing the javascript code for the launch
  */
-function lti_launch_tool($instance, $foruserid=0) {
+function lti_launch_tool($instance) {
 
-    list($endpoint, $parms) = lti_get_launch_data($instance, '', '', $foruserid);
+    list($endpoint, $parms) = lti_get_launch_data($instance);
     $debuglaunch = ( $instance->debuglaunch == 1 );
 
     $content = lti_post_launch_html($parms, $endpoint, $debuglaunch);
@@ -786,13 +773,10 @@ function lti_build_sourcedid($instanceid, $userid, $servicesalt, $typeid = null,
  * @param object    $course         Course object
  * @param int|null  $typeid         Basic LTI tool ID
  * @param boolean   $islti2         True if an LTI 2 tool is being launched
- * @param string    $messagetype    LTI Message Type for this launch
- * @param int       $foruserid      User targeted by this launch
  *
  * @return array                    Request details
  */
-function lti_build_request($instance, $typeconfig, $course, $typeid = null, $islti2 = false,
-    $messagetype = 'basic-lti-launch-request', $foruserid = 0) {
+function lti_build_request($instance, $typeconfig, $course, $typeid = null, $islti2 = false) {
     global $USER, $CFG;
 
     if (empty($instance->cmid)) {
@@ -809,12 +793,6 @@ function lti_build_request($instance, $typeconfig, $course, $typeid = null, $isl
         'context_label' => trim(html_to_text($course->shortname, 0)),
         'context_title' => trim(html_to_text($course->fullname, 0)),
     );
-    if ($foruserid) {
-        $requestparams['for_user_id'] = $foruserid;
-    }
-    if ($messagetype) {
-        $requestparams['lti_message_type'] = $messagetype;
-    }
     if (!empty($instance->name)) {
         $requestparams['resource_link_title'] = trim(html_to_text($instance->name, 0));
     }
@@ -1399,21 +1377,6 @@ function lti_verify_jwt_signature($typeid, $consumerkey, $jwtparam) {
 }
 
 /**
- * Converts an array of custom parameters to a new line separated string.
- *
- * @param object $params list of params to concatenate
- *
- * @return string
- */
-function params_to_string(object $params) {
-    $customparameters = [];
-    foreach ($params as $key => $value) {
-        $customparameters[] = "{$key}={$value}";
-    }
-    return implode("\n", $customparameters);
-}
-
-/**
  * Converts LTI 1.1 Content Item for LTI Link to Form data.
  *
  * @param object $tool Tool for which the item is created for.
@@ -1483,23 +1446,11 @@ function content_item_to_form(object $tool, object $typeconfig, object $item) : 
                 $config->grade_modgrade_point = $maxscore;
                 $config->lineitemresourceid = '';
                 $config->lineitemtag = '';
-                $config->lineitemsubreviewurl = '';
-                $config->lineitemsubreviewparams = '';
                 if (isset($lineitem->assignedActivity) && isset($lineitem->assignedActivity->activityId)) {
                     $config->lineitemresourceid = $lineitem->assignedActivity->activityId?:'';
                 }
                 if (isset($lineitem->tag)) {
                     $config->lineitemtag = $lineitem->tag?:'';
-                }
-                if (isset($lineitem->submissionReview)) {
-                    $subreview = $lineitem->submissionReview;
-                    $config->lineitemsubreviewurl = 'DEFAULT';
-                    if (!empty($subreview->url)) {
-                        $config->lineitemsubreviewurl = $subreview->url;
-                    }
-                    if (isset($subreview->custom)) {
-                        $config->lineitemsubreviewparams = params_to_string($subreview->custom);
-                    }
                 }
             }
         }
@@ -1517,7 +1468,11 @@ function content_item_to_form(object $tool, object $typeconfig, object $item) : 
         }
     }
     if (isset($item->custom)) {
-        $config->instructorcustomparameters = params_to_string($item->custom);
+        $customparameters = [];
+        foreach ($item->custom as $key => $value) {
+            $customparameters[] = "{$key}={$value}";
+        }
+        $config->instructorcustomparameters = implode("\n", $customparameters);
     }
     return $config;
 }
@@ -1686,9 +1641,6 @@ function lti_convert_content_items($param) {
                         $newitem->lineItem->scoreConstraints = new stdClass();
                         $newitem->lineItem->scoreConstraints->{'@type'} = 'NumericLimits';
                         $newitem->lineItem->scoreConstraints->totalMaximum = $item->lineItem->scoreMaximum;
-                    }
-                    if (isset($item->lineItem->submissionReview)) {
-                        $newitem->lineItem->submissionReview = $item->lineItem->submissionReview;
                     }
                 }
                 $items[] = $newitem;
@@ -1942,13 +1894,17 @@ function lti_get_enabled_capabilities($tool) {
 }
 
 /**
- * Splits the custom parameters
+ * Splits the custom parameters field to the various parameters
  *
+ * @param object    $toolproxy      Tool proxy instance object
+ * @param object    $tool           Tool instance object
+ * @param array     $params         LTI launch parameters
  * @param string    $customstr      String containing the parameters
+ * @param boolean   $islti2         True if an LTI 2 tool is being launched
  *
  * @return array of custom parameters
  */
-function lti_split_parameters($customstr) {
+function lti_split_custom_parameters($toolproxy, $tool, $params, $customstr, $islti2 = false) {
     $customstr = str_replace("\r\n", "\n", $customstr);
     $customstr = str_replace("\n\r", "\n", $customstr);
     $customstr = str_replace("\r", "\n", $customstr);
@@ -1961,26 +1917,6 @@ function lti_split_parameters($customstr) {
         }
         $key = trim(core_text::substr($line, 0, $pos));
         $val = trim(core_text::substr($line, $pos + 1, strlen($line)));
-        $retval[$key] = $val;
-    }
-    return $retval;
-}
-
-/**
- * Splits the custom parameters field to the various parameters
- *
- * @param object    $toolproxy      Tool proxy instance object
- * @param object    $tool           Tool instance object
- * @param array     $params         LTI launch parameters
- * @param string    $customstr      String containing the parameters
- * @param boolean   $islti2         True if an LTI 2 tool is being launched
- *
- * @return array of custom parameters
- */
-function lti_split_custom_parameters($toolproxy, $tool, $params, $customstr, $islti2 = false) {
-    $splitted = lti_split_parameters($customstr);
-    $retval = array();
-    foreach ($splitted as $key => $val) {
         $val = lti_parse_custom_parameter($toolproxy, $tool, $params, $val, $islti2);
         $key2 = lti_map_keyname($key);
         $retval['custom_'.$key2] = $val;
@@ -2381,13 +2317,21 @@ function lti_get_configured_types($courseid, $sectionreturn = 0) {
         $type->name     = 'lti_type_' . $ltitype->id;
         // Clean the name. We don't want tags here.
         $type->title    = clean_param($ltitype->name, PARAM_NOTAGS);
-        $trimmeddescription = trim($ltitype->description ?? '');
+        $trimmeddescription = trim($ltitype->description);
         if ($trimmeddescription != '') {
             // Clean the description. We don't want tags here.
             $type->help     = clean_param($trimmeddescription, PARAM_NOTAGS);
             $type->helplink = get_string('modulename_shortcut_link', 'lti');
         }
-        $type->icon = html_writer::empty_tag('img', ['src' => get_tool_type_icon_url($ltitype), 'alt' => '', 'class' => 'icon']);
+
+        $iconurl = get_tool_type_icon_url($ltitype);
+        $iconclass = '';
+        if ($iconurl !== $OUTPUT->image_url('monologo', 'lti')->out()) {
+            // Do not filter the icon if it is not the default LTI activity icon.
+            $iconclass = 'nofilter';
+        }
+        $type->icon = html_writer::empty_tag('img', ['src' => $iconurl, 'alt' => '', 'class' => "icon $iconclass"]);
+
         $type->link = new moodle_url('/course/modedit.php', array('add' => 'lti', 'return' => 0, 'course' => $courseid,
             'sr' => $sectionreturn, 'typeid' => $ltitype->id));
         $types[] = $type;
@@ -2398,7 +2342,7 @@ function lti_get_configured_types($courseid, $sectionreturn = 0) {
 function lti_get_domain_from_url($url) {
     $matches = array();
 
-    if (preg_match(LTI_URL_DOMAIN_REGEX, $url ?? '', $matches)) {
+    if (preg_match(LTI_URL_DOMAIN_REGEX, $url, $matches)) {
         return $matches[1];
     }
 }
@@ -3501,8 +3445,8 @@ function lti_post_launch_html($newparms, $endpoint, $debug=false) {
 
     // Contruct html for the launch parameters.
     foreach ($newparms as $key => $value) {
-        $key = htmlspecialchars($key, ENT_COMPAT);
-        $value = htmlspecialchars($value, ENT_COMPAT);
+        $key = htmlspecialchars($key);
+        $value = htmlspecialchars($value);
         if ( $key == "ext_submit" ) {
             $r .= "<input type=\"submit\"";
         } else {
@@ -3534,8 +3478,8 @@ function lti_post_launch_html($newparms, $endpoint, $debug=false) {
         $r .= $endpoint . "<br/>\n&nbsp;<br/>\n";
         $r .= "<b>".get_string("basiclti_parameters", "lti")."</b><br/>\n";
         foreach ($newparms as $key => $value) {
-            $key = htmlspecialchars($key, ENT_COMPAT);
-            $value = htmlspecialchars($value, ENT_COMPAT);
+            $key = htmlspecialchars($key);
+            $value = htmlspecialchars($value);
             $r .= "$key = $value<br/>\n";
         }
         $r .= "&nbsp;<br/>\n";
@@ -3558,28 +3502,29 @@ function lti_post_launch_html($newparms, $endpoint, $debug=false) {
  * Generate the form for initiating a login request for an LTI 1.3 message
  *
  * @param int            $courseid  Course ID
- * @param int            $cmid        LTI instance ID
+ * @param int            $id        LTI instance ID
  * @param stdClass|null  $instance  LTI instance
  * @param stdClass       $config    Tool type configuration
  * @param string         $messagetype   LTI message type
  * @param string         $title     Title of content item
  * @param string         $text      Description of content item
- * @param int            $foruserid Id of the user targeted by the launch
  * @return string
  */
-function lti_initiate_login($courseid, $cmid, $instance, $config, $messagetype = 'basic-lti-launch-request',
-        $title = '', $text = '', $foruserid = 0) {
+function lti_initiate_login($courseid, $id, $instance, $config, $messagetype = 'basic-lti-launch-request', $title = '',
+        $text = '') {
     global $SESSION;
 
-    $params = lti_build_login_request($courseid, $cmid, $instance, $config, $messagetype, $foruserid, $title, $text);
+    $params = lti_build_login_request($courseid, $id, $instance, $config, $messagetype);
+    $SESSION->lti_message_hint = "{$courseid},{$config->typeid},{$id}," . base64_encode($title) . ',' .
+        base64_encode($text);
 
     $r = "<form action=\"" . $config->lti_initiatelogin .
         "\" name=\"ltiInitiateLoginForm\" id=\"ltiInitiateLoginForm\" method=\"post\" " .
         "encType=\"application/x-www-form-urlencoded\">\n";
 
     foreach ($params as $key => $value) {
-        $key = htmlspecialchars($key, ENT_COMPAT);
-        $value = htmlspecialchars($value, ENT_COMPAT);
+        $key = htmlspecialchars($key);
+        $value = htmlspecialchars($value);
         $r .= "  <input type=\"hidden\" name=\"{$key}\" value=\"{$value}\"/>\n";
     }
     $r .= "</form>\n";
@@ -3597,39 +3542,25 @@ function lti_initiate_login($courseid, $cmid, $instance, $config, $messagetype =
  * Prepares an LTI 1.3 login request
  *
  * @param int            $courseid  Course ID
- * @param int            $cmid        Course Module instance ID
+ * @param int            $id        LTI instance ID
  * @param stdClass|null  $instance  LTI instance
  * @param stdClass       $config    Tool type configuration
  * @param string         $messagetype   LTI message type
- * @param int            $foruserid Id of the user targeted by the launch
- * @param string         $title     Title of content item
- * @param string         $text      Description of content item
  * @return array Login request parameters
  */
-function lti_build_login_request($courseid, $cmid, $instance, $config, $messagetype, $foruserid=0, $title = '', $text = '') {
-    global $USER, $CFG, $SESSION;
-    $ltihint = [];
+function lti_build_login_request($courseid, $id, $instance, $config, $messagetype) {
+    global $USER, $CFG;
+
     if (!empty($instance)) {
         $endpoint = !empty($instance->toolurl) ? $instance->toolurl : $config->lti_toolurl;
-        $launchid = 'ltilaunch'.$instance->id.'_'.rand();
-        $ltihint['cmid'] = $cmid;
-        $SESSION->$launchid = "{$courseid},{$config->typeid},{$cmid},{$messagetype},{$foruserid},,";
     } else {
         $endpoint = $config->lti_toolurl;
         if (($messagetype === 'ContentItemSelectionRequest') && !empty($config->lti_toolurl_ContentItemSelectionRequest)) {
             $endpoint = $config->lti_toolurl_ContentItemSelectionRequest;
         }
-        $launchid = "ltilaunch_$messagetype".rand();
-        $SESSION->$launchid =
-            "{$courseid},{$config->typeid},,{$messagetype},{$foruserid}," . base64_encode($title) . ',' . base64_encode($text);
     }
     $endpoint = trim($endpoint);
-    $services = lti_get_services();
-    foreach ($services as $service) {
-        [$endpoint] = $service->override_endpoint($messagetype ?? 'basic-lti-launch-request', $endpoint, '', $courseid, $instance);
-    }
 
-    $ltihint['launchid'] = $launchid;
     // If SSL is forced make sure https is on the normal launch URL.
     if (isset($config->lti_forcessl) && ($config->lti_forcessl == '1')) {
         $endpoint = lti_ensure_url_is_https($endpoint);
@@ -3641,7 +3572,7 @@ function lti_build_login_request($courseid, $cmid, $instance, $config, $messaget
     $params['iss'] = $CFG->wwwroot;
     $params['target_link_uri'] = $endpoint;
     $params['login_hint'] = $USER->id;
-    $params['lti_message_hint'] = json_encode($ltihint);
+    $params['lti_message_hint'] = $id;
     $params['client_id'] = $config->lti_clientid;
     $params['lti_deployment_id'] = $config->typeid;
     return $params;

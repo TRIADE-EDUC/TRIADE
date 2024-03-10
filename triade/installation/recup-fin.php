@@ -183,6 +183,9 @@
 	@unlink("../common/config-md5.php"); // suppression du fichier config 000-MD5
 	@unlink("../common/crondump.inc.php"); // suppression patch du BACKUP
 	@unlink("../common/config-sms.php"); // suppression patch du SMS
+	@unlink("../common/config-mailing.php");
+	@unlink("../common/config-sign.php"); // suppression patch du SMS
+	@unlink("../common/config-ia.php"); // suppression patch du SMS
 	@copy("./librairie/lib_stockage.php","../common/lib_stockage.php");
 	@copy("../librairie_css/css.css-31","../librairie_css/css.css");
 

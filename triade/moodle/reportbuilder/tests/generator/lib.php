@@ -16,7 +16,6 @@
 
 declare(strict_types=1);
 
-use core_reportbuilder\manager;
 use core_reportbuilder\local\helpers\report as helper;
 use core_reportbuilder\local\helpers\schedule as schedule_helper;
 use core_reportbuilder\local\models\column;
@@ -54,13 +53,7 @@ class core_reportbuilder_generator extends component_generator_base {
         // Include default setup unless specifically disabled in passed record.
         $default = (bool) ($record['default'] ?? true);
 
-        // If setting up default report, purge caches to ensure any default attributes are always loaded in tests.
-        $report = helper::create_report((object) $record, $default);
-        if ($default) {
-            manager::reset_caches();
-        }
-
-        return $report;
+        return helper::create_report((object) $record, $default);
     }
 
     /**

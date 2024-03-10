@@ -330,12 +330,12 @@ function choice_user_submit_response($formanswer, $choice, $userid, $course, $cm
     $continueurl = new moodle_url('/mod/choice/view.php', array('id' => $cm->id));
 
     if (empty($formanswer)) {
-        throw new \moodle_exception('atleastoneoption', 'choice', $continueurl);
+        print_error('atleastoneoption', 'choice', $continueurl);
     }
 
     if (is_array($formanswer)) {
         if (!$choice->allowmultiple) {
-            throw new \moodle_exception('multiplenotallowederror', 'choice', $continueurl);
+            print_error('multiplenotallowederror', 'choice', $continueurl);
         }
         $formanswers = $formanswer;
     } else {
@@ -345,7 +345,7 @@ function choice_user_submit_response($formanswer, $choice, $userid, $course, $cm
     $options = $DB->get_records('choice_options', array('choiceid' => $choice->id), '', 'id');
     foreach ($formanswers as $key => $val) {
         if (!isset($options[$val])) {
-            throw new \moodle_exception('cannotsubmit', 'choice', $continueurl);
+            print_error('cannotsubmit', 'choice', $continueurl);
         }
     }
     // Start lock to prevent synchronous access to the same data
@@ -360,7 +360,7 @@ function choice_user_submit_response($formanswer, $choice, $userid, $course, $cm
         // Opening the lock.
         $choicelock = $lockfactory->get_lock($resouce, $timeout, MINSECS);
         if (!$choicelock) {
-            throw new \moodle_exception('cannotsubmit', 'choice', $continueurl);
+            print_error('cannotsubmit', 'choice', $continueurl);
         }
     }
 
@@ -476,7 +476,7 @@ function choice_user_submit_response($formanswer, $choice, $userid, $course, $cm
     } else {
         // This is a choice with limited options, and one of the options selected has just run over its limit.
         $choicelock->release();
-        throw new \moodle_exception('choicefull', 'choice', $continueurl);
+        print_error('choicefull', 'choice', $continueurl);
     }
 
     // Release lock.

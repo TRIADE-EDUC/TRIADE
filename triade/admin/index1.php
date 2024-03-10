@@ -76,10 +76,9 @@ if ($cnx == 0) {
 ?>
 <?php print $affiche ?>
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
-<tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' >Message(s) Interne(s)</font></b></td>
-</tr>
-<tr id='cadreCentral0' >
-<td >
+<tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' >Message(s) Interne(s)</font></b></td></tr>
+<tr id='cadreCentral0' ><td >
+
 <table height=100% width=100% border=0 >
 <TR><TD align=top>
 <font class=T1>
@@ -92,20 +91,20 @@ if ($cnx == 0) {
         	readfile($fichier);
 		print "<BR>";
 		print "<div align=right><input type=button onclick=\"open('opinion_a_zero.php','_parent','');\" value='Supprimer Messages' STYLE='font-family: Arial;font-size:10px;color:#CC0000;background-color:#CCCCFF;font-weight:bold;'>&nbsp;&nbsp;&nbsp;&nbsp;</div><BR>";
-		print "<HR width=80%>";
 	}
 	// zone pour les questions faq
 	$fichier="../data/fic_question_faq.txt";
         if ((file_exists($fichier)) && (filesize($fichier) > 0)) {
+		print "<HR width=80%>";
 		print "<br /><ul><font class=T2>Question</font></ul><BR>";
 		readfile($fichier);
 		print "<BR><BR>";
 		print "<div align=right><input type=button onclick=\"open('question_faq_a_zero.php','_parent','');\" value='Supprimer Questions' STYLE='font-family: Arial;font-size:10px;color:#CC0000;background-color:#CCCCFF;font-weight:bold;'>&nbsp;&nbsp;&nbsp;&nbsp;</div><BR>";
-		print "<HR width=80%>";
 	}
 	// zone pour les problèmes d'accès
 	$fichier="../data/fic_probleme.txt";
         if ((file_exists($fichier)) && (filesize($fichier) > 0)) {
+		print "<HR width=80%>";
 		print "<br /><ul><font class=T2>Problème d'accès</font></ul><BR>";
 		readfile($fichier);
 		print "<BR><BR>";
@@ -120,11 +119,31 @@ if ($cnx == 0) {
 		print "<input type=button onclick=\"open('bug.php','_parent','');\" value='Transmettre au support Triade' STYLE='font-family: Arial;font-size:10px;color:#CC0000;background-color:#CCCCFF;font-weight:bold;'>&nbsp;&nbsp;";
 		print "<input type=button onclick=\"open('bug_a_zero.php','_parent','');\" value='Supprimer Messages' STYLE='font-family: Arial;font-size:10px;color:#CC0000;background-color:#CCCCFF;font-weight:bold;'>&nbsp;&nbsp;&nbsp;&nbsp;</div><BR>";
 	}
-
 ?>
-</font>
+</font></td></tr></table>
+
+<?php 
+if (!file_exists('../moodle/config.php')) {
+?>
+
+	</font></TD></TR></TABLE>
+	<br><br>
+	<table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
+	<tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' >Installation de Moodle</font></b></td>
+	</tr>
+	<tr id='cadreCentral0' >
+	<td >
+	<table height=100% width=100% border=0 >
+	<TR><TD align=top>
+	Veuillez terminer l'installation : 
+        <input type=button onclick="open('../moodle/','_blank','');" value='Installer Moodle' STYLE='font-family: Arial;font-size:10px;color:#CC0000;background-color:#CCCCFF;font-weight:bold;'>&nbsp;&nbsp;
+	</td></tr></table>
+
+<?php
+} 
+?>
+
 <!-- // fin de la saisie -->
-</font></TD></TR></TABLE>
 </td></tr></table> <BR><BR><BR>
 <SCRIPT language="JavaScript" src="./librairie_js/menudepart2.js"></SCRIPT>
 <?php top_d(); ?>

@@ -28,7 +28,7 @@ if (empty($CFG->auth)) {
 }
 
 if (!empty($auth) and !exists_auth_plugin($auth)) {
-    throw new \moodle_exception('pluginnotinstalled', 'auth', $returnurl, $auth);
+    print_error('pluginnotinstalled', 'auth', $returnurl, $auth);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -55,7 +55,7 @@ switch ($action) {
         $key = array_search($auth, $authsenabled);
         // check auth plugin is valid
         if ($key === false) {
-            throw new \moodle_exception('pluginnotenabled', 'auth', $returnurl, $auth);
+            print_error('pluginnotenabled', 'auth', $returnurl, $auth);
         }
         // move down the list
         if ($key < (count($authsenabled) - 1)) {
@@ -72,7 +72,7 @@ switch ($action) {
         $key = array_search($auth, $authsenabled);
         // check auth is valid
         if ($key === false) {
-            throw new \moodle_exception('pluginnotenabled', 'auth', $returnurl, $auth);
+            print_error('pluginnotenabled', 'auth', $returnurl, $auth);
         }
         // move up the list
         if ($key >= 1) {

@@ -3,6 +3,7 @@ error_reporting(0);
 $idgroupe=$_POST["idgroupe"];
 include_once("./common/config.inc.php");
 include_once("./librairie_php/db_triade.php");
+include_once("./librairie_php/langue-librairie.php");
 $cnx=cnx();
 
 $data=listingGroupeMail($idgroupe); // id,idpers,liste_id,libelle,public

@@ -1123,6 +1123,43 @@ class enrollib_test extends advanced_testcase {
     }
 
     /**
+     * test_course_users in groups
+     *
+     * @covers \enrol_get_course_users()
+     * @return void
+     */
+    public function test_course_users_in_groups() {
+        $this->resetAfterTest();
+
+        $user1 = $this->getDataGenerator()->create_user();
+        $user2 = $this->getDataGenerator()->create_user();
+        $user3 = $this->getDataGenerator()->create_user();
+        $course = $this->getDataGenerator()->create_course();
+        $group1 = $this->getDataGenerator()->create_group(['courseid' => $course->id]);
+        $group2 = $this->getDataGenerator()->create_group(['courseid' => $course->id]);
+
+        $this->getDataGenerator()->enrol_user($user1->id, $course->id);
+        $this->getDataGenerator()->enrol_user($user2->id, $course->id);
+        $this->getDataGenerator()->enrol_user($user3->id, $course->id);
+
+        $this->getDataGenerator()->create_group_member(['groupid' => $group1->id, 'userid' => $user1->id]);
+        $this->getDataGenerator()->create_group_member(['groupid' => $group2->id, 'userid' => $user1->id]);
+        $this->getDataGenerator()->create_group_member(['groupid' => $group2->id, 'userid' => $user2->id]);
+
+        $this->assertCount(3, enrol_get_course_users($course->id));
+        $this->assertCount(1, enrol_get_course_users($course->id, false, [], [], [$group1->id]));
+        $this->assertCount(2, enrol_get_course_users($course->id, false, [], [], [$group2->id]));
+
+        $instances = enrol_get_instances($course->id, true);
+        $manualinstance = reset($instances);
+
+        $manualplugin = enrol_get_plugin('manual');
+        $manualplugin->update_user_enrol($manualinstance, $user1->id, ENROL_USER_SUSPENDED);
+        $this->assertCount(2, enrol_get_course_users($course->id, false, [], [], [$group2->id]));
+        $this->assertCount(1, enrol_get_course_users($course->id, true, [], [], [$group2->id]));
+    }
+
+    /**
      * Test count of enrolled users
      *
      * @return void
@@ -1487,98 +1524,6 @@ class enrollib_test extends advanced_testcase {
                 'expectedcount' => 0,
             ],
         ];
-    }
-
-    /**
-     * Test last_time_enrolments_synced not recorded with "force" option for enrol_check_plugins.
-     * @covers ::enrol_check_plugins
-     */
-    public function test_enrol_check_plugins_with_forced_option() {
-        $this->resetAfterTest();
-        $user = $this->getDataGenerator()->create_user();
-
-        $this->assertNull(get_user_preferences('last_time_enrolments_synced', null, $user));
-        enrol_check_plugins($user);
-        $this->assertNull(get_user_preferences('last_time_enrolments_synced', null, $user));
-    }
-
-    /**
-     * Data provided for test_enrol_check_plugins_with_empty_config_value test.
-     * @return array
-     */
-    public function empty_config_data_provider(): array {
-        return [
-            [0],
-            ["0"],
-            [false],
-            [''],
-            ['string'],
-        ];
-    }
-
-    /**
-     * Test that empty 'enrolments_sync_interval' is treated as forced option for enrol_check_plugins.
-     *
-     * @dataProvider empty_config_data_provider
-     * @covers ::enrol_check_plugins
-     *
-     * @param mixed $config Config value.
-     */
-    public function test_enrol_check_plugins_with_empty_config_value($config) {
-        global $CFG;
-
-        $this->resetAfterTest();
-        $CFG->enrolments_sync_interval = $config;
-        $user = $this->getDataGenerator()->create_user();
-
-        $this->assertNull(get_user_preferences('last_time_enrolments_synced', null, $user));
-        enrol_check_plugins($user, false);
-        $this->assertNull(get_user_preferences('last_time_enrolments_synced', null, $user));
-    }
-
-    /**
-     * Test last_time_enrolments_synced is recorded without "force" option for enrol_check_plugins.
-     * @covers ::enrol_check_plugins
-     */
-    public function test_last_time_enrolments_synced_is_set_if_not_forced() {
-        $this->resetAfterTest();
-        $user = $this->getDataGenerator()->create_user();
-
-        $this->assertNull(get_user_preferences('last_time_enrolments_synced', null, $user));
-
-        enrol_check_plugins($user, false);
-        $firstrun = get_user_preferences('last_time_enrolments_synced', null, $user);
-        $this->assertNotNull($firstrun);
-        sleep(1);
-
-        enrol_check_plugins($user, false);
-        $secondrun = get_user_preferences('last_time_enrolments_synced', null, $user);
-        $this->assertNotNull($secondrun);
-        $this->assertTrue((int)$secondrun == (int)$firstrun);
-    }
-
-    /**
-     * Test last_time_enrolments_synced is recorded correctly without "force" option for enrol_check_plugins.
-     * @covers ::enrol_check_plugins
-     */
-    public function test_last_time_enrolments_synced_is_set_if_not_forced_if_have_not_passed_interval() {
-        global $CFG;
-
-        $this->resetAfterTest();
-        $CFG->enrolments_sync_interval = 1;
-        $user = $this->getDataGenerator()->create_user();
-
-        $this->assertNull(get_user_preferences('last_time_enrolments_synced', null, $user));
-
-        enrol_check_plugins($user, false);
-        $firstrun = get_user_preferences('last_time_enrolments_synced', null, $user);
-        $this->assertNotNull($firstrun);
-        sleep(2);
-
-        enrol_check_plugins($user, false);
-        $secondrun = get_user_preferences('last_time_enrolments_synced', null, $user);
-        $this->assertNotNull($secondrun);
-        $this->assertTrue((int)$secondrun > (int)$firstrun);
     }
 
     /**

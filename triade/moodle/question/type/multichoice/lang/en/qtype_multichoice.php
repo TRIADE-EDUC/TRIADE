@@ -80,6 +80,5 @@ $string['shuffleanswers_desc'] = 'Whether options should be randomly shuffled fo
 $string['shuffleanswers_help'] = 'If enabled, the order of the answers is randomly shuffled for each attempt, provided that "Shuffle within questions" in the activity settings is also enabled.';
 $string['singleanswer'] = 'Choose one answer.';
 $string['showstandardinstruction'] = 'Show standard instructions';
-$string['showstandardinstruction_desc'] = 'Whether to show the instructions "Select one:" or "Select one or more:" before multiple choice answers.';
-$string['showstandardinstruction_help'] = 'Whether to show the instructions \'Select one:\' or \'Select one or more:\' before multiple choice answers. Alternatively, you can include instructions in the question text.';
+$string['showstandardinstruction_help'] = 'Whether to show the instructions "Select one:" or "Select one or more:" before multiple choice answers.';
 $string['toomanyselected'] = 'You have selected too many options.';

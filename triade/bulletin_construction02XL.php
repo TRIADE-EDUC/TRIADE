@@ -657,7 +657,7 @@ if (count($valeur)) {
 			$nom_ue=$recupUE[$f][1];
 			$coef_ue=$recupUE[$f][2];
 			$ects_ue=$recupUE[$f][3];
-			$listeMatiere=recupMatiereUE($code_ue);
+			$listeMatiere=recupMatiereUE($code_ue,$idClasse);
 			
 			$worksheet->write("A$ligne","$nom_ue",$matiere0);
 			$ligneUE=$ligne;

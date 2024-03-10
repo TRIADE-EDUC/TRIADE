@@ -35,7 +35,7 @@ class behat_mod_data_generator extends behat_generator_base {
                 'singular' => 'entry',
                 'datagenerator' => 'entry',
                 'required' => ['database'],
-                'switchids' => ['database' => 'databaseid', 'user' => 'userid'],
+                'switchids' => ['database' => 'databaseid'],
             ],
             'fields' => [
                 'singular' => 'field',
@@ -48,12 +48,6 @@ class behat_mod_data_generator extends behat_generator_base {
                 'datagenerator' => 'template',
                 'required' => ['database', 'name'],
                 'switchids' => ['database' => 'databaseid'],
-            ],
-            'presets' => [
-                'singular' => 'preset',
-                'datagenerator' => 'preset',
-                'required' => ['database', 'name'],
-                'switchids' => ['database' => 'databaseid', 'user' => 'userid'],
             ],
         ];
     }
@@ -81,11 +75,6 @@ class behat_mod_data_generator extends behat_generator_base {
         $database = $DB->get_record('data', ['id' => $data['databaseid']], '*', MUST_EXIST);
 
         unset($data['databaseid']);
-        $userid = 0;
-        if (array_key_exists('userid', $data)) {
-            $userid = $data['userid'];
-            unset($data['userid']);
-        }
 
         $data = array_reduce(array_keys($data), function ($fields, $fieldname) use ($data, $database) {
             global $DB;
@@ -97,7 +86,7 @@ class behat_mod_data_generator extends behat_generator_base {
             return $fields;
         }, []);
 
-        $this->get_data_generator()->create_entry($database, $data, 0, [], null, $userid);
+        $this->get_data_generator()->create_entry($database, $data);
     }
 
     /**
@@ -133,19 +122,6 @@ class behat_mod_data_generator extends behat_generator_base {
             $newdata->{$data['name']} = $data['content'];
             $DB->update_record('data', $newdata);
         }
-    }
-
-    /**
-     * Saves a preset.
-     *
-     * @param array $data Preset data.
-     */
-    protected function process_preset(array $data): void {
-        global $DB;
-
-        $instance = $DB->get_record('data', ['id' => $data['databaseid']], '*', MUST_EXIST);
-
-        $this->get_data_generator()->create_preset($instance, (object) $data);
     }
 
     /**

@@ -8,41 +8,16 @@ use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
 class PageSettings
 {
-    /**
-     * @var string
-     */
     private $officeNs;
 
-    /**
-     * @var string
-     */
     private $stylesNs;
 
-    /**
-     * @var string
-     */
     private $stylesFo;
-
-    /**
-     * @var string
-     */
-    private $tableNs;
-
-    /**
-     * @var string[]
-     */
-    private $tableStylesCrossReference = [];
 
     private $pageLayoutStyles = [];
 
-    /**
-     * @var string[]
-     */
     private $masterStylesCrossReference = [];
 
-    /**
-     * @var string[]
-     */
     private $masterPrintStylesCrossReference = [];
 
     public function __construct(DOMDocument $styleDom)
@@ -57,7 +32,6 @@ class PageSettings
         $this->officeNs = $styleDom->lookupNamespaceUri('office');
         $this->stylesNs = $styleDom->lookupNamespaceUri('style');
         $this->stylesFo = $styleDom->lookupNamespaceUri('fo');
-        $this->tableNs = $styleDom->lookupNamespaceUri('table');
     }
 
     private function readPageSettingStyles(DOMDocument $styleDom): void
@@ -124,31 +98,10 @@ class PageSettings
         foreach ($styleXReferences as $styleXreferenceSet) {
             $styleXRefName = $styleXreferenceSet->getAttributeNS($this->stylesNs, 'name');
             $stylePageLayoutName = $styleXreferenceSet->getAttributeNS($this->stylesNs, 'master-page-name');
-            $styleFamilyName = $styleXreferenceSet->getAttributeNS($this->stylesNs, 'family');
-            if (!empty($styleFamilyName) && $styleFamilyName === 'table') {
-                $styleVisibility = 'true';
-                foreach ($styleXreferenceSet->getElementsByTagNameNS($this->stylesNs, 'table-properties') as $tableProperties) {
-                    $styleVisibility = $tableProperties->getAttributeNS($this->tableNs, 'display');
-                }
-                $this->tableStylesCrossReference[$styleXRefName] = $styleVisibility;
-            }
             if (!empty($stylePageLayoutName)) {
                 $this->masterStylesCrossReference[$styleXRefName] = $stylePageLayoutName;
             }
         }
-    }
-
-    public function setVisibilityForWorksheet(Worksheet $worksheet, string $styleName): void
-    {
-        if (!array_key_exists($styleName, $this->tableStylesCrossReference)) {
-            return;
-        }
-
-        $worksheet->setSheetState(
-            $this->tableStylesCrossReference[$styleName] === 'false'
-                ? Worksheet::SHEETSTATE_HIDDEN
-                : Worksheet::SHEETSTATE_VISIBLE
-        );
     }
 
     public function setPrintSettingsForWorksheet(Worksheet $worksheet, string $styleName): void

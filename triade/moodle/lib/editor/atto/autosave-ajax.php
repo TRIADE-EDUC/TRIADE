@@ -48,7 +48,7 @@ $actions = array_map(function($actionparams) {
     foreach ($keys as $key => $type) {
         // Replicate required_param().
         if (!isset($actionparams[$key])) {
-            throw new \moodle_exception('missingparam', '', '', $key);
+            print_error('missingparam', '', '', $key);
         }
         $params[$key] = clean_param($actionparams[$key], $type);
     }
@@ -68,12 +68,12 @@ $PAGE->set_context($context);
 
 require_login();
 if (isguestuser()) {
-    throw new \moodle_exception('accessdenied', 'admin');
+    print_error('accessdenied', 'admin');
 }
 require_sesskey();
 
 if (!in_array('atto', explode(',', get_config('core', 'texteditors')))) {
-    throw new \moodle_exception('accessdenied', 'admin');
+    print_error('accessdenied', 'admin');
 }
 
 $responses = array();
@@ -94,7 +94,7 @@ foreach ($actions as $actionparams) {
 
         $record = $DB->get_record('editor_atto_autosave', $params);
         if ($record && $record->pageinstance != $pageinstance) {
-            throw new \moodle_exception('concurrent access from the same user is not supported');
+            print_error('concurrent access from the same user is not supported');
             die();
         }
 

@@ -359,7 +359,7 @@ class grade_category extends grade_object {
     public function insert($source = null, $isbulkupdate = false) {
 
         if (empty($this->courseid)) {
-            throw new \moodle_exception('cannotinsertgrade');
+            print_error('cannotinsertgrade');
         }
 
         if (empty($this->parent)) {
@@ -2376,11 +2376,11 @@ class grade_category extends grade_object {
         }
 
         if ($parentid == $this->id) {
-            throw new \moodle_exception('cannotassignselfasparent');
+            print_error('cannotassignselfasparent');
         }
 
         if (empty($this->parent) and $this->is_course_category()) {
-            throw new \moodle_exception('cannothaveparentcate');
+            print_error('cannothaveparentcate');
         }
 
         // find parent and check course id

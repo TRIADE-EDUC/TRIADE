@@ -24,11 +24,6 @@ use core_reportbuilder\permission;
 use core_reportbuilder\local\audiences\base;
 use core_reportbuilder\local\models\audience;
 
-defined('MOODLE_INTERNAL') || die;
-
-global $CFG;
-require_once("{$CFG->libdir}/external/externallib.php");
-
 /**
  * Audience heading editable component
  *

@@ -239,6 +239,7 @@ if ($typebull == "bull01019") { $bull="bulletin_construction01019.php";      }
 if ($typebull == "bull01XL") { $bull="bulletin_construction01XL.php";      }  
 if ($typebull == "bull02XL") { $bull="bulletin_construction02XL.php";      }  
 if ($typebull == "bull02UE") { $bull="bulletin_construction02UE.php";      }  
+if ($typebull == "bull04UE4") { $bull="bulletin_construction04UE4.php";      }  
 if ($typebull == "bull03UE") { $bull="bulletin_construction03UE.php";      }  
 if ($typebull == "bull09S") { $bull="bulletin_construction09S.php";      }  
 if ($typebull == "bul9999t") { $bull="bulletin_construction_vatel_tunisie.php"; }

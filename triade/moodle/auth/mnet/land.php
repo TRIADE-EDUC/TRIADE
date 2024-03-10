@@ -40,7 +40,7 @@ $PAGE->set_context(context_system::instance());
 $site = get_site();
 
 if (!is_enabled_auth('mnet')) {
-    throw new \moodle_exception('mnetdisable');
+    print_error('mnetdisable');
 }
 
 // confirm the MNET session

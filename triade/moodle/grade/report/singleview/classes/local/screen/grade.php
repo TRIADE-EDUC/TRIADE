@@ -44,22 +44,13 @@ defined('MOODLE_INTERNAL') || die;
  */
 class grade extends tablelike implements selectable_items, filterable_items {
 
-    /**
-     * Used for paging
-     * @var int $totalitemcount
-     */
+    /** @var int $totalitemcount Used for paging */
     private $totalitemcount = 0;
 
-    /**
-     * True if this is a manual grade item
-     * @var bool $requiresextra
-     */
+    /** @var bool $requiresextra True if this is a manual grade item */
     private $requiresextra = false;
 
-    /**
-     *  True if there are more users than our limit.
-     * @var bool $requirepaging
-     */
+    /** @var bool $requirepaging True if there are more users than our limit. */
     private $requirespaging = true;
 
     /**
@@ -67,16 +58,15 @@ class grade extends tablelike implements selectable_items, filterable_items {
      *
      * @return bool
      */
-    public static function allowcategories(): bool {
+    public static function allowcategories() {
         return get_config('moodle', 'grade_overridecat');
     }
 
     /**
      * Filter the list excluding category items (if required)?
      * @param grade_item $item The grade item.
-     * @return bool
      */
-    public static function filter($item): bool {
+    public static function filter($item) {
         return get_config('moodle', 'grade_overridecat') ||
                 !($item->is_course_item() || $item->is_category_item());
     }
@@ -85,7 +75,7 @@ class grade extends tablelike implements selectable_items, filterable_items {
      * Get the label for the select box that chooses items for this page.
      * @return string
      */
-    public function select_label(): string {
+    public function select_label() {
         return get_string('selectuser', 'gradereport_singleview');
     }
 
@@ -93,7 +83,7 @@ class grade extends tablelike implements selectable_items, filterable_items {
      * Get the description of this page
      * @return string
      */
-    public function description(): string {
+    public function description() {
         return get_string('users');
     }
 
@@ -102,8 +92,8 @@ class grade extends tablelike implements selectable_items, filterable_items {
      *
      * @return array
      */
-    public function options(): array {
-        $options = [];
+    public function options() {
+        $options = array();
         foreach ($this->items as $userid => $user) {
             $options[$userid] = fullname($user);
         }
@@ -115,7 +105,7 @@ class grade extends tablelike implements selectable_items, filterable_items {
      * Return the type of the things in this list.
      * @return string
      */
-    public function item_type(): string {
+    public function item_type() {
         return 'user';
     }
 
@@ -123,13 +113,14 @@ class grade extends tablelike implements selectable_items, filterable_items {
      * Get the original settings for this item
      * @return array
      */
-    public function original_definition(): array {
-        return [
-            'finalgrade',
-            'feedback',
-            'override',
-            'exclude'
-        ];
+    public function original_definition() {
+        $def = array('finalgrade', 'feedback');
+
+        $def[] = 'override';
+
+        $def[] = 'exclude';
+
+        return $def;
     }
 
     /**
@@ -146,14 +137,14 @@ class grade extends tablelike implements selectable_items, filterable_items {
             return;
         }
 
-        $params = [
+        $params = array(
             'id' => $this->itemid,
             'courseid' => $this->courseid
-        ];
+        );
 
         $this->item = grade_item::fetch($params);
         if (!self::filter($this->item)) {
-            $this->items = [];
+            $this->items = array();
             $this->set_init_error(get_string('gradeitemcannotbeoverridden', 'gradereport_singleview'));
         }
 
@@ -171,24 +162,24 @@ class grade extends tablelike implements selectable_items, filterable_items {
      * @return array
      */
     public function original_headers() {
-        return [
-            get_string('fullnameuser', 'core'),
+        return array(
             '', // For filter icon.
-            get_string('grade', 'grades'),
+            get_string('fullnameuser', 'core'),
             get_string('range', 'grades'),
+            get_string('grade', 'grades'),
             get_string('feedback', 'grades'),
-            get_string('override', 'gradereport_singleview'),
-            get_string('exclude', 'gradereport_singleview'),
-        ];
+            $this->make_toggle_links('override'),
+            $this->make_toggle_links('exclude')
+        );
     }
 
     /**
      * Format a row in the table
      *
      * @param user $item
-     * @return array
+     * @return string
      */
-    public function format_line($item): array {
+    public function format_line($item) {
         global $OUTPUT;
 
         $grade = $this->fetch_grade_or_default($this->item, $item->id);
@@ -214,32 +205,27 @@ class grade extends tablelike implements selectable_items, filterable_items {
         }
 
         $item->imagealt = $fullname;
-        $url = new moodle_url("/user/view.php", ['id' => $item->id, 'course' => $this->courseid]);
+        $url = new moodle_url("/user/view.php", array('id' => $item->id, 'course' => $this->courseid));
+        $iconstring = get_string('filtergrades', 'gradereport_singleview', $fullname);
         $grade->label = $fullname;
         $userpic = $OUTPUT->user_picture($item, ['link' => false, 'visibletoscreenreaders' => false]);
 
-        $formatteddefinition = $this->format_definition($grade);
-
-        $line = [
+        $line = array(
+            $OUTPUT->action_icon($this->format_link('user', $item->id), new pix_icon('t/editstring', ''), null,
+                    ['title' => $iconstring, 'aria-label' => $iconstring]),
             html_writer::link($url, $userpic . $fullname),
-            $this->get_user_action_menu($item),
-            $formatteddefinition['finalgrade'],
-            $this->item_range(),
-            $formatteddefinition['feedback'],
-            $formatteddefinition['override'],
-            $formatteddefinition['exclude'],
-        ];
-        $lineclasses = [
-            'user',
-            'action',
-            'grade',
-            'range',
-        ];
-        $outputline = [];
+            $this->item_range()
+        );
+        $lineclasses = array(
+            "action",
+            "user",
+            "range"
+        );
+        $outputline = array();
         $i = 0;
         foreach ($line as $key => $value) {
             $cell = new \html_table_cell($value);
-            if ($isheader = $i == 0) {
+            if ($isheader = $i == 1) {
                 $cell->header = $isheader;
                 $cell->scope = "row";
             }
@@ -250,7 +236,7 @@ class grade extends tablelike implements selectable_items, filterable_items {
             $i++;
         }
 
-        return $outputline;
+        return $this->format_definition($outputline, $grade);
     }
 
     /**
@@ -271,7 +257,7 @@ class grade extends tablelike implements selectable_items, filterable_items {
      *
      * @return bool
      */
-    public function supports_paging(): bool {
+    public function supports_paging() {
         return $this->requirespaging;
     }
 
@@ -280,18 +266,18 @@ class grade extends tablelike implements selectable_items, filterable_items {
      *
      * @return string
      */
-    public function pager(): string {
+    public function pager() {
         global $OUTPUT;
 
         return $OUTPUT->paging_bar(
             $this->totalitemcount, $this->page, $this->perpage,
-            new moodle_url('/grade/report/singleview/index.php', [
+            new moodle_url('/grade/report/singleview/index.php', array(
                 'perpage' => $this->perpage,
                 'id' => $this->courseid,
                 'group' => $this->groupid,
                 'itemid' => $this->itemid,
                 'item' => 'grade'
-            ])
+            ))
         );
     }
 
@@ -300,7 +286,7 @@ class grade extends tablelike implements selectable_items, filterable_items {
      *
      * @return string
      */
-    public function heading(): string {
+    public function heading() {
         return get_string('gradeitem', 'gradereport_singleview', $this->item->get_name());
     }
 
@@ -309,7 +295,7 @@ class grade extends tablelike implements selectable_items, filterable_items {
      *
      * @return string
      */
-    public function summary(): string {
+    public function summary() {
         return get_string('summarygrade', 'gradereport_singleview');
     }
 
@@ -317,9 +303,9 @@ class grade extends tablelike implements selectable_items, filterable_items {
      * Process the data from the form.
      *
      * @param array $data
-     * @return \stdClass of warnings
+     * @return array of warnings
      */
-    public function process($data): \stdClass {
+    public function process($data) {
         $bulk = new bulk_insert($this->item);
         // Bulk insert messages the data to be passed in
         // ie: for all grades of empty grades apply the specified value.
@@ -328,10 +314,10 @@ class grade extends tablelike implements selectable_items, filterable_items {
             $insertvalue = $bulk->get_insert_value($data);
             // Appropriately massage data that may not exist.
             if ($this->supports_paging()) {
-                $gradeitem = grade_item::fetch([
+                $gradeitem = grade_item::fetch(array(
                     'courseid' => $this->courseid,
                     'id' => $this->item->id
-                ]);
+                ));
 
                 $null = $gradeitem->gradetype == GRADE_TYPE_SCALE ? -1 : '';
 
@@ -341,10 +327,10 @@ class grade extends tablelike implements selectable_items, filterable_items {
                         continue;
                     }
 
-                    $grade = grade_grade::fetch([
+                    $grade = grade_grade::fetch(array(
                         'itemid' => $gradeitem->id,
                         'userid' => $itemid
-                    ]);
+                    ));
 
                     $data->$field = empty($grade) ? $null : $grade->finalgrade;
                     $data->{"old$field"} = $data->$field;
@@ -363,42 +349,23 @@ class grade extends tablelike implements selectable_items, filterable_items {
                     continue;
                 }
 
-                $gradeitem = grade_item::fetch([
+                $gradeitem = grade_item::fetch(array(
                     'courseid' => $this->courseid,
                     'id' => $matches[1]
-                ]);
+                ));
 
                 $isscale = ($gradeitem->gradetype == GRADE_TYPE_SCALE);
 
-                $empties = (trim($value) === '' || ($isscale && $value == -1));
+                $empties = (trim($value) === '' or ($isscale and $value == -1));
 
-                if ($filter == 'all' || $empties) {
-                    $data->$varname = ($isscale && empty($insertvalue)) ?
+                if ($filter == 'all' or $empties) {
+                    $data->$varname = ($isscale and empty($insertvalue)) ?
                         -1 : $insertvalue;
                 }
             }
         }
+
         return parent::process($data);
     }
 
-    /**
-     * Return the action menu HTML for the user item.
-     *
-     * @param \stdClass $user
-     * @return mixed
-     */
-    private function get_user_action_menu(\stdClass $user) {
-        global $OUTPUT;
-
-        $menuitems = [];
-        $url = new moodle_url($this->format_link('user', $user->id));
-        $title = get_string('showallgrades', 'core_grades');
-        $menuitems[] = new \action_menu_link_secondary($url, null, $title);
-        $menu = new \action_menu($menuitems);
-        $icon = $OUTPUT->pix_icon('i/moremenu', get_string('actions'));
-        $menu->set_menu_trigger($icon);
-        $menu->set_menu_left();
-
-        return $OUTPUT->render($menu);
-    }
 }

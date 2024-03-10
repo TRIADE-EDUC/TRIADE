@@ -41,15 +41,15 @@ if (null !== $return) {
 $PAGE->set_url($url);
 
 if (! $forum = $DB->get_record("forum", array("id" => $f))) {
-    throw new \moodle_exception('invalidforumid', 'forum');
+    print_error('invalidforumid', 'forum');
 }
 
 if (! $course = $DB->get_record("course", array("id" => $forum->course))) {
-    throw new \moodle_exception('invalidcourseid');
+    print_error('invalidcourseid');
 }
 
 if (!$cm = get_coursemodule_from_instance("forum", $forum->id, $course->id)) {
-    throw new \moodle_exception('invalidcoursemodule');
+    print_error('invalidcoursemodule');
 }
 
 $user = $USER;
@@ -79,7 +79,7 @@ $info->forum = format_string($forum->name);
 if ($mark == 'read') {
     if (!empty($d)) {
         if (! $discussion = $DB->get_record('forum_discussions', array('id'=> $d, 'forum'=> $forum->id))) {
-            throw new \moodle_exception('invaliddiscussionid', 'forum');
+            print_error('invaliddiscussionid', 'forum');
         }
 
         forum_tp_mark_discussion_read($user, $d);

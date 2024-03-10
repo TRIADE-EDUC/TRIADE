@@ -135,7 +135,7 @@ class comment {
             $this->contextid = $options->contextid;
             $this->context = context::instance_by_id($this->contextid);
         } else {
-            throw new \moodle_exception('invalidcontext');
+            print_error('invalidcontext');
         }
 
         if (!empty($options->component)) {
@@ -930,7 +930,7 @@ class comment {
             $deletelink .= html_writer::start_tag('a', array('href' => '#', 'id' => 'comment-delete-'.$this->cid.'-'.$cmt->id,
                 'class' => 'icon-no-margin', 'title' => $strdelete));
 
-            $deletelink .= $OUTPUT->pix_icon('t/delete', get_string('delete'));
+            $deletelink .= $OUTPUT->pix_icon('t/delete', $strdelete);
             $deletelink .= html_writer::end_tag('a');
             $deletelink .= html_writer::end_tag('div');
             $cmt->content = $deletelink . $cmt->content;

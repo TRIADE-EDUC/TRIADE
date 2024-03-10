@@ -333,7 +333,7 @@ class helper {
         // When there is a logged in user, her information will be passed to the player. It will be used for tracking.
         $usersettings = [];
         if (isloggedin()) {
-            $usersettings['name'] = $USER->username;
+            $usersettings['name'] = fullname($USER, has_capability('moodle/site:viewfullnames', $systemcontext));
             $usersettings['id'] = $USER->id;
         }
         $settings = array(
@@ -346,7 +346,7 @@ class helper {
             'siteUrl' => $CFG->wwwroot,
             'l10n' => array('H5P' => $core->getLocalization()),
             'user' => $usersettings,
-            'hubIsEnabled' => false,
+            'hubIsEnabled' => true,
             'reportingIsEnabled' => false,
             'crossorigin' => !empty($CFG->h5pcrossorigin) ? $CFG->h5pcrossorigin : null,
             'libraryConfig' => $core->h5pF->getLibraryConfig(),

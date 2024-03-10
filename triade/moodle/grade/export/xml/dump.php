@@ -29,13 +29,13 @@ $decimalpoints      = optional_param('decimalpoints', $CFG->grade_export_decimal
 $onlyactive         = optional_param('export_onlyactive', 0, PARAM_BOOL);
 
 if (!$course = $DB->get_record('course', array('id'=>$id))) {
-    throw new \moodle_exception('invalidcourseid');
+    print_error('invalidcourseid');
 }
 
 require_user_key_login('grade/export', $id); // we want different keys for each course
 
 if (empty($CFG->gradepublishing)) {
-    throw new \moodle_exception('gradepubdisable');
+    print_error('gradepubdisable');
 }
 
 $context = context_course::instance($id);
@@ -44,7 +44,7 @@ require_capability('gradeexport/xml:publish', $context);
 require_capability('gradeexport/xml:view', $context);
 
 if (!groups_group_visible($groupid, $COURSE)) {
-    throw new \moodle_exception('cannotaccessgroup', 'grades');
+    print_error('cannotaccessgroup', 'grades');
 }
 
 // Get all url parameters and create an object to simulate a form submission.

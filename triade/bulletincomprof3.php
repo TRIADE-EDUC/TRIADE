@@ -492,18 +492,26 @@ SQL;
 				$productID=PRODUCTID;
 				$iakey=IAKEY;
 				$prenom=recherche_eleve_prenom($idEleve);
-				$lienIA="ajaxIABulletinCom(document.getElementById('saisie_text_$i').value,'$moyEleve','$productID','$iakey','saisie_text_$i','$prenom')";
+				$lienIA="ajaxIABulletinCom(document.getElementById('saisie_text_$i').value,'$moyEleve','$productID','$iakey','saisie_text_$i','$prenom',document.getElementById('tonia_$i').value)";
 			}else{
 				$lienIA="alert('Votre Triade n\'est pas configur&eacute; pour utiliser l\'IA. Contacter votre administrateur Triade')";
 			}
 			?>
 			<input type='button' value='TRIADE-COPILOT' class='BUTTON' onClick="<?php print $lienIA ?>" >
+			<select name='tonia' id='tonia_<?php print $i?>' >
+				<option value='IA' STYLE="color:#000066;background-color:#FCE4BA" >Comportement IA : Par défaut</option>
+				<option value='Neutre' STYLE='color:#000066;background-color:#CCCCFF' >Neutre</option>
+				<option value='Positif' STYLE='color:#000066;background-color:#CCCCFF' >Positif</option>
+				<option value='Encourageant' STYLE='color:#000066;background-color:#CCCCFF' >Encourageant</option>
+				<option value='Inquiétant' STYLE='color:#000066;background-color:#CCCCFF'  >Inquiétant</option>
+				<option value='Motivant' STYLE='color:#000066;background-color:#CCCCFF' >Motivant</option>
+			</select>
 			<span id="afficheToken" style="position:relative;top:-70px;left:-40px"  /></span>
 
 
 			<br>
 			<input type=hidden name="saisie_eleve_<?php print $i?>" value="<?php print $idEleve?>" >
-			<textarea onkeypress="compter(this,'<?php print $nbcar ?>', this.form.CharRestant_<?php print $i?>)" cols="68" rows="5" name="saisie_text_<?php print $i?>" id="saisie_text_<?php print $i?>"  ><?php print $commentaireeleve?></textarea><br>
+			<textarea onkeypress="compter(this,'<?php print $nbcar ?>', this.form.CharRestant_<?php print $i?>)" cols="78" rows="5" name="saisie_text_<?php print $i?>" id="saisie_text_<?php print $i?>"  ><?php print $commentaireeleve?></textarea><br>
 <?php
 			$choix_triprecedent="";
 			if ($choix_tri == "trimestre2") { $choix_triprecedent="trimestre1"; }

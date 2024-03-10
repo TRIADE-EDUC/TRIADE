@@ -18,7 +18,6 @@ declare(strict_types=1);
 
 namespace core_reportbuilder\output;
 
-use core_reportbuilder\manager;
 use core_reportbuilder\external\custom_report_exporter;
 use core_reportbuilder\local\models\report;
 use renderable;
@@ -64,11 +63,7 @@ class custom_report implements renderable, templatable {
      * @return stdClass
      */
     public function export_for_template(renderer_base $output): stdClass {
-        $report = manager::get_report_from_persistent($this->persistent);
-
-        $exporter = new custom_report_exporter($this->persistent, [
-            'pagesize' => $report->get_default_per_page(),
-        ], $this->editmode, $this->download);
+        $exporter = new custom_report_exporter($this->persistent, [], $this->editmode, $this->download);
 
         return $exporter->export($output);
     }

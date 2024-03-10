@@ -213,7 +213,6 @@ if ($idclasse != "") {
 		print "<td id='bordure' valign='top' >Email&nbsp;Parent&nbsp;<input $disabledT type='checkbox' name='liste[]' $titleT value='$ideleve:$datedebut:$datefin:$duree:$time:tuteur'  onClick=\"DisplayLigne('tr$j');\" id='check$j' >";
 		$j++;
 		print "$imgT</td></tr><tr>";
-sh: q: command not found
 		$j++;
 		print "$imgTT</td></tr></table>";
 		print "</tr>";

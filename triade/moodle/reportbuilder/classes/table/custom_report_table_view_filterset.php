@@ -18,9 +18,6 @@ declare(strict_types=1);
 
 namespace core_reportbuilder\table;
 
-use core_table\local\filter\filterset;
-use core_table\local\filter\integer_filter;
-
 /**
  * Custom report dynamic table filterset class
  *
@@ -28,16 +25,5 @@ use core_table\local\filter\integer_filter;
  * @copyright   2021 Paul Holden <paulh@moodle.com>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class custom_report_table_view_filterset extends filterset {
-
-    /**
-     * Get the required filters
-     *
-     * @return array.
-     */
-    public function get_required_filters(): array {
-        return [
-            'pagesize' => integer_filter::class,
-        ];
-    }
+class custom_report_table_view_filterset extends custom_report_table_filterset {
 }

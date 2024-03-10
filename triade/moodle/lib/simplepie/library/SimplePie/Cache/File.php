@@ -162,5 +162,3 @@ class SimplePie_Cache_File implements SimplePie_Cache_Base
 		return false;
 	}
 }
-
-class_alias('SimplePie_Cache_File', 'SimplePie\Cache\File', false);

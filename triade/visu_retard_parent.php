@@ -45,7 +45,6 @@ include_once("./librairie_php/verifEmailEnregistre.php");
 include_once("./librairie_php/lib_licence.php");
 include_once("./librairie_php/db_triade.php");
 $cnx=cnx();
-
 $Seid=$_SESSION["id_pers"];
 
 if ($_SESSION["membre"] == "menututeur") { $Seid=""; }

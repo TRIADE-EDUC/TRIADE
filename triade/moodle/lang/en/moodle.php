@@ -38,7 +38,6 @@ $string['activityiscurrentlyhidden'] = 'Sorry, this activity is currently hidden
 $string['activityheader'] = 'Activity menu';
 $string['activitymodule'] = 'Activity module';
 $string['activitymodules'] = 'Activity modules';
-$string['activitynotready'] = 'Activity not ready yet';
 $string['activityreport'] = 'Activity report';
 $string['activityreports'] = 'Activity reports';
 $string['activityselect'] = 'Select this activity to be moved elsewhere';
@@ -52,7 +51,6 @@ $string['addactivitytosection'] = 'Add an activity to section \'{$a}\'';
 $string['addadmin'] = 'Add admin';
 $string['addblock'] = 'Add a block';
 $string['addcomment'] = 'Add a comment...';
-$string['addcondition'] = 'Add condition';
 $string['addcountertousername'] = 'Create user by adding number to username';
 $string['addcreator'] = 'Add course creator';
 $string['adddots'] = 'Add...';
@@ -154,7 +152,6 @@ $string['answer'] = 'Answer';
 $string['any'] = 'Any';
 $string['approve'] = 'Approve';
 $string['appearance'] = 'Appearance';
-$string['applyfilters'] = 'Apply filters';
 $string['areyousure'] = 'Are you sure?';
 $string['areyousuretorestorethis'] = 'Do you want to continue?';
 $string['areyousuretorestorethisinfo'] = 'Later in this process you will have a choice of adding this backup to an existing course or creating a completely new course.';
@@ -257,8 +254,6 @@ $string['changesmadereallygoaway'] = 'You have made changes. Are you sure you wa
 $string['city'] = 'City/town';
 $string['cleaningtempdata'] = 'Cleaning temp data';
 $string['clear'] = 'Clear';
-$string['clearfilterrow'] = 'Remove filter row';
-$string['clearfilters'] = 'Clear filters';
 $string['clearsearch'] = 'Clear search input';
 $string['clickhelpiconformoreinfo'] = '... continues ... Click on the help icon to read the full article';
 $string['clickhere'] = 'Click here ...';
@@ -272,7 +267,6 @@ $string['closebuttontitle'] = 'Close';
 $string['collapse'] = 'Collapse';
 $string['collapseall'] = 'Collapse all';
 $string['collapsecategory'] = 'Collapse {$a}';
-$string['comebacklater'] = 'Please come back later.';
 $string['commentincontext'] = 'Find this comment in context';
 $string['comments'] = 'Comments';
 $string['commentscount'] = 'Comments ({$a})';
@@ -297,8 +291,6 @@ $string['contentexport_footersummary'] = 'This file is part of the content downl
 $string['contentexport_modulesummary'] = 'This page is part of the content downloaded from <a href="{$a->modulelink}">{$a->modulename}</a> on {$a->date}. Note that some content and any files larger than {$a->maxfilesize} are not downloaded.';
 $string['contentexport_viewfilename'] = 'View the file {$a}';
 $string['contentbank'] = 'Content bank';
-$string['context'] = 'Context';
-$string['contexturl'] = 'Context URL';
 $string['continue'] = 'Continue';
 $string['continuetocourse'] = 'Click here to enter your course';
 $string['convertingwikitomarkdown'] = 'Converting wiki to Markdown';
@@ -753,16 +745,14 @@ $string['emailresetconfirmation'] = 'Hi {$a->firstname},
 
 A password reset was requested for your account \'{$a->username}\' at {$a->sitename}.
 
-To confirm this request, and set a new password for your account, please
-go to the following web address:
-
+To confirm this request, and set a new password for your account, please go to the following web address:
 {$a->link}
-(This link is valid for {$a->resetminutes} minutes from the time this reset was first requested)
+
+(This link is valid for {$a->resetminutes} minutes from the time this reset was first requested.)
 
 If this password reset was not requested by you, no action is needed.
 
-If you need help, please contact the site administrator,
-{$a->admin}';
+If you need help, please contact the site administrator, {$a->admin}';
 $string['emailresetconfirmationsubject'] = '{$a}: Password reset request';
 $string['emailresetconfirmsent'] = 'An email has been sent to your address at <b>{$a}</b>.
 <br />It contains easy instructions to confirm and complete this password change.
@@ -886,7 +876,6 @@ $string['filesfolders'] = 'Files/folders';
 $string['fileuploadwithcontent'] = 'File uploads should not include the content parameter';
 $string['filloutallfields'] = 'Please fill out all fields in this form';
 $string['filter'] = 'Filter';
-$string['filtersetmatchdescription'] = 'How multiple filters should be combined';
 $string['findmorecourses'] = 'Find more courses...';
 $string['first'] = 'First';
 $string['firstaccess'] = 'First access';
@@ -1020,8 +1009,8 @@ $string['hiddenwithbrackets'] = '(hidden)';
 $string['hide'] = 'Hide';
 $string['hideadvancedsettings'] = 'Hide advanced settings';
 $string['hidechartdata'] = 'Hide chart data';
-$string['hidefromstudents'] = 'Hide from students';
-$string['hideoncoursepage'] = 'Make available but not shown on course page';
+$string['hidefromstudents'] = 'Hide on course page';
+$string['hideoncoursepage'] = 'Make available but don\'t show on course page';
 $string['hidesection'] = 'Hide section {$a}';
 $string['hidesettings'] = 'Hide settings';
 $string['hideshowblocks'] = 'Hide or show blocks';
@@ -1077,9 +1066,7 @@ $string['courseenddateenabled_desc'] = 'This setting determines if the course en
 $string['eventcontentviewed'] = 'Content viewed';
 $string['filter'] = 'Filter';
 $string['filteroption'] = '{$a->criteria}: {$a->value}';
-$string['filterrowlegend'] = 'Filter {$a}';
 $string['filters'] = 'Filters';
-$string['filtertype'] = 'Filter type';
 $string['icon'] = 'Icon';
 $string['idnumber'] = 'ID number';
 $string['idnumbercourse'] = 'Course ID number';
@@ -1212,7 +1199,7 @@ $string['loginalready'] = 'You are already logged in';
 $string['loginas'] = 'Log in as';
 $string['loginaspasswordexplain'] = '<p>You must enter the special "loginas password" to use this feature.<br />If you do not know it, ask your server administrator.</p>';
 $string['login_failure_logs'] = 'Login failure logs';
-$string['loginguest'] = 'Log in as a guest';
+$string['loginguest'] = 'Access as a guest';
 $string['loginsite'] = 'Log in to the site';
 $string['loginsteps'] = 'For full access to this site, you first need to create an account.';
 $string['loginstepsnone'] = '<p>Hi!</p>
@@ -1253,9 +1240,7 @@ $string['manageroles'] = 'Roles and permissions';
 $string['markallread'] = 'Mark all as read';
 $string['markedthistopic'] = 'This topic is highlighted as the current topic';
 $string['markthistopic'] = 'Highlight this topic as the current topic';
-$string['match'] = 'Match';
 $string['matchingsearchandrole'] = 'Matching \'{$a->search}\' and {$a->role}';
-$string['matchofthefollowing'] = 'of the following:';
 $string['maxareabytesreached'] = 'The file (or the total size of several files) is larger than the space remaining in this area.';
 $string['maxsectionslimit'] = 'Cannot create new section as it would exceed the maximum number of sections allowed for this course ({$a}).';
 $string['maxfilesize'] = 'Maximum size for new files: {$a}';
@@ -1337,19 +1322,15 @@ $string['moddoesnotsupporttype'] = 'Module {$a->modname} does not support upload
 $string['modhide'] = 'Hide';
 $string['modshow'] = 'Show';
 $string['modvisible'] = 'Availability';
-$string['modvisible_help'] = 'If the availability is set to \'Show on course page\', the activity or resource is available to students (subject to any access restrictions which may be set).
-
-If the availability is set to \'Hide from students\', the activity or resource is only available to users with permission to view hidden activities (by default, users with the role of teacher or non-editing teacher).';
+$string['modvisible_help'] = '* Show on course page: Available to students (subject to any access restrictions which may be set).
+* Hide on course page: Not available to students.';
 $string['modvisiblewithstealth'] = 'Availability';
-$string['modvisiblewithstealth_help'] = 'If the availability is set to \'Show on course page\', the activity or resource is available to students (subject to any access restrictions which may be set).
-
-If the availability is set to \'Hide from students\', the activity or resource is only available to users with permission to view hidden activities (by default, users with the role of teacher or non-editing teacher).
-
-If the course contains many activities or resources, the course page may be simplified by setting the availability to \'Make available but not shown on course page\'. In this case, a link to the activity or resource must be provided from elsewhere, such as from a page resource. The activity would still be listed in the gradebook and other reports.';
+$string['modvisiblewithstealth_help'] = '* Show on course page: Available to students (subject to any access restrictions which may be set).
+* Hide on course page: Not available to students.
+* Make available but don\'t show on course page: Available to students if you provide a link. Activities will still appear in the gradebook and other reports.';
 $string['modvisiblehiddensection'] = 'Availability';
-$string['modvisiblehiddensection_help'] = 'If the availability is set to \'Hide from students\', the activity or resource is only available to users with permission to view hidden activities (by default, users with the role of teacher or non-editing teacher).
-
-If the course contains many activities or resources, the course page may be simplified by setting the availability to \'Make available but not shown on course page\'. In this case, a link to the activity or resource must be provided from elsewhere, such as from a page resource. The activity would still be listed in the gradebook and other reports.';
+$string['modvisiblehiddensection_help'] = '* Hide on course page: Not available to students.
+* Make available but don\'t show on course page: Available to students if you provide a link. Activities will still appear in the gradebook and other reports.';
 $string['moodlelogo'] = 'Moodle logo';
 $string['month'] = 'Month';
 $string['months'] = 'Months';
@@ -1372,7 +1353,7 @@ $string['moreprofileinfoneeded'] = 'Please tell us more about yourself';
 $string['morenavigationlinks'] = 'More...';
 $string['mostrecently'] = 'most recently';
 $string['move'] = 'Move';
-$string['movecoursemodule'] = 'Move resource';
+$string['movecoursemodule'] = 'Move activity';
 $string['movecoursesection'] = 'Move section';
 $string['movecontent'] = 'Move {$a}';
 $string['movecontentafter'] = 'After "{$a}"';
@@ -1586,9 +1567,6 @@ $string['olduserdirectory'] = 'This is the OLD users directory, and is no longer
 $string['opendrawerblocks'] = 'Open block drawer';
 $string['opendrawerindex'] = 'Open course index';
 $string['opensinnewwindow'] = 'Opens in new window';
-$string['operator_and'] = 'and';
-$string['operator_andnot'] = 'and';
-$string['operator_or'] = 'or';
 $string['optional'] = 'optional';
 $string['options'] = 'options';
 $string['order'] = 'Order';
@@ -1651,18 +1629,14 @@ $string['phone'] = 'Phone';
 $string['phone1'] = 'Phone';
 $string['phone2'] = 'Mobile phone';
 $string['phpinfo'] = 'PHP info';
-$string['picture'] = 'Picture';
 $string['pictureof'] = 'Picture of {$a}';
 $string['pictureofuser'] = 'User picture';
-$string['placeholdertypeorselect'] = 'Type or select...';
 $string['pleaseclose'] = 'Please close this window now.';
 $string['pleasesearchmore'] = 'Please search some more';
 $string['pleaseusesearch'] = 'Please use the search';
 $string['plugin'] = 'Plugin';
-$string['pluginarea'] = 'Area';
 $string['plugindeletefiles'] = 'All data associated with the plugin \'{$a->name}\' has been deleted from the database. To prevent the plugin re-installing itself, you should now delete this directory from your server: {$a->directory}';
 $string['plugincheck'] = 'Plugins check';
-$string['pluginitemid'] = 'Item ID';
 $string['pluginsetup'] = 'Setting up plugin tables';
 $string['policyaccept'] = 'I understand and agree';
 $string['policyagree'] = 'You must agree to this policy to continue using this site.  Do you agree?';
@@ -1941,9 +1915,6 @@ $string['selectedfile'] = 'Selected file';
 $string['selectedcategories'] = 'Selected categories';
 $string['selectednowmove'] = '{$a} files selected for moving. Now go into the destination folder and press \'Move files to here\'';
 $string['selectfiles'] = 'Select files';
-$string['selectfiltertype'] = 'Select';
-$string['selectgroupsseparate'] = 'Select separate groups';
-$string['selectgroupsvisible'] = 'Select visible groups';
 $string['selectitem'] = 'Select \'{$a}\'';
 $string['selectmoduletoviewhelp'] = 'Select an activity or resource to view its help.
 
@@ -2392,6 +2363,10 @@ $string['yourteacher'] = 'your {$a}';
 $string['yourwordforx'] = 'Your word for \'{$a}\'';
 $string['zippingbackup'] = 'Zipping backup';
 $string['deprecatedeventname'] = '{$a} (no longer in use)';
+
+// Deprecated since Moodle 3.9.
+$string['participantscount'] = 'Number of participants: {$a}';
+$string['userfilterplaceholder'] = 'Search keyword or select filter';
 
 // Deprecated since Moodle 3.11.
 $string['hidepicture'] = 'Hide picture';

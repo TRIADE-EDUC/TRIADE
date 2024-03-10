@@ -41,7 +41,7 @@ class mod_assignment_mod_form extends moodleform_mod {
      * @return void
      */
     public function definition() {
-        throw new \moodle_exception('assignmentdisabled', 'assignment');
+        print_error('assignmentdisabled', 'assignment');
     }
 
 

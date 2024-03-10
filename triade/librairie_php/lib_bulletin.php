@@ -5,6 +5,7 @@
 		<option value='bull03UE' id='select1'><?php print LANGPARAM30?> Pigier (UE)</option>
 		<option value='bull04UE' id='select1'><?php print LANGPARAM30?> IPAC (UE)</option>
 		<option value='bull04UE3' id='select1'><?php print LANGPARAM30?> Certification IPAC (UE)</option>
+		<option value='bull04UE4' id='select1'><?php print LANGPARAM30?> UNIV-DSCHANG (UE)</option>
 		<option value='bull04UE2' id='select1'><?php print "Relevé de notes" ?> IPAC (UE)</option>
 		<optgroup label="<?php print "Bulletin avec Unité Enseignement (xls)" ?>">
      		<option value='bull01XL' id='select1'><?php print LANGPARAM30?> TRIADE (UE xls)</option>
@@ -131,6 +132,7 @@ function RecupBulletin($value) {
 	switch($value) {
 
 		case 'bull01UE' : $im=LANGPARAM30." Triade (UE)"		; break;
+		case 'bull04UE4': $im=LANGPARAM30." UNIV-DSCHANG (UE)"		; break;
 		case 'bull03UE' : $im=LANGPARAM30." Pigier (UE)"		; break;
 		case 'bull01' 	: $im=LANGPARAM30." Triade (sans sous matière)" ; break;
 		case 'bull01b' 	: $im=LANGPARAM30." IPAC BTS" 			; break;

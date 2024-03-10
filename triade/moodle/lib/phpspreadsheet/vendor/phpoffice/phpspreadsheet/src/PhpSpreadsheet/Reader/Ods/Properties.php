@@ -26,11 +26,10 @@ class Properties
                 $this->setCoreProperties($docProps, $officePropertiesDC);
             }
 
-            $officePropertyMeta = null;
+            $officePropertyMeta = [];
             if (isset($namespacesMeta['dc'])) {
                 $officePropertyMeta = $officePropertyData->children($namespacesMeta['meta']);
             }
-            $officePropertyMeta = $officePropertyMeta ?? [];
             foreach ($officePropertyMeta as $propertyName => $propertyValue) {
                 $this->setMetaProperties($namespacesMeta, $propertyValue, $propertyName, $docProps);
             }

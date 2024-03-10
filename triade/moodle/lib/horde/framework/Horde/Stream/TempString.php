@@ -251,42 +251,28 @@ class Horde_Stream_TempString extends Horde_Stream_Temp
      */
     public function serialize()
     {
-        return serialize($this->__serialize());
+        if ($this->_string) {
+            $data = array(
+                $this->_string,
+                $this->_params
+            );
+        } else {
+            $data = parent::serialize();
+        }
+
+        return serialize($data);
     }
 
     /**
      */
     public function unserialize($data)
     {
-        $this->__unserialize(unserialize($data));
-    }
-
-    /**
-     * @return array
-     */
-    public function __serialize()
-    {
-        if ($this->_string) {
-            return array(
-                $this->_string,
-                $this->_params
-            );
-        } else {
-            return parent::__serialize();
-        }
-    }
-
-    /**
-     * @param array $data
-     * @return void
-     */
-    public function __unserialize($data)
-    {
+        $data = unserialize($data);
         if ($data[0] instanceof Horde_Stream_String) {
             $this->_string = $data[0];
             $this->_params = $data[1];
         } else {
-            parent::__unserialize($data);
+            parent::unserialize($data);
         }
     }
 

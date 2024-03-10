@@ -20,8 +20,7 @@ class PercentageFormatter extends BaseFormatter
 
         $format = str_replace('%', '%%', $format);
         $wholePartSize = strlen((string) floor($value));
-        $decimalPartSize = 0;
-        $placeHolders = '';
+        $decimalPartSize = $placeHolders = 0;
         // Number of decimals
         if (preg_match('/\.([?0]+)/u', $format, $matches)) {
             $decimalPartSize = strlen($matches[1]);
@@ -30,18 +29,14 @@ class PercentageFormatter extends BaseFormatter
             $placeHolders = str_repeat(' ', strlen($matches[1]) - $decimalPartSize);
         }
         // Number of digits to display before the decimal
-        if (preg_match('/([#0,]+)\.?/u', $format, $matches)) {
-            $firstZero = preg_replace('/^[#,]*/', '', $matches[1]);
-            $wholePartSize = max($wholePartSize, strlen($firstZero));
+        if (preg_match('/([#0,]+)\./u', $format, $matches)) {
+            $wholePartSize = max($wholePartSize, strlen($matches[1]));
         }
 
-        $wholePartSize += $decimalPartSize + (int) ($decimalPartSize > 0);
-        $replacement = "0{$wholePartSize}.{$decimalPartSize}";
-        $mask = (string) preg_replace('/[#0,]+\.?[?#0,]*/ui', "%{$replacement}f{$placeHolders}", $format);
+        $wholePartSize += $decimalPartSize;
+        $replacement = "{$wholePartSize}.{$decimalPartSize}";
+        $mask = preg_replace('/[#0,]+\.?[?#0,]*/ui', "%{$replacement}f{$placeHolders}", $format);
 
-        /** @var float */
-        $valueFloat = $value;
-
-        return sprintf($mask, round($valueFloat, $decimalPartSize));
+        return sprintf($mask, $value);
     }
 }

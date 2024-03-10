@@ -57,7 +57,7 @@ if (LAN == "oui") {
 	$cnx=cnx();
 ?>
 	
-<script language="JavaScript" src="https://support.triade-educ.org/support/version-patch.php?v=<?php print VERSIONPATCH ?>"></script>
+<script language="JavaScript" src="https://support.triade-educ.net/support/version-patch.php?v=<?php print VERSIONPATCH ?>"></script>
 <script language="JavaScript" src="https://support.triade-educ.org/support/version-md5.php?v=<?php print VERSIONMD5 ?>"></script>
 <ul>
 <font class='T2'>Liste des fichiers non conformes : </font>
@@ -75,7 +75,13 @@ print "</textarea>";
 
 ?>
 <br /><br />
+<?php 
+if (!file_exists("../../../common/lib_acces_inc.php")) { ?>
 <script language=JavaScript>buttonMagicSubmit("Récupération du patch","envoi"); //text,nomInput</script>
+<?php }else{ ?>
+<i>La gestion de votre Triade est sous le contrôle de nos équipes.</i> 
+
+<?php } ?>
 </form>
 <br /><br />
 <?php

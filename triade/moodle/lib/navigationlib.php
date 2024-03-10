@@ -1243,7 +1243,7 @@ class navigation_node_collection implements IteratorAggregate, Countable {
      *
      * @return int
      */
-    public function count(): int {
+    public function count() {
         return $this->count;
     }
     /**
@@ -1254,7 +1254,7 @@ class navigation_node_collection implements IteratorAggregate, Countable {
      *
      * @return ArrayIterator
      */
-    public function getIterator(): Traversable {
+    public function getIterator() {
         return new ArrayIterator($this->collection);
     }
 }
@@ -5836,7 +5836,7 @@ class navigation_json {
         }
 
         if ($child->forcetitle || $child->title !== $child->text) {
-            $attributes['title'] = htmlentities($child->title ?? '', ENT_QUOTES, 'UTF-8');
+            $attributes['title'] = htmlentities($child->title, ENT_QUOTES, 'UTF-8');
         }
         if (array_key_exists($child->key.':'.$child->type, $this->expandable)) {
             $attributes['expandable'] = $child->key;

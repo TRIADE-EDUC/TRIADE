@@ -74,10 +74,6 @@ $cnx=cnx();
 	<table><tr><td><script language=JavaScript>buttonMagic2("Connexion à votre compte Elanel","http://www.elanel.fr/Se-connecter.html","_blank","","")</script></td></tr></table></td>
 	<td width='30%'><img src="image/elanel/offre.gif" border='0' /></td></tr></table>
 	
-<?php if ((LAN == "oui") && (HTTPS != "oui")) { include_once('./librairie_php/xiti-page.php'); xitipage("ELANEL"); } ?>
-	
-
-
 	<br />
 	<?php
 	print "</td></tr></table>";

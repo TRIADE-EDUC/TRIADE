@@ -27,9 +27,6 @@ namespace tool_uploaduser;
 defined('MOODLE_INTERNAL') || die();
 
 use context_system;
-use context_coursecat;
-use core_course_category;
-
 use tool_uploaduser\local\field_value_validators;
 
 require_once($CFG->dirroot.'/user/profile/lib.php');
@@ -126,7 +123,6 @@ class process {
         $today = make_timestamp(date('Y', $today), date('m', $today), date('d', $today), 0, 0, 0);
         $this->today = $today;
 
-        $this->rolecache      = uu_allowed_roles_cache(); // Course roles lookup cache.
         $this->sysrolecache   = uu_allowed_sysroles_cache(); // System roles lookup cache.
         $this->supportedauths = uu_supported_auths(); // Officially supported plugins that are enabled.
 
@@ -226,15 +222,6 @@ class process {
     protected function get_allow_deletes(): bool {
         $optype = $this->get_operation_type();
         return (!empty($this->formdata->uuallowdeletes) and $optype != UU_USER_ADDNEW and $optype != UU_USER_ADDINC);
-    }
-
-    /**
-     * Setting to allow matching user accounts on email
-     * @return bool
-     */
-    protected function get_match_on_email(): bool {
-        $optype = $this->get_operation_type();
-        return (!empty($this->formdata->uumatchemail) && $optype != UU_USER_ADDNEW && $optype != UU_USER_ADDINC);
     }
 
     /**
@@ -423,7 +410,7 @@ class process {
         }
 
         // Make sure we really have username.
-        if (empty($user->username) && !$this->get_match_on_email()) {
+        if (empty($user->username)) {
             $this->upt->track('status', get_string('missingfield', 'error', 'username'), 'error');
             $this->upt->track('username', get_string('error'), 'error');
             $this->userserrors++;
@@ -462,16 +449,7 @@ class process {
             return;
         }
 
-        $matchparam = $this->get_match_on_email() ? ['email' => $user->email] : ['username' => $user->username];
-        if ($existinguser = $DB->get_records('user', $matchparam + ['mnethostid' => $user->mnethostid])) {
-            if (is_array($existinguser) && count($existinguser) !== 1) {
-                $this->upt->track('status', get_string('duplicateemail', 'tool_uploaduser', $user->email), 'warning');
-                $this->userserrors++;
-                return;
-
-            }
-
-            $existinguser = is_array($existinguser) ? array_values($existinguser)[0] : $existinguser;
+        if ($existinguser = $DB->get_record('user', ['username' => $user->username, 'mnethostid' => $user->mnethostid])) {
             $this->upt->track('id', $existinguser->id, 'normal', false);
         }
 
@@ -599,12 +577,6 @@ class process {
         }
         // We do not need the deleted flag anymore.
         unset($user->deleted);
-
-        $matchonemailallowrename = $this->get_match_on_email() && $this->get_allow_renames();
-        if ($matchonemailallowrename && $user->username && ($user->username !== $existinguser->username)) {
-            $user->oldusername = $existinguser->username;
-            $existinguser = false;
-        }
 
         // Renaming requested?
         if (!empty($user->oldusername) ) {
@@ -1134,48 +1106,6 @@ class process {
 
                 continue;
             }
-
-            if (preg_match('/^categoryrole(?<roleid>\d+)$/', $column, $rolematches)) {
-                $categoryrolecache = [];
-                $categorycache  = []; // Category cache - do not fetch all categories here, we will not probably use them all.
-
-                $categoryfield = "category{$rolematches['roleid']}";
-                $categoryrolefield = "categoryrole{$rolematches['roleid']}";
-
-                if (empty($user->{$categoryfield})) {
-                    continue;
-                }
-
-                $categoryidnumber = $user->{$categoryfield};
-
-                if (!array_key_exists($categoryidnumber, $categorycache)) {
-                    $category = $DB->get_record('course_categories', ['idnumber' => $categoryidnumber], 'id, idnumber');
-                    if (empty($category)) {
-                        $this->upt->track('enrolments', get_string('unknowncategory', 'error', s($categoryidnumber)), 'error');
-                        continue;
-                    }
-                    $categoryrolecache[$categoryidnumber] = uu_allowed_roles_cache($category->id);
-                    $categoryobj = core_course_category::get($category->id);
-                    $context = context_coursecat::instance($categoryobj->id);
-                    $categorycache[$categoryidnumber] = $context;
-                }
-                // Check the user's category role.
-                if (!empty($user->{$categoryrolefield})) {
-                    $rolename = $user->{$categoryrolefield};
-                    if (array_key_exists($rolename, $categoryrolecache[$categoryidnumber])) {
-                        $roleid = $categoryrolecache[$categoryidnumber][$rolename]->id;
-                        // Assign a role to user with category context.
-                        role_assign($roleid, $user->id, $categorycache[$categoryidnumber]->id);
-                    } else {
-                        $this->upt->track('enrolments', get_string('unknownrole', 'error', s($rolename)), 'error');
-                        continue;
-                    }
-                } else {
-                    $this->upt->track('enrolments', get_string('missingcategoryrole', 'error', s($categoryidnumber)), 'error');
-                    continue;
-                }
-            }
-
             if (!preg_match('/^course\d+$/', $column)) {
                 continue;
             }
@@ -1209,14 +1139,18 @@ class process {
                 }
             }
 
+            if (!array_key_exists($courseid, $this->rolecache)) {
+                $this->rolecache[$courseid] = uu_allowed_roles_cache(null, (int)$courseid);
+            }
+
             if ($courseid == SITEID) {
                 // Technically frontpage does not have enrolments, but only role assignments,
                 // let's not invent new lang strings here for this rarely used feature.
 
                 if (!empty($user->{'role'.$i})) {
                     $rolename = $user->{'role'.$i};
-                    if (array_key_exists($rolename, $this->rolecache)) {
-                        $roleid = $this->rolecache[$rolename]->id;
+                    if (array_key_exists($rolename, $this->rolecache[$courseid]) ) {
+                        $roleid = $this->rolecache[$courseid][$rolename]->id;
                     } else {
                         $this->upt->track('enrolments', get_string('unknownrole', 'error', s($rolename)), 'error');
                         continue;
@@ -1226,7 +1160,7 @@ class process {
 
                     $a = new \stdClass();
                     $a->course = $shortname;
-                    $a->role   = $this->rolecache[$roleid]->name;
+                    $a->role = $this->rolecache[$courseid][$roleid]->name;
                     $this->upt->track('enrolments', get_string('enrolledincourserole', 'enrol_manual', $a), 'info');
                 }
 
@@ -1236,8 +1170,8 @@ class process {
                 $roleid = false;
                 if (!empty($user->{'role'.$i})) {
                     $rolename = $user->{'role'.$i};
-                    if (array_key_exists($rolename, $this->rolecache)) {
-                        $roleid = $this->rolecache[$rolename]->id;
+                    if (array_key_exists($rolename, $this->rolecache[$courseid])) {
+                        $roleid = $this->rolecache[$courseid][$rolename]->id;
                     } else {
                         $this->upt->track('enrolments', get_string('unknownrole', 'error', s($rolename)), 'error');
                         continue;
@@ -1256,7 +1190,15 @@ class process {
                     }
                 } else {
                     // No role specified, use the default from manual enrol plugin.
-                    $roleid = $this->manualcache[$courseid]->roleid;
+                    $defaultenrolroleid = (int)$this->manualcache[$courseid]->roleid;
+                    // Validate the current user can assign this role.
+                    if (array_key_exists($defaultenrolroleid, $this->rolecache[$courseid]) ) {
+                        $roleid = $defaultenrolroleid;
+                    } else {
+                        $role = $DB->get_record('role', ['id' => $defaultenrolroleid]);
+                        $this->upt->track('enrolments', get_string('unknownrole', 'error', s($role->shortname)), 'error');
+                        continue;
+                    }
                 }
 
                 if ($roleid) {
@@ -1299,7 +1241,7 @@ class process {
 
                     $a = new \stdClass();
                     $a->course = $shortname;
-                    $a->role   = $this->rolecache[$roleid]->name;
+                    $a->role = $this->rolecache[$courseid][$roleid]->name;
                     $this->upt->track('enrolments', get_string('enrolledincourserole', 'enrol_manual', $a), 'info');
                 }
             }

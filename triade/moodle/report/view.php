@@ -32,7 +32,7 @@ $PAGE->set_url(new moodle_url('/report/view.php', array('courseid' => $courseid)
 
 // Basic access checks.
 if (!$course = $DB->get_record('course', array('id' => $courseid))) {
-    throw new \moodle_exception('invalidcourseid');
+    print_error('invalidcourseid');
 }
 require_login($course);
 

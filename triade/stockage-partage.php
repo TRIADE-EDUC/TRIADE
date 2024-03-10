@@ -9,6 +9,7 @@ if (empty($_SESSION["nom"]))  {
 
 include_once("./librairie_php/lib_licence.php");
 include_once("./librairie_php/db_triade.php");
+$cnx=cnx();
 
 function mimetype($fichier,$quoi) {
 	global $mess,$HTTP_USER_AGENT;
@@ -65,7 +66,6 @@ function taille($fichier) {
 	return $taille;
 }
 
-$cnx=cnx();
 
 $idpers=$_SESSION["id_pers"];
 $membre=$_SESSION["membre"];
@@ -83,12 +83,11 @@ echo "<table width='100%'>";
 echo "<tr><td align='right' >";
 echo "<a href=\"stockage-partage.php\" title=\"Réseau / Partage\"><img src=\"image/stockage/reseau.png\" alt=\"Réseau Partage\" border=\"0\"></a>&nbsp;&nbsp;\n";
 echo "<a href=\"stockage.php\"><img src=\"image/stockage/hdd.gif\" alt=\"Local\" border=\"0\"></a>&nbsp;&nbsp;\n";
-echo "<a href=\"javascript:location.reload()\"><img src=\"image/stockage/refresh.gif\" alt=\"$mess[85]\" border=\"0\"></a>&nbsp;&nbsp;\n";
 echo "</td></tr></table>";
 
-print "<div style='position:absolute; left:30px; top:45px; border: 2px solid #CCCCCC; background-color: #FFFFEE; border-radius: 10px 10px 10px 10px; width:90%; height:360px; overflow:auto '  >";
+print "<div style='position:absolute; left:30px; top:45px; border: 2px solid #CCCCCC; background-color: #FFFFFF; border-radius: 10px 10px 10px 10px; width:90%; height:360px; overflow:auto ; box-shadow: 5px 5px 5px grey;'  >";
 print "<br>";
-print "<font class='T2'>&nbsp;&nbsp;<b>Liste des fichiers partagés : </b>";
+print "<font class='T2'>&nbsp;&nbsp;<b>Liste des fichiers partagés : </b><br>";
 print "&nbsp;&nbsp;<table width='100%' >";
 print "<tr><td height='5' colspan='4' ></td></tr>";
 print "<tr><td width='40%' >Fichier</td><td>Taille</td><td>Modifié le</td><td>Télécharger</td></tr>";
@@ -101,6 +100,11 @@ for($i=0;$i<count($data);$i++) {
 	$membresource=$data[$i][5];
 	$idsource=$data[$i][6];
 	$id=$data[$i][7];
+
+	if (!file_exists("./data/stockage/$membresource/$idsource/$chemin")) {
+		suppFichierPartager($id);
+		continue;
+	}
 
 	print "<tr>";
 	print "<td width='5' ><img src='image/stockage/".mimetype("./data/stockage/$membreS/$idpersS/$chemin","image")."' align='bottom' />";

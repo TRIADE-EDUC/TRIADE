@@ -34,17 +34,17 @@ $pageid    = optional_param('pageid', 0, PARAM_INT);
 $returnurl = optional_param('returnurl', '', PARAM_LOCALURL);
 
 if (!$subwiki = wiki_get_subwiki($subwikiid)) {
-    throw new \moodle_exception('incorrectsubwikiid', 'wiki');
+    print_error('incorrectsubwikiid', 'wiki');
 }
 
 // Checking wiki instance of that subwiki
 if (!$wiki = wiki_get_wiki($subwiki->wikiid)) {
-    throw new \moodle_exception('incorrectwikiid', 'wiki');
+    print_error('incorrectwikiid', 'wiki');
 }
 
 // Checking course module instance
 if (!$cm = get_coursemodule_from_instance("wiki", $subwiki->wikiid)) {
-    throw new \moodle_exception('invalidcoursemodule');
+    print_error('invalidcoursemodule');
 }
 
 // Checking course instance
@@ -55,7 +55,7 @@ $context = context_module::instance($cm->id);
 require_login($course, true, $cm);
 
 if (!wiki_user_can_view($subwiki, $wiki)) {
-    throw new \moodle_exception('cannotviewpage', 'wiki');
+    print_error('cannotviewpage', 'wiki');
 }
 require_capability('mod/wiki:managefiles', $context);
 

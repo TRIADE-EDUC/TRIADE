@@ -367,12 +367,12 @@ final class column {
         $fields = [];
 
         foreach ($this->fields as $alias => $sql) {
-            // Ensure params within SQL are prefixed with column index.
-            foreach ($this->params as $name => $value) {
-                $sql = preg_replace_callback('/:(?<param>' . preg_quote($name, '\b/') . ')/', function(array $matches): string {
-                    return ':' . $this->unique_param_name($matches['param']);
-                }, $sql);
-            }
+
+            // Ensure parameter names within SQL are prefixed with column index.
+            $params = array_keys($this->params);
+            $sql = database::sql_replace_parameter_names($sql, $params, function(string $param): string {
+                return $this->unique_param_name($param);
+            });
 
             $fields[$alias] = [
                 'sql' => $sql,
@@ -478,8 +478,9 @@ final class column {
      * The callback should implement the following signature (where $value is the first column field, $row is all column
      * fields, and $additionalarguments are those passed on from this method):
      *
-     * The type of the $value parameter passed to the callback is determined by calling {@see set_type}, this type is preserved
-     * if the column is part of a report source and is being aggregated.
+     * The type of the $value parameter passed to the callback is determined by calling {@see set_type}, however note that
+     * if the column is part of a report source and can be aggregated using one of the "Group concatenation" methods then the
+     * type should be omitted if it's not string
      * For entities that can to be left joined to a report, the first argument to their column callbacks must be nullable.
      *
      * function($value, stdClass $row[, $additionalarguments]): string
@@ -645,17 +646,16 @@ final class column {
      * Return the default column value, that being the value of it's first field
      *
      * @param array $values
-     * @param int $columntype
      * @return mixed
      */
-    public static function get_default_value(array $values, int $columntype) {
+    private function get_default_value(array $values) {
         $value = reset($values);
         if ($value === null) {
             return $value;
         }
 
         // Ensure default value is cast to it's strict type.
-        switch ($columntype) {
+        switch ($this->get_type()) {
             case self::TYPE_INTEGER:
             case self::TYPE_TIMESTAMP:
                 $value = (int) $value;
@@ -679,11 +679,11 @@ final class column {
      */
     public function format_value(array $row) {
         $values = $this->get_values($row);
-        $value = self::get_default_value($values, $this->type);
+        $value = $this->get_default_value($values);
 
         // If column is being aggregated then defer formatting to them, otherwise loop through all column callbacks.
         if (!empty($this->aggregation)) {
-            $value = $this->aggregation::format_value($value, $values, $this->callbacks, $this->type);
+            $value = $this->aggregation::format_value($value, $values, $this->callbacks);
         } else {
             foreach ($this->callbacks as $callback) {
                 [$callable, $arguments] = $callback;

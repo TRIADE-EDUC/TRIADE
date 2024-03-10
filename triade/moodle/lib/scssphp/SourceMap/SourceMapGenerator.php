@@ -107,7 +107,7 @@ class SourceMapGenerator
      */
     public function __construct(array $options = [])
     {
-        $this->options = array_replace($this->defaultOptions, $options);
+        $this->options = array_merge($this->defaultOptions, $options);
         $this->encoder = new Base64VLQ();
     }
 
@@ -140,7 +140,7 @@ class SourceMapGenerator
      *
      * @param string $content The content to write
      *
-     * @return string|null
+     * @return string
      *
      * @throws \ScssPhp\ScssPhp\Exception\CompilerException If the file could not be saved
      * @deprecated
@@ -148,7 +148,6 @@ class SourceMapGenerator
     public function saveMap($content)
     {
         $file = $this->options['sourceMapWriteTo'];
-        assert($file !== null);
         $dir  = \dirname($file);
 
         // directory does not exist
@@ -202,7 +201,7 @@ class SourceMapGenerator
         // A list of original sources used by the 'mappings' entry.
         $sourceMap['sources'] = [];
 
-        foreach ($this->sources as $sourceFilename) {
+        foreach ($this->sources as $sourceUri => $sourceFilename) {
             $sourceMap['sources'][] = $this->normalizeFilename($sourceFilename);
         }
 
@@ -224,15 +223,7 @@ class SourceMapGenerator
             unset($sourceMap['sourceRoot']);
         }
 
-        $jsonSourceMap = json_encode($sourceMap, JSON_UNESCAPED_SLASHES);
-
-        if (json_last_error() !== JSON_ERROR_NONE) {
-            throw new \RuntimeException(json_last_error_msg());
-        }
-
-        assert($jsonSourceMap !== false);
-
-        return $jsonSourceMap;
+        return json_encode($sourceMap, JSON_UNESCAPED_SLASHES);
     }
 
     /**

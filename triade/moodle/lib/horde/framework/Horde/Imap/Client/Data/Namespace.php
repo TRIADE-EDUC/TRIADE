@@ -130,31 +130,14 @@ class Horde_Imap_Client_Data_Namespace implements Serializable
      */
     public function serialize()
     {
-        return serialize($this->__serialize());
+        return json_encode($this->_data);
     }
 
     /**
      */
     public function unserialize($data)
     {
-        $data = @unserialize($data);
-        if (!is_array($data)) {
-            throw new Exception('Cache version change.');
-        }
-        $this->__unserialize($data);
-    }
-
-    /**
-     * @return array
-     */
-    public function __serialize()
-    {
-        return $this->_data;
-    }
-
-    public function __unserialize(array $data)
-    {
-        $this->_data = $data;
+        $this->_data = json_decode($data, true);
     }
 
 }

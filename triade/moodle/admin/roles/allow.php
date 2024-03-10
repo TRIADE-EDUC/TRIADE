@@ -33,7 +33,7 @@ $classformode = array(
     'view' => 'core_role_allow_view_page'
 );
 if (!isset($classformode[$mode])) {
-    throw new \moodle_exception('invalidmode', '', '', $mode);
+    print_error('invalidmode', '', '', $mode);
 }
 
 $baseurl = new moodle_url('/admin/roles/allow.php', array('mode'=>$mode));

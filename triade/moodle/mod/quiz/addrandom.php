@@ -43,13 +43,13 @@ $scrollpos = optional_param('scrollpos', 0, PARAM_INT);
 
 // Get the course object and related bits.
 if (!$course = $DB->get_record('course', array('id' => $quiz->course))) {
-    throw new \moodle_exception('invalidcourseid');
+    print_error('invalidcourseid');
 }
 // You need mod/quiz:manage in addition to question capabilities to access this page.
 // You also need the moodle/question:useall capability somewhere.
 require_capability('mod/quiz:manage', $contexts->lowest());
 if (!$contexts->having_cap('moodle/question:useall')) {
-    throw new \moodle_exception('nopermissions', '', '', 'use');
+    print_error('nopermissions', '', '', 'use');
 }
 
 $PAGE->set_url($thispageurl);
@@ -132,7 +132,7 @@ $PAGE->set_heading($course->fullname);
 echo $OUTPUT->header();
 
 if (!$quizname = $DB->get_field($cm->modname, 'name', array('id' => $cm->instance))) {
-            throw new \moodle_exception('invalidcoursemodule');
+            print_error('invalidcoursemodule');
 }
 
 echo $OUTPUT->heading(get_string('addrandomquestiontoquiz', 'quiz', $quizname), 2);

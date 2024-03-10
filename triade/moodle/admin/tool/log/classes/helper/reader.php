@@ -74,10 +74,10 @@ trait reader {
      * @return mixed Decoded value
      */
     public static function decode_other(?string $other) {
-        if ($other === 'N;' || preg_match('~^.:~', $other ?? '')) {
-            return unserialize($other);
+        if ($other === 'N;' || preg_match('~^.:~', $other)) {
+            return unserialize($other, ['allowed_classes' => [stdClass::class]]);
         } else {
-            return json_decode($other ?? '', true);
+            return json_decode($other, true);
         }
     }
 

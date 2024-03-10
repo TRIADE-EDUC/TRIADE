@@ -529,38 +529,6 @@ class pdf extends TcpdfFpdi {
     }
 
     /**
-     * Generate images from the PDF
-     * @return array Array of filename of the generated images
-     */
-    public function get_images(): array {
-        $this->precheck_generate_image();
-
-        $imagefile = $this->imagefolder . '/' . self::IMAGE_PAGE;
-        $command = $this->get_command_for_image(-1, $imagefile);
-        exec($command);
-        $images = array();
-        for ($i = 0; $i < $this->pagecount; $i++) {
-            // Image file is created from 1, so need to change to 0.
-            $file = $imagefile . ($i + 1) . '.png';
-            $newfile = $imagefile . $i . '.png';
-            if (file_exists($file)) {
-                rename($file, $newfile);
-            } else {
-                // Converter added '-' and zerofill for the pagenumber.
-                $length = strlen($this->pagecount);
-                $file = $imagefile . '-' . str_pad(($i + 1), $length, '0', STR_PAD_LEFT) . '.png';
-                if (file_exists($file)) {
-                    rename($file, $newfile);
-                } else {
-                    $newfile = self::get_error_image($this->imagefolder, $i);
-                }
-            }
-            $images[$i] = basename($newfile);
-        }
-        return $images;
-    }
-
-    /**
      * Generate an image of the specified page in the PDF
      * @param int $pageno the page to generate the image of
      * @throws \moodle_exception
@@ -568,7 +536,17 @@ class pdf extends TcpdfFpdi {
      * @return string the filename of the generated image
      */
     public function get_image($pageno) {
-        $this->precheck_generate_image();
+        if (!$this->filename) {
+            throw new \coding_exception('Attempting to generate a page image without first setting the PDF filename');
+        }
+
+        if (!$this->imagefolder) {
+            throw new \coding_exception('Attempting to generate a page image without first specifying the image output folder');
+        }
+
+        if (!is_dir($this->imagefolder)) {
+            throw new \coding_exception('The specified image output folder is not a valid folder');
+        }
 
         $imagefile = $this->imagefolder . '/' . self::IMAGE_PAGE . $pageno . '.png';
         $generate = true;
@@ -587,9 +565,9 @@ class pdf extends TcpdfFpdi {
                 $fullerror = '<pre>'.get_string('command', 'assignfeedback_editpdf')."\n";
                 $fullerror .= $command . "\n\n";
                 $fullerror .= get_string('result', 'assignfeedback_editpdf')."\n";
-                $fullerror .= htmlspecialchars($result, ENT_COMPAT) . "\n\n";
+                $fullerror .= htmlspecialchars($result) . "\n\n";
                 $fullerror .= get_string('output', 'assignfeedback_editpdf')."\n";
-                $fullerror .= htmlspecialchars(implode("\n", $output), ENT_COMPAT) . '</pre>';
+                $fullerror .= htmlspecialchars(implode("\n", $output)) . '</pre>';
                 throw new \moodle_exception('errorgenerateimage', 'assignfeedback_editpdf', '', $fullerror);
             }
         }
@@ -598,28 +576,9 @@ class pdf extends TcpdfFpdi {
     }
 
     /**
-     * Make sure the file name and image folder are ready before generate image.
-     * @return bool
-     */
-    protected function precheck_generate_image() {
-        if (!$this->filename) {
-            throw new \coding_exception('Attempting to generate a page image without first setting the PDF filename');
-        }
-
-        if (!$this->imagefolder) {
-            throw new \coding_exception('Attempting to generate a page image without first specifying the image output folder');
-        }
-
-        if (!is_dir($this->imagefolder)) {
-            throw new \coding_exception('The specified image output folder is not a valid folder');
-        }
-        return true;
-    }
-
-    /**
      * Gets the command to use to extract as image the given $pageno page number
      * from a PDF document into the $imagefile file.
-     * @param int $pageno Page number to extract from document. -1 means for all pages.
+     * @param int $pageno Page number to extract from document.
      * @param string $imagefile Target filename for the PNG image as absolute path.
      * @return string The command to use to extract a page as PNG image.
      */
@@ -638,7 +597,7 @@ class pdf extends TcpdfFpdi {
     /**
      * Gets the pdftoppm command to use to extract as image the given $pageno page number
      * from a PDF document into the $imagefile file.
-     * @param int $pageno Page number to extract from document. -1 means for all pages.
+     * @param int $pageno Page number to extract from document.
      * @param string $imagefile Target filename for the PNG image as absolute path.
      * @return string The pdftoppm command to use to extract a page as PNG image.
      */
@@ -646,28 +605,17 @@ class pdf extends TcpdfFpdi {
         global $CFG;
         $pdftoppmexec = \escapeshellarg($CFG->pathtopdftoppm);
         $imageres = \escapeshellarg(100);
+        $imagefile = substr($imagefile, 0, -4); // Pdftoppm tool automatically adds extension file.
+        $imagefilearg = \escapeshellarg($imagefile);
         $filename = \escapeshellarg($this->filename);
         $pagenoinc = \escapeshellarg($pageno + 1);
-        if ($pageno >= 0) {
-            // Convert 1 page.
-            $imagefile = substr($imagefile, 0, -4); // Pdftoppm tool automatically adds extension file.
-            $frompageno = $pagenoinc;
-            $topageno = $pagenoinc;
-            $singlefile = '-singlefile';
-        } else {
-            // Convert all pages at once.
-            $frompageno = 1;
-            $topageno = $this->pagecount;
-            $singlefile = '';
-        }
-        $imagefilearg = \escapeshellarg($imagefile);
-        return "$pdftoppmexec -q -r $imageres -f $frompageno -l $topageno -png $singlefile $filename $imagefilearg";
+        return "$pdftoppmexec -q -r $imageres -f $pagenoinc -l $pagenoinc -png -singlefile $filename $imagefilearg";
     }
 
     /**
      * Gets the ghostscript (gs) command to use to extract as image the given $pageno page number
      * from a PDF document into the $imagefile file.
-     * @param int $pageno Page number to extract from document. -1 means for all pages.
+     * @param int $pageno Page number to extract from document.
      * @param string $imagefile Target filename for the PNG image as absolute path.
      * @return string The ghostscript (gs) command to use to extract a page as PNG image.
      */
@@ -678,17 +626,7 @@ class pdf extends TcpdfFpdi {
         $imagefilearg = \escapeshellarg($imagefile);
         $filename = \escapeshellarg($this->filename);
         $pagenoinc = \escapeshellarg($pageno + 1);
-        if ($pageno >= 0) {
-            // Convert 1 page.
-            $firstpage = $pagenoinc;
-            $lastpage = $pagenoinc;
-        } else {
-            // Convert all pages at once.
-            $imagefilearg = \escapeshellarg($imagefile . '%d.png');
-            $firstpage = 1;
-            $lastpage = $this->pagecount;
-        }
-        return "$gsexec -q -sDEVICE=png16m -dSAFER -dBATCH -dNOPAUSE -r$imageres -dFirstPage=$firstpage -dLastPage=$lastpage ".
+        return "$gsexec -q -sDEVICE=png16m -dSAFER -dBATCH -dNOPAUSE -r$imageres -dFirstPage=$pagenoinc -dLastPage=$pagenoinc ".
             "-dDOINTERPOLATE -dGraphicsAlphaBits=4 -dTextAlphaBits=4 -sOutputFile=$imagefilearg $filename";
     }
 

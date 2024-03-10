@@ -64,7 +64,7 @@ document.write("<img src='./image/cube.gif' width='4' height='4'> <a href='gesco
 document.write("<img src='./image/cube.gif' width='4' height='4'> <a href='memo.php' id='menumodule0'  >"+langmenugeneral01a+"</a><br>");
 if (moduleeleveagenda == "oui") {  document.write("<img src='./image/cube.gif' width='4' height='4'> <a href='#' id='menumodule0' onclick=\"open('./agenda/phenix/index.php','timecop','resizable=yes,width=1000,height=700');\" >"+langmenuadmin00+"</a><br>"); }
 if (moduleelevestockage == "oui") { document.write("<img src='./image/cube.gif' width='4' height='4'> <a href='#' onclick=\"open('stockage.php','stockage','scrollbars=yes,resizable=yes,width=850,height=500')\" id='menumodule0' >"+langmenuadmin06+"</a><br>"); }
-//if (moduleelevemsn == "oui") { document.write("<img src='./image/cube.gif' width='4' height='4'> <a href='./intra-msn.php' id='menumodule0' >"+langmenuadmin100+"</a><br>"); }
+if (moduleelevemsn == "oui") { document.write("<img src='./image/cube.gif' width='4' height='4'> <a href='./intra-msn.php' id='menumodule0' >"+langmenuadmin100+"</a><br>"); }
 if (moduleelevecompta == "oui") { document.write("<img src='./image/cube.gif' width='4' height='4'> <a id='menumodule0' href='compta_consulte3.php' >"+langmenuadmin90+"</a><br>"); }
 if (moduleeleverss == "oui") { document.write("<img src='./image/cube.gif' width='4' height='4'> <a href='./flux.php' id='menumodule0' >"+langmenuadmin521+"</a><br>"); }
 if (moduleelevecantine == "oui") { document.write("<img src='./image/cube.gif' width='4' height='4'> <a id='menumodule0' href='./cantine_consulte.php' >"+langmenupersonnel2+"</a><br>"); }

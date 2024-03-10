@@ -49,10 +49,7 @@ if ($valide == 0) {
 include_once('librairie_php/db_triade.php');
 if (file_exists("./data/install_log/access.log")) {
 	print "<br><ul>Fichier LOG des activités des utilisateurs Triade : ";
-	if (($_SESSION["membre"] == "menuadmin") && (!isset($_SESSION['admin1']))) {
-		print "<a href='base_de_donne_key.php?base=infolog' target='_top' ><img src='./image/stockage/txt.gif' align=center border=0 /></a>";
-	}
-	if (isset($_SESSION["admin1"])) {
+	if (($_SESSION["membre"] == "menuadmin") || (isset($_SESSION['admin1']))) {
 		print "<a href='visu_accesslog.php' target='_blank' ><img src='./image/stockage/txt.gif' align=center border=0 /></a>";
 	}
 
@@ -79,7 +76,7 @@ for($i=0;$i<count($data);$i++)
 	<td align=center width=60 bgcolor="#FFFFFF"><?php print dateForm($data[$i][1])?><br><?php print $data[$i][0]?></td>
 	<td  bgcolor="#FFFFFF">&nbsp;<?php print $data[$i][2]?></td>
 	<td  bgcolor="#FFFFFF">&nbsp;<?php print $data[$i][3]?></td>
-	<td  bgcolor="#FFFFFF">&nbsp;<?php print $data[$i][4]?></td>
+	<td  bgcolor="#FFFFFF">&nbsp;<?php print $data[$i][4] ?></td>
 	</tr>
 	<?php
 	}

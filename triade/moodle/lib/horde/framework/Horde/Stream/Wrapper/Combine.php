@@ -171,11 +171,9 @@ class Horde_Stream_Wrapper_Combine
             }
 
             $curr_read = min($count, $tmp['l'] - $tmp['p']);
-            if ($curr_read > 0) {
-                $out .= fread($tmp['fp'], $curr_read);
-                $count -= $curr_read;
-                $this->_position += $curr_read;
-            }
+            $out .= fread($tmp['fp'], $curr_read);
+            $count -= $curr_read;
+            $this->_position += $curr_read;
 
             if ($this->_position == $this->_length) {
                 if ($count) {

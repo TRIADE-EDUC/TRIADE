@@ -25,23 +25,6 @@
 class data_field_number extends data_field_base {
     var $type = 'number';
 
-    public function supports_preview(): bool {
-        return true;
-    }
-
-    public function get_data_content_preview(int $recordid): stdClass {
-        return (object)[
-            'id' => 0,
-            'fieldid' => $this->field->id,
-            'recordid' => $recordid,
-            'content' => 1233 + $recordid,
-            'content1' => null,
-            'content2' => null,
-            'content3' => null,
-            'content4' => null,
-        ];
-    }
-
     function update_content($recordid, $value, $name='') {
         global $DB;
 
@@ -63,21 +46,27 @@ class data_field_number extends data_field_base {
     }
 
     function display_browse_field($recordid, $template) {
-        $content = $this->get_data_content($recordid);
-        if (!$content || $content->content === '') {
-            return '';
+        global $DB;
+
+        if ($content = $DB->get_record('data_content', array('fieldid'=>$this->field->id, 'recordid'=>$recordid))) {
+            if (strlen($content->content) < 1) {
+                return false;
+            }
+            $number = $content->content;
+            $decimals = trim($this->field->param1);
+            // only apply number formatting if param1 contains an integer number >= 0:
+            if (preg_match("/^\d+$/", $decimals)) {
+                $decimals = $decimals * 1;
+                // removes leading zeros (eg. '007' -> '7'; '00' -> '0')
+                $str = format_float($number, $decimals, true);
+                // For debugging only:
+#                $str .= " ($decimals)";
+            } else {
+                $str = $number;
+            }
+            return $str;
         }
-        $number = $content->content;
-        $decimals = trim($this->field->param1 ?? '');
-        // Only apply number formatting if param1 contains an integer number >= 0.
-        if (preg_match("/^\d+$/", $decimals)) {
-            $decimals = $decimals * 1;
-            // Removes leading zeros (eg. '007' -> '7'; '00' -> '0').
-            $str = format_float($number, $decimals, true);
-        } else {
-            $str = $number;
-        }
-        return $str;
+        return false;
     }
 
     function display_search_field($value = '') {
@@ -136,3 +125,5 @@ class data_field_number extends data_field_base {
         return $configs;
     }
 }
+
+

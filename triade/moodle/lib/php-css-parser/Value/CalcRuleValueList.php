@@ -2,23 +2,13 @@
 
 namespace Sabberworm\CSS\Value;
 
-use Sabberworm\CSS\OutputFormat;
+class CalcRuleValueList extends RuleValueList {
+	public function __construct($iLineNo = 0) {
+		parent::__construct(array(), ',', $iLineNo);
+	}
 
-class CalcRuleValueList extends RuleValueList
-{
-    /**
-     * @param int $iLineNo
-     */
-    public function __construct($iLineNo = 0)
-    {
-        parent::__construct(',', $iLineNo);
-    }
+	public function render(\Sabberworm\CSS\OutputFormat $oOutputFormat) {
+		return $oOutputFormat->implode(' ', $this->aComponents);
+	}
 
-    /**
-     * @return string
-     */
-    public function render(OutputFormat $oOutputFormat)
-    {
-        return $oOutputFormat->implode(' ', $this->aComponents);
-    }
 }

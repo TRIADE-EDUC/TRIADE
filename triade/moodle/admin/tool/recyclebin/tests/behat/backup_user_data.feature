@@ -44,7 +44,7 @@ Feature: Backup user data
     And I click on "False" "radio" in the "Second question" "question"
     And I press "Finish attempt"
     And I press "Submit all and finish"
-    And I click on "Submit" "button" in the "Submit all your answers and finish?" "dialogue"
+    And I click on "Submit all and finish" "button" in the "Confirmation" "dialogue"
     And I should see "50.00 out of 100.00"
     And I log out
     And I log in as "teacher1"
@@ -54,10 +54,7 @@ Feature: Backup user data
     And I navigate to "Recycle bin" in current page administration
     And I should see "Quiz 1"
     And I click on "Restore" "link" in the "region-main" "region"
-    And I log out
-    And I log in as "student1"
-    And I am on "Course 1" course homepage
-    When I navigate to "User report" in the course gradebook
+    When I am on the "Course 1" "grades > User report > View" page logged in as "student1"
     Then "Quiz 1" row "Grade" column of "user-grade" table should contain "50"
     And "Quiz 1" row "Percentage" column of "user-grade" table should contain "50"
 

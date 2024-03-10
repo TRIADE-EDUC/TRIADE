@@ -24,6 +24,8 @@
 
 namespace gradereport_singleview\local\ui;
 
+use html_writer;
+
 defined('MOODLE_INTERNAL') || die;
 
 /**
@@ -50,30 +52,30 @@ class bulk_insert extends element {
     /**
      * Is this checkbox checked?
      *
-     * @param array|object $data The form data
+     * @param array $data The form data
      * @return bool
      */
-    public function is_applied($data): bool {
+    public function is_applied($data) {
         return isset($data->{$this->applyname});
     }
 
     /**
      * Get the type of this input (user or grade)
      *
-     * @param array|object $data The form data
+     * @param array $data The form data
      * @return string
      */
-    public function get_type($data): string {
+    public function get_type($data) {
         return $data->{$this->selectname};
     }
 
     /**
      * Get the value from either the user or grade.
      *
-     * @param array|object $data The form data
+     * @param array $data The form data
      * @return string
      */
-    public function get_insert_value($data): string {
+    public function get_insert_value($data) {
         return $data->{$this->insertname};
     }
 
@@ -82,7 +84,7 @@ class bulk_insert extends element {
      *
      * @return string HTML
      */
-    public function html(): string {
+    public function html() {
         global $OUTPUT;
 
         $text = new text_attribute($this->insertname, "0", 'bulk');
@@ -97,6 +99,7 @@ class bulk_insert extends element {
                 ['value' => 'blanks', 'name' => get_string('blanks', 'gradereport_singleview'), 'selected' => true],
             ],
             'valuename' => $this->insertname,
+            'valuelabel' => get_string('bulkinsertvalue', 'gradereport_singleview'),
             'valuefield' => $text->html()
         ];
 

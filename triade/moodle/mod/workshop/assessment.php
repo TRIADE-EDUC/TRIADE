@@ -46,7 +46,7 @@ $cm         = get_coursemodule_from_instance('workshop', $workshop->id, $course-
 
 require_login($course, false, $cm);
 if (isguestuser()) {
-    throw new \moodle_exception('guestsarenotallowed');
+    print_error('guestsarenotallowed');
 }
 $workshop = new workshop($workshop, $cm, $course);
 

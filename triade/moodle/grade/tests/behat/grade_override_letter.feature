@@ -1,4 +1,4 @@
-@core @core_grades @javascript
+@core @core_grades
 Feature: Grade letters can be overridden
   In order to test the grade letters functionality
   As a teacher I override site defaults
@@ -21,29 +21,35 @@ Feature: Grade letters can be overridden
 
   Scenario Outline: Grade letters can be completely overridden
     When I set the following fields to these values:
-      | Override site defaults | 1    |
+      | override               | 1    |
       | Grade letter 1         | <l1> |
-      | Letter grade boundary 1| <b1> |
+      | gradeboundary1         | <b1> |
       | Grade letter 2         | <l2> |
-      | Letter grade boundary 2| <b2> |
+      | gradeboundary2         | <b2> |
       | Grade letter 3         | <l3> |
-      | Letter grade boundary 3| <b3> |
+      | gradeboundary3         | <b3> |
       | Grade letter 4         | <l4> |
-      | Letter grade boundary 4| <b4> |
+      | gradeboundary4         | <b4> |
       | Grade letter 5         | <l5> |
-      | Letter grade boundary 5| <b5> |
+      | gradeboundary5         | <b5> |
       | Grade letter 6         | <l6> |
-      | Letter grade boundary 6| <b6> |
+      | gradeboundary6         | <b6> |
       | Grade letter 7         | <l7> |
-      | Letter grade boundary 7| <b7> |
+      | gradeboundary7         | <b7> |
       | Grade letter 8         | <l8> |
-      | Letter grade boundary 8| <b8> |
+      | gradeboundary8         | <b8> |
       | Grade letter 9         | <l9> |
-      | Letter grade boundary 9| <b9> |
+      | gradeboundary9         | <b9> |
       | Grade letter 10        |      |
-      | Letter grade boundary 10|     |
+      | gradeboundary10        |      |
       | Grade letter 11        |      |
-      | Letter grade boundary 11|     |
+      | gradeboundary11        |      |
+      | Grade letter 12        |      |
+      | gradeboundary12        |      |
+      | Grade letter 13        |      |
+      | gradeboundary13        |      |
+      | Grade letter 14        |      |
+      | gradeboundary14        |      |
     And I press "Save changes"
     Then I should see "The default grade letters are currently overridden."
     And the following should exist in the "grade-letters-view" table:
@@ -68,29 +74,29 @@ Feature: Grade letters can be overridden
       | component       | stringid | value        |
       | core_langconfig | decsep   | <decsep>     |
     When I set the following fields to these values:
-      | Override site defaults | 1    |
+      | override               | 1    |
       | Grade letter 1         | <l1> |
-      | Letter grade boundary 1| <b1> |
+      | gradeboundary1         | <b1> |
       | Grade letter 2         | <l2> |
-      | Letter grade boundary 2| <b2> |
+      | gradeboundary2         | <b2> |
       | Grade letter 3         | <l3> |
-      | Letter grade boundary 3| <b3> |
+      | gradeboundary3         | <b3> |
       | Grade letter 4         |      |
-      | Letter grade boundary 4|      |
+      | gradeboundary4         |      |
       | Grade letter 5         |      |
-      | Letter grade boundary 5|      |
+      | gradeboundary5         |      |
       | Grade letter 6         |      |
-      | Letter grade boundary 6|      |
+      | gradeboundary6         |      |
       | Grade letter 7         |      |
-      | Letter grade boundary 7|      |
+      | gradeboundary7         |      |
       | Grade letter 8         |      |
-      | Letter grade boundary 8|      |
+      | gradeboundary8         |      |
       | Grade letter 9         |      |
-      | Letter grade boundary 9|      |
+      | gradeboundary9         |      |
       | Grade letter 10        |      |
-      | Letter grade boundary 10|     |
+      | gradeboundary10        |      |
       | Grade letter 11        |      |
-      | Letter grade boundary 11|     |
+      | gradeboundary11        |      |
     And I press "Save changes"
     Then I should see "The default grade letters are currently overridden."
     And the following should exist in the "grade-letters-view" table:
@@ -104,62 +110,37 @@ Feature: Grade letters can be overridden
       | .      | A  | 88.88 | B  | 50.00 | C  | 0.00 | 100.00 % | 88.88 % | 88.87 % | 50.00 % | 49.99 % | 0.00 % |
       | #      | A  | 88#88 | B  | 50#00 | C  | 0#00 | 100#00 % | 88#88 % | 88#87 % | 50#00 % | 49#99 % | 0#00 % |
 
-  Scenario: Define additional grade letters
-    Given I set the field "Override site defaults" to "1"
-    When I press "Add 3 field(s) to form"
-    And I set the following fields to these values:
-      | Grade letter 11          | E  |
-      | Letter grade boundary 11 | 50 |
-      | Grade letter 12          | F  |
-      | Letter grade boundary 12 | 40 |
-      | Grade letter 13          | G  |
-      | Letter grade boundary 13 | 30 |
-      | Grade letter 14          | U  |
-      | Letter grade boundary 14 | 0  |
-    And I press "Save changes"
-    Then I should see "The default grade letters are currently overridden."
-    And the following should exist in the "grade-letters-view" table:
-      | Highest  | Lowest   | Letter |
-      | 100.00 % | 93.00 %  | A      |
-      | 92.99 %  | 90.00 %  | A-     |
-      | 89.99 %  | 87.00 %  | B+     |
-      | 86.99 %  | 83.00 %  | B      |
-      | 82.99 %  | 80.00 %  | B-     |
-      | 79.99 %  | 77.00 %  | C+     |
-      | 76.99 %  | 73.00 %  | C      |
-      | 72.99 %  | 70.00 %  | C-     |
-      | 69.99 %  | 67.00 %  | D+     |
-      | 66.99 %  | 60.00 %  | D      |
-      | 59.99 %  | 50.00 %  | E      |
-      | 49.99 %  | 40.00 %  | F      |
-      | 39.99 %  | 30.00 %  | G      |
-      | 29.99 %  | 0.00 %   | U      |
-
   Scenario: I delete a grade letter
     Given I set the following fields to these values:
-      | Override site defaults | 1  |
+      | override               | 1  |
       | Grade letter 1         | A  |
-      | Letter grade boundary 1| 90 |
+      | gradeboundary1         | 90 |
       | Grade letter 2         | B  |
-      | Letter grade boundary 2| 80 |
+      | gradeboundary2         | 80 |
       | Grade letter 3         | C  |
-      | Letter grade boundary 3| 50 |
+      | gradeboundary3         | 50 |
       | Grade letter 4         | D  |
-      | Letter grade boundary 4| 40 |
+      | gradeboundary4         | 40 |
       | Grade letter 5         | E  |
-      | Letter grade boundary 5| 20 |
+      | gradeboundary5         | 20 |
       | Grade letter 6         | F  |
-      | Letter grade boundary 6| 0  |
+      | gradeboundary6         | 0  |
       | Grade letter 7         |    |
-      | Letter grade boundary 7|    |
+      | gradeboundary7         |    |
       | Grade letter 8         |    |
-      | Letter grade boundary 8|    |
+      | gradeboundary8         |    |
       | Grade letter 9         |    |
-      | Letter grade boundary 9|    |
+      | gradeboundary9         |    |
       | Grade letter 10        |    |
-      | Letter grade boundary 10|   |
+      | gradeboundary10        |    |
       | Grade letter 11        |    |
-      | Letter grade boundary 11|   |
+      | gradeboundary11        |    |
+      | Grade letter 12        |    |
+      | gradeboundary12        |    |
+      | Grade letter 13        |    |
+      | gradeboundary13        |    |
+      | Grade letter 14        |    |
+      | gradeboundary14        |    |
     And I press "Save changes"
     And I should see "The default grade letters are currently overridden."
     And the following should exist in the "grade-letters-view" table:
@@ -172,19 +153,19 @@ Feature: Grade letters can be overridden
       | 19.99 %  | 0.00 %   | F      |
     When I click on "Edit" "button"
     And I set the following fields to these values:
-      | Override site defaults | 1  |
+      | override               | 1  |
       | Grade letter 1         | A  |
-      | Letter grade boundary 1| 90 |
+      | gradeboundary1         | 90 |
       | Grade letter 2         | B  |
-      | Letter grade boundary 2| 80 |
+      | gradeboundary2         | 80 |
       | Grade letter 3         | C  |
-      | Letter grade boundary 3| 50 |
+      | gradeboundary3         | 50 |
       | Grade letter 4         | D  |
-      | Letter grade boundary 4| 40 |
+      | gradeboundary4         | 40 |
       | Grade letter 5         |    |
-      | Letter grade boundary 5|    |
+      | gradeboundary5         |    |
       | Grade letter 6         | F  |
-      | Letter grade boundary 6| 0  |
+      | gradeboundary6         | 0  |
     And I press "Save changes"
     Then I should see "The default grade letters are currently overridden."
     And the following should exist in the "grade-letters-view" table:
@@ -197,29 +178,35 @@ Feature: Grade letters can be overridden
 
   Scenario: I override grade letters for a second time
     Given I set the following fields to these values:
-      | Override site defaults | 1  |
+      | override               | 1  |
       | Grade letter 1         | A+ |
-      | Letter grade boundary 1| 90 |
+      | gradeboundary1         | 90 |
       | Grade letter 2         | A  |
-      | Letter grade boundary 2| 80 |
+      | gradeboundary2         | 80 |
       | Grade letter 3         | B+ |
-      | Letter grade boundary 3| 70 |
+      | gradeboundary3         | 70 |
       | Grade letter 4         | B  |
-      | Letter grade boundary 4| 60 |
+      | gradeboundary4         | 60 |
       | Grade letter 5         | C  |
-      | Letter grade boundary 5| 50 |
+      | gradeboundary5         | 50 |
       | Grade letter 6         | D  |
-      | Letter grade boundary 6| 40 |
+      | gradeboundary6         | 40 |
       | Grade letter 7         | F  |
-      | Letter grade boundary 7| 0  |
+      | gradeboundary7         | 0  |
       | Grade letter 8         |    |
-      | Letter grade boundary 8|    |
+      | gradeboundary8         |    |
       | Grade letter 9         |    |
-      | Letter grade boundary 9|    |
+      | gradeboundary9         |    |
       | Grade letter 10        |    |
-      | Letter grade boundary 10|   |
+      | gradeboundary10        |    |
       | Grade letter 11        |    |
-      | Letter grade boundary 11|   |
+      | gradeboundary11        |    |
+      | Grade letter 12        |    |
+      | gradeboundary12        |    |
+      | Grade letter 13        |    |
+      | gradeboundary13        |    |
+      | Grade letter 14        |    |
+      | gradeboundary14        |    |
     And I press "Save changes"
     And I should see "The default grade letters are currently overridden."
     And the following should exist in the "grade-letters-view" table:
@@ -233,21 +220,21 @@ Feature: Grade letters can be overridden
       | 39.99 %  | 0.00 %   | F      |
     When I click on "Edit" "button"
     And I set the following fields to these values:
-      | Override site defaults | 1  |
+      | override               | 1  |
       | Grade letter 1         | α  |
-      | Letter grade boundary 1| 95 |
+      | gradeboundary1         | 95 |
       | Grade letter 2         | β  |
-      | Letter grade boundary 2| 85 |
+      | gradeboundary2         | 85 |
       | Grade letter 3         | γ  |
-      | Letter grade boundary 3| 70 |
+      | gradeboundary3         | 70 |
       | Grade letter 4         | δ  |
-      | Letter grade boundary 4| 55 |
+      | gradeboundary4         | 55 |
       | Grade letter 5         |    |
-      | Letter grade boundary 5|    |
+      | gradeboundary5         |    |
       | Grade letter 6         | Ω  |
-      | Letter grade boundary 6| 0  |
+      | gradeboundary6         | 0  |
       | Grade letter 7         | π  |
-      | Letter grade boundary 7| 90 |
+      | gradeboundary7         | 90 |
     And I press "Save changes"
     Then I should see "The default grade letters are currently overridden."
     And the following should exist in the "grade-letters-view" table:

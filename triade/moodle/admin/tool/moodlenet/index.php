@@ -44,7 +44,7 @@ if ($importinfo->get_config()->course) {
     require_capability('moodle/course:manageactivities', context_course::instance($importinfo->get_config()->course));
 }
 if (!get_config('tool_moodlenet', 'enablemoodlenet')) {
-    throw new \moodle_exception('moodlenetnotenabled', 'tool_moodlenet');
+    print_error('moodlenetnotenabled', 'tool_moodlenet');
 }
 
 // Handle the form submits.
@@ -73,7 +73,7 @@ if ($cancel) {
             $context = import_backup_helper::get_context_for_user($USER->id);
 
             if (is_null($context)) {
-                throw new \moodle_exception('nopermissions', 'error', '', get_string('restore:uploadfile', 'core_role'));
+                print_error('nopermissions', 'error', '', get_string('restore:uploadfile', 'core_role'));
             }
         } else {
             $context = context_course::instance($importinfo->get_config()->course);

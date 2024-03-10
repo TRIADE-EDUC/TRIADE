@@ -89,7 +89,7 @@ if (modulemessagerieadmin == "oui") {
 	document.write("<img src='./image/cube.gif' width='4' height='4'> <a href='./messagerie_reception.php' id='menumodule0'>"+langmenuadmin03+"</a><br>");
 	document.write("<img src='./image/cube.gif' width='4' height='4'> <a href='./messagerie_envoi.php' id='menumodule0'>"+langmenuadmin02+"</a><br>");
 	document.write("<img src='./image/cube.gif' width='4' height='4'> <a href='./corbeille_message.php' id='menumodule0'>"+langmenuadmin023+"</a><br>");
-	document.write("<img src='./image/cube.gif' width='4' height='4'> <a href='./messagerie_brouillon.php' id='menumodule0'>"+langmenuadmin022+"</a><br>");
+//	document.write("<img src='./image/cube.gif' width='4' height='4'> <a href='./messagerie_brouillon.php' id='menumodule0'>"+langmenuadmin022+"</a><br>");
 	document.write("<img src='./image/cube.gif' width='4' height='4'> <a href='./messagerie_suppression.php' id='menumodule0'>"+langmenuadmin04+"</a><br>");
 }
 document.write("<img src='./image/cube.gif' width='4' height='4'> <a href='./sms-mess0.php' id='menumodule0' >"+langmenuadmin522+"</a><br>");

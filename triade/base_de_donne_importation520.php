@@ -63,7 +63,8 @@ if ( (!empty($fichier)) && (($type == "application/octet-stream" ) || ($type == 
 	$fic_xls="data/fichier_gep/traitement1.xls";
 	include_once('./librairie_php/reader.php');
 	$data = new Spreadsheet_Excel_Reader();
-	$data->setOutputEncoding('CP1251');
+//	$data->setOutputEncoding('CP1251');
+	$data->setOutputEncoding('UTF-8');
 	$data->read($fic_xls);
 	$cnx=cnx();
 	$nbeleveaffecte=0;

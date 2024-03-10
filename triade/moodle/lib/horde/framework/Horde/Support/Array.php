@@ -146,7 +146,6 @@ class Horde_Support_Array implements ArrayAccess, Countable, IteratorAggregate
      *
      * @return integer
      */
-    #[ReturnTypeWillChange]
     public function count()
     {
         return count($this->_array);
@@ -154,7 +153,6 @@ class Horde_Support_Array implements ArrayAccess, Countable, IteratorAggregate
 
     /**
      */
-    #[ReturnTypeWillChange]
     public function getIterator()
     {
         return new ArrayIterator($this->_array);
@@ -165,7 +163,6 @@ class Horde_Support_Array implements ArrayAccess, Countable, IteratorAggregate
      *
      * @see __get()
      */
-    #[ReturnTypeWillChange]
     public function offsetGet($offset)
     {
         return $this->__get($offset);
@@ -176,7 +173,6 @@ class Horde_Support_Array implements ArrayAccess, Countable, IteratorAggregate
      *
      * @see __set()
      */
-    #[ReturnTypeWillChange]
     public function offsetSet($offset, $value)
     {
         return $this->__set($offset, $value);
@@ -187,7 +183,6 @@ class Horde_Support_Array implements ArrayAccess, Countable, IteratorAggregate
      *
      * @see __isset()
      */
-    #[ReturnTypeWillChange]
     public function offsetExists($offset)
     {
         return $this->__isset($offset);
@@ -198,7 +193,6 @@ class Horde_Support_Array implements ArrayAccess, Countable, IteratorAggregate
      *
      * @see __unset()
      */
-    #[ReturnTypeWillChange]
     public function offsetUnset($offset)
     {
         return $this->__unset($offset);

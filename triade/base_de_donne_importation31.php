@@ -69,7 +69,7 @@ if ( (!empty($fichier)) && (($type == "application/octet-stream" ) || ($type == 
 	$typefichier="excel";
 	include_once('./librairie_php/reader.php');
 	$data = new Spreadsheet_Excel_Reader();
-	$data->setOutputEncoding('CP1251');
+	$data->setOutputEncoding('UTF-8');
 	$data->read($fic_xls);
 
 	for ($i = 1; $i <= $data->sheets[0]['numRows']; $i++) {

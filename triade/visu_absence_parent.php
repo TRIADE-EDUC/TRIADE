@@ -1,5 +1,5 @@
 <?php
-      session_start();
+session_start();
 $anneeScolaire=$_COOKIE["anneeScolaire"];
 if (isset($_POST["anneeScolaire"])) {
         setcookie("anneeScolaire",$_POST["anneeScolaire"],time()+36000*24*30);

@@ -51,9 +51,10 @@ include_once("../common/lib_admin.php");
 <table><tr><td><img src="../image/commun/assisante.gif" /></td><td><font class=T2><?php print "Disposer d'un service d'assistance en ligne." ?></font></td></tr></table>
 <br><br>
 <table align='center' ><tr><td align='center'>
-<script language=JavaScript>buttonMagic2("Espace Client Triade",'http://www.triade-educ.com/accueil/acces_client.php','_blank','','0')</script>
-<script language=JavaScript>buttonMagic2("Forum Libre Triade",'http://forum.triade-educ.com','_blank','','0')</script>
-<script language=JavaScript>buttonMagic2("Documentation Triade",'http://doc.triade-educ.com','_blank','','0')</script>&nbsp;&nbsp;</td></tr></table>
+<script language=JavaScript>buttonMagic2("TRIADE-CLIENT",'http://www.triade-educ.org/accueil/acces_client.php','_blank','','0')</script>
+<script language=JavaScript>buttonMagic2("TRIADE-FORUM",'http://forum.triade-educ.org','_blank','','0')</script>
+<script language=JavaScript>buttonMagic2("TRIADE-DOC",'http://doc.triade-educ.org','_blank','','0')</script>
+<script language=JavaScript>buttonMagic2("TRIADE-DISCORD",'https://www.triade-educ.org/accueil/discord.php','_blank','','0')</script>&nbsp;&nbsp;</td></tr></table>
 <br><br>
 
 </td></tr></table>

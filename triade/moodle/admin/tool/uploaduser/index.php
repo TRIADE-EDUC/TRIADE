@@ -54,7 +54,7 @@ if (empty($iid)) {
         unset($content);
 
         if (!is_null($csvloaderror)) {
-            throw new \moodle_exception('csvloaderror', '', $returnurl, $csvloaderror);
+            print_error('csvloaderror', '', $returnurl, $csvloaderror);
         }
         // Continue to form2.
 

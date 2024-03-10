@@ -48,7 +48,7 @@
 <td >
 <table align=center><tr><td>
 <script language=JavaScript>buttonMagic("<?php print LANGBT11?>","list_suppleant.php","liste_suppleant","height=300,width=700,scrollbars=yes,status=no","");</script>
-<script language=JavaScript>buttonMagic("<?php print LANGCREAT2 ?>","suppression_compte_suppleant.php","_parent","","");</script>&nbsp;&nbsp;</td></tr></table>
+<script language=JavaScript>buttonMagic("<?php print "Supprimer affectation suppléant"  ?>","suppression_compte_suppleant.php","_parent","","");</script>&nbsp;&nbsp;</td></tr></table>
 </td></tr></table>
 <br />
 

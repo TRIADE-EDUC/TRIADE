@@ -139,10 +139,6 @@ class admin_uploaduser_form2 extends moodleform {
         }
         $mform->addElement('select', 'uuforcepasswordchange', get_string('forcepasswordchange', 'core'), $choices);
 
-        $mform->addElement('selectyesno', 'uumatchemail', get_string('matchemail', 'tool_uploaduser'));
-        $mform->setDefault('uumatchemail', 0);
-        $mform->hideIf('uumatchemail', 'uutype', 'eq', UU_USER_ADDNEW);
-        $mform->hideIf('uumatchemail', 'uutype', 'eq', UU_USER_ADDINC);
 
         $mform->addElement('selectyesno', 'uuallowrenames', get_string('allowrenames', 'tool_uploaduser'));
         $mform->setDefault('uuallowrenames', 0);
@@ -234,6 +230,7 @@ class admin_uploaduser_form2 extends moodleform {
 
         $mform->addElement('text', 'username', get_string('uuusernametemplate', 'tool_uploaduser'), 'size="20"');
         $mform->setType('username', PARAM_RAW); // No cleaning here. The process verifies it later.
+        $mform->addRule('username', get_string('requiredtemplate', 'tool_uploaduser'), 'required', null, 'client');
         $mform->hideIf('username', 'uutype', 'eq', UU_USER_ADD_UPDATE);
         $mform->hideIf('username', 'uutype', 'eq', UU_USER_UPDATE);
         $mform->setForceLtr('username');

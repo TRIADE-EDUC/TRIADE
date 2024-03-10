@@ -434,10 +434,10 @@ function vatel_create($champs,$table) {
 			}
 		}
 		$sql=" INSERT INTO `${prefixe}".$table."` ( ".substr($requete_nom, 0, -1)." ) VALUES ( ".substr($requete_valeur,0,-1).");";
-//		print ($sql);
 		execSql($sql);
-		return(mysqli_insert_id());
-		}
+		$rt=$cnx->connection->insert_id;
+		return($rt);
+	}
 }
 
 function vatel_create_due($champs,$id,$table) {

@@ -2080,7 +2080,7 @@ class core_admin_renderer extends plugin_renderer_base {
                         $errorline = true;
                     } else {
                         if ($status) {                                          //Handle ok result (ok)
-                            $status = get_string('statusok');
+                            $status = get_string('ok');
                         } else {
                             if ($environment_result->getLevel() == 'optional') {//Handle check result (warning)
                                 $status = get_string('check');

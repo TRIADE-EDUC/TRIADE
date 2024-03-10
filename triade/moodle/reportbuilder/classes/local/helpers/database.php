@@ -46,19 +46,6 @@ class database {
 
         return static::GENERATE_ALIAS_PREFIX . ($aliascount++);
     }
-
-    /**
-     * Generate multiple unique table/column aliases, see {@see generate_alias} for info
-     *
-     * @param int $count
-     * @return string[]
-     */
-    public static function generate_aliases(int $count): array {
-        return array_map([
-            static::class, 'generate_alias'
-        ], array_fill(0, $count, null));
-    }
-
     /**
      * Generates unique parameter name that must be used in generated SQL
      *
@@ -68,18 +55,6 @@ class database {
         static $paramcount = 0;
 
         return static::GENERATE_PARAM_PREFIX . ($paramcount++);
-    }
-
-    /**
-     * Generate multiple unique parameter names, see {@see generate_param_name} for info
-     *
-     * @param int $count
-     * @return string[]
-     */
-    public static function generate_param_names(int $count): array {
-        return array_map([
-            static::class, 'generate_param_name'
-        ], array_fill(0, $count, null));
     }
 
     /**
@@ -99,6 +74,29 @@ class database {
         }
 
         return true;
+    }
+
+    /**
+     * Replace parameter names within given SQL expression, allowing caller to specify callback to handle their replacement
+     * primarily to ensure uniqueness when the expression is to be used as part of a larger query
+     *
+     * @param string $sql
+     * @param array $params
+     * @param callable $callback Method that takes a single string parameter, and returns another string
+     * @return string
+     */
+    public static function sql_replace_parameter_names(string $sql, array $params, callable $callback): string {
+        foreach ($params as $param) {
+
+            // Pattern to look for param within the SQL.
+            $pattern = '/:(?<param>' . preg_quote($param) . ')\b/';
+
+            $sql = preg_replace_callback($pattern, function(array $matches) use ($callback): string {
+                return ':' . $callback($matches['param']);
+            }, $sql);
+        }
+
+        return $sql;
     }
 
     /**
@@ -134,7 +132,7 @@ class database {
             }
 
             // Cast sort, stick the direction on the end.
-            $fieldsort = $DB->sql_cast_to_char($fieldsort) . ' ' . $fieldsortdirection;
+            $fieldsort = "CAST({$fieldsort} AS VARCHAR) {$fieldsortdirection}";
         }
 
         return $fieldsort;

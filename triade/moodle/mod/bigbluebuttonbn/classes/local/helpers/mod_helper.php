@@ -41,7 +41,7 @@ class mod_helper {
         self::process_pre_save_instance($bigbluebuttonbn);
         self::process_pre_save_checkboxes($bigbluebuttonbn);
         self::process_pre_save_common($bigbluebuttonbn);
-        $bigbluebuttonbn->participants = htmlspecialchars_decode($bigbluebuttonbn->participants, ENT_COMPAT);
+        $bigbluebuttonbn->participants = htmlspecialchars_decode($bigbluebuttonbn->participants);
     }
 
     /**
@@ -114,6 +114,9 @@ class mod_helper {
         }
         if (!isset($bigbluebuttonbn->lockedlayout)) {
             $bigbluebuttonbn->lockedlayout = 0;
+        }
+        if (!isset($bigbluebuttonbn->lockonjoin)) {
+            $bigbluebuttonbn->lockonjoin = 0;
         }
     }
 

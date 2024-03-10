@@ -81,7 +81,7 @@ if ($id) {
     // Editing course.
     if ($id == SITEID){
         // Don't allow editing of  'site course' using this from.
-        throw new \moodle_exception('cannoteditsiteform');
+        print_error('cannoteditsiteform');
     }
 
     // Login to the course and retrieve also all fields defined by course format.

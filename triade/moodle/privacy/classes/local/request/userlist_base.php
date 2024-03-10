@@ -146,7 +146,6 @@ abstract class userlist_base implements
      *
      * @return  \user
      */
-    #[\ReturnTypeWillChange]
     public function current() {
         $user = \core_user::get_user($this->userids[$this->iteratorposition]);
 
@@ -161,7 +160,7 @@ abstract class userlist_base implements
                 $user = $this->current();
             } else {
                 // There are no more context ids left.
-                return null;
+                return;
             }
         }
 
@@ -173,7 +172,6 @@ abstract class userlist_base implements
      *
      * @return  mixed
      */
-    #[\ReturnTypeWillChange]
     public function key() {
         return $this->iteratorposition;
     }
@@ -181,7 +179,7 @@ abstract class userlist_base implements
     /**
      * Move to the next user in the list.
      */
-    public function next(): void {
+    public function next() {
         ++$this->iteratorposition;
     }
 
@@ -190,7 +188,7 @@ abstract class userlist_base implements
      *
      * @return  bool
      */
-    public function valid(): bool {
+    public function valid() {
         return isset($this->userids[$this->iteratorposition]) && $this->current();
     }
 
@@ -200,14 +198,14 @@ abstract class userlist_base implements
      * The list of users is uniqued during the rewind.
      * The rewind is called at the start of most iterations.
      */
-    public function rewind(): void {
+    public function rewind() {
         $this->iteratorposition = 0;
     }
 
     /**
      * Return the number of users.
      */
-    public function count(): int {
+    public function count() {
         return count($this->userids);
     }
 

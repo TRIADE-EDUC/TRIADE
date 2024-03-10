@@ -17,11 +17,9 @@ Feature: Users can request and approve courses
       | user2 | Acceptance test site | manager |
     And the following config values are set as admin:
       | lockrequestcategory | 1 |
-    Given I log in as "admin"
-    And I set the following system permissions of "Authenticated user" role:
-      | capability | permission |
-      | moodle/course:request | Allow |
-    And I log out
+    And the following "role capability" exists:
+      | role                  | user  |
+      | moodle/course:request | allow |
     When I log in as "user1"
     And I am on course index
     And I click on "More actions" "button"
@@ -40,9 +38,7 @@ Feature: Users can request and approve courses
     And I am on course index
     And I click on "More actions" "button"
     And I click on "Courses pending approval" "link"
-    And the following should exist in the "pendingcourserequests" table:
-      | Requested by | Course short name | Course full name | Category   | Reason for course request |
-      | User 1       | Mynewcourse       | My new course    | Category 1 | pretty please             |
+    And I should see "Category 1" in the "My new course" "table_row"
     And I click on "Approve" "button" in the "My new course" "table_row"
     And I press "Save and return"
     And I should see "There are no courses pending approval"
@@ -71,11 +67,9 @@ Feature: Users can request and approve courses
       | user1 | courserequestor | Category     | ENG       |
       | user2 | manager         | Category     | SCI       |
       | user3 | manager         | Category     | ENG       |
-    Given I log in as "admin"
-    And I set the following system permissions of "Course requestor" role:
-      | capability            | permission |
-      | moodle/course:request | Allow      |
-    And I log out
+    And the following "role capability" exists:
+      | role                  | courserequestor |
+      | moodle/course:request | allow           |
     And I log in as "user1"
     And I am on course index
     And I follow "English category"
@@ -105,9 +99,7 @@ Feature: Users can request and approve courses
     And I follow "English category"
     And I click on "More actions" "button"
     And I click on "Courses pending approval" "link"
-    And the following should exist in the "pendingcourserequests" table:
-      | Requested by | Course short name | Course full name | Category         | Reason for course request |
-      | User 1       | Mynewcourse       | My new course    | English category | pretty please             |
+    And I should see "English category" in the "Mynewcourse" "table_row"
     And I click on "Approve" "button" in the "Mynewcourse" "table_row"
     And I press "Save and return"
     And I am on course index

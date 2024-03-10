@@ -33,12 +33,9 @@ defined('MOODLE_INTERNAL') || die;
  * @copyright 2014 Moodle Pty Ltd (http://moodle.com)
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class override extends grade_attribute_format implements be_checked, be_disabled, be_readonly {
+class override extends grade_attribute_format implements be_checked, be_disabled {
 
-    /**
-     * The name for this input
-     * @var string $name
-     */
+    /** @var string $name The name for this input */
     public $name = 'override';
 
     /**
@@ -46,7 +43,7 @@ class override extends grade_attribute_format implements be_checked, be_disabled
      *
      * @return bool
      */
-    public function is_checked(): bool {
+    public function is_checked() {
         return $this->grade->is_overridden();
     }
 
@@ -55,7 +52,7 @@ class override extends grade_attribute_format implements be_checked, be_disabled
      *
      * @return bool
      */
-    public function is_disabled(): bool {
+    public function is_disabled() {
         $lockedgrade = $lockedgradeitem = 0;
         if (!empty($this->grade->locked)) {
             $lockedgrade = 1;
@@ -67,21 +64,11 @@ class override extends grade_attribute_format implements be_checked, be_disabled
     }
 
     /**
-     * Return true if this is read-only.
-     *
-     * @return bool
-     */
-    public function is_readonly(): bool {
-        global $USER;
-        return empty($USER->editing);
-    }
-
-    /**
      * Get the label for this form element.
      *
      * @return string
      */
-    public function get_label(): string {
+    public function get_label() {
         if (!isset($this->grade->label)) {
             $this->grade->label = '';
         }
@@ -93,7 +80,7 @@ class override extends grade_attribute_format implements be_checked, be_disabled
      *
      * @return element
      */
-    public function determine_format(): element {
+    public function determine_format() {
         if (!$this->grade->grade_item->is_overridable_item()) {
             return new empty_element();
         }
@@ -101,8 +88,7 @@ class override extends grade_attribute_format implements be_checked, be_disabled
             $this->get_name(),
             $this->get_label(),
             $this->is_checked(),
-            $this->is_disabled(),
-            $this->is_readonly()
+            $this->is_disabled()
         );
     }
 
@@ -117,7 +103,7 @@ class override extends grade_attribute_format implements be_checked, be_disabled
             return false;
         }
 
-        $state = !($value == 0);
+        $state = $value == 0 ? false : true;
 
         $this->grade->set_overridden($state);
         $this->grade->grade_item->force_regrading();

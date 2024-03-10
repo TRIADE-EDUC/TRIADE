@@ -40,14 +40,6 @@ define(['jquery', 'core/notification', 'core/str', 'core/form-autocomplete',
         this._lastXofYUpdate = 0;
         this._firstLoadUsers = true;
 
-        let url = new URL(window.location);
-        if (parseInt(url.searchParams.get('treset')) > 0) {
-            // Remove 'treset' url parameter to make sure that
-            // table preferences won't be reset on page refresh.
-            url.searchParams.delete('treset');
-            window.history.replaceState({}, "", url);
-        }
-
         // Get the current user list from a webservice.
         this._loadAllUsers();
 
@@ -58,7 +50,6 @@ define(['jquery', 'core/notification', 'core/str', 'core/form-autocomplete',
         this._region.find('[data-action="next-user"]').on('click', this._handleNextUser.bind(this));
         this._region.find('[data-action="change-user"]').on('change', this._handleChangeUser.bind(this));
         this._region.find('[data-region="user-filters"]').on('click', this._toggleExpandFilters.bind(this));
-        this._region.find('[data-region="user-resettable"]').on('click', this._toggleResetTable.bind());
 
         $(document).on('user-changed', this._refreshSelector.bind(this));
         $(document).on('done-saving-show-next', this._handleNextUser.bind(this));
@@ -264,7 +255,7 @@ define(['jquery', 'core/notification', 'core/str', 'core/form-autocomplete',
             // Reload the list of users to apply the new filters.
             if (!this._loadAllUsers()) {
                 var userid = parseInt(select.attr('data-selected'));
-                let foundIndex = null;
+                var foundIndex = 0;
                 // Search the returned users for the current selection.
                 $.each(this._filteredUsers, function(index, user) {
                     if (userid == user.id) {
@@ -272,7 +263,7 @@ define(['jquery', 'core/notification', 'core/str', 'core/form-autocomplete',
                     }
                 });
 
-                if (this._filteredUsers.length && foundIndex !== null) {
+                if (this._filteredUsers.length) {
                     this._selectUserById(this._filteredUsers[foundIndex].id);
                 } else {
                     this._selectNoUser();
@@ -372,18 +363,6 @@ define(['jquery', 'core/notification', 'core/str', 'core/form-autocomplete',
             event.stopPropagation();
             $(document).on('click.mod_assign_grading_navigation', this._checkClickOutsideConfigureFilters.bind(this));
         }
-    };
-
-    /**
-     * Reset table preferences.
-     *
-     * @private
-     * @method _toggleResetTable
-     */
-    GradingNavigation.prototype._toggleResetTable = function() {
-        let url = new URL(window.location);
-        url.searchParams.set('treset', '1');
-        window.location.href = url;
     };
 
     /**

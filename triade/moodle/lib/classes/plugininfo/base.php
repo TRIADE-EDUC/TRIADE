@@ -285,8 +285,7 @@ abstract class base {
         }
 
         if (isset($plugin->incompatible) && $plugin->incompatible !== null) {
-            if (((is_string($plugin->incompatible) && ctype_digit($plugin->incompatible)) || is_int($plugin->incompatible))
-                    && (int) $plugin->incompatible > 0) {
+            if ((ctype_digit($plugin->incompatible) || is_int($plugin->incompatible)) && (int) $plugin->incompatible > 0) {
                 $this->pluginincompatible = intval($plugin->incompatible);
             } else {
                 throw new coding_exception('Incorrect syntax in plugin incompatible declaration in '."$this->name");
@@ -597,10 +596,6 @@ abstract class base {
      */
     public function get_dir() {
         global $CFG;
-
-        if (!isset($pluginfo->rootdir)) {
-            return '';
-        }
 
         return substr($this->rootdir, strlen($CFG->dirroot));
     }

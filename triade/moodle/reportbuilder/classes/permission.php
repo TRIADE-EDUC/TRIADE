@@ -18,7 +18,6 @@ declare(strict_types=1);
 
 namespace core_reportbuilder;
 
-use context;
 use context_system;
 use core_reportbuilder\local\helpers\audience;
 use core_reportbuilder\local\models\report;
@@ -37,11 +36,10 @@ class permission {
      * Require given user can view reports list
      *
      * @param int|null $userid User ID to check, or the current user if omitted
-     * @param context|null $context
      * @throws report_access_exception
      */
-    public static function require_can_view_reports_list(?int $userid = null, ?context $context = null): void {
-        if (!static::can_view_reports_list($userid, $context)) {
+    public static function require_can_view_reports_list(?int $userid = null): void {
+        if (!static::can_view_reports_list($userid)) {
             throw new report_access_exception();
         }
     }
@@ -50,21 +48,16 @@ class permission {
      * Whether given user can view reports list
      *
      * @param int|null $userid User ID to check, or the current user if omitted
-     * @param context|null $context
      * @return bool
      */
-    public static function can_view_reports_list(?int $userid = null, ?context $context = null): bool {
+    public static function can_view_reports_list(?int $userid = null): bool {
         global $CFG;
-
-        if ($context === null) {
-            $context = context_system::instance();
-        }
 
         return !empty($CFG->enablecustomreports) && has_any_capability([
             'moodle/reportbuilder:editall',
             'moodle/reportbuilder:edit',
             'moodle/reportbuilder:view',
-        ], $context, $userid);
+        ], context_system::instance(), $userid);
     }
 
     /**
@@ -88,7 +81,7 @@ class permission {
      * @return bool
      */
     public static function can_view_report(report $report, ?int $userid = null): bool {
-        if (!static::can_view_reports_list($userid, $report->get_context())) {
+        if (!static::can_view_reports_list($userid)) {
             return false;
         }
 
@@ -139,9 +132,9 @@ class permission {
             return has_any_capability([
                 'moodle/reportbuilder:edit',
                 'moodle/reportbuilder:editall',
-            ], $report->get_context(), $userid);
+            ], context_system::instance(), $userid);
         } else {
-            return has_capability('moodle/reportbuilder:editall', $report->get_context(), $userid);
+            return has_capability('moodle/reportbuilder:editall', context_system::instance(), $userid);
         }
     }
 
@@ -149,31 +142,25 @@ class permission {
      * Whether given user can create a new report
      *
      * @param int|null $userid User ID to check, or the current user if omitted
-     * @param context|null $context
      * @return bool
      */
-    public static function can_create_report(?int $userid = null, ?context $context = null): bool {
+    public static function can_create_report(?int $userid = null): bool {
         global $CFG;
-
-        if ($context === null) {
-            $context = context_system::instance();
-        }
 
         return !empty($CFG->enablecustomreports) && has_any_capability([
             'moodle/reportbuilder:edit',
             'moodle/reportbuilder:editall',
-        ], $context, $userid) && !manager::report_limit_reached();
+        ], context_system::instance(), $userid);
     }
 
     /**
      * Require given user can create a new report
      *
      * @param int|null $userid User ID to check, or the current user if omitted
-     * @param context|null $context
      * @throws report_access_exception
      */
-    public static function require_can_create_report(?int $userid = null, ?context $context = null): void {
-        if (!static::can_create_report($userid, $context)) {
+    public static function require_can_create_report(?int $userid = null): void {
+        if (!static::can_create_report($userid)) {
             throw new report_access_exception('errorreportcreate');
         }
     }

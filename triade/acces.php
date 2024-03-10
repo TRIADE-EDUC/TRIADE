@@ -19,12 +19,14 @@
  ***************************************************************************/
 session_start();
 
+error_reporting(0);
+
 include_once("./common/config.inc.php");
 include_once("./common/config2.inc.php");
 include_once("./librairie_php/db_triade.php");
+$cnx=cnx();
 
-
-//error_reporting(0);
+$color=recupColor();
 
 if ($_COOKIE["langue-triade"] == "fr") {
 	include_once("./librairie_php/langue-text-fr.php");
@@ -56,11 +58,27 @@ include_once("./common/config.inc.php");
 include_once("./librairie_php/db_triade.php");
 
 include_once("./librairie_php/timezone.php");
-$cnx=cnx();
 
 $nomsPostVar=array('saisie_membre','membre','saisienom','nom','saisieprenom','prenom','saisiepasswd','pwd');
 $hashPostVar=hashPostVar($nomsPostVar);
 $code=acces($hashPostVar);
+if ($code == 1) {
+	if (($hashPostVar[membre] == 'eleve') || ($hashPostVar[membre] == 'parent')) {
+      		$nom=trim(ucwords($hashPostVar[nom]));
+	        $prenom=trim($hashPostVar[prenom]) ;
+		$id_pers=chercheIdEleve(strtolower($nom),strtolower($prenom));
+	        $idClasse=chercheIdClasseDunEleve($id_pers);
+		$code=chercherOfflineClasse($idClasse);
+		if ($code == 1) { $code=0; }else{ $code=1; } 
+	}
+}
+
+if ($hashPostVar[membre] != 'administrateur') {
+	if (file_exists("./data/parametrage/noacces.ete")) {
+		$code=0;
+	}
+}
+
 $nav_info=$_POST["info_nav"];
 
 if  ((preg_match('/microsoft/i',$nav_info)) || (preg_match('/internet explorer/i',$nav_info))) {
@@ -68,6 +86,7 @@ if  ((preg_match('/microsoft/i',$nav_info)) || (preg_match('/internet explorer/i
 }else {
 	$navigateur="NONIE";
 }
+
 
 
 
@@ -121,6 +140,7 @@ if (($hashPostVar[membre] == 'administrateur') && $code==1) :
       $_SESSION["os"]=$os;
       $_SESSION["ip"]=$ip;
       $_SESSION["id_session"]=$id_session;
+      $_SESSION["color"]="$color";
       enr_trace(addslashes($nav),addslashes($os),$ip,addslashes($nom),addslashes($prenom),"Administrateur");
       enr_statUtilisateur(addslashes($nom),addslashes($prenom),$id_pers,"menuadmin",$id_session);
       statConecParHeure(dateH());
@@ -151,6 +171,7 @@ if (($hashPostVar[membre] == 'administrateur') && $code==1) :
       $_SESSION["os"]=$os;
       $_SESSION["ip"]=$ip;
       $_SESSION["id_session"]=$id_session;
+      $_SESSION["color"]="$color";
       setcookie("nom","$nom");
       setcookie("prenom","$prenom");
       setcookie("id_pers","$id_pers");
@@ -187,6 +208,7 @@ if (($hashPostVar[membre] == 'administrateur') && $code==1) :
       $_SESSION["ip"]=$ip;
       $_SESSION["id_session"]=$id_session;
       $_SESSION["pwd"]=$_POST["saisiepasswd"];
+      $_SESSION["color"]="$color";
       enr_trace(addslashes($nav),addslashes($os),$ip,addslashes($nom),addslashes($prenom),"Elève");
       enr_statUtilisateur(addslashes($nom),addslashes($prenom),$id_pers,"menueleve",$id_session);
       ip_timeout_clear($ip);
@@ -217,6 +239,7 @@ if (($hashPostVar[membre] == 'administrateur') && $code==1) :
       $_SESSION["os"]=$os;
       $_SESSION["ip"]=$ip;
       $_SESSION["id_session"]=$id_session;
+      $_SESSION["color"]="$color";
       enr_trace(addslashes($nav),addslashes($os),$ip,addslashes($nom),addslashes($prenom),"Vie Scolaire");
       enr_statUtilisateur(addslashes($nom),addslashes($prenom),$id_pers,"menuscolaire",$id_session);
       ip_timeout_clear($ip);
@@ -244,6 +267,7 @@ if (($hashPostVar[membre] == 'administrateur') && $code==1) :
       $_SESSION["os"]=$os;
       $_SESSION["ip"]=$ip;
       $_SESSION["id_session"]=$id_session;
+      $_SESSION["color"]="$color";
       enr_trace(addslashes($nav),addslashes($os),$ip,addslashes($nom),addslashes($prenom),"Tuteur Stage");
       enr_statUtilisateur(addslashes($nom),addslashes($prenom),$id_pers,"menututeur",$id_session);
       ip_timeout_clear($ip);
@@ -273,6 +297,7 @@ if (($hashPostVar[membre] == 'administrateur') && $code==1) :
       $_SESSION["os"]=$os;
       $_SESSION["ip"]=$ip;
       $_SESSION["id_session"]=$id_session;
+      $_SESSION["color"]="$color";
       enr_trace(addslashes($nav),addslashes($os),$ip,addslashes($nom),addslashes($prenom),"Personnel");
       enr_statUtilisateur(addslashes($nom),addslashes($prenom),$id_pers,"menupersonnel",$id_session);
       ip_timeout_clear($ip);
@@ -310,6 +335,7 @@ if (($hashPostVar[membre] == 'administrateur') && $code==1) :
       $_SESSION["os"]=$os;
       $_SESSION["ip"]=$ip;
       $_SESSION["id_session"]=$id_session;
+      $_SESSION["color"]="$color";
       enr_trace(addslashes($nav),addslashes($os),$ip,addslashes($nom),addslashes($prenom),"Enseignant");
       enr_statUtilisateur(addslashes($nom),addslashes($prenom),$id_pers,"menuprof",$id_session);
       ip_timeout_clear($ip);
@@ -328,7 +354,6 @@ if (($hashPostVar[membre] == 'administrateur') && $code==1) :
    	session_unset();
 	session_destroy();
 	$passwd=$_POST["saisiepasswd"];
-   	acceslog("ERREUR CONNEXION#$nav#$os#$ip#$nom#$prenom#membre : $membre#$passwd");
    	ip_timeout($ip);
 	header("Location: acces_depart.php?message=".LANGTERREURCONNECT."&saisie_membre=$hashPostVar[membre]&saisie_titre=$hashPostVar[membre]");
 	exit;

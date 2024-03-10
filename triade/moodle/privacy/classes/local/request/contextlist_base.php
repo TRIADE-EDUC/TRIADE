@@ -121,7 +121,6 @@ abstract class contextlist_base implements
      *
      * @return  \context
      */
-    #[\ReturnTypeWillChange]
     public function current() {
         // It is possible that this context has been deleted and we now have subsequent calls being made with this
         // contextlist. Exceptions here will stop the further processing of this component and that is why we are
@@ -138,7 +137,7 @@ abstract class contextlist_base implements
                 $context = $this->current();
             } else {
                 // There are no more context ids left.
-                return null;
+                return;
             }
         }
         return $context;
@@ -149,7 +148,6 @@ abstract class contextlist_base implements
      *
      * @return  mixed
      */
-    #[\ReturnTypeWillChange]
     public function key() {
         return $this->iteratorposition;
     }
@@ -157,7 +155,7 @@ abstract class contextlist_base implements
     /**
      * Move to the next context in the list.
      */
-    public function next(): void {
+    public function next() {
         ++$this->iteratorposition;
     }
 
@@ -166,7 +164,7 @@ abstract class contextlist_base implements
      *
      * @return  bool
      */
-    public function valid(): bool {
+    public function valid() {
         return isset($this->contextids[$this->iteratorposition]);
     }
 
@@ -176,14 +174,14 @@ abstract class contextlist_base implements
      * The list of contexts is uniqued during the rewind.
      * The rewind is called at the start of most iterations.
      */
-    public function rewind(): void {
+    public function rewind() {
         $this->iteratorposition = 0;
     }
 
     /**
      * Return the number of contexts.
      */
-    public function count(): int {
+    public function count() {
         return count($this->contextids);
     }
 }

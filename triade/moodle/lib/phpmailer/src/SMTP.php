@@ -35,7 +35,7 @@ class SMTP
      *
      * @var string
      */
-    const VERSION = '6.6.5';
+    const VERSION = '6.5.3';
 
     /**
      * SMTP line break constant.
@@ -187,7 +187,6 @@ class SMTP
         'SendGrid' => '/[\d]{3} Ok: queued as (.*)/',
         'CampaignMonitor' => '/[\d]{3} 2.0.0 OK:([a-zA-Z\d]{48})/',
         'Haraka' => '/[\d]{3} Message Queued \((.*)\)/',
-        'Mailjet' => '/[\d]{3} OK queued as (.*)/',
     ];
 
     /**
@@ -483,7 +482,7 @@ class SMTP
      * @param string $username The user name
      * @param string $password The password
      * @param string $authtype The auth type (CRAM-MD5, PLAIN, LOGIN, XOAUTH2)
-     * @param OAuthTokenProvider $OAuth An optional OAuthTokenProvider instance for XOAUTH2 authentication
+     * @param OAuth  $OAuth    An optional OAuth instance for XOAUTH2 authentication
      *
      * @return bool True if successfully authenticated
      */
@@ -682,6 +681,7 @@ class SMTP
      */
     public function close()
     {
+        $this->setError('');
         $this->server_caps = null;
         $this->helo_rply = null;
         if (is_resource($this->smtp_conn)) {
@@ -1036,10 +1036,7 @@ class SMTP
             return false;
         }
 
-        //Don't clear the error store when using keepalive
-        if ($command !== 'RSET') {
-            $this->setError('');
-        }
+        $this->setError('');
 
         return true;
     }

@@ -91,18 +91,13 @@ define('URL_MATCH_EXACT', 2);
  * @return string
  */
 function s($var) {
+
     if ($var === false) {
         return '0';
     }
 
-    if ($var === null || $var === '') {
-        return '';
-    }
-
-    return preg_replace(
-        '/&amp;#(\d+|x[0-9a-f]+);/i', '&#$1;',
-        htmlspecialchars($var, ENT_QUOTES | ENT_HTML401 | ENT_SUBSTITUTE)
-    );
+    return preg_replace('/&amp;#(\d+|x[0-9a-f]+);/i', '&#$1;',
+            htmlspecialchars($var, ENT_QUOTES | ENT_HTML401 | ENT_SUBSTITUTE));
 }
 
 /**
@@ -153,9 +148,6 @@ function addslashes_js($var) {
  * @return string The remaining URL.
  */
 function strip_querystring($url) {
-    if ($url === null || $url === '') {
-        return '';
-    }
 
     if ($commapos = strpos($url, '?')) {
         return substr($url, 0, $commapos);
@@ -344,7 +336,6 @@ class moodle_url {
             $this->anchor = $url->anchor;
 
         } else {
-            $url = $url ?? '';
             // Detect if anchor used.
             $apos = strpos($url, '#');
             if ($apos !== false) {
@@ -535,6 +526,27 @@ class moodle_url {
         } else {
             return implode('&', $arr);
         }
+    }
+
+    /**
+     * Get the url params as an array of key => value pairs.
+     *
+     * This helps in handling cases where url params contain arrays.
+     *
+     * @return array params array for templates.
+     */
+    public function export_params_for_template(): array {
+        $data = [];
+        foreach ($this->params as $key => $val) {
+            if (is_array($val)) {
+                foreach ($val as $index => $value) {
+                    $data[] = ['name' => $key.'['.$index.']', 'value' => $value];
+                }
+            } else {
+                $data[] = ['name' => $key, 'value' => $val];
+            }
+        }
+        return $data;
     }
 
     /**
@@ -1124,7 +1136,7 @@ function validate_email($address) {
 
     require_once("{$CFG->libdir}/phpmailer/moodle_phpmailer.php");
 
-    return moodle_phpmailer::validateAddress($address ?? '') && !preg_match('/[<>]/', $address);
+    return moodle_phpmailer::validateAddress($address) && !preg_match('/[<>]/', $address);
 }
 
 /**
@@ -1311,9 +1323,15 @@ function format_text($text, $format = FORMAT_MOODLE, $options = null, $courseidd
 
     switch ($format) {
         case FORMAT_HTML:
+            $filteroptions['stage'] = 'pre_format';
+            $text = $filtermanager->filter_text($text, $context, $filteroptions);
+            // Text is already in HTML format, so just continue to the next filtering stage.
+            $filteroptions['stage'] = 'pre_clean';
+            $text = $filtermanager->filter_text($text, $context, $filteroptions);
             if (!$options['noclean']) {
                 $text = clean_text($text, FORMAT_HTML, $options);
             }
+            $filteroptions['stage'] = 'post_clean';
             $text = $filtermanager->filter_text($text, $context, $filteroptions);
             break;
 
@@ -1333,17 +1351,27 @@ function format_text($text, $format = FORMAT_MOODLE, $options = null, $courseidd
             break;
 
         case FORMAT_MARKDOWN:
+            $filteroptions['stage'] = 'pre_format';
+            $text = $filtermanager->filter_text($text, $context, $filteroptions);
             $text = markdown_to_html($text);
+            $filteroptions['stage'] = 'pre_clean';
+            $text = $filtermanager->filter_text($text, $context, $filteroptions);
             // The markdown parser does not strip dangerous html so we need to clean it, even if noclean is set to true.
             $text = clean_text($text, FORMAT_HTML, $options);
+            $filteroptions['stage'] = 'post_clean';
             $text = $filtermanager->filter_text($text, $context, $filteroptions);
             break;
 
         default:  // FORMAT_MOODLE or anything else.
+            $filteroptions['stage'] = 'pre_format';
+            $text = $filtermanager->filter_text($text, $context, $filteroptions);
             $text = text_to_html($text, null, $options['para'], $options['newlines']);
+            $filteroptions['stage'] = 'pre_clean';
+            $text = $filtermanager->filter_text($text, $context, $filteroptions);
             if (!$options['noclean']) {
                 $text = clean_text($text, FORMAT_HTML, $options);
             }
+            $filteroptions['stage'] = 'post_clean';
             $text = $filtermanager->filter_text($text, $context, $filteroptions);
             break;
     }
@@ -1443,11 +1471,6 @@ function reset_text_filters_cache($phpunitreset = false) {
 function format_string($string, $striplinks = true, $options = null) {
     global $CFG, $PAGE;
 
-    if ($string === '' || is_null($string)) {
-        // No need to do any filters and cleaning.
-        return '';
-    }
-
     // We'll use a in-memory cache here to speed up repeated strings.
     static $strcache = false;
 
@@ -1537,7 +1560,7 @@ function format_string($string, $striplinks = true, $options = null) {
  * @return string
  */
 function replace_ampersands_not_followed_by_entity($string) {
-    return preg_replace("/\&(?![a-zA-Z0-9#]{1,8};)/", "&amp;", $string ?? '');
+    return preg_replace("/\&(?![a-zA-Z0-9#]{1,8};)/", "&amp;", $string);
 }
 
 /**
@@ -2225,24 +2248,6 @@ function highlightfast($needle, $haystack) {
 }
 
 /**
- * Converts a language code to hyphen-separated format in accordance to the
- * {@link https://datatracker.ietf.org/doc/html/rfc5646#section-2.1 BCP47 syntax}.
- *
- * For additional information, check out
- * {@link https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/lang MDN web docs - lang}.
- *
- * @param string $langcode The language code to convert.
- * @return string
- */
-function get_html_lang_attribute_value(string $langcode): string {
-    if (empty(trim($langcode))) {
-        // If the language code passed is an empty string, return 'unknown'.
-        return 'unknown';
-    }
-    return str_replace('_', '-', $langcode);
-}
-
-/**
  * Return a string containing 'lang', xml:lang and optionally 'dir' HTML attributes.
  *
  * Internationalisation, for print_header and backup/restorelib.
@@ -2254,7 +2259,7 @@ function get_html_lang($dir = false) {
     global $CFG;
 
     $currentlang = current_language();
-    if ($currentlang !== $CFG->lang && !get_string_manager()->translation_exists($currentlang)) {
+    if (isset($CFG->lang) && $currentlang !== $CFG->lang && !get_string_manager()->translation_exists($currentlang)) {
         // Use the default site language when the current language is not available.
         $currentlang = $CFG->lang;
         // Fix the current language.
@@ -2271,7 +2276,7 @@ function get_html_lang($dir = false) {
     }
 
     // Accessibility: added the 'lang' attribute to $direction, used in theme <html> tag.
-    $language = get_html_lang_attribute_value($currentlang);
+    $language = str_replace('_', '-', $currentlang);
     @header('Content-Language: '.$language);
     return ($direction.' lang="'.$language.'" xml:lang="'.$language.'"');
 }
@@ -3457,7 +3462,7 @@ class html_progress_trace extends progress_trace {
      * @return void Output is echo'd
      */
     public function output($message, $depth = 0) {
-        echo '<p>', str_repeat('&#160;&#160;', $depth), htmlspecialchars($message, ENT_COMPAT), "</p>\n";
+        echo '<p>', str_repeat('&#160;&#160;', $depth), htmlspecialchars($message), "</p>\n";
         flush();
     }
 }
@@ -3498,7 +3503,7 @@ class html_list_progress_trace extends progress_trace {
         if ($samedepth) {
             echo "</li>\n<li>";
         }
-        echo htmlspecialchars($message, ENT_COMPAT);
+        echo htmlspecialchars($message);
         flush();
     }
 

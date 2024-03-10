@@ -21,6 +21,8 @@ session_start();
 include_once("./common/config.inc.php");
 include_once("./common/config2.inc.php");
 include_once("./librairie_php/lib_get_init.php");
+include_once('librairie_php/db_triade.php');
+$cnx=cnx();
 $anneeScolaire=$_POST["annee_scolaire"];
 if (isset($_POST["annee_scolaire"])) {
         $anneeScolaire=$_POST["annee_scolaire"];
@@ -29,8 +31,6 @@ if (isset($_POST["annee_scolaire"])) {
 $examen=trim($_POST["NoteExam"]);
 $id=php_ini_get("safe_mode");
 if ($id != 1) { set_time_limit(900); }
-include_once('librairie_php/db_triade.php');
-$cnx=cnx();
 if ($_SESSION["membre"] == "menupersonnel") {
 	if (!verifDroit($_SESSION["id_pers"],"imprtableau")) {
 		Pgclose();
@@ -40,7 +40,7 @@ if ($_SESSION["membre"] == "menupersonnel") {
 }else{
 	validerequete("3");
 }
-$valeur=visu_affectation_detail($_POST["saisie_classe"]);
+$valeur=visu_affectation_detail($_POST["saisie_classe"],'');
 if ((EXAMENJTC != "oui") && (MODNAMUR0 == "oui")) {
 	$recupInfo=recupCaractVieScolaire($_POST["saisie_classe"]);
 	$persVieScolaire=$recupInfo[0][4];
@@ -456,15 +456,25 @@ if ($_POST["affrang"] == "1") {
 		$worksheet1->write($ligne, $colonne, $place3[$j], $center);	$ligne++;
 		$ligne++;
 	}
-
 }
  
 $workbook->close();
+
 header("Content-Type: application/x-msexcel; name=\"moyenne_$classe_nom.xls\"");
 header("Content-Disposition: inline; filename=\"moyenne_$classe_nom.xls\"");
-$fh=fopen($fname, "rb");
-fpassthru($fh);
+if (HTTPS == "oui") {
+        header("Cache-Control: public");
+        header("Pragma:");
+        header("Expires: 0");
+}else{
+        header("Pragma: no-cache");
+        header("Cache-Control: must-revalidate, post-check=0, pre-check=0, public");
+        header("Expires: 0");
+}
+readfile($fname);
+
 @unlink($fname);
+
 history_cmd($_SESSION["nom"],"CREATION TABLEAU EXCEL","Classe : $classe_nom");
 Pgclose();
 exit;

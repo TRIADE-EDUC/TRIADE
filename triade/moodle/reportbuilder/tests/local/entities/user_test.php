@@ -31,42 +31,6 @@ use advanced_testcase;
 class user_test extends advanced_testcase {
 
     /**
-     * Test getting user identity column
-     */
-    public function test_get_identity_column(): void {
-        $this->resetAfterTest();
-
-        $this->getDataGenerator()->create_custom_profile_field(['datatype' => 'text', 'name' => 'Hi', 'shortname' => 'hi']);
-
-        $user = new user();
-        $user->initialise();
-
-        $columnusername = $user->get_identity_column('username');
-        $this->assertEquals('user:username', $columnusername->get_unique_identifier());
-
-        $columnprofilefield = $user->get_identity_column('profile_field_hi');
-        $this->assertEquals('user:profilefield_hi', $columnprofilefield->get_unique_identifier());
-    }
-
-    /**
-     * Test getting user identity filter
-     */
-    public function test_get_identity_filter(): void {
-        $this->resetAfterTest();
-
-        $this->getDataGenerator()->create_custom_profile_field(['datatype' => 'text', 'name' => 'Hi', 'shortname' => 'hi']);
-
-        $user = new user();
-        $user->initialise();
-
-        $filterusername = $user->get_identity_filter('username');
-        $this->assertEquals('user:username', $filterusername->get_unique_identifier());
-
-        $filterprofilefield = $user->get_identity_filter('profile_field_hi');
-        $this->assertEquals('user:profilefield_hi', $filterprofilefield->get_unique_identifier());
-    }
-
-    /**
      * Data provider for {@see test_get_name_fields_select}
      *
      * @return array

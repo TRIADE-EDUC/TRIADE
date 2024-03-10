@@ -39,7 +39,7 @@ $user = optional_param('user', 0, PARAM_INT);
 $rolec = optional_param('rolec', 0, PARAM_INT);
 
 if (!$cmid && !$courseid) {
-    throw new \moodle_exception('invalidarguments');
+    print_error('invalidarguments');
 }
 
 // Process self completion
@@ -92,12 +92,12 @@ if ($courseid) {
             $completion = $completion->get_completion($USER->id, COMPLETION_CRITERIA_TYPE_SELF);
 
             if (!$completion) {
-                throw new \moodle_exception('noselfcompletioncriteria', 'completion');
+                print_error('noselfcompletioncriteria', 'completion');
             }
 
             // Check if the user has already marked themselves as complete
             if ($completion->is_complete()) {
-                throw new \moodle_exception('useralreadymarkedcomplete', 'completion');
+                print_error('useralreadymarkedcomplete', 'completion');
             }
 
             $completion->mark_complete();
@@ -128,7 +128,7 @@ switch($targetstate) {
     case COMPLETION_INCOMPLETE:
         break;
     default:
-        throw new \moodle_exception('unsupportedstate');
+        print_error('unsupportedstate');
 }
 
 // Get course-modules entry
@@ -140,7 +140,7 @@ require_login($course, false, $cm);
 require_capability('moodle/course:togglecompletion', context_module::instance($cmid));
 
 if (isguestuser() or !confirm_sesskey()) {
-    throw new \moodle_exception('error');
+    print_error('error');
 }
 
 // Set up completion object and check it is enabled.

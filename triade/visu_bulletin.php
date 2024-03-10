@@ -5,9 +5,6 @@ if (isset($_POST["anneeScolaire"])) {
         setcookie("anneeScolaire",$_POST["anneeScolaire"],time()+36000*24*30);
         $anneeScolaire=$_POST["anneeScolaire"];
 }
-
-
-
 /***************************************************************************
  *                              T.R.I.A.D.E
  *                            ---------------
@@ -44,6 +41,7 @@ if (isset($_POST["anneeScolaire"])) {
 include_once("./librairie_php/lib_licence.php");
 include_once('./librairie_php/db_triade.php');
 validerequete("6");
+$cnx=cnx();
 
 if ($_SESSION["membre"] == "menututeur") { $Seid=""; }
 
@@ -92,7 +90,6 @@ if ($_SESSION["membre"] == "menututeur") {
 <td valign=top>
 <br />
 <?php
-$cnx=cnx();
 if ($_SESSION["membre"] == "menueleve") $Seid=$_SESSION["id_pers"];
 if ($_SESSION["membre"] == "menuparent") $Seid=$_SESSION["id_pers"];
 $idClasse=recupHistoClasseEleve($Seid,$anneeScolaire);

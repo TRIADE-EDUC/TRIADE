@@ -66,14 +66,10 @@ class provider implements
                 'userid' => 'privacy:metadata:userid',
                 'coursemoduleid' => 'privacy:metadata:coursemoduleid',
                 'completionstate' => 'privacy:metadata:completionstate',
+                'viewed' => 'privacy:metadata:viewed',
                 'overrideby' => 'privacy:metadata:overrideby',
                 'timemodified' => 'privacy:metadata:timemodified'
             ], 'privacy:metadata:coursemodulesummary');
-        $collection->add_database_table('course_modules_viewed', [
-            'userid' => 'privacy:metadata:userid',
-            'coursemoduleid' => 'privacy:metadata:coursemoduleid',
-            'timecreated' => 'privacy:metadata:timecreated',
-        ], 'privacy:metadata:coursemodulesummary');
         $collection->add_database_table('course_completion_crit_compl', [
                 'userid' => 'privacy:metadata:userid',
                 'course' => 'privacy:metadata:course',
@@ -95,18 +91,16 @@ class provider implements
     public static function get_course_completion_join_sql(int $userid, string $prefix, string $joinfield) : array {
         $cccalias = "{$prefix}_ccc"; // Course completion criteria.
         $cmcalias = "{$prefix}_cmc"; // Course modules completion.
-        $cmvalias = "{$prefix}_cmv"; // Course modules viewed.
         $ccccalias = "{$prefix}_cccc"; // Course completion criteria completion.
 
         $join = "JOIN {course_completion_criteria} {$cccalias} ON {$joinfield} = {$cccalias}.course
              LEFT JOIN {course_modules_completion} {$cmcalias} ON {$cccalias}.moduleinstance = {$cmcalias}.coursemoduleid
                         AND {$cmcalias}.userid = :{$prefix}_moduleuserid
-             LEFT JOIN {course_modules_viewed} {$cmvalias} ON {$cccalias}.moduleinstance = {$cmvalias}.coursemoduleid
-                        AND {$cmvalias}.userid = :{$prefix}_moduleuserid2
              LEFT JOIN {course_completion_crit_compl} {$ccccalias} ON {$ccccalias}.criteriaid = {$cccalias}.id
                         AND {$ccccalias}.userid = :{$prefix}_courseuserid";
-        $where = "{$cmcalias}.id IS NOT NULL OR {$ccccalias}.id IS NOT NULL OR {$cmvalias}.id IS NOT NULL";
-        $params = ["{$prefix}_moduleuserid" => $userid, "{$prefix}_moduleuserid2" => $userid, "{$prefix}_courseuserid" => $userid];
+        $where = "{$cmcalias}.id IS NOT NULL OR {$ccccalias}.id IS NOT NULL";
+        $params = ["{$prefix}_moduleuserid" => $userid, "{$prefix}_courseuserid" => $userid];
+
         return [$join, $where, $params];
     }
 
@@ -129,14 +123,6 @@ class provider implements
                  JOIN {course_completion_criteria} ccc ON ccc.course = c.id
                  JOIN {course_modules_completion} cmc ON cmc.coursemoduleid = ccc.moduleinstance
                 WHERE c.id = :courseid";
-
-        $userlist->add_from_sql('userid', $sql, $params);
-
-        $sql = "SELECT cmv.userid
-                  FROM {course} c
-                  JOIN {course_completion_criteria} ccc ON ccc.course = c.id
-                  JOIN {course_modules_viewed} cmv ON cmv.coursemoduleid = ccc.moduleinstance
-                 WHERE c.id = :courseid";
 
         $userlist->add_from_sql('userid', $sql, $params);
 
@@ -245,7 +231,6 @@ class provider implements
         if (isset($courseid)) {
 
             $usersql = isset($user) ? 'AND cmc.userid = :userid' : '';
-            $usercmvsql = isset($user) ? 'AND cmv.userid = :userid' : '';
             $params = isset($user) ? ['course' => $courseid, 'userid' => $user->id] : ['course' => $courseid];
 
             // Find records relating to course modules.
@@ -260,19 +245,6 @@ class provider implements
                 $deletesql = 'id ' . $deletesql;
                 $DB->delete_records_select('course_modules_completion', $deletesql, $deleteparams);
             }
-            // Find records relating to course modules completion viewed.
-            $sql = "SELECT cmv.id
-                      FROM {course_completion_criteria} ccc
-                      JOIN {course_modules_viewed} cmv ON ccc.moduleinstance = cmv.coursemoduleid
-                     WHERE ccc.course = :course $usercmvsql";
-            $recordids = $DB->get_records_sql($sql, $params);
-            $ids = array_keys($recordids);
-            if (!empty($ids)) {
-                list($deletesql, $deleteparams) = $DB->get_in_or_equal($ids);
-                $deletesql = 'id ' . $deletesql;
-                $DB->delete_records_select('course_modules_viewed', $deletesql, $deleteparams);
-            }
-
             $DB->delete_records('course_completion_crit_compl', $params);
             $DB->delete_records('course_completions', $params);
         }
@@ -301,7 +273,6 @@ class provider implements
             // Only delete the record for course modules completion.
             $sql = "coursemoduleid = :coursemoduleid AND userid {$useridsql}";
             $DB->delete_records_select('course_modules_completion', $sql, $params);
-            $DB->delete_records_select('course_modules_viewed', $sql, $params);
             return;
         }
 
@@ -319,19 +290,6 @@ class provider implements
                 list($deletesql, $deleteparams) = $DB->get_in_or_equal($ids);
                 $deletesql = 'id ' . $deletesql;
                 $DB->delete_records_select('course_modules_completion', $deletesql, $deleteparams);
-            }
-
-            // Find records relating to course modules.
-            $sql = "SELECT cmv.id
-                      FROM {course_completion_criteria} ccc
-                      JOIN {course_modules_viewed} cmv ON ccc.moduleinstance = cmv.coursemoduleid
-                     WHERE ccc.course = :course AND cmv.userid {$useridsql}";
-            $recordids = $DB->get_records_sql($sql, $params);
-            $ids = array_keys($recordids);
-            if (!empty($ids)) {
-                list($deletesql, $deleteparams) = $DB->get_in_or_equal($ids);
-                $deletesql = 'id ' . $deletesql;
-                $DB->delete_records_select('course_modules_viewed', $deletesql, $deleteparams);
             }
 
             $sql = "course = :course AND userid {$useridsql}";

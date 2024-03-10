@@ -46,16 +46,16 @@ if ($qid !== 0) {
 $PAGE->set_url($url);
 
 if (!$cm = get_coursemodule_from_id('survey', $id)) {
-    throw new \moodle_exception('invalidcoursemodule');
+    print_error('invalidcoursemodule');
 }
 
 if (!$course = $DB->get_record("course", array("id" => $cm->course))) {
-    throw new \moodle_exception('coursemisconf');
+    print_error('coursemisconf');
 }
 
 if ($sid) {
     if (!$user = $DB->get_record("user", array("id" => $sid))) {
-        throw new \moodle_exception('invaliduserid');
+        print_error('invaliduserid');
     }
 }
 
@@ -66,14 +66,14 @@ $context = context_module::instance($cm->id);
 
 if (!has_capability('mod/survey:readresponses', $context)) {
     if ($type != "student.png" or $sid != $USER->id) {
-        throw new \moodle_exception('nopermissiontoshow');
+        print_error('nopermissiontoshow');
     } else if ($groupmode and !groups_is_member($group)) {
-        throw new \moodle_exception('nopermissiontoshow');
+        print_error('nopermissiontoshow');
     }
 }
 
 if (!$survey = $DB->get_record("survey", array("id" => $cm->instance))) {
-    throw new \moodle_exception('invalidsurveyid', 'survey');
+    print_error('invalidsurveyid', 'survey');
 }
 
 // Check to see if groups are being used in this survey.

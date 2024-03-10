@@ -94,7 +94,7 @@ if (!user_can_view_profile($user, null, $context)) {
 
 // Get the profile page.  Should always return something unless the database is broken.
 if (!$currentpage = my_get_page($userid, MY_PAGE_PUBLIC)) {
-    throw new \moodle_exception('mymoodlesetup');
+    print_error('mymoodlesetup');
 }
 
 $PAGE->set_context($context);
@@ -140,7 +140,7 @@ if ($PAGE->user_allowed_editing()) {
     if ($reset !== null) {
         if (!is_null($userid)) {
             if (!$currentpage = my_reset_page($userid, MY_PAGE_PUBLIC, 'user-profile')) {
-                throw new \moodle_exception('reseterror', 'my');
+                print_error('reseterror', 'my');
             }
             redirect(new moodle_url('/user/profile.php', array('id' => $userid)));
         }
@@ -157,7 +157,7 @@ if ($PAGE->user_allowed_editing()) {
             // For the page to display properly with the user context header the page blocks need to
             // be copied over to the user context.
             if (!$currentpage = my_copy_page($userid, MY_PAGE_PUBLIC, 'user-profile')) {
-                throw new \moodle_exception('mymoodlesetup');
+                print_error('mymoodlesetup');
             }
             $PAGE->set_context($usercontext);
             $PAGE->set_subpage($currentpage->id);

@@ -3,10 +3,8 @@
   <library>
     <location>rpc.php</location>
     <name>TinyMCE spellchecker</name>
-    <description>TinyMCE - Spellchecker for PHP.</description>
-    <version>2.0.6.1</version>
     <license>LGPL</license>
+    <version>2.0.6.1</version>
     <licenseversion>2.1+</licenseversion>
-    <repository>https://github.com/tinymce/tinymce_spellchecker_php</repository>
   </library>
 </libraries>

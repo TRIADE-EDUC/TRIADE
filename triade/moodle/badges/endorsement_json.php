@@ -28,7 +28,7 @@ require_once(__DIR__ . '/../config.php');
 require_once($CFG->libdir . '/badgeslib.php');
 
 if (empty($CFG->enablebadges)) {
-    throw new \moodle_exception('badgesdisabled', 'badges');
+    print_error('badgesdisabled', 'badges');
 }
 
 global $DB;

@@ -61,7 +61,7 @@ class auth_plugin_mnet extends auth_plugin_base {
      * @return bool Authentication success or failure.
      */
     function user_login($username, $password) {
-        return false; // Throw moodle_exception("mnetlocal").
+        return false; // print_error("mnetlocal");
     }
 
     /**
@@ -152,7 +152,7 @@ class auth_plugin_mnet extends auth_plugin_base {
         require_once $CFG->dirroot . '/mnet/xmlrpc/client.php';
 
         if (\core\session\manager::is_loggedinas()) {
-            throw new \moodle_exception('notpermittedtojumpas', 'mnet');
+            print_error('notpermittedtojumpas', 'mnet');
         }
 
         // check remote login permissions
@@ -160,12 +160,12 @@ class auth_plugin_mnet extends auth_plugin_base {
                 or is_mnet_remote_user($USER)
                 or isguestuser()
                 or !isloggedin()) {
-            throw new \moodle_exception('notpermittedtojump', 'mnet');
+            print_error('notpermittedtojump', 'mnet');
         }
 
         // check for SSO publish permission first
         if ($this->has_service($mnethostid, 'sso_sp') == false) {
-            throw new \moodle_exception('hostnotconfiguredforsso', 'mnet');
+            print_error('hostnotconfiguredforsso', 'mnet');
         }
 
         // set RPC timeout to 30 seconds if not configured
@@ -230,7 +230,7 @@ class auth_plugin_mnet extends auth_plugin_base {
 
         // verify the remote host is configured locally before attempting RPC call
         if (! $remotehost = $DB->get_record('mnet_host', array('wwwroot' => $remotepeer->wwwroot, 'deleted' => 0))) {
-            throw new \moodle_exception('notpermittedtoland', 'mnet');
+            print_error('notpermittedtoland', 'mnet');
         }
 
         // set up the RPC request
@@ -249,23 +249,22 @@ class auth_plugin_mnet extends auth_plugin_base {
                 list($code, $message) = array_map('trim',explode(':', $errormessage, 2));
                 if($code == 702) {
                     $site = get_site();
-                    throw new \moodle_exception('mnet_session_prohibited', 'mnet', $remotepeer->wwwroot,
-                        format_string($site->fullname));
+                    print_error('mnet_session_prohibited', 'mnet', $remotepeer->wwwroot, format_string($site->fullname));
                     exit;
                 }
                 $message .= "ERROR $code:<br/>$errormessage<br/>";
             }
-            throw new \moodle_exception("rpcerror", '', '', $message);
+            print_error("rpcerror", '', '', $message);
         }
         unset($mnetrequest);
 
         if (empty($remoteuser) or empty($remoteuser->username)) {
-            throw new \moodle_exception('unknownerror', 'mnet');
+            print_error('unknownerror', 'mnet');
             exit;
         }
 
         if (user_not_fully_set_up($remoteuser, false)) {
-            throw new \moodle_exception('notenoughidpinfo', 'mnet');
+            print_error('notenoughidpinfo', 'mnet');
             exit;
         }
 
@@ -290,7 +289,7 @@ class auth_plugin_mnet extends auth_plugin_base {
         if (empty($localuser) || ! $localuser->id) {
             /*
             if (empty($this->config->auto_add_remote_users)) {
-                throw new \moodle_exception('nolocaluser', 'mnet');
+                print_error('nolocaluser', 'mnet');
             } See MDL-21327   for why this is commented out
             */
             $remoteuser->mnethostid = $remotehost->id;
@@ -304,8 +303,7 @@ class auth_plugin_mnet extends auth_plugin_base {
 
         // check sso access control list for permission first
         if (!$this->can_login_remotely($localuser->username, $remotehost->id)) {
-            throw new \moodle_exception('sso_mnet_login_refused', 'mnet', '',
-                array('user' => $localuser->username, 'host' => $remotehost->name));
+            print_error('sso_mnet_login_refused', 'mnet', '', array('user'=>$localuser->username, 'host'=>$remotehost->name));
         }
 
         $fs = get_file_storage();
@@ -418,7 +416,7 @@ class auth_plugin_mnet extends auth_plugin_base {
                 // we may be clearing out stale entries
                 $courses = array();
             }
-            $mnetrequest->add_param($courses, 'array');
+            $mnetrequest->add_param($courses);
 
             // Call 0800-RPC Now! -- we don't care too much if it fails
             // as it's just informational.

@@ -37,7 +37,7 @@ $cancelemailchange = optional_param('cancelemailchange', 0, PARAM_INT);   // Cou
 $PAGE->set_url('/user/edit.php', array('course' => $course, 'id' => $userid));
 
 if (!$course = $DB->get_record('course', array('id' => $course))) {
-    throw new \moodle_exception('invalidcourseid');
+    print_error('invalidcourseid');
 }
 
 if ($course->id != SITEID) {
@@ -53,17 +53,17 @@ if ($course->id != SITEID) {
 
 // Guest can not edit.
 if (isguestuser()) {
-    throw new \moodle_exception('guestnoeditprofile');
+    print_error('guestnoeditprofile');
 }
 
 // The user profile we are editing.
 if (!$user = $DB->get_record('user', array('id' => $userid))) {
-    throw new \moodle_exception('invaliduserid');
+    print_error('invaliduserid');
 }
 
 // Guest can not be edited.
 if (isguestuser($user)) {
-    throw new \moodle_exception('guestnoeditprofile');
+    print_error('guestnoeditprofile');
 }
 
 // User interests separated by commas.
@@ -75,7 +75,7 @@ $user->interests = core_tag_tag::get_item_tags_array('core', 'user', $user->id);
 if (is_mnet_remote_user($user)) {
     if (user_not_fully_set_up($user, true)) {
         $hostwwwroot = $DB->get_field('mnet_host', 'wwwroot', array('id' => $user->mnethostid));
-        throw new \moodle_exception('usernotfullysetup', 'mnet', '', $hostwwwroot);
+        print_error('usernotfullysetup', 'mnet', '', $hostwwwroot);
     }
     redirect($CFG->wwwroot . "/user/view.php?course={$course->id}");
 }
@@ -84,7 +84,7 @@ if (is_mnet_remote_user($user)) {
 $userauth = get_auth_plugin($user->auth);
 
 if (!$userauth->can_edit_profile()) {
-    throw new \moodle_exception('noprofileedit', 'auth');
+    print_error('noprofileedit', 'auth');
 }
 
 if ($editurl = $userauth->edit_profile_url()) {
@@ -104,7 +104,7 @@ $personalcontext = context_user::instance($user->id);
 if ($user->id == $USER->id) {
     // Editing own profile - require_login() MUST NOT be used here, it would result in infinite loop!
     if (!has_capability('moodle/user:editownprofile', $systemcontext)) {
-        throw new \moodle_exception('cannotedityourprofile');
+        print_error('cannotedityourprofile');
     }
 
 } else {
@@ -112,11 +112,11 @@ if ($user->id == $USER->id) {
     require_capability('moodle/user:editprofile', $personalcontext);
     // No editing of guest user account.
     if (isguestuser($user->id)) {
-        throw new \moodle_exception('guestnoeditprofileother');
+        print_error('guestnoeditprofileother');
     }
     // No editing of primary admin!
     if (is_siteadmin($user) and !is_siteadmin($USER)) {  // Only admins may edit other admins.
-        throw new \moodle_exception('useradmineditadmin');
+        print_error('useradmineditadmin');
     }
 }
 
@@ -224,7 +224,7 @@ if ($userform->is_cancelled()) {
     // Pass a true old $user here.
     if (!$authplugin->user_update($user, $usernew)) {
         // Auth update failed.
-        throw new \moodle_exception('cannotupdateprofile');
+        print_error('cannotupdateprofile');
     }
 
     // Update user with new profile data.
@@ -260,11 +260,13 @@ if ($userform->is_cancelled()) {
         $tempuser = $DB->get_record('user', array('id' => $user->id), '*', MUST_EXIST);
         $tempuser->email = $emailchanged;
 
+        $supportuser = core_user::get_support_user();
+
         $a = new stdClass();
         $a->url = $CFG->wwwroot . '/user/emailupdate.php?key=' . $emailchangedkey . '&id=' . $user->id;
         $a->site = format_string($SITE->fullname, true, array('context' => context_course::instance(SITEID)));
         $a->fullname = fullname($tempuser, true);
-        $a->supportemail = $OUTPUT->supportemail();
+        $a->supportemail = $supportuser->email;
 
         $emailupdatemessage = get_string('emailupdatemessage', 'auth', $a);
         $emailupdatetitle = get_string('emailupdatetitle', 'auth', $a);

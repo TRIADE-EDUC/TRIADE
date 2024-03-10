@@ -406,7 +406,7 @@ class Horde_Mail_Rfc822
         if ($this->_curr() == '@') {
             try {
                 $this->_rfc822ParseDomain($host);
-                if (!empty($host)) {
+                if (strlen($host)) {
                     $ob->host = $host;
                 }
             } catch (Horde_Mail_Exception $e) {
@@ -647,7 +647,7 @@ class Horde_Mail_Rfc822
                 /* TODO: Optimize by duplicating rfc822IsAtext code here */
                 !$this->_rfc822IsAtext($chr, ',<:')) {
                 $this->_rfc822SkipLwsp();
-                if (!$this->_params['validate'] && $str !== null) {
+                if (!$this->_params['validate']) {
                     $str = trim($str);
                 }
                 return;

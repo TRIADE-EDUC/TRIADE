@@ -377,7 +377,6 @@ class Horde_Imap_Client_Ids implements Countable, Iterator, Serializable
 
     /**
      */
-    #[ReturnTypeWillChange]
     public function count()
     {
         return is_array($this->_ids)
@@ -389,7 +388,6 @@ class Horde_Imap_Client_Ids implements Countable, Iterator, Serializable
 
     /**
      */
-    #[ReturnTypeWillChange]
     public function current()
     {
         return is_array($this->_ids)
@@ -399,7 +397,6 @@ class Horde_Imap_Client_Ids implements Countable, Iterator, Serializable
 
     /**
      */
-    #[ReturnTypeWillChange]
     public function key()
     {
         return is_array($this->_ids)
@@ -409,7 +406,6 @@ class Horde_Imap_Client_Ids implements Countable, Iterator, Serializable
 
     /**
      */
-    #[ReturnTypeWillChange]
     public function next()
     {
         if (is_array($this->_ids)) {
@@ -419,7 +415,6 @@ class Horde_Imap_Client_Ids implements Countable, Iterator, Serializable
 
     /**
      */
-    #[ReturnTypeWillChange]
     public function rewind()
     {
         if (is_array($this->_ids)) {
@@ -429,30 +424,16 @@ class Horde_Imap_Client_Ids implements Countable, Iterator, Serializable
 
     /**
      */
-    #[ReturnTypeWillChange]
     public function valid()
     {
         return !is_null($this->key());
     }
 
-    public function serialize()
-    {
-        return serialize($this->__serialize());
-    }
-
-    public function unserialize($data)
-    {
-        $data = @unserialize($data);
-        if (!is_array($data)) {
-            throw new Exception('Cache version change.');
-        }
-
-        $this->__unserialize($data);
-    }
+    /* Serializable methods. */
 
     /**
      */
-    public function __serialize()
+    public function serialize()
     {
         $save = array();
 
@@ -486,25 +467,27 @@ class Horde_Imap_Client_Ids implements Countable, Iterator, Serializable
             break;
         }
 
-        return $save;
+        return serialize($save);
     }
 
     /**
      */
-    public function __unserialize($data)
+    public function unserialize($data)
     {
-        $this->duplicates = !empty($data['d']);
-        $this->_sequence = !empty($data['s']);
-        $this->_sorted = !empty($data['is']);
+        $save = @unserialize($data);
 
-        if (isset($data['a'])) {
+        $this->duplicates = !empty($save['d']);
+        $this->_sequence = !empty($save['s']);
+        $this->_sorted = !empty($save['is']);
+
+        if (isset($save['a'])) {
             $this->_ids = self::ALL;
-        } elseif (isset($data['l'])) {
+        } elseif (isset($save['l'])) {
             $this->_ids = self::LARGEST;
-        } elseif (isset($data['sr'])) {
+        } elseif (isset($save['sr'])) {
             $this->_ids = self::SEARCH_RES;
-        } elseif (isset($data['i'])) {
-            $this->add($data['i']);
+        } elseif (isset($save['i'])) {
+            $this->add($save['i']);
         }
     }
 

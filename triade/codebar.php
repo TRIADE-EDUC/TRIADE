@@ -62,9 +62,7 @@ $sql="SELECT libelle,elev_id,nom,prenom FROM ${prefixe}eleves ,${prefixe}classes
 $res=execSql($sql);
 $data=chargeMat($res);
 if (preg_match('/^7/',$version)) {
-
 	print "<br><table><tr><td><input type=button value='Imprimer' onclick=\"open('codebarimpr.php?idclasse=$saisie_classe&codebase=".$_GET["codebase"]."','_blank','')\"  class='button'\"></td>";
-	//print "<td><script language=JavaScript>buttonMagic2('Commander Badge','badge.php','','width=700,height=600,scrollbars=yes','')</script></td></tr></table><br>";
 }
 print "$mess";
 
@@ -101,16 +99,12 @@ for($i=0;$i<count($data);$i++) {
 	print "<a href='codebar.php?idclasse=$saisie_classe&idsupp=".$data[$i][1]."&codebase=".$_GET["codebase"]."'><img src='./image/commun/recycle.jpg' border='0' title='Nouveau code' /></a> ";
 	print "<a href=\"#\" onclick=\"document.getElementById('codeim$i').style.display='none';  document.getElementById('codeinput$i').style.display='inline'; return false; \"><img src='./image/commun/editer.gif' border='0' title='Enregistrer un code' /></a>";
 	print "</td>";
-
 	if (preg_match('/^7/',$version)) {
 		print "<td align=center>";
 		print "";
 		print "<img id='codeim$i' src=\"./codebar/image.php?code=".$_GET["codebase"]."&text=".$texte."\">";
 		print "<span id='codespan$i'><input type=text id='codeinput$i' size='10' style='display:none' onchange=\"enrModifCodebarre(this.value,'".$data[$i][1]."','codespan$i','menueleve')\" ></span>";
 		print "</td>";
-
-		
-
 	}else {
 		print "<td></td>";
 	}

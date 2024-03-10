@@ -4,8 +4,8 @@
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
- *   Site                 : http://www.triade-educ.com
+ *   copyright            : (C) 2000 E. TAESCH 
+ *   Site                 : http://www.triade-educ.org
  *
  *
  ***************************************************************************/
@@ -67,42 +67,41 @@ function execSql($sql) {
 	global $ERROR;
 
         $res =& $cnx->query($sql);
-        if(DB::isError($res))
-        {
-			if (preg_match('/restobase/i',$_SERVER['SCRIPT_NAME'])) {
-				//Pgclose();
-				//return ;
-			}
+        if(DB::isError($res)) {
+		if (preg_match('/restobase/i',$_SERVER['SCRIPT_NAME'])) {
+			//Pgclose();
+			//return ;
+		}
 
-			//print $sql."<br>" ;
-			//print $res->getMessage()."<br><br>" ;
+	//	print $sql."<br>" ;
+	//	print $res->getMessage()."<br><br>" ;
 
-			if (($res->getMessage() != "DB Error: already exists") && ($res->getMessage() != "DB Error: unknown error")) {
-            			$fichier="../data/erreurs.log";
-	            		if (file_exists($fichier)) {
-					$texte=dateDMY();
-					$texte .= " <b>".$_SERVER['PHP_SELF']."</b><br />\n";
-					$texte .= "Notice sur la ligne :<br>";
-              		 		$texte .= "<i>$sql</i><br>";
-              		 		$texte .= $res->getMessage()."<br>";
-					$texte .= "<hr><br>";
-              				$fichier=fopen($fichier,"a");
-	        		      	fwrite($fichier,$texte);
-        	      		  	fclose($fichier);
-        			}
-			}
+		if (($res->getMessage() != "DB Error: already exists") && ($res->getMessage() != "DB Error: unknown error")) {
+            		$fichier="../data/erreurs.log";
+	        	if (file_exists($fichier)) {
+				$texte=dateDMY();
+				$texte .= " <b>".$_SERVER['PHP_SELF']."</b><br />\n";
+				$texte .= "Notice sur la ligne :<br>";
+              	 		$texte .= "<i>$sql</i><br>";
+              	 		$texte .= $res->getMessage()."<br>";
+				$texte .= "<hr><br>";
+              			$fichier=fopen($fichier,"a");
+	        	      	fwrite($fichier,$texte);
+        	      	  	fclose($fichier);
+        		}
+		}
 
-			if (file_exists("../data/parametrage/analyse.triade")) {
-				$fichier=fopen("../data/parametrage/analyse.log","a");
-       	        		fwrite($fichier,"- ".dateDMY()." à ".dateHIS()."ERROR : ".$_SERVER['PHP_SELF']." -> ".$sql."\n");
-       	        		fclose($fichier);
-			}
+		if (file_exists("../data/parametrage/analyse.triade")) {
+			$fichier=fopen("../data/parametrage/analyse.log","a");
+       	        	fwrite($fichier,"- ".dateDMY()." à ".dateHIS()."ERROR : ".$_SERVER['PHP_SELF']." -> ".$sql."\n");
+       	        	fclose($fichier);
+		}
 
-		    	if ($ERROR == "true") {
-                		print("<font color=\"red\"><b>$sql</b></font><br><br>");
-	          		print $res->getMessage();
-		    	}
-		    	Pgclose();
+		if ($ERROR == "true") {
+                	print("<font color=\"red\"><b>$sql</b></font><br><br>");
+	          	print $res->getMessage();
+		}
+		Pgclose();
 
         }else {
 		if (file_exists("./data/parametrage/analyse.triade")) {
@@ -1080,7 +1079,7 @@ function verif_html_rep($rep) {
 
 function verif_php_rep($rep) {
 	if (is_dir($rep)) {
-		$text="<html><body OnLoad=\"location.href='../index.php';\" ></body></html>";
+		$text="<html><body OnLoad=\"location.href='../index1.php';\" ></body></html>";
 		@unlink("$rep/index.php");
 		@unlink("$rep/index.html");
 		$fp = fopen("$rep/index.php","w");
@@ -1462,7 +1461,7 @@ function verifDbb() {
 	$bdd=$base;	
 	@mysqli_connect($host, $login, $password);
 	
-	$sql="SHOW TABLES FROM $base";
+	$sql="SHOW TABLES FROM `$base`";
 	$result=execSql($sql);
 
 	/* Tant qu'il y a des tables */
@@ -1527,8 +1526,6 @@ function verifAgenda() {
 			$sql="DELETE FROM  ${prefixe}px_tria2phenix WHERE idtriade='$idtriade'";
 			execSql($sql);
 		}
-
-
 	}
 	return 1;
 }

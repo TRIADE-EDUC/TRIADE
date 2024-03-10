@@ -41,11 +41,11 @@ $PAGE->set_url($url);
 require_login();
 
 if (isguestuser()) {
-    throw new \moodle_exception('guestnoeditmessage', 'message');
+    print_error('guestnoeditmessage', 'message');
 }
 
 if (!$user = $DB->get_record('user', array('id' => $userid))) {
-    throw new \moodle_exception('invaliduserid');
+    print_error('invaliduserid');
 }
 
 $systemcontext   = context_system::instance();
@@ -64,11 +64,11 @@ if ($user->id == $USER->id) {
     require_capability('moodle/user:editmessageprofile', $personalcontext);
     // no editing of guest user account
     if (isguestuser($user->id)) {
-        throw new \moodle_exception('guestnoeditmessageother', 'message');
+        print_error('guestnoeditmessageother', 'message');
     }
     // no editing of admins by non admins!
     if (is_siteadmin($user) and !is_siteadmin($USER)) {
-        throw new \moodle_exception('useradmineditadmin');
+        print_error('useradmineditadmin');
     }
     $PAGE->navbar->includesettingsbase = true;
     $PAGE->navigation->extend_for_user($user);

@@ -35,7 +35,7 @@ $lang = current_language();
 require_login();
 
 if (empty($CFG->enablebadges)) {
-    throw new \moodle_exception('badgesdisabled', 'badges');
+    print_error('badgesdisabled', 'badges');
 }
 
 $badge = new badge($badgeid);
@@ -45,7 +45,7 @@ require_capability('moodle/badges:configuredetails', $context);
 
 if ($badge->type == BADGE_TYPE_COURSE) {
     if (empty($CFG->badges_allowcoursebadges)) {
-        throw new \moodle_exception('coursebadgesdisabled', 'badges');
+        print_error('coursebadgesdisabled', 'badges');
     }
     require_login($badge->courseid);
     $course = get_course($badge->courseid);

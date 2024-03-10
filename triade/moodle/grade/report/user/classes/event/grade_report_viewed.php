@@ -40,7 +40,7 @@ class grade_report_viewed extends \core\event\grade_report_viewed {
      * Initialise the event data.
      * @return void
      */
-    protected function init(): void {
+    protected function init() {
         parent::init();
         $this->data['edulevel'] = self::LEVEL_PARTICIPATING;
     }
@@ -50,7 +50,7 @@ class grade_report_viewed extends \core\event\grade_report_viewed {
      *
      * @return string
      */
-    public static function get_name(): string {
+    public static function get_name() {
         return get_string('eventgradereportviewed', 'gradereport_user');
     }
 

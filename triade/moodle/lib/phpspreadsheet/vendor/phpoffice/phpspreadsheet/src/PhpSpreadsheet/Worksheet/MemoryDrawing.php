@@ -47,9 +47,6 @@ class MemoryDrawing extends BaseDrawing
      */
     private $uniqueName;
 
-    /** @var null|resource */
-    private $alwaysNull;
-
     /**
      * Create a new MemoryDrawing.
      */
@@ -59,7 +56,6 @@ class MemoryDrawing extends BaseDrawing
         $this->renderingFunction = self::RENDERING_DEFAULT;
         $this->mimeType = self::MIMETYPE_DEFAULT;
         $this->uniqueName = md5(mt_rand(0, 9999) . time() . mt_rand(0, 9999));
-        $this->alwaysNull = null;
 
         // Initialize parent
         parent::__construct();
@@ -68,9 +64,8 @@ class MemoryDrawing extends BaseDrawing
     public function __destruct()
     {
         if ($this->imageResource) {
-            $rslt = @imagedestroy($this->imageResource);
-            // "Fix" for Scrutinizer
-            $this->imageResource = $rslt ? null : $this->alwaysNull;
+            imagedestroy($this->imageResource);
+            $this->imageResource = null;
         }
     }
 
@@ -86,8 +81,8 @@ class MemoryDrawing extends BaseDrawing
             return;
         }
 
-        $width = (int) imagesx($this->imageResource);
-        $height = (int) imagesy($this->imageResource);
+        $width = imagesx($this->imageResource);
+        $height = imagesy($this->imageResource);
 
         if (imageistruecolor($this->imageResource)) {
             $clone = imagecreatetruecolor($width, $height);
@@ -150,8 +145,8 @@ class MemoryDrawing extends BaseDrawing
 
         if ($this->imageResource !== null) {
             // Get width/height
-            $this->width = (int) imagesx($this->imageResource);
-            $this->height = (int) imagesy($this->imageResource);
+            $this->width = imagesx($this->imageResource);
+            $this->height = imagesy($this->imageResource);
         }
 
         return $this;

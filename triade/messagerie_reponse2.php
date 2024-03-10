@@ -189,7 +189,7 @@ if (file_exists("./common/config-ia.php")) {
 <script language=JavaScript>buttonMagicSubmit2('<?php print LANGBT4?>','rien','<?php print LANGBT5 ?>'); //text,nomInput</script>
 <?php 
 if (($_SESSION['membre'] == "menuadmin") || ($_SESSION['membre'] == "menuprof") || ($_SESSION['membre'] == "menuscolaire")) {
-	print "&nbsp,&nbsp;<input type='text' size=50 id='commentaire' placeholder=\"Indiquer une suggestion de message &agrave; r&eacute;diger\"  /> <input type='button' value='TRIADE-COPILOT' id='bt_copilot' class='BUTTON' onClick=\"$lienIA\" >&nbsp;&nbsp;<a href='#'  onMouseOver=\"AffBulle('TRIADE-COPILOT vous permet de pr&eacute;parer votre message via des mots clefs que vous indiquer.');\"  onMouseOut=\"HideBulle()\";><img src=\"./image/help.gif\" border=0 align=center></a>
+	print "&nbsp,&nbsp;<input type='text' size=50 id='commentaire' placeholder=\"Indiquer une suggestion de message &agrave; r&eacute;diger\"  /> <input type='button' value='TRIADE-COPILOT' id='bt_copilot' class='BUTTON' onClick=\"$lienIA\" >&nbsp;&nbsp;<a href='#'  onMouseOver=\"AffBulle('TRIADE-COPILOT vous permet de pr&eacute;parer votre message via des mots clefs que vous indiquez.');\"  onMouseOut=\"HideBulle()\";><img src=\"./image/help.gif\" border=0 align=center></a>
 ";
 }
 

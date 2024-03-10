@@ -35,10 +35,10 @@ $forcenew = optional_param('forcenew', false, PARAM_BOOL); // Used to force a ne
 $page = optional_param('page', -1, PARAM_INT); // Page to jump to in the attempt.
 
 if (!$cm = get_coursemodule_from_id('quiz', $id)) {
-    throw new \moodle_exception('invalidcoursemodule');
+    print_error('invalidcoursemodule');
 }
 if (!$course = $DB->get_record('course', array('id' => $cm->course))) {
-    throw new \moodle_exception("coursemisconf");
+    print_error("coursemisconf");
 }
 
 $quizobj = quiz::create($cm->instance, $USER->id);
@@ -57,7 +57,7 @@ if (!$quizobj->has_questions()) {
     if ($quizobj->has_capability('mod/quiz:manage')) {
         redirect($quizobj->edit_url());
     } else {
-        throw new \moodle_exception('cannotstartnoquestions', 'quiz', $quizobj->view_url());
+        print_error('cannotstartnoquestions', 'quiz', $quizobj->view_url());
     }
 }
 
@@ -72,7 +72,7 @@ list($currentattemptid, $attemptnumber, $lastattempt, $messages, $page) =
 // Check access.
 if (!$quizobj->is_preview_user() && $messages) {
     $output = $PAGE->get_renderer('mod_quiz');
-    throw new \moodle_exception('attempterror', 'quiz', $quizobj->view_url(),
+    print_error('attempterror', 'quiz', $quizobj->view_url(),
             $output->access_messages($messages));
 }
 

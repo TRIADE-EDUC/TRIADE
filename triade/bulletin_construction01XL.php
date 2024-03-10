@@ -87,7 +87,7 @@ if (count($valeur)) {
 		if ($_POST["saisie_trimestre"] == "trimestre2" ) { $textTrimestre=LANGBULL26; $triabsconet="T2"; $sem=2; }
 	}
 
-	$dateRecup=recupDateTrimByIdclasse("trimestre1",$_POST["saisie_classe"]);
+	$dateRecup=recupDateTrimByIdclasse("trimestre1",$_POST["saisie_classe"],$anneeScolaire);
 	for($j=0;$j<count($dateRecup);$j++) {
 		$dateDebutP1=$dateRecup[$j][0];
 		$dateFinP1=$dateRecup[$j][1];
@@ -97,7 +97,7 @@ if (count($valeur)) {
 	$dateDebutP1=dateForm($dateDebutP1);
 	$dateFinP1=dateForm($dateFinP1);
 
-	$dateRecup=recupDateTrimByIdclasse("trimestre2",$_POST["saisie_classe"]);
+	$dateRecup=recupDateTrimByIdclasse("trimestre2",$_POST["saisie_classe"],$anneeScolaire);
 	for($j=0;$j<count($dateRecup);$j++) {
 		$dateDebutP2=$dateRecup[$j][0];
 		$dateFinP2=$dateRecup[$j][1];
@@ -107,7 +107,7 @@ if (count($valeur)) {
 	$dateDebutP2=dateForm($dateDebutP2);
 	$dateFinP2=dateForm($dateFinP2);
 	
-	$dateRecup=recupDateTrimByIdclasse("trimestre3",$_POST["saisie_classe"]);
+	$dateRecup=recupDateTrimByIdclasse("trimestre3",$_POST["saisie_classe"],$anneeScolaire);
 	for($j=0;$j<count($dateRecup);$j++) {
 		$dateDebutP3=$dateRecup[$j][0];
 		$dateFinP3=$dateRecup[$j][1];
@@ -137,11 +137,11 @@ if (count($valeur)) {
 
 	@unlink($fichier);
 
-	$workbook = &new writeexcel_workbook($fichier);
+	$workbook = new writeexcel_workbook($fichier);
 
 	/* --------------------------------------------------------------------------------------------------------- */
 	/* ---------------------------------- */
-	$titre1 =& $workbook->addformat(array(  border => 0, 
+	$titre1 = $workbook->addformat(array(  border => 0, 
 						fg_color => 'white', 
 						pattern => 1,  
 						italic => 0, 
@@ -153,7 +153,7 @@ if (count($valeur)) {
 	$titre1->set_align('left');
 	$titre1->set_align('vcenter');
 	/* ---------------------------------- */
-	$normal =& $workbook->addformat(array(  border => 0, 
+	$normal = $workbook->addformat(array(  border => 0, 
 						fg_color => 'white', 
 						pattern => 1,  
 						italic => 0, 
@@ -165,7 +165,7 @@ if (count($valeur)) {
 	$normal->set_align('left');
 	$normal->set_align('vcenter');
 	/* ---------------------------------- */
-	$normal2 =& $workbook->addformat(array(  border => 0, 
+	$normal2 = $workbook->addformat(array(  border => 0, 
 						fg_color => 'white', 
 						pattern => 1,  
 						italic => 0, 
@@ -177,7 +177,7 @@ if (count($valeur)) {
 	$normal2->set_align('right');
 	$normal2->set_align('vcenter');
 	/* ---------------------------------- */
-	$normal3 =& $workbook->addformat(array(  border => 0, 
+	$normal3 = $workbook->addformat(array(  border => 0, 
 						fg_color => 'white', 
 						pattern => 1,  
 						italic => 0, 
@@ -189,7 +189,7 @@ if (count($valeur)) {
 	$normal3->set_align('right');
 	$normal3->set_align('vcenter');
 	/* ---------------------------------- */
-	$normal4 =& $workbook->addformat(array(  border => 0, 
+	$normal4 = $workbook->addformat(array(  border => 0, 
 						fg_color => 'white', 
 						pattern => 1,  
 						italic => 0, 
@@ -201,7 +201,7 @@ if (count($valeur)) {
 	$normal4->set_align('right');
 	$normal4->set_align('vcenter');
 	/* ---------------------------------- */
-	$titre2 =& $workbook->addformat(array(  border => 0, 
+	$titre2 = $workbook->addformat(array(  border => 0, 
 						fg_color => 'white', 
 						pattern => 1,  
 						italic => 0, 
@@ -213,7 +213,7 @@ if (count($valeur)) {
 	$titre2->set_align('right');
 	$titre2->set_align('vcenter');
 	/* ---------------------------------- */
-	$colonne1 =& $workbook->addformat(array(  border => 1, 
+	$colonne1 = $workbook->addformat(array(  border => 1, 
 						fg_color => 'white', 
 						pattern => 2,  
 						italic => 0, 
@@ -226,7 +226,7 @@ if (count($valeur)) {
 	$colonne1->set_align('center');
 	$colonne1->set_align('vcenter');
 	/* ---------------------------------- */
-	$colonne2 =& $workbook->addformat(array(  border => 1, 
+	$colonne2 = $workbook->addformat(array(  border => 1, 
 						fg_color => 'white', 
 						pattern => 2,  
 						italic => 0, 
@@ -249,7 +249,7 @@ if (count($valeur)) {
 	$matiere1->set_merge();
 	$matiere1->set_border(1);
 	/* ---------------------------------- */
-	$matiere0 =& $workbook->addformat();
+	$matiere0 = $workbook->addformat();
 	$matiere0->set_color('white');
 	$matiere0->set_size(9);
 	$matiere0->set_pattern(0x1);
@@ -261,7 +261,7 @@ if (count($valeur)) {
 	$matiere0->set_border(1);
 	$matiere0->set_text_wrap();
 	/* ---------------------------------- */
-	$matiere2 =& $workbook->addformat();
+	$matiere2 = $workbook->addformat();
 	$matiere2->set_color('white');
 	$matiere2->set_size(9);
 	$matiere2->set_pattern(0x1);
@@ -273,7 +273,7 @@ if (count($valeur)) {
 	$matiere2->set_border(1);
 	$matiere2->set_text_wrap();
 	/* ---------------------------------- */
-	$matiere3 =& $workbook->addformat();
+	$matiere3 = $workbook->addformat();
 	$matiere3->set_color('black');
 	$matiere3->set_size(9);
 	$matiere3->set_pattern(0x1);
@@ -285,7 +285,7 @@ if (count($valeur)) {
 	$matiere3->set_border(1);
 	$matiere3->set_text_wrap();
 	/* ---------------------------------- */
-	$matiere4 =& $workbook->addformat();
+	$matiere4 = $workbook->addformat();
 	$matiere4->set_color('black');
 	$matiere4->set_size(9);
 	$matiere4->set_pattern(0x1);
@@ -297,7 +297,7 @@ if (count($valeur)) {
 	$matiere4->set_border(1);
 	$matiere4->set_text_wrap();
 	/* ---------------------------------- */
-	$matiere44 =& $workbook->addformat();
+	$matiere44 = $workbook->addformat();
 	$matiere44->set_color('red');
 	$matiere44->set_size(9);
 	$matiere44->set_pattern(0x1);
@@ -309,7 +309,7 @@ if (count($valeur)) {
 	$matiere44->set_border(1);
 	$matiere44->set_text_wrap();
 	/* ---------------------------------- */
-	$commentaire0 =& $workbook->addformat();
+	$commentaire0 = $workbook->addformat();
 	$commentaire0->set_color('white');
 	$commentaire0->set_size(9);
 	$commentaire0->set_pattern(0x1);
@@ -321,7 +321,7 @@ if (count($valeur)) {
 	$commentaire0->set_border(1);
 	$commentaire0->set_merge();
 	/* ---------------------------------- */
-	$M1 =& $workbook->addformat();
+	$M1 = $workbook->addformat();
 	$M1->set_color('black');
 	$M1->set_size(9);
 	$M1->set_pattern(0x1);
@@ -333,7 +333,7 @@ if (count($valeur)) {
 	$M1->set_border(0);
 	$M1->set_merge();
 	/* ---------------------------------- */
-	$M2 =& $workbook->addformat();
+	$M2 = $workbook->addformat();
 	$M2->set_color('black');
 	$M2->set_size(12);
 	$M2->set_pattern(0x1);
@@ -344,7 +344,7 @@ if (count($valeur)) {
 	$M2->set_bold(1);
 	$M2->set_border(1);
 	/* ---------------------------------- */
-	$M3 =& $workbook->addformat();
+	$M3 = $workbook->addformat();
 	$M3->set_color('black');
 	$M3->set_size(9);
 	$M3->set_pattern(0x1);
@@ -355,7 +355,7 @@ if (count($valeur)) {
 	$M3->set_bold(1);
 	$M3->set_border(1);
 	/* ---------------------------------- */
-	$commentaire1 =& $workbook->addformat(array(  border => 1, 
+	$commentaire1 = $workbook->addformat(array(  border => 1, 
 						fg_color => 'white', 
 						pattern => 2,  
 						italic => 0, 
@@ -370,7 +370,7 @@ if (count($valeur)) {
 	$commentaire1->set_text_wrap();
 	/* ---------------------------------- */
 	/* ---------------------------------- */
-	$commentaire2 =& $workbook->addformat(array(  border => 1, 
+	$commentaire2 = $workbook->addformat(array(  border => 1, 
 						fg_color => 'white', 
 						pattern => 2,  
 						italic => 0, 
@@ -385,7 +385,7 @@ if (count($valeur)) {
 	$commentaire2->set_merge();
 	$commentaire2->set_text_wrap();
 	/* ---------------------------------- */
-	$commentaireDirection =& $workbook->addformat(array(  border => 1, 
+	$commentaireDirection = $workbook->addformat(array(  border => 1, 
 						fg_color => 'white', 
 						pattern => 2,  
 						italic => 0, 
@@ -420,7 +420,7 @@ if (count($valeur)) {
 	}
 	// fin de la recup
 	// recherche des dates de debut et fin
-	$dateRecup=recupDateTrimByIdclasse($_POST["saisie_trimestre"],$_POST["saisie_classe"]);
+	$dateRecup=recupDateTrimByIdclasse($_POST["saisie_trimestre"],$_POST["saisie_classe"],$anneeScolaire);
 	for($j=0;$j<count($dateRecup);$j++) {
 		$dateDebut=$dateRecup[$j][0];
 		$dateFin=$dateRecup[$j][1];
@@ -429,11 +429,11 @@ if (count($valeur)) {
 	$dateFin=dateForm($dateFin);
 
 	$idClasse=$_POST["saisie_classe"];
-	$ordre=ordre_matiere_visubull($_POST["saisie_classe"]); // recup ordre matiere
+	$ordre=ordre_matiere_visubull($_POST["saisie_classe"],$anneeScolaire); // recup ordre matiere
 
 	$noteMoyEleG=0; // pour la moyenne de l'eleve general
 	$coefEleG=0; // pour la moyenne de l'eleve general
-	$eleveT=recupEleve($_POST["saisie_classe"]); // recup liste eleve
+	$eleveT=recupEleve($_POST["saisie_classe"],$anneeScolaire); // recup liste eleve
 
 	$moyenClasseGen=""; // pour le calcul moyenne classe
 	$moyenClasseMin=1000; // pour la calcul moyenne min classe
@@ -604,7 +604,7 @@ if (count($valeur)) {
 			$nom_ue=$recupUE[$f][1];
 			$coef_ue=$recupUE[$f][2];
 			$ects_ue=$recupUE[$f][3];
-			$listeMatiere=recupMatiereUE($code_ue);
+			$listeMatiere=recupMatiereUE($code_ue,$idClasse);
 			
 			$worksheet->write("A$ligne","$nom_ue",$matiere0);
 			$worksheet->write("B$ligne","",$matiere2); // ESAD $coef_ue
@@ -886,7 +886,7 @@ if (count($valeur)) {
 		$commentairedirec=preg_replace("/\n/"," ",$commentairedirec);
 
 		$commentairedir="Appréciation du conseil de classe : 
-$commentairedirec"; // ESAD " /n "
+		$commentairedirec"; // ESAD " /n "
 
 		$ligneN=$ligne-1;
 		$worksheet->write("A$ligne","$commentairedir",$commentaireDirection);
@@ -896,7 +896,6 @@ $commentairedirec"; // ESAD " /n "
 		$worksheet->write_blank($ligneN,4,$commentaireDirection);
 	
 	}
-
 	$workbook->close($fname);
 
 	Pgclose();

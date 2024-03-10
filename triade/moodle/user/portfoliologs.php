@@ -25,7 +25,7 @@
 require_once(__DIR__ . '/../config.php');
 
 if (empty($CFG->enableportfolios)) {
-    throw new \moodle_exception('disabled', 'portfolio');
+    print_error('disabled', 'portfolio');
 }
 
 require_once($CFG->libdir . '/portfoliolib.php');
@@ -36,7 +36,7 @@ $page     = optional_param('page', 0, PARAM_INT);
 $perpage  = optional_param('perpage', 10, PARAM_INT);
 
 if (! $course = $DB->get_record("course", array("id" => $courseid))) {
-    throw new \moodle_exception('invalidcourseid');
+    print_error('invalidcourseid');
 }
 
 require_login($course, false);

@@ -36,7 +36,7 @@ defined('MOODLE_INTERNAL') || die;
 interface unique_value {
     /**
      * Get the value for this item.
-     * @return null|string
+     * @return string
      */
-    public function get_value(): ?string;
+    public function get_value();
 }

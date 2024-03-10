@@ -18,7 +18,6 @@ declare(strict_types=1);
 
 namespace core_reportbuilder;
 
-use action_menu_filler;
 use coding_exception;
 use stdClass;
 use core_reportbuilder\local\models\report;
@@ -41,10 +40,7 @@ abstract class system_report extends base {
     /** @var string[] $basefields List of base fields */
     private $basefields = [];
 
-    /** @var bool $filterformdefault Whether to use the default filters form */
-    private $filterformdefault = true;
-
-    /** @var action|action_menu_filler[] $actions */
+    /** @var action[] $actions */
     private $actions = [];
 
     /** @var column $initialsortcolumn */
@@ -124,42 +120,12 @@ abstract class system_report extends base {
     }
 
     /**
-     * Override whether to use the default system report filters form, for instance this can be disabled if the UI requires
-     * it's own custom filter management form for a specific report
-     *
-     * @param bool $filterformdefault
-     */
-    final public function set_filter_form_default(bool $filterformdefault = true): void {
-        $this->filterformdefault = $filterformdefault;
-    }
-
-    /**
-     * Whether to use the default filters form
-     *
-     * @return bool
-     */
-    final public function get_filter_form_default(): bool {
-        return $this->filterformdefault;
-    }
-
-    /**
      * Adds an action to the report
      *
      * @param action $action
      */
     final public function add_action(action $action): void {
         $this->actions[] = $action;
-    }
-
-    /**
-     * Adds action divider to the report
-     *
-     */
-    final public function add_action_divider(): void {
-        $divider = new action_menu_filler();
-        // We need to set as not primary action because we just need add an action divider, not a new action item.
-        $divider->primary = false;
-        $this->actions[] = $divider;
     }
 
     /**
@@ -174,7 +140,7 @@ abstract class system_report extends base {
     /**
      * Return report actions
      *
-     * @return action|action_menu_filler[]
+     * @return action[]
      */
     final public function get_actions(): array {
         return $this->actions;
@@ -240,6 +206,15 @@ abstract class system_report extends base {
      */
     public function get_row_class(stdClass $row): string {
         return '';
+    }
+
+    /**
+     * Default 'per page' size. Can be overridden by system reports to define a different paging value
+     *
+     * @return int
+     */
+    public function get_default_per_page(): int {
+        return self::DEFAULT_PAGESIZE;
     }
 
     /**

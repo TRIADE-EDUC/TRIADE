@@ -238,7 +238,6 @@ for($i=0;$i<count($data);$i++) {
 	$description=preg_replace('/,/',' ',$description);
 	$objet=preg_replace('/,/',' ',$objet);
 	fwrite($fp,"$objet,$dateDebut,$heureDebut,$dateFin,$heureFin,FALSE,FALSE,,,$description,Normal\n");
-
 	print $affiche;
 /*
 	$f_pass=fopen("./data/essai2.txt","a+");

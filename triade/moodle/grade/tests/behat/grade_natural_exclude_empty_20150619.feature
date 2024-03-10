@@ -24,9 +24,7 @@ Feature: Gradebook calculations for extra credit items before the fix 20150619
       | assign   | C1     | a3       | Test assignment three        | x     | 200   |
       | assign   | C1     | a4       | Test assignment four (extra) | x     | 20    |
       | assign   | C1     | a5       | Test assignment five (extra) | x     | 10    |
-    And I log in as "teacher1"
-    And I am on "Course 1" course homepage
-    And I navigate to "Setup > Gradebook setup" in the course gradebook
+    And I am on the "Course 1" "grades > gradebook setup" page logged in as "teacher1"
     And I set the following settings for grade item "Test assignment four (extra)":
       | Extra credit | 1 |
     And I set the following settings for grade item "Test assignment five (extra)":
@@ -43,7 +41,7 @@ Feature: Gradebook calculations for extra credit items before the fix 20150619
     And I give the grade "8.00" to the user "Student 1" for the grade item "Test assignment five (extra)"
     And I press "Save changes"
     And I navigate to "View > User report" in the course gradebook
-    And I click on "Student 1" in the "user" search widget
+    And I set the field "Select all or one user" to "Student 1"
     Then the following should exist in the "user-grade" table:
       | Grade item                   | Calculated weight      | Grade  | Range | Percentage | Contribution to course total |
       | Test assignment one          | 28.57 %                | 80.00  | 0–100 | 80.00 %    | 22.86 %                      |
@@ -64,7 +62,7 @@ Feature: Gradebook calculations for extra credit items before the fix 20150619
     And I give the grade "8.00" to the user "Student 1" for the grade item "Test assignment five (extra)"
     And I press "Save changes"
     And I navigate to "View > User report" in the course gradebook
-    And I click on "Student 1" in the "user" search widget
+    And I set the field "Select all or one user" to "Student 1"
     Then the following should exist in the "user-grade" table:
       | Grade item                   | Calculated weight       | Grade  | Range | Percentage | Contribution to course total |
       | Test assignment one          | 66.67 %                 | 80.00  | 0–100 | 80.00 %    | 53.33 %                      |
@@ -83,7 +81,7 @@ Feature: Gradebook calculations for extra credit items before the fix 20150619
     And I give the grade "8.00" to the user "Student 1" for the grade item "Test assignment five (extra)"
     And I press "Save changes"
     And I navigate to "View > User report" in the course gradebook
-    And I click on "Student 1" in the "user" search widget
+    And I set the field "Select all or one user" to "Student 1"
     Then the following should exist in the "user-grade" table:
       | Grade item                   | Calculated weight      | Grade | Range | Percentage | Contribution to course total |
       | Test assignment one          | 0.00 %( Empty )        | -     | 0–100 | -          | 0.00 %                       |
@@ -110,7 +108,7 @@ Feature: Gradebook calculations for extra credit items before the fix 20150619
     And I give the grade "8.00" to the user "Student 1" for the grade item "Test assignment five (extra)"
     And I press "Save changes"
     And I navigate to "View > User report" in the course gradebook
-    And I click on "Student 1" in the "user" search widget
+    And I set the field "Select all or one user" to "Student 1"
     Then the following should exist in the "user-grade" table:
       | Grade item                   | Calculated weight      | Grade | Range | Percentage | Contribution to course total |
       | Test assignment one          | 0.00 %( Extra credit ) | 80.00 | 0–100 | 80.00 %    | 0.00 %                       |
@@ -135,7 +133,7 @@ Feature: Gradebook calculations for extra credit items before the fix 20150619
     And I give the grade "8.00" to the user "Student 1" for the grade item "Test assignment five (extra)"
     And I press "Save changes"
     And I navigate to "View > User report" in the course gradebook
-    And I click on "Student 1" in the "user" search widget
+    And I set the field "Select all or one user" to "Student 1"
     Then the following should exist in the "user-grade" table:
       | Grade item                   | Calculated weight      | Grade  | Range | Percentage | Contribution to course total |
       | Test assignment one          | 50.00 %                | 80.00  | 0–100 | 80.00 %    | 40.00 %                      |
@@ -160,7 +158,7 @@ Feature: Gradebook calculations for extra credit items before the fix 20150619
     And I give the grade "8.00" to the user "Student 1" for the grade item "Test assignment five (extra)"
     And I press "Save changes"
     And I navigate to "View > User report" in the course gradebook
-    And I click on "Student 1" in the "user" search widget
+    And I set the field "Select all or one user" to "Student 1"
     Then the following should exist in the "user-grade" table:
       | Grade item                   | Calculated weight       | Grade  | Range | Percentage | Contribution to course total |
       | Test assignment one          | 83.33 %                 | 80.00  | 0–100 | 80.00 %    | 66.67 %                      |
@@ -183,7 +181,7 @@ Feature: Gradebook calculations for extra credit items before the fix 20150619
     And I give the grade "8.00" to the user "Student 1" for the grade item "Test assignment five (extra)"
     And I press "Save changes"
     And I navigate to "View > User report" in the course gradebook
-    And I click on "Student 1" in the "user" search widget
+    And I set the field "Select all or one user" to "Student 1"
     Then the following should exist in the "user-grade" table:
       | Grade item                   | Calculated weight      | Grade | Range | Percentage | Contribution to course total |
       | Test assignment one          | 0.00 %( Empty )        | -     | 0–100 | -          | 0.00 %                       |
@@ -210,7 +208,7 @@ Feature: Gradebook calculations for extra credit items before the fix 20150619
     And I give the grade "8.00" to the user "Student 1" for the grade item "Test assignment five (extra)"
     And I press "Save changes"
     And I navigate to "View > User report" in the course gradebook
-    And I click on "Student 1" in the "user" search widget
+    And I set the field "Select all or one user" to "Student 1"
     Then the following should exist in the "user-grade" table:
       | Grade item                   | Calculated weight       | Grade  | Range | Percentage | Contribution to course total |
       | Test assignment one          | 50.00 %                 | 80.00  | 0–100 | 80.00 %    | 40.00 %                      |
@@ -237,7 +235,7 @@ Feature: Gradebook calculations for extra credit items before the fix 20150619
     And I give the grade "8.00" to the user "Student 1" for the grade item "Test assignment five (extra)"
     And I press "Save changes"
     And I navigate to "View > User report" in the course gradebook
-    And I click on "Student 1" in the "user" search widget
+    And I set the field "Select all or one user" to "Student 1"
     Then the following should exist in the "user-grade" table:
       | Grade item                   | Calculated weight       | Grade  | Range | Percentage | Contribution to course total |
       | Test assignment one          | 83.33 %                 | 80.00  | 0–100 | 80.00 %    | 66.67 %                      |
@@ -262,7 +260,7 @@ Feature: Gradebook calculations for extra credit items before the fix 20150619
     And I give the grade "8.00" to the user "Student 1" for the grade item "Test assignment five (extra)"
     And I press "Save changes"
     And I navigate to "View > User report" in the course gradebook
-    And I click on "Student 1" in the "user" search widget
+    And I set the field "Select all or one user" to "Student 1"
     Then the following should exist in the "user-grade" table:
       | Grade item                   | Calculated weight      | Grade | Range | Percentage | Contribution to course total |
       | Test assignment one          | 0.00 %( Empty )        | -     | 0–100 | -          | 0.00 %                       |

@@ -202,7 +202,6 @@ class test_counting_iterator implements \Iterator {
      *
      * @return mixed Can return any type.
      */
-    #[\ReturnTypeWillChange]
     public function current() {
         $this->count++;
         return false;
@@ -220,7 +219,7 @@ class test_counting_iterator implements \Iterator {
     /**
      * Goes on to the next element.
      */
-    public function next(): void {
+    public function next() {
         $this->pos++;
     }
 
@@ -229,7 +228,6 @@ class test_counting_iterator implements \Iterator {
      *
      * @throws \coding_exception Always
      */
-    #[\ReturnTypeWillChange]
     public function key() {
         throw new \coding_exception('Unsupported');
     }
@@ -239,14 +237,14 @@ class test_counting_iterator implements \Iterator {
      *
      * @return bool True if still valid
      */
-    public function valid(): bool {
+    public function valid() {
         return $this->pos < 3;
     }
 
     /**
      * Rewinds the iterator.
      */
-    public function rewind(): void {
+    public function rewind() {
         $this->pos = 0;
     }
 }

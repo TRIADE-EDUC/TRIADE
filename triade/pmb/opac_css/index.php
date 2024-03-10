@@ -44,5 +44,6 @@ $base_path=".";
 $is_opac_included=false;
 
 //Inclusion de l'OPAC
+
 require_once($base_path."/includes/index_includes.inc.php");
 ?>

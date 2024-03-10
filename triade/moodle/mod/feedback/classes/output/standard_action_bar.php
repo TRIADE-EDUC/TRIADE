@@ -92,7 +92,7 @@ class standard_action_bar extends base_action_bar {
             } else {
                 $label = get_string('complete_the_form', 'feedback');
             }
-            $items['left'][]['actionlink'] = new action_link($completeurl, $label, null, ['class' => 'btn btn-primary']);
+            $items['left'][]['actionlink'] = new action_link($completeurl, $label, null, ['class' => 'btn btn-secondary']);
         }
 
         return $items;

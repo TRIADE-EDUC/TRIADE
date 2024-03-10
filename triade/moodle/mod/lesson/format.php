@@ -476,7 +476,7 @@ class qformat_default {
                     if ($pageid) {
                         // the new page follows on from this page
                         if (!$page = $DB->get_record("lesson_pages", array("id" => $pageid))) {
-                            throw new \moodle_exception('invalidpageid', 'lesson');
+                            print_error('invalidpageid', 'lesson');
                         }
                         $newpage->prevpageid = $pageid;
                         $newpage->nextpageid = $page->nextpageid;

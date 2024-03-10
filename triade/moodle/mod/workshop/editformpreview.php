@@ -33,7 +33,7 @@ $workshop = $DB->get_record('workshop', array('id' => $cm->instance), '*', MUST_
 
 require_login($course, false, $cm);
 if (isguestuser()) {
-    throw new \moodle_exception('guestsarenotallowed');
+    print_error('guestsarenotallowed');
 }
 $workshop = new workshop($workshop, $cm, $course);
 

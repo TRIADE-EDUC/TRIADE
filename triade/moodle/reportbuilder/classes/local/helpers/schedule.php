@@ -19,6 +19,7 @@ declare(strict_types=1);
 namespace core_reportbuilder\local\helpers;
 
 use context_user;
+use core_plugin_manager;
 use core_user;
 use invalid_parameter_exception;
 use stdClass;
@@ -345,10 +346,10 @@ class schedule {
      * @return string[]
      */
     public static function get_format_options(): array {
-        $dataformats = dataformat::get_enabled_plugins();
+        $dataformats = core_plugin_manager::instance()->get_plugins_of_type('dataformat');
 
-        return array_map(static function(string $pluginname): string {
-            return get_string('dataformat', 'dataformat_' . $pluginname);
+        return array_map(static function(dataformat $dataformat): string {
+            return $dataformat->displayname;
         }, $dataformats);
     }
 

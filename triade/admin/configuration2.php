@@ -310,6 +310,7 @@ $tuteurenvoidelegue=$_POST["tuteurenvoidelegue"];
 $tuteurenvoipersonnel=$_POST["tuteurenvoipersonnel"];
 $stageetudiantadminprof=$_POST["stageetudiantadminprof"];
 $affichageia=$_POST["affichageia"];
+$affichagesign=$_POST["affichagesign"];
 
 $profpmodifaffect=$_POST["profpmodifaffect"];
 
@@ -668,6 +669,7 @@ $texte.="define(\"INTITULEENSEIGNANT\",\"$intitule_enseignant\");\n";
 $texte.="define(\"INTITULECLASSE\",\"$intitule_classe\");\n";
 $texte.="define(\"CNILPROTECTEUR\",\"$cnilprotecteur\");\n";
 $texte.="define(\"AFFICHAGEIA\",\"$affichageia\");\n";
+$texte.="define(\"AFFICHAGESIGN\",\"$affichagesign\");\n";
 $texte.="?>\n";
 
 

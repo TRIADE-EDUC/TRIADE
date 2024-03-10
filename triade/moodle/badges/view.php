@@ -36,11 +36,11 @@ $page       = optional_param('page', 0, PARAM_INT);
 require_login();
 
 if (empty($CFG->enablebadges)) {
-    throw new \moodle_exception('badgesdisabled', 'badges');
+    print_error('badgesdisabled', 'badges');
 }
 
 if (empty($CFG->badges_allowcoursebadges) && $courseid != 0) {
-    throw new \moodle_exception('coursebadgesdisabled', 'badges');
+    print_error('coursebadgesdisabled', 'badges');
 }
 
 if (!in_array($sortby, array('name', 'dateissued'))) {

@@ -55,11 +55,11 @@ if ($action == 'updatecomponent' && confirm_sesskey()) {
                     $a = new stdClass();
                     $a->url  = 'https://download.moodle.org/environment/environment.zip';
                     $a->dest = $CFG->dataroot . '/';
-                    throw new \moodle_exception($cd->get_error(), 'error', $PAGE->url, $a);
+                    print_error($cd->get_error(), 'error', $PAGE->url, $a);
                     die();
 
                 } else {
-                    throw new \moodle_exception($cd->get_error(), 'error', $PAGE->url);
+                    print_error($cd->get_error(), 'error', $PAGE->url);
                     die();
                 }
 

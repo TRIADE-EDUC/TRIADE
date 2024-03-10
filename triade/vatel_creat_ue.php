@@ -47,15 +47,37 @@ session_start();
 <tr id='cadreCentral0'>
 <td >
 <!-- // fin  -->
+<?php
+include_once('librairie_php/db_triade.php');
+include("librairie_php/fonctions_vatel.php"); 
+$cnx=cnx();
+if(isset($_POST["create"])){        
+	validerequete("menuadmin");
+        $anneeScolaire=$_POST["annee_scolaire"];
+        if ($anneeScolaire == "") {
+                alertJs("Création impossible, année scolaire non indiquée.");
+        }else{
+                $cr=vatel_create($_POST,'ue');
+                for($i=0;$i<=$_POST["nb"];$i++) { 
+                       $code_matiere=$_POST["code_matiere_$i"];
+                        if ($code_matiere > 0) {
+                                $idprof=$_POST["idprof_$i"];
+                                vatel_create_due_bis($code_matiere,$cr,$idprof);
+                        }
+                }
+                if($cr) {
+                        alertJs("Nouvelle unité d'enseignement créée.");
+                }
+        }
+
+}
+?>
 <BR>
 <table>
 <td align='right'><font class="T2"><?php print LANGBULL3?> :</font> </td>
 <td> 
 <select name='annee_scolaire' >
 <?php
-include_once('librairie_php/db_triade.php');
-include("librairie_php/fonctions_vatel.php"); 
-$cnx=cnx();
 $anneeScolaire=$_COOKIE["anneeScolaire"];
 filtreAnneeScolaireSelectNote($anneeScolaire,3);
 ?>
@@ -127,27 +149,4 @@ Pgclose();
 </ul>
 
 <SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."2.js'>" ?></SCRIPT>
-<?php
-if(isset($_POST["create"])){
-	validerequete("menuadmin");
-    	$cnx=cnx();
-	$anneeScolaire=$_POST["annee_scolaire"];
-	if ($anneeScolaire == "") {
-		alertJs("Création impossible, année scolaire non indiquée.");
-	}else{
-		$cr=vatel_create($_POST,'ue');
-		for($i=0;$i<=$_POST["nb"];$i++) {
-			$code_matiere=$_POST["code_matiere_$i"];
-			if ($code_matiere > 0) { 
-				$idprof=$_POST["idprof_$i"];
-				vatel_create_due_bis($code_matiere,$cr,$idprof);
-			}	
-		}
-    		if($cr) {
-        		alertJs("Nouvelle unité d'enseignement créée.");
-    		}
-	}
-	Pgclose();
-}
-?>
    </BODY></HTML>

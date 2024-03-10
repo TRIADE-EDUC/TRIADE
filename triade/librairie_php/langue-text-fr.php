@@ -2433,7 +2433,7 @@ define("LANGPATIENTE","Veuillez patienter");
 define("LANGSMS3","Numéro de téléphone portable");
 define("LANGSMS4","150 caractères maximum");
 define("LANGSMS5","Message");
-define("LANGSMS6","L'envoi du message SMS est conservé et accessible par ".INTITULEDIRECTION);
+define("LANGSMS6","L'envoi du message SMS est conservé et accessible par la ".INTITULEDIRECTION);
 define("LANGSMS7","Envoi message SMS");
 define("LANGSMS8","Envoyer un message SMS");
 define("LANGSMS9","Liste des numéros de téléphones des parents <br> de ");

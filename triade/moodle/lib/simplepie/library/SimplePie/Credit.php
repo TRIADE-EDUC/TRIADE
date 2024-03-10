@@ -146,5 +146,3 @@ class SimplePie_Credit
 		return null;
 	}
 }
-
-class_alias('SimplePie_Credit', 'SimplePie\Credit', false);

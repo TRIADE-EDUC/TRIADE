@@ -66,7 +66,7 @@ if ($_SESSION["membre"] == "menuprof") {
 	validerequete("2");
 }
 $debut=deb_prog();
-$valeur=visu_affectation_detail($_POST["saisie_classe"]);
+$valeur=visu_affectation_detail($_POST["saisie_classe"],$_POST["annee_scolaire"]);
 if (count($valeur)) {
 
 if ($_POST["typetrisem"] == "trimestre") {
@@ -154,7 +154,6 @@ for($j=0;$j<count($dateRecup);$j++) {
 $dateDebutT3=dateForm($dateDebut);
 $dateFinT3=dateForm($dateFin);
 
-
 $idClasse=$_POST["saisie_classe"];
 $ordre=ordre_matiere_visubull($_POST["saisie_classe"]); // recup ordre matiere
 // creation PDF
@@ -187,6 +186,8 @@ $profp=implode(', ',$profp);
 
 if (count($profptab) > 1) { $hautclassant=1.5; }
 
+@nettoyage_repertoire('./data/pdf_bull/'.$classe_nom);
+@rmdir('./data/pdf_bull/'.$classe_nom);
 
 $plageEleve=$_POST["plageEleve"];
 if ($plageEleve == "tous") { $dep=0; $nbEleveT=count($eleveT); }
@@ -198,12 +199,14 @@ if ($plageEleve == "50") { $dep=39; $nbEleveT=49; }
 if ($plageEleve == "60") { $dep=49; $nbEleveT=59; }
 if ($nbEleveT > count($eleveT)) { $nbEleveT=count($eleveT); }
 for($j=$dep;$j<$nbEleveT;$j++) {  // premiere ligne de la creation PDF
+
 	// variable eleve
 	$nomEleve=ucwords($eleveT[$j][0]);
 	$prenomEleve=ucwords($eleveT[$j][1]);
 	$lv1Eleve=$eleveT[$j][2];
 	$lv2Eleve=$eleveT[$j][3];
 	$idEleve=$eleveT[$j][4];
+
 
 	$policeT=12;
 
@@ -451,7 +454,7 @@ for($j=$dep;$j<$nbEleveT;$j++) {  // premiere ligne de la creation PDF
         $pdf->MultiCell($LR1,$HT1,'',1,'C',0);
         $xsujet1+=8+$LARGCOM+2;
         $ysujet1=$ycoor0+13+18;
-        $pdf->TextWithDirection($xsujet1,$ysujet1,"Moy. Générale","U");
+        $pdf->TextWithDirection($xsujet1,$ysujet1,utf8_decode("Moy. Générale"),"U");
 	$LR2=15;
 	$pdf->SetFont($police,'',$policeT-2);
 	$xcoor0=1;
@@ -1152,8 +1155,6 @@ $archive = new PclZip('./data/pdf_bull/'.$classe_nom.'.zip');
 $archive->create('./data/pdf_bull/'.$classe_nom,PCLZIP_OPT_REMOVE_PATH, 'data/pdf_bull/');
 $fichier='./data/pdf_bull/'.$classe_nom.'.zip';
 $bttexte="Récupérer le fichier ZIP des bulletins";
-//@nettoyage_repertoire('./data/pdf_bull/'.$classe_nom);
-//@rmdir('./data/pdf_bull/'.$classe_nom);
 // --------------------------------------------------------------------------------------------------------------------------
 ?>
 <br><ul><ul>

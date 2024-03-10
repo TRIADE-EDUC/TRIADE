@@ -70,5 +70,7 @@ if (LAN == "oui") {
 <SCRIPT language="JavaScript" src="./librairie_js/menudepart2.js"></SCRIPT>
 <?php top_d(); ?>
 <SCRIPT language="JavaScript" src="./librairie_js/menudepart22.js"></SCRIPT>
+
+<script>alert("En cours de chargement, veuillez patientez quelques minutes... ")</script>
 </body>
 </html>

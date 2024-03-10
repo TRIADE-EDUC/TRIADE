@@ -29,7 +29,7 @@ use core_reportbuilder\table\custom_report_table;
 use core_reportbuilder\table\custom_report_table_filterset;
 use core_reportbuilder\table\custom_report_table_view;
 use core_reportbuilder\table\custom_report_table_view_filterset;
-use core_table\local\filter\integer_filter;
+use core_reportbuilder\local\helpers\report as report_helper;
 
 /**
  * Custom report exporter class
@@ -78,7 +78,6 @@ class custom_report_exporter extends persistent_exporter {
      */
     protected static function define_related(): array {
         return [
-            'pagesize' => 'int?',
         ];
     }
 
@@ -90,30 +89,18 @@ class custom_report_exporter extends persistent_exporter {
     protected static function define_other_properties(): array {
         return [
             'table' => ['type' => PARAM_RAW],
+            'sidebarmenucards' => ['type' => custom_report_menu_cards_exporter::read_properties_definition()],
+            'conditions' => ['type' => custom_report_conditions_exporter::read_properties_definition()],
+            'filters' => ['type' => custom_report_filters_exporter::read_properties_definition()],
+            'sorting' => ['type' => custom_report_columns_sorting_exporter::read_properties_definition()],
+            'cardview' => ['type' => custom_report_card_view_exporter::read_properties_definition()],
             'filtersapplied' => ['type' => PARAM_INT],
             'filterspresent' => ['type' => PARAM_BOOL],
-            'filtersform' => ['type' => PARAM_RAW],
-            'editmode' => ['type' => PARAM_BOOL],
-            'sidebarmenucards' => [
-                'type' => custom_report_column_cards_exporter::read_properties_definition(),
+            'filtersform' => [
+                'type' => PARAM_RAW,
                 'optional' => true,
             ],
-            'conditions' => [
-                'type' => custom_report_conditions_exporter::read_properties_definition(),
-                'optional' => true,
-            ],
-            'filters' => [
-                'type' => custom_report_filters_exporter::read_properties_definition(),
-                'optional' => true,
-            ],
-            'sorting' => [
-                'type' => custom_report_columns_sorting_exporter::read_properties_definition(),
-                'optional' => true,
-            ],
-            'cardview' => [
-                'type' => custom_report_card_view_exporter::read_properties_definition(),
-                'optional' => true,
-            ],
+            'editmode' => ['type' => PARAM_INT],
             'javascript' => ['type' => PARAM_RAW],
         ];
     }
@@ -125,9 +112,6 @@ class custom_report_exporter extends persistent_exporter {
      * @return array
      */
     protected function get_other_values(renderer_base $output): array {
-        /** @var datasource $report */
-        $report = manager::get_report_from_persistent($this->persistent);
-
         $filterspresent = false;
         $filtersform = '';
 
@@ -135,47 +119,52 @@ class custom_report_exporter extends persistent_exporter {
             $table = custom_report_table::create($this->persistent->get('id'));
             $table->set_filterset(new custom_report_table_filterset());
         } else {
-            // We store the pagesize within the table filterset so that it's available between AJAX requests.
-            $filterset = new custom_report_table_view_filterset();
-            $filterset->add_filter(new integer_filter('pagesize', null, [$this->related['pagesize']]));
-
             $table = custom_report_table_view::create($this->persistent->get('id'), $this->download);
-            $table->set_filterset($filterset);
+            $table->set_filterset(new custom_report_table_view_filterset());
 
             // Generate filters form if report contains any filters.
-            $filterspresent = !empty($report->get_active_filters());
+            $source = $this->persistent->get('source');
+            /** @var datasource $datasource */
+            $datasource = new $source($this->persistent);
+
+            $filterspresent = !empty($datasource->get_active_filters());
             if ($filterspresent) {
                 $filtersform = $this->generate_filters_form()->render();
             }
         }
 
+        $report = manager::get_report_from_persistent($this->persistent);
+
         // If we are editing we need all this information for the template.
-        $editordata = [];
         if ($this->editmode) {
-            $menucardsexporter = new custom_report_column_cards_exporter(null, ['report' => $report]);
-            $editordata['sidebarmenucards'] = (array) $menucardsexporter->export($output);
+            $menucardexporter = new custom_report_menu_cards_exporter(null, [
+                'menucards' => report_helper::get_available_columns($report->get_report_persistent())
+            ]);
 
+            $menucards = (array) $menucardexporter->export($output);
             $conditionsexporter = new custom_report_conditions_exporter(null, ['report' => $report]);
-            $editordata['conditions'] = (array) $conditionsexporter->export($output);
-
+            $conditions = (array) $conditionsexporter->export($output);
             $filtersexporter = new custom_report_filters_exporter(null, ['report' => $report]);
-            $editordata['filters'] = (array) $filtersexporter->export($output);
-
+            $filters = (array) $filtersexporter->export($output);
             $sortingexporter = new custom_report_columns_sorting_exporter(null, ['report' => $report]);
-            $editordata['sorting'] = (array) $sortingexporter->export($output);
-
+            $sorting = (array) $sortingexporter->export($output);
             $cardviewexporter = new custom_report_card_view_exporter(null, ['report' => $report]);
-            $editordata['cardview'] = (array) $cardviewexporter->export($output);
+            $cardview = (array) $cardviewexporter->export($output);
         }
 
         return [
             'table' => $output->render($table),
+            'sidebarmenucards' => $menucards ?? [],
+            'conditions' => $conditions ?? [],
+            'filters' => $filters ?? [],
+            'sorting' => $sorting ?? [],
+            'cardview' => $cardview ?? [],
             'filtersapplied' => $report->get_applied_filter_count(),
             'filterspresent' => $filterspresent,
             'filtersform' => $filtersform,
-            'editmode' => $this->editmode,
+            'editmode' => (int)$this->editmode,
             'javascript' => '',
-        ] + $editordata;
+        ];
     }
 
     /**

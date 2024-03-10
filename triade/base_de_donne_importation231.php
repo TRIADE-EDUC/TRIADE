@@ -84,7 +84,7 @@ if ( (!empty($fichier)) && (($type == "application/octet-stream" ) || ($type == 
 	$fic_xls="data/fichier_gep/traitement.xls";
 	include_once('./librairie_php/reader.php');
 	$data = new Spreadsheet_Excel_Reader();
-	$data->setOutputEncoding('CP1251');
+	$data->setOutputEncoding('UTF-8');
 	$data->read($fic_xls);
 	/*
 	 * 1) libelle  
@@ -105,8 +105,7 @@ if ( (!empty($fichier)) && (($type == "application/octet-stream" ) || ($type == 
 	 	$libelle_long=trim(addslashes($data->sheets[0]['cells'][$i][2]));
 		$code_matiere=trim(addslashes($data->sheets[0]['cells'][$i][3]));
 		$libelle_en=trim(addslashes($data->sheets[0]['cells'][$i][4]));
-
-		$cr=create_matiere_2($libelle,$libelle_long,$code_matiere,$libelle_en);
+		$cr=create_matiere_3($libelle,$libelle_long,$code_matiere,$libelle_en);
 		if ($cr) $nb++;
 	}
 

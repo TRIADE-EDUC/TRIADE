@@ -96,7 +96,6 @@ class helper {
             'filename'  => $file->get_filename()
         ];
 
-        $contenttype = $content->get_content_type_instance();
         $encodedpath = base64_encode(json_encode($params));
 
         $node = [
@@ -109,8 +108,8 @@ class helper {
             'isref' => $file->is_external_file(),
             'size' => $file->get_filesize(),
             'source' => $encodedpath,
-            'icon' => $contenttype->get_icon($content),
-            'thumbnail' => $contenttype->get_icon($content)
+            'icon' => $OUTPUT->image_url(file_file_icon($file, 24))->out(false),
+            'thumbnail' => $OUTPUT->image_url(file_file_icon($file, 90))->out(false)
         ];
 
         if ($file->get_status() == 666) {

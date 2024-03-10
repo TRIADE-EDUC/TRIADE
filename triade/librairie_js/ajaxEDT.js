@@ -44,9 +44,8 @@ visugroupe = function (idClasse)
 						var newOption = document.createElement("option");
 						newOption.setAttribute("value",tab[i][0]);
 						newOption.setAttribute("id","select1");
-						newOption.innerHTML=tab[i][1];
+						newOption.innerHTML=accent_export(tab[i][1]);
 						document.getElementById('groupeID').appendChild(newOption);
-	
 					}	
 				}
   			}

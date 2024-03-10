@@ -31,14 +31,6 @@ use stdClass;
 class stateactions_test extends \advanced_testcase {
 
     /**
-     * Setup to ensure that fixtures are loaded.
-     */
-    public static function setupBeforeClass(): void {
-        global $CFG;
-        require_once($CFG->dirroot . '/lib/externallib.php');
-    }
-
-    /**
      * Helper method to create an activity into a section and add it to the $sections and $activities arrays.
      *
      * @param int $courseid Course identifier where the activity will be added.
@@ -188,7 +180,6 @@ class stateactions_test extends \advanced_testcase {
      * @param array $params the ids, targetsection and targetcm to use as params
      * @param array $expectedresults List of the course module names expected after calling the method.
      * @param bool $expectedexception If this call will raise an exception.
-
      */
     public function test_get_state(
         string $format,
@@ -604,17 +595,17 @@ class stateactions_test extends \advanced_testcase {
      * @return array the state update summary
      */
     protected function basic_state_text(
-        string $method = 'section_hide',
-        string $role = 'editingteacher',
-        array $idrefs = [],
-        bool $expectedexception = false,
-        int $expectedtotal = 0,
+        string  $method = 'section_hide',
+        string  $role = 'editingteacher',
+        array   $idrefs = [],
+        bool    $expectedexception = false,
+        int     $expectedtotal = 0,
         ?string $coursefield = null,
-        $coursevalue = 0,
+                $coursevalue = 0,
         ?string $sectionfield = null,
-        $sectionvalue = 0,
+                $sectionvalue = 0,
         ?string $cmfield = null,
-        $cmvalue = 0
+                $cmvalue = 0
     ): array {
         $this->resetAfterTest();
 
@@ -680,172 +671,6 @@ class stateactions_test extends \advanced_testcase {
     }
 
     /**
-     * Test for section_hide
-     *
-     * @covers ::section_hide
-     * @dataProvider basic_role_provider
-     * @param string $role the user role
-     * @param bool $expectedexception if it will expect an exception.
-     */
-    public function test_section_hide(
-        string $role = 'editingteacher',
-        bool $expectedexception = false
-    ): void {
-        $this->basic_state_text(
-            'section_hide',
-            $role,
-            ['section1', 'section2', 'section3'],
-            $expectedexception,
-            7,
-            null,
-            null,
-            'visible',
-            0,
-            null,
-            null
-        );
-    }
-
-    /**
-     * Test for section_hide
-     *
-     * @covers ::section_show
-     * @dataProvider basic_role_provider
-     * @param string $role the user role
-     * @param bool $expectedexception if it will expect an exception.
-     */
-    public function test_section_show(
-        string $role = 'editingteacher',
-        bool $expectedexception = false
-    ): void {
-        $this->basic_state_text(
-            'section_show',
-            $role,
-            ['section1', 'section2', 'section3'],
-            $expectedexception,
-            7,
-            null,
-            null,
-            'visible',
-            1,
-            null,
-            null
-        );
-    }
-
-    /**
-     * Test for cm_show
-     *
-     * @covers ::cm_show
-     * @dataProvider basic_role_provider
-     * @param string $role the user role
-     * @param bool $expectedexception if it will expect an exception.
-     */
-    public function test_cm_show(
-        string $role = 'editingteacher',
-        bool $expectedexception = false
-    ): void {
-        $this->basic_state_text(
-            'cm_show',
-            $role,
-            ['cm0', 'cm1', 'cm2', 'cm3'],
-            $expectedexception,
-            4,
-            null,
-            null,
-            null,
-            null,
-            'visible',
-            1
-        );
-    }
-
-    /**
-     * Test for cm_hide
-     *
-     * @covers ::cm_hide
-     * @dataProvider basic_role_provider
-     * @param string $role the user role
-     * @param bool $expectedexception if it will expect an exception.
-     */
-    public function test_cm_hide(
-        string $role = 'editingteacher',
-        bool $expectedexception = false
-    ): void {
-        $this->basic_state_text(
-            'cm_hide',
-            $role,
-            ['cm0', 'cm1', 'cm2', 'cm3'],
-            $expectedexception,
-            4,
-            null,
-            null,
-            null,
-            null,
-            'visible',
-            0
-        );
-    }
-
-    /**
-     * Test for cm_stealth
-     *
-     * @covers ::cm_stealth
-     * @dataProvider basic_role_provider
-     * @param string $role the user role
-     * @param bool $expectedexception if it will expect an exception.
-     */
-    public function test_cm_stealth(
-        string $role = 'editingteacher',
-        bool $expectedexception = false
-    ): void {
-        set_config('allowstealth', 1);
-        $this->basic_state_text(
-            'cm_stealth',
-            $role,
-            ['cm0', 'cm1', 'cm2', 'cm3'],
-            $expectedexception,
-            4,
-            null,
-            null,
-            null,
-            null,
-            'stealth',
-            1
-        );
-        // Disable stealth.
-        set_config('allowstealth', 0);
-        // When stealth are disabled the validation is a but more complex because they depends
-        // also on the section visibility (legacy stealth).
-        $this->basic_state_text(
-            'cm_stealth',
-            $role,
-            ['cm0', 'cm1'],
-            $expectedexception,
-            2,
-            null,
-            null,
-            null,
-            null,
-            'stealth',
-            0
-        );
-        $this->basic_state_text(
-            'cm_stealth',
-            $role,
-            ['cm2', 'cm3'],
-            $expectedexception,
-            2,
-            null,
-            null,
-            null,
-            null,
-            'stealth',
-            1
-        );
-    }
-
-    /**
      * Data provider for basic role tests.
      *
      * @return array the testing scenarios
@@ -869,5 +694,59 @@ class stateactions_test extends \advanced_testcase {
                 'expectedexception' => true,
             ],
         ];
+    }
+
+    /**
+     * Test for cm_moveright
+     *
+     * @covers ::cm_moveright
+     * @dataProvider basic_role_provider
+     * @param string $role the user role
+     * @param bool $expectedexception if it will expect an exception.
+     */
+    public function test_cm_moveright(
+        string $role = 'editingteacher',
+        bool $expectedexception = false
+    ): void {
+        $this->basic_state_text(
+            'cm_moveright',
+            $role,
+            ['cm0', 'cm1', 'cm2', 'cm3'],
+            $expectedexception,
+            4,
+            null,
+            null,
+            null,
+            null,
+            'indent',
+            1
+        );
+    }
+
+    /**
+     * Test for cm_moveleft
+     *
+     * @covers ::cm_moveleft
+     * @dataProvider basic_role_provider
+     * @param string $role the user role
+     * @param bool $expectedexception if it will expect an exception.
+     */
+    public function test_cm_moveleft(
+        string $role = 'editingteacher',
+        bool $expectedexception = false
+    ): void {
+        $this->basic_state_text(
+            'cm_moveleft',
+            $role,
+            ['cm0', 'cm1', 'cm2', 'cm3'],
+            $expectedexception,
+            4,
+            null,
+            null,
+            null,
+            null,
+            'indent',
+            0
+        );
     }
 }

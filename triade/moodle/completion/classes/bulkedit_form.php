@@ -73,7 +73,7 @@ class core_completion_bulkedit_form extends core_completion_edit_base_form {
         if (file_exists($modmoodleform)) {
             require_once($modmoodleform);
         } else {
-            throw new \moodle_exception('noformdesc');
+            print_error('noformdesc');
         }
 
         list($cmrec, $context, $module, $data, $cw) = get_moduleinfo_data($cm, $course);

@@ -72,7 +72,7 @@ if (!empty($data) || (!empty($p) && !empty($s))) {
         // The user has confirmed successfully, let's log them in
 
         if (!$user = get_complete_user_data('username', $username)) {
-            throw new \moodle_exception('cannotfinduser', '', '', s($username));
+            print_error('cannotfinduser', '', '', s($username));
         }
 
         if (!$user->suspended) {
@@ -101,10 +101,10 @@ if (!empty($data) || (!empty($p) && !empty($s))) {
         echo $OUTPUT->footer();
         exit;
     } else {
-        throw new \moodle_exception('invalidconfirmdata');
+        print_error('invalidconfirmdata');
     }
 } else {
-    throw new \moodle_exception("errorwhenconfirming");
+    print_error("errorwhenconfirming");
 }
 
 redirect("$CFG->wwwroot/");

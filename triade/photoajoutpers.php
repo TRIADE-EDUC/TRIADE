@@ -98,7 +98,7 @@ if ($okp) {
 <?php print LANGNA2 ?> : <b><?php print ucwords($prenom_admin) ?></b> <br><br>
 </font>
 <br>
-<tr><td colspan=2 align=center><br> <?php print $text1?> <?php print LANGTRONBI7 ?> : <input type="file" name="photo" size=30 > <br> <?php print "L'image doit être <b>au format jpg</b>" ?> </td></tr>
+<tr><td colspan=2 align=center><br> <?php print $text1?> <?php print LANGTRONBI7 ?> : <input type="file" name="photo" size=30 > <br> <?php print "L'image doit &ecirc;tre <b>au format jpg</b>" ?> </td></tr>
 <tr><td colspan=2 align=center><br>
 <table align=center><tr><td><br>
 <script language=JavaScript>buttonMagicSubmit('<?php print LANGBT46?>','create'); //text,nomInput</script> <script language=JavaScript>buttonMagicFermeture(); //bouton de fermeture</script>&nbsp;&nbsp;

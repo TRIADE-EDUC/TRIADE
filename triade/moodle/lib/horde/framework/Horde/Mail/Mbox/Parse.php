@@ -133,7 +133,6 @@ implements ArrayAccess, Countable, Iterator
 
     /**
      */
-    #[\ReturnTypeWillChange]
     public function offsetExists($offset)
     {
         return isset($this->_parsed[$offset]);
@@ -141,7 +140,6 @@ implements ArrayAccess, Countable, Iterator
 
     /**
      */
-    #[\ReturnTypeWillChange]
     public function offsetGet($offset)
     {
         if (!isset($this->_parsed[$offset])) {
@@ -181,7 +179,6 @@ implements ArrayAccess, Countable, Iterator
 
     /**
      */
-    #[\ReturnTypeWillChange]
     public function offsetSet($offset, $value)
     {
         // NOOP
@@ -189,7 +186,6 @@ implements ArrayAccess, Countable, Iterator
 
     /**
      */
-    #[\ReturnTypeWillChange]
     public function offsetUnset($offset)
     {
         // NOOP
@@ -202,7 +198,6 @@ implements ArrayAccess, Countable, Iterator
      *
      * @return integer  The number of messages.
      */
-    #[\ReturnTypeWillChange]
     public function count()
     {
         return count($this->_parsed);
@@ -223,7 +218,6 @@ implements ArrayAccess, Countable, Iterator
 
     /* Iterator methods. */
 
-    #[\ReturnTypeWillChange]
     public function current()
     {
         $key = $this->key();
@@ -233,13 +227,11 @@ implements ArrayAccess, Countable, Iterator
             : $this[$key];
     }
 
-    #[\ReturnTypeWillChange]
     public function key()
     {
         return key($this->_parsed);
     }
 
-    #[\ReturnTypeWillChange]
     public function next()
     {
         if ($this->valid()) {
@@ -247,13 +239,11 @@ implements ArrayAccess, Countable, Iterator
         }
     }
 
-    #[\ReturnTypeWillChange]
     public function rewind()
     {
         reset($this->_parsed);
     }
 
-    #[\ReturnTypeWillChange]
     public function valid()
     {
         return !is_null($this->key());

@@ -29,6 +29,7 @@ namespace core_reportbuilder\local\entities;
 use advanced_testcase;
 use coding_exception;
 use lang_string;
+use ReflectionClass;
 use core_reportbuilder\local\filters\text;
 use core_reportbuilder\local\report\column;
 use core_reportbuilder\local\report\filter;
@@ -87,34 +88,6 @@ class base_test extends advanced_testcase {
     }
 
     /**
-     * Test setting multiple table aliases
-     */
-    public function test_set_table_aliases(): void {
-        $entity = new base_test_entity();
-
-        $entity->set_table_aliases([
-            'mytable' => 'newalias',
-            'myothertable' => 'newalias2',
-        ]);
-        $this->assertEquals('newalias', $entity->get_table_alias('mytable'));
-        $this->assertEquals('newalias2', $entity->get_table_alias('myothertable'));
-    }
-
-    /**
-     * Test setting multiple table aliases, containing an invalid table
-     */
-    public function test_set_table_aliases_invalid(): void {
-        $entity = new base_test_entity();
-
-        $this->expectException(coding_exception::class);
-        $this->expectExceptionMessage('Coding error detected, it must be fixed by a programmer: Invalid table name (nonexistent)');
-        $entity->set_table_aliases([
-            'mytable' => 'newalias',
-            'nonexistent' => 'newalias2',
-        ]);
-    }
-
-    /**
      * Test entity name
      */
     public function test_set_entity_name(): void {
@@ -159,7 +132,9 @@ class base_test extends advanced_testcase {
         $tablejoin = "JOIN {course} c2 ON c2.id = c1.id";
         $entity->add_join($tablejoin);
 
-        $this->assertEquals([$tablejoin], $entity->get_joins());
+        $method = (new ReflectionClass(base_test_entity::class))->getMethod('get_joins');
+        $method->setAccessible(true);
+        $this->assertEquals([$tablejoin], $method->invoke($entity));
     }
 
     /**
@@ -174,7 +149,9 @@ class base_test extends advanced_testcase {
         ];
         $entity->add_joins($tablejoins);
 
-        $this->assertEquals($tablejoins, $entity->get_joins());
+        $method = (new ReflectionClass(base_test_entity::class))->getMethod('get_joins');
+        $method->setAccessible(true);
+        $this->assertEquals($tablejoins, $method->invoke($entity));
     }
 
     /**
@@ -191,7 +168,9 @@ class base_test extends advanced_testcase {
             ->add_joins($tablejoins)
             ->add_joins($tablejoins);
 
-        $this->assertEquals($tablejoins, $entity->get_joins());
+        $method = (new ReflectionClass(base_test_entity::class))->getMethod('get_joins');
+        $method->setAccessible(true);
+        $this->assertEquals($tablejoins, $method->invoke($entity));
     }
 
     /**

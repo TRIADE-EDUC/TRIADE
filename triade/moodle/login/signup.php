@@ -30,7 +30,7 @@ require_once($CFG->libdir . '/authlib.php');
 require_once('lib.php');
 
 if (!$authplugin = signup_is_enabled()) {
-    throw new \moodle_exception('notlocalisederrormessage', 'error', '', 'Sorry, you may not use this page.');
+    print_error('notlocalisederrormessage', 'error', '', 'Sorry, you may not use this page.');
 }
 
 $PAGE->set_url('/login/signup.php');

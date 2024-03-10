@@ -174,7 +174,7 @@ class ADOdbLoadBalancer
      * @param  string $type Type of database connection, either: 'write' capable or 'readonly'
      * @return bool|int|string
      */
-    public function getConnectionByWeight($type)
+    private function getConnectionByWeight($type)
     {
         if ($type == 'readonly') {
             $total_weight = $this->total_connection_weights['all'];
@@ -233,7 +233,7 @@ class ADOdbLoadBalancer
      * @return bool|ADOConnection
      * @throws Exception
      */
-    public function getConnectionById($connection_id)
+    private function _getConnection($connection_id)
     {
         if (isset($this->connections[$connection_id])) {
             $connection_obj = $this->connections[$connection_id];
@@ -259,15 +259,6 @@ class ADOdbLoadBalancer
                 } catch (Exception $e) {
                     // Connection error, see if there are other connections to try still.
                     throw $e; // No connections left, reThrow exception so application can catch it.
-                }
-
-                // Check to see if a connection test callback was defined, and if so execute it.
-                // This is useful for testing replication lag and such to ensure the connection is suitable to be used.
-                $test_connection_callback = $connection_obj->getConnectionTestCallback();
-                if (is_callable($test_connection_callback)
-                    && $test_connection_callback($connection_obj, $adodb_obj) !== TRUE
-                ) {
-                    return false;
                 }
 
                 if (is_array($this->user_defined_session_init_sql)) {
@@ -307,12 +298,9 @@ class ADOdbLoadBalancer
 
             if ($connection_id !== false) {
                 try {
-                    $adodb_obj = $this->getConnectionById($connection_id);
-                    if (is_object($adodb_obj)) {
-                        break; //Found valid connection, continue with it.
-                    } else {
-                        throw new Exception('ADODB Connection Object does not exist. Perhaps LoadBalancer Database Connection Test Failed?');
-                    }
+                    $adodb_obj = $this->_getConnection($connection_id);
+                    // $connection_obj = $this->connections[$connection_id];
+                    break;
                 } catch (Exception $e) {
                     // Connection error, see if there are other connections to try still.
                     $this->removeConnection($connection_id);
@@ -325,10 +313,6 @@ class ADOdbLoadBalancer
             } else {
                 throw new Exception('Connection ID is invalid!');
             }
-        }
-
-        if (!isset($connection_id)) {
-            throw new Exception('No connection available to use at this time! Type: ' . $type);
         }
 
         $this->last_connection_id[$type] = $connection_id;
@@ -448,7 +432,7 @@ class ADOdbLoadBalancer
                         && $connection_obj->getADOdbObject()->_connectionID !== false
                     )
                 ) {
-                    $adodb_obj = $this->getConnectionById($key);
+                    $adodb_obj = $this->_getConnection($key);
                     if (is_object($adodb_obj)) {
                         $result_arr[] = $adodb_obj->Execute($sql, $inputarr);
                     }
@@ -611,7 +595,6 @@ class ADOdbLoadBalancer
             case 'binddate':
             case 'bindtimestamp':
             case 'setfetchmode':
-            case 'setcustommetatype':
                   $type = false; // No connection necessary.
                 break;
 
@@ -704,11 +687,6 @@ class ADOdbLoadBalancerConnection
     protected $adodb_obj = false;
 
     /**
-     * @var callable    Closure
-     */
-    protected $connection_test_callback = NULL;
-
-    /**
      * @var string    Type of connection, either 'write' capable or 'readonly'
      */
     public $type = 'write';
@@ -781,24 +759,6 @@ class ADOdbLoadBalancerConnection
         $this->database = $argDatabaseName;
 
         return true;
-    }
-
-    /**
-     * Anonymous function that is called and must return TRUE for the connection to be usable.*
-     *   The first argument is the type of connection to test.
-     *   Useful to check things like replication lag.
-     * @param callable $callback
-     * @return void
-     */
-    function setConnectionTestCallback($callback) {
-        $this->connection_test_callback = $callback;
-    }
-
-    /**
-     * @return callable|null
-     */
-    function getConnectionTestCallback() {
-        return $this->connection_test_callback;
     }
 
     /**

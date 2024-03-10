@@ -578,16 +578,11 @@ abstract class restore_dbops {
             CONTEXT_SYSTEM => CONTEXT_COURSE,
             CONTEXT_COURSECAT => CONTEXT_COURSE);
 
+        /** @var restore_controller $rc */
         $rc = restore_controller_dbops::load_controller($restoreid);
-        $restoreinfo = $rc->get_info();
+        $plan = $rc->get_plan();
+        $after35 = $plan->backup_release_compare('3.5', '>=') && $plan->backup_version_compare(20180205, '>');
         $rc->destroy(); // Always need to destroy.
-        $backuprelease = $restoreinfo->backup_release; // The major version: 2.9, 3.0, 3.10...
-        preg_match('/(\d{8})/', $restoreinfo->moodle_release, $matches);
-        $backupbuild = (int)$matches[1];
-        $after35 = false;
-        if (version_compare($backuprelease, '3.5', '>=') && $backupbuild > 20180205) {
-            $after35 = true;
-        }
 
         // For any contextlevel, follow this process logic:
         //
@@ -1019,26 +1014,21 @@ abstract class restore_dbops {
                 continue;
             }
 
-            // Updated the times of the new record.
-            // The file record should reflect when the file entered the system,
-            // and when this record was created.
-            $time = time();
-
             // The file record to restore.
             $file_record = array(
-                'contextid'    => $newcontextid,
-                'component'    => $component,
-                'filearea'     => $filearea,
-                'itemid'       => $rec->newitemid,
-                'filepath'     => $file->filepath,
-                'filename'     => $file->filename,
-                'timecreated'  => $time,
-                'timemodified' => $time,
-                'userid'       => $mappeduserid,
-                'source'       => $file->source,
-                'author'       => $file->author,
-                'license'      => $file->license,
-                'sortorder'    => $file->sortorder
+                'contextid'   => $newcontextid,
+                'component'   => $component,
+                'filearea'    => $filearea,
+                'itemid'      => $rec->newitemid,
+                'filepath'    => $file->filepath,
+                'filename'    => $file->filename,
+                'timecreated' => $file->timecreated,
+                'timemodified'=> $file->timemodified,
+                'userid'      => $mappeduserid,
+                'source'      => $file->source,
+                'author'      => $file->author,
+                'license'     => $file->license,
+                'sortorder'   => $file->sortorder
             );
 
             if (empty($file->repositoryid)) {

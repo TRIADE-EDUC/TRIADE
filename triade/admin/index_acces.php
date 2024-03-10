@@ -25,8 +25,8 @@ function error ($error_message) {
         exit;
 }
 include_once("../common/lib_acces_inc.php");
-if (file_exists("../../../../common/lib_acces_inc.php")) {
-	include_once("../../../../common/lib_acces_inc.php");
+if (file_exists("../../../common/lib_acces_inc.php")) {
+	include_once("../../../common/lib_acces_inc.php");
 }
 include_once("../common/config.inc.php");
 
@@ -74,8 +74,8 @@ if (true) {
 		<table bordercolor="#000000" border="0" id='bodyfond2' height="100" width="300" cellPadding="0" cellSpacing="0" style='box-shadow: 0px 0px 10px 4px rgba(119, 119, 119, 0.75); moz-box-shadow: 0px 0px 10px 4px rgba(119, 119, 119, 0.75); -webkit-box-shadow: 0px 0px 10px 4px rgba(119, 119, 119, 0.75);' >
 		<tr><td align=right ><font class="T2">Login :&nbsp;</font></td>
 		<td>&nbsp;<input type=text name="login" size=20 class=bouton2 >&nbsp;</td></tr>
-		<tr><td align=right><font class="T2">Mot de passe :&nbsp;</font></td>
-		<td>&nbsp;<input type=password name="passwd" size=20 class=bouton2 >&nbsp;</td></tr>
+		<tr><td align=right><font class="T2">&nbsp;&nbsp;Mot&nbsp;de&nbsp;passe&nbsp;:&nbsp;</font></td>
+		<td>&nbsp;<input type=password name="passwd" size=20 class=bouton2 >&nbsp;&nbsp;&nbsp;</td></tr>
 		</table></td></tr></table>
 		<br><br>
 		<table align=center><tr><td>
@@ -109,7 +109,7 @@ if (true) {
 <?php
 		$affiche="non";
 	}else{
-		if ((file_exists("../../../../common/lib_acces_inc.php")) && ($verif != 2))   {
+		if ((file_exists("../../../common/lib_acces_inc.php")) && ($verif != 2))   {
 			if ( (($_POST["login"] == $LOGIN )  &&  (crypt(md5($_POST["passwd"]),"T2") == $PASSWORD ))   || 
 			     (($_POST["login"] == $LOGINT )  &&  (crypt(md5($_POST["passwd"]),"T2") == $PASSWORDT ))  ) {
 				$admin1="Administrateur";

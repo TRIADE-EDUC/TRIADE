@@ -215,10 +215,6 @@ class Mustache_Tokenizer
             }
         }
 
-        if ($this->state !== self::IN_TEXT) {
-            $this->throwUnclosedTagException();
-        }
-
         $this->flushBuffer();
 
         // Restore the user's encoding...
@@ -283,10 +279,6 @@ class Mustache_Tokenizer
         $close      = '=' . $this->ctag;
         $closeIndex = strpos($text, $close, $index);
 
-        if ($closeIndex === false) {
-            $this->throwUnclosedTagException();
-        }
-
         $token = array(
             self::TYPE => self::T_DELIM_CHANGE,
             self::LINE => $this->line,
@@ -341,10 +333,6 @@ class Mustache_Tokenizer
     private function addPragma($text, $index)
     {
         $end    = strpos($text, $this->ctag, $index);
-        if ($end === false) {
-            $this->throwUnclosedTagException();
-        }
-
         $pragma = trim(substr($text, $index + 2, $end - $index - 2));
 
         // Pragmas are hoisted to the front of the template.
@@ -355,24 +343,5 @@ class Mustache_Tokenizer
         ));
 
         return $end + $this->ctagLen - 1;
-    }
-
-    private function throwUnclosedTagException()
-    {
-        $name = trim($this->buffer);
-        if ($name !== '') {
-            $msg = sprintf('Unclosed tag: %s on line %d', $name, $this->line);
-        } else {
-            $msg = sprintf('Unclosed tag on line %d', $this->line);
-        }
-
-        throw new Mustache_Exception_SyntaxException($msg, array(
-            self::TYPE  => $this->tagType,
-            self::NAME  => $name,
-            self::OTAG  => $this->otag,
-            self::CTAG  => $this->ctag,
-            self::LINE  => $this->line,
-            self::INDEX => $this->seenTag - $this->otagLen,
-        ));
     }
 }

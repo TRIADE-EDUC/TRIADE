@@ -520,7 +520,7 @@ if ($moyenGeneral != "") {
 
 $infoplus="";
 if ($ectsGeneral < 60) $resultatGeneral="NON ACQUIS";
-if (($ectsGeneral > 48) && ($moyenGeneralAff > 10) && ($ectsGeneral < 60))  {
+if (($ectsGeneral > 45) && ($moyenGeneralAff > 10) && ($ectsGeneral < 60))  {
 		$nbc=60-$ectsGeneral;	
 		$resultatGeneral="ADMIS *";
 		$infoplus="* $nbc crédits à valider en N+1";
@@ -593,7 +593,7 @@ if (file_exists($logo)) {
 
 $pdf->SetFont('Arial','',6);
 $pdf->SetXY(3,260);
-$pdf->MultiCell(200,3,"L'Université Professionnelle d'Afrique est une association à vocation francophone\nprésente sur les site de Brazzaville-Kinshasa-Pointe-Noire. Partenaire du Groupe ESG - www.univpro-afrique.com \n\nAucun duplicata de ce document ne pourra être édité. Veillez à faire des copies.",0,'C',0);
+$pdf->MultiCell(200,3,"International Management School Group est une association à vocation francophone\nprésente sur les site de Brazzaville-Kinshasa-Pointe-Noire. Partenaire du Groupe ESG - www.univpro-afrique.com \n\nAucun duplicata de ce document ne pourra être édité. Veillez à faire des copies.",0,'C',0);
 
 if (($_POST["affdocattestation"] == "oui") && ($ectsGeneral >= 60)) {
 
@@ -625,7 +625,7 @@ if (($_POST["affdocattestation"] == "oui") && ($ectsGeneral >= 60)) {
 
 	$pdf->SetXY($X+30,$Y+=30);
 	$pdf->SetFont('Arial','',10);
-	$pdf->MultiCell(150,5,"Université Professionnelle d'Afrique\nBRAZZAVILLE-KINSHASA-POINTE-NOIRE",0,'C',0);
+	$pdf->MultiCell(150,5,"International Management School Group\nBRAZZAVILLE-KINSHASA-POINTE-NOIRE",0,'C',0);
 
 	$pdf->SetXY($X+30,$Y+=20);
 	$pdf->SetFont('Arial','B',14);
@@ -687,7 +687,7 @@ if (($_POST["affdocattestation"] == "oui") && ($ectsGeneral >= 60)) {
 
 	$pdf->SetFont('Arial','',6);
 	$pdf->SetXY(3,260);
-	$pdf->MultiCell(200,3,"L'Université Professionnelle d'Afrique est une association à vocation francophone\nprésente sur les site de Brazzaville-Kinshasa-Pointe-Noire.\nPartenaire du Groupe ESG - www.univpro-afrique.com \n\nAucun duplicata de ce document ne pourra être édité. Veillez à faire des copies.",0,'C',0);
+	$pdf->MultiCell(200,3,"L'Université professionnelle d’Afrique est une association à vocation francophone\nprésente sur les site de Brazzaville-Kinshasa-Pointe-Noire.\nPartenaire du Groupe ESG - www.univpro-afrique.com \n\nAucun duplicata de ce document ne pourra être édité. Veillez à faire des copies.",0,'C',0);
 
 }
 

@@ -57,8 +57,7 @@ $sql="SELECT civ,pers_id,nom,prenom FROM ${prefixe}personnel  WHERE type_pers='$
 $res=execSql($sql);
 $data=chargeMat($res);
 if (preg_match('/^7/',$version)) {
-	print "<br><script language=JavaScript>buttonMagicImprimer()</script>";
-//	print "<script language=JavaScript>buttonMagic2('Commander Badge','badge0.php','','width=500,height=500','')</script><br><br>";
+	print "<br><table><tr><td><input type=button value='Imprimer' onclick=\"open('codebarimpr.php?membre=$membre&codebase=".$_GET["codebase"]."','_blank','')\"  class='button'\"></td>";
 }
 print "$mess";
 

@@ -940,7 +940,7 @@ EOF;
                         $msgs[] = $errnostring . ": " .$error['message'] . " at " . $error['file'] . ": " . $error['line'];
                     }
                     $msg = "PHP errors found:\n" . implode("\n", $msgs);
-                    throw new \Exception(htmlentities($msg, ENT_COMPAT));
+                    throw new \Exception(htmlentities($msg));
                 }
 
                 return;
@@ -978,7 +978,7 @@ EOF;
                 }
 
                 $msg = "Moodle exception: " . $errormsg->getText() . "\n" . $errorinfo;
-                throw new \Exception(html_entity_decode($msg, ENT_COMPAT));
+                throw new \Exception(html_entity_decode($msg));
             }
 
             // Debugging messages.
@@ -988,7 +988,7 @@ EOF;
                     $msgs[] = $this->get_debug_text($debuggingmessage->getHtml());
                 }
                 $msg = "debugging() message/s found:\n" . implode("\n", $msgs);
-                throw new \Exception(html_entity_decode($msg, ENT_COMPAT));
+                throw new \Exception(html_entity_decode($msg));
             }
 
             // PHP debug messages.
@@ -999,7 +999,7 @@ EOF;
                     $msgs[] = $this->get_debug_text($phpmessage->getHtml());
                 }
                 $msg = "PHP debug message/s found:\n" . implode("\n", $msgs);
-                throw new \Exception(html_entity_decode($msg, ENT_COMPAT));
+                throw new \Exception(html_entity_decode($msg));
             }
 
             // Any other backtrace.
@@ -1013,7 +1013,7 @@ EOF;
                         $msgs[] = $backtrace . '()';
                     }
                     $msg = "Other backtraces found:\n" . implode("\n", $msgs);
-                    throw new \Exception(htmlentities($msg, ENT_COMPAT));
+                    throw new \Exception(htmlentities($msg));
                 }
             }
 

@@ -21,6 +21,11 @@ error_reporting(0);
  //
  ***************************************************************************/
 include_once("./common/config2.inc.php");
+include_once("./common/config.inc.php");
+include_once("./librairie_php/db_triade.php");
+$cnx=cnx();
+verifCnxIntraMsn();
+
 $nb=$_POST["nb"];
 if (defined("TIMESESSION")) {
 	$max=TIMESESSION;

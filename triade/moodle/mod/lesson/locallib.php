@@ -183,7 +183,7 @@ function lesson_unseen_branch_jump($lesson, $userid) {
     }
 
     if (!$seenbranches = $lesson->get_content_pages_viewed($retakes, $userid, 'timeseen DESC')) {
-        throw new \moodle_exception('cannotfindrecords', 'lesson');
+        print_error('cannotfindrecords', 'lesson');
     }
 
     // get the lesson pages
@@ -237,7 +237,7 @@ function lesson_random_question_jump($lesson, $pageid) {
     // get the lesson pages
     $params = array ("lessonid" => $lesson->id);
     if (!$lessonpages = $DB->get_records_select("lesson_pages", "lessonid = :lessonid", $params)) {
-        throw new \moodle_exception('cannotfindpages', 'lesson');
+        print_error('cannotfindpages', 'lesson');
     }
 
     // go up the pages till branch table
@@ -323,7 +323,7 @@ function lesson_grade($lesson, $ntries, $userid = 0) {
                 $attempt = end($attempts);
                 // If essay question, handle it, otherwise add to score
                 if ($page->requires_manual_grading()) {
-                    $useranswerobj = unserialize($attempt->useranswer);
+                    $useranswerobj = unserialize_object($attempt->useranswer);
                     if (isset($useranswerobj->score)) {
                         $earned += $useranswerobj->score;
                     }
@@ -584,7 +584,7 @@ function lesson_add_header_buttons($cm, $context, $extraeditbuttons=false, $less
 
     if (has_capability('mod/lesson:edit', $context) && $extraeditbuttons) {
         if ($lessonpageid === null) {
-            throw new \moodle_exception('invalidpageid', 'lesson');
+            print_error('invalidpageid', 'lesson');
         }
         if (!empty($lessonpageid) && $lessonpageid != LESSON_EOL) {
             $url = new moodle_url('/mod/lesson/editpage.php', array(
@@ -1682,7 +1682,7 @@ class lesson extends lesson_base {
         global $DB;
 
         if (!$lesson = $DB->get_record('lesson', array('id' => $lessonid))) {
-            throw new \moodle_exception('invalidcoursemodule');
+            print_error('invalidcoursemodule');
         }
         return new lesson($lesson);
     }
@@ -2068,7 +2068,7 @@ class lesson extends lesson_base {
             if (!$this->loadedallpages) {
                 $firstpageid = $DB->get_field('lesson_pages', 'id', array('lessonid'=>$this->properties->id, 'prevpageid'=>0));
                 if (!$firstpageid) {
-                    throw new \moodle_exception('cannotfindfirstpage', 'lesson');
+                    print_error('cannotfindfirstpage', 'lesson');
                 }
                 $this->firstpageid = $firstpageid;
             } else {
@@ -2089,7 +2089,7 @@ class lesson extends lesson_base {
             if (!$this->loadedallpages) {
                 $lastpageid = $DB->get_field('lesson_pages', 'id', array('lessonid'=>$this->properties->id, 'nextpageid'=>0));
                 if (!$lastpageid) {
-                    throw new \moodle_exception('cannotfindlastpage', 'lesson');
+                    print_error('cannotfindlastpage', 'lesson');
                 }
                 $this->lastpageid = $lastpageid;
             } else {
@@ -2718,7 +2718,7 @@ class lesson extends lesson_base {
         $pages = $this->load_all_pages();
 
         if (!array_key_exists($pageid, $pages) || ($after!=0 && !array_key_exists($after, $pages))) {
-            throw new \moodle_exception('cannotfindpages', 'lesson', "$CFG->wwwroot/mod/lesson/edit.php?id=$cm->id");
+            print_error('cannotfindpages', 'lesson', "$CFG->wwwroot/mod/lesson/edit.php?id=$cm->id");
         }
 
         $pagetomove = clone($pages[$pageid]);
@@ -2919,11 +2919,11 @@ class lesson extends lesson_base {
 
         if ($dependentlesson = $DB->get_record('lesson', array('id' => $this->properties->dependency))) {
             // Lesson exists, so we can proceed.
-            $conditions = unserialize($this->properties->conditions);
+            $conditions = unserialize_object($this->properties->conditions);
             // Assume false for all.
             $errors = array();
             // Check for the timespent condition.
-            if ($conditions->timespent) {
+            if (!empty($conditions->timespent)) {
                 $timespent = false;
                 if ($attempttimes = $DB->get_records('lesson_timer', array("userid" => $USER->id, "lessonid" => $dependentlesson->id))) {
                     // Go through all the times and test to see if any of them satisfy the condition.
@@ -2939,7 +2939,7 @@ class lesson extends lesson_base {
                 }
             }
             // Check for the gradebetterthan condition.
-            if ($conditions->gradebetterthan) {
+            if (!empty($conditions->gradebetterthan)) {
                 $gradebetterthan = false;
                 if ($studentgrades = $DB->get_records('lesson_grades', array("userid" => $USER->id, "lessonid" => $dependentlesson->id))) {
                     // Go through all the grades and test to see if any of them satisfy the condition.
@@ -2954,7 +2954,7 @@ class lesson extends lesson_base {
                 }
             }
             // Check for the completed condition.
-            if ($conditions->completed) {
+            if (!empty($conditions->completed)) {
                 if (!$DB->count_records('lesson_grades', array('userid' => $USER->id, 'lessonid' => $dependentlesson->id))) {
                     $errors[] = get_string('completederror', 'lesson');
                 }
@@ -3920,7 +3920,7 @@ abstract class lesson_page extends lesson_base {
         if ($properties->pageid) {
             $prevpage = $DB->get_record("lesson_pages", array("id" => $properties->pageid), 'id, nextpageid');
             if (!$prevpage) {
-                throw new \moodle_exception('cannotfindpages', 'lesson');
+                print_error('cannotfindpages', 'lesson');
             }
             $newpage->prevpageid = $prevpage->id;
             $newpage->nextpageid = $prevpage->nextpageid;
@@ -3987,7 +3987,7 @@ abstract class lesson_page extends lesson_base {
         } else {
             $page = $DB->get_record("lesson_pages", array("id" => $id));
             if (!$page) {
-                throw new \moodle_exception('cannotfindpages', 'lesson');
+                print_error('cannotfindpages', 'lesson');
             }
         }
         $manager = lesson_page_type_manager::get($lesson);
@@ -5234,7 +5234,7 @@ class lesson_page_type_manager {
     public function load_page($pageid, lesson $lesson) {
         global $DB;
         if (!($page =$DB->get_record('lesson_pages', array('id'=>$pageid, 'lessonid'=>$lesson->id)))) {
-            throw new \moodle_exception('cannotfindpages', 'lesson');
+            print_error('cannotfindpages', 'lesson');
         }
         $pagetype = get_class($this->types[$page->qtype]);
         $page = new $pagetype($page, $lesson);

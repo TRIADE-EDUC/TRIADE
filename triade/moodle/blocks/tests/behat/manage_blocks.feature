@@ -15,16 +15,18 @@ Feature: Block appearances
       | user | course | role |
       | teacher1 | C1 | editingteacher |
     And the following "activities" exist:
-      | activity | name             | course | idnumber | template |
-      | survey   | Test survey name | C1     | survey1  | 4        |
-      | book     | Test book name   | C1     | book1    |          |
+      | activity | name             | course | idnumber | section | template |
+      | survey   | Test survey name | C1     | survey1  | 1       | 4        |
+      | book     | Test book name   | C1     | book1    | 1       |          |
     And the following "mod_book > chapter" exists:
       | book    | Test book name         |
       | title   | Book title             |
       | content | Book content test test |
+    And the following "blocks" exist:
+      | blockname | contextlevel | reference | pagetypepattern | defaultregion |
+      | comments  | Course       | C1        | course-view-*   | side-pre      |
     And I am on the "Course 1" course page logged in as teacher1
     And I turn editing mode on
-    And I add the "Comments" block
     And I configure the "Comments" block
     And I set the following fields to these values:
       | Display on page types | Any page |

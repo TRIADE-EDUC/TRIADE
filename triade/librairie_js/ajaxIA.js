@@ -138,9 +138,9 @@ function ajaxIAMessagerieReponse(commentaire,productID,ia,retour,CKEDITOR) {
 }
 
 
-function ajaxIABulletinCom(commentaire,moyenne,productID,ia,retour,prenom) {
+function ajaxIABulletinCom(commentaire,moyenne,productID,ia,retour,prenom,tonia) {
 	var requete = getRequete();
-	var corps="commentaire="+escape(commentaire)+"&moyenne="+moyenne+"&productID="+productID+"&ia="+ia+"&prenom="+prenom;
+	var corps="commentaire="+escape(commentaire)+"&moyenne="+moyenne+"&productID="+productID+"&ia="+ia+"&prenom="+prenom+"&tonia="+tonia;
 	if (requete != null) {
 		requete.onreadystatechange = function() { 
 			if (requete.readyState != 4)  {

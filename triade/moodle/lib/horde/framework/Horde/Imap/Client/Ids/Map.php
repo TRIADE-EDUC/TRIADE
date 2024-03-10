@@ -196,7 +196,6 @@ class Horde_Imap_Client_Ids_Map implements Countable, IteratorAggregate, Seriali
 
     /**
      */
-    #[ReturnTypeWillChange]
     public function count()
     {
         return count($this->_ids);
@@ -206,7 +205,6 @@ class Horde_Imap_Client_Ids_Map implements Countable, IteratorAggregate, Seriali
 
     /**
      */
-    #[ReturnTypeWillChange]
     public function getIterator()
     {
         return new ArrayIterator($this->_ids);
@@ -214,37 +212,25 @@ class Horde_Imap_Client_Ids_Map implements Countable, IteratorAggregate, Seriali
 
     /* Serializable methods. */
 
-    public function serialize()
-    {
-        return serialize($this->__serialize());
-    }
-
-    public function unserialize($data)
-    {
-        $data = @unserialize($data);
-        if (!is_array($data)) {
-            throw new Exception('Cache version change.');
-        }
-        $this->__unserialize($data);
-    }
-
     /**
      */
-    public function __serialize()
+    public function serialize()
     {
         /* Sort before storing; provides more compressible representation. */
         $this->sort();
 
-        return [
+        return json_encode(array(
             strval(new Horde_Imap_Client_Ids(array_keys($this->_ids))),
             strval(new Horde_Imap_Client_Ids(array_values($this->_ids)))
-        ];
+        ));
     }
 
     /**
      */
-    public function __unserialize($data)
+    public function unserialize($data)
     {
+        $data = json_decode($data, true);
+
         $keys = new Horde_Imap_Client_Ids($data[0]);
         $vals = new Horde_Imap_Client_Ids($data[1]);
         $this->_ids = array_combine($keys->ids, $vals->ids);

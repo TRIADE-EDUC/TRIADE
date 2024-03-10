@@ -334,9 +334,11 @@ class Spreadsheet_Excel_Reader {
 
                                                          }
                                                 }
-//                                              $retstr = ($asciiEncoding) ? $retstr : $this->_encodeUTF16($retstr);
-						$retstr = ($asciiEncoding) ? iconv('cp1250', 'utf-8', $retstr) : $this->_encodeUTF16($retstr);
-//                                              echo "Str $i = $retstr\n";
+                                         //     $retstr = ($asciiEncoding) ? $retstr : $this->_encodeUTF16($retstr);
+					 //     $retstr = ($asciiEncoding) ? iconv('cp1250', 'utf-8', $retstr) : $this->_encodeUTF16($retstr);
+						$retstr = ($asciiEncoding) ? utf8_encode($retstr) : $this->_encodeUTF16($retstr);
+					//	$retstr = ($asciiEncoding) ? iconv('utf-8', 'cp1250', $retstr) : $this->_encodeUTF16($retstr);
+//                                             echo "Str $i = $retstr\n";
                                         if ($richString){
                                                   $spos += 4 * $formattingRuns;
                                                 }
@@ -795,8 +797,8 @@ class Spreadsheet_Excel_Reader {
     	$result = $string;
         if ($this->_defaultEncoding){
         	switch ($this->_encoderFunction){
-        	      //case 'iconv' : 	$result = iconv('UTF-16LE', $this->_defaultEncoding, $string);
-        		case 'iconv' : 	$result = iconv("cp1252", "ISO-8859-1//IGNORE", $string);
+        	        case 'iconv' : 	$result = iconv('UTF-16LE', $this->_defaultEncoding, $string);
+        	//	case 'iconv' : 	$result = iconv("cp1252", "ISO-8859-1//IGNORE", $string);
         						break;
         		case 'mb_convert_encoding' : 	$result = mb_convert_encoding($string, $this->_defaultEncoding, 'UTF-16LE' );
         						break;

@@ -113,7 +113,6 @@ $string['eventkind'] = 'Type of event';
 $string['eventname'] = 'Event title';
 $string['eventnameandcategory'] = '{$a->category}: {$a->name}';
 $string['eventnameandcourse'] = '{$a->course}: {$a->name}';
-$string['eventnamelocation'] = '{$a->name} location: {$a->location}';
 $string['eventnone'] = 'No events';
 $string['eventrepeat'] = 'Repeats';
 $string['events'] = 'Events';

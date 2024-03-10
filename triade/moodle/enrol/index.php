@@ -49,7 +49,7 @@ if ($course->id == SITEID) {
 }
 
 if (!$course->visible && !has_capability('moodle/course:viewhiddencourses', context_course::instance($course->id))) {
-    throw new \moodle_exception('coursehidden');
+    print_error('coursehidden');
 }
 
 $PAGE->set_course($course);
@@ -60,12 +60,12 @@ $PAGE->add_body_class('limitedwidth');
 
 // do not allow enrols when in login-as session
 if (\core\session\manager::is_loggedinas() and $USER->loginascontext->contextlevel == CONTEXT_COURSE) {
-    throw new \moodle_exception('loginasnoenrol', '', $CFG->wwwroot.'/course/view.php?id='.$USER->loginascontext->instanceid);
+    print_error('loginasnoenrol', '', $CFG->wwwroot.'/course/view.php?id='.$USER->loginascontext->instanceid);
 }
 
 // Check if user has access to the category where the course is located.
 if (!core_course_category::can_view_course_info($course) && !is_enrolled($context, $USER, '', true)) {
-    throw new \moodle_exception('coursehidden', '', $CFG->wwwroot . '/');
+    print_error('coursehidden', '', $CFG->wwwroot . '/');
 }
 
 // get all enrol forms available in this course

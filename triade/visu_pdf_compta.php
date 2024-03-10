@@ -8,12 +8,12 @@ include_once('./common/config.inc.php');
 include_once('./librairie_php/db_triade.php');
 include_once("./common/config2.inc.php");
 validerequete("profadmin");
+$cnx=cnx();
 $fic=$_GET["id"];
 if (!file_exists($fic)) {
 	header("Location: ./err404.php");
 	exit;
 }
-$cnx=cnx();
 if ($_SESSION["membre"] == "menuprof") {
 	$cr=verifPdfProfVersement($fic,$_SESSION["id_pers"]);
 	if (!$cr) {

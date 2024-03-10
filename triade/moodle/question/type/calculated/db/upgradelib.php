@@ -15,34 +15,46 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
+ * Upgrade library code for the calculated question type.
+ *
+ * @package    qtype
+ * @subpackage calculated
+ * @copyright  2011 The Open University
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
+
+defined('MOODLE_INTERNAL') || die();
+
+
+/**
  * Class for converting attempt data for calculated questions when upgrading
  * attempts to the new question engine.
  *
  * This class is used by the code in question/engine/upgrade/upgradelib.php.
  *
- * @package    qtype_calculated
  * @copyright  2011 The Open University
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class qtype_calculated_qe2_attempt_updater extends question_qtype_attempt_updater {
     protected $selecteditem = null;
     /** @var array variable name => value */
-    protected $values = [];
+    protected $values;
 
     /** @var array variable names wrapped in {...}. Used by {@link substitute_values()}. */
-    protected $search = [];
+    protected $search;
 
     /**
      * @var array variable values, with negative numbers wrapped in (...).
      * Used by {@link substitute_values()}.
      */
-    protected $safevalue = [];
+    protected $safevalue;
 
     /**
      * @var array variable values, with negative numbers wrapped in (...).
      * Used by {@link substitute_values()}.
      */
-    protected $prettyvalue = [];
+    protected $prettyvalue;
 
     public function question_summary() {
         return ''; // Done later, after we know which dataset is used.
@@ -74,7 +86,7 @@ class qtype_calculated_qe2_attempt_updater extends question_qtype_attempt_update
             throw new coding_exception("Brokes state {$state->id} for calculated
                     question {$state->question}. (It did not specify a dataset.");
         }
-        [$datasetbit, $realanswer] = explode('-', $state->answer, 2);
+        list($datasetbit, $realanswer) = explode('-', $state->answer, 2);
         $selecteditem = substr($datasetbit, 7);
 
         if (is_null($this->selecteditem)) {
@@ -86,21 +98,21 @@ class qtype_calculated_qe2_attempt_updater extends question_qtype_attempt_update
         }
 
         if (!$realanswer) {
-            return ['', ''];
+            return array('', '');
         }
 
         if (strpos($realanswer, '|||||') === false) {
             $answer = $realanswer;
             $unit = '';
         } else {
-            [$answer, $unit] = explode('|||||', $realanswer, 2);
+            list($answer, $unit) = explode('|||||', $realanswer, 2);
         }
 
-        return [$answer, $unit];
+        return array($answer, $unit);
     }
 
     public function response_summary($state) {
-        [$answer, $unit] = $this->parse_response($state);
+        list($answer, $unit) = $this->parse_response($state);
 
         if (empty($answer) && empty($unit)) {
             $resp = null;
@@ -145,11 +157,9 @@ class qtype_calculated_qe2_attempt_updater extends question_qtype_attempt_update
             return;
         }
 
-        [$answer, $unit] = $this->parse_response($state);
-        if (
-            !empty($this->question->options->showunits) &&
-                $this->question->options->showunits == 1
-        ) {
+        list($answer, $unit) = $this->parse_response($state);
+        if (!empty($this->question->options->showunits) &&
+                $this->question->options->showunits == 1) {
             // Multichoice units.
             $data['answer'] = $answer;
             $data['unit'] = $unit;
@@ -175,9 +185,9 @@ class qtype_calculated_qe2_attempt_updater extends question_qtype_attempt_update
                 $this->question->id, $selecteditem);
 
         // Prepare an array for {@link substitute_values()}.
-        $this->search = [];
-        $this->safevalue = [];
-        $this->prettyvalue = [];
+        $this->search = array();
+        $this->safevalue = array();
+        $this->prettyvalue = array();
         foreach ($this->values as $name => $value) {
             if (!is_numeric($value)) {
                 $a = new stdClass();
@@ -260,7 +270,7 @@ class qtype_calculated_qe2_attempt_updater extends question_qtype_attempt_update
      *      corresponding value.
      */
     protected function substitute_values_for_eval($expression) {
-        return str_replace($this->search, $this->safevalue, $expression ?? '');
+        return str_replace($this->search, $this->safevalue, $expression);
     }
 
     /**
@@ -272,7 +282,7 @@ class qtype_calculated_qe2_attempt_updater extends question_qtype_attempt_update
      *      corresponding value.
      */
     protected function substitute_values_pretty($text) {
-        return str_replace($this->search, $this->prettyvalue, $text ?? '');
+        return str_replace($this->search, $this->prettyvalue, $text);
     }
 
     /**
@@ -282,17 +292,11 @@ class qtype_calculated_qe2_attempt_updater extends question_qtype_attempt_update
      * @return string the text with values substituted.
      */
     public function replace_expressions_in_text($text, $length = null, $format = null) {
-        if ($text === null || $text === '') {
-            return $text;
-        }
         $vs = $this; // Can't see to use $this in a PHP closure.
-        $text = preg_replace_callback(
-            '~\{=([^{}]*(?:\{[^{}]+}[^{}]*)*)}~',
-            function ($matches) use ($vs, $format, $length) {
-                return $vs->format_float($vs->calculate($matches[1]), $length, $format);
-            },
-            $text
-        );
+        $text = preg_replace_callback('~\{=([^{}]*(?:\{[^{}]+}[^{}]*)*)}~',
+                function ($matches) use ($vs, $format, $length) {
+                    return $vs->format_float($vs->calculate($matches[1]), $length, $format);
+                }, $text);
         return $this->substitute_values_pretty($text);
     }
 }

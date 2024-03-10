@@ -183,7 +183,7 @@ class chart_series implements JsonSerializable {
      *
      * @return array
      */
-    public function jsonSerialize(): array {
+    public function jsonSerialize() {
         $data = [
             'label' => $this->label,
             'labels' => $this->labels,

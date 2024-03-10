@@ -365,7 +365,7 @@ class page_wiki_view extends page_wiki {
             $params['swid'] = $this->subwiki->id;
             $params['title'] = $this->title;
         } else {
-            throw new \moodle_exception(get_string('invalidparameters', 'wiki'));
+            print_error(get_string('invalidparameters', 'wiki'));
         }
         $PAGE->set_url(new moodle_url($CFG->wwwroot . '/mod/wiki/view.php', $params));
     }
@@ -835,7 +835,7 @@ class page_wiki_editcomment extends page_wiki {
 
         if ($this->format == 'html') {
             $com->action = 'edit';
-            $com->entrycomment_editor['text'] = $com->content;
+            $com->entrycomment_editor['text'] = clean_text($com->content, $this->format);
             $com->commentoptions = array('trusttext' => true, 'maxfiles' => 0);
 
             $this->form->set_data($com);
@@ -1205,7 +1205,7 @@ class page_wiki_diff extends page_wiki {
 
             echo $this->wikioutput->diff($pageid, $oldversion, $newversion, array('total' => $total));
         } else {
-            throw new \moodle_exception('versionerror', 'wiki');
+            print_error('versionerror', 'wiki');
         }
     }
 }
@@ -1771,7 +1771,7 @@ class page_wiki_map extends page_wiki {
             $strdataux = '';
             foreach ($pages as $page) {
                 $user = wiki_get_user_info($page->userid);
-                $strdata = date('d M Y', $page->timemodified);
+                $strdata = strftime('%d %b %Y', $page->timemodified);
                 if ($strdata != $strdataux) {
                     $table->data[] = array($OUTPUT->heading($strdata, 4));
                     $strdataux = $strdata;
@@ -2130,7 +2130,7 @@ class page_wiki_save extends page_wiki_edit {
             $url = new moodle_url('/mod/wiki/view.php', array('pageid' => $this->page->id, 'group' => $this->subwiki->groupid));
             redirect($url);
         } else {
-            throw new \moodle_exception('savingerror', 'wiki');
+            print_error('savingerror', 'wiki');
         }
     }
 }
@@ -2220,7 +2220,7 @@ class page_wiki_viewversion extends page_wiki {
             echo $OUTPUT->box($content, 'generalbox wiki_contentbox');
 
         } else {
-            throw new \moodle_exception('versionerror', 'wiki');
+            print_error('versionerror', 'wiki');
         }
     }
 }
@@ -2247,7 +2247,7 @@ class page_wiki_confirmrestore extends page_wiki_save {
                 wiki_restore_page($this->page, $version, $this->modcontext)) {
             redirect($CFG->wwwroot . '/mod/wiki/view.php?pageid=' . $this->page->id, get_string('restoring', 'wiki', $version->version), 3);
         } else {
-            throw new \moodle_exception('restoreerror', 'wiki', $version->version);
+            print_error('restoreerror', 'wiki', $version->version);
         }
     }
 
@@ -2345,7 +2345,7 @@ class page_wiki_handlecomments extends page_wiki {
                 $this->delete_comment($this->commentid);
                 redirect($CFG->wwwroot . '/mod/wiki/comments.php?pageid=' . $this->page->id, get_string('deletecomment', 'wiki'), 2);
             } else {
-                throw new \moodle_exception('nopermissiontoeditcomment');
+                print_error('nopermissiontoeditcomment');
             }
         }
 

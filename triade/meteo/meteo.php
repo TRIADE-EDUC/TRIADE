@@ -5,8 +5,8 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
- *   Site                 : http://www.triade-educ.com
+ *   copyright            : (C) 2000 E. TAESCH 
+ *   Site                 : http://www.triade-educ.org
  *
  *
  ***************************************************************************/
@@ -29,7 +29,7 @@ $ville = METEOID;
 //$vname="Paris";
 $jours = 2;
 $datedujour=dateDMY2();
-$url = "http://www.triade-educ.org/accueil/weather.php?ref=".METEOID."&date=$datedujour";
+$url = "https://www.triade-educ.org/accueil/weather.php?ref=".METEOID."&date=$datedujour";
 //print $url;
 /*
 <TRIADE>

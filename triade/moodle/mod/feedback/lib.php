@@ -2785,7 +2785,7 @@ function feedback_send_email_html($info, $course, $cm) {
 function feedback_encode_target_url($url) {
     if (strpos($url, '?')) {
         list($part1, $part2) = explode('?', $url, 2); //maximal 2 parts
-        return $part1 . '?' . htmlentities($part2, ENT_COMPAT);
+        return $part1 . '?' . htmlentities($part2);
     } else {
         return $url;
     }
@@ -2800,7 +2800,7 @@ function feedback_encode_target_url($url) {
 function feedback_extend_settings_navigation(settings_navigation $settings, navigation_node $feedbacknode) {
     $hassecondary = $settings->get_page()->has_secondary_navigation();
     if (!$context = context_module::instance($settings->get_page()->cm->id, IGNORE_MISSING)) {
-        throw new \moodle_exception('badcontext');
+        print_error('badcontext');
     }
 
     if (has_capability('mod/feedback:edititems', $context)) {

@@ -35,24 +35,24 @@ $mode = optional_param('mode', '', PARAM_ALPHA);
 
 if ($id) {
     if (!$cm = get_coursemodule_from_id('quiz', $id)) {
-        throw new \moodle_exception('invalidcoursemodule');
+        print_error('invalidcoursemodule');
     }
     if (!$course = $DB->get_record('course', array('id' => $cm->course))) {
-        throw new \moodle_exception('coursemisconf');
+        print_error('coursemisconf');
     }
     if (!$quiz = $DB->get_record('quiz', array('id' => $cm->instance))) {
-        throw new \moodle_exception('invalidcoursemodule');
+        print_error('invalidcoursemodule');
     }
 
 } else {
     if (!$quiz = $DB->get_record('quiz', array('id' => $q))) {
-        throw new \moodle_exception('invalidquizid', 'quiz');
+        print_error('invalidquizid', 'quiz');
     }
     if (!$course = $DB->get_record('course', array('id' => $quiz->course))) {
-        throw new \moodle_exception('invalidcourseid');
+        print_error('invalidcourseid');
     }
     if (!$cm = get_coursemodule_from_instance("quiz", $quiz->id, $course->id)) {
-        throw new \moodle_exception('invalidcoursemodule');
+        print_error('invalidcoursemodule');
     }
 }
 
@@ -68,7 +68,7 @@ $PAGE->set_pagelayout('report');
 $PAGE->activityheader->disable();
 $reportlist = quiz_report_list($context);
 if (empty($reportlist)) {
-    throw new \moodle_exception('erroraccessingreport', 'quiz');
+    print_error('erroraccessingreport', 'quiz');
 }
 
 // Validate the requested report name.
@@ -77,10 +77,10 @@ if ($mode == '') {
     $url->param('mode', reset($reportlist));
     redirect($url);
 } else if (!in_array($mode, $reportlist)) {
-    throw new \moodle_exception('erroraccessingreport', 'quiz');
+    print_error('erroraccessingreport', 'quiz');
 }
 if (!is_readable("report/$mode/report.php")) {
-    throw new \moodle_exception('reportnotfound', 'quiz', '', $mode);
+    print_error('reportnotfound', 'quiz', '', $mode);
 }
 
 // Open the selected quiz report and display it.
@@ -90,7 +90,7 @@ if (is_readable($file)) {
 }
 $reportclassname = 'quiz_' . $mode . '_report';
 if (!class_exists($reportclassname)) {
-    throw new \moodle_exception('preprocesserror', 'quiz');
+    print_error('preprocesserror', 'quiz');
 }
 
 $report = new $reportclassname();

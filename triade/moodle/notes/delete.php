@@ -23,27 +23,27 @@ $noteid = required_param('id', PARAM_INT);
 $PAGE->set_url('/notes/delete.php', array('id' => $noteid));
 
 if (!$note = note_load($noteid)) {
-    throw new \moodle_exception('invalidid');
+    print_error('invalidid');
 }
 
 if (!$course = $DB->get_record('course', array('id' => $note->courseid))) {
-    throw new \moodle_exception('invalidcourseid');
+    print_error('invalidcourseid');
 }
 
 require_login($course);
 
 if (empty($CFG->enablenotes)) {
-    throw new \moodle_exception('notesdisabled', 'notes');
+    print_error('notesdisabled', 'notes');
 }
 
 if (!$user = $DB->get_record('user', array('id' => $note->userid))) {
-    throw new \moodle_exception('invaliduserid');
+    print_error('invaliduserid');
 }
 
 $context = context_course::instance($course->id);
 
 if (!has_capability('moodle/notes:manage', $context)) {
-    throw new \moodle_exception('nopermissiontodelete', 'notes');
+    print_error('nopermissiontodelete', 'notes');
 }
 
 if (data_submitted() && confirm_sesskey()) {

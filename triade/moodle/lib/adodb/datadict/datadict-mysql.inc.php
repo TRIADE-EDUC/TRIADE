@@ -33,7 +33,7 @@ class ADODB2_mysql extends ADODB_DataDict {
 
 	public $blobAllowsNotNull = true;
 	
-	function metaType($t,$len=-1,$fieldobj=false)
+	function MetaType($t,$len=-1,$fieldobj=false)
 	{
 		
 		if (is_object($t)) {
@@ -44,14 +44,7 @@ class ADODB2_mysql extends ADODB_DataDict {
 		$is_serial = is_object($fieldobj) && $fieldobj->primary_key && $fieldobj->auto_increment;
 
 		$len = -1; // mysql max_length is not accurate
-			
-		$t = strtoupper($t);
-		
-		if (array_key_exists($t,$this->connection->customActualTypes))
-			return  $this->connection->customActualTypes[$t];
-		
-		switch ($t) {
-			
+		switch (strtoupper($t)) {
 		case 'STRING':
 		case 'CHAR':
 		case 'VARCHAR':
@@ -91,27 +84,13 @@ class ADODB2_mysql extends ADODB_DataDict {
 		case 'SMALLINT': return $is_serial ? 'R' : 'I2';
 		case 'MEDIUMINT': return $is_serial ? 'R' : 'I4';
 		case 'BIGINT':  return $is_serial ? 'R' : 'I8';
-		default: 
-			
-			return ADODB_DEFAULT_METATYPE;
+		default: return ADODB_DEFAULT_METATYPE;
 		}
 	}
 
 	function ActualType($meta)
 	{
-		
-		$meta = strtoupper($meta);
-		
-		/*
-		* Add support for custom meta types. We do this
-		* first, that allows us to override existing types
-		*/
-		if (isset($this->connection->customMetaTypes[$meta]))
-			return $this->connection->customMetaTypes[$meta]['actual'];
-				
-		switch($meta) 
-		{
-		
+		switch(strtoupper($meta)) {
 		case 'C': return 'VARCHAR';
 		case 'XL':return 'LONGTEXT';
 		case 'X': return 'TEXT';
@@ -135,9 +114,7 @@ class ADODB2_mysql extends ADODB_DataDict {
 
 		case 'F': return 'DOUBLE';
 		case 'N': return 'NUMERIC';
-			
 		default:
-			
 			return $meta;
 		}
 	}

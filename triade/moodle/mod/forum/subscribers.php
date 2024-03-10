@@ -53,7 +53,7 @@ require_login($course, false, $cm);
 
 $context = context_module::instance($cm->id);
 if (!has_capability('mod/forum:viewsubscribers', $context)) {
-    throw new \moodle_exception('nopermissiontosubscribe', 'forum');
+    print_error('nopermissiontosubscribe', 'forum');
 }
 
 unset($SESSION->fromdiscussion);
@@ -78,20 +78,20 @@ if (data_submitted()) {
     $unsubscribe = (bool)optional_param('unsubscribe', false, PARAM_RAW);
     /** It has to be one or the other, not both or neither */
     if (!($subscribe xor $unsubscribe)) {
-        throw new \moodle_exception('invalidaction');
+        print_error('invalidaction');
     }
     if ($subscribe) {
         $users = $subscriberselector->get_selected_users();
         foreach ($users as $user) {
             if (!\mod_forum\subscriptions::subscribe_user($user->id, $forum)) {
-                throw new \moodle_exception('cannotaddsubscriber', 'forum', '', $user->id);
+                print_error('cannotaddsubscriber', 'forum', '', $user->id);
             }
         }
     } else if ($unsubscribe) {
         $users = $existingselector->get_selected_users();
         foreach ($users as $user) {
             if (!\mod_forum\subscriptions::unsubscribe_user($user->id, $forum)) {
-                throw new \moodle_exception('cannotremovesubscriber', 'forum', '', $user->id);
+                print_error('cannotremovesubscriber', 'forum', '', $user->id);
             }
         }
     }

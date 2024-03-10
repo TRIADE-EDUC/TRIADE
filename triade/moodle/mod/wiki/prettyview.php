@@ -38,23 +38,23 @@ require_once($CFG->dirroot . '/mod/wiki/pagelib.php');
 $pageid = required_param('pageid', PARAM_INT); // Page ID
 
 if (!$page = wiki_get_page($pageid)) {
-    throw new \moodle_exception('incorrectpageid', 'wiki');
+    print_error('incorrectpageid', 'wiki');
 }
 if (!$subwiki = wiki_get_subwiki($page->subwikiid)) {
-    throw new \moodle_exception('incorrectsubwikiid', 'wiki');
+    print_error('incorrectsubwikiid', 'wiki');
 }
 if (!$cm = get_coursemodule_from_instance("wiki", $subwiki->wikiid)) {
-    throw new \moodle_exception('invalidcoursemodule');
+    print_error('invalidcoursemodule');
 }
 $course = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
 if (!$wiki = wiki_get_wiki($subwiki->wikiid)) {
-    throw new \moodle_exception('incorrectwikiid', 'wiki');
+    print_error('incorrectwikiid', 'wiki');
 }
 
 require_course_login($course, true, $cm);
 
 if (!wiki_user_can_view($subwiki, $wiki)) {
-    throw new \moodle_exception('cannotviewpage', 'wiki');
+    print_error('cannotviewpage', 'wiki');
 }
 
 $wikipage = new page_wiki_prettyview($wiki, $subwiki, $cm);

@@ -1234,5 +1234,3 @@ class SimplePie_IRI
 		return $iauthority;
 	}
 }
-
-class_alias('SimplePie_IRI', 'SimplePie\IRI', false);

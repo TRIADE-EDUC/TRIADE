@@ -58,7 +58,7 @@ abstract class moodle_recordset implements Iterator {
      * Rewinds are not supported!
      * @return void
      */
-    public function rewind(): void {
+    public function rewind() {
         // no seeking, sorry - let's ignore it ;-)
         return;
     }

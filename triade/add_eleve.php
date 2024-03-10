@@ -78,7 +78,7 @@ if (($nom == "") ||  ($prenom == "" ) ||  ($email_eleve == "" ) || ($passwd_elev
 			for($k=0;$k<count($tab);$k++){
 				$destinataire=$tab[$k][0];
 				$objet="Nouvel inscription";
-				$message="Une nouvelle inscription vient d'être effctu&eacute;e.";
+				$message="Une nouvelle inscription vient d'être effectu&eacute;e.";
 				$number="";
 				$date=dateDMY2();
 				$heure=dateHIS();

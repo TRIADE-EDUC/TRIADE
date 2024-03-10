@@ -236,7 +236,6 @@ function cron_run_adhoc_tasks(int $timenow, $keepalive = 0, $checklimits = true)
  */
 function cron_run_inner_scheduled_task(\core\task\task_base $task) {
     global $CFG, $DB;
-    $debuglevel = $CFG->debug;
 
     \core\task\manager::scheduled_task_starting($task);
     \core\task\logmanager::start_logging($task);
@@ -248,14 +247,13 @@ function cron_run_inner_scheduled_task(\core\task\task_base $task) {
     $predbqueries = null;
     $predbqueries = $DB->perf_get_queries();
     $pretime = microtime(1);
+
+    // Ensure that we have a clean session with the correct cron user.
+    cron_setup_user();
+
     try {
         get_mailer('buffer');
         cron_prepare_core_renderer();
-        // Temporarily increase debug level if task has failed and debugging isn't already at maximum.
-        if ($debuglevel !== DEBUG_DEVELOPER && $faildelay = $task->get_fail_delay()) {
-            mtrace('Debugging increased temporarily due to faildelay of ' . $faildelay);
-            set_debugging(DEBUG_DEVELOPER);
-        }
         $task->execute();
         if ($DB->is_transaction_started()) {
             throw new coding_exception("Task left transaction open");
@@ -286,10 +284,6 @@ function cron_run_inner_scheduled_task(\core\task\task_base $task) {
         }
         \core\task\manager::scheduled_task_failed($task);
     } finally {
-        // Reset debugging if it changed.
-        if ($CFG->debug !== $debuglevel) {
-            set_debugging($debuglevel);
-        }
         // Reset back to the standard admin user.
         cron_setup_user();
         cron_set_process_title('Waiting for next scheduled task');
@@ -304,15 +298,12 @@ function cron_run_inner_scheduled_task(\core\task\task_base $task) {
  * @param \core\task\adhoc_task $task
  */
 function cron_run_inner_adhoc_task(\core\task\adhoc_task $task) {
-    global $CFG, $DB;
-    $debuglevel = $CFG->debug;
+    global $DB, $CFG;
 
     \core\task\manager::adhoc_task_starting($task);
     \core\task\logmanager::start_logging($task);
 
     mtrace("Execute adhoc task: " . get_class($task));
-    mtrace("Adhoc task id: " . $task->get_id());
-    mtrace("Adhoc task custom data: " . $task->get_custom_data_as_string());
     cron_set_process_title('Adhoc task: ' . $task->get_id() . ' ' . get_class($task));
     cron_trace_time_and_memory();
     $predbqueries = null;
@@ -346,16 +337,15 @@ function cron_run_inner_adhoc_task(\core\task\adhoc_task $task) {
         }
 
         cron_setup_user($user);
+    } else {
+        // No user specified, ensure that we have a clean session with the correct cron user.
+        cron_setup_user();
+
     }
 
     try {
         get_mailer('buffer');
         cron_prepare_core_renderer();
-        // Temporarily increase debug level if task has failed and debugging isn't already at maximum.
-        if ($debuglevel !== DEBUG_DEVELOPER && $faildelay = $task->get_fail_delay()) {
-            mtrace('Debugging increased temporarily due to faildelay of ' . $faildelay);
-            set_debugging(DEBUG_DEVELOPER);
-        }
         $task->execute();
         if ($DB->is_transaction_started()) {
             throw new coding_exception("Task left transaction open");
@@ -386,10 +376,6 @@ function cron_run_inner_adhoc_task(\core\task\adhoc_task $task) {
         }
         \core\task\manager::adhoc_task_failed($task);
     } finally {
-        // Reset debug level if it changed.
-        if ($CFG->debug !== $debuglevel) {
-            set_debugging($debuglevel);
-        }
         // Reset back to the standard admin user.
         cron_setup_user();
         cron_prepare_core_renderer(true);

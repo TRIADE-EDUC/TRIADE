@@ -10,6 +10,7 @@ include_once("./librairie_php/timezone.php");
 <title>EDT Editer</title>
 <LINK TITLE="style" TYPE="text/CSS" rel="stylesheet" HREF="./librairie_css/css.css">
 <script language="JavaScript" src="./librairie_js/lib_css.js"></script>
+<script language="JavaScript" src="./librairie_js/function.js"></script>
 <script type="text/javascript" src="./librairie_js/prototype.js"></script>
 <script type="text/javascript" src="./librairie_js/ajaxEDT.js"></script>
 <script type="text/javascript" src="./librairie_js/xorax_serialize.js" ></script>

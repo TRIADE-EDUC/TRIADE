@@ -17,7 +17,6 @@
 namespace mod_bigbluebuttonbn\external;
 
 use context_module;
-use core_course\external\helper_for_get_mods_by_courses;
 use external_api;
 use external_files;
 use external_format_value;
@@ -87,7 +86,15 @@ class get_bigbluebuttonbns_by_courses extends external_api {
             // We can avoid then additional validate_context calls.
             $bigbluebuttonbns = get_all_instances_in_courses("bigbluebuttonbn", $courses, $USER->id);
             foreach ($bigbluebuttonbns as $bigbluebuttonbn) {
-                helper_for_get_mods_by_courses::format_name_and_intro($bigbluebuttonbn, 'mod_bigbluebuttonbn');
+                $context = context_module::instance($bigbluebuttonbn->coursemodule);
+                // Entry to return.
+                $bigbluebuttonbn->name = external_format_string($bigbluebuttonbn->name, $context->id);
+
+                [$bigbluebuttonbn->intro, $bigbluebuttonbn->introformat] = external_format_text($bigbluebuttonbn->intro,
+                    $bigbluebuttonbn->introformat, $context->id, 'mod_bigbluebuttonbn', 'intro', null);
+                $bigbluebuttonbn->introfiles = external_util::get_area_files($context->id,
+                    'mod_bigbluebuttonbn', 'intro', false, false);
+
                 $returnedbigbluebuttonbns[] = $bigbluebuttonbn;
             }
         }
@@ -108,13 +115,22 @@ class get_bigbluebuttonbns_by_courses extends external_api {
     public static function execute_returns() {
         return new external_single_structure([
                 'bigbluebuttonbns' => new external_multiple_structure(
-                    new external_single_structure(array_merge(
-                        helper_for_get_mods_by_courses::standard_coursemodule_elements_returns(),
-                        [
+                    new external_single_structure([
+                            'id' => new external_value(PARAM_INT, 'Module id'),
+                            'coursemodule' => new external_value(PARAM_INT, 'Course module id'),
+                            'course' => new external_value(PARAM_INT, 'Course id'),
+                            'name' => new external_value(PARAM_RAW, 'Name'),
+                            'intro' => new external_value(PARAM_RAW, 'Description'),
                             'meetingid' => new external_value(PARAM_RAW, 'Meeting id'),
+                            'introformat' => new external_format_value('intro', VALUE_REQUIRED, 'Summary format'),
+                            'introfiles' => new external_files('Files in the introduction text'),
                             'timemodified' => new external_value(PARAM_INT, 'Last time the instance was modified'),
+                            'section' => new external_value(PARAM_INT, 'Course section id'),
+                            'visible' => new external_value(PARAM_INT, 'Module visibility'),
+                            'groupmode' => new external_value(PARAM_INT, 'Group mode'),
+                            'groupingid' => new external_value(PARAM_INT, 'Grouping id'),
                         ]
-                    ))
+                    )
                 ),
                 'warnings' => new external_warnings(),
             ]

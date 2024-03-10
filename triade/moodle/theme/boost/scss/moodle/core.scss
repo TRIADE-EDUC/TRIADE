@@ -18,6 +18,7 @@ $thin-scroll-bg-hover: $gray-700 !default;
 $font-size-xs: ($font-size-base * .75) !default;
 
 #region-main {
+    overflow-x: auto;
     overflow-y: visible;
     background-color: $body-bg;
 }
@@ -2170,14 +2171,6 @@ h3.sectionname .inplaceeditable.inplaceeditingon .editinstructions {
 
 /** Chart area. */
 .chart-area {
-    @include media-breakpoint-up(lg) {
-        .chart-image {
-            position: relative;
-            margin: auto;
-            height: 48vh;
-            width: 46vw;
-        }
-    }
 
     .chart-table-data {
         display: none;
@@ -2197,12 +2190,6 @@ h3.sectionname .inplaceeditable.inplaceeditingon .editinstructions {
             }
         }
     }
-}
-
-// Reset for ul.
-ul {
-    padding-left: 1rem;
-    -webkit-margin-start: 0.2rem;  /* stylelint-disable-line */
 }
 
 /* YUI 2 Tree View */
@@ -2326,10 +2313,6 @@ $footer-link-color: $bg-inverse-link-color !default;
     @include box-shadow($popover-box-shadow);
 }
 
-.hasstickyfooter .btn-footer-popover {
-    bottom: calc(2rem + #{$navbar-height});
-}
-
 .popover.footer {
     .popover-body {
         padding: 0;
@@ -2346,10 +2329,6 @@ $footer-link-color: $bg-inverse-link-color !default;
             }
         }
     }
-}
-
-.footer-support-link {
-    padding-bottom: 5px;
 }
 
 @include media-breakpoint-up(sm) {
@@ -2383,7 +2362,6 @@ $footer-link-color: $bg-inverse-link-color !default;
         width: 100%;
         color: $body-color;
     }
-    &.active,
     &:active,
     &:hover,
     &:focus,
@@ -2395,14 +2373,13 @@ $footer-link-color: $bg-inverse-link-color !default;
             color: $dropdown-link-active-color;
         }
     }
-    &[aria-current="true"],
-    &[aria-selected="true"] {
+    &[aria-current="true"] {
         position: relative;
         display: flex;
         align-items: center;
         &:before {
             @include fa-icon();
-            content: $fa-var-check;
+            content: $fa-var-circle;
             position: absolute;
             left: 0.4rem;
             font-size: 0.7rem;
@@ -2958,35 +2935,27 @@ body.dragging {
     font-size: 9px;
     width: 9px;
     border: 0;
+
 }
 
-.select-menu {
-    li:first-child {
-        ul[role="group"] {
-            padding: 0;
-        }
-    }
+.dropleft .dropdown-toggle::before {
+    border: 0;
+    content: $fa-var-chevron-left;
+    @include fa-icon();
+    font-size: 9px;
+    margin-left: 0;
+    margin-right: 4px;
+    width: 9px;
+}
 
-    ul[role="group"] {
-        padding: 0.3rem 0 0 0;
-        margin: 0;
-        li:first-child {
-            cursor: default;
-            color: $gray-600;
-            padding: 0.25rem 1.5rem;
-            display: block;
-        }
-        .dropdown-item {
-            padding-left: 2.5rem;
-        }
-    }
-    .dropdown-item {
-        cursor: pointer;
+.dropright .dropdown-toggle::after {
+    border: 0;
+    content: $fa-var-chevron-right;
+}
 
-        &[aria-selected="true"] {
-            font-weight: bold;
-        }
-    }
+.dropup .dropdown-toggle::after {
+    border: 0;
+    content: $fa-var-chevron-up;
 }
 
 .initialbargroups ul {
@@ -3043,5 +3012,4 @@ blockquote {
         overflow-wrap: anywhere;
         white-space: normal;
     }
-
 }

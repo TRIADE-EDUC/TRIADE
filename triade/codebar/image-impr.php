@@ -41,17 +41,24 @@ if ($code == "codabar") {
 	$code = new codabar(30,$color_black,$color_white,2,$texte,$font);
 }
 
-/* Here is the list of the arguments
-1 - Filename (empty : display on screen)
-2 - Background color */
-$drawing = new FDrawing('',$color_white);
-$drawing->setBarcode($code);
-$drawing->draw();
+if ($code == "qcode") {
+        include_once('../qrcode/qrlib.php');
+        echo QRcode::png("$texte");
+}
 
-// Header that says it is an image (remove it if you save the barcode to a file)
-header('Content-Type: image/png');
+if ($code != "qcode") {
+	/* Here is the list of the arguments
+	1 - Filename (empty : display on screen)
+	2 - Background color */
+	$drawing = new FDrawing('',$color_white);
+	$drawing->setBarcode($code);
+	$drawing->draw();
 
-// Draw (or save) the image into PNG format.
-$drawing->finish(IMG_FORMAT_PNG);
+	// Header that says it is an image (remove it if you save the barcode to a file)
+	header('Content-Type: image/png');
+
+	// Draw (or save) the image into PNG format.
+	$drawing->finish(IMG_FORMAT_PNG);
+}
 
 ?>

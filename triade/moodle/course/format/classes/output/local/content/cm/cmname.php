@@ -64,20 +64,16 @@ class cmname implements named_templatable, renderable {
      * @param course_format $format the course format
      * @param section_info $section the section info
      * @param cm_info $mod the course module ionfo
-     * @param null $unused This parameter has been deprecated since 4.1 and should not be used anymore.
+     * @param bool|null $editable if it is editable (not used)
      * @param array $displayoptions optional extra display options
      */
     public function __construct(
         course_format $format,
         section_info $section,
         cm_info $mod,
-        ?bool $unused = null,
+        ?bool $editable = null,
         array $displayoptions = []
     ) {
-        if ($unused !== null) {
-            debugging('Deprecated argument passed to ' . __FUNCTION__, DEBUG_DEVELOPER);
-        }
-
         $this->format = $format;
         $this->section = $section;
         $this->mod = $mod;
@@ -102,15 +98,21 @@ class cmname implements named_templatable, renderable {
             return [];
         }
 
+        $iconurl = $mod->get_icon_url();
+        $iconclass = $iconurl->get_param('filtericon') ? '' : 'nofilter';
         $data = [
             'url' => $mod->url,
-            'icon' => $mod->get_icon_url(),
+            'icon' => $iconurl,
+            'iconclass' => $iconclass,
             'modname' => $mod->modname,
-            'pluginname' => get_string('pluginname', 'mod_' . $mod->modname),
             'textclasses' => $displayoptions['textclasses'] ?? '',
             'purpose' => plugin_supports('mod', $mod->modname, FEATURE_MOD_PURPOSE, MOD_PURPOSE_OTHER),
             'activityname' => $this->get_title_data($output),
         ];
+
+        if ($this->format->show_editor()) {
+            $data['pluginname'] = get_string('pluginname', 'mod_' . $mod->modname);
+        }
 
         return $data;
     }

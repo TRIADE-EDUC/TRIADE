@@ -28,10 +28,10 @@ session_start();
 <meta name="Copyright" content="Triade©, 2001">
 <LINK TITLE="style" TYPE="text/CSS" rel="stylesheet" HREF="./librairie_css/css.css">
 <script language="JavaScript" src="./librairie_js/clickdroit.js"></script>
+<?php include("./librairie_php/lib_licence.php"); ?>
 <title><?php print LANGatte_mess1?></title>
 </head>
 <body id='bodyfond2' border=1 marginheight="0" marginwidth="0" leftmargin="0" topmargin="0">
-<?php include("./librairie_php/lib_licence.php"); ?>
 <table width=102% height=100%>
   <tr>
     <td align=center> <font class='T2'><?php print LANGatte_mess2 ?></font>

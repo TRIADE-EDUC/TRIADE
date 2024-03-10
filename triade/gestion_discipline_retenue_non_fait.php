@@ -78,7 +78,7 @@ include("./librairie_php/class.writeexcel_worksheet.inc.php");
 $fichierxls="./data/fichier_ASCII/export_discipline_".$_SESSION["id_pers"].".xls";
 @unlink($fichierxls);
 
-$workbook = &new writeexcel_workbook($fichierxls);
+$workbook = new writeexcel_workbook($fichierxls);
 $worksheet =& $workbook->addworksheet("Listing Retenu non fait.");
 
 $header =& $workbook->addformat();

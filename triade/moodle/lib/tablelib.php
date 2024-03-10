@@ -573,7 +573,7 @@ class flexible_table {
         global $SESSION;
         if (isset($SESSION->flextable[$uniqueid])) {
             $prefs = $SESSION->flextable[$uniqueid];
-        } else if (!$prefs = json_decode(get_user_preferences("flextable_{$uniqueid}", ''), true)) {
+        } else if (!$prefs = json_decode(get_user_preferences('flextable_' . $uniqueid), true)) {
             return '';
         }
 
@@ -601,9 +601,9 @@ class flexible_table {
                 $column = $DB->sql_order_by_text($column);
             }
             if ($order == SORT_ASC) {
-                $bits[] = $DB->sql_order_by_null($column);
+                $bits[] = $column . ' ASC';
             } else {
-                $bits[] = $DB->sql_order_by_null($column, SORT_DESC);
+                $bits[] = $column . ' DESC';
             }
         }
 
@@ -1469,7 +1469,7 @@ class flexible_table {
 
         // Load any existing user preferences.
         if ($this->persistent) {
-            $this->prefs = json_decode(get_user_preferences("flextable_{$this->uniqueid}", ''), true);
+            $this->prefs = json_decode(get_user_preferences('flextable_' . $this->uniqueid), true);
             $oldprefs = $this->prefs;
         } else if (isset($SESSION->flextable[$this->uniqueid])) {
             $this->prefs = $SESSION->flextable[$this->uniqueid];
@@ -2210,7 +2210,7 @@ class table_default_export_format_parent {
     function format_text($text, $format=FORMAT_MOODLE, $options=NULL, $courseid=NULL) {
         //use some whitespace to indicate where there was some line spacing.
         $text = str_replace(array('</p>', "\n", "\r"), '   ', $text);
-        return html_entity_decode(strip_tags($text), ENT_COMPAT);
+        return html_entity_decode(strip_tags($text));
     }
 
     /**
@@ -2352,3 +2352,4 @@ class table_dataformat_export_format extends table_default_export_format_parent 
         exit();
     }
 }
+

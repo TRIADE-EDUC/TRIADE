@@ -504,9 +504,6 @@ class ADORecordSet_ado extends ADORecordSet {
 			$t = $fieldobj->type;
 			$len = $fieldobj->max_length;
 		}
-		
-		if (array_key_exists($t,$this->connection->customActualTypes))
-			return  $this->connection->customActualTypes[$t];
 
 		if (!is_numeric($t)) return $t;
 

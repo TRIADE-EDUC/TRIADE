@@ -18,27 +18,27 @@ if ($hook !== 'ALL') {
 $PAGE->set_url($url);
 
 if (!$entry = $DB->get_record('glossary_entries', array('id'=>$id))) {
-    throw new \moodle_exception('invalidentry');
+    print_error('invalidentry');
 }
 
 if ($entry->sourceglossaryid) {
     //already exported
     if (!$cm = get_coursemodule_from_id('glossary', $entry->sourceglossaryid)) {
-        throw new \moodle_exception('invalidcoursemodule');
+        print_error('invalidcoursemodule');
     }
     redirect('view.php?id='.$cm->id.'&amp;mode=entry&amp;hook='.$entry->id);
 }
 
 if (!$cm = get_coursemodule_from_instance('glossary', $entry->glossaryid)) {
-    throw new \moodle_exception('invalidcoursemodule');
+    print_error('invalidcoursemodule');
 }
 
 if (!$glossary = $DB->get_record('glossary', array('id'=>$cm->instance))) {
-    throw new \moodle_exception('invalidid', 'glossary');
+    print_error('invalidid', 'glossary');
 }
 
 if (!$course = $DB->get_record('course', array('id'=>$cm->course))) {
-    throw new \moodle_exception('coursemisconf');
+    print_error('coursemisconf');
 }
 
 require_course_login($course->id, true, $cm);
@@ -53,14 +53,14 @@ if (!$mainglossary = $DB->get_record('glossary', array('course'=>$cm->course, 'm
 }
 
 if (!$maincm = get_coursemodule_from_instance('glossary', $mainglossary->id)) {
-    throw new \moodle_exception('invalidcoursemodule');
+    print_error('invalidcoursemodule');
 }
 
 $context     = context_module::instance($cm->id);
 $maincontext = context_module::instance($maincm->id);
 
 if (!$course = $DB->get_record('course', array('id'=>$cm->course))) {
-    throw new \moodle_exception('coursemisconf');
+    print_error('coursemisconf');
 }
 
 

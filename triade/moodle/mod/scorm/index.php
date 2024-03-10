@@ -23,10 +23,10 @@ $PAGE->set_url('/mod/scorm/index.php', array('id' => $id));
 
 if (!empty($id)) {
     if (!$course = $DB->get_record('course', array('id' => $id))) {
-        throw new \moodle_exception('invalidcourseid');
+        print_error('invalidcourseid');
     }
 } else {
-    throw new \moodle_exception('missingparameter');
+    print_error('missingparameter');
 }
 
 require_course_login($course);

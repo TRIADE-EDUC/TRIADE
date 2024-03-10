@@ -57,7 +57,7 @@ langmenuparent35="D.S.T.";
 langmenuprof1="Messagerie";
 langmenuprof11="Ecrire";
 langmenuprof12="R&eacute;ception";
-langmenuprof13="Message envoy&eacute;s";
+langmenuprof13="Envoy&eacute;s";
 //------
 langmenuprof2="Notes";
 langmenuprof21="Ajouter devoirs";
@@ -86,7 +86,7 @@ langmenuadmin01="News - Actualit&eacute;s";
 langmenuadmin02="Ecrire";
 langmenuadmin023="Corbeille";
 langmenuadmin03="R&eacute;ception";
-langmenuadmin04="Messages envoy&eacute;s";
+langmenuadmin04="Envoy&eacute;s";
 langmenuadmin05="News Audio";
 //------
 langmenuadmin1="Gestion";
@@ -265,7 +265,7 @@ langmenuadmin96="Exporter";
 langmenuadmin97="Emargement";
 langmenuadmin98="Unit&eacute;s enseignmts";
 langmenuadmin99="Nouvelle ann&eacute;e";
-langmenuadmin100="Intra-MSN";
+langmenuadmin100="Triade-MSN";
 langmenuadmin103="E-Learning";
 langmenuadmin525bis="Etat Versement";
 langmenuadmin104="Personnels";

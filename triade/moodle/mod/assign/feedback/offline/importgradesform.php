@@ -57,7 +57,7 @@ class assignfeedback_offline_import_grades_form extends moodleform implements re
         $draftid = $params['draftid'];
 
         if (!$gradeimporter) {
-            throw new \moodle_exception('invalidarguments');
+            print_error('invalidarguments');
             return;
         }
 
@@ -77,7 +77,7 @@ class assignfeedback_offline_import_grades_form extends moodleform implements re
                                                                      'plugin'=>'offline',
                                                                      'pluginaction'=>'uploadgrades',
                                                                      'id'=>$assignment->get_course_module()->id));
-            throw new \moodle_exception('invalidgradeimport', 'assignfeedback_offline', $thisurl);
+            print_error('invalidgradeimport', 'assignfeedback_offline', $thisurl);
             return;
         }
 

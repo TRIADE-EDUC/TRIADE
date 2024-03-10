@@ -170,7 +170,7 @@ $nocache=time();
 <script language="JavaScript"> var contenu=""; </script>
 <?php
 $efface="";
-$titre3=strtolower($_GET["saisie_titre"]);
+$titre3=strtolower(htmlspecialchars($_GET["saisie_titre"]));
 if ($titre3 == "administrateur"){ $titre3="administration"; }
 if ($titre3 == "direction")	{ $titre3="administration"; }
 if ($titre3 == "parents") 	{ $titre3="parents"; 	}
@@ -226,7 +226,7 @@ var	contenu = '<table Id="HelpTable" style="width: 335px;" cellspacing="0" cellp
 }
 ?>
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
-<tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' ><?php print LANGTTITRE1?> <?php print ucfirst($titre3) ?></font> &nbsp;&nbsp;&nbsp;&nbsp;</b><font id="color2"><?php print $_GET["message"] ?></FONT></td>
+<tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' ><?php print LANGTTITRE1?> <?php print ucfirst($titre3) ?></font> &nbsp;&nbsp;&nbsp;&nbsp;</b><font id="color2"><?php print htmlspecialchars($_GET["message"]) ?></FONT></td>
 </tr>
 <tr id='cadreCentral0'>
 <td >
@@ -309,7 +309,7 @@ if ((file_exists("./data/parametrage/noacces.ete")) && ($_GET["saisie_membre"] !
         $disabled="disabled";
         $action="acces_depart.php";
         $codeErreur="" ;
-        $messageaccueil="L'ENT Triade est en vacance, l'&eacute;tablissement pr&eacute;pare la nouvelle ann&eacute;e, merci de revenir plus tard.";
+        $messageaccueil="L'ENT Triade est en vacances, l'&eacute;tablissement pr&eacute;pare la nouvelle ann&eacute;e, merci de revenir plus tard.";
 }
 
 if ((file_exists("./data/parametrage/noacces.parent")) && ($_GET["saisie_membre"] == "parent")) {
@@ -353,8 +353,8 @@ if (trim($disabled) == "") {
 <TR>
 <TD align=right ><font class="T2"><?php print LANGNA3?> : </font></TD>
 <TD width="2"><input type=password name=saisiepasswd size=20 <?php print $efface ?>  class="idAccesNom" onblur="this.className='idAccesNom'" onfocus="this.className='idAccesNom2'" >
-<input type=hidden name='saisie_membre' value="<?php print $_GET["saisie_membre"] ?>" >
-<input type=hidden name='saisie_titre' value="<?php print $_GET["saisie_titre"] ?>" >
+<input type=hidden name='saisie_membre' value="<?php print htmlspecialchars($_GET["saisie_membre"]) ?>" >
+<input type=hidden name='saisie_titre' value="<?php print htmlspecialchars($_GET["saisie_titre"]) ?>" >
 <input type=hidden name='saisiewidth' id='saisiewidth' >
 <script>
 if (screen.width >= 800) { document.getElementById('saisiewidth').value='780'; }
@@ -459,8 +459,6 @@ if (isset($_GET["expire"])) {
 <SCRIPT language="JavaScript" src="./librairie_js/menudepart22.js"></SCRIPT>
 <?php include_once("./librairie_php/finbody.php"); ?>
 <?php if (md5_file("librairie_php/mactu.php") != "7f1e92090ce16c5d90d1acf8e1077010") { ?>
-
-
 
 
 <?php } ?>

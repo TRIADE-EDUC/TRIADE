@@ -93,7 +93,8 @@ if (trim($_POST["typefichier"]) == "excel" ) {
 	$fic_xls=$_POST["fichier"];
 	include_once('./librairie_php/reader.php');
 	$data = new Spreadsheet_Excel_Reader();
-	$data->setOutputEncoding('CP1251');
+//	$data->setOutputEncoding('CP1251');
+	$data->setOutputEncoding('UTF-8');
 	$data->read($fic_xls);
 /*
 	1) N° MATRIC  

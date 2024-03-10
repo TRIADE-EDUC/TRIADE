@@ -23,7 +23,9 @@
  * @author     T.J.Hunt@open.ac.uk
  * @license    http://www.gnu.org/copyleft/gpl.html GNU Public License
  */
+
 class weblib_test extends advanced_testcase {
+
     /**
      * @covers ::format_string
      */
@@ -45,10 +47,6 @@ class weblib_test extends advanced_testcase {
 
         // Unicode entities.
         $this->assertSame("&#4475;", format_string("&#4475;"));
-
-        // Nulls.
-        $this->assertSame('', format_string(null));
-        $this->assertSame('', format_string(null, true, ['escape' => false]));
 
         // < and > signs.
         $originalformatstringstriptags = $CFG->formatstringstriptags;
@@ -956,59 +954,5 @@ EXPECTED;
         $CFG->maxconsecutiveidentchars = 1;
 
         $this->assertNotEquals($policydisabled, print_password_policy());
-    }
-
-    /**
-     * Data provider for the testing get_html_lang_attribute_value().
-     *
-     * @return string[][]
-     */
-    public function get_html_lang_attribute_value_provider() {
-        return [
-            'Empty lang code' => ['    ', 'unknown'],
-            'English' => ['en', 'en'],
-            'English, US' => ['en_us', 'en-us'],
-        ];
-    }
-
-    /**
-     * Test for get_html_lang_attribute_value().
-     *
-     * @covers ::get_html_lang_attribute_value()
-     * @dataProvider get_html_lang_attribute_value_provider
-     * @param string $langcode The language code to convert.
-     * @param string $expected The expected converted value.
-     * @return void
-     */
-    public function test_get_html_lang_attribute_value(string $langcode, string $expected): void {
-        $this->assertEquals($expected, get_html_lang_attribute_value($langcode));
-    }
-
-    /**
-     * Data provider for strip_querystring tests.
-     *
-     * @return array
-     */
-    public function strip_querystring_provider(): array {
-        return [
-            'Null' => [null, ''],
-            'Empty string' => ['', ''],
-            'No querystring' => ['https://example.com', 'https://example.com'],
-            'Querystring' => ['https://example.com?foo=bar', 'https://example.com'],
-            'Querystring with fragment' => ['https://example.com?foo=bar#baz', 'https://example.com'],
-            'Querystring with fragment and path' => ['https://example.com/foo/bar?foo=bar#baz', 'https://example.com/foo/bar'],
-        ];
-    }
-
-    /**
-     * Test the strip_querystring function with various exampels.
-     *
-     * @dataProvider strip_querystring_provider
-     * @param mixed $value
-     * @param mixed $expected
-     * @covers ::strip_querystring
-     */
-    public function test_strip_querystring($value, $expected): void {
-        $this->assertEquals($expected, strip_querystring($value));
     }
 }

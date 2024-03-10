@@ -1971,157 +1971,6 @@ class accesslib_test extends advanced_testcase {
     }
 
     /**
-     * Utility method to fake a plugin
-     *
-     * @param string $pluginname plugin name
-     * @return void
-     */
-    protected function setup_fake_plugin($pluginname) {
-        global $CFG;
-        // Here we have to hack the component loader so we can insert our fake plugin and test that
-        // the access.php works.
-        $mockedcomponent = new ReflectionClass(core_component::class);
-        $mockedplugins = $mockedcomponent->getProperty('plugins');
-        $mockedplugins->setAccessible(true);
-        $plugins = $mockedplugins->getValue();
-        $plugins['fake'] = [$pluginname => "{$CFG->dirroot}/lib/tests/fixtures/fakeplugins/$pluginname"];
-        $mockedplugins->setValue($plugins);
-        update_capabilities('fake_access');
-        $this->resetDebugging(); // We have debugging messages here that we need to get rid of.
-        // End of the component loader mock.
-    }
-
-    /**
-     * Test get_deprecated_capability_info()
-     *
-     * @covers ::get_deprecated_capability_info
-     */
-    public function test_get_deprecated_capability_info() {
-        $this->resetAfterTest();
-        $course = $this->getDataGenerator()->create_course();
-        $coursecontext = context_course::instance($course->id);
-        $user = $this->getDataGenerator()->create_and_enrol($course);
-        $this->setup_fake_plugin('access');
-
-        // For now we have deprecated fake/access:fakecapability.
-        $capinfo = get_deprecated_capability_info('fake/access:fakecapability');
-        $this->assertNotEmpty($capinfo);
-        $this->assertEquals("The capability 'fake/access:fakecapability' is"
-            . " deprecated.This capability should not be used anymore.", $capinfo['fullmessage']);
-    }
-
-    /**
-     * Test get_deprecated_capability_info() through has_capability
-     *
-     * @covers ::get_deprecated_capability_info
-     */
-    public function test_get_deprecated_capability_info_through_has_capability() {
-        $this->resetAfterTest();
-        $course = $this->getDataGenerator()->create_course();
-        $coursecontext = context_course::instance($course->id);
-        $user = $this->getDataGenerator()->create_and_enrol($course);
-        $this->setup_fake_plugin('access');
-
-        // For now we have deprecated fake/access:fakecapability.
-        $hascap = has_capability('fake/access:fakecapability', $coursecontext, $user);
-        $this->assertTrue($hascap);
-        $this->assertDebuggingCalled("The capability 'fake/access:fakecapability' is deprecated."
-            . "This capability should not be used anymore.");
-    }
-
-    /**
-     * Test get_deprecated_capability_info() through get_user_capability_contexts()
-     *
-     * @covers ::get_deprecated_capability_info
-     */
-    public function test_get_deprecated_capability_info_through_get_user_capability_contexts() {
-        $this->resetAfterTest();
-        $category = $this->getDataGenerator()->create_category();
-        $course = $this->getDataGenerator()->create_course(['categoryid' => $category->id]);
-        $user = $this->getDataGenerator()->create_and_enrol($course);
-        $this->setup_fake_plugin('access');
-
-        // For now we have deprecated fake/access:fakecapability.
-        list($categories, $courses) = get_user_capability_contexts('fake/access:fakecapability', false, $user->id);
-        $this->assertNotEmpty($courses);
-        $this->assertDebuggingCalled("The capability 'fake/access:fakecapability' is deprecated."
-                . "This capability should not be used anymore.");
-    }
-
-    /**
-     * Test get_deprecated_capability_info with a capability that does not exist
-     *
-     * @param string $capability the capability name
-     * @param array $debugmessages the debug messsages we expect
-     * @param bool $expectedexisting does the capability exist
-     * @covers ::get_deprecated_capability_info
-     * @dataProvider deprecated_capabilities_use_cases
-     */
-    public function test_get_deprecated_capability_specific_cases(string $capability, array $debugmessages,
-        bool $expectedexisting) {
-        $this->resetAfterTest();
-        $course = $this->getDataGenerator()->create_course();
-        $coursecontext = context_course::instance($course->id);
-        $user = $this->getDataGenerator()->create_and_enrol($course);
-        $this->setup_fake_plugin('access');
-
-        // For now we have deprecated fake/access:fakecapability.
-        $this->resetDebugging();
-        $hascap = has_capability($capability, $coursecontext, $user);
-        $this->assertEquals($expectedexisting, $hascap);
-        $this->assertDebuggingCalledCount(count($debugmessages), $debugmessages);
-    }
-
-    /**
-     * Specific use case for deprecated capabilities
-     *
-     * @return array
-     */
-    public function deprecated_capabilities_use_cases() {
-        return [
-            'capability missing' => [
-                'fake/access:missingcapability',
-                [
-                    "Capability \"fake/access:missingcapability\" was not found! This has to be fixed in code."
-                ],
-                false
-            ],
-            'replacement no info' => [
-                'fake/access:replacementnoinfo',
-                [
-                    "The capability 'fake/access:replacementnoinfo' is deprecated.",
-                ],
-                true
-            ],
-            'replacement missing' => [
-                'fake/access:replacementmissing',
-                [
-                    "The capability 'fake/access:replacementmissing' is deprecated.This capability should not be used anymore.",
-                ],
-                true
-            ],
-            'replacement with non existing cap' => [
-                'fake/access:replacementwithwrongcapability',
-                [
-                    "Capability 'fake/access:replacementwithwrongcapability' was supposed to be replaced with"
-                    . " 'fake/access:nonexistingcapabilty', which does not exist !",
-                    "The capability 'fake/access:replacementwithwrongcapability' is deprecated."
-                    . "This capability should not be used anymore.It will be replaced by 'fake/access:nonexistingcapabilty'."
-                ],
-                true
-            ],
-            'replacement with existing' => [
-                'fake/access:replacementwithexisting', // Existing capability buf for a different role.
-                [
-                    "The capability 'fake/access:replacementwithexisting' is deprecated.This capability should not be used anymore."
-                    . "It will be replaced by 'fake/access:existingcapability'.",
-                ],
-                false // As the capability is applied to managers, we should not have this capability for this simple user.
-            ],
-        ];
-    }
-
-    /**
      * Test that assigning a fake cap does not return.
      *
      * @covers ::get_users_by_capability
@@ -2485,6 +2334,8 @@ class accesslib_test extends advanced_testcase {
     /**
      * Tests get_user_capability_contexts() which checks a capability across all courses and categories.
      * Testing for categories only because courses results are covered by test_get_user_capability_course.
+     *
+     * @covers ::get_user_capability_contexts
      */
     public function test_get_user_capability_contexts() {
         $this->resetAfterTest();
@@ -2512,9 +2363,9 @@ class accesslib_test extends advanced_testcase {
         assign_capability($cap, CAP_PROHIBIT, $prohibitroleid, $systemcontext->id);
 
         // Create three categories (two of them nested).
-        $cat1 = $generator->create_category();
-        $cat2 = $generator->create_category();
-        $cat3 = $generator->create_category(['parent' => $cat1->id]);
+        $cat1 = $generator->create_category(['name' => 'Aardvarks']);
+        $cat2 = $generator->create_category(['name' => 'Badgers']);
+        $cat3 = $generator->create_category(['parent' => $cat1->id, 'name' => 'Cheetahs']);
 
         // Category overrides: in cat 1, empty role is allowed; in cat 2, empty role is prevented.
         assign_capability($cap, CAP_ALLOW, $emptyroleid,
@@ -2535,7 +2386,7 @@ class accesslib_test extends advanced_testcase {
         $u1 = $generator->create_user();
 
         // It returns false (annoyingly) if there are no course categories.
-        list($categories, $courses) = get_user_capability_contexts($cap, true, $u1->id, true, '', '', '', 'id');
+        list($categories, $courses) = get_user_capability_contexts($cap, true, $u1->id);
         $this->assertFalse($categories);
 
         // User 2 has allow role (system wide).
@@ -2543,7 +2394,7 @@ class accesslib_test extends advanced_testcase {
         role_assign($allowroleid, $u2->id, $systemcontext->id);
 
         // Should get $defaultcategory only. cat2 is prohibited; cat1 is prevented, so cat3 is not allowed.
-        list($categories, $courses) = get_user_capability_contexts($cap, true, $u2->id, true, '', '', '', 'id');
+        list($categories, $courses) = get_user_capability_contexts($cap, true, $u2->id);
         // Using same assert_course_ids helper even when we are checking course category ids.
         $this->assert_course_ids([$defaultcategoryid], $categories);
 
@@ -2551,8 +2402,8 @@ class accesslib_test extends advanced_testcase {
         $u3 = $generator->create_user();
         role_assign($emptyroleid, $u3->id, $systemcontext->id);
 
-        // Should get cat1 and cat3. cat2 is prohibited; no access to system level.
-        list($categories, $courses) = get_user_capability_contexts($cap, true, $u3->id, true, '', '', '', 'id');
+        // Should get cat1 and cat3. cat2 is prohibited; no access to system level. Sorted by category name.
+        list($categories, $courses) = get_user_capability_contexts($cap, true, $u3->id, true, '', '', '', 'name');
         $this->assert_course_ids([$cat1->id, $cat3->id], $categories);
 
         // User 4 has prohibit role (system wide).
@@ -2561,7 +2412,7 @@ class accesslib_test extends advanced_testcase {
 
         // Should not get any, because all of them are prohibited at system level.
         // Even if we try to allow an specific category.
-        list($categories, $courses) = get_user_capability_contexts($cap, true, $u4->id, true, '', '', '', 'id');
+        list($categories, $courses) = get_user_capability_contexts($cap, true, $u4->id);
         $this->assertFalse($categories);
     }
 

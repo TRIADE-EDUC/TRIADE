@@ -45,7 +45,7 @@ if ($confirm) {
         throw new moodle_exception('confirmsesskeybad');
     }
     if (!$workshop->switch_phase($phase)) {
-        throw new \moodle_exception('errorswitchingphase', 'workshop', $workshop->view_url());
+        print_error('errorswitchingphase', 'workshop', $workshop->view_url());
     }
     redirect($workshop->view_url());
 }

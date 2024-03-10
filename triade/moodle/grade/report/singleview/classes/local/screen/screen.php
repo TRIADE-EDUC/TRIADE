@@ -43,62 +43,38 @@ defined('MOODLE_INTERNAL') || die;
  */
 abstract class screen {
 
-    /**
-     * The id of the course
-     * @var int $courseid
-     */
+    /** @var int $courseid The id of the course */
     protected $courseid;
 
-    /**
-     * Either a user id or a grade_item id
-     * @var int|null $itemid
-     */
+    /** @var int $itemid Either a user id or a grade_item id */
     protected $itemid;
 
-    /**
-     * The currently set groupid (if set)
-     * @var int $groupid
-     */
+    /** @var int $groupid The currently set groupid (if set) */
     protected $groupid;
 
-    /**
-     * The course context
-     * @var context_course $context
-     */
+    /** @var course_context $context The course context */
     protected $context;
 
-    /**
-     * The page number
-     * @var int $page
-     */
+    /** @var int $page The page number */
     protected $page;
 
-    /**
-     * Results per page
-     * @var int $perpage
-     */
+    /** @var int $perpage Results per page */
     protected $perpage;
 
-    /**
-     * List of items on the page, they could be users or grade_items
-     * @var array $items
-     */
+    /** @var array $items List of items on the page, they could be users or grade_items */
     protected $items;
 
-    /**
-     * List of allowed values for 'perpage' setting
-     * @var array $validperpage
-     */
+    /** @var array $validperpage List of allowed values for 'perpage' setting */
     protected static $validperpage = [20, 50, 100, 200, 400, 1000, 5000];
 
     /**
      * Constructor
      *
      * @param int $courseid The course id
-     * @param int|null $itemid The item id
-     * @param int|null $groupid The group id
+     * @param int $itemid The item id
+     * @param int $groupid The group id
      */
-    public function __construct(int $courseid, ?int $itemid, ?int $groupid = null) {
+    public function __construct($courseid, $itemid, $groupid = null) {
         global $DB;
 
         $this->courseid = $courseid;
@@ -106,7 +82,7 @@ abstract class screen {
         $this->groupid = $groupid;
 
         $this->context = context_course::instance($this->courseid);
-        $this->course = $DB->get_record('course', ['id' => $courseid]);
+        $this->course = $DB->get_record('course', array('id' => $courseid));
 
         $this->page = optional_param('page', 0, PARAM_INT);
 
@@ -141,16 +117,16 @@ abstract class screen {
      *
      * @param string $screen
      * @param int $itemid
-     * @param bool|null $display Should we wrap this in an anchor ?
+     * @param bool $display Should we wrap this in an anchor ?
      * @return string The link
      */
-    public function format_link(string $screen, int $itemid, bool $display = null): string {
-        $url = new moodle_url('/grade/report/singleview/index.php', [
+    public function format_link($screen, $itemid, $display = null) {
+        $url = new moodle_url('/grade/report/singleview/index.php', array(
             'id' => $this->courseid,
             'item' => $screen,
             'itemid' => $itemid,
             'group' => $this->groupid,
-        ]);
+        ));
 
         if ($display) {
             return html_writer::link($url, $display);
@@ -166,10 +142,10 @@ abstract class screen {
      * @param int $userid The user id
      * @return grade_grade
      */
-    public function fetch_grade_or_default(grade_item $item, int $userid): grade_grade {
-        $grade = grade_grade::fetch([
+    public function fetch_grade_or_default($item, $userid) {
+        $grade = grade_grade::fetch(array(
             'itemid' => $item->id, 'userid' => $userid
-        ]);
+        ));
 
         if (!$grade) {
             $default = new stdClass;
@@ -187,11 +163,57 @@ abstract class screen {
     }
 
     /**
+     * Make the HTML element that toggles all the checkboxes on or off.
+     *
+     * @param string $key A unique key for this control - inserted in the classes.
+     * @return string
+     */
+    public function make_toggle($key) {
+        $attrs = array('href' => '#');
+
+        // Do proper lang strings for title attributes exist for the given key?
+        $strmanager = \get_string_manager();
+        $titleall = get_string('all');
+        $titlenone = get_string('none');
+        if ($strmanager->string_exists(strtolower($key) . 'all', 'gradereport_singleview')) {
+            $titleall = get_string(strtolower($key) . 'all', 'gradereport_singleview');
+        }
+        if ($strmanager->string_exists(strtolower($key) . 'none', 'gradereport_singleview')) {
+            $titlenone = get_string(strtolower($key) . 'none', 'gradereport_singleview');
+        }
+
+        $all = html_writer::tag('a', get_string('all'), $attrs + array(
+            'class' => 'include all ' . $key,
+            'title' => $titleall
+        ));
+
+        $none = html_writer::tag('a', get_string('none'), $attrs + array(
+            'class' => 'include none ' . $key,
+            'title' => $titlenone
+        ));
+
+        return html_writer::tag('span', "$all / $none", array(
+            'class' => 'inclusion_links'
+        ));
+    }
+
+    /**
+     * Make a toggle link with some text before it.
+     *
+     * @param string $key A unique key for this control - inserted in the classes.
+     * @return string
+     */
+    public function make_toggle_links($key) {
+        return get_string($key, 'gradereport_singleview') . ' ' .
+            $this->make_toggle($key);
+    }
+
+    /**
      * Get the default heading for the screen.
      *
      * @return string
      */
-    public function heading(): string {
+    public function heading() {
         return get_string('entrypage', 'gradereport_singleview');
     }
 
@@ -200,28 +222,28 @@ abstract class screen {
      *
      * @param boolean $selfitemisempty True if no item has been selected yet.
      */
-    abstract public function init(bool $selfitemisempty = false);
+    public abstract function init($selfitemisempty = false);
 
     /**
      * Get the type of items in the list.
      *
-     * @return null|string
+     * @return string
      */
-    abstract public function item_type(): ?string;
+    public abstract function item_type();
 
     /**
      * Get the entire screen as a string.
      *
      * @return string
      */
-    abstract public function html(): string;
+    public abstract function html();
 
     /**
      * Does this screen support paging?
      *
      * @return bool
      */
-    public function supports_paging(): bool {
+    public function supports_paging() {
         return true;
     }
 
@@ -230,7 +252,7 @@ abstract class screen {
      *
      * @return string
      */
-    public function pager(): string {
+    public function pager() {
         return '';
     }
 
@@ -240,25 +262,24 @@ abstract class screen {
     public function js() {
         global $PAGE;
 
-        $module = [
+        $module = array(
             'name' => 'gradereport_singleview',
             'fullpath' => '/grade/report/singleview/js/singleview.js',
-            'requires' => ['base', 'dom', 'event', 'event-simulate', 'io-base']
-        ];
+            'requires' => array('base', 'dom', 'event', 'event-simulate', 'io-base')
+        );
 
-        $PAGE->requires->strings_for_js(['overridenoneconfirm', 'removeoverride', 'removeoverridesave'],
-            'gradereport_singleview');
-        $PAGE->requires->js_init_call('M.gradereport_singleview.init', [], false, $module);
+        $PAGE->requires->string_for_js('overridenoneconfirm', 'gradereport_singleview');
+        $PAGE->requires->js_init_call('M.gradereport_singleview.init', array(), false, $module);
     }
 
     /**
      * Process the data from a form submission.
      *
-     * @param array|object $data
-     * @return stdClass of warnings
+     * @param array $data
+     * @return array of warnings
      */
-    public function process($data): stdClass {
-        $warnings = [];
+    public function process($data) {
+        $warnings = array();
 
         $fields = $this->definition();
 
@@ -268,7 +289,7 @@ abstract class screen {
         $progressbar = new \core\progress\display_if_slow();
         $progressbar->start_html();
         $progressbar->start_progress(get_string('savegrades', 'gradereport_singleview'), count((array) $data) - 1);
-        $changecount = [];
+        $changecount = array();
         // This array is used to determine if the override should be excluded from being counted as a change.
         $ignorevalues = [];
 
@@ -282,9 +303,9 @@ abstract class screen {
                 continue;
             }
 
-            $gradeitem = grade_item::fetch([
+            $gradeitem = grade_item::fetch(array(
                 'id' => $itemid, 'courseid' => $this->courseid
-            ]);
+            ));
 
             if (preg_match('/^old[oe]{1}/', $varname)) {
                 $elementname = preg_replace('/^old/', '', $varname);
@@ -368,18 +389,18 @@ abstract class screen {
     }
 
     /**
-     * By default, there are no options.
+     * By default there are no options.
      * @return array
      */
-    public function options(): array {
-        return [];
+    public function options() {
+        return array();
     }
 
     /**
      * Should we show the group selector?
      * @return bool
      */
-    public function display_group_selector(): bool {
+    public function display_group_selector() {
         return true;
     }
 
@@ -387,7 +408,7 @@ abstract class screen {
      * Should we show the next prev selector?
      * @return bool
      */
-    public function supports_next_prev(): bool {
+    public function supports_next_prev() {
         return true;
     }
 
@@ -395,7 +416,7 @@ abstract class screen {
      * Load a valid list of users for this gradebook as the screen "items".
      * @return array $users A list of enroled users.
      */
-    protected function load_users(): array {
+    protected function load_users() {
         global $CFG;
 
         // Create a graded_users_iterator because it will properly check the groups etc.
@@ -409,7 +430,7 @@ abstract class screen {
         $gui->init();
 
         // Flatten the users.
-        $users = [];
+        $users = array();
         while ($user = $gui->next_user()) {
             $users[$user->user->id] = $user->user;
         }
@@ -421,7 +442,7 @@ abstract class screen {
      * Allow selection of number of items to display per page.
      * @return string
      */
-    public function perpage_select(): string {
+    public function perpage_select() {
         global $PAGE, $OUTPUT;
 
         $options = array_combine(self::$validperpage, self::$validperpage);

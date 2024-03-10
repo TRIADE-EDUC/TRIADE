@@ -9,10 +9,10 @@ if (empty($_SESSION["id_pers"]))  {
 include_once('./common/config.inc.php');
 include_once('./librairie_php/db_triade.php');
 include_once("./common/config2.inc.php");
-$fic=$_GET["id"];
+$cnx=cnx();
+$fic=htmlspecialchars($_GET["id"]);
 if ($fic == "") { exit; }
 
-$cnx=cnx();
 $filename=nomFichierJoint($fic);
 Pgclose();
 if (trim($filename) == "") { exit; }

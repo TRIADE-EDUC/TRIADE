@@ -27,15 +27,15 @@ if ($groupid !== 0) {
 $PAGE->set_url($url);
 
 if (!$chat = $DB->get_record('chat', array('id' => $id))) {
-    throw new \moodle_exception('invalidid', 'chat');
+    print_error('invalidid', 'chat');
 }
 
 if (!$course = $DB->get_record('course', array('id' => $chat->course))) {
-    throw new \moodle_exception('invalidcourseid');
+    print_error('invalidcourseid');
 }
 
 if (!$cm = get_coursemodule_from_instance('chat', $chat->id, $course->id)) {
-    throw new \moodle_exception('invalidcoursemodule');
+    print_error('invalidcoursemodule');
 }
 
 $context = context_module::instance($cm->id);
@@ -48,7 +48,7 @@ require_capability('mod/chat:chat', $context);
 if ($groupmode = groups_get_activity_groupmode($cm)) {   // Groups are being used.
     if ($groupid = groups_get_activity_group($cm)) {
         if (!$group = groups_get_group($groupid)) {
-            throw new \moodle_exception('invalidgroupid');
+            print_error('invalidgroupid');
         }
         $groupname = ': '.$group->name;
     } else {
@@ -62,7 +62,7 @@ if ($groupmode = groups_get_activity_groupmode($cm)) {   // Groups are being use
 $strchat = get_string('modulename', 'chat'); // Must be before current_language() in chat_login_user() to force course language!
 
 if (!$chatsid = chat_login_user($chat->id, 'header_js', $groupid, $course)) {
-    throw new \moodle_exception('cantlogin', 'chat');
+    print_error('cantlogin', 'chat');
 }
 
 $params = "chat_id=$id&chat_sid={$chatsid}";

@@ -56,46 +56,34 @@ ns.isIE = navigator.userAgent.match(/; MSIE \d+.\d+;/) !== null;
  */
 ns.renderableCommonFields = {};
 
-(() => {
-  const loading = {}; // Map of callbacks for each src being loaded
-
-  /**
-   * Help load JavaScripts, prevents double loading.
-   *
-   * @param {string} src
-   * @param {Function} done Callback
-   */
-  ns.loadJs = (src, done) => {
-    if (H5P.jsLoaded(src)) {
-      // Already loaded
-      done(); 
-      return;
-    }
-
-    if (loading[src] !== undefined) {
-      // Loading in progress...
-      loading[src].push(done);
-      return;
-    }
-
-    loading[src] = [done];
-
-    // Load using script tag
+/**
+ * Help load JavaScripts, prevents double loading.
+ *
+ * @param {string} src
+ * @param {Function} done Callback
+ */
+ns.loadJs = function (src, done) {
+  if (H5P.jsLoaded(src)) {
+    // Already loaded
+    done();
+  }
+  else {
+    // Loading using script tag
     var script = document.createElement('script');
     script.type = 'text/javascript';
     script.charset = 'UTF-8';
     script.async = false;
     script.onload = function () {
       H5PIntegration.loadedJs.push(src);
-      loading[src].forEach(cb => cb());
+      done();
     };
     script.onerror = function (err) {
-      loading[src].forEach(cb => cb(err));
+      done(err);
     };
     script.src = src;
     document.head.appendChild(script);
-  };
-})();
+  }
+}
 
 /**
  * Helper function invoked when a library is requested. Will add CSS and eval JS
@@ -295,7 +283,6 @@ ns.resetLoadedLibraries = function () {
   H5PIntegration.loadedJs = [];
   ns.loadedCallbacks = [];
   ns.libraryLoaded = {};
-  ns.libraryCache = {};
 };
 
 /**

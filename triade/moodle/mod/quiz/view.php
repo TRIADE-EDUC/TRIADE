@@ -35,20 +35,20 @@ $q = optional_param('q',  0, PARAM_INT);  // Quiz ID.
 
 if ($id) {
     if (!$cm = get_coursemodule_from_id('quiz', $id)) {
-        throw new \moodle_exception('invalidcoursemodule');
+        print_error('invalidcoursemodule');
     }
     if (!$course = $DB->get_record('course', array('id' => $cm->course))) {
-        throw new \moodle_exception('coursemisconf');
+        print_error('coursemisconf');
     }
 } else {
     if (!$quiz = $DB->get_record('quiz', array('id' => $q))) {
-        throw new \moodle_exception('invalidquizid', 'quiz');
+        print_error('invalidquizid', 'quiz');
     }
     if (!$course = $DB->get_record('course', array('id' => $quiz->course))) {
-        throw new \moodle_exception('invalidcourseid');
+        print_error('invalidcourseid');
     }
     if (!$cm = get_coursemodule_from_instance("quiz", $quiz->id, $course->id)) {
-        throw new \moodle_exception('invalidcoursemodule');
+        print_error('invalidcoursemodule');
     }
 }
 

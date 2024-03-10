@@ -286,18 +286,9 @@ abstract class Formatter
 
         ob_start();
 
-        try {
-            $this->block($block);
-        } catch (\Exception $e) {
-            ob_end_clean();
-            throw $e;
-        } catch (\Throwable $e) {
-            ob_end_clean();
-            throw $e;
-        }
+        $this->block($block);
 
         $out = ob_get_clean();
-        assert($out !== false);
 
         return $out;
     }
@@ -340,8 +331,6 @@ abstract class Formatter
                 // If the written line starts is empty, adding a mapping would add it for
                 // a non-existent column as we are at the end of the line
                 if ($line !== '') {
-                    assert($this->currentBlock->sourceLine !== null);
-                    assert($this->currentBlock->sourceName !== null);
                     $this->sourceMapGenerator->addMapping(
                         $this->currentLine,
                         $this->currentColumn,
@@ -357,8 +346,6 @@ abstract class Formatter
             }
 
             if ($lastLine !== '') {
-                assert($this->currentBlock->sourceLine !== null);
-                assert($this->currentBlock->sourceName !== null);
                 $this->sourceMapGenerator->addMapping(
                     $this->currentLine,
                     $this->currentColumn,

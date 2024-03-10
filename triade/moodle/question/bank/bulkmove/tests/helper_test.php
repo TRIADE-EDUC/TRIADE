@@ -132,7 +132,7 @@ class helper_test extends \advanced_testcase {
         ob_start();
         $pagevars = [
             'qpage' => 0,
-            'qperpage' => DEFAULT_QUESTIONS_PER_PAGE,
+            'qperpage' => 20,
             'cat' => $this->cat->id . ',' . $this->context->id,
             'recurse' => false,
             'showhidden' => false,
@@ -153,7 +153,7 @@ class helper_test extends \advanced_testcase {
         ob_start();
         $pagevars = [
             'qpage' => 0,
-            'qperpage' => DEFAULT_QUESTIONS_PER_PAGE,
+            'qperpage' => 20,
             'cat' => $this->cat->id . ',' . $this->context->id,
             'recurse' => false,
             'showhidden' => false,
@@ -169,7 +169,7 @@ class helper_test extends \advanced_testcase {
         ob_start();
         $pagevars = [
             'qpage' => 0,
-            'qperpage' => DEFAULT_QUESTIONS_PER_PAGE,
+            'qperpage' => 20,
             'cat' => $this->secondcategory->id . ',' . $this->context->id,
             'category' => $this->secondcategory->id . ',' . $this->context->id,
             'recurse' => false,

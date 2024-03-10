@@ -34,8 +34,7 @@ session_start();
 <title>Triade - Compte de <?php print "$_SESSION[nom] $_SESSION[prenom] "?></title>
 </head>
 <body id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" onload="Init();" >
-<?php include("./librairie_php/lib_licence.php"); ?>
-<?php
+<?php include("./librairie_php/lib_licence.php"); 
 // connexion (après include_once lib_licence.php obligatoirement)
 include_once("librairie_php/db_triade.php");
 $cnx=cnx();

@@ -61,7 +61,7 @@ if ($courseid AND $courseid != SITEID) {
 }
 
 if (!$feedbackcompletion->can_complete()) {
-    throw new \moodle_exception('error');
+    print_error('error');
 }
 
 $PAGE->navbar->add(get_string('feedback:complete', 'feedback'));

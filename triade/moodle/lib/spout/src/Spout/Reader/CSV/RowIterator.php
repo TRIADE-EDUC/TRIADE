@@ -84,7 +84,6 @@ class RowIterator implements IteratorInterface
      *
      * @return void
      */
-    #[\ReturnTypeWillChange]
     public function rewind()
     {
         $this->rewindAndSkipBom();
@@ -115,7 +114,6 @@ class RowIterator implements IteratorInterface
      *
      * @return bool
      */
-    #[\ReturnTypeWillChange]
     public function valid()
     {
         return ($this->filePointer && !$this->hasReachedEndOfFile);
@@ -128,7 +126,6 @@ class RowIterator implements IteratorInterface
      * @throws \Box\Spout\Common\Exception\EncodingConversionException If unable to convert data to UTF-8
      * @return void
      */
-    #[\ReturnTypeWillChange]
     public function next()
     {
         $this->hasReachedEndOfFile = $this->globalFunctionsHelper->feof($this->filePointer);
@@ -227,7 +224,6 @@ class RowIterator implements IteratorInterface
      *
      * @return Row|null
      */
-    #[\ReturnTypeWillChange]
     public function current()
     {
         return $this->rowBuffer;
@@ -239,7 +235,6 @@ class RowIterator implements IteratorInterface
      *
      * @return int
      */
-    #[\ReturnTypeWillChange]
     public function key()
     {
         return $this->numReadRows;

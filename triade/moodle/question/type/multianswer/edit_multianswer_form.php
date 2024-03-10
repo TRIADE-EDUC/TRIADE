@@ -280,7 +280,7 @@ class qtype_multianswer_edit_form extends question_edit_form {
                             case 'subquestion_replacement':
                                 continue 2;
                             default:
-                                throw new \moodle_exception('unknownquestiontype', 'question', '',
+                                print_error('unknownquestiontype', 'question', '',
                                         $wrapped->qtype);
                         }
                         $separator = '';
@@ -415,7 +415,7 @@ class qtype_multianswer_edit_form extends question_edit_form {
                             }
 
                             $defaultvalues[$prefix.'answer['.$key.']'] =
-                                    htmlspecialchars($answer, ENT_COMPAT);
+                                    htmlspecialchars($answer);
                         }
                         if ($answercount == 0) {
                             if ($subquestion->qtype == 'multichoice') {
@@ -433,7 +433,7 @@ class qtype_multianswer_edit_form extends question_edit_form {
                         foreach ($subquestion->feedback as $key => $answer) {
 
                             $defaultvalues[$prefix.'feedback['.$key.']'] =
-                                    htmlspecialchars ($answer['text'], ENT_COMPAT);
+                                    htmlspecialchars ($answer['text']);
                         }
                         foreach ($subquestion->fraction as $key => $answer) {
                             $defaultvalues[$prefix.'fraction['.$key.']'] = $answer;

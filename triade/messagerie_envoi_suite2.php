@@ -128,6 +128,7 @@ if (isset($_GET["erreur"])) {
 <form name="formulaire" method=post action='./messagerie_enr.php' target='_parent' onsubmit='return verif_message_envoi()'>
 <BR>
 <?php
+$cnx=cnx();
 
 $brouillon=0;
 if (isset($_GET["brouillon"])) { $brouillon=$_GET["brouillon"]; }
@@ -137,7 +138,6 @@ if (isset($_GET["f"])) { $forwarding=$_GET["f"]; }
 if (isset($_GET["saisie_id_message"])) { $idMessage=$_GET["saisie_id_message"]; } 
 
 include_once('librairie_php/db_triade.php');
-$cnx=cnx();
 if ($forwarding == 1) {
 	if ($idMessage > 0) {
 		$dataMessage=affichage_messagerie_message($idMessage);
@@ -151,7 +151,6 @@ if ($forwarding == 1) {
 			}else{
 			    $destinataire=recherche_eleve($dataMessage[$i][1]);
 			}
-	
 			$messageencours="<br><br><hr>";
 			$messageencours.="> <i>".LANGMESS31.": $destinataire</i><br>";
 			$messageencours.="> <i>".LANGTE12." ".dateForm($dataMessage[$i][4])." ".LANGTE13." ".$dataMessage[$i][5]."</i>";
@@ -367,7 +366,7 @@ if (file_exists("./common/config-ia.php")) {
 
 if (($_SESSION['membre'] == "menuadmin") || ($_SESSION['membre'] == "menuprof") || ($_SESSION['membre'] == "menuscolaire")) {
 
-	print "<br><br><input type='text' size=50 id='commentaire' placeholder=\"Indiquer une suggestion de message &agrave; r&eacute;diger\"  /> <input type='button' value='TRIADE-COPILOT' id='bt_copilot' class='BUTTON' onClick=\"$lienIA\" >&nbsp;&nbsp;<a href='#'  onMouseOver=\"AffBulle('TRIADE-COPILOT vous permet de pr&eacute;parer votre message via des mots clefs que vous indiquer.');\"  onMouseOut=\"HideBulle()\";><img src=\"./image/help.gif\" border=0 align=center></a>
+	print "<br><br><input type='text' size=50 id='commentaire' placeholder=\"Indiquer une suggestion de message &agrave; r&eacute;diger\"  /> <input type='button' value='TRIADE-COPILOT' id='bt_copilot' class='BUTTON' onClick=\"$lienIA\" >&nbsp;&nbsp;<a href='#'  onMouseOver=\"AffBulle('TRIADE-COPILOT vous permet de pr&eacute;parer votre message via des mots clefs que vous indiquez.');\"  onMouseOut=\"HideBulle()\";><img src=\"./image/help.gif\" border=0 align=center></a>
 ";
 }
 

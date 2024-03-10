@@ -77,8 +77,8 @@ if ( (!empty($fichier)) && (($type == "application/octet-stream" ) || ($type == 
 	move_uploaded_file($tmp_name,$fic_xls);
 	include_once('./librairie_php/reader2.php');
 	$data = new Spreadsheet_Excel_Reader();
-	$data->setOutputEncoding('CP1250');
-	//$data->setOutputEncoding('UTF-8');
+	//$data->setOutputEncoding('CP1250');
+	$data->setOutputEncoding('UTF-8');
 	$data->read($fic_xls);
 	/*
 		1) ordre_affichage
@@ -101,12 +101,12 @@ if ( (!empty($fichier)) && (($type == "application/octet-stream" ) || ($type == 
 	
 	for ($i = 2; $i <= $data->sheets[0]['numRows']; $i++) {
 		$ordre_affichage=trim(addslashes($data->sheets[0]['cells'][$i][1]));
-	 	$libelle_matiere_fr=utf8_encode(trim(addslashes($data->sheets[0]['cells'][$i][2])));
+	 	$libelle_matiere_fr=trim(addslashes($data->sheets[0]['cells'][$i][2]));
        	 	$libelle_matiere_en=trim(addslashes($data->sheets[0]['cells'][$i][3]));
 	 	$numero_semestre=trim(addslashes($data->sheets[0]['cells'][$i][4]));
 		$ects=trim(addslashes($data->sheets[0]['cells'][$i][5]));
        	 	$coef=trim(addslashes($data->sheets[0]['cells'][$i][6]));
-		$UE_libelle_fr=utf8_encode(trim(addslashes($data->sheets[0]['cells'][$i][7])));
+		$UE_libelle_fr=trim(addslashes($data->sheets[0]['cells'][$i][7]));
 	 	$UE_libelle_en=trim(addslashes($data->sheets[0]['cells'][$i][8]));
        	 	$code_matiere=trim(addslashes($data->sheets[0]['cells'][$i][9]));		
 		$libelle_classe=trim(addslashes($data->sheets[0]['cells'][$i][10]));		

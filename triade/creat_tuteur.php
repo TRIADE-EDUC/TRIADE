@@ -54,6 +54,8 @@ session_start();
 <br />
 <?php
 include_once("librairie_php/db_triade.php");
+include_once("common/config.inc.php");
+$cnx=cnx();
 $affiche=affichageMessageSecurite();
 $txt2=preg_replace('/\<b\>/',"",$affiche);
 $txt2=preg_replace('/\<\/b\>/',"",$txt2);
@@ -101,7 +103,6 @@ if ($_SESSION["nav"] == "IE") {
 <select name='id_societe' >
 <option STYLE='color:#000066;background-color:#FCE4BA' value='0' ><?php print LANGCHOIX ?></option>
 <?php
-$cnx=cnx();
 select_entreprise_limit(25);
 ?>
 </select>

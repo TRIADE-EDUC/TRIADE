@@ -228,7 +228,8 @@ $tasks = array(
         'hour' => '*',
         'day' => '*',
         'dayofweek' => '*',
-        'month' => '*'
+        'month' => '*',
+        'disabled' => true,
     ),
     array(
         'classname' => 'core\task\registration_cron_task',
@@ -428,13 +429,4 @@ $tasks = array(
         'month' => '*',
         'dayofweek' => '*',
     ),
-    [
-        'classname' => 'core\task\task_lock_cleanup_task',
-        'blocking' => 0,
-        'minute' => 'R',
-        'hour' => '0',
-        'day' => '*',
-        'dayofweek' => '*',
-        'month' => '*'
-    ]
 );

@@ -54,7 +54,7 @@ function report_courseoverview_print_chart($report, $time, $numcourses) {
 
     if (empty($courses)) {
         $PAGE->set_url('/report/courseoverview/index.php');
-        throw new \moodle_exception('statsnodata', 'error', $PAGE->url->out());
+        print_error('statsnodata', 'error', $PAGE->url->out());
     }
 
     $data = [];

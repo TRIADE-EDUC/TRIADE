@@ -492,6 +492,18 @@ print "var moduleentretien='$ok';\n";
 if (verifDroit($_SESSION["id_pers"],'edt')) { $ok="oui"; }else{ $ok='non'; }
 print "var moduleedt='$ok';\n";
 
+print "var SIGNKEY='';";
+
+if (file_exists("../common/config-sign.php")) {
+	include_once("../common/config-sign.php");
+	print "SIGNKEY='".SIGNKEY."';\n";
+}
+
+if (file_exists("./common/config-sign.php")) {
+        include_once("./common/config-sign.php");
+        print "SIGNKEY='".SIGNKEY."';\n";
+}
+
 print "</script>";
 
 include_once("./librairie_php/langue.php");

@@ -4,7 +4,7 @@ session_start();
  *                              T.R.I.A.D.E
  *                            ---------------
  *
- *   begin                : Janvier 2023
+ *   begin                : Janvier 2024
  *   copyright            : (C) 2000 E. TAESCH - 
  *   Site                 : http://www.triade-educ.org
  *
@@ -43,7 +43,7 @@ session_start();
 <div align='center'><?php top_h(); ?>
 <SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."1.js'>" ?></SCRIPT>
 <?php
-if (($_SESSION['membre'] == "menuadmin") || ($_SESSION['membre'] == "menuprof") || ($_SESSION['membre'] == "menuscolaire")) {
+if (($_SESSION['membre'] == "menuadmin") || ($_SESSION['membre'] == "menuprof") || ($_SESSION['membre'] == "menuscolaire") || ($_SESSION['membre'] == "menupersonnel") ) {
 ?>
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="750">
 <tr id='coulBar0' >
@@ -92,10 +92,10 @@ if(file_exists("./common/config-ia.php")) {
 <table><tr><td><img src="image/commun/assisante.gif" /></td><td><font class=T2><?php print "Disposer d'un service d'assistance en ligne." ?></font></td></tr></table>
 <br><br>
 <table align='center' ><tr><td align='center'>
-<script language=JavaScript>buttonMagic2("Espace Client Triade",'http://www.triade-educ.org/accueil/acces_client.php','_blank','','0')</script>
-<script language=JavaScript>buttonMagic2("Forum Libre Triade",'http://forum.triade-educ.org','_blank','','0')</script>
-<script language=JavaScript>buttonMagic2("Documentation Triade",'http://doc.triade-educ.org','_blank','','0')</script>
-<script language=JavaScript>buttonMagic2("Discord Triade",'https://www.triade-educ.org/accueil/discord.php','_blank','','0')</script>&nbsp;&nbsp;</td></tr></table>
+<script language=JavaScript>buttonMagic2("TRIADE-CLIENT",'http://www.triade-educ.org/accueil/acces_client.php','_blank','','0')</script>
+<script language=JavaScript>buttonMagic2("TRIADE-FORUM",'http://forum.triade-educ.org','_blank','','0')</script>
+<script language=JavaScript>buttonMagic2("TRIADE-DOC",'http://doc.triade-educ.org','_blank','','0')</script>
+<script language=JavaScript>buttonMagic2("TRIADE-DISCORD",'https://www.triade-educ.org/accueil/discord.php','_blank','','0')</script>&nbsp;&nbsp;</td></tr></table>
 &nbsp;&nbsp;
 <br><br><br>
     
@@ -104,20 +104,35 @@ if(file_exists("./common/config-ia.php")) {
 
      <?php
        // Test du membre pour savoir quel fichier JS je dois executer
-       if ($_SESSION[membre] == "menuadmin") :
-       print "<SCRIPT language='JavaScript' ";
-       print "src='./librairie_js/".$_SESSION[membre]."2.js'>";
-       print "</SCRIPT>";
-       else :
-       print "<SCRIPT language='JavaScript' ";
-      print "src='./librairie_js/".$_SESSION[membre]."22.js'>";
-       print "</SCRIPT>";
-
-      top_d();
-
-     print "<SCRIPT language='JavaScript' ";
-     print "src='./librairie_js/".$_SESSION[membre]."33.js'>";
+// Test du membre pour savoir quel fichier JS je dois executer
+if (($_SESSION["membre"] == "menuadmin") || ($_SESSION["membre"] == "menuscolaire")) :
+     print "<SCRIPT type='text/javascript' ";
+     print "src='./librairie_js/".$_SESSION["membre"]."2.js'>";
      print "</SCRIPT>";
-       endif ;
+else :
+     print "<SCRIPT type='text/javascript' ";
+     print "src='./librairie_js/".$_SESSION["membre"]."22.js'>";
+     print "</SCRIPT>";
+     top_d();
+     print "<SCRIPT type='text/javascript' ";
+     print "src='./librairie_js/".$_SESSION["membre"]."33.js'>";
+     print "</SCRIPT>";
+endif ;
      ?>
+
+<!-- Brevo Conversations {literal} -->
+<script>
+    (function(d, w, c) {
+        w.BrevoConversationsID = '64baa5aa2041cf06f4299bfc';
+        w[c] = w[c] || function() {
+            (w[c].q = w[c].q || []).push(arguments);
+        };
+        var s = d.createElement('script');
+        s.async = true;
+        s.src = 'https://conversations-widget.brevo.com/brevo-conversations.js';
+        if (d.head) d.head.appendChild(s);
+    })(document, window, 'BrevoConversations');
+</script>
+<!-- /Brevo Conversations {/literal} -->
+
 </BODY></HTML>

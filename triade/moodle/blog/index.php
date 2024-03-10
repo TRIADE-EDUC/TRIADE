@@ -90,7 +90,7 @@ if ($CFG->bloglevel == BLOG_GLOBAL_LEVEL) {
     require_login();
     if (isguestuser()) {
         // They must have entered the url manually.
-        throw new \moodle_exception('noguest');
+        print_error('noguest');
     }
 
 } else if ($CFG->bloglevel == BLOG_USER_LEVEL) {
@@ -99,11 +99,11 @@ if ($CFG->bloglevel == BLOG_GLOBAL_LEVEL) {
 
 } else {
     // Weird!
-    throw new \moodle_exception('blogdisable', 'blog');
+    print_error('blogdisable', 'blog');
 }
 
 if (empty($CFG->enableblogs)) {
-    throw new \moodle_exception('blogdisable', 'blog');
+    print_error('blogdisable', 'blog');
 }
 
 list($courseid, $userid) = blog_validate_access($courseid, $modid, $groupid, $entryid, $userid);

@@ -48,7 +48,7 @@ $assignment = new \assign($context, null, null);
 require_login($assignment->get_course(), false, $cm);
 
 if (!$assignment->can_view_submission($userid)) {
-    throw new \moodle_exception('nopermission');
+    print_error('nopermission');
 }
 
 if ($action === 'pollconversions') {

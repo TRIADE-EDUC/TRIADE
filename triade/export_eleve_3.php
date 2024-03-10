@@ -258,12 +258,6 @@ if ($ok == 1) {
 
 	$workbook->close();
 
-//	header("Content-Type: application/x-msexcel; name=\"example-panes.xls\"");
-//	header("Content-Disposition: inline; filename=\"example-panes.xls\"");
-//	$fh=fopen($fichier, "rb");
-//	fpassthru($fh);
-//	fclose($fh);
-//	unlink($fname);
 
 }
 ?>

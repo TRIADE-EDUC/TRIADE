@@ -1,5 +1,5 @@
 <?php
-      session_start();
+session_start();
 /***************************************************************************
  *                              T.R.I.A.D.E
  *                            ---------------
@@ -66,6 +66,7 @@ select_classe(); // creation des options
 <font class=T2><?php print LANGMESS221 ?></font> <select name="codebase">
 <!-- <option value="codabar" id='select0' >CODABAR</option> -->
 <option value="code39" id='select0' >code39</option>
+<option value="qcode" id='select0' >Qcode</option>
 <!-- <option value="EAN13-ISBN" id='select0' >EAN-13/ISBN</option> -->
 </select>
 
@@ -92,6 +93,7 @@ select_classe(); // creation des options
 <font class=T2><?php print LANGMESS221?></font> <select name="codebase">
 <!-- <option value="codabar" id='select0' >CODABAR</option> -->
 <option value="code39" id='select0' >code39</option>
+<option value="qcode" id='select0' >Qcode</option>
 <!-- <option value="EAN13-ISBN" id='select0' >EAN-13/ISBN</option> -->
 </select>
 

@@ -269,8 +269,6 @@ if ($messclassic == 'classic') { $checkedmessclassic="selected='selected'"; }
 </form>
 <br><br>
 
-
-
 <form method="POST" name="form1" >
 <!-- message -->
 <?php
@@ -317,7 +315,6 @@ for($i=0;$i<count($data);$i++) {
 		}else{ 
 			$imgimpression="";  
 		}
-
 
 $reponse_poubelle="<TR><td  bordercolor='#FFFFFF' colspan='4' ><input type=submit name='suppmess' value='".LANGBT50."' class='button' > ";
 $reponse_poubelle.="&nbsp;&nbsp;&nbsp; ";

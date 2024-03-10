@@ -1,13 +1,11 @@
 <?php
 session_start();
 error_reporting(0);
-
 $anneeScolaire=$_COOKIE["anneeScolaire"];
 if (isset($_POST["anneeScolaire"])) {
 	$anneeScolaire=$_POST["anneeScolaire"];
 	setcookie("anneeScolaire",$anneeScolaire,time()+3600*24*30);
 }
-
 if (isset($_GET["anneeScolaire"])) { 
 	$anneeScolaire=$_GET["anneeScolaire"]; 
 	setcookie("anneeScolaire",$anneeScolaire,time()+3600*24*30);
@@ -30,6 +28,12 @@ if (isset($_GET["anneeScolaire"])) {
  *   (at your option) any later version.
  *
  ***************************************************************************/
+include_once("./librairie_php/lib_error.php");
+include_once("./common/config.inc.php");
+include_once("./librairie_php/db_triade.php");
+include_once("common/config2.inc.php"); 
+$cnx=cnx();
+
 if (isset($_GET["order"])) {
 	$triEleve=$_GET["order"];
 }else{
@@ -43,14 +47,9 @@ if (isset($_GET["order"])) {
 }
 setcookie("tri_eleve",$triEleve,time()+36000*24*30);
 
-include_once("./librairie_php/lib_error.php");
-include_once("./common/config.inc.php");
-include_once("./librairie_php/db_triade.php");
-include_once("common/config2.inc.php"); 
 
 if ($_SESSION["membre"] == "menuprof") {
 	if (PROFPACCESNOTE == "oui") {
-		$cnx=cnx();
 		verif_profp_ens($_SESSION["id_pers"]);
 		Pgclose();
 	}else{
@@ -407,7 +406,7 @@ $moyennne->set_fg_color('blue');
 		if ($sql2 == "") $data_note=array();	
 
 		$unenote=0;
-print "<td><table><tr>";
+		print "<td><table><tr>";
 		for($t=0;$t<count($data_note);$t++){
 			$pdf->SetFont('Arial','',10);
 			//note_id,elev_id,prof_id,code_mat,coef,date,sujet,$f_trunc(note,2),typenote,noteexam,notationsur
@@ -607,6 +606,9 @@ print "<td><table><tr>";
 
 		        	$pdf->SetTextColor(0,0,0);
 				$pdf->SetFillColor(255);
+
+			}else{
+				print "</tr></table>";
 
 			}
 		$y=0;

@@ -24,8 +24,8 @@ use core_reportbuilder_generator;
 use core_reportbuilder\local\filters\boolean_select;
 use core_reportbuilder\local\filters\date;
 use core_reportbuilder\local\filters\select;
-use core_reportbuilder\local\filters\tags;
 use core_reportbuilder\local\filters\text;
+use core_reportbuilder\local\helpers\user_filter_manager;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -33,7 +33,7 @@ global $CFG;
 require_once("{$CFG->dirroot}/reportbuilder/tests/helpers.php");
 
 /**
- * Unit tests for courses datasources
+ * Unit tests for component datasources
  *
  * @package     core_course
  * @covers      \core_course\reportbuilder\datasource\courses
@@ -89,7 +89,6 @@ class courses_test extends core_reportbuilder_testcase {
             'category' => $category->id,
             'fullname' => 'Cats',
             'summary' => 'Course description',
-            'tags' => ['Horses'],
         ]);
 
         /** @var core_reportbuilder_generator $generator */
@@ -97,7 +96,6 @@ class courses_test extends core_reportbuilder_testcase {
         $report = $generator->create_report(['name' => 'Courses', 'source' => courses::class, 'default' => 0]);
 
         // Category.
-        $generator->create_column(['reportid' => $report->get('id'), 'uniqueidentifier' => 'course_category:namewithlink']);
         $generator->create_column(['reportid' => $report->get('id'), 'uniqueidentifier' => 'course_category:path']);
         $generator->create_column(['reportid' => $report->get('id'), 'uniqueidentifier' => 'course_category:idnumber']);
         $generator->create_column(['reportid' => $report->get('id'), 'uniqueidentifier' => 'course_category:description']);
@@ -119,41 +117,32 @@ class courses_test extends core_reportbuilder_testcase {
         $generator->create_column(['reportid' => $report->get('id'), 'uniqueidentifier' => 'course:enablecompletion']);
         $generator->create_column(['reportid' => $report->get('id'), 'uniqueidentifier' => 'course:downloadcontent']);
 
-        // Tags.
-        $generator->create_column(['reportid' => $report->get('id'), 'uniqueidentifier' => 'tag:name']);
-        $generator->create_column(['reportid' => $report->get('id'), 'uniqueidentifier' => 'tag:namewithlink']);
-
         $content = $this->get_custom_report_content($report->get('id'));
         $this->assertCount(1, $content);
 
         $courserow = array_values($content[0]);
 
         // Category.
-        $this->assertStringContainsString($category->get_formatted_name(), $courserow[0]);
-        $this->assertEquals($category->get_nested_name(false), $courserow[1]);
-        $this->assertEquals($category->idnumber, $courserow[2]);
-        $this->assertEquals(format_text($category->description, $category->descriptionformat), $courserow[3]);
+        $this->assertEquals($category->get_nested_name(false), $courserow[0]);
+        $this->assertEquals($category->idnumber, $courserow[1]);
+        $this->assertEquals(format_text($category->description, $category->descriptionformat), $courserow[2]);
 
         // Course.
-        $this->assertStringContainsString($course->fullname, $courserow[4]);
-        $this->assertStringContainsString($course->shortname, $courserow[5]);
-        $this->assertStringContainsString($course->idnumber, $courserow[6]);
-        $this->assertEquals(format_text($course->summary, $course->summaryformat), $courserow[7]);
-        $this->assertEquals('Topics format', $courserow[8]);
-        $this->assertEquals(userdate($course->startdate), $courserow[9]);
-        $this->assertEmpty($courserow[10]);
-        $this->assertEquals('Yes', $courserow[11]);
-        $this->assertEquals('No groups', $courserow[12]);
-        $this->assertEquals('No', $courserow[13]);
+        $this->assertStringContainsString($course->fullname, $courserow[3]);
+        $this->assertStringContainsString($course->shortname, $courserow[4]);
+        $this->assertStringContainsString($course->idnumber, $courserow[5]);
+        $this->assertEquals(format_text($course->summary, $course->summaryformat), $courserow[6]);
+        $this->assertEquals('Topics format', $courserow[7]);
+        $this->assertEquals(userdate($course->startdate), $courserow[8]);
+        $this->assertEmpty($courserow[9]);
+        $this->assertEquals('Yes', $courserow[10]);
+        $this->assertEquals('No groups', $courserow[11]);
+        $this->assertEquals('No', $courserow[12]);
+        $this->assertEmpty($courserow[13]);
         $this->assertEmpty($courserow[14]);
         $this->assertEmpty($courserow[15]);
-        $this->assertEmpty($courserow[16]);
-        $this->assertEquals('No', $courserow[17]);
-        $this->assertEmpty($courserow[18]);
-
-        // Tags.
-        $this->assertEquals('Horses', $courserow[19]);
-        $this->assertStringContainsString('Horses', $courserow[20]);
+        $this->assertEquals('No', $courserow[16]);
+        $this->assertEmpty($courserow[17]);
     }
 
     /**
@@ -203,15 +192,8 @@ class courses_test extends core_reportbuilder_testcase {
         return [
             // Category.
             'Filter category' => ['course_category:name', [
+                'course_category:name_operator' => select::EQUAL_TO,
                 'course_category:name_value' => -1,
-            ], false],
-            'Filter category name' => ['course_category:text', [
-                'course_category:text_operator' => text::IS_EQUAL_TO,
-                'course_category:text_value' => 'Animals',
-            ], true],
-            'Filter category name (no match)' => ['course_category:text', [
-                'course_category:text_operator' => text::IS_EQUAL_TO,
-                'course_category:text_value' => 'Fruit',
             ], false],
             'Filter category idnumber' => ['course_category:idnumber', [
                 'course_category:idnumber_operator' => text::IS_EQUAL_TO,
@@ -249,14 +231,6 @@ class courses_test extends core_reportbuilder_testcase {
             'Filter course idnumber (no match)' => ['course:idnumber', [
                 'course:idnumber_operator' => text::IS_EQUAL_TO,
                 'course:idnumber_value' => 'F-101XT',
-            ], false],
-            'Filter course summary' => ['course:summary', [
-                'course:summary_operator' => text::CONTAINS,
-                'course:summary_value' => 'Lorem ipsum',
-            ], true],
-            'Filter course summary (no match)' => ['course:summary', [
-                'course:summary_operator' => text::IS_EQUAL_TO,
-                'course:summary_value' => 'Fiat',
             ], false],
             'Filter course format' => ['course:format', [
                 'course:format_operator' => select::EQUAL_TO,
@@ -336,15 +310,6 @@ class courses_test extends core_reportbuilder_testcase {
             'Filter course downloadcontent (no match)' => ['course:downloadcontent', [
                 'course:downloadcontent_operator' => boolean_select::NOT_CHECKED,
             ], false],
-
-            // Tags.
-            'Filter tag name' => ['tag:name', [
-                'tag:name_operator' => tags::EQUAL_TO,
-                'tag:name_value' => [-1],
-            ], false],
-            'Filter tag name not empty' => ['tag:name', [
-                'tag:name_operator' => tags::NOT_EMPTY,
-            ], true],
         ];
     }
 
@@ -370,7 +335,6 @@ class courses_test extends core_reportbuilder_testcase {
             'calendartype' => 'gregorian',
             'theme' => 'boost',
             'downloadcontent' => 1,
-            'tags' => ['Horses'],
         ]);
 
         /** @var core_reportbuilder_generator $generator */
@@ -382,7 +346,9 @@ class courses_test extends core_reportbuilder_testcase {
 
         // Add filter, set it's values.
         $generator->create_filter(['reportid' => $report->get('id'), 'uniqueidentifier' => $filtername]);
-        $content = $this->get_custom_report_content($report->get('id'), 0, $filtervalues);
+        user_filter_manager::set($report->get('id'), $filtervalues);
+
+        $content = $this->get_custom_report_content($report->get('id'));
 
         if ($expectmatch) {
             $this->assertCount(1, $content);

@@ -59,7 +59,8 @@ ajax_js();
 <blockquote><BR>
 <table border=0 cellspacing=0><tr><td style="padding-top:0px;" nowrap>
 <font class="T2"><?php print LANGABS3?> : </font><input type="text" name="saisie_nom_eleve" size="20" id="search" autocomplete="off" onkeyup="searchRequest(this,'eleve','target','formulaire','saisie_nom_eleve')"   style="width:15em;" />
-</td></tr><tr><td style="padding-top:0px;"><div id="target" style="width:13.5em;" ></div></td></tr>
+</td></tr>
+<tr><td style="padding-top:0px;" ><div id="target" style="width:16em;border-style:none; background-color:#EEEEEE;"></div></td></tr> 
 </table><div style="position:relative">
 <UL><UL><UL><script language=JavaScript>buttonMagicSubmit("<?php print LANGBT39?>","create"); //text,nomInput</script></UL></UL></UL>
 </div>

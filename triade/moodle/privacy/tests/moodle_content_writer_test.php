@@ -1292,18 +1292,6 @@ class moodle_content_writer_test extends advanced_testcase {
      */
     public function rewrite_pluginfile_urls_provider() {
         return [
-            'nullcontent' => [
-                'intro',
-                0,
-                null,
-                '',
-            ],
-            'emptycontent' => [
-                'intro',
-                0,
-                '',
-                '',
-            ],
             'zeroitemid' => [
                 'intro',
                 0,

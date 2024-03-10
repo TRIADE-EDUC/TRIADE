@@ -53,7 +53,7 @@ require_course_login($course, true, $cm);
 $feedback = $PAGE->activityrecord;
 
 if (!($feedback->publish_stats OR has_capability('mod/feedback:viewreports', $context))) {
-    throw new \moodle_exception('error');
+    print_error('error');
 }
 
 $feedbackstructure = new mod_feedback_structure($feedback, $PAGE->cm, $courseid);

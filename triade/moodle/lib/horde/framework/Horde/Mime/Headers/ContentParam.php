@@ -368,7 +368,6 @@ implements ArrayAccess, Horde_Mime_Headers_Extension_Mime, Serializable
 
     /**
      */
-	#[ReturnTypeWillChange]
     public function offsetExists($offset)
     {
         return isset($this->_params[$offset]);
@@ -376,7 +375,6 @@ implements ArrayAccess, Horde_Mime_Headers_Extension_Mime, Serializable
 
     /**
      */
-	#[ReturnTypeWillChange]
     public function offsetGet($offset)
     {
         return $this->_params[$offset];
@@ -384,7 +382,6 @@ implements ArrayAccess, Horde_Mime_Headers_Extension_Mime, Serializable
 
     /**
      */
-	#[ReturnTypeWillChange]
     public function offsetSet($offset, $value)
     {
         $this->_params[$offset] = $this->_sanityCheck($value);
@@ -392,7 +389,6 @@ implements ArrayAccess, Horde_Mime_Headers_Extension_Mime, Serializable
 
     /**
      */
-	#[ReturnTypeWillChange]
     public function offsetUnset($offset)
     {
         unset($this->_params[$offset]);
@@ -401,36 +397,22 @@ implements ArrayAccess, Horde_Mime_Headers_Extension_Mime, Serializable
     /* Serializable methods */
 
     /**
-     * Serialize (until PHP 7.3)
-     * 
-     * @return string serialized object state
      */
     public function serialize()
-    {
-        return serialize($this->__serialize());
-    }
-
-    /**
-     * Serialize (PHP 7.4+)
-     *
-     * @return array object state
-     */
-    public function __serialize(): array
     {
         $vars = array_filter(get_object_vars($this));
         if (isset($vars['_params'])) {
             $vars['_params'] = $vars['_params']->getArrayCopy();
         }
-        return $vars;
+        return serialize($vars);
     }
 
     /**
-     * Unserialize (PHP 7.4+)
-     * 
-     * @param array $data
      */
-    public function __unserialize(array $data): void
+    public function unserialize($data)
     {
+        $data = unserialize($data);
+
         foreach ($data as $key => $val) {
             switch ($key) {
             case '_params':
@@ -442,16 +424,6 @@ implements ArrayAccess, Horde_Mime_Headers_Extension_Mime, Serializable
                 break;
             }
         }
-    }
-
-    /**
-     * Unserialize (until PHP 7.3)
-     * 
-     * @param string $data
-     */
-    public function unserialize($data)
-    {
-        $this->__unserialize(unserialize($data));
     }
 
 }

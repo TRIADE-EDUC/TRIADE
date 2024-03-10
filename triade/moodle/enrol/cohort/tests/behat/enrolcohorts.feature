@@ -65,7 +65,7 @@ Feature: Cohort enrolment management
     And the "members" select box should contain "John Smith (s2@example.com)"
     And I log in as "admin"
     And I navigate to "Users > Accounts > Cohorts" in site administration
-    And I press "Assign" action in the "Alpha1" report row
+    And I click on "Assign" "link" in the "Alpha1" "table_row"
     And I should see "Cohort 'Alpha1' members"
     And I should see "Removing users from a cohort may result in unenrolling of users from multiple courses which includes deleting of user settings, grades, group membership and other user information from affected courses."
     # Remove user s4 from cohort

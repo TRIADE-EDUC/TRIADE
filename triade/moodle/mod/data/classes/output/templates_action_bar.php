@@ -16,7 +16,6 @@
 
 namespace mod_data\output;
 
-use core\output\select_menu;
 use templatable;
 use renderable;
 
@@ -32,25 +31,29 @@ class templates_action_bar implements templatable, renderable {
     /** @var int $id The database module id. */
     private $id;
 
-    /** @var select_menu $selectmenu The URL selector object. */
-    private $selectmenu;
+    /** @var \url_select $urlselect The URL selector object. */
+    private $urlselect;
 
-    /** @var \action_menu $actionsselect The presets actions selector object. */
-    private $actionsselect;
+    /** @var \single_button|null $urlselect The save as preset single button object. */
+    private $saveaspresetbutton;
+
+    /** @var \single_button|null $urlselect The export preset single button object. */
+    private $exportpresetbutton;
 
     /**
      * The class constructor.
      *
      * @param int $id The database module id.
-     * @param select_menu $selectmenu The URL selector object.
-     * @param null $unused1 This parameter has been deprecated since 4.1 and should not be used anymore.
-     * @param null $unused2 This parameter has been deprecated since 4.1 and should not be used anymore.
-     * @param \action_menu $actionsselect The presets actions selector object.
+     * @param \url_select $urlselect The URL selector object.
+     * @param \single_button|null $saveaspresetbutton The save as preset single button object or null.
+     * @param \single_button|null $exportpresetbutton The export preset single button object or null.
      */
-    public function __construct(int $id, select_menu $selectmenu, $unused1, $unused2, \action_menu $actionsselect) {
+    public function __construct(int $id, \url_select $urlselect, ?\single_button $saveaspresetbutton,
+            ?\single_button $exportpresetbutton) {
         $this->id = $id;
-        $this->selectmenu = $selectmenu;
-        $this->actionsselect = $actionsselect;
+        $this->urlselect = $urlselect;
+        $this->saveaspresetbutton = $saveaspresetbutton;
+        $this->exportpresetbutton = $exportpresetbutton;
     }
 
     /**
@@ -61,10 +64,17 @@ class templates_action_bar implements templatable, renderable {
      */
     public function export_for_template(\renderer_base $output): array {
 
-        return [
+        $data = [
             'd' => $this->id,
-            'selectmenu' => $this->selectmenu->export_for_template($output),
-            'actionsselect' => $this->actionsselect->export_for_template($output),
+            'urlselect' => $this->urlselect->export_for_template($output),
         ];
+
+        $data['saveaspreset'] = $this->saveaspresetbutton;
+
+        if ($this->exportpresetbutton) {
+            $data['exportpreset'] = $this->exportpresetbutton->export_for_template($output);
+        }
+
+        return $data;
     }
 }

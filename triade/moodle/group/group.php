@@ -43,22 +43,22 @@ if ($delete) {
 
 if ($id) {
     if (!$group = $DB->get_record('groups', array('id'=>$id))) {
-        throw new \moodle_exception('invalidgroupid');
+        print_error('invalidgroupid');
     }
     if (empty($courseid)) {
         $courseid = $group->courseid;
 
     } else if ($courseid != $group->courseid) {
-        throw new \moodle_exception('invalidcourseid');
+        print_error('invalidcourseid');
     }
 
     if (!$course = $DB->get_record('course', array('id'=>$courseid))) {
-        throw new \moodle_exception('invalidcourseid');
+        print_error('invalidcourseid');
     }
 
 } else {
     if (!$course = $DB->get_record('course', array('id'=>$courseid))) {
-        throw new \moodle_exception('invalidcourseid');
+        print_error('invalidcourseid');
     }
     $group = new stdClass();
     $group->courseid = $course->id;

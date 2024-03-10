@@ -36,8 +36,6 @@ use mod_quiz\question\bank\filter\custom_category_condition;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class custom_view extends \core_question\local\bank\view {
-    /** @var int number of questions per page to show in the add from question bank modal. */
-    const DEFAULT_PAGE_SIZE = 20;
 
     /** @var bool $quizhasattempts whether the quiz this is used by has been attemptd. */
     protected $quizhasattempts = false;
@@ -59,7 +57,6 @@ class custom_view extends \core_question\local\bank\view {
     public function __construct($contexts, $pageurl, $course, $cm, $quiz) {
         parent::__construct($contexts, $pageurl, $course, $cm);
         $this->quiz = $quiz;
-        $this->pagesize = self::DEFAULT_PAGE_SIZE;
     }
 
     protected function get_question_bank_plugins(): array {

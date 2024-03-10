@@ -52,7 +52,7 @@ if (!$go or !data_submitted() or !confirm_sesskey()) {   /// Print a form
 
 
 if (!$tables = $DB->get_tables() ) {    // No tables yet at all.
-    throw new \moodle_exception('notables', 'debug');
+    print_error('notables', 'debug');
 }
 
 echo $OUTPUT->box_start();

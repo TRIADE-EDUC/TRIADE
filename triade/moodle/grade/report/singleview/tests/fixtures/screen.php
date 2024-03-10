@@ -31,25 +31,22 @@ class gradereport_singleview_screen_testable extends \gradereport_singleview\loc
      *
      * @return array returns array of users.
      */
-    public function test_load_users(): array {
+    public function test_load_users() {
         return $this->load_users();
     }
 
     /**
      * Return the HTML for the page.
      */
-    public function init($selfitemisempty = false) {
-    }
+    public function init($selfitemisempty = false) {}
 
     /**
      * Get the type of items on this screen, not valid so return false.
      */
-    public function item_type(): string {
-    }
+    public function item_type() {}
 
     /**
      * Return the HTML for the page.
      */
-    public function html(): string {
-    }
+    public function html() {}
 }

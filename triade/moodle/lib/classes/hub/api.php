@@ -25,6 +25,7 @@
 namespace core\hub;
 defined('MOODLE_INTERNAL') || die();
 
+use webservice_xmlrpc_client;
 use moodle_exception;
 use curl;
 use stdClass;

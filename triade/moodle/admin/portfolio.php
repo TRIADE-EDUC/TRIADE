@@ -116,13 +116,13 @@ if (($action == 'edit') || ($action == 'new')) {
     $instance = portfolio_instance($portfolio);
     if ($sure) {
         if (!confirm_sesskey()) {
-            throw new \moodle_exception('confirmsesskeybad', '', $baseurl);
+            print_error('confirmsesskeybad', '', $baseurl);
         }
         if ($instance->delete()) {
             $deletedstr = get_string('instancedeleted', 'portfolio');
             redirect($baseurl, $deletedstr, 1);
         } else {
-            throw new \moodle_exception('instancenotdeleted', 'portfolio', $baseurl);
+            print_error('instancenotdeleted', 'portfolio', $baseurl);
         }
         exit;
     } else {

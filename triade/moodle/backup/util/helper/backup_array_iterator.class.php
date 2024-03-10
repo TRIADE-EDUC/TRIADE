@@ -40,25 +40,23 @@ class backup_array_iterator implements iterator {
         $this->arr = $arr;
     }
 
-    public function rewind(): void {
-        reset($this->arr);
+    public function rewind() {
+        return reset($this->arr);
     }
 
-    #[\ReturnTypeWillChange]
     public function current() {
         return current($this->arr);
     }
 
-    #[\ReturnTypeWillChange]
     public function key() {
         return key($this->arr);
     }
 
-    public function next(): void {
-        next($this->arr);
+    public function next() {
+        return next($this->arr);
     }
 
-    public function valid(): bool {
+    public function valid() {
         return key($this->arr) !== null;
     }
 

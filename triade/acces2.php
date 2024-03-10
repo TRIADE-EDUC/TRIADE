@@ -2,8 +2,9 @@
 session_start();
 include_once("./common/config.inc.php");
 include_once("./librairie_php/db_triade.php");
+$cnx=cnx();
+verifCnxIntraMsn();
 if ($_SESSION["membre"] == "menuadmin") {
-	$cnx=cnx();
 	if (verifSiInfoParamSaisie() == 0) { 
 		header("Location:param.php"); 
 	}
@@ -59,6 +60,7 @@ if ($_SESSION["membre"] == "menuadmin") {
 
 </head>
 <body id="bodyfond" style="margin:0;" >
+<noscript><meta http-equiv="Refresh" content="0; URL=noscript.php"></noscript>
 
 
 	<script type="text/javascript" src="./librairie_js/function.js"></script>
@@ -74,19 +76,15 @@ include_once("./common/config2.inc.php");
 include_once("./librairie_php/popupfen.php"); 
 include_once("./librairie_php/lib_licence.php");
 
-
-if (file_exists('./updateBase.php')) { include_once('./updateBase.php'); }
-
 valideProductId();
 
-$debut=deb_prog();
-$cnx=cnx();
+// $debut=deb_prog();
+
+if (is_dir("data/DevoirScolaire")) htaccess("data/DevoirScolaire");
 
 $ident=array('nom','Sn','prenom','Sp','membre','Sm','id_pers','Spid');
 $mySession=hashSessionVar($ident);
 unset($ident);
-
-$code=1;
 
 verifResaList();
 
@@ -105,6 +103,12 @@ if (verif_compte($_SESSION["nom"],$_SESSION["prenom"],$idpers,$_SESSION["membre"
 	<?php
 	$inscri="<a href='#' onclick=\"return apercu('inscription.php')\"><font color=red size=3><center>".LANGTP12."</center></font></a><br /><br />";
 }
+
+$modeete="";
+if (file_exists("./data/parametrage/noacces.ete")) {
+	$modeete="<center><font color=red><b>ATTENTION, votre Triade est en mode été !!<br />Connexion impossible pour utilisateur hors direction.</b></font></center><br>";
+}
+
 
 if (LAN == "oui") {
         if (file_exists("./common/config-sms.php")) {
@@ -279,6 +283,7 @@ if (isset($_POST["createvideo"])) {
 }
 ?>
 
+<?php print $modeete ?>
 
 <?php print $inscri ?>
 
@@ -458,7 +463,6 @@ for($i=0;$i<count($data);$i++) {
 </TABLE>
 <!-- // fin  -->
 </td></tr></table>
-
 <!----------------------------------------->
 
 
@@ -563,7 +567,48 @@ for($i=0;$i<count($data);$i++) {
 </td></tr></table>
 <?php } } ?>
 <!----------------------------------------->
+<?php 
+if (LAN == "oui") {
+?>
+<script>
+var idactu="KO";
+var triadeactu="KO"; 
+var triadeactutest="KO"; 
+var messageactu=""; 
+</script>
+<script src='https://support.triade-educ.org/support/triade-actu.php'></script>
+<script>
+function triadeactufnc(val) {
+	document.getElementById('triadeactu').style.display="none";
+	setCookie("TRIADE-ACTU",val,15);
+}
 
+var dev="<?php print DEV ?>";
+var idactulocal=getCookie("TRIADE-ACTU");
+if ((idactulocal != idactu) || (dev == "1")) {
+	if ((triadeactu == '1') || ((triadeactutest == dev) && (triadeactutest == '1'))) { 
+	    if (messageactu != "") {
+
+document.write("<style>");
+document.write(".cadre_central { border: 1px solid #DAD9D9;border-radius: 5px 5px 5px 5px;color: #333333;width:97%;padding:10px;padding-top:20px;padding-bottom:30px; vertical-align: top; background-color: #F9F9F9; box-shadow: 0px 0px 10px 4px rgba(119, 119, 119, 0.75); moz-box-shadow: 0px 0px 10px 4px rgba(119, 119, 119, 0.75); -webkit-box-shadow: 0px 0px 10px 4px rgba(119, 119, 119, 0.75); vertical-align: top;  } ");
+document.write(".shadow { text-shadow: 2px 4px 3px rgba(0, 0, 0, 0.3); } ");
+document.write(".font1 { font-family: 'Electrolize',cursive; color:#544F93; font-size: 16px; } ");
+document.write("</style>");
+
+document.write("<br><br><div class='cadre_central' id='triadeactu' style='background-color:#FFFFFF;'  >");
+document.write("<table border='0' width='100%'><tr><td width='50%'><font class='font1 shadow' ><b>TRIADE-ACTU</b></font></td>");
+document.write("<td align='right'><a href='#' onClick='triadeactufnc(idactu)' ><img src='./image/closeb.gif' border='0' ></a>&nbsp;&nbsp;</td></tr></table>");
+document.write("<br/>");
+document.write(messageactu);
+document.write("</div>");
+		}
+	}
+}
+</script>
+
+<?php } ?>
+
+<!----------------------------------------->
 <br /><br />
      <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
      <tr  id='coulBar0'>
@@ -692,7 +737,7 @@ function closeMessage() { messageObj.close(); }
 <?php } ?>
 </BODY></HTML>
 <?php
-fin_prog($debut);
+// fin_prog($debut);
 Pgclose();
 include_once("./librairie_php/finbody.php"); 
 include_once("librairie_php/lib_verif_nav.php");

@@ -52,8 +52,24 @@ session_start();
 	validerequete("menuadmin");
 	// connexion P
 	$cnx=cnx();
+	if (isset($_POST["saisie_remplacement"])) {
+		if (is_numeric($_POST["saisie_remplacement"])) {
+			$date_entree=$_POST["saisie_date_entree"];
+			$date_entree=dateFormBase($date_entree);
+			$date_sortie=$_POST["saisie_date_sortie"];
+			if($date_sortie == LANGINCONNU ) {
+		                $date_sortie='NULL';
+		        } else {
+                		$date_sortie="'".dateFormBase($date_sortie)."'";
+		        }
+			$remp=$_POST["saisie_remplacement"];
+			$pers_id=$_POST["id_pers"];
+			$sql_ins3="INSERT INTO ${prefixe}vacataires VALUES($pers_id,'$date_entree',$remp,$date_sortie)";
+	                execSql($sql_ins3);
+			history_cmd($_SESSION["nom"],"AFFECTATION SUPPLEANT"," de $_POST[saisie_creat_nom]");
+		} 
+	}
 
-	
 	if (isset($_POST["offline"])) {
 		modif_personnel_actif_desactif($_POST["id_pers"],"1"); 
 		history_cmd($_SESSION["nom"],"DESACTIVE"," de $_POST[saisie_creat_nom]");
@@ -138,7 +154,24 @@ if(isset($_POST["create"])) {
 <tr><td align=right><font class="T2"><?php print "Indice salaire" ?> : </font></td><td><input type=text name="saisie_indice_salaire" size=33 maxlength=150  value="<?php print $indice_salaire ?>" ></td></tr>
 </TABLE>
 </fieldset>
-<br><br>
+<br><br><br>
+
+
+<fieldset><legend><?php print "Remplaçant " ?></legend>
+<TABLE width=95% border=0 cellpadding="2" cellspacing="2">
+
+<tr><td align='right' ><font class="T2"><?php print LANGNA5?>: </font></td><td><select name="saisie_remplacement">
+    <option STYLE='color:#000066;background-color:#FCE4BA'><?php print LANGCHOIX?></option>
+<?php
+$cnx=cnx();
+select_personne_2('ENS',30); // creation des options?>
+                                 </select> </td></tr>
+<tr><td align='right' ><font class="T2"><?php print ucwords(LANGTE2)?></td><td><input type=text size=12 name='saisie_date_entree' value='<?php print dateDMY() ?>'> <?php print ucwords(LANGTE10)?></font>
+<input type=text name="saisie_date_sortie" size=12 value='inconnu' onclick="this.value='jj/mm/aaaa'">
+</td></tr>
+</table>
+</fieldset>
+
 <BR><BR>
 <center>
 <input type=hidden name=id_pers value="<?php print $saisie_id?>" >

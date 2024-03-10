@@ -74,13 +74,11 @@ Feature: A Teacher can comment in a question
 
   @javascript
   Scenario: Teacher with comment permissions for their own questions but not others questions
-    Given I log in as "admin"
-    And I set the following system permissions of "Teacher" role:
-      | capability                  | permission |
-      | moodle/question:commentmine | Allow      |
-      | moodle/question:commentall  | Prevent    |
-    And I log out
-    Given I am on the "Test quiz" "mod_quiz > question bank" page logged in as "teacher1"
+    Given the following "role capability" exists:
+      | role                        | editingteacher |
+      | moodle/question:commentmine | allow          |
+      | moodle/question:commentall  | prevent        |
+    And I am on the "Test quiz" "mod_quiz > question bank" page logged in as "teacher1"
     And I set the field "Select a category" to "Test questions"
     And I choose "Preview" action for "First question" in the question bank
     Then I should not see "Save comment"
@@ -131,23 +129,3 @@ Feature: A Teacher can comment in a question
     And I switch to "questionpreview" window
     And I press "Comments"
     Then I should not see "Some new comment"
-
-  @javascript
-  Scenario: Comments modal can change the version using dropdown
-    Given I log in as "teacher1"
-    And I am on the "Test quiz" "quiz activity" page
-    When I navigate to "Question bank" in current page administration
-    And I set the field "Select a category" to "Test questions"
-    And I should see "First question"
-    And I choose "Edit question" action for "First question" in the question bank
-    And I set the field "id_name" to "Renamed question v2"
-    And I set the field "id_questiontext" to "edited question"
-    And I press "id_submitbutton"
-    And I should not see "First question"
-    And I should see "Renamed question v2"
-    And I click "0" on the row on the comments column
-    And I should see "Version 2"
-    Then I should see "edited question"
-    And I should see "Version 1"
-    And I set the field "question_version_dropdown" to "Version 1"
-    And I should see "Answer the first question"

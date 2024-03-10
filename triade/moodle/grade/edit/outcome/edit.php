@@ -49,12 +49,12 @@ if ($id) {
 
     /// editing existing outcome
     if (!$outcome_rec = $DB->get_record('grade_outcomes', array('id' => $id))) {
-        throw new \moodle_exception('invalidoutcome');
+        print_error('invalidoutcome');
     }
     if ($outcome_rec->courseid) {
         $outcome_rec->standard = 0;
         if (!$course = $DB->get_record('course', array('id' => $outcome_rec->courseid))) {
-            throw new \moodle_exception('invalidcourseid');
+            print_error('invalidcourseid');
         }
         require_login($course);
         $context = context_course::instance($course->id);
@@ -63,7 +63,7 @@ if ($id) {
     } else {
         if ($courseid) {
             if (!$course = $DB->get_record('course', array('id' => $courseid))) {
-                throw new \moodle_exception('invalidcourseid');
+                print_error('invalidcourseid');
             }
         }
         $outcome_rec->standard = 1;

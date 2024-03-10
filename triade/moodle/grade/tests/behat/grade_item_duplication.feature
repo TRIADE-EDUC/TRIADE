@@ -1,4 +1,4 @@
-@core @core_grades @javascript
+@core @core_grades
 Feature: We can duplicate grade items that already exist.
   In order to quickly create grade items that have similar settings.
   As a teacher
@@ -25,15 +25,12 @@ Feature: We can duplicate grade items that already exist.
       | Item1    | C1     | Category1 | 001      | Value     | 80.00    | 5.00     | 40.00     | 1       | 1        | 0      | 1              |
 
   Scenario: Ensure the duplicated grade item settings match the original grade item
-    Given I log in as "teacher1"
-    And I am on "Course 1" course homepage
-    And I navigate to "Setup > Gradebook setup" in the course gradebook
+    Given I am on the "Course 1" "grades > gradebook setup" page logged in as "teacher1"
     And I should not see "Duplicate   Category1"
     And I should not see "Duplicate   Assignment1"
     When I duplicate the grade item "Item1"
     Then I should see "Item1 (copy)"
-    And I open the action menu in "Item1 (copy)" "table_row"
-    And I choose "Edit settings" in the open action menu
+    And I follow "Edit   Item1 (copy)"
     And the field "Item name" matches value "Item1 (copy)"
     And the field "ID number" matches value ""
     And the field "Grade type" matches value "Value"

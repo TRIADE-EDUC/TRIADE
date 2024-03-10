@@ -17,7 +17,7 @@
 namespace qbank_usage\output;
 
 /**
- * Renderer for usage plugin.
+ * Class renderer
  *
  * @package    qbank_usage
  * @copyright  2021 Catalyst IT Australia Pty Ltd
@@ -34,16 +34,6 @@ class renderer extends \plugin_renderer_base {
      */
     public function render_usage_fragment(array $displaydata): string {
         return $this->render_from_template('qbank_usage/usage_modal', $displaydata);
-    }
-
-    /**
-     * Render the question usage column.
-     *
-     * @param array $displaydata last used date or never
-     * @return string
-     */
-    public function render_last_used_column(array $displaydata): string {
-        return $this->render_from_template('qbank_usage/last_used', $displaydata);
     }
 
 }

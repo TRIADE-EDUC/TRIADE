@@ -49,5 +49,5 @@ if (file_exists($pathname) and !is_dir($pathname)) {
     send_file($pathname, $image);
 } else {
     header('HTTP/1.0 404 not found');
-    throw new \moodle_exception('filenotfound', 'error'); // This is not displayed on IIS??
+    print_error('filenotfound', 'error'); // This is not displayed on IIS??
 }

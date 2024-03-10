@@ -4,57 +4,38 @@ namespace Sabberworm\CSS;
 
 use Sabberworm\CSS\CSSList\Document;
 use Sabberworm\CSS\Parsing\ParserState;
-use Sabberworm\CSS\Parsing\SourceException;
 
 /**
- * This class parses CSS from text into a data structure.
+ * Parser class parses CSS from text into a data structure.
  */
-class Parser
-{
-    /**
-     * @var ParserState
-     */
-    private $oParserState;
+class Parser {
+	private $oParserState;
 
-    /**
-     * @param string $sText
-     * @param Settings|null $oParserSettings
-     * @param int $iLineNo the line number (starting from 1, not from 0)
-     */
-    public function __construct($sText, Settings $oParserSettings = null, $iLineNo = 1)
-    {
-        if ($oParserSettings === null) {
-            $oParserSettings = Settings::create();
-        }
-        $this->oParserState = new ParserState($sText, $oParserSettings, $iLineNo);
-    }
+	/**
+	 * Parser constructor.
+	 * Note that that iLineNo starts from 1 and not 0
+	 *
+	 * @param $sText
+	 * @param Settings|null $oParserSettings
+	 * @param int $iLineNo
+	 */
+	public function __construct($sText, Settings $oParserSettings = null, $iLineNo = 1) {
+		if ($oParserSettings === null) {
+			$oParserSettings = Settings::create();
+		}
+		$this->oParserState = new ParserState($sText, $oParserSettings, $iLineNo);
+	}
 
-    /**
-     * @param string $sCharset
-     *
-     * @return void
-     */
-    public function setCharset($sCharset)
-    {
-        $this->oParserState->setCharset($sCharset);
-    }
+	public function setCharset($sCharset) {
+		$this->oParserState->setCharset($sCharset);
+	}
 
-    /**
-     * @return void
-     */
-    public function getCharset()
-    {
-        // Note: The `return` statement is missing here. This is a bug that needs to be fixed.
-        $this->oParserState->getCharset();
-    }
+	public function getCharset() {
+		$this->oParserState->getCharset();
+	}
 
-    /**
-     * @return Document
-     *
-     * @throws SourceException
-     */
-    public function parse()
-    {
-        return Document::parse($this->oParserState);
-    }
+	public function parse() {
+		return Document::parse($this->oParserState);
+	}
+
 }

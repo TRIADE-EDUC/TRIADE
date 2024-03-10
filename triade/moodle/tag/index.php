@@ -29,7 +29,7 @@ require_once($CFG->dirroot . '/blog/lib.php');
 require_login();
 
 if (empty($CFG->usetags)) {
-    throw new \moodle_exception('tagsaredisabled', 'tag');
+    print_error('tagsaredisabled', 'tag');
 }
 
 $tagid       = optional_param('id', 0, PARAM_INT); // tag id

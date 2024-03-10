@@ -170,7 +170,7 @@ abstract class completion_criteria extends data_object {
         global $CFG, $COMPLETION_CRITERIA_TYPES;
 
         if (!isset($params['criteriatype']) || !isset($COMPLETION_CRITERIA_TYPES[$params['criteriatype']])) {
-            throw new \moodle_exception('invalidcriteriatype', 'completion');
+            print_error('invalidcriteriatype', 'completion');
         }
 
         $class = 'completion_criteria_'.$COMPLETION_CRITERIA_TYPES[$params['criteriatype']];

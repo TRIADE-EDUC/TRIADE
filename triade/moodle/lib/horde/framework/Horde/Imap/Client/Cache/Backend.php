@@ -151,27 +151,15 @@ abstract class Horde_Imap_Client_Cache_Backend implements Serializable
      */
     public function serialize()
     {
-        return serialize($this->__serialize());
+        return serialize($this->_params);
     }
 
     /**
      */
     public function unserialize($data)
     {
-        $this->__unserialize(unserialize($data));
-    }
-
-    /**
-     * @return array
-     */
-    public function __serialize()
-    {
-        return $this->_params;
-    }
-
-    public function __unserialize(array $data)
-    {
-        $this->_params = $data;
+        $this->_params = unserialize($data);
+        $this->_initOb();
     }
 
 }

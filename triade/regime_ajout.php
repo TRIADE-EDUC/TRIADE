@@ -164,7 +164,7 @@ if (isset($_GET["id"])) {
 </form>
 <i>Vous pouvez créer les régimes <b>"demi-pension" </b>, <b>"demi pension" </b>, <b>"interne" </b> et <b>"externe" </b> déjà présent dans la fiche des régimes des élèves.</i>
 <br><hr><br>
-<table width="100%" border='1'>
+<table width="100%" border='1' style='border-collapse: collapse;' >
 <tr>
 <td bgcolor="yellow"><font class='T2'>&nbsp;&nbsp;Libellé</font></td>
 <td bgcolor="yellow" colspan='2' align='center' >L</td>

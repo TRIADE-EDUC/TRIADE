@@ -225,6 +225,18 @@ abstract class base {
             self::$instances = array();
         }
     }
+    /**
+     * Reset the current user for all courses.
+     *
+     * The course format cache resets every time the course cache resets but
+     * also when the user changes their language, all course editors
+     *
+     * @return void
+     */
+    public static function session_cache_reset_all(): void {
+        $statecache = cache::make('core', 'courseeditorstate');
+        $statecache->purge();
+    }
 
     /**
      * Reset the current user course format cache.
@@ -444,14 +456,6 @@ abstract class base {
     /**
      * Returns true if this course format uses activity indentation.
      *
-     * Indentation is not supported by core formats anymore and may be deprecated in the future.
-     * This method will keep a default return "true" for legacy reasons but new formats should override
-     * it with a return false to prevent future deprecations.
-     *
-     * A message in a bottle: if indentation is finally deprecated, both behat steps i_indent_right_activity
-     * and i_indent_left_activity should be removed as well. Right now no core behat uses them but indentation
-     * is not officially deprecated so they are still available for the contrib formats.
-     *
      * @return bool if the course format uses indentation.
      */
     public function uses_indentation(): bool {
@@ -608,7 +612,7 @@ abstract class base {
         $course = $this->get_course();
         try {
             $sectionpreferences = (array) json_decode(
-                get_user_preferences("coursesectionspreferences_{$course->id}", '', $USER->id)
+                get_user_preferences('coursesectionspreferences_' . $course->id, null, $USER->id)
             );
             if (empty($sectionpreferences)) {
                 $sectionpreferences = [];
@@ -1068,7 +1072,7 @@ abstract class base {
         $changed = $needrebuild = false;
         foreach ($defaultoptions as $key => $value) {
             if (isset($records[$key])) {
-                if (array_key_exists($key, $data) && $records[$key]->value != $data[$key]) {
+                if (array_key_exists($key, $data) && $records[$key]->value !== $data[$key]) {
                     $DB->set_field('course_format_options', 'value',
                             $data[$key], array('id' => $records[$key]->id));
                     $changed = true;
@@ -1341,7 +1345,7 @@ abstract class base {
      * return true if the course editor must be displayed.
      *
      * @param array|null $capabilities array of capabilities a user needs to have to see edit controls in general.
-     *  If null or not specified, the user needs to have 'moodle/course:manageactivities'.
+     *  If null or not specified, the user needs to have 'moodle/course:manageactivities'
      * @return bool true if edit controls must be displayed
      */
     public function show_editor(?array $capabilities = ['moodle/course:manageactivities']): bool {

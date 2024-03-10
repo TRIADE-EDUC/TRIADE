@@ -25,7 +25,7 @@
 require_once("../../../../config.php");
 
 if (isguestuser()) {
-    throw new \moodle_exception('noguest');
+    print_error('noguest');
 }
 
 $courseid = required_param('courseid', PARAM_INT);

@@ -144,9 +144,6 @@ class Xlfn
         . '|call'
         . '|let'
         . '|register[.]id'
-        . '|textafter'
-        . '|textbefore'
-        . '|textsplit'
         . '|valuetotext'
         . ')(?=\\s*[(])/i';
 
@@ -155,7 +152,7 @@ class Xlfn
      */
     public static function addXlfn(string $funcstring): string
     {
-        return (string) preg_replace(self::XLFNREGEXP, '_xlfn.$1', $funcstring);
+        return preg_replace(self::XLFNREGEXP, '_xlfn.$1', $funcstring);
     }
 
     /**

@@ -62,11 +62,6 @@ class feedback_summary_exporter extends exporter {
                 'default' => FORMAT_MOODLE,
                 'description' => 'Feedback intro text format.',
             ),
-            'lang' => array(
-                'type' => PARAM_LANG,
-                'description' => 'Forced activity language',
-                'null' => NULL_ALLOWED,
-            ),
             'anonymous' => array(
                 'type' => PARAM_INT,
                 'description' => 'Whether the feedback is anonymous.',

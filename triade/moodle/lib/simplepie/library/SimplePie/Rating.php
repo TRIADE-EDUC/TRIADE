@@ -122,5 +122,3 @@ class SimplePie_Rating
 		return null;
 	}
 }
-
-class_alias('SimplePie_Rating', 'SimplePie\Rating', false);

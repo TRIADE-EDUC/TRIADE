@@ -23,9 +23,12 @@
  */
 namespace core_user\output;
 
+use context_course;
 use core_user\fields;
+use renderable;
 use renderer_base;
 use stdClass;
+use templatable;
 
 /**
  * Class for rendering user filters on the course participants page.
@@ -33,7 +36,29 @@ use stdClass;
  * @copyright  2020 Michael Hawkins <michaelh@moodle.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class participants_filter extends \core\output\datafilter {
+class participants_filter implements renderable, templatable {
+
+    /** @var context_course $context The context where the filters are being rendered. */
+    protected $context;
+
+    /** @var string $tableregionid The table to be updated by this filter */
+    protected $tableregionid;
+
+    /** @var stdClass $course The course shown */
+    protected $course;
+
+    /**
+     * Participants filter constructor.
+     *
+     * @param context_course $context The context where the filters are being rendered.
+     * @param string $tableregionid The table to be updated by this filter
+     */
+    public function __construct(context_course $context, string $tableregionid) {
+        $this->context = $context;
+        $this->tableregionid = $tableregionid;
+
+        $this->course = get_course($context->instanceid);
+    }
 
     /**
      * Get data for all filter types.
@@ -320,7 +345,7 @@ class participants_filter extends \core\output\datafilter {
             get_string('country'),
             false,
             true,
-            'core/datafilter/filtertypes/country',
+            'core_user/local/participantsfilter/filtertypes/country',
             array_map(function(string $code, string $name): stdClass {
                 return (object) [
                     'value' => $code,
@@ -341,7 +366,7 @@ class participants_filter extends \core\output\datafilter {
             get_string('filterbykeyword', 'core_user'),
             true,
             true,
-            'core/datafilter/filtertypes/keyword',
+            'core_user/local/participantsfilter/filtertypes/keyword',
             [],
             true
         );
@@ -362,5 +387,42 @@ class participants_filter extends \core\output\datafilter {
         ];
 
         return $data;
+    }
+
+    /**
+     * Get a standardised filter object.
+     *
+     * @param string $name
+     * @param string $title
+     * @param bool $custom
+     * @param bool $multiple
+     * @param string|null $filterclass
+     * @param array $values
+     * @param bool $allowempty
+     * @return stdClass|null
+     */
+    protected function get_filter_object(
+        string $name,
+        string $title,
+        bool $custom,
+        bool $multiple,
+        ?string $filterclass,
+        array $values,
+        bool $allowempty = false
+    ): ?stdClass {
+
+        if (!$allowempty && empty($values)) {
+            // Do not show empty filters.
+            return null;
+        }
+
+        return (object) [
+            'name' => $name,
+            'title' => $title,
+            'allowcustom' => $custom,
+            'allowmultiple' => $multiple,
+            'filtertypeclass' => $filterclass,
+            'values' => $values,
+        ];
     }
 }

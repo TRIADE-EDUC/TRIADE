@@ -8,6 +8,7 @@ if (empty($_SESSION["nom"]))  {
 include_once('common/config.inc.php');
 include_once('librairie_php/db_triade.php');
 include_once("./common/config2.inc.php");
+$cnx=cnx();
 $fic="data/image_pers/".$_GET["id"]."_edt.pdf";
 if (!file_exists($fic)) {
 	header("Location: ./err404.php");
@@ -21,7 +22,6 @@ switch(strrchr(basename($filename), ".")) {
 	default: exit; break;
 
 }
-$cnx=cnx();
 history_cmd($_SESSION["nom"],"CONSULTATION"," $filename");
 PgClose();
 header("Content-disposition: attachment; filename=$filename");

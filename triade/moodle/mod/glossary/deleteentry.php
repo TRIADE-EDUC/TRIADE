@@ -28,27 +28,27 @@ $entrydeleted  = get_string("entrydeleted","glossary");
 
 
 if (! $cm = get_coursemodule_from_id('glossary', $id)) {
-    throw new \moodle_exception("invalidcoursemodule");
+    print_error("invalidcoursemodule");
 }
 
 if (! $course = $DB->get_record("course", array("id"=>$cm->course))) {
-    throw new \moodle_exception('coursemisconf');
+    print_error('coursemisconf');
 }
 
 if (! $entry = $DB->get_record("glossary_entries", array("id"=>$entry))) {
-    throw new \moodle_exception('invalidentry');
+    print_error('invalidentry');
 }
 
 // Permission checks are based on the course module instance so make sure it is correct.
 if ($cm->instance != $entry->glossaryid) {
-    throw new \moodle_exception('invalidentry');
+    print_error('invalidentry');
 }
 
 require_login($course, false, $cm);
 $context = context_module::instance($cm->id);
 
 if (! $glossary = $DB->get_record("glossary", array("id"=>$cm->instance))) {
-    throw new \moodle_exception('invalidid', 'glossary');
+    print_error('invalidid', 'glossary');
 }
 
 // Throws an exception if the user cannot delete the entry.

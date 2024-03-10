@@ -41,16 +41,16 @@ $forcedownload = optional_param('forcedownload', 0, PARAM_BOOL);
 
 // relative path must start with '/', because of backup/restore!!!
 if (!$relativepath) {
-    throw new \moodle_exception('invalidargorconf');
+    print_error('invalidargorconf');
 } else if ($relativepath[0] != '/') {
-    throw new \moodle_exception('pathdoesnotstartslash');
+    print_error('pathdoesnotstartslash');
 }
 
 // extract relative path components
 $args = explode('/', ltrim($relativepath, '/'));
 
 if (count($args) == 0) { // always at least courseid, may search for index.html in course root
-    throw new \moodle_exception('invalidarguments');
+    print_error('invalidarguments');
 }
 
 $courseid = (int)array_shift($args);

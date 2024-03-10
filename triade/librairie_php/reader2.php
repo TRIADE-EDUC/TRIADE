@@ -1,5 +1,5 @@
 <?php
-error_reporting(0);
+//error_reporting(0);
 //require_once 'PEAR.php';
 require_once 'oleread.inc.php';
 
@@ -120,8 +120,8 @@ class Spreadsheet_Excel_Reader {
         0x2c => '$%1.2f', //"$#,##0.00;($#,##0.00)",
         0x30 => '%1.0f'); //"##0.0E0";
 
-    function Spreadsheet_Excel_Reader(){
-        $this->_ole =& new OLERead();
+    function __construct(){
+        $this->_ole = new OLERead();
         $this->setUTFEncoder('iconv');
 
     }
@@ -334,8 +334,8 @@ class Spreadsheet_Excel_Reader {
 
                                                          }
                                                 }
-                                              $retstr = ($asciiEncoding) ? $retstr : $this->_encodeUTF16($retstr);
-		//			      $retstr = ($asciiEncoding) ? iconv('cp1250', 'utf-8', $retstr) : $this->_encodeUTF16($retstr);
+//                                              $retstr = ($asciiEncoding) ? $retstr : $this->_encodeUTF16($retstr);
+						$retstr = ($asciiEncoding) ? iconv('cp1250', 'utf-8', $retstr) : $this->_encodeUTF16($retstr);
 //                                              echo "Str $i = $retstr\n";
                                         if ($richString){
                                                   $spos += 4 * $formattingRuns;

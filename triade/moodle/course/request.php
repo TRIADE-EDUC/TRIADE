@@ -43,10 +43,10 @@ $PAGE->set_url($url);
 // Check permissions.
 require_login(null, false);
 if (isguestuser()) {
-    throw new \moodle_exception('guestsarenotallowed', '', $returnurl);
+    print_error('guestsarenotallowed', '', $returnurl);
 }
 if (empty($CFG->enablecourserequests)) {
-    throw new \moodle_exception('courserequestdisabled', '', $returnurl);
+    print_error('courserequestdisabled', '', $returnurl);
 }
 
 if ($CFG->lockrequestcategory) {

@@ -23,18 +23,18 @@ $chatsid = required_param('chat_sid', PARAM_ALPHANUM);
 $chatid   = required_param('chat_id', PARAM_INT);
 
 if (!$chatuser = $DB->get_record('chat_users', array('sid' => $chatsid))) {
-    throw new \moodle_exception('notlogged', 'chat');
+    print_error('notlogged', 'chat');
 }
 if (!$chat = $DB->get_record('chat', array('id' => $chatid))) {
-    throw new \moodle_exception('invalidid', 'chat');
+    print_error('invalidid', 'chat');
 }
 
 if (!$course = $DB->get_record('course', array('id' => $chat->course))) {
-    throw new \moodle_exception('invalidcourseid');
+    print_error('invalidcourseid');
 }
 
 if (!$cm = get_coursemodule_from_instance('chat', $chat->id, $course->id)) {
-    throw new \moodle_exception('invalidcoursemodule');
+    print_error('invalidcoursemodule');
 }
 
 $PAGE->set_url('/mod/chat/gui_header_js/chatinput.php', array('chat_sid' => $chatsid, 'chat_id' => $chatid));

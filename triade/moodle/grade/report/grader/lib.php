@@ -257,7 +257,7 @@ class grade_report_grader extends grade_report {
                     }
 
                     if (!$gradeitem = grade_item::fetch(array('id'=>$itemid, 'courseid'=>$this->courseid))) {
-                        throw new \moodle_exception('invalidgradeitemid');
+                        print_error('invalidgradeitemid');
                     }
 
                     // Pre-process grade

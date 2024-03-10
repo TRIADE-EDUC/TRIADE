@@ -24,14 +24,15 @@
 
 namespace core_question\local\bank;
 
+use core_plugin_manager;
+use core_question\bank\search\condition;
+use core_question\local\statistics\statistics_bulk_loader;
+use qbank_columnsortorder\column_manager;
+use qbank_editquestion\editquestion_helper;
+
 defined('MOODLE_INTERNAL') || die();
 
 require_once($CFG->dirroot . '/question/editlib.php');
-use core_plugin_manager;
-use core_question\bank\search\condition;
-use qbank_columnsortorder\column_manager;
-use qbank_editquestion\editquestion_helper;
-use qbank_managecategories\helper;
 
 /**
  * This class prints a view of the question bank.
@@ -90,19 +91,19 @@ class view {
     public $course;
 
     /**
-     * @var \question_bank_column_base[] these are all the 'columns' that are
+     * @var column_base[] these are all the 'columns' that are
      * part of the display. Array keys are the class name.
      */
     protected $requiredcolumns;
 
     /**
-     * @var \question_bank_column_base[] these are the 'columns' that are
+     * @var column_base[] these are the 'columns' that are
      * actually displayed as a column, in order. Array keys are the class name.
      */
     protected $visiblecolumns;
 
     /**
-     * @var \question_bank_column_base[] these are the 'columns' that are
+     * @var column_base[] these are the 'columns' that are
      * actually displayed as an additional row (e.g. question text), in order.
      * Array keys are the class name.
      */
@@ -112,11 +113,6 @@ class view {
      * @var array list of column class names for which columns to sort on.
      */
     protected $sort;
-
-    /**
-     * @var int page size to use (when we are not showing all questions).
-     */
-    protected $pagesize = DEFAULT_QUESTIONS_PER_PAGE;
 
     /**
      * @var int|null id of the a question to highlight in the list (if present).
@@ -138,6 +134,15 @@ class view {
      * @var array params used by $countsql and $loadsql (which currently must be the same).
      */
     protected $sqlparams;
+
+    /**
+     * @var ?array Stores all the average statistics that this question bank view needs.
+     *
+     * This field gets initialised in {@see display_question_list()}. It is a two dimensional
+     * $this->loadedstatistics[$questionid][$fieldname] = $average value of that statistics for that question.
+     * Column classes in qbank plugins can access these values using {@see get_aggregate_statistic()}.
+     */
+    protected $loadedstatistics = null;
 
     /**
      * @var condition[] search conditions.
@@ -209,10 +214,6 @@ class view {
             $pluginentrypoint = new $plugin();
             $bulkactions = $pluginentrypoint->get_bulk_actions();
             if (!is_array($bulkactions)) {
-                debugging("The method {$componentname}::get_bulk_actions() must return an " .
-                    "array of bulk actions instead of a single bulk action. " .
-                    "Please update your implementation of get_bulk_actions() to return an array. " .
-                    "Check out the qbank_bulkmove plugin for a working example.", DEBUG_DEVELOPER);
                 $bulkactions = [$bulkactions];
             }
 
@@ -945,11 +946,11 @@ class view {
      * @param string     $categoryandcontext 'categoryID,contextID'.
      * @param int        $recurse     Whether to include subcategories.
      * @param int        $page        The number of the page to be displayed
-     * @param int|null   $perpage     Number of questions to show per page
+     * @param int        $perpage     Number of questions to show per page
      * @param array      $addcontexts contexts where the user is allowed to add new questions.
      */
     protected function display_question_list($pageurl, $categoryandcontext, $recurse = 1, $page = 0,
-                $perpage = null, $addcontexts = []): void {
+                                                $perpage = 100, $addcontexts = []): void {
         global $OUTPUT;
         // This function can be moderately slow with large question counts and may time out.
         // We probably do not want to raise it to unlimited, so randomly picking 5 minutes.
@@ -957,7 +958,6 @@ class view {
         \core_php_time_limit::raise(300);
 
         $category = $this->get_current_category($categoryandcontext);
-        $perpage = $perpage ?? $this->pagesize;
 
         list($categoryid, $contextid) = explode(',', $categoryandcontext);
         $catcontext = \context::instance_by_id($contextid);
@@ -979,6 +979,11 @@ class view {
             }
         }
         $questionsrs->close();
+
+        // Bulk load any required statistics.
+        $this->load_required_statistics($questions);
+
+        // Bulk load any extra data that any column requires.
         foreach ($this->requiredcolumns as $name => $column) {
             $column->load_additional_data($questions);
         }
@@ -1003,6 +1008,60 @@ class view {
 
         echo \html_writer::end_tag('fieldset');
         echo \html_writer::end_tag('form');
+    }
+
+    /**
+     * Work out the list of all the required statistics fields for this question bank view.
+     *
+     * This gathers all the required fields from all columns, so they can all be loaded at once.
+     *
+     * @return string[] the names of all the required fields for this question bank view.
+     */
+    protected function determine_required_statistics(): array {
+        $requiredfields = [];
+        foreach ($this->requiredcolumns as $column) {
+            $requiredfields = array_merge($requiredfields, $column->get_required_statistics_fields());
+        }
+
+        return array_unique($requiredfields);
+    }
+
+    /**
+     * Load the aggregate statistics that all the columns require.
+     *
+     * @param \stdClass[] $questions the questions that will be displayed indexed by question id.
+     */
+    protected function load_required_statistics(array $questions): void {
+        $requiredstatistics = $this->determine_required_statistics();
+        $this->loadedstatistics = statistics_bulk_loader::load_aggregate_statistics(
+                array_keys($questions), $requiredstatistics);
+    }
+
+    /**
+     * Get the aggregated value of a particular statistic for a particular question.
+     *
+     * You can only get values for the questions on the current page of the question bank view,
+     * and only if you declared the need for this statistic in the get_required_statistics_fields()
+     * method of your question bank column.
+     *
+     * @param int $questionid the id of a question
+     * @param string $fieldname the name of a statistics field, e.g. 'facility'.
+     * @return float|null the average (across all users) of this statistic for this question.
+     *      Null if the value is not available right now.
+     */
+    public function get_aggregate_statistic(int $questionid, string $fieldname): ?float {
+        if (!array_key_exists($questionid, $this->loadedstatistics)) {
+            throw new \coding_exception('Question ' . $questionid . ' is not on the current page of ' .
+                    'this question bank view, so its statistics are not available.');
+        }
+
+        // Must be array_key_exists, not isset, because we care about null values.
+        if (!array_key_exists($fieldname, $this->loadedstatistics[$questionid])) {
+            throw new \coding_exception('Statistics field ' . $fieldname . ' was not requested by any ' .
+                    'question bank column in this view, so it is not available.');
+        }
+
+        return $this->loadedstatistics[$questionid][$fieldname];
     }
 
     /**
@@ -1033,9 +1092,9 @@ class view {
                 'pagination' => $pagination,
                 'biggertotal' => true,
         );
-        if ($totalnumber > $this->pagesize) {
+        if ($totalnumber > DEFAULT_QUESTIONS_PER_PAGE) {
             $displaydata['showall'] = true;
-            if ($perpage == $this->pagesize) {
+            if ($perpage == DEFAULT_QUESTIONS_PER_PAGE) {
                 $url = new \moodle_url($pageurl, array_merge($pageurl->params(),
                         ['qpage' => 0, 'qperpage' => MAXIMUM_QUESTIONS_PER_PAGE]));
                 if ($totalnumber > MAXIMUM_QUESTIONS_PER_PAGE) {
@@ -1046,8 +1105,8 @@ class view {
                 }
             } else {
                 $url = new \moodle_url($pageurl, array_merge($pageurl->params(),
-                        ['qperpage' => $this->pagesize]));
-                $displaydata['totalnumber'] = $this->pagesize;
+                        ['qperpage' => DEFAULT_QUESTIONS_PER_PAGE]));
+                $displaydata['totalnumber'] = DEFAULT_QUESTIONS_PER_PAGE;
             }
             $displaydata['showallurl'] = $url;
         }
@@ -1256,5 +1315,14 @@ class view {
      */
     public function get_visiblecolumns(): array {
         return $this->visiblecolumns;
+    }
+
+    /**
+     * Is this view showing separate versions of a question?
+     *
+     * @return bool
+     */
+    public function is_listing_specific_versions(): bool {
+        return false;
     }
 }

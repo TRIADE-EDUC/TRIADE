@@ -33,7 +33,7 @@ if (!empty($id)) {
     $course = $DB->get_record("course", array("id" => $scorm->course), '*', MUST_EXIST);
     $cm = get_coursemodule_from_instance("scorm", $scorm->id, $course->id, false, MUST_EXIST);
 } else {
-    throw new \moodle_exception('missingparameter');
+    print_error('missingparameter');
 }
 
 $PAGE->set_url('/mod/scorm/datamodels/sequencinghandler.php',

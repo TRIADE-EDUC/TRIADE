@@ -85,9 +85,10 @@ if (file_exists($fichier_info)) {
 }
 
 if (isset($patchrequis)) {
+	if (file_exists("../common/lib_patch.php")) include_once("../common/lib_patch.php");
 	if ($patchrequis != "aucun") {
 		if ($patchrequis != VERSIONPATCH) {
-			print "<br><font class='T2' color='red'><b>ATTENTION, VOUS DEVEZ INSTALLER <br> LE PATCH $patchrequis AVANT !!!</b><br /></font>";
+			print "<br><font class='T2' color='red'><b>ATTENTION, VOUS DEVEZ INSTALLER <br> LE PATCH $patchrequis AVANT !!! ".VERSIONPATCH."</b><br /></font>";
 		}
 	}
 }

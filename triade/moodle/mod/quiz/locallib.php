@@ -40,6 +40,7 @@ require_once($CFG->libdir . '/filelib.php');
 require_once($CFG->libdir . '/questionlib.php');
 
 use mod_quiz\question\bank\qbank_helper;
+use qbank_previewquestion\question_preview_options;
 
 /**
  * @var int We show the countdown timer if there is less than this amount of time left before the
@@ -113,7 +114,7 @@ function quiz_create_attempt(quiz $quizobj, $attemptnumber, $lastattempt, $timen
     } else {
         // Build on last attempt.
         if (empty($lastattempt)) {
-            throw new \moodle_exception('cannotfindprevattempt', 'quiz');
+            print_error('cannotfindprevattempt', 'quiz');
         }
         $attempt = $lastattempt;
     }
@@ -179,6 +180,9 @@ function quiz_start_new_attempt($quizobj, $quba, $attempt, $attemptnumber, $time
         $slot += 1;
         $maxmark[$slot] = $questiondata->maxmark;
         $page[$slot] = $questiondata->page;
+        if ($questiondata->status == \core_question\local\bank\question_version_status::QUESTION_STATUS_DRAFT) {
+            throw new moodle_exception('questiondraftonly', 'mod_quiz', '', $questiondata->name);
+        }
         if ($questiondata->qtype == 'random') {
             $randomfound = true;
             continue;
@@ -317,7 +321,11 @@ function quiz_start_attempt_built_on_last($quba, $attempt, $lastattempt) {
 
     $oldnumberstonew = array();
     foreach ($oldquba->get_attempt_iterator() as $oldslot => $oldqa) {
-        $newslot = $quba->add_question($oldqa->get_question(false), $oldqa->get_max_mark());
+        $question = $oldqa->get_question(false);
+        if ($question->status == \core_question\local\bank\question_version_status::QUESTION_STATUS_DRAFT) {
+            throw new moodle_exception('questiondraftonly', 'mod_quiz', '', $question->name);
+        }
+        $newslot = $quba->add_question($question, $oldqa->get_max_mark());
 
         $quba->start_question_based_on($newslot, $oldqa);
 
@@ -1446,9 +1454,10 @@ function quiz_question_edit_button($cmid, $question, $returnurl, $contentafteric
  * @param object $quiz the quiz settings
  * @param object $question the question
  * @param int $variant which question variant to preview (optional).
+ * @param int $restartversion version of the question to use when restarting the preview.
  * @return moodle_url to preview this question with the options from this quiz.
  */
-function quiz_question_preview_url($quiz, $question, $variant = null) {
+function quiz_question_preview_url($quiz, $question, $variant = null, $restartversion = null) {
     // Get the appropriate display options.
     $displayoptions = mod_quiz_display_options::make_from_quiz($quiz,
             mod_quiz_display_options::DURING);
@@ -1460,7 +1469,7 @@ function quiz_question_preview_url($quiz, $question, $variant = null) {
 
     // Work out the correcte preview URL.
     return \qbank_previewquestion\helper::question_preview_url($question->id, $quiz->preferredbehaviour,
-            $maxmark, $displayoptions, $variant);
+            $maxmark, $displayoptions, $variant, null, null, $restartversion);
 }
 
 /**
@@ -1469,14 +1478,22 @@ function quiz_question_preview_url($quiz, $question, $variant = null) {
  * @param bool $label if true, show the preview question label after the icon
  * @param int $variant which question variant to preview (optional).
  * @param bool $random if question is random, true.
- * @return the HTML for a preview question icon.
+ * @return string the HTML for a preview question icon.
  */
 function quiz_question_preview_button($quiz, $question, $label = false, $variant = null, $random = null) {
     global $PAGE;
     if (!question_has_capability_on($question, 'use')) {
         return '';
     }
-    return $PAGE->get_renderer('mod_quiz', 'edit')->question_preview_icon($quiz, $question, $label, $variant, null);
+    $structure = quiz::create($quiz->id)->get_structure();
+    if (!empty($question->slot)) {
+        $requestedversion = $structure->get_slot_by_number($question->slot)->requestedversion
+                ?? question_preview_options::ALWAYS_LATEST;
+    } else {
+        $requestedversion = question_preview_options::ALWAYS_LATEST;
+    }
+    return $PAGE->get_renderer('mod_quiz', 'edit')->question_preview_icon(
+            $quiz, $question, $label, $variant, $requestedversion);
 }
 
 /**
@@ -2266,17 +2283,12 @@ function quiz_require_question_use($questionid) {
 
 /**
  * Verify that the question exists, and the user has permission to use it.
- *
- * @deprecated in 4.1 use mod_quiz\structure::has_use_capability(...) instead.
- *
  * @param object $quiz the quiz settings.
  * @param int $slot which question in the quiz to test.
  * @return bool whether the user can use this question.
  */
 function quiz_has_question_use($quiz, $slot) {
     global $DB;
-
-    debugging('Deprecated. Please use mod_quiz\structure::has_use_capability instead.');
 
     $sql = 'SELECT q.*
               FROM {quiz_slots} slot

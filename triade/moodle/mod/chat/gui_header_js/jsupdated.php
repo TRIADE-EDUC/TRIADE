@@ -58,19 +58,19 @@ if ($chatlastid !== 1) {
 $PAGE->set_url($url);
 
 if (!$chatuser = $DB->get_record('chat_users', array('sid' => $chatsid))) {
-    throw new \moodle_exception('notlogged', 'chat');
+    print_error('notlogged', 'chat');
 }
 
 // Get the minimal course.
 if (!$course = $DB->get_record('course', array('id' => $chatuser->course))) {
-    throw new \moodle_exception('invalidcourseid');
+    print_error('invalidcourseid');
 }
 
 // Get the user theme and enough info to be used in chat_format_message() which passes it along to
 // chat_format_message_manually() -- and only id and timezone are used.
 // No optimisation here, it would break again in future!
 if (!$user = $DB->get_record('user', array('id' => $chatuser->userid, 'deleted' => 0, 'suspended' => 0))) {
-    throw new \moodle_exception('invaliduser');
+    print_error('invaliduser');
 }
 \core\session\manager::set_user($user);
 

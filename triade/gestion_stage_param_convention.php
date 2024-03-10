@@ -5,8 +5,8 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
- *   Site                 : http://www.triade-educ.com
+ *   copyright            : (C) 2000 E. TAESCH 
+ *   Site                 : http://www.triade-educ.org
  *
  *
  ***************************************************************************/
@@ -29,21 +29,12 @@ session_start();
 <script language="JavaScript" src="./librairie_js/clickdroit.js"></script>
 <script language="JavaScript" src="./librairie_js/function.js"></script>
 <script language="JavaScript" src="./librairie_js/lib_css.js"></script>
+<script type="text/javascript" src="./ckeditor/ckeditor2.js"></script>
 <script >var panelWidth = 350;</script>
 <script language="JavaScript" src="./librairie_js/lib_aide.js"></script>
 <script type="text/javascript">
-_editor_url = "./HTMLArea";
-_editor_lang = "<?php  print $_SESSION["langue"] ?>";
-</script>
-<script type="text/javascript" src="./HTMLArea/htmlarea-pdf.js"></script>
-<script type="text/javascript">
-HTMLArea.loadPlugin("ContextMenu");
-HTMLArea.loadPlugin("TableOperations");
-function initDocument() {
-  var editor = new HTMLArea("editor");
-  editor.registerPlugin(ContextMenu);
-  //editor.registerPlugin(TableOperations);
-  editor.generate();
+function _(el) {
+	return document.getElementById(el);
 }
 </script>
 <title>Triade - Compte de <?php print "$_SESSION[nom] $_SESSION[prenom] "?></title>
@@ -60,8 +51,6 @@ function initDocument() {
 	padding:0px;
 }
 </style>
-
-
 
 </head>
 <body id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" onload="initDocument()" >
@@ -83,7 +72,7 @@ $cnx=cnx();
 
 <img src="image/commun/info2.gif" align=left>
 <font class=T1><b><?php print LANGAIDE2 ?></b> <br>
-<br><table border=1 bgcolor="#FFFFFF" width="100%" ><tr><td valign=top>
+<br><table border=1 bgcolor="#FFFFFF" width="100%" style="border-collapse: collapse;" ><tr><td valign=top>
 Nom de l'élève=> NomEleve<br>
 Prénom de l'élève=> PrenomEleve<br>
 Classe de l'élève=> classe_eleve<br>
@@ -143,6 +132,7 @@ if (isset($_POST["saisie_classe"])) {
 	$idclasse="0";
 }
 ?>
+<br>
 <script language=JavaScript>buttonMagic3("<?php print LANGAIDE ?>","initSlideLeftPanel();return false"); //text,nomInput</script>
 <form method="post" action="gestion_stage_param_convention.php" >
 &nbsp;<font class='T2'>Visualisation de la classe : <select name="saisie_classe" onChange="this.form.submit()" > 
@@ -157,7 +147,7 @@ select_classe();
 ?>
 </select>
 
-Convention N° : <select name='nbconv' onChange="this.form.submit()" >
+&nbsp;&nbsp;Convention N° : <select name='nbconv' onChange="this.form.submit()" >
 <?php 
 if (trim($_POST["nbconv"]) != "") {
 	$nbconv=$_POST["nbconv"];
@@ -165,7 +155,7 @@ if (trim($_POST["nbconv"]) != "") {
 	$nbconv=preg_replace('/_conv_/','',$nbconv);
 	print "$nbconv</option>";
 }
-	print "<option></option><option value='_conv_A' id='select1' >A</option><option value='_conv_B' id='select1' >B</option><option id='select1' value='_conv_C'>C</option></select>";
+print "<option></option><option value='_conv_A' id='select1' >A</option><option value='_conv_B' id='select1' >B</option><option id='select1' value='_conv_C'>C</option></select>";
  
 $fichier1="./data/parametrage/courrier_stageconvention_$idclasse.rtf";
 if (file_exists($fichier1)) { ?>
@@ -203,8 +193,11 @@ if (isset($_POST["create"])) {
 	}else{
 		$nbconv=$_POST["nbconv"];
 		$texte=$_POST["suite"];
+		$texte=preg_replace('#(\\\\r|\\\\r\\\\n|\\\\n)#',' ',$texte);
 		$texte=preg_replace('/\\\"/','"',$texte);
 		$texte=preg_replace("/\\\'/","'",$texte);
+		$texte=stripslashes($texte);
+		$texte=stripslashes($texte);
 		//--------------------
 		config_param_ajout_classe($_POST["suite"],"param_conv_stag#$idclasse$nbconv","$idclasse");
 		if ($idclasse == 0) {
@@ -224,7 +217,7 @@ if (isset($_POST["create"])) {
 <font class=T2><b><?php print "La convention est enregistrée."  ?></b></font>
 <br><br>
 <font class=T1><?php print LANGCONFIG2 ?></font>:<br><br>
-<table width=100% height=200 bgcolor="#FFFFFF" border=1 cellpadding="5" >
+<table width="100%" height="200" bgcolor="#FFFFFF" border=1 cellpadding="5" style="border-collapse: collapse;" >
 <tr><td valign=top>
 <?php 
 if ($texte != "{FICHIERRTFSTAGE}") { 
@@ -247,12 +240,20 @@ if ($texte != "{FICHIERRTFSTAGE}") {
 	}else{
 		$texte="<i>Fichier 'rtf' comme matrice de donnée</i>";
 	}
+	
+	$texte=preg_replace('#(\\\\r|\\\\r\\\\n|\\\\n)#',' ',$texte);
 
 ?>
 <br>
-<form method=post ENCTYPE="multipart/form-data">
-<textarea id="editor" style="height: 48em; width: 100%;" name="suite"><?php print $texte ?>
+<form method=post ENCTYPE="multipart/form-data"><br>
+<textarea id="editor2" style="height: 48em; width: 100%;" name="suite"><?php print $texte ?>
 </textarea><br><br>
+<script type="text/javascript">var colorGRAPH='<?php print $GRAPH ?>';
+//<![CDATA[
+CKEDITOR.replace('editor2', {height:'399px',language:'<?php print ($_SESSION["langue"] == "fr") ? "fr":"en";?>',scayt_autoStartup:true,grayt_autoStartup:true,scayt_maxSuggestions:3,scayt_sLang:'en_FR',removeButtons:'PasteFromWord' });
+//]]>
+</script>
+
 &nbsp;<font class='T2'>Classe : <select name="saisie_classe" > 
 <?php 
 if ($idclasse == 0) {

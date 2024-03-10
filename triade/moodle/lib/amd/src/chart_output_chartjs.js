@@ -156,9 +156,9 @@ define([
         }
 
         if (axis.getLabel() !== null) {
-            scaleData.title = {
+            scaleData.scaleLabel = {
                 display: true,
-                text: this._cleanData(axis.getLabel())
+                labelString: this._cleanData(axis.getLabel())
             };
         }
 
@@ -187,33 +187,22 @@ define([
      * @return {Object} The axis config.
      */
     Output.prototype._makeConfig = function() {
-        var charType = this._getChartType();
         var config = {
-            type: charType,
+            type: this._getChartType(),
             data: {
                 labels: this._cleanData(this._chart.getLabels()),
                 datasets: this._makeDatasetsConfig()
             },
             options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    title: {
-                        display: this._chart.getTitle() !== null,
-                        text: this._cleanData(this._chart.getTitle())
-                    }
+                title: {
+                    display: this._chart.getTitle() !== null,
+                    text: this._cleanData(this._chart.getTitle())
                 }
             }
         };
-
-        if (charType === 'horizontalBar') {
-            config.type = 'bar';
-            config.options.indexAxis = 'y';
-        }
-
         var legendOptions = this._chart.getLegendOptions();
         if (legendOptions) {
-            config.options.plugins.legend = legendOptions;
+            config.options.legend = legendOptions;
         }
 
 
@@ -221,33 +210,33 @@ define([
             var axisLabels = axis.getLabels();
 
             config.options.scales = config.options.scales || {};
-            config.options.scales.x = config.options.scales.x || {};
-            config.options.scales.x[i] = this._makeAxisConfig(axis, 'x', i);
+            config.options.scales.xAxes = config.options.scales.xAxes || [];
+            config.options.scales.xAxes[i] = this._makeAxisConfig(axis, 'x', i);
 
             if (axisLabels !== null) {
-                config.options.scales.x[i].ticks.callback = function(value, index) {
+                config.options.scales.xAxes[i].ticks.callback = function(value, index) {
                     return axisLabels[index] || '';
                 };
             }
-            config.options.scales.x.stacked = this._isStacked();
+            config.options.scales.xAxes[i].stacked = this._isStacked();
         }.bind(this));
 
         this._chart.getYAxes().forEach(function(axis, i) {
             var axisLabels = axis.getLabels();
 
             config.options.scales = config.options.scales || {};
-            config.options.scales.y = config.options.scales.yAxes || {};
-            config.options.scales.y[i] = this._makeAxisConfig(axis, 'y', i);
+            config.options.scales.yAxes = config.options.scales.yAxes || [];
+            config.options.scales.yAxes[i] = this._makeAxisConfig(axis, 'y', i);
 
             if (axisLabels !== null) {
-                config.options.scales.y[i].ticks.callback = function(value) {
+                config.options.scales.yAxes[i].ticks.callback = function(value) {
                     return axisLabels[parseInt(value, 10)] || '';
                 };
             }
-            config.options.scales.y.stacked = this._isStacked();
+            config.options.scales.yAxes[i].stacked = this._isStacked();
         }.bind(this));
 
-        config.options.plugins.tooltip = {
+        config.options.tooltips = {
             callbacks: {
                 label: this._makeTooltip.bind(this)
             }
@@ -273,7 +262,7 @@ define([
                 backgroundColor: colors,
                 // Pie charts look better without borders.
                 borderColor: this._chart.getType() == Pie.prototype.TYPE ? '#fff' : colors,
-                tension: this._isSmooth(series) ? 0.3 : 0
+                lineTension: this._isSmooth(series) ? 0.3 : 0
             };
 
             if (series.getXAxis() !== null) {
@@ -291,25 +280,32 @@ define([
     /**
      * Get the chart data, add labels and rebuild the tooltip.
      *
-     * @param {Object[]} tooltipItem The tooltip item object.
-     * @returns {Array}
+     * @param {Object[]} tooltipItem The tooltip item data.
+     * @param {Object[]} data The chart data.
+     * @returns {String}
      * @protected
      */
-    Output.prototype._makeTooltip = function(tooltipItem) {
+    Output.prototype._makeTooltip = function(tooltipItem, data) {
 
         // Get series and chart data to rebuild the tooltip and add labels.
         var series = this._chart.getSeries()[tooltipItem.datasetIndex];
         var serieLabel = series.getLabel();
-        var chartData = tooltipItem.dataset.data;
-        var tooltipData = chartData[tooltipItem.dataIndex];
+        var serieLabels = series.getLabels();
+        var chartData = data.datasets[tooltipItem.datasetIndex].data;
+        var tooltipData = chartData[tooltipItem.index];
 
         // Build default tooltip.
         var tooltip = [];
 
-        // Pie and doughnut charts tooltip are different.
-        if (this._chart.getType() === Pie.prototype.TYPE) {
+        // Pie and doughnut charts does not have axis.
+        if (tooltipItem.xLabel == '' && tooltipItem.yLabel == '') {
             var chartLabels = this._cleanData(this._chart.getLabels());
-            tooltip.push(chartLabels[tooltipItem.dataIndex] + ' - ' + this._cleanData(serieLabel) + ': ' + tooltipData);
+            tooltip.push(chartLabels[tooltipItem.index]);
+        }
+
+        // Add series labels to the tooltip if any.
+        if (serieLabels !== null) {
+            tooltip.push(this._cleanData(serieLabels[tooltipItem.index]));
         } else {
             tooltip.push(this._cleanData(serieLabel) + ': ' + tooltipData);
         }

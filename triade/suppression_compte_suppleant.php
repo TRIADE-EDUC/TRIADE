@@ -127,9 +127,6 @@ $prprenom=ucwords($data[0][5]);
 <br />
 <font color="red"><?php print $sciv." ".$sprenom." ".$snom ?></font><br />
 <br />
-<?php print LANGSUPP3bis ?> <br />
-<br />
-<font color="red"><?php print $prciv." ".$prprenom." ".$prnom ?></font>
 </p>
 </UL>
 <p><center>
@@ -162,7 +159,7 @@ if ($cr) {
 	$cr=supp_suppleant($_POST["pid"]);
 	if($cr) {
 		@delete_comptaVacation($_POST["pid"]);
-		alertJs(LANGSUPP6);
+		alertJs("Affectation suppléant supprimée");
                 history_cmd($_SESSION["nom"],"SUPPRESSION",$personne);
 		reload_page('suppression_compte_suppleant.php');
 	}else {

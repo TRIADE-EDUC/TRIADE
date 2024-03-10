@@ -166,7 +166,7 @@ class Compiler
 
     /**
      * @var array
-     * @phpstan-var array<string, array{0: callable, 1: string[]|null}>
+     * @phpstan-var array<string, array{0: callable, 1: array|null}>
      */
     protected $userFunctions = [];
     /**
@@ -211,15 +211,9 @@ class Compiler
     private $charset = true;
 
     /**
-     * @var Formatter
+     * @var string|\ScssPhp\ScssPhp\Formatter
      */
-    protected $formatter;
-
-    /**
-     * @var string
-     * @phpstan-var class-string<Formatter>
-     */
-    private $configuredFormatter = Expanded::class;
+    protected $formatter = Expanded::class;
 
     /**
      * @var Environment
@@ -387,7 +381,7 @@ class Compiler
             'encoding'           => $this->encoding,
             'sourceMap'          => serialize($this->sourceMap),
             'sourceMapOptions'   => $this->sourceMapOptions,
-            'formatter'          => $this->configuredFormatter,
+            'formatter'          => $this->formatter,
             'legacyImportPath'   => $this->legacyCwdImportPath,
         ];
 
@@ -508,7 +502,7 @@ class Compiler
             $tree         = $this->parser->parse($source);
             $this->parser = null;
 
-            $this->formatter = new $this->configuredFormatter();
+            $this->formatter = new $this->formatter();
             $this->rootBlock = null;
             $this->rootEnv   = $this->pushEnv($tree);
 
@@ -535,7 +529,6 @@ class Compiler
                     $sourceMapGenerator = new SourceMapGenerator($this->sourceMapOptions);
                 }
             }
-            assert($this->scope !== null);
 
             $out = $this->formatter->format($this->scope, $sourceMapGenerator);
 
@@ -549,7 +542,6 @@ class Compiler
             $sourceMap = null;
 
             if (! empty($out) && $this->sourceMap && $this->sourceMap !== self::SOURCE_MAP_NONE) {
-                assert($sourceMapGenerator !== null);
                 $sourceMap = $sourceMapGenerator->generateJson($prefix);
                 $sourceMapUrl = null;
 
@@ -679,7 +671,7 @@ class Compiler
     /**
      * Push extends
      *
-     * @param string[]   $target
+     * @param array      $target
      * @param array      $origin
      * @param array|null $block
      *
@@ -722,9 +714,9 @@ class Compiler
             $out->sourceLine   = $this->env->block->sourceLine;
             $out->sourceColumn = $this->env->block->sourceColumn;
         } else {
-            $out->sourceName = isset($this->sourceNames[$this->sourceIndex]) ? $this->sourceNames[$this->sourceIndex] : '(stdin)';
-            $out->sourceLine = $this->sourceLine;
-            $out->sourceColumn = $this->sourceColumn;
+            $out->sourceName   = null;
+            $out->sourceLine   = null;
+            $out->sourceColumn = null;
         }
 
         return $out;
@@ -742,7 +734,6 @@ class Compiler
         $this->rootBlock = $this->scope = $this->makeOutputBlock(Type::T_ROOT);
 
         $this->compileChildrenNoReturn($rootBlock->children, $this->scope);
-        assert($this->scope !== null);
         $this->flattenSelectors($this->scope);
         $this->missingSelectors();
     }
@@ -824,7 +815,6 @@ class Compiler
             }
 
             if ($placeholderSelector && 0 === \count($block->selectors) && null !== $parentKey) {
-                assert($block->parent !== null);
                 unset($block->parent->children[$parentKey]);
 
                 return;
@@ -1297,7 +1287,6 @@ class Compiler
         $mediaQueries = $this->compileMediaQuery($this->multiplyMedia($this->env));
 
         if (! empty($mediaQueries)) {
-            assert($this->scope !== null);
             $previousScope = $this->scope;
             $parentScope = $this->mediaParent($this->scope);
 
@@ -1463,7 +1452,7 @@ class Compiler
 
         if (
             ! $selfParent->selectors &&
-            isset($block->parent) &&
+            isset($block->parent) && $block->parent &&
             isset($block->parent->selectors) && $block->parent->selectors
         ) {
             $selfParent = $block->parent;
@@ -1471,15 +1460,13 @@ class Compiler
 
         $this->env = $this->filterWithWithout($envs, $with, $without);
 
-        assert($this->scope !== null);
         $saveScope   = $this->scope;
         $this->scope = $this->filterScopeWithWithout($saveScope, $with, $without);
 
         // propagate selfParent to the children where they still can be useful
         $this->compileChildrenNoReturn($block->children, $this->scope, $selfParent);
 
-        assert($this->scope !== null);
-        $this->completeScope($this->scope, $saveScope);
+        $this->scope = $this->completeScope($this->scope, $saveScope);
         $this->scope = $saveScope;
         $this->env   = $this->extractEnv($envs);
 
@@ -1503,7 +1490,6 @@ class Compiler
         if ($scope->type === Type::T_ROOT) {
             return $scope;
         }
-        assert($this->rootBlock !== null);
 
         // start from the root
         while ($scope->parent && $scope->parent->type !== Type::T_ROOT) {
@@ -1571,7 +1557,7 @@ class Compiler
      */
     protected function completeScope($scope, $previousScope)
     {
-        if (! $scope->type && ! $scope->selectors && \count($scope->lines)) {
+        if (! $scope->type && (! $scope->selectors || ! \count($scope->selectors)) && \count($scope->lines)) {
             $scope->selectors = $this->findScopeSelectors($previousScope, $scope->depth);
         }
 
@@ -1782,12 +1768,10 @@ class Compiler
 
         $this->scope = $this->makeOutputBlock($block->type, $selectors);
         $this->scope->depth = 1;
-        assert($this->scope->parent !== null);
         $this->scope->parent->children[] = $this->scope;
 
         $this->compileChildrenNoReturn($block->children, $this->scope);
 
-        assert($this->scope !== null);
         $this->scope = $this->scope->parent;
         $this->env   = $this->extractEnv($envs);
 
@@ -1845,7 +1829,6 @@ class Compiler
         $this->pushEnv($block);
 
         $this->scope = $this->makeOutputBlock($block->type, $selectors);
-        assert($this->scope->parent !== null);
         $this->scope->parent->children[] = $this->scope;
 
         // wrap assign children in a block
@@ -1879,7 +1862,6 @@ class Compiler
 
         $this->compileChildrenNoReturn($block->children, $this->scope);
 
-        assert($this->scope !== null);
         $this->scope = $this->scope->parent;
 
         $this->popEnv();
@@ -1908,12 +1890,10 @@ class Compiler
     protected function compileBlock(Block $block)
     {
         $env = $this->pushEnv($block);
-        assert($block->selectors !== null);
         $env->selectors = $this->evalSelectors($block->selectors);
 
         $out = $this->makeOutputBlock(null);
 
-        assert($this->scope !== null);
         $this->scope->children[] = $out;
 
         if (\count($block->children)) {
@@ -1931,7 +1911,6 @@ class Compiler
 
             // and revert for the following children of the same block
             if ($selfParentSelectors) {
-                assert($block->selfParent !== null);
                 $block->selfParent->selectors = $selfParentSelectors;
             }
         }
@@ -1987,7 +1966,6 @@ class Compiler
         $out = $this->makeOutputBlock(Type::T_COMMENT);
         $out->lines[] = $this->compileCommentValue($block, true);
 
-        assert($this->scope !== null);
         $this->scope->children[] = $out;
     }
 
@@ -2002,11 +1980,7 @@ class Compiler
     {
         $this->shouldEvaluate = false;
 
-        $evaluatedSelectors = [];
-        foreach ($selectors as $selector) {
-            $evaluatedSelectors[] = $this->evalSelector($selector);
-        }
-        $selectors = $evaluatedSelectors;
+        $selectors = array_map([$this, 'evalSelector'], $selectors);
 
         // after evaluating interpolates, we might need a second pass
         if ($this->shouldEvaluate) {
@@ -2034,8 +2008,6 @@ class Compiler
      * @param array $selector
      *
      * @return array
-     *
-     * @phpstan-impure
      */
     protected function evalSelector($selector)
     {
@@ -2048,8 +2020,6 @@ class Compiler
      * @param array $part
      *
      * @return array
-     *
-     * @phpstan-impure
      */
     protected function evalSelectorPart($part)
     {
@@ -2063,8 +2033,8 @@ class Compiler
                 }
             } elseif (
                 \is_string($p) && \strlen($p) >= 2 &&
-                ($p[0] === '"' || $p[0] === "'") &&
-                substr($p, -1) === $p[0]
+                ($first = $p[0]) && ($first === '"' || $first === "'") &&
+                substr($p, -1) === $first
             ) {
                 $p = substr($p, 1, -1);
             }
@@ -2350,9 +2320,9 @@ class Compiler
     }
 
     /**
-     * Compile children and throw exception if unexpected at-return
+     * Compile children and throw exception if unexpected `@return`
      *
-     * @param array[]                                $stms
+     * @param array                                  $stms
      * @param \ScssPhp\ScssPhp\Formatter\OutputBlock $out
      * @param \ScssPhp\ScssPhp\Block                 $selfParent
      * @param string                                 $traceName
@@ -2367,13 +2337,13 @@ class Compiler
 
         foreach ($stms as $stm) {
             if ($selfParent && isset($stm[1]) && \is_object($stm[1]) && $stm[1] instanceof Block) {
-                $oldSelfParent = $stm[1]->selfParent;
                 $stm[1]->selfParent = $selfParent;
                 $ret = $this->compileChild($stm, $out);
-                $stm[1]->selfParent = $oldSelfParent;
+                $stm[1]->selfParent = null;
             } elseif ($selfParent && \in_array($stm[0], [Type::T_INCLUDE, Type::T_EXTEND])) {
                 $stm['selfParent'] = $selfParent;
                 $ret = $this->compileChild($stm, $out);
+                unset($stm['selfParent']);
             } else {
                 $ret = $this->compileChild($stm, $out);
             }
@@ -2431,7 +2401,7 @@ class Compiler
                 $queryString = $this->compileMediaQuery([$queryList[$kql]]);
                 $queryString = reset($queryString);
 
-                if ($queryString !== false && strpos($queryString, '@media ') === 0) {
+                if (strpos($queryString, '@media ') === 0) {
                     $queryString = substr($queryString, 7);
                     $queries = [];
 
@@ -2887,7 +2857,7 @@ class Compiler
             $this->sourceIndex  = isset($child[Parser::SOURCE_INDEX]) ? $child[Parser::SOURCE_INDEX] : null;
             $this->sourceLine   = isset($child[Parser::SOURCE_LINE]) ? $child[Parser::SOURCE_LINE] : -1;
             $this->sourceColumn = isset($child[Parser::SOURCE_COLUMN]) ? $child[Parser::SOURCE_COLUMN] : -1;
-        } elseif (\is_array($child) && isset($child[1]->sourceLine) && $child[1] instanceof Block) {
+        } elseif (\is_array($child) && isset($child[1]->sourceLine)) {
             $this->sourceIndex  = $child[1]->sourceIndex;
             $this->sourceLine   = $child[1]->sourceLine;
             $this->sourceColumn = $child[1]->sourceColumn;
@@ -3123,7 +3093,6 @@ class Compiler
                         if (! $selectors && isset($child['selfParent'])) {
                             $selectors = $this->multiplySelectors($this->env, $child['selfParent']);
                         }
-                        assert($selectors !== null);
 
                         if (\count($result) > 1) {
                             $replacement = implode(', ', $result);
@@ -3286,7 +3255,7 @@ EOL;
                 // and assign this fake parent to childs
                 $selfParent = null;
 
-                if (isset($child['selfParent']) && $child['selfParent'] instanceof Block && isset($child['selfParent']->selectors)) {
+                if (isset($child['selfParent']) && isset($child['selfParent']->selectors)) {
                     $selfParent = $child['selfParent'];
                 } else {
                     $parentSelectors = $this->multiplySelectors($this->env);
@@ -3296,7 +3265,7 @@ EOL;
                         $parent->selectors = $parentSelectors;
 
                         foreach ($mixin->children as $k => $child) {
-                            if (isset($child[1]) && $child[1] instanceof Block) {
+                            if (isset($child[1]) && \is_object($child[1]) && $child[1] instanceof Block) {
                                 $mixin->children[$k][1]->parent = $parent;
                             }
                         }
@@ -3402,8 +3371,6 @@ EOL;
             default:
                 throw $this->error("unknown child type: $child[0]");
         }
-
-        return null;
     }
 
     /**
@@ -3538,24 +3505,32 @@ EOL;
                 $ucLType  = ucfirst($ltype);
                 $ucRType  = ucfirst($rtype);
 
-                $shouldEval = $inParens || $inExp;
-
                 // this tries:
                 // 1. op[op name][left type][right type]
-                // 2. op[left type][right type] (passing the op as first arg)
+                // 2. op[left type][right type] (passing the op as first arg
                 // 3. op[op name]
-                if (\is_callable([$this, $fn = "op{$ucOpName}{$ucLType}{$ucRType}"])) {
-                    $out = $this->$fn($left, $right, $shouldEval);
-                } elseif (\is_callable([$this, $fn = "op{$ucLType}{$ucRType}"])) {
-                    $out = $this->$fn($op, $left, $right, $shouldEval);
-                } elseif (\is_callable([$this, $fn = "op{$ucOpName}"])) {
-                    $out = $this->$fn($left, $right, $shouldEval);
-                } else {
-                    $out = null;
-                }
+                $fn = "op${ucOpName}${ucLType}${ucRType}";
 
-                if (isset($out)) {
-                    return $out;
+                if (
+                    \is_callable([$this, $fn]) ||
+                    (($fn = "op${ucLType}${ucRType}") &&
+                        \is_callable([$this, $fn]) &&
+                        $passOp = true) ||
+                    (($fn = "op${ucOpName}") &&
+                        \is_callable([$this, $fn]) &&
+                        $genOp = true)
+                ) {
+                    $shouldEval = $inParens || $inExp;
+
+                    if (isset($passOp)) {
+                        $out = $this->$fn($op, $left, $right, $shouldEval);
+                    } else {
+                        $out = $this->$fn($left, $right, $shouldEval);
+                    }
+
+                    if (isset($out)) {
+                        return $out;
+                    }
                 }
 
                 return $this->expToString($value);
@@ -3892,12 +3867,11 @@ EOL;
 
         // Special functions overriding a CSS function are case-insensitive. We normalize them as lowercase
         // to avoid the deprecation warning about the wrong case being used.
-        if ($lowercasedName === 'min' || $lowercasedName === 'max' || $lowercasedName === 'rgb' || $lowercasedName === 'rgba' || $lowercasedName === 'hsl' || $lowercasedName === 'hsla') {
+        if ($lowercasedName === 'min' || $lowercasedName === 'max') {
             $normalizedName = $lowercasedName;
         }
 
         if (($f = $this->getBuiltinFunction($normalizedName)) && \is_callable($f)) {
-            /** @var string $libName */
             $libName   = $f[1];
             $prototype = isset(static::$$libName) ? static::$$libName : null;
 
@@ -5543,11 +5517,11 @@ EOL;
     {
         switch ($style) {
             case OutputStyle::EXPANDED:
-                $this->configuredFormatter = Expanded::class;
+                $this->formatter = Expanded::class;
                 break;
 
             case OutputStyle::COMPRESSED:
-                $this->configuredFormatter = Compressed::class;
+                $this->formatter = Compressed::class;
                 break;
 
             default:
@@ -5565,8 +5539,6 @@ EOL;
      * @return void
      *
      * @deprecated Use {@see setOutputStyle} instead.
-     *
-     * @phpstan-param class-string<Formatter> $formatterName
      */
     public function setFormatter($formatterName)
     {
@@ -5575,7 +5547,7 @@ EOL;
         }
         @trigger_error('The method "setFormatter" is deprecated. Use "setOutputStyle" instead.', E_USER_DEPRECATED);
 
-        $this->configuredFormatter = $formatterName;
+        $this->formatter = $formatterName;
     }
 
     /**
@@ -5715,10 +5687,6 @@ EOL;
         $this->pushCallStack('import ' . $this->getPrettyPath($path));
         // see if tree is cached
         $realPath = realpath($path);
-
-        if ($realPath === false) {
-            $realPath = $path;
-        }
 
         if (substr($path, -5) === '.sass') {
             $this->sourceIndex = \count($this->sourceNames);
@@ -6063,8 +6031,6 @@ EOL;
      *
      * @param string $msg Message with optional sprintf()-style vararg parameters
      *
-     * @return never
-     *
      * @throws \ScssPhp\ScssPhp\Exception\CompilerException
      *
      * @deprecated use "error" and throw the exception in the caller instead.
@@ -6084,8 +6050,7 @@ EOL;
      *
      * @internal
      *
-     * @param string                     $msg Message with optional sprintf()-style vararg parameters
-     * @param bool|float|int|string|null ...$args
+     * @param string $msg Message with optional sprintf()-style vararg parameters
      *
      * @return CompilerException
      */
@@ -6202,8 +6167,6 @@ EOL;
      * Handle import loop
      *
      * @param string $name
-     *
-     * @return void
      *
      * @throws \Exception
      */
@@ -6399,9 +6362,6 @@ EOL;
         if (\in_array($functionName, ['libRgb', 'libRgba', 'libHsl', 'libHsla'])) {
             // notation 100 127 255 / 0 is in fact a simple list of 4 values
             foreach ($args as $k => $arg) {
-                if (!isset($arg[1])) {
-                    continue; // This happens when using a trailing comma
-                }
                 if ($arg[1][0] === Type::T_LIST && \count($arg[1][2]) === 3) {
                     $args[$k][1][2] = $this->extractSlashAlphaInColorFunction($arg[1][2]);
                 }
@@ -6834,7 +6794,7 @@ EOL;
         $prototype = ['arguments' => [], 'rest_argument' => null];
         $originalRestArgumentName = null;
 
-        foreach ($argDef as $arg) {
+        foreach ($argDef as $i => $arg) {
             list($name, $default, $isVariable) = $arg;
             $normalizedName = str_replace('_', '-', $name);
 
@@ -7302,8 +7262,6 @@ EOL;
     protected function coerceString($value)
     {
         if ($value[0] === Type::T_STRING) {
-            assert(\is_array($value));
-
             return $value;
         }
 
@@ -7407,7 +7365,6 @@ EOL;
         if ($value[0] !== Type::T_LIST) {
             throw $this->error('expecting list, %s received', $value[0]);
         }
-        assert(\is_array($value));
 
         return $value;
     }
@@ -7577,7 +7534,7 @@ EOL;
                 $h = 60 * ($green - $blue) / $d;
             } elseif ($green == $max) {
                 $h = 60 * ($blue - $red) / $d + 120;
-            } else {
+            } elseif ($blue == $max) {
                 $h = 60 * ($red - $green) / $d + 240;
             }
         }
@@ -7656,9 +7613,9 @@ EOL;
      *
      * @api
      *
-     * @param int|float $hue        H from 0 to 360
-     * @param int|float $whiteness  W from 0 to 100
-     * @param int|float $blackness  B from 0 to 100
+     * @param int $hue        H from 0 to 360
+     * @param int $whiteness  W from 0 to 100
+     * @param int $blackness  B from 0 to 100
      *
      * @return array
      */
@@ -7709,7 +7666,7 @@ EOL;
                 $h = 60 * ($green - $blue) / $d;
             } elseif ($green == $max) {
                 $h = 60 * ($blue - $red) / $d + 120;
-            } else {
+            } elseif ($blue == $max) {
                 $h = 60 * ($red - $green) / $d + 240;
             }
         }
@@ -7833,14 +7790,6 @@ EOL;
         ['channels'],
         ['red', 'green', 'blue'],
         ['red', 'green', 'blue', 'alpha'] ];
-
-    /**
-     * @param array $args
-     * @param array $kwargs
-     * @param string $funcName
-     *
-     * @return array
-     */
     protected function libRgb($args, $kwargs, $funcName = 'rgb')
     {
         switch (\count($args)) {
@@ -7923,7 +7872,14 @@ EOL;
         $scale = $operation === 'scale';
         $change = $operation === 'change';
 
-        /** @phpstan-var callable(string, float|int, bool=, bool=): (float|int|null) $getParam */
+        /**
+         * @param string $name
+         * @param float|int $max
+         * @param bool $checkPercent
+         * @param bool $assertPercent
+         *
+         * @return float|int|null
+         */
         $getParam = function ($name, $max, $checkPercent = false, $assertPercent = false) use (&$kwargs, $scale, $change) {
             if (!isset($kwargs[$name])) {
                 return null;
@@ -7947,11 +7903,7 @@ EOL;
                 $max = 100;
             }
 
-            if ($scale || $assertPercent) {
-                return $number->valueInRange($change ? 0 : -$max, $max, $name);
-            }
-
-            return $number->valueInRangeWithUnit($change ? 0 : -$max, $max, $name, $checkPercent ? '%' : '');
+            return $number->valueInRange($change ? 0 : -$max, $max, $name);
         };
 
         $alpha = $getParam('alpha', 1);
@@ -7986,6 +7938,7 @@ EOL;
         $hasRgb = $red !== null || $green !== null || $blue !== null;
         $hasSL = $saturation !== null || $lightness !== null;
         $hasWB = $whiteness !== null || $blackness !== null;
+        $found = false;
 
         if ($hasRgb && ($hasSL || $hasWB || $hue !== null)) {
             throw new SassScriptException(sprintf('RGB parameters may not be passed along with %s parameters.', $hasWB ? 'HWB' : 'HSL'));
@@ -8206,14 +8159,6 @@ EOL;
         ['hue', 'saturation'],
         ['hue', 'saturation', 'lightness'],
         ['hue', 'saturation', 'lightness', 'alpha'] ];
-
-    /**
-     * @param array $args
-     * @param array $kwargs
-     * @param string $funcName
-     *
-     * @return array|null
-     */
     protected function libHsl($args, $kwargs, $funcName = 'hsl')
     {
         $args_to_check = $args;
@@ -8238,7 +8183,7 @@ EOL;
             throw new SassScriptException('Missing argument $lightness.');
         }
 
-        foreach ($kwargs as $arg) {
+        foreach ($kwargs as $k => $arg) {
             if (in_array($arg[0], [Type::T_FUNCTION_CALL, Type::T_FUNCTION]) && in_array($arg[1], ['min', 'max'])) {
                 return null;
             }
@@ -8586,7 +8531,7 @@ EOL;
         $color = $this->assertColor($args[0], 'color');
         $amount = $this->assertNumber($args[1], 'amount');
 
-        $color[4] = (isset($color[4]) ? $color[4] : 1) + $amount->valueInRangeWithUnit(0, 1, 'amount', '');
+        $color[4] = (isset($color[4]) ? $color[4] : 1) + $amount->valueInRange(0, 1, 'amount');
         $color[4] = min(1, max(0, $color[4]));
 
         return $color;
@@ -8605,7 +8550,7 @@ EOL;
         $color = $this->assertColor($args[0], 'color');
         $amount = $this->assertNumber($args[1], 'amount');
 
-        $color[4] = (isset($color[4]) ? $color[4] : 1) - $amount->valueInRangeWithUnit(0, 1, 'amount', '');
+        $color[4] = (isset($color[4]) ? $color[4] : 1) - $amount->valueInRange(0, 1, 'amount');
         $color[4] = min(1, max(0, $color[4]));
 
         return $color;
@@ -8773,7 +8718,7 @@ will be an error in future versions of Sass.\n         on line $line of $fname";
     protected function libNth($args)
     {
         $list = $this->coerceList($args[0], ',', false);
-        $n = $this->assertInteger($args[1]);
+        $n = $this->assertNumber($args[1])->getDimension();
 
         if ($n > 0) {
             $n--;
@@ -8788,7 +8733,7 @@ will be an error in future versions of Sass.\n         on line $line of $fname";
     protected function libSetNth($args)
     {
         $list = $this->coerceList($args[0]);
-        $n = $this->assertInteger($args[1]);
+        $n = $this->assertNumber($args[1])->getDimension();
 
         if ($n > 0) {
             $n--;
@@ -9405,7 +9350,7 @@ will be an error in future versions of Sass.\n         on line $line of $fname";
             $index = $index - 1;
         }
         if ($index < 0) {
-            $index = max(Util::mbStrlen($stringContent) + 1 + $index, 0);
+            $index = Util::mbStrlen($stringContent) + 1 + $index;
         }
 
         $string[2] = [
@@ -9593,25 +9538,7 @@ will be an error in future versions of Sass.\n         on line $line of $fname";
     protected function libRandom($args)
     {
         if (isset($args[0]) && $args[0] !== static::$null) {
-            $limit = $this->assertNumber($args[0], 'limit');
-
-            if ($limit->hasUnits()) {
-                $unitString = $limit->unitStr();
-                $message = <<<TXT
-random() will no longer ignore \$limit units ($limit) in a future release.
-
-Recommendation: random(\$limit / 1$unitString) * 1$unitString
-
-To preserve current behavior: random(\$limit / 1$unitString)
-
-More info: https://sass-lang.com/d/random-with-units
-
-TXT;
-
-                Warn::deprecation($this->addLocationToMessage($message));
-            }
-
-            $n = $this->assertInteger($limit, 'limit');
+            $n = $this->assertInteger($args[0], 'limit');
 
             if ($n < 1) {
                 throw new SassScriptException("\$limit: Must be greater than 0, was $n.");
@@ -10075,8 +10002,6 @@ TXT;
         foreach ($args as $arg) {
             $selectorsMap[] = $this->getSelectorArg($arg, 'selector', true);
         }
-
-        assert(!empty($selectorsMap));
 
         $envs = [];
 

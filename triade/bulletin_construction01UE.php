@@ -135,12 +135,8 @@ $datap=config_param_visu("affTextDirPedago");
 $affTextDirPedago=$datap[0][0];
 $datap=config_param_visu("affhautbasgeneral");
 $affhautbasgeneral=$datap[0][0];
-
-       
-
 $datap=config_param_visu("affTextDirPedago");
 $affTextDirPedago=$datap[0][0];
-
 $affcommentaire=$_POST["affcommentaire"];
 config_param_ajout($affcommentaire,"affcommentaire");
 $affnbabsmat=$_POST["affnbabsmat"];

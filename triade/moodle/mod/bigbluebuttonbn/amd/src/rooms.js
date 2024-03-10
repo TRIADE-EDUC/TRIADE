@@ -31,13 +31,9 @@ import {
 
 import {eventTypes, notifyCurrentSessionEnded} from './events';
 
-/**
- * Init the room
- *
- * @param {Number} bigbluebuttonbnid bigblubeutton identifier
- * @param {Number} pollInterval poll interval in miliseconds
- */
-export const init = (bigbluebuttonbnid, pollInterval) => {
+const timeoutjoin = 5000;
+
+export const init = (bigbluebuttonbnid) => {
     const completionElement = document.querySelector('a[href*=completion_validate]');
     if (completionElement) {
         completionElement.addEventListener("click", () => {
@@ -50,10 +46,10 @@ export const init = (bigbluebuttonbnid, pollInterval) => {
         if (joinButton) {
             window.open(joinButton.href, 'bigbluebutton_conference');
             e.preventDefault();
-            // Gives the user a bit of time to go into the meeting before polling the room.
+            // Gives the user a bit of time to go into the meeting.
             setTimeout(() => {
                 roomUpdater.updateRoom(true);
-            }, pollInterval);
+                }, timeoutjoin);
         }
     });
 
@@ -69,22 +65,25 @@ export const init = (bigbluebuttonbnid, pollInterval) => {
         fetchNotifications();
     });
     // Room update.
-    roomUpdater.start(pollInterval);
+    roomUpdater.start();
+};
+
+/**
+ * Handle autoclosing of the window.
+ */
+const autoclose = () => {
+    window.opener.setTimeout(() => {
+        roomUpdater.updateRoom(true);
+    }, timeoutjoin);
+    window.removeEventListener('onbeforeunload', autoclose);
 };
 
 /**
  * Auto close child windows when clicking the End meeting button.
- * @param {Number} closeDelay time to wait in miliseconds before closing the window
  */
-export const setupWindowAutoClose = (closeDelay = 2000) => {
+export const setupWindowAutoClose = () => {
     notifyCurrentSessionEnded(window.opener);
-    window.addEventListener('onbeforeunload', () => {
-            window.opener.setTimeout(() => {
-                roomUpdater.updateRoom(true);
-            }, closeDelay);
-        },
-        {
-            once: true
-        });
+    window.addEventListener('onbeforeunload', autoclose);
+
     window.close(); // This does not work as scripts can only close windows that are opened by themselves.
 };

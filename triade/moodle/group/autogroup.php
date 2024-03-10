@@ -35,7 +35,7 @@ $courseid = required_param('courseid', PARAM_INT);
 $PAGE->set_url('/group/autogroup.php', array('courseid' => $courseid));
 
 if (!$course = $DB->get_record('course', array('id'=>$courseid))) {
-    throw new \moodle_exception('invalidcourseid');
+    print_error('invalidcourseid');
 }
 
 // Make sure that the user has permissions to manage groups.
@@ -83,7 +83,7 @@ if ($editform->is_cancelled()) {
         case 'idnumber':
             $orderby = 'idnumber'; break;
         default:
-            throw new \moodle_exception('unknoworder');
+            print_error('unknoworder');
     }
     $source = array();
     if ($data->cohortid) {

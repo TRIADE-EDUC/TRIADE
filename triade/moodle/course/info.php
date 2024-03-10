@@ -28,16 +28,16 @@
     $name = optional_param('name', false, PARAM_RAW); // Course short name
 
     if (!$id and !$name) {
-        throw new \moodle_exception("unspecifycourseid");
+        print_error("unspecifycourseid");
     }
 
     if ($name) {
         if (!$course = $DB->get_record("course", array("shortname"=>$name))) {
-            throw new \moodle_exception("invalidshortname");
+            print_error("invalidshortname");
         }
     } else {
         if (!$course = $DB->get_record("course", array("id"=>$id))) {
-            throw new \moodle_exception("invalidcourseid");
+            print_error("invalidcourseid");
         }
     }
 
@@ -49,7 +49,7 @@
 
     $context = context_course::instance($course->id);
     if (!core_course_category::can_view_course_info($course) && !is_enrolled($context, null, '', true)) {
-        throw new \moodle_exception('cannotviewcategory', '', $CFG->wwwroot .'/');
+        print_error('cannotviewcategory', '', $CFG->wwwroot .'/');
     }
 
     $PAGE->set_course($course);

@@ -16,7 +16,7 @@ class Title
     /**
      * Title Layout.
      *
-     * @var ?Layout
+     * @var Layout
      */
     private $layout;
 
@@ -78,7 +78,12 @@ class Title
         return $this;
     }
 
-    public function getLayout(): ?Layout
+    /**
+     * Get Layout.
+     *
+     * @return Layout
+     */
+    public function getLayout()
     {
         return $this->layout;
     }

@@ -13,8 +13,8 @@ if (isset($_POST["saisie_envoi"])) {
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
- *   Site                 : http://www.triade-educ.com
+ *   copyright            : (C) 2000 E. TAESCH 
+ *   Site                 : http://www.triade-educ.org
  *
  *
  ***************************************************************************/
@@ -243,7 +243,6 @@ if ($valid == 1) {
                                                         $type_personne_dest=recherche_type_personne($idunique);
                                                         $nomemetteur=strtolower(recherche_personne_nom($destinataire,$type_personne_dest));
                                                         $prenomemetteur=strtolower(recherche_personne_prenom($destinataire,$type_personne_dest));
-
                                                         if ($type_personne_dest == "ELE") { $membre_dest="menueleve"; }
                                                         if ($type_personne_dest == "PAR") { $membre_dest="menuparent"; }
                                                         if ($type_personne_dest == "ADM") { $membre_dest="menuadmin"; }
@@ -270,7 +269,7 @@ if ($valid == 1) {
                                                         	}
 	                                                        $fichierjoint=preg_replace('/,$/','',$fichierjoint);
         	                                                mailTriade(stripslashes($objet),$text,$text,$destinataire,$source,$source,$expediteur,$fichierjoint);
-        	               //                             	print	" GRPMAIL mailTriade($objet,$text,$text,$destinataire,$source,$source,$expediteur,$fichierjoint);";
+        	               //  print " GRPMAIL mailTriade($objet,$text,$text,$destinataire,$source,$source,$expediteur,$fichierjoint);";
                                                         }
                                                 }
 
@@ -449,7 +448,7 @@ if ($valid == 1) {
 	                                                }
 	                                                $fichierjoint=preg_replace('/,$/','',$fichierjoint);
 	                	                        mailTriade(stripslashes($objet),$text,$text,$destinataire,$source,$source,$expediteur,$fichierjoint);
-	               //                               print "mailTriade($objet,$text,$text,$destinataire,$source,$source,$expediteur,$fichierjoint);";
+//	 envoi mail                    print "mailTriade($objet,$text,$text,$destinataire,$source,$source,$expediteur,$fichierjoint);";
 	                                         }
 					}
 				}
@@ -504,7 +503,7 @@ print "<BR>";
 print $heure;
 print "<BR>";
 print $type_personne_dest;
- */
+*/ 
 
 		// chaine indesirable //
 		if(!function_exists('str_ireplace')) {
@@ -577,7 +576,7 @@ print $type_personne_dest;
 				$type_personne_dest="PAR";$membre_dest="menuparent";
 			}
 
-			// -------------------------------------------------------------------------------------------------------------------------------------------------- //
+			// -------------------------------------------------------------------------------------------------------------- //
 			if ($destinataire == "touslesparentsdelegues")  {
 				$sql="SELECT  nomparent1,nomparent2  FROM  ${prefixe}delegue";
 				$res=execSql($sql);$dataDelegue=chargeMat($res);

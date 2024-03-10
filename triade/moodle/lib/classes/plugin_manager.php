@@ -1320,7 +1320,7 @@ class core_plugin_manager {
             return false;
         }
 
-        $ok = get_string('statusok', 'core');
+        $ok = get_string('ok', 'core');
 
         // Let admins know they can expect more verbose output.
         $silent or $this->mtrace(get_string('packagesdebug', 'core_plugin'), PHP_EOL, DEBUG_NORMAL);
@@ -1651,7 +1651,7 @@ class core_plugin_manager {
         }
 
         // To be able to remove the plugin folder, its parent must be writable, too.
-        if (!isset($pluginfo->rootdir) || !is_writable(dirname($pluginfo->rootdir))) {
+        if (!is_writable(dirname($pluginfo->rootdir))) {
             return false;
         }
 
@@ -1745,7 +1745,7 @@ class core_plugin_manager {
                 'binarius', 'boxxie', 'brick', 'canvas', 'formal_white', 'formfactor', 'fusion', 'leatherbound',
                 'magazine', 'mymobile', 'nimble', 'nonzero', 'overlay', 'serenity', 'sky_high', 'splash',
                 'standard', 'standardold'),
-            'webservice' => array('amf', 'xmlrpc'),
+            'webservice' => array('amf'),
         );
 
         if (!isset($plugins[$type])) {
@@ -1850,10 +1850,7 @@ class core_plugin_manager {
             ),
 
             'datapreset' => array(
-                'imagegallery',
-                'journal',
-                'proposals',
-                'resources',
+                'imagegallery'
             ),
 
             'fileconverter' => array(
@@ -1861,7 +1858,7 @@ class core_plugin_manager {
             ),
 
             'editor' => array(
-                'atto', 'textarea', 'tiny', 'tinymce'
+                'atto', 'textarea', 'tinymce'
             ),
 
             'enrol' => array(
@@ -1893,7 +1890,7 @@ class core_plugin_manager {
             ),
 
             'gradereport' => array(
-                'grader', 'history', 'outcomes', 'overview', 'user', 'singleview', 'summary'
+                'grader', 'history', 'outcomes', 'overview', 'user', 'singleview'
             ),
 
             'gradingform' => array(
@@ -2028,15 +2025,6 @@ class core_plugin_manager {
                 'objectives'
             ),
 
-            'tiny' => [
-                'accessibilitychecker',
-                'autosave',
-                'equation',
-                'h5p',
-                'media',
-                'recordrtc',
-            ],
-
             'tinymce' => array(
                 'ctrlhelp', 'managefiles', 'moodleemoticon', 'moodleimage',
                 'moodlemedia', 'moodlenolink', 'pdw', 'spellchecker', 'wrap'
@@ -2056,7 +2044,7 @@ class core_plugin_manager {
             ),
 
             'webservice' => array(
-                'rest', 'soap'
+                'rest', 'soap', 'xmlrpc'
             ),
 
             'workshopallocation' => array(

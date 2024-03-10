@@ -178,19 +178,6 @@ class lineitem extends resource_base {
             }
             $gbs->tag = $tag;
             $gbs->resourceid = $resourceid;
-            $incomingurl = null;
-            $incomingparams = null;
-            if (isset($json->submissionReview)) {
-                $incomingurl = $json->submissionReview->url ?? 'DEFAULT';
-                if (isset($json->submissionReview->custom)) {
-                    $incomingparams = params_to_string($json->submissionReview->custom);
-                }
-            }
-            if ($gbs->subreviewurl ?? null !== $incomingurl || $gbs->subreviewparams ?? null !== $incomingparams) {
-                $upgradegradebookservices = true;
-                $gbs->subreviewurl = $incomingurl;
-                $gbs->subreviewparams = $incomingparams;
-            }
         }
         $ltilinkid = null;
         if (isset($json->resourceLinkId)) {
@@ -270,9 +257,7 @@ class lineitem extends resource_base {
                     'baseurl' => $baseurl,
                     'ltilinkid' => $ltilinkid,
                     'resourceid' => $resourceid,
-                    'tag' => $gbs->tag,
-                    'subreviewurl' => $gbs->subreviewurl,
-                    'subreviewparams' => $gbs->subreviewparams
+                    'tag' => $gbs->tag
             ));
         }
 
@@ -330,13 +315,7 @@ class lineitem extends resource_base {
             }
             $id = optional_param('id', 0, PARAM_INT); // Course Module ID.
             if (empty($id)) {
-                $hint = optional_param('lti_message_hint', "", PARAM_TEXT);
-                if ($hint) {
-                    $hintdec = json_decode($hint);
-                    if (isset($hintdec->cmid)) {
-                        $id = $hintdec->cmid;
-                    }
-                }
+                $id = optional_param('lti_message_hint', 0, PARAM_INT);
             }
             if (!empty($id)) {
                 $cm = get_coursemodule_from_id('lti', $id, 0, false, MUST_EXIST);

@@ -18,9 +18,7 @@ Feature: Calculated grade items can be used in the gradebook
       | teacher1 | C1     | editingteacher |
       | student1 | C1     | student        |
       | student2 | C1     | student        |
-    And I log in as "admin"
-    And I am on "Course 1" course homepage
-    And I navigate to "Setup > Gradebook setup" in the course gradebook
+    And I am on the "Course 1" "grades > gradebook setup" page logged in as "admin"
 
   @javascript
   Scenario: The max grade for a category item, with a calculation using Natural aggregation, can be changed
@@ -42,7 +40,7 @@ Feature: Calculated grade items can be used in the gradebook
     And I give the grade "75.00" to the user "Student 1" for the grade item "grade item 1"
     And I press "Save changes"
     And I navigate to "View > User report" in the course gradebook
-    And I click on "Student 1" in the "user" search widget
+    And I select "Student 1" from the "Select all or one user" singleselect
     And the following should exist in the "user-grade" table:
       | Grade item                          | Calculated weight | Grade  | Range | Percentage | Contribution to course total |
       | grade item 1                        | -                 | 75.00  | 0–100 | 75.00 %    | -                            |
@@ -69,7 +67,7 @@ Feature: Calculated grade items can be used in the gradebook
     And I give the grade "75.00" to the user "Student 1" for the grade item "grade item 1"
     And I press "Save changes"
     And I navigate to "View > User report" in the course gradebook
-    And I click on "Student 1" in the "user" search widget
+    And I select "Student 1" from the "Select all or one user" singleselect
     And the following should exist in the "user-grade" table:
       | Grade item                          | Calculated weight | Grade  | Range | Percentage | Contribution to course total |
       | grade item 1                        | -                 | 75.00  | 0–100 | 75.00 %    | -                            |
@@ -82,13 +80,13 @@ Feature: Calculated grade items can be used in the gradebook
     And I give the grade "65.00" to the user "Student 2" for the grade item "grade item 1"
     And I press "Save changes"
     And I navigate to "View > User report" in the course gradebook
-    When I click on "Student 1" in the "user" search widget
+    When I select "Student 1" from the "Select all or one user" singleselect
     Then the following should exist in the "user-grade" table:
       | Grade item                          | Calculated weight | Grade  | Range | Percentage | Contribution to course total |
       | grade item 1                        | -                 | 75.00  | 0–100 | 75.00 %    | -                            |
       | Calc cat totalInclude empty grades. | 100.00 %          | 37.50  | 0–40  | 93.75 %    | -                            |
       | Course total                        | -                 | 37.50  | 0–40  | 93.75 %    | -                            |
-    And I click on "Student 2" in the "user" search widget
+    And I select "Student 2" from the "Select all or one user" singleselect
     And the following should exist in the "user-grade" table:
       | Grade item                          | Calculated weight | Grade  | Range | Percentage | Contribution to course total |
       | grade item 1                        | -                 | 65.00  | 0–100 | 65.00 %    | -                            |
@@ -99,13 +97,13 @@ Feature: Calculated grade items can be used in the gradebook
       | Min and max grades used in calculation | Initial min and max grades |
     And I press "Save changes"
     And I navigate to "View > User report" in the course gradebook
-    And I click on "Student 1" in the "user" search widget
+    And I select "Student 1" from the "Select all or one user" singleselect
     And the following should exist in the "user-grade" table:
       | Grade item                          | Calculated weight | Grade  | Range | Percentage | Contribution to course total |
       | grade item 1                        | -                 | 75.00  | 0–100 | 75.00 %    | -                            |
       | Calc cat totalInclude empty grades. | 100.00 %          | 37.50  | 0–40  | 93.75 %    | -                            |
       | Course total                        | -                 | 37.50  | 0–40  | 93.75 %    | -                            |
-    And I click on "Student 2" in the "user" search widget
+    And I select "Student 2" from the "Select all or one user" singleselect
     And the following should exist in the "user-grade" table:
       | Grade item                          | Calculated weight | Grade  | Range | Percentage | Contribution to course total |
       | grade item 1                        | -                 | 65.00  | 0–100 | 65.00 %    | -                            |
@@ -135,7 +133,7 @@ Feature: Calculated grade items can be used in the gradebook
     And I give the grade "75.00" to the user "Student 1" for the grade item "grade item 1"
     And I press "Save changes"
     And I navigate to "View > User report" in the course gradebook
-    When I click on "Student 1" in the "user" search widget
+    When I select "Student 1" from the "Select all or one user" singleselect
     Then the following should exist in the "user-grade" table:
       | Grade item   | Calculated weight | Grade  | Range | Percentage | Contribution to course total |
       | grade item 1 | 66.67 %           | 75.00  | 0–100 | 75.00 %    | 50.00 %                      |
@@ -149,13 +147,13 @@ Feature: Calculated grade items can be used in the gradebook
     And I give the grade "65.00" to the user "Student 2" for the grade item "grade item 1"
     And I press "Save changes"
     And I navigate to "View > User report" in the course gradebook
-    And I click on "Student 1" in the "user" search widget
+    And I select "Student 1" from the "Select all or one user" singleselect
     And the following should exist in the "user-grade" table:
       | Grade item   | Calculated weight | Grade  | Range | Percentage | Contribution to course total |
       | grade item 1 | 71.43 %           | 75.00  | 0–100 | 75.00 %    | 53.57 %                      |
       | calc item    | 28.57 %           | 37.50  | 0–40  | 93.75 %    | 26.79 %                      |
       | Course total | -                 | 112.50 | 0–140 | 80.36 %    | -                            |
-    And I click on "Student 2" in the "user" search widget
+    And I select "Student 2" from the "Select all or one user" singleselect
     And the following should exist in the "user-grade" table:
       | Grade item   | Calculated weight | Grade  | Range | Percentage | Contribution to course total |
       | grade item 1 | 71.43 %           | 65.00  | 0–100 | 65.00 %    | 46.43 %                      |

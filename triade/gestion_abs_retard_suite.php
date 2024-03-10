@@ -189,6 +189,14 @@ $dataEdt=recupCoursDuJourViaClasse($datedepart,$idClasse); // id,code,enseigneme
 if (count($dataEdt)) {
 	print "<optgroup label='EDT'>";
 	for($i=0;$i<count($dataEdt);$i++) {
+
+		list($h,$m,$s)=preg_split('/:/',$dataEdt[$i][4]);
+		$h=$h+TIMEZONE;
+		$m=$m+TIMEZONEMINUTE;
+		if ($h < 10) $h="0$h";
+		if ($m < 10) $m="0$m";
+		$dataEdt[$i][4]="$h:$m:$s";
+
 		$secondeT=conv_en_seconde($dataEdt[$i][4]);
                 $secondeT+=conv_en_seconde($dataEdt[$i][5]);
                 $heureFin=calcul_hours($secondeT);

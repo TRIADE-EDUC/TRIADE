@@ -67,7 +67,8 @@ if (file_exists("./data/fichier_gep/traitement.xls")) {
 	$fic_xls="./data/fichier_gep/traitement.xls";
 	include_once('./librairie_php/reader.php');
 	$data = new Spreadsheet_Excel_Reader();
-	$data->setOutputEncoding('CP1251');
+//	$data->setOutputEncoding('CP1251');
+	$data->setOutputEncoding('UTF-8');
 	$data->read($fic_xls);
 /*
 	1) N° MATRIC  

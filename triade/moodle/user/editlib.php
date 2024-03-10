@@ -48,11 +48,11 @@ function useredit_setup_preference_page($userid, $courseid) {
 
     // Guest can not edit.
     if (isguestuser()) {
-        throw new \moodle_exception('guestnoeditprofile');
+        print_error('guestnoeditprofile');
     }
 
     if (!$course = $DB->get_record('course', array('id' => $courseid))) {
-        throw new \moodle_exception('invalidcourseid');
+        print_error('invalidcourseid');
     }
 
     if ($course->id != SITEID) {
@@ -68,19 +68,19 @@ function useredit_setup_preference_page($userid, $courseid) {
 
     // The user profile we are editing.
     if (!$user = $DB->get_record('user', array('id' => $userid))) {
-        throw new \moodle_exception('invaliduserid');
+        print_error('invaliduserid');
     }
 
     // Guest can not be edited.
     if (isguestuser($user)) {
-        throw new \moodle_exception('guestnoeditprofile');
+        print_error('guestnoeditprofile');
     }
 
     // Remote users cannot be edited.
     if (is_mnet_remote_user($user)) {
         if (user_not_fully_set_up($user, false)) {
             $hostwwwroot = $DB->get_field('mnet_host', 'wwwroot', array('id' => $user->mnethostid));
-            throw new \moodle_exception('usernotfullysetup', 'mnet', '', $hostwwwroot);
+            print_error('usernotfullysetup', 'mnet', '', $hostwwwroot);
         }
         redirect($CFG->wwwroot . "/user/view.php?course={$course->id}");
     }
@@ -92,7 +92,7 @@ function useredit_setup_preference_page($userid, $courseid) {
     if ($user->id == $USER->id) {
         // Editing own profile - require_login() MUST NOT be used here, it would result in infinite loop!
         if (!has_capability('moodle/user:editownprofile', $systemcontext)) {
-            throw new \moodle_exception('cannotedityourprofile');
+            print_error('cannotedityourprofile');
         }
 
     } else {
@@ -101,7 +101,7 @@ function useredit_setup_preference_page($userid, $courseid) {
 
         // No editing of primary admin!
         if (is_siteadmin($user) and !is_siteadmin($USER)) {  // Only admins may edit other admins.
-            throw new \moodle_exception('useradmineditadmin');
+            print_error('useradmineditadmin');
         }
     }
 

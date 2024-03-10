@@ -36,7 +36,7 @@ $uid = optional_param('uid', 0, PARAM_INT);
 // so sesskey must be checked
 if ($action == 'create') {
     if (!confirm_sesskey()) {
-        throw new \moodle_exception('invalidsesskey');
+        print_error('invalidsesskey');
     }
 }
 
@@ -44,20 +44,20 @@ if (!empty($swid)) {
     $subwiki = wiki_get_subwiki($swid);
 
     if (!$wiki = wiki_get_wiki($subwiki->wikiid)) {
-        throw new \moodle_exception('incorrectwikiid', 'wiki');
+        print_error('incorrectwikiid', 'wiki');
     }
 
 } else {
     $subwiki = wiki_get_subwiki_by_group($wid, $group, $uid);
 
     if (!$wiki = wiki_get_wiki($wid)) {
-        throw new \moodle_exception('incorrectwikiid', 'wiki');
+        print_error('incorrectwikiid', 'wiki');
     }
 
 }
 
 if (!$cm = get_coursemodule_from_instance('wiki', $wiki->id)) {
-    throw new \moodle_exception('invalidcoursemodule');
+    print_error('invalidcoursemodule');
 }
 
 $groups = new stdClass();

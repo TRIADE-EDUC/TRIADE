@@ -23,13 +23,11 @@ Feature: Users can edit tags to add description or rename
 
   @javascript
   Scenario: User with tag editing capability can change tag description
-    Given I log in as "admin"
-    And I set the following system permissions of "Tag editor" role:
-      | capability                   | permission |
-      | moodle/tag:edit              | Allow      |
-      | moodle/site:viewparticipants | Allow      |
-      | moodle/user:viewdetails      | Allow      |
-    And I log out
+    Given the following "role capability" exists:
+      | role                         | tageditor |
+      | moodle/tag:edit              | allow     |
+      | moodle/site:viewparticipants | allow     |
+      | moodle/user:viewdetails      | allow     |
     When I log in as "editor1"
     And I turn editing mode on
     And the following config values are set as admin:
@@ -224,21 +222,6 @@ Feature: Users can edit tags to add description or rename
     And I should see "Turtle"
     # Even though Turtle was not standard but at least one of combined tags was (Neverusedtag). Now Turtle is also standard.
     And "Remove from standard tags" "link" should exist in the "Turtle" "table_row"
-
-  @javascript
-  Scenario: Combining all tags
-    When I log in as "manager1"
-    And I navigate to "Appearance > Manage tags" in site administration
-    And I follow "Default collection"
-    And I set the field "Select all" to "1"
-    And I press "Combine selected"
-    And I set the field "Turtle" in the "Combine selected" "dialogue" to "1"
-    And I click on "Continue" "button" in the "Combine selected" "dialogue"
-    Then I should see "Tags are combined"
-    And I should not see "Cat"
-    And I should not see "Dog"
-    And I should see "Turtle"
-    And I should not see "Neverusedtag"
 
   Scenario: Filtering tags
     When I log in as "manager1"

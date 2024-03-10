@@ -53,11 +53,11 @@ if ($page < 0) {
 require_login();
 
 if (empty($CFG->enablebadges)) {
-    throw new \moodle_exception('badgesdisabled', 'badges');
+    print_error('badgesdisabled', 'badges');
 }
 
 if (empty($CFG->badges_allowcoursebadges) && ($type == BADGE_TYPE_COURSE)) {
-    throw new \moodle_exception('coursebadgesdisabled', 'badges');
+    print_error('coursebadgesdisabled', 'badges');
 }
 
 $err = '';

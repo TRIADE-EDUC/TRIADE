@@ -38,10 +38,20 @@ include_once("./librairie_php/db_triade.php");
 validerequete("2");
 $cnx=cnx();
 
-$saisie_classe=$_GET["idclasse"];
-$sql="SELECT libelle,elev_id,nom,prenom FROM ${prefixe}eleves,${prefixe}classes WHERE classe='$saisie_classe' AND code_class='$saisie_classe' ORDER BY nom";
+if (($_GET["membre"] != "menueleve") && (isset($_GET['membre']))) {
+	$membre=renvoiTypePersonne($_GET["membre"]);	
+	$sql="SELECT type_pers,pers_id,nom,prenom FROM ${prefixe}personnel WHERE type_pers='$membre'  ORDER BY nom";
+}else{
+	$saisie_classe=$_GET["idclasse"];
+	$sql="SELECT libelle,elev_id,nom,prenom FROM ${prefixe}eleves,${prefixe}classes WHERE classe='$saisie_classe' AND code_class='$saisie_classe' ORDER BY nom";
+}
 $res=execSql($sql);
 $data=chargeMat($res);
+if ($_GET["membre"] != "menueleve") {
+	$classe_nom=renvoiMembreFormatePersonne($_GET["membre"]);
+}else{
+	$classe_nom=chercheClasse_nom($saisie_classe);
+}
 print "<table width='100%'  border='0' align='left' >";
 print "<tr>";
 $j=0;
@@ -50,13 +60,14 @@ for($i=0;$i<count($data);$i++) {
 	print "<td align='center' valign='top' >";
 	print "<img id='codeim$i' src=\"./codebar/image-impr.php?code=".$_GET["codebase"]."&text=".$texte."\"><br><br>";
 	print "<b><font size=3>&nbsp;".strtoupper(trim($data[$i][2]))." ".ucfirst(trim(trunchaine($data[$i][3],15)))."</font></b>";
+	print "<br/><font size=1>&nbsp;".$classe_nom."</font>";
 	print "</td>";
 	$j++;
 	if ($j == 3) { print "</tr><tr><td height='30' colspan=3 ><hr></td></tr><tr>"; $j=0; }
-
 }
-	print "</tr>";
-	print "</table>";
+print "</tr>";
+print "</table>";
+
 // deconnexion en fin de fichier
 Pgclose();
 ?>

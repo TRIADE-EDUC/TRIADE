@@ -104,7 +104,7 @@ if (!empty($edit) || !empty($new)) {
             core_plugin_manager::reset_caches();
             redirect($parenturl);
         } else {
-            throw new \moodle_exception('instancenotsaved', 'repository', $parenturl);
+            print_error('instancenotsaved', 'repository', $parenturl);
         }
         exit;
     } else {
@@ -134,7 +134,7 @@ if (!empty($edit) || !empty($new)) {
             core_plugin_manager::reset_caches();
             redirect($parenturl, $deletedstr, 3);
         } else {
-            throw new \moodle_exception('instancenotdeleted', 'repository', $parenturl);
+            print_error('instancenotdeleted', 'repository', $parenturl);
         }
         exit;
     }

@@ -48,4 +48,4 @@ if ($action === 'filtertext') {
     die();
 }
 
-throw new \moodle_exception('invalidarguments');
+print_error('invalidarguments');

@@ -126,12 +126,13 @@ class page_nopermission implements renderable, templatable {
      * @return \stdClass
      */
     public function export_for_template(renderer_base $output) {
-        global $OUTPUT;
+        global $CFG;
 
         $data = (object) [
             'pluginbaseurl' => (new moodle_url('/admin/tool/policy'))->out(false),
             'haspermissionagreedocs' => $this->haspermissionagreedocs,
-            'supportemail' => $OUTPUT->supportemail(['class' => 'font-weight-bold'])
+            'supportname' => $CFG->supportname,
+            'supportemail' => $CFG->supportemail ?? null,
         ];
 
         // Get the messages to display.

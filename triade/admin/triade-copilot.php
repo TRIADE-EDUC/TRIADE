@@ -64,14 +64,14 @@ if (LAN == "oui") {
 		include_once("../common/config-ia.php");
 		$idkey=IAKEY;
 		$inc=GRAPH;
-		print "<table align=center><tr><td><font class=T2>Acc&eacute; &agrave; votre compte TRIADE-COPILOT : </font></td>";
-		print "<td><script language=JavaScript>buttonMagicSubmit3('Cliquez ICI','https://support.triade-educ.org/support/triade-ia.php?idkey=$idkey&inc=$inc','','width=550,height=600','','');</script></td></tr></table>";
+		print "<table align=center><tr><td><font class=T2>Acc&egrave;s &agrave; votre compte TRIADE-COPILOT : </font></td>";
+		print "<td><script language=JavaScript>buttonMagicSubmit3('Cliquez ICI','https://www.triade-educ.org/accueil/triade-ia-compte.php?idkey=$idkey&inc=$inc','_blank','','','');</script></td></tr></table>";
 	}
 
 	include_once("../common/config2.inc.php");
 	if (AFFICHAGEIA != "oui") {
 		print "<ul><br /><font class=T2 color='red' >";
-                print "Vous devez activer l'aurisation d'utilisation de TRIADE-COPILOT dans la module <a href='configuration.php'><font color='red'><b>Config. G&eacute;n&eacute;rale.</b></font></a>";
+                print "Vous devez activer l'autorisation d'utilisation de TRIADE-COPILOT dans la module <a href='configuration.php'><font color='red'><b>Config. G&eacute;n&eacute;rale.</b></font></a>";
                 print "<br /><br />";
 
 	}

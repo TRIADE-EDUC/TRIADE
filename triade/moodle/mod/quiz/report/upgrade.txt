@@ -2,7 +2,7 @@ This files describes API changes for quiz report plugins.
 
 Overview of this plugin type at http://docs.moodle.org/dev/Quiz_reports
 
-=== 4.1.1 ===
+=== 4.0.6 ===
 
 There was an ill-advised, never documented, API change in quiz_report_get_significant_questions
 in Moodle 4.0. The API has now been reverted to how it was before 4.0. Hopefully this

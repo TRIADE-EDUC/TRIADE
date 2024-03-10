@@ -1,4 +1,42 @@
 
+function accent_export(chaine) {
+	chaine=chaine.replace("[#339]","oe");
+        chaine=chaine.replace("[agrave]","à");
+        chaine=chaine.replace("[eacute]","é");
+        chaine=chaine.replace("[egrave]","è");
+        chaine=chaine.replace("[ugrave]","ù");
+        chaine=chaine.replace("[acirc]","â");
+        chaine=chaine.replace("[ecirc]","ê");
+        chaine=chaine.replace("[icirc]","î");
+        chaine=chaine.replace("[ocirc]","ô");
+        chaine=chaine.replace("[ucirc]","û");
+        chaine=chaine.replace("[auml]","ä");
+        chaine=chaine.replace("[euml]","ë");
+        chaine=chaine.replace("[iuml]","ï");
+        chaine=chaine.replace("[ouml]","ö");
+        chaine=chaine.replace("[uuml]","ü");
+        chaine=chaine.replace("[Egrave]","È");
+        chaine=chaine.replace("[Eacute]","É");
+        chaine=chaine.replace("[Ecirc]","Ê");
+        chaine=chaine.replace("[Ccedil]","Ç");
+        chaine=chaine.replace("[Quote]","'");
+        chaine=chaine.replace("[ByQuote]","`");
+        chaine=chaine.replace("[DblQuote]",'"');
+	chaine=chaine.replace("[Quote2]",'’');
+        chaine=chaine.replace("[ccdile]",'ç');
+        chaine=chaine.replace("[ocute]",'ó');
+        chaine=chaine.replace("[acute]",'á');
+        chaine=chaine.replace("[ntild]",'ñ');
+        chaine=chaine.replace("[icute]",'í');
+        chaine=chaine.replace("[ucute]",'ú');
+        chaine=chaine.replace("[Ntild]",'Ñ');
+        chaine=chaine.replace("[stdin]",'<');
+        chaine=chaine.replace("[stdout]",'>');
+	return chaine;
+}
+
+
+
 // module pour les messages error
 function NoError() {
      return true;
@@ -1256,5 +1294,30 @@ function encode_utf8(s) {
 function decode_utf8(s) {
 	return decodeURIComponent(escape(s));
 }
+
+function setCookie(cname,cvalue,exdays) {
+	const d = new Date();
+	d.setTime(d.getTime() + (exdays*24*60*60*1000));
+	let expires = "expires="+ d.toUTCString();
+	document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+}
+
+function getCookie(cname) {
+	let name = cname + "=";
+	let decodedCookie = decodeURIComponent(document.cookie);
+	let ca = decodedCookie.split(';');
+	for(let i = 0; i <ca.length; i++) {
+		let c = ca[i];
+		while (c.charAt(0) == ' ') {
+			c = c.substring(1);
+		}
+		if (c.indexOf(name) == 0) {
+			return c.substring(name.length, c.length);
+		}
+	}
+	return "";
+}
+
+
 
 

@@ -466,7 +466,7 @@ for($i=0;$i<count($ordre);$i++) {
 	        $productID=PRODUCTID;
 	        $iakey=IAKEY;
 	        $prenom=recherche_eleve_prenom($idEleve);
-	        $lienIA="ajaxIABulletinCom('".addslashes($commentaireeleve)."','$noteaff1','$productID','$iakey','saisie_text_$i','$prenom')";
+	        $lienIA="ajaxIABulletinCom('".addslashes($commentaireeleve)."','$noteaff1','$productID','$iakey','saisie_text_$i','$prenom',document.getElementById('tonia_$i').value)";
 	}else{
 	        $lienIA="alert('Votre Triade n\'est pas configur&eacute; pour utiliser l\'IA. Contacter votre administrateur Triade')";
 	}
@@ -475,8 +475,16 @@ for($i=0;$i<count($ordre);$i++) {
 	if ($typecom > 0) { $nbcar=150; }
 	print "<input type='text' name='CharRestant_$i' size='2' disabled='disabled'> ($nbcar caract&eacute;res maximum)";
 	print "&nbsp;&nbsp;<input type='button' value='TRIADE-COPILOT' class='BUTTON' onClick=\"$lienIA\" >";
+	print "<select name='tonia' id='tonia_$i' >";
+        print "<option value='IA' STYLE='color:#000066;background-color:#FCE4BA' >Comportement IA : Par défaut</option>";
+        print "<option value='Neutre' STYLE='color:#000066;background-color:#CCCCFF' >Neutre</option>";
+        print "<option value='Positif' STYLE='color:#000066;background-color:#CCCCFF' >Positif</option>";
+        print "<option value='Encourageant' STYLE='color:#000066;background-color:#CCCCFF' >Encourageant</option>";
+	print "<option value='Inquiétant' STYLE='color:#000066;background-color:#CCCCFF'  >Inquiétant</option>";
+	print "<option value='Motivant' STYLE='color:#000066;background-color:#CCCCFF' >Motivant</option>";
+        print "</select>";
 	print "<br>";
-	print "<textarea onkeypress=\"compter(this,'$nbcar', this.form.CharRestant_$i)\" cols='68' rows='3' id='saisie_text_$i' name='saisie_text_$i' >$commentaireeleve</textarea></td>";
+	print "<textarea onkeypress=\"compter(this,'$nbcar', this.form.CharRestant_$i)\" cols='78' rows='3' id='saisie_text_$i' name='saisie_text_$i' >$commentaireeleve</textarea></td>";
 
 	print "</tr>";
 	

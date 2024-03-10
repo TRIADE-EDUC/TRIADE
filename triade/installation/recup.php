@@ -4,7 +4,7 @@
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - - 
+ *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -231,14 +231,12 @@ if ( !defined('PATH_SEPARATOR') ) {
 	$text.= 'define("VERIFEMAIL", "oui");'."\n";
 	$text.= 'define("GESTIONMDP", "'.$gestionmdp.'"); // valeur possible MD5 ou SHA2 (par défaut crypt)'."\n";
 
-	$messageAlerte="";
 //--------------------------------------------------------------------------------------
 //--- si ajout voir aussi notemodif3.php, notesupp3.php, notevisu3.php
 
 	if ( ($typeserveur == "EASYPHP") || ($typeserveur == "WAMP" ) || ($typeserveur == "WAMP310" ) || ($typeserveur == "APACHE2TRIAD") ) {
 		$path = 'WEBROOT."/".ECOLE."/common/pear/'.PATH_SEPARATOR.'."';
 		$text.= 'ini_set("include_path",'.$path.');'."\n";
-		$messageAlerte="<br/><br/><font color='red'>L'installation de la base de donn&eacute;e peut prendre entre 5 &agrave; 15 minutes</font>";
 	}
 
         if  ($typeserveur == "FREEEOS") {
@@ -397,7 +395,6 @@ if ( !defined('PATH_SEPARATOR') ) {
 						INSTALLATION DE LA BASE SQL&nbsp;:<br />
 						<br/>
 						Etape <b>1/2 </b>&nbsp;&nbsp;&nbsp;&nbsp;<img src="./image/stat1.gif" alt="Ok" />
-						<?php print $messageAlerte ?>
 					</span>
 				</p>
 				<form action="recup2.php" id="form" method="post" onsubmit="document.getElementById('form').val.disabled=true" >

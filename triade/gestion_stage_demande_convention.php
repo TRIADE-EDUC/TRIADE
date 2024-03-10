@@ -122,7 +122,7 @@ if (isset($_POST["create"])) {
 ?>
 
 <font class="T2">&nbsp;&nbsp;<b>Demande en cours :</b></font><br><br>
-<table border='1' width='100%' bgcolor='#FFFFF'>
+<table border='1' width='100%' bgcolor='#FFFFF' style="border-collapse: collapse;" >
 <tr>
 <td bgcolor="yellow" width='5%' >&nbsp;Demandé&nbsp;le&nbsp;</td>
 <td bgcolor="yellow">&nbsp;Stage&nbsp;</td>
@@ -134,13 +134,13 @@ if (isset($_POST["create"])) {
 $data=listingDemandeStage($_SESSION["id_pers"]); // id,date_envoi,date_retour,idstage,message,societe,etat
 for($i=0;$i<count($data);$i++) {
 	print "<tr>";
-	print "<td id='bordure'>".dateForm($data[$i][1])."</td>";
+	print "<td id='bordure'>".dateForm($data[$i][2])."</td>";
 	
 	$stage=chercheNomStageviaId($data[$i][3]);
-	print "<td id='bordure'>".$stage."</td>";
+	print "<td id='bordure'>".stripslashes($stage)."</td>";
 
 
-	if ($data[$i][6] == "0") { $etat="<font color='yellow'>&nbsp;En&nbsp;attente</font>"; }
+	if ($data[$i][6] == "0") { $etat="<font color='orange'>&nbsp;En&nbsp;attente</font>"; }
 	if ($data[$i][6] == "1") { $etat="<font color='red'>A&nbsp;retourner&nbsp;signé</font>"; }
 	if ($data[$i][6] == "2") { $etat="<font color='green'>Terminé</font>"; }
 

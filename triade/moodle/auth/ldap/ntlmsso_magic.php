@@ -12,12 +12,12 @@ $PAGE->set_context(context_system::instance());
 
 $authsequence = get_enabled_auth_plugins(); // Auths, in sequence.
 if (!in_array('ldap', $authsequence, true)) {
-    throw new \moodle_exception('ldap_isdisabled', 'auth');
+    print_error('ldap_isdisabled', 'auth');
 }
 
 $authplugin = get_auth_plugin('ldap');
 if (empty($authplugin->config->ntlmsso_enabled)) {
-    throw new \moodle_exception('ntlmsso_isdisabled', 'auth_ldap');
+    print_error('ntlmsso_isdisabled', 'auth_ldap');
 }
 
 $sesskey = required_param('sesskey', PARAM_RAW);
@@ -41,7 +41,7 @@ if ($authplugin->ntlmsso_magic($sesskey) && file_exists($file)) {
     fclose($handle);
     exit;
 } else {
-    throw new \moodle_exception('ntlmsso_iwamagicnotenabled', 'auth_ldap');
+    print_error('ntlmsso_iwamagicnotenabled', 'auth_ldap');
 }
 
 

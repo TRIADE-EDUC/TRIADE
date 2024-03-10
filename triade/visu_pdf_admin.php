@@ -7,8 +7,8 @@ if (empty($_SESSION["nom"]))  {
 include_once('./common/config.inc.php');
 include_once('./librairie_php/db_triade.php');
 include_once("./common/config2.inc.php");
+$cnx=cnx();
 if ($_SESSION["membre"] == "menuprof") {
-	$cnx=cnx();
 	verif_profp_class($_SESSION["id_pers"],$_GET["idclasse"]);
 	PgClose();
 }else{

@@ -8,9 +8,9 @@ document.write("<table border='0' cellpadding='0' cellspacing='0' width='100%' h
 document.write("<tr id='coulBar0' >");
 document.write("<td height='20' width='20%'>");
 if (lienassist == '0' ) {
-	document.write("<div align='center'><a href='#' onclick=\"open('http://doc.triade-educ.com','_blank','')\" class='m'>"+langtitre0+"</a></div>");
+        document.write("<div align='center'><a href='./besoin_daide.php' class='m'>"+langtitre0+"</a></div>");
 }else{
-	document.write("<div align='center'><a href='"+lienassist+"' class='m' target='_blank' >"+langtitre0+"</a></div>");
+        document.write("<div align='center'><a href='"+lienassist+"' class='m' target='_blank' >"+langtitre0+"</a></div>");
 }
 document.write("</td>");
 document.write("<td height='20' width='20%'>");

@@ -228,9 +228,8 @@ class calculator {
 
                 $this->sumofmarkvariance += $this->stats->for_slot($slot)->markvariance;
 
-                $covariancewithoverallmark = $this->stats->for_slot($slot)->covariancewithoverallmark;
-                if (null !== $covariancewithoverallmark && $covariancewithoverallmark >= 0) {
-                    $sumofcovariancewithoverallmark += sqrt($covariancewithoverallmark);
+                if ($this->stats->for_slot($slot)->covariancewithoverallmark >= 0) {
+                    $sumofcovariancewithoverallmark += sqrt($this->stats->for_slot($slot)->covariancewithoverallmark);
                 }
             }
             $this->progress->end_progress();

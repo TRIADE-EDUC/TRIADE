@@ -86,10 +86,9 @@ class countdistinct extends base {
      * @param mixed $value
      * @param array $values
      * @param array $callbacks
-     * @param int $columntype
-     * @return int
+     * @return mixed
      */
-    public static function format_value($value, array $values, array $callbacks, int $columntype): int {
+    public static function format_value($value, array $values, array $callbacks) {
         return (int) reset($values);
     }
 }

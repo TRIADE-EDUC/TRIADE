@@ -70,7 +70,7 @@ filtreAnneeScolaireSelectAnterieur("$anneeScolaire",10); // creation des options
 <td bgcolor="yellow"  align=center width=5%><?php print LANGBULL3?></TD></TR>
 <?php
 if ($_GET["choix"] == "2") {	
-	$sql="SELECT libelle,annee_scolaire FROM ${prefixe}classes WHERE annee_scolaire='$anneeScolaire' ORDER BY libelle ";
+	$sql="SELECT libelle FROM ${prefixe}classes ORDER BY libelle ";
 	$res=execSql($sql);
 	$data_classe=chargeMat($res);
 	for($i=0;$i<count($data_classe);$i++) {
@@ -92,9 +92,8 @@ if ($_GET["choix"] == "2") {
 		unset($click);
 	}
 
-
 }else {
-$sql="SELECT group_id,libelle,liste_elev FROM ${prefixe}groupes WHERE annee_scolaire='$anneeScolaire' ORDER BY libelle";
+	$sql="SELECT group_id,libelle,liste_elev FROM ${prefixe}groupes WHERE annee_scolaire='$anneeScolaire' ORDER BY libelle";
 
 $res=execSql($sql);
 $liste_gid=chargeMat($res);
@@ -134,8 +133,6 @@ unset($classesDsGroupe_tmp);
 			}
 		}
 		
-		?>
-		<?php
 		if (trim($affnomgroupe) != "") {
 			if ($liste_classe == "") { $disabled="disabled='disabled'";$liste_classe="&nbsp;<i><font color=red>aucun élève</font></i>"; }
 		?>

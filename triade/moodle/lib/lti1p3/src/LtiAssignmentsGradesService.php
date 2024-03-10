@@ -42,11 +42,7 @@ class LtiAssignmentsGradesService extends LtiAbstractService
         $pos = strpos($scoreUrl, '?');
         $scoreUrl = $pos === false ? $scoreUrl.'/scores' : substr_replace($scoreUrl, '/scores', $pos, 0);
 
-        $request = new ServiceRequest(
-            ServiceRequest::METHOD_POST,
-            $scoreUrl,
-            ServiceRequest::TYPE_SYNC_GRADE
-        );
+        $request = new ServiceRequest(LtiServiceConnector::METHOD_POST, $scoreUrl);
         $request->setBody($grade);
         $request->setContentType(static::CONTENTTYPE_SCORE);
 
@@ -66,36 +62,15 @@ class LtiAssignmentsGradesService extends LtiAbstractService
         return null;
     }
 
-    public function updateLineitem(LtiLineItem $lineitemToUpdate): LtiLineitem
-    {
-        $request = new ServiceRequest(
-            ServiceRequest::METHOD_PUT,
-            $this->getServiceData()['lineitems'],
-            ServiceRequest::TYPE_UPDATE_LINEITEM
-        );
-
-        $request->setBody($lineitemToUpdate)
-            ->setContentType(static::CONTENTTYPE_LINEITEM)
-            ->setAccept(static::CONTENTTYPE_LINEITEM);
-
-        $updatedLineitem = $this->makeServiceRequest($request);
-
-        return new LtiLineitem($updatedLineitem['body']);
-    }
-
     public function createLineitem(LtiLineitem $newLineItem): LtiLineitem
     {
-        $request = new ServiceRequest(
-            ServiceRequest::METHOD_POST,
-            $this->getServiceData()['lineitems'],
-            ServiceRequest::TYPE_CREATE_LINEITEM
-        );
+        $request = new ServiceRequest(LtiServiceConnector::METHOD_POST, $this->getServiceData()['lineitems']);
         $request->setBody($newLineItem)
             ->setContentType(static::CONTENTTYPE_LINEITEM)
             ->setAccept(static::CONTENTTYPE_LINEITEM);
-        $createdLineItem = $this->makeServiceRequest($request);
+        $createdLineItems = $this->makeServiceRequest($request);
 
-        return new LtiLineitem($createdLineItem['body']);
+        return new LtiLineitem($createdLineItems['body']);
     }
 
     public function findOrCreateLineitem(LtiLineitem $newLineItem): LtiLineitem
@@ -112,11 +87,7 @@ class LtiAssignmentsGradesService extends LtiAbstractService
         $pos = strpos($resultsUrl, '?');
         $resultsUrl = $pos === false ? $resultsUrl.'/results' : substr_replace($resultsUrl, '/results', $pos, 0);
 
-        $request = new ServiceRequest(
-            ServiceRequest::METHOD_GET,
-            $resultsUrl,
-            ServiceRequest::TYPE_GET_GRADES
-        );
+        $request = new ServiceRequest(LtiServiceConnector::METHOD_GET, $resultsUrl);
         $request->setAccept(static::CONTENTTYPE_RESULTCONTAINER);
         $scores = $this->makeServiceRequest($request);
 
@@ -130,9 +101,8 @@ class LtiAssignmentsGradesService extends LtiAbstractService
         }
 
         $request = new ServiceRequest(
-            ServiceRequest::METHOD_GET,
-            $this->getServiceData()['lineitems'],
-            ServiceRequest::TYPE_GET_LINEITEMS
+            LtiServiceConnector::METHOD_GET,
+            $this->getServiceData()['lineitems']
         );
         $request->setAccept(static::CONTENTTYPE_LINEITEMCONTAINER);
 
@@ -152,11 +122,7 @@ class LtiAssignmentsGradesService extends LtiAbstractService
             throw new LtiException('Missing required scope', 1);
         }
 
-        $request = new ServiceRequest(
-            ServiceRequest::METHOD_GET,
-            $url,
-            ServiceRequest::TYPE_GET_LINEITEM
-        );
+        $request = new ServiceRequest(LtiServiceConnector::METHOD_GET, $url);
         $request->setAccept(static::CONTENTTYPE_LINEITEM);
 
         $response = $this->makeServiceRequest($request)['body'];

@@ -36,7 +36,7 @@ if ($eid) {
     $entries = glossary_get_entries_search($concept, $courseid);
 
 } else {
-    throw new \moodle_exception('invalidelementid');
+    print_error('invalidelementid');
 }
 
 $PAGE->set_pagelayout('incourse');

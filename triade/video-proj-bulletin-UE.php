@@ -142,7 +142,7 @@ for($j=0;$j<count($eleveT);$j++) {  // premiere ligne
 		$coef_ue=$recupUE[$f][2];
 		$ects_ue=$recupUE[$f][3];
 
-		$listeMatiere=recupMatiereUE($code_ue);  // u.code_matiere,m.libelle,u.code_enseignant
+		$listeMatiere=recupMatiereUE($code_ue,$idClasse);  // u.code_matiere,m.libelle,u.code_enseignant
 	
 		print "<tr>";
 		print "<td  valign='top' colspan='5'><font class='T2' color='#FFFFFF' >$nom_ue</font> (coef UE: $coef_ue) </td>";

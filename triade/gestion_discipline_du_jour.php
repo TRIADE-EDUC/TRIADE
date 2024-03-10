@@ -126,7 +126,7 @@ for($i=0;$i<count($data);$i++) {
 	<td ><?php print infoBulleEleveSansLoupe($data[$i][0],ucwords(recherche_eleve_nom($data[$i][0])))?>
 	<?php print ucwords(recherche_eleve_prenom($data[$i][0]))?></td>
 	<td ><?php print $classe[0][1]?></td>
-	<td ><?php print "Le ".dateForm($data[$i][1])."<br /> à "; print timeForm($data[$i][2])?> 
+	<td ><?php print "Le ".dateForm($data[$i][1])."<br /> &agrave; "; print timeForm($data[$i][2])?> 
 	<?php print "durant ".timeForm($data[$i][10])?></td>
 	<?php
 		if (($data[$i][6] == t ) || ($data[$i][6] == 1 )) {
@@ -164,7 +164,7 @@ print "</table>";
 <BR><br>
 <input type=hidden name="saisie_nb" value="<?php print $a?>" >
 <table align=center><tr><td>
-<script language=JavaScript>buttonMagicSubmit("Mise à jour des retenues","rien"); //text,nomInput</script>
+<script language=JavaScript>buttonMagicSubmit("Mise &agrave; jour des retenues","rien"); //text,nomInput</script>
 </td></tr></table>
 </form>
 <BR>

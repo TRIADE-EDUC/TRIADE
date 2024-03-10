@@ -24,7 +24,7 @@ document.write("</table>");
 document.write("<br><p>&nbsp;</p>");
 document.write("</td>");
 document.write("</tr>");
-document.write("<tr valign='middle'><td colspan='5' height='43'><div align='center'><p>La <b>T</b>ransparence et la <b>R</b>apidité de l'<b>I</b>nformatique <b>A</b>u service <b>D</b>e l'<b>E</b>nseignement<br> Pour visualiser ce site de façon optimale :  résolution minimale : 800x600 <br>  T.R.I.A.D.E. &copy; 2023  - Tous droits réservés</p>");
+document.write("<tr valign='middle'><td colspan='5' height='43'><div align='center'><p>La <b>T</b>ransparence et la <b>R</b>apidité de l'<b>I</b>nformatique <b>A</b>u service <b>D</b>e l'<b>E</b>nseignement<br> Pour visualiser ce site de façon optimale :  résolution minimale : 800x600 <br>  T.R.I.A.D.E. &copy; 2024  - Tous droits réservés</p>");
 document.write("<img src='../image/commun/triade-xhtml.jpg' alt='XHTML'>  <img src='../image/commun/triade-w3C.jpg' alt='w3C'> <img src='../image/commun/triade-css.png' alt='css' > <a href='http://www.triade-educ.com/accueil/don-triade.php' target='_blank' ><img border='0' src='../image/commun/triade_paypal.png' alt='Paypal' ></a><br /><br />");
 document.write("</div></td></tr></table></div>");
 document.write("</td></tr></table></center>");

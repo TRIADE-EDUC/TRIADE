@@ -17,18 +17,18 @@ if ($action !== '') {
 $PAGE->set_url($url);
 
 if (! $cm = get_coursemodule_from_id('choice', $id)) {
-    throw new \moodle_exception('invalidcoursemodule');
+    print_error('invalidcoursemodule');
 }
 $cm = cm_info::create($cm);
 
 if (! $course = $DB->get_record("course", array("id" => $cm->course))) {
-    throw new \moodle_exception('coursemisconf');
+    print_error('coursemisconf');
 }
 
 require_course_login($course, false, $cm);
 
 if (!$choice = choice_get_choice($cm->instance)) {
-    throw new \moodle_exception('invalidcoursemodule');
+    print_error('invalidcoursemodule');
 }
 
 $strchoice = get_string('modulename', 'choice');

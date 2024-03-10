@@ -29,13 +29,11 @@ global $ADODB_INCLUDED_CSV;
 $ADODB_INCLUDED_CSV = 1;
 
 	/**
- 	 * Convert a recordset into special format
+ 	 * convert a recordset into special format
 	 *
-	 * @param ADORecordSet  $rs the recordset
-	 * @param ADOConnection $conn
-	 * @param string        $sql
+	 * @param rs	the recordset
 	 *
-	 * @return string the CSV formatted data
+	 * @return	the CSV formatted data
 	 */
 	function _rs2serialize(&$rs,$conn=false,$sql='')
 	{
@@ -76,7 +74,7 @@ $ADODB_INCLUDED_CSV = 1;
 
 		$savefetch = isset($rs->adodbFetchMode) ? $rs->adodbFetchMode : $rs->fetchMode;
 		$class = $rs->connection->arrayClass;
-		$rs2 = new $class(-1); // Dummy query Id
+		$rs2 = new $class();
 		$rs2->timeCreated = $rs->timeCreated; # memcache fix
 		$rs2->sql = $rs->sql;
 		$rs2->oldProvider = $rs->dataProvider;
@@ -85,19 +83,19 @@ $ADODB_INCLUDED_CSV = 1;
 		return $line.serialize($rs2);
 	}
 
-	/**
-	 * Open CSV file and convert it into Data.
-	 *
-	 * @param string $url     file/ftp/http url
-	 * @param string &$err    returns the error message
-	 * @param int $timeout    dispose if recordset has been alive for $timeout secs
-	 * @param string $rsclass RecordSet class to return
-	 *
-	 * @return ADORecordSet|false recordset, or false if error occurred.
-	 *                            If no error occurred in sql INSERT/UPDATE/DELETE,
-	 *                            empty recordset is returned.
-	 */
-	function csv2rs($url, &$err, $timeout=0, $rsclass='ADORecordSet_array')
+
+/**
+* Open CSV file and convert it into Data.
+*
+* @param url  		file/ftp/http url
+* @param err		returns the error message
+* @param timeout	dispose if recordset has been alive for $timeout secs
+*
+* @return		recordset, or false if error occurred. If no
+*			error occurred in sql INSERT/UPDATE/DELETE,
+*			empty recordset is returned
+*/
+	function csv2rs($url,&$err,$timeout=0, $rsclass='ADORecordSet_array')
 	{
 		$false = false;
 		$err = false;

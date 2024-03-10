@@ -199,7 +199,7 @@ class document_test extends \advanced_testcase {
         $export = $doc->export_for_template($renderer);
 
         if ($expected) {
-            $authorname = htmlentities(fullname($author), ENT_COMPAT);
+            $authorname = htmlentities(fullname($author));
             $this->assertEquals($authorname, $export['userfullname']);
         } else {
             $this->assertArrayNotHasKey('userfullname', $export);

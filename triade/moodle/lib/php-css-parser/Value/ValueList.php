@@ -2,99 +2,46 @@
 
 namespace Sabberworm\CSS\Value;
 
-use Sabberworm\CSS\OutputFormat;
+abstract class ValueList extends Value {
 
-abstract class ValueList extends Value
-{
-    /**
-     * @var array<int, RuleValueList|CSSFunction|CSSString|LineName|Size|URL|string>
-     */
-    protected $aComponents;
+	protected $aComponents;
+	protected $sSeparator;
 
-    /**
-     * @var string
-     */
-    protected $sSeparator;
+	public function __construct($aComponents = array(), $sSeparator = ',', $iLineNo = 0) {
+		parent::__construct($iLineNo);
+		if (!is_array($aComponents)) {
+			$aComponents = array($aComponents);
+		}
+		$this->aComponents = $aComponents;
+		$this->sSeparator = $sSeparator;
+	}
 
-    /**
-     * phpcs:ignore Generic.Files.LineLength
-     * @param array<int, RuleValueList|CSSFunction|CSSString|LineName|Size|URL|string>|RuleValueList|CSSFunction|CSSString|LineName|Size|URL|string $aComponents
-     * @param string $sSeparator
-     * @param int $iLineNo
-     */
-    public function __construct($aComponents = [], $sSeparator = ',', $iLineNo = 0)
-    {
-        parent::__construct($iLineNo);
-        if (!is_array($aComponents)) {
-            $aComponents = [$aComponents];
-        }
-        $this->aComponents = $aComponents;
-        $this->sSeparator = $sSeparator;
-    }
+	public function addListComponent($mComponent) {
+		$this->aComponents[] = $mComponent;
+	}
 
-    /**
-     * @param RuleValueList|CSSFunction|CSSString|LineName|Size|URL|string $mComponent
-     *
-     * @return void
-     */
-    public function addListComponent($mComponent)
-    {
-        $this->aComponents[] = $mComponent;
-    }
+	public function getListComponents() {
+		return $this->aComponents;
+	}
 
-    /**
-     * @return array<int, RuleValueList|CSSFunction|CSSString|LineName|Size|URL|string>
-     */
-    public function getListComponents()
-    {
-        return $this->aComponents;
-    }
+	public function setListComponents($aComponents) {
+		$this->aComponents = $aComponents;
+	}
 
-    /**
-     * @param array<int, RuleValueList|CSSFunction|CSSString|LineName|Size|URL|string> $aComponents
-     *
-     * @return void
-     */
-    public function setListComponents(array $aComponents)
-    {
-        $this->aComponents = $aComponents;
-    }
+	public function getListSeparator() {
+		return $this->sSeparator;
+	}
 
-    /**
-     * @return string
-     */
-    public function getListSeparator()
-    {
-        return $this->sSeparator;
-    }
+	public function setListSeparator($sSeparator) {
+		$this->sSeparator = $sSeparator;
+	}
 
-    /**
-     * @param string $sSeparator
-     *
-     * @return void
-     */
-    public function setListSeparator($sSeparator)
-    {
-        $this->sSeparator = $sSeparator;
-    }
+	public function __toString() {
+		return $this->render(new \Sabberworm\CSS\OutputFormat());
+	}
 
-    /**
-     * @return string
-     */
-    public function __toString()
-    {
-        return $this->render(new OutputFormat());
-    }
+	public function render(\Sabberworm\CSS\OutputFormat $oOutputFormat) {
+		return $oOutputFormat->implode($oOutputFormat->spaceBeforeListArgumentSeparator($this->sSeparator) . $this->sSeparator . $oOutputFormat->spaceAfterListArgumentSeparator($this->sSeparator), $this->aComponents);
+	}
 
-    /**
-     * @return string
-     */
-    public function render(OutputFormat $oOutputFormat)
-    {
-        return $oOutputFormat->implode(
-            $oOutputFormat->spaceBeforeListArgumentSeparator($this->sSeparator) . $this->sSeparator
-            . $oOutputFormat->spaceAfterListArgumentSeparator($this->sSeparator),
-            $this->aComponents
-        );
-    }
 }

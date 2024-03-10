@@ -44,11 +44,11 @@ $PAGE->set_url($url);
 
 /// basic access checks
 if (!$course = $DB->get_record('course', array('id' => $courseid))) {
-    throw new \moodle_exception('invalidcourseid');
+    print_error('invalidcourseid');
 }
 
 if (!$item = $DB->get_record('grade_items', array('id' => $itemid))) {
-    throw new \moodle_exception('noitemid', 'grades');
+    print_error('noitemid', 'grades');
 }
 
 require_login($course);

@@ -31,7 +31,7 @@ $courseid = required_param('id', PARAM_INT);                   // course id
 $PAGE->set_url('/grade/report/outcomes/index.php', array('id'=>$courseid));
 
 if (!$course = $DB->get_record('course', array('id' => $courseid))) {
-    throw new \moodle_exception('invalidcourseid');
+    print_error('invalidcourseid');
 }
 
 require_login($course);

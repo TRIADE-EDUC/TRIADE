@@ -23,14 +23,16 @@ if (empty($_SESSION["nom"]))  { exit; }
 
 // Trombino pour les élèves
 if (isset($_GET['idE'])) {
-	$idEleve=$_GET["idE"];
 	include_once("./common/config.inc.php");
 	include_once("./common/config2.inc.php");
 	include_once("./librairie_php/db_triade.php");
 	$cnx=cnx();
+	$idEleve=$_GET["idE"];
+	if(!is_numeric($idEleve)) exit;
 	$photoLocal=recherche_photo_eleve($idEleve);
 	Pgclose();
 
+	
 
 	// Définition de la largeur et de la hauteur maximale
 	$width='120';

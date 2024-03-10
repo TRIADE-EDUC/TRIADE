@@ -55,6 +55,7 @@ if ($id != 1) {
 <!-- // fin  --><br> <br>
 <?php
 include_once('librairie_php/db_triade.php');
+$anneeScolaire=$_POST["annee_scolaire"];
 $cnx=cnx();
 if ($_SESSION["membre"] == "menuprof") {
 	$data=aff_enr_parametrage("autorisebulletinprof"); 
@@ -66,7 +67,7 @@ if ($_SESSION["membre"] == "menuprof") {
 }else{
 	validerequete("2");
 }
-$valeur=visu_affectation_detail($_POST["saisie_classe"]);
+$valeur=visu_affectation_detail($_POST["saisie_classe"],$anneeScolaire);
 $affmoyclasse=$_POST["affmoyclasse"];
 $affmoyclasse="oui";
 
@@ -82,6 +83,7 @@ if ($_POST["typetrisem"] == "semestre") {
 	if ($_POST["saisie_trimestre"] == "trimestre1" ) { $textTrimestre=LANGBULL25; }
 	if ($_POST["saisie_trimestre"] == "trimestre2" ) { $textTrimestre=LANGBULL26; }
 }
+
 
 // recupe du nom de la classe
 $data=chercheClasse($_POST["saisie_classe"]);
@@ -714,7 +716,7 @@ $ledecompte=count($ordre);
 	$ii++;
 
 
-	if ($Ymat > 260) { 
+	if ($Ymat > 250) { 
 		$pdf->AddPage(); 
 		$Ymat=10;
 		$Ymatcont=10;

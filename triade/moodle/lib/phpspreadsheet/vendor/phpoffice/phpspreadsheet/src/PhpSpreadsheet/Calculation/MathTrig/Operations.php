@@ -2,33 +2,21 @@
 
 namespace PhpOffice\PhpSpreadsheet\Calculation\MathTrig;
 
-use PhpOffice\PhpSpreadsheet\Calculation\ArrayEnabled;
 use PhpOffice\PhpSpreadsheet\Calculation\Exception;
 use PhpOffice\PhpSpreadsheet\Calculation\Functions;
-use PhpOffice\PhpSpreadsheet\Calculation\Information\ExcelError;
 
 class Operations
 {
-    use ArrayEnabled;
-
     /**
      * MOD.
      *
      * @param mixed $dividend Dividend
-     *                      Or can be an array of values
      * @param mixed $divisor Divisor
-     *                      Or can be an array of values
      *
-     * @return array|float|int|string Remainder, or a string containing an error
-     *         If an array of numbers is passed as an argument, then the returned result will also be an array
-     *            with the same dimensions
+     * @return float|int|string Remainder, or a string containing an error
      */
     public static function mod($dividend, $divisor)
     {
-        if (is_array($dividend) || is_array($divisor)) {
-            return self::evaluateArrayArguments([self::class, __FUNCTION__], $dividend, $divisor);
-        }
-
         try {
             $dividend = Helpers::validateNumericNullBool($dividend);
             $divisor = Helpers::validateNumericNullBool($divisor);
@@ -52,21 +40,13 @@ class Operations
      *
      * Computes x raised to the power y.
      *
-     * @param array|float|int $x
-     *                      Or can be an array of values
-     * @param array|float|int $y
-     *                      Or can be an array of values
+     * @param float|int $x
+     * @param float|int $y
      *
-     * @return array|float|int|string The result, or a string containing an error
-     *         If an array of numbers is passed as an argument, then the returned result will also be an array
-     *            with the same dimensions
+     * @return float|int|string The result, or a string containing an error
      */
     public static function power($x, $y)
     {
-        if (is_array($x) || is_array($y)) {
-            return self::evaluateArrayArguments([self::class, __FUNCTION__], $x, $y);
-        }
-
         try {
             $x = Helpers::validateNumericNullBool($x);
             $y = Helpers::validateNumericNullBool($y);
@@ -76,10 +56,10 @@ class Operations
 
         // Validate parameters
         if (!$x && !$y) {
-            return ExcelError::NAN();
+            return Functions::NAN();
         }
         if (!$x && $y < 0.0) {
-            return ExcelError::DIV0();
+            return Functions::DIV0();
         }
 
         // Return
@@ -102,27 +82,29 @@ class Operations
      */
     public static function product(...$args)
     {
-        $args = array_filter(
-            Functions::flattenArray($args),
-            function ($value) {
-                return $value !== null;
-            }
-        );
-
         // Return value
-        $returnValue = (count($args) === 0) ? 0.0 : 1.0;
+        $returnValue = null;
 
         // Loop through arguments
-        foreach ($args as $arg) {
+        foreach (Functions::flattenArray($args) as $arg) {
             // Is it a numeric value?
             if (is_numeric($arg)) {
-                $returnValue *= $arg;
+                if ($returnValue === null) {
+                    $returnValue = $arg;
+                } else {
+                    $returnValue *= $arg;
+                }
             } else {
-                return ExcelError::throwError($arg);
+                return Functions::VALUE();
             }
         }
 
-        return (float) $returnValue;
+        // Return
+        if ($returnValue === null) {
+            return 0;
+        }
+
+        return $returnValue;
     }
 
     /**
@@ -135,20 +117,12 @@ class Operations
      *        QUOTIENT(value1,value2)
      *
      * @param mixed $numerator Expect float|int
-     *                      Or can be an array of values
      * @param mixed $denominator Expect float|int
-     *                      Or can be an array of values
      *
-     * @return array|int|string
-     *         If an array of numbers is passed as an argument, then the returned result will also be an array
-     *            with the same dimensions
+     * @return int|string
      */
     public static function quotient($numerator, $denominator)
     {
-        if (is_array($numerator) || is_array($denominator)) {
-            return self::evaluateArrayArguments([self::class, __FUNCTION__], $numerator, $denominator);
-        }
-
         try {
             $numerator = Helpers::validateNumericNullSubstitution($numerator, 0);
             $denominator = Helpers::validateNumericNullSubstitution($denominator, 0);

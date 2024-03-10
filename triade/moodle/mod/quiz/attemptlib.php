@@ -27,6 +27,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+use core_question\local\bank\question_version_status;
 use mod_quiz\question\bank\qbank_helper;
 
 
@@ -543,6 +544,10 @@ class quiz {
         $qcategories = array();
 
         foreach ($this->get_questions() as $questiondata) {
+            if ($questiondata->status == question_version_status::QUESTION_STATUS_DRAFT) {
+                // Skip questions where all versions are draft.
+                continue;
+            }
             if ($questiondata->qtype === 'random' && $includepotential) {
                 if (!isset($qcategories[$questiondata->category])) {
                     $qcategories[$questiondata->category] = false;
@@ -1849,7 +1854,7 @@ class quiz_attempt {
      */
     public function render_question_for_commenting($slot) {
         $options = $this->get_display_options(true);
-        $options->generalfeedback = question_display_options::HIDDEN;
+        $options->hide_all_feedback();
         $options->manualcomment = question_display_options::EDITABLE;
         return $this->quba->render_question($slot, $options,
                 $this->get_question_number($slot));
@@ -2711,22 +2716,6 @@ class quiz_attempt {
             return true;
         }
         return false;
-    }
-
-    /**
-     * Get the total number of unanswered questions in the attempt.
-     *
-     * @return int
-     */
-    public function get_number_of_unanswered_questions(): int {
-        $totalunanswered = 0;
-        foreach ($this->get_slots() as $slot) {
-            $questionstate = $this->get_question_state($slot);
-            if ($questionstate == question_state::$todo || $questionstate == question_state::$invalid) {
-                $totalunanswered++;
-            }
-        }
-        return $totalunanswered;
     }
 }
 

@@ -38,28 +38,24 @@ class core_role_admins_existing_selector extends user_selector_base {
             $name = 'removeselect';
         }
         $options['multiselect'] = false;
-        $options['includecustomfields'] = true;
         parent::__construct($name, $options);
     }
 
     public function find_users($search) {
         global $DB, $CFG;
+        list($wherecondition, $params) = $this->search_sql($search, '');
 
-        [$wherecondition, $params] = $this->search_sql($search, 'u');
-        $params = array_merge($params, $this->userfieldsparams);
-
-        $fields = 'SELECT u.id, ' . $this->userfieldsselects;
+        $fields      = 'SELECT ' . $this->required_fields_sql('');
 
         if ($wherecondition) {
-            $wherecondition = "$wherecondition AND u.id IN ($CFG->siteadmins)";
+            $wherecondition = "$wherecondition AND id IN ($CFG->siteadmins)";
         } else {
-            $wherecondition = "u.id IN ($CFG->siteadmins)";
+            $wherecondition = "id IN ($CFG->siteadmins)";
         }
-        $sql = " FROM {user} u
-                      $this->userfieldsjoin
+        $sql = " FROM {user}
                 WHERE $wherecondition";
 
-        [$sort, $sortparams] = users_order_by_sql('u', $search, $this->accesscontext, $this->userfieldsmappings);
+        list($sort, $sortparams) = users_order_by_sql('', $search, $this->accesscontext);
         $params = array_merge($params, $sortparams);
 
         // Sort first by email domain and then by normal name order.

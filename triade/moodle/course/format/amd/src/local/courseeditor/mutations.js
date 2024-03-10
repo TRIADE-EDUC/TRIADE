@@ -131,51 +131,6 @@ export default class {
     }
 
     /**
-     * Hides sections.
-     * @param {StateManager} stateManager the current state manager
-     * @param {array} sectionIds the list of section ids
-     */
-    async sectionHide(stateManager, sectionIds) {
-        await this._sectionBasicAction(stateManager, 'section_hide', sectionIds);
-    }
-
-    /**
-     * Show sections.
-     * @param {StateManager} stateManager the current state manager
-     * @param {array} sectionIds the list of section ids
-     */
-    async sectionShow(stateManager, sectionIds) {
-        await this._sectionBasicAction(stateManager, 'section_show', sectionIds);
-    }
-
-    /**
-     * Show cms.
-     * @param {StateManager} stateManager the current state manager
-     * @param {array} cmIds the list of cm ids
-     */
-    async cmShow(stateManager, cmIds) {
-        await this._cmBasicAction(stateManager, 'cm_show', cmIds);
-    }
-
-    /**
-     * Hide cms.
-     * @param {StateManager} stateManager the current state manager
-     * @param {array} cmIds the list of cm ids
-     */
-    async cmHide(stateManager, cmIds) {
-        await this._cmBasicAction(stateManager, 'cm_hide', cmIds);
-    }
-
-    /**
-     * Stealth cms.
-     * @param {StateManager} stateManager the current state manager
-     * @param {array} cmIds the list of cm ids
-     */
-    async cmStealth(stateManager, cmIds) {
-        await this._cmBasicAction(stateManager, 'cm_stealth', cmIds);
-    }
-
-    /**
      * Move course modules to specific course location.
      *
      * Note that one of targetSectionId or targetCmId should be provided in order to identify the
@@ -283,6 +238,24 @@ export default class {
     }
 
     /**
+     * Move cms to the right: indent = 1.
+     * @param {StateManager} stateManager the current state manager
+     * @param {array} cmIds the list of cm ids
+     */
+    async cmMoveRight(stateManager, cmIds) {
+        await this._cmBasicAction(stateManager, 'cm_moveright', cmIds);
+    }
+
+    /**
+     * Move cms to the left: indent = 0.
+     * @param {StateManager} stateManager the current state manager
+     * @param {array} cmIds the list of cm ids
+     */
+    async cmMoveLeft(stateManager, cmIds) {
+        await this._cmBasicAction(stateManager, 'cm_moveleft', cmIds);
+    }
+
+    /**
      * Lock or unlock course modules.
      *
      * @param {StateManager} stateManager the current state manager
@@ -383,6 +356,9 @@ export default class {
      */
     async sectionIndexCollapsed(stateManager, sectionIds, collapsed) {
         const collapsedIds = this._updateStateSectionPreference(stateManager, 'indexcollapsed', sectionIds, collapsed);
+        if (!collapsedIds) {
+            return;
+        }
         const course = stateManager.get('course');
         await this._callEditWebservice('section_index_collapsed', course.id, collapsedIds);
     }
@@ -396,6 +372,9 @@ export default class {
      */
     async sectionContentCollapsed(stateManager, sectionIds, collapsed) {
         const collapsedIds = this._updateStateSectionPreference(stateManager, 'contentcollapsed', sectionIds, collapsed);
+        if (!collapsedIds) {
+            return;
+        }
         const course = stateManager.get('course');
         await this._callEditWebservice('section_content_collapsed', course.id, collapsedIds);
     }
@@ -407,7 +386,7 @@ export default class {
      * @param {string} preferenceName the preference name
      * @param {array} sectionIds the affected section ids
      * @param {boolean} preferenceValue the new preferenceValue value
-     * @return {array} the list of all sections with that preference set to true
+     * @return {Number[]|null} sections ids with the preference value true or null if no update is required
      */
     _updateStateSectionPreference(stateManager, preferenceName, sectionIds, preferenceValue) {
         stateManager.setReadOnly(false);
@@ -416,7 +395,7 @@ export default class {
         sectionIds.forEach(sectionId => {
             const section = stateManager.get('section', sectionId);
             if (section === undefined) {
-                return;
+                return null;
             }
             const newValue = preferenceValue ?? section[preferenceName];
             if (section[preferenceName] != newValue) {
@@ -426,7 +405,7 @@ export default class {
         });
         stateManager.setReadOnly(true);
         if (affectedSections.size == 0) {
-            return [];
+            return null;
         }
         // Get all collapsed section ids.
         const collapsedSectionIds = [];

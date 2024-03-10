@@ -28,3 +28,22 @@ Order Deny,Allow
 Deny from all
 </Files>
 
+<Files "erreurs.log">
+Order Deny,Allow
+Deny from all
+</Files>
+
+<Files "bug_report.txt">
+Order Deny,Allow
+Deny from all
+</Files>
+
+<Files "*.php*">
+Order Deny,Allow
+Deny from all
+</Files>
+
+<Files "bug_report.txt">
+Order Deny,Allow
+Deny from all
+</Files>

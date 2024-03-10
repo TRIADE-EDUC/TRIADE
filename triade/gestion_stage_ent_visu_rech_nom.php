@@ -52,9 +52,9 @@ include_once("librairie_php/db_triade.php");
 $cnx=cnx();
 
 if (isset($_GET["recherche"])) {
-	$recherche=$_GET["recherche"];
+	$recherche=htmlspecialchars($_GET["recherche"]);
 }else{
-	$recherche=$_POST["recherche"];
+	$recherche=htmlspecialchars($_POST["recherche"]);
 }
 print "<font class=T2><ul>";
 

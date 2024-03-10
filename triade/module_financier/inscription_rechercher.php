@@ -339,7 +339,7 @@ if(autorisation_module()) {
 												<tr>
 													<td align="right"><?php echo LANG_FIN_ELEV_002; ?>&nbsp;:&nbsp;</td>
 													<td align="left">
-														<input type="text" name="nom_eleve" id="nom_eleve" value="<?php echo $nom_eleve; ?>" size="20" maxlength="20" onKeyUp="onkeyup_nom_eleve(this);" style="width:15em;" autocomplete="off">
+														<input type="text" name="nom_eleve" id="nom_eleve" value="<?php echo $nom_eleve; ?>" size="20" maxlength="20" <?php // onKeyUp="onkeyup_nom_eleve(this);" ?> style="width:15em;" autocomplete="off">
 													</td>
 													<td>&nbsp;</td>
 													<td align="left">
@@ -688,22 +688,15 @@ if(autorisation_module()) {
 				
 				
 				var obj_recherche = new ajax_recherche();
-			
 				obj_recherche.init();
-				
 				obj_recherche.type_recherche = 'eleve';
 				obj_recherche.id_formulaire = 'formulaire_eleve';
-				
 				obj_recherche.id_champ_critere_1 = 'nom_eleve';
-				
 				obj_recherche.msg_validation_1 = '<?php echo LANG_CHA_AJAX_001; ?>';
 				obj_recherche.msg_validation_2 = '<?php echo LANG_CHA_AJAX_002; ?>';
 				obj_recherche.msg_validation_3 = '<?php echo LANG_CHA_AJAX_003; ?>';
-
 				obj_recherche.url_module = '<?php echo url_module(); ?>';
-				
 				obj_recherche.fonction_onclick = 'onclick_sur_nom_eleve';
-				
 				obj_recherche.rechercher();
 				
 			}

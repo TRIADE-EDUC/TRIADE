@@ -36,15 +36,15 @@ if ($action !== false) {
 $PAGE->set_url($url);
 
 if (! $cm = get_coursemodule_from_id('feedback', $id)) {
-    throw new \moodle_exception('invalidcoursemodule');
+    print_error('invalidcoursemodule');
 }
 
 if (! $course = $DB->get_record("course", array("id"=>$cm->course))) {
-    throw new \moodle_exception('coursemisconf');
+    print_error('coursemisconf');
 }
 
 if (! $feedback = $DB->get_record("feedback", array("id"=>$cm->instance))) {
-    throw new \moodle_exception('invalidcoursemodule');
+    print_error('invalidcoursemodule');
 }
 
 $context = context_module::instance($cm->id);
@@ -55,7 +55,7 @@ require_capability('mod/feedback:edititems', $context);
 
 if ($action == 'exportfile') {
     if (!$exportdata = feedback_get_xml_data($feedback->id)) {
-        throw new \moodle_exception('nodata');
+        print_error('nodata');
     }
     @feedback_send_xml_data($exportdata, 'feedback_'.$feedback->id.'.xml');
     exit;

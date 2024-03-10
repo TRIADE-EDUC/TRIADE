@@ -35,18 +35,12 @@ use grade_grade;
  * @copyright 2014 Moodle Pty Ltd (http://moodle.com)
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class exclude extends grade_attribute_format implements be_checked, be_disabled, be_readonly {
+class exclude extends grade_attribute_format implements be_checked, be_disabled {
 
-    /**
-     * The name of the input
-     * @var string $name
-     */
+    /** @var string $name The name of the input */
     public $name = 'exclude';
 
-    /**
-     * Is the checkbox disabled?
-     * @var bool $disabled
-     */
+    /** @var bool $disabled Is the checkbox disabled? */
     public $disabled = false;
 
     /**
@@ -54,7 +48,7 @@ class exclude extends grade_attribute_format implements be_checked, be_disabled,
      *
      * @return bool
      */
-    public function is_checked(): bool {
+    public function is_checked() {
         return $this->grade->is_excluded();
     }
 
@@ -63,18 +57,8 @@ class exclude extends grade_attribute_format implements be_checked, be_disabled,
      *
      * @return bool
      */
-    public function is_disabled(): bool {
+    public function is_disabled() {
         return $this->disabled;
-    }
-
-    /**
-     * Return true if this is read-only.
-     *
-     * @return bool
-     */
-    public function is_readonly(): bool {
-        global $USER;
-        return empty($USER->editing);
     }
 
     /**
@@ -82,13 +66,12 @@ class exclude extends grade_attribute_format implements be_checked, be_disabled,
      *
      * @return element
      */
-    public function determine_format(): element {
+    public function determine_format() {
         return new checkbox_attribute(
             $this->get_name(),
             $this->get_label(),
             $this->is_checked(),
-            $this->is_disabled(),
-            $this->is_readonly()
+            $this->is_disabled()
         );
     }
 
@@ -97,7 +80,7 @@ class exclude extends grade_attribute_format implements be_checked, be_disabled,
      *
      * @return string
      */
-    public function get_label(): string {
+    public function get_label() {
         if (!isset($this->grade->label)) {
             $this->grade->label = '';
         }
@@ -123,16 +106,16 @@ class exclude extends grade_attribute_format implements be_checked, be_disabled,
                 $this->grade->userid, null, 'singleview', null, FORMAT_MOODLE
             );
 
-            $gradeparams = [
+            $gradeparams = array(
                 'userid' => $this->grade->userid,
                 'itemid' => $this->grade->itemid
-            ];
+            );
 
             $this->grade = grade_grade::fetch($gradeparams);
             $this->grade->grade_item = $gradeitem;
         }
 
-        $state = !($value == 0);
+        $state = $value == 0 ? false : true;
 
         $this->grade->set_excluded($state);
 

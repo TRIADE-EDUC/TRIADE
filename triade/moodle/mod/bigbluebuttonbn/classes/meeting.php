@@ -147,12 +147,12 @@ class meeting {
     }
 
     /**
-     * Number of participants
+     * Total number of moderators and viewers.
      *
      * @return int
      */
     public function get_participant_count() {
-        return $this->get_meeting_info()->participantcount;
+        return $this->get_meeting_info()->totalusercount;
     }
 
     /**
@@ -192,7 +192,7 @@ class meeting {
      *
      * @return string
      */
-    public function get_join_url(): string {
+    public function get_join_url() {
         return bigbluebutton_proxy::get_join_url(
             $this->instance->get_meeting_id(),
             $this->instance->get_user_fullname(),
@@ -204,26 +204,6 @@ class meeting {
             $this->get_meeting_info()->createtime
         );
     }
-
-    /**
-     * Get meeting join URL for guest
-     *
-     * @param string $fullname
-     * @return string
-     */
-    public function get_guest_join_url(string $fullname): string {
-        return bigbluebutton_proxy::get_join_url(
-            $this->instance->get_meeting_id(),
-            $fullname,
-            $this->instance->get_current_user_password(),
-            $this->instance->get_guest_access_url()->out(false),
-            $this->instance->get_current_user_role(),
-            null,
-            0,
-            $this->get_meeting_info()->createtime
-        );
-    }
-
 
     /**
      * Return meeting information for this meeting.
@@ -253,7 +233,7 @@ class meeting {
         $activitystatus = bigbluebutton_proxy::view_get_activity_status($instance);
         // This might raise an exception if info cannot be retrieved.
         // But this might be totally fine as the meeting is maybe not yet created on BBB side.
-        $participantcount = 0;
+        $totalusercount = 0;
         // This is the default value for any meeting that has not been created.
         $meetinginfo->statusrunning = false;
         $meetinginfo->createtime = null;
@@ -262,19 +242,16 @@ class meeting {
         if (!empty($info)) {
             $meetinginfo->statusrunning = $info['running'] === 'true';
             $meetinginfo->createtime = $info['createTime'] ?? null;
-            $participantcount = isset($info['participantCount']) ? $info['participantCount'] : 0;
+            $totalusercount = isset($info['participantCount']) ? $info['participantCount'] : 0;
         }
 
         $meetinginfo->statusclosed = $activitystatus === 'ended';
         $meetinginfo->statusopen = !$meetinginfo->statusrunning && $activitystatus === 'open';
-        $meetinginfo->participantcount = $participantcount;
+        $meetinginfo->totalusercount = $totalusercount;
 
         $canjoin = !$instance->user_must_wait_to_join() || $meetinginfo->statusrunning;
-        // Limit has not been reached or user does not count toward limit.
-        $canjoin = $canjoin && (
-            !$instance->has_user_limit_been_reached($participantcount)
-            || !$instance->does_current_user_count_towards_user_limit()
-            );
+        // Limit has not been reached.
+        $canjoin = $canjoin && (!$instance->has_user_limit_been_reached($totalusercount));
         // User should only join during scheduled session start and end time, if defined.
         $canjoin = $canjoin && ($instance->is_currently_open());
         // Double check that the user has the capabilities to join.
@@ -286,7 +263,7 @@ class meeting {
             $meetinginfo->startedat = floor(intval($info['startTime']) / 1000); // Milliseconds.
             $meetinginfo->moderatorcount = $info['moderatorCount'];
             $meetinginfo->moderatorplural = $info['moderatorCount'] > 1;
-            $meetinginfo->participantcount = $participantcount - $meetinginfo->moderatorcount;
+            $meetinginfo->participantcount = $totalusercount - $meetinginfo->moderatorcount;
             $meetinginfo->participantplural = $meetinginfo->participantcount > 1;
         }
         $meetinginfo->statusmessage = $this->get_status_message($meetinginfo, $instance);
@@ -302,13 +279,6 @@ class meeting {
                 $meetinginfo->attendees[] = (array) $attendee;
             }
         }
-        $meetinginfo->guestaccessenabled = $instance->is_guest_allowed();
-        if ($meetinginfo->guestaccessenabled && $instance->is_moderator()) {
-            $meetinginfo->guestjoinurl = $instance->get_guest_access_url()->out();
-            $meetinginfo->guestpassword = $instance->get_guest_access_password();
-        }
-
-        $meetinginfo->features = $instance->get_enabled_features();
         return $meetinginfo;
     }
 
@@ -322,6 +292,9 @@ class meeting {
      * @return string
      */
     protected function get_status_message(object $meetinginfo, instance $instance): string {
+        if ($instance->has_user_limit_been_reached($meetinginfo->totalusercount)) {
+            return get_string('view_message_conference_user_limit_reached', 'bigbluebuttonbn');
+        }
         if ($meetinginfo->statusrunning) {
             return get_string('view_message_conference_in_progress', 'bigbluebuttonbn');
         }
@@ -379,6 +352,7 @@ class meeting {
         'disableprivatechat' => 'lockSettingsDisablePrivateChat',
         'disablepublicchat' => 'lockSettingsDisablePublicChat',
         'disablenote' => 'lockSettingsDisableNote',
+        'lockonjoin' => 'lockSettingsLockOnJoin',
         'hideuserlist' => 'lockSettingsHideUserList'
     ];
     /**
@@ -415,19 +389,11 @@ class meeting {
         if ($this->instance->get_mute_on_start()) {
             $data['muteOnStart'] = 'true';
         }
-        // Here a bit of a change compared to the API default behaviour: we should not allow guest to join
-        // a meeting managed by Moodle by default.
-        if ($this->instance->is_guest_allowed()) {
-            $data['guestPolicy'] = $this->instance->is_moderator_approval_required() ? 'ASK_MODERATOR' : 'ALWAYS_ACCEPT';
-        }
         // Locks settings.
         foreach (self::LOCK_SETTINGS_MEETING_DATA as $instancevarname => $lockname) {
             $instancevar = $this->instance->get_instance_var($instancevarname);
             if (!is_null($instancevar)) {
                 $data[$lockname] = $instancevar ? 'true' : 'false';
-                if ($instancevar) {
-                    $data['lockSettingsLockOnJoin'] = 'true'; // This will be locked whenever one settings is locked.
-                }
             }
         }
         return $data;
@@ -543,18 +509,16 @@ class meeting {
     }
 
     /**
-     * Prepare join meeting action
+     * Join a meeting.
      *
-     * @param int $origin
-     * @return void
+     * @param int $origin The spec
+     * @return string The URL to redirect to
+     * @throws meeting_join_exception
      */
-    protected function prepare_meeting_join_action(int $origin) {
+    public function join(int $origin): string {
         $this->do_get_meeting_info(true);
         if ($this->is_running()) {
-            if (
-                    $this->instance->has_user_limit_been_reached($this->get_participant_count())
-                    && $this->instance->does_current_user_count_towards_user_limit()
-            ) {
+            if ($this->instance->has_user_limit_been_reached($this->get_participant_count())) {
                 throw new meeting_join_exception('userlimitreached');
             }
         } else if ($this->instance->user_must_wait_to_join()) {
@@ -567,29 +531,6 @@ class meeting {
 
         // Before executing the redirect, increment the number of participants.
         roles::participant_joined($this->instance->get_meeting_id(), $this->instance->is_moderator());
-    }
-    /**
-     * Join a meeting.
-     *
-     * @param int $origin The spec
-     * @return string The URL to redirect to
-     * @throws meeting_join_exception
-     */
-    public function join(int $origin): string {
-        $this->prepare_meeting_join_action($origin);
-        return $this->get_join_url();
-    }
-
-    /**
-     * Join a meeting as a guest.
-     *
-     * @param int $origin The spec
-     * @param string $userfullname Fullname for the guest user
-     * @return string The URL to redirect to
-     * @throws meeting_join_exception
-     */
-    public function guest_join(int $origin, string $userfullname): string {
-        $this->prepare_meeting_join_action($origin);
         return $this->get_join_url();
     }
 }

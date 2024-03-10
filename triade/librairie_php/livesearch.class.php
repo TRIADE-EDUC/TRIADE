@@ -39,10 +39,11 @@ class livesearch {
 	function search($input,$quoi,$target,$form,$champs) {
 
 			
+/*
 		$fp=fopen("./essai.txt","a+");
 		fwrite($fp,"$input:$quoi:$target:$form:$champs:\r\n");
 		fclose($fp);
-	 
+*/	 
 	 	
 
 		$ret = array();

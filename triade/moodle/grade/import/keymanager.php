@@ -31,7 +31,7 @@ $id = required_param('id', PARAM_INT); // course id
 $PAGE->set_url('/grade/import/keymanager.php', array('id' => $id));
 
 if (!$course = $DB->get_record('course', array('id'=>$id))) {
-    throw new \moodle_exception('invalidcourseid');
+    print_error('invalidcourseid');
 }
 
 require_login($course);
@@ -42,7 +42,7 @@ require_capability('moodle/grade:import', $context);
 // Check if the user has at least one grade publishing capability.
 $plugins = grade_helper::get_plugins_import($course->id);
 if (!isset($plugins['keymanager'])) {
-    throw new \moodle_exception('nopermissions');
+    print_error('nopermissions');
 }
 
 $actionbar = new \core_grades\output\import_key_manager_action_bar($context);

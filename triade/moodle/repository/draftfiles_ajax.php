@@ -33,7 +33,7 @@ require_once($CFG->dirroot.'/repository/lib.php');
 $PAGE->set_context(context_system::instance());
 require_login();
 if (isguestuser()) {
-    throw new \moodle_exception('noguest');
+    print_error('noguest');
 }
 require_sesskey();
 

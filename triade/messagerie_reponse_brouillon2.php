@@ -143,8 +143,6 @@ for($i=0;$i<count($data);$i++) {
 	}else{
 	    $destinataire=recherche_eleve($data[$i][2]);
 	}
-
-
 ?>
 <form name="formulaire" method=post onsubmit='return verif_message_envoi()' action='<?php print $action ?>' target='_parent'>
 <BR>
@@ -183,7 +181,7 @@ $idpiecejointe=md5($_SESSION["membre"].$_SESSION["id_pers"].date("YMDHms"));
 
 <div  style="position:absolute; top:700 ;left:100" >
 <table align=center><tr><td>
-<script language=JavaScript>buttonMagicSubmit2('<?php print LANGBT4?>','rien','<?php print LANGBT5 ?>'); //text,nomInput</script>
+<script language=JavaScript>buttonMagicSubmit2('<?php print LANGBT4?>','rien','<?php print LANGBT5 ?>');</script>
 </td></tr></table>
 <br><br>
 </div>

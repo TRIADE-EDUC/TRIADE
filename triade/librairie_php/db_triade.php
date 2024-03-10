@@ -94,6 +94,7 @@ function cnx2() {
 
 				}elseif (preg_match('/base_de_donne_importation32\.php/',$_SERVER['REQUEST_URI'])) {
 
+
 				}elseif (preg_match('/sms-mess-classe2\.php/',$_SERVER['REQUEST_URI'])) {
 					$_POST["message"]=mysql_real_escape_string($_POST["message"]);
 				}elseif (preg_match('/edit_event\.php/',$_SERVER['REQUEST_URI'])) {
@@ -104,7 +105,8 @@ function cnx2() {
                                         $_POST = @array_map('trim', $_POST);
                                         $_COOKIE = @array_map('trim', $_COOKIE);
                                         $_REQUEST = @array_map('trim', $_REQUEST);
-                                        foreach($_GET as $key=>$value){ $_GET[$key] = $cnx->escapeSimple($value);  }
+                                        foreach($_GET as $key=>$value){ $_GET[$key] = $cnx->escapeSimple($value); }
+	                                foreach($_GET as $key=>$value){ $_GET[$key] = htmlspecialchars($value);  }
                                         foreach($_POST as $key=>$value){ $_POST[$key] = $cnx->escapeSimple($value);  }
                                         foreach($_COOKIE as $key=>$value){ $_COOKIE[$key] = $cnx->escapeSimple($value);  }
                                         foreach($_REQUEST as $key=>$value){ $_REQUEST[$key] = $cnx->escapeSimple($value);  }
@@ -124,7 +126,7 @@ function cnx() {
 	if (!$cnx) { 
 		$cnx = DB::connect($dsn);
 		if(DB::isError($cnx)){
-			//exit($cnx->getMessage());
+			exit($cnx->getMessage());
 		}else{
 			if ((! @file_exists("./data/install_log/noaccess.inc")) && (! @file_exists("../../../common/stop.triade"))) {
 				if (!get_magic_quotes_gpc()) {
@@ -201,6 +203,7 @@ function cnx() {
 					}elseif (preg_match('/export_personnel_2\.php/',$_SERVER['REQUEST_URI'])) {
 					}elseif (preg_match('/circulaire_ajout2\.php/',$_SERVER['REQUEST_URI'])) {
 					}elseif (preg_match('/gestion_abs_retard_du_jour_misaj2\.php/',$_SERVER['REQUEST_URI'])) {
+					}elseif (preg_match('/messagerie_creat_grpmail2\.php/',$_SERVER['REQUEST_URI'])) {
 					}elseif (preg_match('/gestion_stage_affec_eleve\.php/',$_SERVER['REQUEST_URI'])) {
 					// rien
 					}else{
@@ -209,6 +212,7 @@ function cnx() {
 	                                        $_COOKIE = @array_map('trim', $_COOKIE);
 	                                        $_REQUEST = @array_map('trim', $_REQUEST);
 	                                        foreach($_GET as $key=>$value){ $_GET[$key] = $cnx->escapeSimple($value);  }
+	                                        foreach($_GET as $key=>$value){ $_GET[$key] = htmlspecialchars($value);  }
 	                                        foreach($_POST as $key=>$value){ $_POST[$key] = $cnx->escapeSimple($value);  }
 	                                        foreach($_COOKIE as $key=>$value){ $_COOKIE[$key] = $cnx->escapeSimple($value);  }
 	                                        foreach($_REQUEST as $key=>$value){ $_REQUEST[$key] = $cnx->escapeSimple($value);  }
@@ -482,8 +486,6 @@ function accent_import($chaine)	{
 	$chaine=str_replace('"',"[DblQuote]",$chaine);
 	$chaine=str_replace('’',"[Quote2]",$chaine);
 	$chaine=str_replace('ç',"[ccdile]",$chaine);
-
-	
 	$chaine=str_replace('ó',"[ocute]",$chaine);
 	$chaine=str_replace('á',"[acute]",$chaine);
 	$chaine=str_replace('ñ',"[ntild]",$chaine);
@@ -850,7 +852,6 @@ function create_personnel_prof($nom,$pren,$mdp,$tp,$civ,$pren2='',$adr,$codepost
 	}
 
 	if (VERIFPASS == "oui") {
-
 		if (SECURITE == 3) {
 			if ( (strlen($mdp) < 8) || (!preg_match('/[a-z]/',$mdp)) || (!preg_match('/[A-Z]/',$mdp)) || (!preg_match('/[0-9]/',$mdp)) ) {
 				return -3 ;
@@ -1900,7 +1901,7 @@ $sql=<<<EOF
 		)
 EOF;
 		$rc=execSql($sql);
-		$UID=mysqli_insert_id();
+		$UID=$cnx->connection->insert_id;
 
 		if (AUTOINE == "oui") {
 			$INE=$annee_scolaire."-".$UID;
@@ -3150,7 +3151,7 @@ function affRetarddujour2($date) {
 function affRetarddujour3($date) {
         global $cnx;
 	global $prefixe;
-	if (preg_match('\//',$date)) { $date=dateFormBase($date); }
+	if (preg_match('/\//',$date)) { $date=dateFormBase($date); }
         $sql="SELECT r.elev_id, r.heure_ret, r.date_ret, r.date_saisie, r.origin_saisie, r.duree_ret, r.motif, r.idmatiere, r.justifier, r.heure_saisie,  r.creneaux , r.smsenvoye FROM ${prefixe}retards r, ${prefixe}eleves e, ${prefixe}classes c WHERE r.elev_id=e.elev_id AND  c.code_class=e.classe AND r.date_ret='$date' ORDER BY c.libelle,e.nom, r.date_ret DESC , r.heure_ret DESC ";
         $res=execSql($sql);
         $data=chargeMat($res);
@@ -4908,7 +4909,7 @@ function affClasse(){
 function affClasseSansOffline() {
 	global $cnx;
 	global $prefixe;
-        $sql="SELECT code_class,libelle,desclong,offline,idsite,niveau FROM ${prefixe}classes  ORDER BY libelle ";
+        $sql="SELECT code_class,libelle,desclong,offline,idsite,niveau,noconnexion FROM ${prefixe}classes  ORDER BY libelle ";
         $res=execSql($sql);
         $data=chargeMat($res);
         return $data;
@@ -5450,11 +5451,34 @@ function create_matiere_2($nom_matiere,$nom_matiere_long,$code_matiere="",$libel
 	$res=execSql($sql);
 	$data=chargeMat($res);
 	freeResult($res);
-	if(count($data) > 0 ) return(false); 
+	if(count($data) > 0 ) { return(false); }
+	$mat=stripslashes($mat);
+	$nom_matiere_long=stripslashes($nom_matiere_long);
+	$code_matiere=stripslashes($code_matiere);
+	$libelle_en=stripslashes($libelle_en);
 	$sql="INSERT INTO ${prefixe}matieres(libelle,sous_matiere,libelle_long,code_matiere,libelle_en) VALUES ('$mat','0','$nom_matiere_long','$code_matiere','$libelle_en')";
  	return(execSql($sql));
 }
 
+function create_matiere_3($nom_matiere,$nom_matiere_long,$code_matiere="",$libelle_en) {
+        global $cnx;
+	global $prefixe;
+	$mat=trim($nom_matiere);
+	$matTmp=explode(" ",$mat);
+	$mat='';// espace indispensable pour la base de données et l'affichage
+	foreach($matTmp as $tmp) {
+		trim($tmp);
+		$mat .= $tmp." ";
+	}
+	$mat=trim($mat);
+	$sql="SELECT * FROM ${prefixe}matieres WHERE libelle='$nom_matiere'";
+	$res=execSql($sql);
+	$data=chargeMat($res);
+	freeResult($res);
+	if(count($data) > 0 ) { return(false); }
+	$sql="INSERT INTO ${prefixe}matieres(libelle,sous_matiere,libelle_long,code_matiere,libelle_en) VALUES ('$mat','0','$nom_matiere_long','$code_matiere','$libelle_en')";
+ 	return(execSql($sql));
+}
 
 
 function mise_ajoutCouleurMatiere($id,$couleur) {
@@ -6821,7 +6845,9 @@ function modif_pers_passe($id,$pass,$type,$envoiMail="non",$email="") {
                 $prenom=addslashes($prenom);
                 delete_inscription($nom,$prenom,$type);
                 if ($envoiMail == "oui") {
-                        if ((ValideMail($email)) && (trim($pass) != "")) { envoiMotDePasse($email,stripslashes($nom),stripslashes($prenom),$pass,$type_membre); }
+                        if ((ValideMail($email)) && (trim($pass) != "")) { 
+				envoiMotDePasse($email,stripslashes($nom),stripslashes($prenom),$pass,$type_membre); 
+			}
                 }
                 return 1;
         }else{
@@ -7227,7 +7253,10 @@ function select_suppleant() {
 		   $id=$data[0][0];
 	   	   $nom=strtoupper(trim($data[0][1]));
 		   $prenom=ucwords(trim($data[0][2]));
-		   print "<option id='select1' value='$id'>$nom $prenom</option>";
+		   $tab[$id]="$nom $prenom";
+		}
+		foreach($tab as $key=>$value) {
+		   print "<option id='select1' value='$key'>$value</option>";
 		}
 	}
 }
@@ -7235,10 +7264,8 @@ function select_suppleant() {
 function supp_suppleant($pid) {
 	global $cnx;
 	global $prefixe;
-	//nécessite une transaction
 	$sqla="DELETE FROM ${prefixe}vacataires WHERE pers_id='$pid'";
-	$sqlb="DELETE FROM ${prefixe}personnel WHERE pers_id='$pid'";
-	if( execSql($sqla) && execSql($sqlb) ) {
+	if(execSql($sqla)) {
 		return 1;
 	}else {
 		return 0;
@@ -8922,7 +8949,7 @@ EOF;
 $sql=<<<EOF
 SELECT COUNT(*) FROM ${prefixe}eleves
 WHERE
-	lower(trim(nom))='$in' AND lower(trim(prenom))='$ip' AND ( passwd='$ipwd' OR passwd_parent_2='$ipwd' )
+	lower(trim(nom))='$in' AND lower(trim(prenom))='$ip' AND compte_inactif='0' AND ( passwd='$ipwd' OR passwd_parent_2='$ipwd' )
 EOF;
 	}else if($im == 'eleve') {
 $sql=<<<EOF
@@ -9199,7 +9226,7 @@ ORDER BY code_classe
 
 
 
-function visu_affectation_detail($id_classe,$anneeScolaire) {
+function visu_affectation_detail($id_classe,$anneeScolaire="") {
 	global $cnx;
 	global $prefixe;
 	if ($anneeScolaire == '') $anneeScolaire=$_COOKIE["anneeScolaire"];
@@ -9641,6 +9668,8 @@ function envoi_messagerie($emetteur,$destinataire,$objet,$text,$date,$heure,$typ
 	    $objet = addslashes($objet);
 	    $text = addslashes($text);
 	}
+	
+	$objet=strip_tags($objet);
 
 	$nbenvoi=0;
 	if (FORWARDMAIL == "oui") {
@@ -9661,7 +9690,6 @@ function envoi_messagerie($emetteur,$destinataire,$objet,$text,$date,$heure,$typ
                   envoi_mail_forward($nomemetteur,$prenomemetteur,$text,$email,$lien,recherche_personne($emetteur),$number,$objet,$destinataire) ;
             }
         }
-
 	
 	if ($type_personne_dest == "GRPMAIL") {
 		$idgroupe=$destinataire;
@@ -10355,6 +10383,7 @@ $lib=$options[$i][1];
 $lib=preg_replace('/0/', " ", $lib); // j'ai rajouter mais si la matiere contient un zero il sera remplace par un blanc
 $libtitle=$lib;
 $lib=trunchaine($lib,40);
+$lib=stripslashes($lib);
 $selectOptions .= <<<HTML
 <option value="$val" id='select1' title="$libtitle"  >$lib</option>
 HTML;
@@ -10459,7 +10488,7 @@ for($cpt=0;$cpt<count($groupes);$cpt++){
         }
         $explod=array_unique($explod);
 
-        $sl = $groupes[$cpt][1];
+        $sl = accent_import($groupes[$cpt][1]);
 
         foreach($explod as $tmp){
                 if( strtolower(trim($tmp)) == strtolower(trim($nomClasse)) ) {
@@ -10545,6 +10574,7 @@ function htmlTrMat($mat){
                                                 $matiere=preg_replace('/0$/',"",trim($matiere));  // supprime le ZERO des sous matieres
                                         }
                                 }
+				$matiere=stripslashes($matiere);
                                 print "\t<td valign=top ><font class=T2>&nbsp;".$matiere."</font></td>\n" ;
                         }
                         print("</tr>\n");
@@ -11830,8 +11860,8 @@ function history_cmd($user_cmd,$cmd,$com){
 	if (trim($user_cmd) != "") {
 		$time_cmd=dateHIS();
 		$date_cmd=dateDMY2();
-		$com=addslashes(utf8_decode($com));
-		$user_cmd=addslashes(utf8_decode($user_cmd));
+		$com=addslashes($com);
+		$user_cmd=addslashes($user_cmd);
 		$sql="INSERT INTO ${prefixe}history_cmd (time_cmd,date_cmd,user_cmd,cmd,commentaire) VALUES ('$time_cmd','$date_cmd','$user_cmd','$cmd','$com')";
 		execSql($sql);
 	}
@@ -11913,6 +11943,7 @@ function supprimer_rep ($tableau) { // fonction pour supprimer un ou plusieurs r
 // Module de sauvegarde complete
 //------------------------------
 function sauvegarde_total($user,$mdp) {
+/*
 	nettoyage_repertoire("./data/sauvegarde");
 	$fichier=fopen("./data/tempo","w");
 	$donnee=fwrite($fichier,"$mdp");
@@ -11925,12 +11956,14 @@ function sauvegarde_total($user,$mdp) {
 	exec('tar cvf ./data/sauvegarde/'.$fic_sauve.'.tar .');
 	// return
 	$ficok="./data/sauvegarde/$fic_sauve";
-    return $ficok;
+    	return $ficok;
+*/
 }
 
 // Module de restauration complete
 //--------------------------------
 function restauration_total($user,$mdp,$ficsql) {
+/*
 	$fichier=fopen("./data/tempo","w");
 	$donnee=fwrite($fichier,"$mdp");
 	fclose($fichier);
@@ -11938,6 +11971,7 @@ function restauration_total($user,$mdp,$ficsql) {
 	unlink("./data/tempo");
 	// return
 	return 1;
+*/
 }
 // -----
 
@@ -13142,7 +13176,7 @@ function select_stage_nom($idclasse) {
 	{
 		$dateDebut=dateForm($data[$i][3]);
 		$dateFin=dateForm($data[$i][4]);
-    		print "<option id='select1' value='".$data[$i][0]."' >".ucwords($data[$i][1])." ($dateDebut - $dateFin)  </option>\n";
+    		print "<option id='select1' value='".$data[$i][0]."' >".stripslashes(ucwords($data[$i][1]))." ($dateDebut - $dateFin)  </option>\n";
 	}
 }
 
@@ -14409,7 +14443,7 @@ function create_resa($equipement,$date,$idpers,$heure1,$heure2,$info,$confirm=0,
 		$date=dateFormBase($date);
 		$sql="INSERT INTO ${prefixe}resa_liste(idmatos,idqui,quand,heure_depart,heure_fin,info,valider) VALUES ('$equipement','$idpers','$date','$heure1','$heure2','$info','$valid')";
 		$cr=execSql($sql);
-		$idResaListe=mysqli_insert_id();
+		$idResaListe=$cnx->connection->insert_id;
 		if ($cr == 1) {
 			$CODE=md5(date("H:m:sd/m/Y").rand(1000,9999));
 			
@@ -14463,7 +14497,7 @@ function create_resa($equipement,$date,$idpers,$heure1,$heure2,$info,$confirm=0,
 		if ($cr == 0) {
 			foreach($tabsql as $key=>$sql) {
 				$cr=execSql($sql);
-				$idResaListe=mysqli_insert_id();
+				$idResaListe=$cnx->connection->insert_id;
 				if ($cr == 1) {
 					$sql=$tabsql2[$key];
 					execSql($sql);
@@ -14559,7 +14593,7 @@ function create_resa2($equipement,$date,$idpers,$heure1,$heure2,$info,$confirm=0
 		}else{
 			$sql="INSERT INTO ${prefixe}resa_liste(idmatos,idqui,quand,heure_depart,heure_fin,info,valider,id_edt_seance) VALUES ('$equipement','$idpers','$date','$heure1','$heure2','$info','$valid','$id_edt_seances')";
 			$cr=execSql($sql);
-			$idResaListe=mysqli_insert_id();
+			$idResaListe=$cnx->connection->insert_id;
 		}
 	}else{
 
@@ -14603,7 +14637,7 @@ function create_resa2($equipement,$date,$idpers,$heure1,$heure2,$info,$confirm=0
 			foreach($tabsql as $key=>$sql) {
 				if ($update == 0) {
 					$cr=execSql($sql);
-					$idResaListe=mysqli_insert_id();
+					$idResaListe=$cnx->connection->insert_id;
 				}else{
 					execSql($sql);
 					$sql="SELECT id FROM ${prefixe}resa_liste WHERE id_edt_seance='$id_edt_seances'";
@@ -14897,7 +14931,7 @@ function envoi_mail_forward($nom,$prenom,$texte,$email,$lien,$emetteur,$number,$
        $mail=trim($data[$i][5]);
   }
 
-  $message ="
+  $message =utf8_decode("
 <b>Messagerie TRIADE</b><br>
 <br>
 	Bonjour,<br>
@@ -14930,7 +14964,7 @@ $adresse<br>
 $ville - $postal<br>
 $tel - $mail<br>
 <br>
-";
+");
   $to = trim($email);
   $objet=TextNoAccent($objet) ;
   $objet=stripslashes($objet);
@@ -17685,21 +17719,30 @@ function envoi_message_par_mail($sujet,$message,$to,$from,$nom_expediteur) {
 
 function mailTriade($sujet,$message1,$message2,$to,$from,$reply,$nom_expediteur,$fichierjoint) {
 
+	if (file_exists("./common/config-mailing.php")) include_once("./common/config-mailing.php");
+	if (file_exists("../common/config-mailing.php")) include_once("../common/config-mailing.php");
+	if (file_exists("../../common/config-mailing.php")) include_once("../../common/config-mailing.php");
 
-	$nom_expediteur=MAILNOMREPLY;
+	$file=$fichierjoint;
+
 	//---------------------
 	//DECLARE LES VARIABLES
 	//---------------------
+	$nom_expediteur=MAILNOMREPLY;
 	$sujet=stripslashes($sujet);
 	$email_expediteur=MAILREPLY;
 	$email_reply=$from;
 	$destinataire=$to;
 
+
+	$messageAPI=$message2;
         $message1=preg_replace('#(\\\\r|\\\\r\\\\n|\\\\n)#', ' ',$message1);
         $message1=preg_replace('/\\\\\\\/','',$message1);
         $message2=preg_replace('#(\\\\r|\\\\r\\\\n|\\\\n)#', ' ',$message2);
         $message2=preg_replace('/\\\\\\\/','',$message2);
 
+	$messageAPI=stripslashes($messageAPI);
+        $messageAPI=preg_replace('#(\\\\r|\\\\r\\\\n|\\\\n)#', ' ',$messageAPI);
 
 	$message_texte=$message1;
 	$message_html=$message2;
@@ -17821,18 +17864,134 @@ ________________________________________________________________________________
 		}
         }
 
-        //Test Thomas Trachet
+        //Test Thomas 
         //Ligne ajoutee :
         $message .= '--'.$frontiere.'--'."$ret";
-	if (preg_match('/,/',$destinataire)) {
-		mail($destinataire,$sujet,$message,$headers); 
-		history_cmd("MAILING","MAILING","Email envoyé à $destinataire");
-	}else{
-		if (ValideMail($destinataire)) { 
-			mail($destinataire,$sujet,$message,$headers); 
-	//	print "mail($destinataire,$sujet,$message,$headers)";
+
+
+	$mailServeurTriade="oui";
+	if (defined(MAILINGKEY)) {
+		if (curlTriadeMailingVerif()) $mailServeurTriade="non";
+	}	
+
+	if ($mailServeurTriade != "oui") {
+		if (preg_match('/,/',$destinataire)) {
+			curlTriadeMailing($destinataire,$sujet,$messageAPI,$file);
 			history_cmd("MAILING","MAILING","Email envoyé à $destinataire");
+		}else{
+			if (ValideMail($destinataire)) { 
+				curlTriadeMailing($destinataire,$sujet,$messageAPI,$file);
+				history_cmd("MAILING","MAILING","Email envoyé à $destinataire");
+			}
 		}
+	}else{
+		if (preg_match('/,/',$destinataire)) {
+			mail($destinataire,$sujet,$message,$headers); 
+			history_cmd("MAILING","MAILING","Email envoyé à $destinataire");
+		}else{
+			if (ValideMail($destinataire)) { 
+				mail($destinataire,$sujet,$message,$headers); 
+				history_cmd("TRIADE-MAILING","MAILING","Email envoyé à $destinataire");
+			}
+		}
+	}
+}
+
+
+function curlFile($file) {
+	return new CURLFile(realpath($file["tmp_name"]),$file["type"],$file["name"]);
+}
+
+
+function curlTriadeMailingVerif() {
+	
+	if (file_exists("./common/config-mailing.php")) include_once("./common/config-mailing.php");
+	if (file_exists("../common/config-mailing.php")) include_once("../common/config-mailing.php");
+	if (file_exists("../../common/config-mailing.php")) include_once("../../common/config-mailing.php");
+	if (file_exists("./common/config2.inc.php")) include_once("./common/config2.inc.php");
+	if (file_exists("../common/config2.inc.php")) include_once("../common/config2.inc.php");
+	if (file_exists("../../common/config2.inc.php")) include_once("../../common/config2.inc.php");
+	if (file_exists("./common/productId.php")) include_once("./common/productId.php");
+	if (file_exists("../common/productId.php")) include_once("../common/productId.php");
+	if (file_exists("../../common/productId.php")) include_once("../../common/productId.php");
+
+	$mailingkey=MAILINGKEY;
+	$mailurl=MAILURL;
+	$mailnomreply=MAILNOMREPLY;
+	$mailreply=MAILREPLY;
+	$productId=PRODUCTID;
+	$url=$_SERVER["SERVER_NAME"];
+
+	$ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, "${mailurl}/mailverif.php");
+        curl_setopt($ch, CURLOPT_HEADER,array('content-type: multipart/form-data'));
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_SAFE_UPLOAD, true);
+        $datas = http_build_query(array("mailingkey"=>"$mailingkey",
+                        "productId"=>"$productId",
+                        "url"=>"$url"));
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $datas);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 20);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+        curl_setopt($ch, CURLOPT_MAXREDIRS, 10);
+        curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0');
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
+        $reponse=curl_exec($ch);	
+	if (preg_match('/nonmailingtriade/',$reponse)) { 
+		return(false);
+	}else{
+		return(true);
+	}
+}
+
+function curlTriadeMailing($destinataire,$sujet,$message,$file) {
+
+	if (file_exists("./common/config-mailing.php")) include_once("./common/config-mailing.php");
+	if (file_exists("../common/config-mailing.php")) include_once("../common/config-mailing.php");
+	if (file_exists("../../common/config-mailing.php")) include_once("../../common/config-mailing.php");
+	if (file_exists("./common/config2.inc.php")) include_once("./common/config2.inc.php");
+	if (file_exists("../common/config2.inc.php")) include_once("../common/config2.inc.php");
+	if (file_exists("../../common/config2.inc.php")) include_once("../../common/config2.inc.php");
+	if (file_exists("./common/productId.php")) include_once("./common/productId.php");
+	if (file_exists("../common/productId.php")) include_once("../common/productId.php");
+	if (file_exists("../../common/productId.php")) include_once("../../common/productId.php");
+
+	$mailingkey=MAILINGKEY;
+	$mailurl=MAILURL;
+	$mailnomreply=MAILNOMREPLY;
+	$mailreply=MAILREPLY;
+	$productId=PRODUCTID;
+	$url=$_SERVER["SERVER_NAME"];
+
+	$ch = curl_init();
+	$cfile = curl_file_create("$file");
+	curl_setopt($ch, CURLOPT_URL, "${mailurl}/mail.php");
+	curl_setopt($ch, CURLOPT_HEADER,array('content-type: multipart/form-data'));
+	curl_setopt($ch, CURLOPT_POST, true);
+	curl_setopt($ch, CURLOPT_SAFE_UPLOAD, true);
+	$datas = http_build_query(array("to"=>"$destinataire",
+			"objet"=>"$sujet",
+			"message"=>"$message",
+			"id"=>"$mailingkey",
+			"mailreply"=>"$mailreply",
+			"productId"=>"$productId",
+			"url"=>"$url",
+			"file" => curlFile($file),
+			"mailnomreply"=>"$mailnomreply"));
+	curl_setopt($ch, CURLOPT_POSTFIELDS, $datas);
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+	curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 20); 
+	curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+	curl_setopt($ch, CURLOPT_MAXREDIRS, 10);
+	curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0');
+	curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
+	$reponse=curl_exec($ch);
+	if (curl_errno($ch)) {
+	//	echo curl_error($ch);
+	//	$f_pass=fopen("./data/debug.txt","a+");
+	//	fwrite($f_pass,$ligne);
+	//	fclose($f_pass);
 	}
 }
 
@@ -19755,11 +19914,8 @@ L'Equipe TRIADE.<br>
 	$from = 'From: "'.$nom_expediteur.'" <'.$email_expediteur.'>'."$ret";
 	$headers=$from;
 	$email_expediteur=trim($email_expediteur);
-
 //	print "$sujet,$message,$message,"$to",$email_expediteur,$email_expediteur,$nom_expediteur<hr>"; exit;
-
 	mailTriade($sujet,$message,$message,"$to",$email_expediteur,$email_expediteur,$nom_expediteur,"");
-
 }
 
 
@@ -24849,10 +25005,6 @@ function rechercheCompteEmailMdpPersonnel($email,$membre='') {
 	return("");
 }
 
-
-
-
-
 function modifPassOublie($mdp0,$idpers,$membre,$email) {
         global $cnx;
 	global $prefixe;
@@ -24907,17 +25059,12 @@ Le service ENT Vatel<br>
 			$sujet = "$objet";
   			$nom_expediteur=expediteur_triade();
   			$email_expediteur=MAILREPLY;
-//	  		$message=TextNoAccent($message);
-			
   			$ret="\n";
 	  		if (PHP_OS == "WINNT") {  $ret="\r\n"; }	
-
   			$from = 'From: "'.$nom_expediteur.'" <'.$email_expediteur.'>'."$ret";
   			$headers=$from;
   			$email_expediteur=trim($email_expediteur);
-  			//print "to : $to, Sujet : $sujet , From:$from <br>  <hr>";
   			if (ValideMail($to) && (ValideMail($email_expediteur)) ) {
-				//mail($to, $sujet, $message,$headers);
 				mailTriade($sujet,$message,$message,$to,$email_expediteur,$email_expediteur,$nom_expediteur,"");
 			}
 		}
@@ -25393,6 +25540,7 @@ function recupInfoM($id_pers,$idparent,$membre) {
 	global $prefixe;
 	if ($membre == "menuparent") {
 		if ($idparent == 2) $suite="_resp_2";
+		if ($idparent == "") $idparent="1";
 		$sql="SELECT email$suite,civ_$idparent  FROM ${prefixe}eleves WHERE elev_id='$id_pers' AND `mailing_tu$idparent`='0'";
 	}elseif($membre == "menueleve") {
 		$sql="SELECT email_eleve,sexe FROM ${prefixe}eleves WHERE elev_id='$id_pers' AND mailing_el='0'";
@@ -25427,9 +25575,10 @@ function nb2space($chaine) {
 function check_rib($cbanque, $cguichet, $nocompte, $clerib) {
         $tabcompte = "";
         $len = strlen($nocompte);
-        if ($len != 11) {
+        if ($len < 11) {
                 return false;
         }
+
         for ($i = 0; $i < $len; $i++) {
                 $car = substr($nocompte, $i, 1);
                 if (!is_numeric($car)) {
@@ -25442,7 +25591,7 @@ function check_rib($cbanque, $cguichet, $nocompte, $clerib) {
                 }
         }
         $int = $cbanque . $cguichet . $tabcompte . $clerib;
-        return (strlen($int) >= 21 && bcmod($int, 97) == 0);
+        return (strlen($int) >= 20 && bcmod($int, 97) == 0);
 }
 
 
@@ -25556,27 +25705,48 @@ function verifierIBAN($iban){
         return (intval(bcmod($tmpiban,"97")) == 1);
 }
 
-function isValideIBAN ($s_IBAN) {
-        // Vérification que le numéro IBAN est bien défini
-        if(empty($s_IBAN)) return false;
- 
-        // Nettoyage des caractères de formatage et mise en Capital
-        $s_IBAN = strtoupper(trim($s_IBAN));
-        /* Vérification de l'IBAN par rapport au modèle :
-                - Ne comporte pas ' espace , . / - ? : ( ) , " +
-                - Suppression des caractères IBAN en début de phrase si présent
-                - Déplacement des 4 premiers caractères (2 lettres et 2 chiffres) à la fin de la chaîne
-                - Remplacement des caractères alphabétiques comme suit : A->10, B->11 C->12... Z->35
-                - Vérifie que le modulo 97 donne 1
-        */
-        $s_modele = array('/[\'\s\/\-\?:\(\)\.,"\+]/', '/^IBAN(.+)/', '/([[:alpha:]]{2}[[:digit:]]{2})([[:alnum:]]+)/', "/([A-Z])/e");
-        $s_retour = array('', '\1', '\2\1', "ord('\\1')-55");
-        $i_IBAN = preg_replace($s_modele, $s_retour, $s_IBAN);
- 
-        return (bcmod($i_IBAN, 97) == 1) ;
+function isValideIBAN ($iban) {
+  $iban = strtolower($iban);
+  $Countries = array(
+    'al'=>28,'ad'=>24,'at'=>20,'az'=>28,'bh'=>22,'be'=>16,'ba'=>20,'br'=>29,'bg'=>22,'cr'=>21,'hr'=>21,'cy'=>28,'cz'=>24,
+    'dk'=>18,'do'=>28,'ee'=>20,'fo'=>18,'fi'=>18,'fr'=>27,'ge'=>22,'de'=>22,'gi'=>23,'gr'=>27,'gl'=>18,'gt'=>28,'hu'=>28,
+    'is'=>26,'ie'=>22,'il'=>23,'it'=>27,'jo'=>30,'kz'=>20,'kw'=>30,'lv'=>21,'lb'=>28,'li'=>21,'lt'=>20,'lu'=>20,'mk'=>19,
+    'mt'=>31,'mr'=>27,'mu'=>30,'mc'=>27,'md'=>24,'me'=>22,'nl'=>18,'no'=>15,'pk'=>24,'ps'=>29,'pl'=>28,'pt'=>25,'qa'=>29,
+    'ro'=>24,'sm'=>27,'sa'=>24,'rs'=>22,'sk'=>24,'si'=>19,'es'=>24,'se'=>24,'ch'=>21,'tn'=>24,'tr'=>26,'ae'=>23,'gb'=>22,'vg'=>24
+  );
+  $Chars = array(
+    'a'=>10,'b'=>11,'c'=>12,'d'=>13,'e'=>14,'f'=>15,'g'=>16,'h'=>17,'i'=>18,'j'=>19,'k'=>20,'l'=>21,'m'=>22,
+    'n'=>23,'o'=>24,'p'=>25,'q'=>26,'r'=>27,'s'=>28,'t'=>29,'u'=>30,'v'=>31,'w'=>32,'x'=>33,'y'=>34,'z'=>35
+  );
+
+  if (strlen($iban) != $Countries[ substr($iban,0,2) ]) { return false; }
+
+  $MovedChar = substr($iban, 4) . substr($iban,0,4);
+  $MovedCharArray = str_split($MovedChar);
+  $NewString = "";
+
+  foreach ($MovedCharArray as $k => $v) {
+
+    if ( !is_numeric($MovedCharArray[$k]) ) {
+      $MovedCharArray[$k] = $Chars[$MovedCharArray[$k]];
+    }
+    $NewString .= $MovedCharArray[$k];
+  }
+  if (function_exists("bcmod")) { return bcmod($NewString, '97') == 1; }
+
+  // http://au2.php.net/manual/en/function.bcmod.php#38474
+  $x = $NewString; $y = "97";
+  $take = 5; $mod = "";
+
+  do {
+    $a = (int)$mod . substr($x, 0, $take);
+    $x = substr($x, $take);
+    $mod = $a % $y;
+  }
+  while (strlen($x));
+
+  return (int)$mod == 1;
 }
-
-
 
 function suppPeriodeEdt($dateDebut,$dateFin) {
 	global $cnx;
@@ -25919,10 +26089,18 @@ function recupListFichierPartager($idpers,$membre) {
 	global $cnx;
 	global $prefixe;
 	$sql="SELECT fichier,chemin,membreIdProprio,membreIdAutorise,idclasse,membresource,idsource,id FROM ${prefixe}stockage_partage 
-		     WHERE membreIdAutorise='$membre$idpers' ";
+	      WHERE membreIdAutorise='$membre$idpers' ";
         $res=execSql($sql);
         $data=ChargeMat($res);
 	return($data);
+}
+
+
+function suppFichierPartager($id) {
+	global $cnx;        
+	global $prefixe;
+	$sql="DELETE FROM ${prefixe}stockage_partage WHERE id='$id'";
+	execSql($sql);
 }
 
 function recupListFichierPartagerViaId($id) {
@@ -27150,6 +27328,146 @@ function verifTable() {
         global $prefixe;
         $sql="ALTER TABLE ${prefixe}eleves CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;";
         execSql($sql);
+}
+
+
+function recupColor() {
+	include_once('./common/config2.inc.php');
+	$graph=GRAPH;
+	if ($graph == "0") return("#B2CADE");
+	if ($graph == "1") return("#666666");
+	if ($graph == "2") return("#CC6666");
+	if ($graph == "3") return("#66CC66");
+	if ($graph == "4") return("#F1B100");
+	if ($graph == "5") return("#99CC66");
+	if ($graph == "6") return("#FF9797");
+	if ($graph == "7") return("#52251C");
+	if ($graph == "8") return("#91127d");
+	if ($graph == "9") return("#6699FF");
+	if ($graph == "10") return("#94C11F");
+	if ($graph == "11") return("#6699FF");
+	if ($graph == "12") return("#09C");
+	if ($graph == "13") return("#F98F3C");
+	if ($graph == "14") return("#6699FF");
+	if ($graph == "15") return("#91127d");
+	if ($graph == "16") return("#bd2d24");
+	if ($graph == "17") return("#C63f36");
+	if ($graph == "18") return("#c90128");
+	if ($graph == "19") return("#000000");
+	if ($graph == "20") return("#FF7F00");
+
+	if ($graph == "21") return("#CC6666");
+	if ($graph == "22") return("#CC6666");
+	if ($graph == "23") return("#CC6666");
+	if ($graph == "24") return("#CC6666");
+	if ($graph == "25") return("#CC6666");
+	if ($graph == "26") return("#CC6666");
+	if ($graph == "27") return("#CC6666");
+	if ($graph == "28") return("#CC6666");
+	if ($graph == "29") return("#CC6666");
+	if ($graph == "30") return("#CC6666");
+
+	if ($graph == "31") return("#67546e");
+	return("#67546e");
+}
+
+
+function verifCompteIntraMsn($email) {
+	global $cnx;
+        global $prefixe;
+        $sql="SELECT unique_id FROM ${prefixe}users WHERE email='$email'";
+        $res=@execSql($sql);
+        $data=chargeMat($res);	
+	if(count($data)) {
+		$_SESSION["unique_id"]=$data[0][0];
+		return(count($data));
+	}else{
+		return(0);
+	}
+}
+
+
+function verifCnxIntraMsn() {
+	global $cnx;
+        global $prefixe;
+	$time=time();
+	$time=$time-1000;
+	$sql="UPDATE ${prefixe}users SET status='Offline now' WHERE status='Active now' AND update_sync > '$time'";
+	@execSql($sql);
+}
+
+function recupImageIntraMSN($id) {
+	global $cnx;
+        global $prefixe;
+	$sql="SELECT img FROM ${prefixe}users WHERE unique_id='$id'";
+	$res=@execSql($sql);
+        $data=chargeMat($res);
+	return($data[0][0]);	
+}
+
+function recupUniqueIdIntraMsn($email) {
+	global $cnx;
+        global $prefixe;
+        $sql="SELECT unique_id  FROM ${prefixe}users WHERE email='$email'";
+        $res=@execSql($sql);
+        $data=chargeMat($res);
+        return($data[0][0]);
+}
+
+function updateImageIntraMsn($imgID,$id) {
+	global $cnx;
+        global $prefixe;
+	$imgId=basename($imgID);
+        $sql="UPDATE ${prefixe}users SET img='$imgId'  WHERE unique_id='$id' ";
+        @execSql($sql);
+}
+
+function recupInfoCompte($code) {
+	global $cnx;
+        global $prefixe;
+	$sql="SELECT id_pers,membre FROM ${prefixe}codebar WHERE id='$code' AND valide='1'";
+	$res=@execSql($sql);
+        $data=chargeMat($res);
+	if (count($data)) {
+		$idpers=$data[0][0];
+		if ($data[0][1] == "menueleve") {
+			$sql="SELECT elev_id,nom,prenom,classe,compte_inactif,annee_scolaire  FROM ${prefixe}eleves  WHERE  elev_id='$idpers' ";
+			$res=@execSql($sql);
+		        $data=chargeMat($res);
+		}else{
+			$sql="SELECT pers_id,nom,prenom,type_pers,offline FROM ${prefixe}personnel WHERE pers_id='$idpers' ";
+			$res=@execSql($sql);
+		        $data=chargeMat($res);
+		}
+		return($data);
+	}else{
+		return;
+	}
+}
+
+function recupImgIntraMsn($email) {
+	global $cnx;
+        global $prefixe;
+        $sql="SELECT img  FROM ${prefixe}users WHERE email='$email'";
+        $res=@execSql($sql);
+        $data=chargeMat($res);
+        return($data[0][0]);
+}
+
+function modifOffline($id,$offline) {
+        global $cnx;
+        global $prefixe;
+        $sql="UPDATE ${prefixe}classes  SET noconnexion='$offline' WHERE code_class='$id'";
+        return(execSql($sql));
+}
+
+function chercherOfflineClasse($id) {
+        global $cnx;
+        global $prefixe;
+        $sql="SELECT noconnexion FROM ${prefixe}classes WHERE code_class='$id'";
+        $res=execSql($sql);
+        $data=chargeMat($res);
+        return ($data[0][0]);
 }
 
 ?>

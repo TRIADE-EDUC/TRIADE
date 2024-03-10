@@ -38,38 +38,38 @@ require_once($CFG->dirroot . '/mod/wiki/locallib.php');
 require_once($CFG->dirroot . '/mod/wiki/pagelib.php');
 
 if (!confirm_sesskey()) {
-    throw new \moodle_exception('invalidsesskey');
+    print_error('invalidsesskey');
 }
 
 $pageid = required_param('pageid', PARAM_INT);
 $section = optional_param('section', "", PARAM_TEXT);
 
 if (!$page = wiki_get_page($pageid)) {
-    throw new \moodle_exception('incorrectpageid', 'wiki');
+    print_error('incorrectpageid', 'wiki');
 }
 
 if (!$subwiki = wiki_get_subwiki($page->subwikiid)) {
-    throw new \moodle_exception('incorrectsubwikiid', 'wiki');
+    print_error('incorrectsubwikiid', 'wiki');
 }
 
 if (!$wiki = wiki_get_wiki($subwiki->wikiid)) {
-    throw new \moodle_exception('incorrectwikiid', 'wiki');
+    print_error('incorrectwikiid', 'wiki');
 }
 
 if (!$cm = get_coursemodule_from_instance('wiki', $wiki->id)) {
-    throw new \moodle_exception('invalidcoursemodule');
+    print_error('invalidcoursemodule');
 }
 
 $course = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
 
 if (!empty($section) && !$sectioncontent = wiki_get_section_page($page, $section)) {
-    throw new \moodle_exception('invalidsection', 'wiki');
+    print_error('invalidsection', 'wiki');
 }
 
 require_login($course, false, $cm);
 
 if (!wiki_user_can_edit($subwiki)) {
-    throw new \moodle_exception('cannoteditpage', 'wiki');
+    print_error('cannoteditpage', 'wiki');
 }
 
 $wikipage = new page_wiki_lock($wiki, $subwiki, $cm);

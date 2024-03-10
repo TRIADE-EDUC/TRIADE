@@ -8,126 +8,100 @@ class LtiDeepLinkResource
     private $title;
     private $text;
     private $url;
-    private $line_item;
-    private $icon;
-    private $thumbnail;
+    private $lineitem;
     private $custom_params = [];
     private $target = 'iframe';
 
-    public static function new(): LtiDeepLinkResource
+    public static function new()
     {
         return new LtiDeepLinkResource();
     }
 
-    public function getType(): string
+    public function getType()
     {
         return $this->type;
     }
 
-    public function setType(string $value): LtiDeepLinkResource
+    public function setType($value)
     {
         $this->type = $value;
 
         return $this;
     }
 
-    public function getTitle(): ?string
+    public function getTitle()
     {
         return $this->title;
     }
 
-    public function setTitle(?string $value): LtiDeepLinkResource
+    public function setTitle($value)
     {
         $this->title = $value;
 
         return $this;
     }
 
-    public function getText(): ?string
+    public function getText()
     {
         return $this->text;
     }
 
-    public function setText(?string $value): LtiDeepLinkResource
+    public function setText($value)
     {
         $this->text = $value;
 
         return $this;
     }
 
-    public function getUrl(): ?string
+    public function getUrl()
     {
         return $this->url;
     }
 
-    public function setUrl(?string $value): LtiDeepLinkResource
+    public function setUrl($value)
     {
         $this->url = $value;
 
         return $this;
     }
 
-    public function getLineItem(): ?LtiLineitem
+    public function getLineitem()
     {
-        return $this->line_item;
+        return $this->lineitem;
     }
 
-    public function setLineItem(?LtiLineitem $value): LtiDeepLinkResource
+    public function setLineitem(LtiLineitem $value)
     {
-        $this->line_item = $value;
+        $this->lineitem = $value;
 
         return $this;
     }
 
-    public function setIcon(?LtiDeepLinkResourceIcon $icon): LtiDeepLinkResource
-    {
-        $this->icon = $icon;
-
-        return $this;
-    }
-
-    public function getIcon(): ?LtiDeepLinkResourceIcon
-    {
-        return $this->icon;
-    }
-
-    public function setThumbnail(?LtiDeepLinkResourceIcon $thumbnail): LtiDeepLinkResource
-    {
-        $this->thumbnail = $thumbnail;
-
-        return $this;
-    }
-
-    public function getThumbnail(): ?LtiDeepLinkResourceIcon
-    {
-        return $this->thumbnail;
-    }
-
-    public function getCustomParams(): array
+    public function getCustomParams()
     {
         return $this->custom_params;
     }
 
-    public function setCustomParams(array $value): LtiDeepLinkResource
+    public function setCustomParams($value)
     {
         $this->custom_params = $value;
 
         return $this;
     }
 
-    public function getTarget(): string
+    public function getTarget()
     {
         return $this->target;
     }
 
-    public function setTarget(string $value): LtiDeepLinkResource
+    public function setTarget($value)
     {
         $this->target = $value;
 
         return $this;
     }
 
-    public function toArray(): array
+    public function toArray()
     {
         $resource = [
             'type' => $this->type,
@@ -137,20 +111,12 @@ class LtiDeepLinkResource
             'presentation' => [
                 'documentTarget' => $this->target,
             ],
+            'custom' => $this->custom_params,
         ];
-        if (!empty($this->custom_params)) {
-            $resource['custom'] = $this->custom_params;
-        }
-        if (isset($this->icon)) {
-            $resource['icon'] = $this->icon->toArray();
-        }
-        if (isset($this->thumbnail)) {
-            $resource['thumbnail'] = $this->thumbnail->toArray();
-        }
-        if ($this->line_item !== null) {
+        if ($this->lineitem !== null) {
             $resource['lineItem'] = [
-                'scoreMaximum' => $this->line_item->getScoreMaximum(),
-                'label' => $this->line_item->getLabel(),
+                'scoreMaximum' => $this->lineitem->getScoreMaximum(),
+                'label' => $this->lineitem->getLabel(),
             ];
         }
 

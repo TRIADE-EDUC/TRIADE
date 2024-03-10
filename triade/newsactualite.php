@@ -81,6 +81,7 @@ session_start();
 <br />
 <?php
 $textA=preg_replace('#(\\\\r|\\\\r\\\\n|\\\\n)#', ' ',$textA);
+$textA=stripslashes($textA);
 ?>
 <textarea id="editor" name="resultat" ><?php print stripslashes($textA) ?></textarea>
 <script type="text/javascript">
@@ -101,9 +102,7 @@ CKEDITOR.replace( 'editor', {
 <script type='text/javascript' >buttonMagicSubmit("<?php print LANGMESST700 ?>","Supp");</script>
 
 <?php }else{ ?>
-
 	<font color='red' class='T2'><?php print LANGMESS300 ?></font>
-
 <?php } ?>
 </center>
 <br><br>

@@ -563,21 +563,6 @@ define('EMAIL_VIA_ALWAYS', 1);
  */
 define('EMAIL_VIA_NO_REPLY_ONLY', 2);
 
-/**
- * Contact site support form/link disabled.
- */
-define('CONTACT_SUPPORT_DISABLED', 0);
-
-/**
- * Contact site support form/link only available to authenticated users.
- */
-define('CONTACT_SUPPORT_AUTHENTICATED', 1);
-
-/**
- * Contact site support form/link available to anyone visiting the site.
- */
-define('CONTACT_SUPPORT_ANYONE', 2);
-
 // PARAMETER HANDLING.
 
 /**
@@ -607,7 +592,7 @@ function required_param($parname, $type) {
     } else if (isset($_GET[$parname])) {
         $param = $_GET[$parname];
     } else {
-        throw new \moodle_exception('missingparam', '', '', $parname);
+        print_error('missingparam', '', '', $parname);
     }
 
     if (is_array($param)) {
@@ -646,10 +631,10 @@ function required_param_array($parname, $type) {
     } else if (isset($_GET[$parname])) {
         $param = $_GET[$parname];
     } else {
-        throw new \moodle_exception('missingparam', '', '', $parname);
+        print_error('missingparam', '', '', $parname);
     }
     if (!is_array($param)) {
-        throw new \moodle_exception('missingparam', '', '', $parname);
+        print_error('missingparam', '', '', $parname);
     }
 
     $result = array();
@@ -859,7 +844,7 @@ function clean_param($param, $type) {
 
         case PARAM_RAW_TRIMMED:
             // No cleaning, but strip leading and trailing whitespace.
-            $param = (string)fix_utf8($param);
+            $param = fix_utf8($param);
             return trim($param);
 
         case PARAM_CLEAN:
@@ -874,7 +859,7 @@ function clean_param($param, $type) {
 
         case PARAM_CLEANHTML:
             // Clean html fragment.
-            $param = (string)fix_utf8($param);
+            $param = fix_utf8($param);
             // Sweep for scripts, etc.
             $param = clean_text($param, FORMAT_HTML);
             return trim($param);
@@ -893,27 +878,27 @@ function clean_param($param, $type) {
 
         case PARAM_ALPHA:
             // Remove everything not `a-z`.
-            return preg_replace('/[^a-zA-Z]/i', '', (string)$param);
+            return preg_replace('/[^a-zA-Z]/i', '', $param);
 
         case PARAM_ALPHAEXT:
             // Remove everything not `a-zA-Z_-` (originally allowed "/" too).
-            return preg_replace('/[^a-zA-Z_-]/i', '', (string)$param);
+            return preg_replace('/[^a-zA-Z_-]/i', '', $param);
 
         case PARAM_ALPHANUM:
             // Remove everything not `a-zA-Z0-9`.
-            return preg_replace('/[^A-Za-z0-9]/i', '', (string)$param);
+            return preg_replace('/[^A-Za-z0-9]/i', '', $param);
 
         case PARAM_ALPHANUMEXT:
             // Remove everything not `a-zA-Z0-9_-`.
-            return preg_replace('/[^A-Za-z0-9_-]/i', '', (string)$param);
+            return preg_replace('/[^A-Za-z0-9_-]/i', '', $param);
 
         case PARAM_SEQUENCE:
             // Remove everything not `0-9,`.
-            return preg_replace('/[^0-9,]/i', '', (string)$param);
+            return preg_replace('/[^0-9,]/i', '', $param);
 
         case PARAM_BOOL:
             // Convert to 1 or 0.
-            $tempstr = strtolower((string)$param);
+            $tempstr = strtolower($param);
             if ($tempstr === 'on' or $tempstr === 'yes' or $tempstr === 'true') {
                 $param = 1;
             } else if ($tempstr === 'off' or $tempstr === 'no'  or $tempstr === 'false') {
@@ -926,7 +911,7 @@ function clean_param($param, $type) {
         case PARAM_NOTAGS:
             // Strip all tags.
             $param = fix_utf8($param);
-            return strip_tags((string)$param);
+            return strip_tags($param);
 
         case PARAM_TEXT:
             // Leave only tags needed for multilang.
@@ -934,7 +919,7 @@ function clean_param($param, $type) {
             // If the multilang syntax is not correct we strip all tags because it would break xhtml strict which is required
             // for accessibility standards please note this cleaning does not strip unbalanced '>' for BC compatibility reasons.
             do {
-                if (strpos((string)$param, '</lang>') !== false) {
+                if (strpos($param, '</lang>') !== false) {
                     // Old and future mutilang syntax.
                     $param = strip_tags($param, '<lang>');
                     if (!preg_match_all('/<.*>/suU', $param, $matches)) {
@@ -961,7 +946,7 @@ function clean_param($param, $type) {
                     }
                     return $param;
 
-                } else if (strpos((string)$param, '</span>') !== false) {
+                } else if (strpos($param, '</span>') !== false) {
                     // Current problematic multilang syntax.
                     $param = strip_tags($param, '<span>');
                     if (!preg_match_all('/<.*>/suU', $param, $matches)) {
@@ -990,12 +975,11 @@ function clean_param($param, $type) {
                 }
             } while (false);
             // Easy, just strip all tags, if we ever want to fix orphaned '&' we have to do that in format_string().
-            return strip_tags((string)$param);
+            return strip_tags($param);
 
         case PARAM_COMPONENT:
             // We do not want any guessing here, either the name is correct or not
             // please note only normalised component names are accepted.
-            $param = (string)$param;
             if (!preg_match('/^[a-z][a-z0-9]*(_[a-z][a-z0-9_]*)?[a-z0-9]+$/', $param)) {
                 return '';
             }
@@ -1020,15 +1004,15 @@ function clean_param($param, $type) {
 
         case PARAM_SAFEDIR:
             // Remove everything not a-zA-Z0-9_- .
-            return preg_replace('/[^a-zA-Z0-9_-]/i', '', (string)$param);
+            return preg_replace('/[^a-zA-Z0-9_-]/i', '', $param);
 
         case PARAM_SAFEPATH:
             // Remove everything not a-zA-Z0-9/_- .
-            return preg_replace('/[^a-zA-Z0-9\/_-]/i', '', (string)$param);
+            return preg_replace('/[^a-zA-Z0-9\/_-]/i', '', $param);
 
         case PARAM_FILE:
             // Strip all suspicious characters from filename.
-            $param = (string)fix_utf8($param);
+            $param = fix_utf8($param);
             $param = preg_replace('~[[:cntrl:]]|[&<>"`\|\':\\\\/]~u', '', $param);
             if ($param === '.' || $param === '..') {
                 $param = '';
@@ -1037,7 +1021,7 @@ function clean_param($param, $type) {
 
         case PARAM_PATH:
             // Strip all suspicious characters from file path.
-            $param = (string)fix_utf8($param);
+            $param = fix_utf8($param);
             $param = str_replace('\\', '/', $param);
 
             // Explode the path and clean each element using the PARAM_FILE rules.
@@ -1059,7 +1043,7 @@ function clean_param($param, $type) {
 
         case PARAM_HOST:
             // Allow FQDN or IPv4 dotted quad.
-            $param = preg_replace('/[^\.\d\w-]/', '', (string)$param );
+            $param = preg_replace('/[^\.\d\w-]/', '', $param );
             // Match ipv4 dotted quad.
             if (preg_match('/(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})/', $param, $match)) {
                 // Confirm values are ok.
@@ -1083,7 +1067,7 @@ function clean_param($param, $type) {
 
         case PARAM_URL:
             // Allow safe urls.
-            $param = (string)fix_utf8($param);
+            $param = fix_utf8($param);
             include_once($CFG->dirroot . '/lib/validateurlsyntax.php');
             if (!empty($param) && validateUrlSyntax($param, 's?H?S?F?E-u-P-a?I?p?f?q?r?')) {
                 // All is ok, param is respected.
@@ -1117,7 +1101,7 @@ function clean_param($param, $type) {
             return $param;
 
         case PARAM_PEM:
-            $param = trim((string)$param);
+            $param = trim($param);
             // PEM formatted strings may contain letters/numbers and the symbols:
             //   forward slash: /
             //   plus sign:     +
@@ -1165,7 +1149,7 @@ function clean_param($param, $type) {
             }
 
         case PARAM_TAG:
-            $param = (string)fix_utf8($param);
+            $param = fix_utf8($param);
             // Please note it is not safe to use the tag name directly anywhere,
             // it must be processed with s(), urlencode() before embedding anywhere.
             // Remove some nasties.
@@ -1176,7 +1160,7 @@ function clean_param($param, $type) {
             return $param;
 
         case PARAM_TAGLIST:
-            $param = (string)fix_utf8($param);
+            $param = fix_utf8($param);
             $tags = explode(',', $param);
             $result = array();
             foreach ($tags as $tag) {
@@ -1239,7 +1223,7 @@ function clean_param($param, $type) {
             }
 
         case PARAM_USERNAME:
-            $param = (string)fix_utf8($param);
+            $param = fix_utf8($param);
             $param = trim($param);
             // Convert uppercase to lowercase MDL-16919.
             $param = core_text::strtolower($param);
@@ -1253,14 +1237,14 @@ function clean_param($param, $type) {
 
         case PARAM_EMAIL:
             $param = fix_utf8($param);
-            if (validate_email($param ?? '')) {
+            if (validate_email($param)) {
                 return $param;
             } else {
                 return '';
             }
 
         case PARAM_STRINGID:
-            if (preg_match('|^[a-zA-Z][a-zA-Z0-9\.:/_-]*$|', (string)$param)) {
+            if (preg_match('|^[a-zA-Z][a-zA-Z0-9\.:/_-]*$|', $param)) {
                 return $param;
             } else {
                 return '';
@@ -1268,7 +1252,7 @@ function clean_param($param, $type) {
 
         case PARAM_TIMEZONE:
             // Can be int, float(with .5 or .0) or string seperated by '/' and can have '-_'.
-            $param = (string)fix_utf8($param);
+            $param = fix_utf8($param);
             $timezonepattern = '/^(([+-]?(0?[0-9](\.[5|0])?|1[0-3](\.0)?|1[0-2]\.5))|(99)|[[:alnum:]]+(\/?[[:alpha:]_-])+)$/';
             if (preg_match($timezonepattern, $param)) {
                 return $param;
@@ -1278,7 +1262,7 @@ function clean_param($param, $type) {
 
         default:
             // Doh! throw error, switched parameters in optional_param or another serious problem.
-            throw new \moodle_exception("unknownparamtype", '', '', $type);
+            print_error("unknownparamtype", '', '', $type);
     }
 }
 
@@ -1318,8 +1302,9 @@ function fix_utf8($value) {
             // Shortcut.
             return $value;
         }
-        // No null bytes expected in our data, so let's remove it.
-        $value = str_replace("\0", '', $value);
+
+        // Remove null bytes or invalid Unicode sequences from value.
+        $value = str_replace(["\0", "\xef\xbf\xbe", "\xef\xbf\xbf"], '', $value);
 
         // Note: this duplicates min_fix_utf8() intentionally.
         static $buggyiconv = null;
@@ -1407,7 +1392,7 @@ function get_host_from_url($url) {
  * images, objects, etc.
  */
 function html_is_blank($string) {
-    return trim(strip_tags((string)$string, '<img><object><applet><input><select><textarea><hr>')) == '';
+    return trim(strip_tags($string, '<img><object><applet><input><select><textarea><hr>')) == '';
 }
 
 /**
@@ -1428,67 +1413,64 @@ function html_is_blank($string) {
  * @param string $plugin (optional) the plugin scope, default null
  * @return bool true or exception
  */
-function set_config($name, $value, $plugin = null) {
+function set_config($name, $value, $plugin=null) {
     global $CFG, $DB;
 
-    // Redirect to appropriate handler when value is null.
-    if ($value === null) {
-        return unset_config($name, $plugin);
-    }
-
-    // Set variables determining conditions and where to store the new config.
-    // Plugin config goes to {config_plugins}, core config goes to {config}.
-    $iscore = empty($plugin);
-    if ($iscore) {
-        // If it's for core config.
-        $table = 'config';
-        $conditions = ['name' => $name];
-        $invalidatecachekey = 'core';
-    } else {
-        // If it's a plugin.
-        $table = 'config_plugins';
-        $conditions = ['name' => $name, 'plugin' => $plugin];
-        $invalidatecachekey = $plugin;
-    }
-
-    // DB handling - checks for existing config, updating or inserting only if necessary.
-    $invalidatecache = true;
-    $inserted = false;
-    $record = $DB->get_record($table, $conditions, 'id, value');
-    if ($record === false) {
-        // Inserts a new config record.
-        $config = new stdClass();
-        $config->name  = $name;
-        $config->value = $value;
-        if (!$iscore) {
-            $config->plugin = $plugin;
+    if (empty($plugin)) {
+        if (!array_key_exists($name, $CFG->config_php_settings)) {
+            // So it's defined for this invocation at least.
+            if (is_null($value)) {
+                unset($CFG->$name);
+            } else {
+                // Settings from db are always strings.
+                $CFG->$name = (string)$value;
+            }
         }
-        $inserted = $DB->insert_record($table, $config, false);
-    } else if ($invalidatecache = ($record->value !== $value)) {
-        // Record exists - Check and only set new value if it has changed.
-        $DB->set_field($table, 'value', $value, ['id' => $record->id]);
-    }
 
-    if ($iscore && !isset($CFG->config_php_settings[$name])) {
-        // So it's defined for this invocation at least.
-        // Settings from db are always strings.
-        $CFG->$name = (string) $value;
-    }
-
-    // When setting config during a Behat test (in the CLI script, not in the web browser
-    // requests), remember which ones are set so that we can clear them later.
-    if ($iscore && $inserted && defined('BEHAT_TEST')) {
-        $CFG->behat_cli_added_config[$name] = true;
-    }
-
-    // Update siteidentifier cache, if required.
-    if ($iscore && $name === 'siteidentifier') {
-        cache_helper::update_site_identifier($value);
-    }
-
-    // Invalidate cache, if required.
-    if ($invalidatecache) {
-        cache_helper::invalidate_by_definition('core', 'config', [], $invalidatecachekey);
+        if ($DB->get_field('config', 'name', array('name' => $name))) {
+            if ($value === null) {
+                $DB->delete_records('config', array('name' => $name));
+            } else {
+                $DB->set_field('config', 'value', $value, array('name' => $name));
+            }
+        } else {
+            if ($value !== null) {
+                $config = new stdClass();
+                $config->name  = $name;
+                $config->value = $value;
+                $DB->insert_record('config', $config, false);
+            }
+            // When setting config during a Behat test (in the CLI script, not in the web browser
+            // requests), remember which ones are set so that we can clear them later.
+            if (defined('BEHAT_TEST')) {
+                if (!property_exists($CFG, 'behat_cli_added_config')) {
+                    $CFG->behat_cli_added_config = [];
+                }
+                $CFG->behat_cli_added_config[$name] = true;
+            }
+        }
+        if ($name === 'siteidentifier') {
+            cache_helper::update_site_identifier($value);
+        }
+        cache_helper::invalidate_by_definition('core', 'config', array(), 'core');
+    } else {
+        // Plugin scope.
+        if ($id = $DB->get_field('config_plugins', 'id', array('name' => $name, 'plugin' => $plugin))) {
+            if ($value===null) {
+                $DB->delete_records('config_plugins', array('name' => $name, 'plugin' => $plugin));
+            } else {
+                $DB->set_field('config_plugins', 'value', $value, array('id' => $id));
+            }
+        } else {
+            if ($value !== null) {
+                $config = new stdClass();
+                $config->plugin = $plugin;
+                $config->name   = $name;
+                $config->value  = $value;
+                $DB->insert_record('config_plugins', $config, false);
+            }
+        }
+        cache_helper::invalidate_by_definition('core', 'config', array(), $plugin);
     }
 
     return true;
@@ -2362,10 +2344,22 @@ function userdate_htmltime($date, $format = '', $timezone = 99, $fixday = true, 
  * @since Moodle 2.3.3
  */
 function date_format_string($date, $format, $tz = 99) {
+    global $CFG;
+
+    $localewincharset = null;
+    // Get the calendar type user is using.
+    if ($CFG->ostype == 'WINDOWS') {
+        $calendartype = \core_calendar\type_factory::get_calendar_instance();
+        $localewincharset = $calendartype->locale_win_charset();
+    }
+
+    if ($localewincharset) {
+        $format = core_text::convert($format, 'utf-8', $localewincharset);
+    }
 
     date_default_timezone_set(core_date::get_user_timezone($tz));
 
-    if (date('A', 0) === date('A', HOURSECS * 18)) {
+    if (strftime('%p', 0) === strftime('%p', HOURSECS * 18)) {
         $datearray = getdate($date);
         $format = str_replace([
             '%P',
@@ -2376,8 +2370,12 @@ function date_format_string($date, $format, $tz = 99) {
         ], $format);
     }
 
-    $datestring = core_date::strftime($format, $date);
+    $datestring = strftime($format, $date);
     core_date::set_default_server_timezone();
+
+    if ($localewincharset) {
+        $datestring = core_text::convert($datestring, $localewincharset, 'utf-8');
+    }
 
     return $datestring;
 }
@@ -2793,8 +2791,7 @@ function require_login($courseorid = null, $autologinguest = true, $cm = null, $
     if ($course->id != SITEID and \core\session\manager::is_loggedinas()) {
         if ($USER->loginascontext->contextlevel == CONTEXT_COURSE) {
             if ($USER->loginascontext->instanceid != $course->id) {
-                throw new \moodle_exception('loginasonecourse', '',
-                    $CFG->wwwroot.'/course/view.php?id='.$USER->loginascontext->instanceid);
+                print_error('loginasonecourse', '', $CFG->wwwroot.'/course/view.php?id='.$USER->loginascontext->instanceid);
             }
         }
     }
@@ -3260,17 +3257,17 @@ function validate_user_key($keyvalue, $script, $instance) {
     global $DB;
 
     if (!$key = $DB->get_record('user_private_key', array('script' => $script, 'value' => $keyvalue, 'instance' => $instance))) {
-        throw new \moodle_exception('invalidkey');
+        print_error('invalidkey');
     }
 
     if (!empty($key->validuntil) and $key->validuntil < time()) {
-        throw new \moodle_exception('expiredkey');
+        print_error('expiredkey');
     }
 
     if ($key->iprestriction) {
         $remoteaddr = getremoteaddr(null);
         if (empty($remoteaddr) or !address_in_subnet($remoteaddr, $key->iprestriction)) {
-            throw new \moodle_exception('ipmismatch');
+            print_error('ipmismatch');
         }
     }
     return $key;
@@ -3290,7 +3287,7 @@ function require_user_key_login($script, $instance = null, $keyvalue = null) {
     global $DB;
 
     if (!NO_MOODLE_COOKIES) {
-        throw new \moodle_exception('sessioncookiesdisable');
+        print_error('sessioncookiesdisable');
     }
 
     // Extra safety.
@@ -3303,13 +3300,13 @@ function require_user_key_login($script, $instance = null, $keyvalue = null) {
     $key = validate_user_key($keyvalue, $script, $instance);
 
     if (!$user = $DB->get_record('user', array('id' => $key->userid))) {
-        throw new \moodle_exception('invaliduserid');
+        print_error('invaliduserid');
     }
 
     core_user::require_active_user($user, true, true);
 
     // Emulate normal session.
-    enrol_check_plugins($user, false);
+    enrol_check_plugins($user);
     \core\session\manager::set_user($user);
 
     // Note we are not using normal login.
@@ -3445,17 +3442,8 @@ function update_user_login_times() {
  * @return bool
  */
 function user_not_fully_set_up($user, $strict = true) {
-    global $CFG, $SESSION, $USER;
+    global $CFG;
     require_once($CFG->dirroot.'/user/profile/lib.php');
-
-    // If the user is setup then store this in the session to avoid re-checking.
-    // Some edge cases are when the users email starts to bounce or the
-    // configuration for custom fields has changed while they are logged in so
-    // we re-check this fully every hour for the rare cases it has changed.
-    if (isset($USER->id) && isset($user->id) && $USER->id === $user->id &&
-         isset($SESSION->fullysetupstrict) && (time() - $SESSION->fullysetupstrict) < HOURSECS) {
-        return false;
-    }
 
     if (isguestuser($user)) {
         return false;
@@ -3472,9 +3460,6 @@ function user_not_fully_set_up($user, $strict = true) {
         }
         if (!profile_has_required_custom_fields_set($user->id)) {
             return true;
-        }
-        if (isset($USER->id) && isset($user->id) && $USER->id === $user->id) {
-            $SESSION->fullysetupstrict = time();
         }
     }
 
@@ -3801,7 +3786,7 @@ function get_auth_plugin($auth) {
 
     // Check the plugin exists first.
     if (! exists_auth_plugin($auth)) {
-        throw new \moodle_exception('authpluginnotfound', 'debug', '', $auth);
+        print_error('authpluginnotfound', 'debug', '', $auth);
     }
 
     // Return auth plugin instance.
@@ -4574,10 +4559,9 @@ function authenticate_user_login($username, $password, $ignorelockout=false, &$f
  * - this function does not set any cookies any more!
  *
  * @param stdClass $user
- * @param array $extrauserinfo
  * @return stdClass A {@link $USER} object - BC only, do not use
  */
-function complete_user_login($user, array $extrauserinfo = []) {
+function complete_user_login($user) {
     global $CFG, $DB, $USER, $SESSION;
 
     \core\session\manager::login_user($user);
@@ -4597,10 +4581,7 @@ function complete_user_login($user, array $extrauserinfo = []) {
         array(
             'userid' => $USER->id,
             'objectid' => $USER->id,
-            'other' => [
-                'username' => $USER->username,
-                'extrauserinfo' => $extrauserinfo
-            ]
+            'other' => array('username' => $USER->username),
         )
     );
     $event->trigger();
@@ -4660,7 +4641,7 @@ function complete_user_login($user, array $extrauserinfo = []) {
                 redirect($CFG->wwwroot.'/login/change_password.php');
             }
         } else {
-            throw new \moodle_exception('nopasswordchangeforced', 'auth');
+            print_error('nopasswordchangeforced', 'auth');
         }
     }
     return $USER;
@@ -4919,6 +4900,23 @@ function get_complete_user_data($field, $value, $mnethostid = null, $throwexcept
     if ($lastaccesses = $DB->get_records('user_lastaccess', array('userid' => $user->id))) {
         foreach ($lastaccesses as $lastaccess) {
             $user->lastcourseaccess[$lastaccess->courseid] = $lastaccess->timeaccess;
+        }
+    }
+
+    $sql = "SELECT g.id, g.courseid
+              FROM {groups} g, {groups_members} gm
+             WHERE gm.groupid=g.id AND gm.userid=?";
+
+    // This is a special hack to speedup calendar display.
+    $user->groupmember = array();
+    if (!isguestuser($user)) {
+        if ($groups = $DB->get_records_sql($sql, array($user->id))) {
+            foreach ($groups as $group) {
+                if (!array_key_exists($group->courseid, $user->groupmember)) {
+                    $user->groupmember[$group->courseid] = array();
+                }
+                $user->groupmember[$group->courseid][$group->id] = $group->id;
+            }
         }
     }
 
@@ -5214,7 +5212,6 @@ function remove_course_contents($courseid, $showfeedback = true, array $options 
                         // Delete cm and its context - orphaned contexts are purged in cron in case of any race condition.
                         context_helper::delete_instance(CONTEXT_MODULE, $cm->id);
                         $DB->delete_records('course_modules_completion', ['coursemoduleid' => $cm->id]);
-                        $DB->delete_records('course_modules_viewed', ['coursemoduleid' => $cm->id]);
                         $DB->delete_records('course_modules', array('id' => $cm->id));
                         rebuild_course_cache($cm->course, true);
                     }
@@ -5238,8 +5235,6 @@ function remove_course_contents($courseid, $showfeedback = true, array $options 
     // features are not enabled now, in case they were enabled previously.
     $DB->delete_records_subquery('course_modules_completion', 'coursemoduleid', 'id',
             'SELECT id from {course_modules} WHERE course = ?', [$courseid]);
-    $DB->delete_records_subquery('course_modules_viewed', 'coursemoduleid', 'id',
-        'SELECT id from {course_modules} WHERE course = ?', [$courseid]);
 
     // Remove course-module data that has not been removed in modules' _delete_instance callbacks.
     $cms = $DB->get_records('course_modules', array('course' => $course->id));
@@ -5680,6 +5675,10 @@ function reset_course_userdata($data) {
             }
             // Update calendar events for all modules.
             course_module_bulk_update_calendar_events($modname, $data->courseid);
+        }
+        // Purge the course cache after resetting course start date. MDL-76936
+        if ($data->timeshift) {
+            course_modinfo::purge_course_cache($data->courseid);
         }
     }
 
@@ -6376,19 +6375,18 @@ function can_send_from_real_email_address($from, $user, $unused = null) {
  * @return string
  */
 function generate_email_signoff() {
-    global $CFG, $OUTPUT;
+    global $CFG;
 
     $signoff = "\n";
     if (!empty($CFG->supportname)) {
         $signoff .= $CFG->supportname."\n";
     }
-
-    $supportemail = $OUTPUT->supportemail(['class' => 'font-weight-bold']);
-
-    if ($supportemail) {
-        $signoff .= "\n" . $supportemail . "\n";
+    if (!empty($CFG->supportemail)) {
+        $signoff .= $CFG->supportemail."\n";
     }
-
+    if (!empty($CFG->supportpage)) {
+        $signoff .= $CFG->supportpage."\n";
+    }
     return $signoff;
 }
 
@@ -6453,7 +6451,7 @@ function reset_password_and_mail($user) {
     $newpassword = generate_password();
 
     if (!$userauth->user_update_password($user, $newpassword)) {
-        throw new \moodle_exception("cannotsetpassword");
+        print_error("cannotsetpassword");
     }
 
     $a = new stdClass();
@@ -7111,7 +7109,7 @@ function clean_filename($string) {
  * @return string
  */
 function current_language() {
-    global $CFG, $PAGE, $SESSION, $USER;
+    global $CFG, $USER, $SESSION, $COURSE;
 
     if (!empty($SESSION->forcelang)) {
         // Allows overriding course-forced language (useful for admins to check
@@ -7120,13 +7118,9 @@ function current_language() {
         // specific language (see force_current_language()).
         $return = $SESSION->forcelang;
 
-    } else if (!empty($PAGE->cm->lang)) {
-        // Activity language, if set.
-        $return = $PAGE->cm->lang;
-
-    } else if (!empty($PAGE->course->id) && $PAGE->course->id != SITEID && !empty($PAGE->course->lang)) {
+    } else if (!empty($COURSE->id) and $COURSE->id != SITEID and !empty($COURSE->lang)) {
         // Course language can override all other settings for this page.
-        $return = $PAGE->course->lang;
+        $return = $COURSE->lang;
 
     } else if (!empty($SESSION->lang)) {
         // Session language can override other settings.
@@ -7212,7 +7206,7 @@ function force_current_language($language) {
     global $SESSION;
     $sessionforcelang = isset($SESSION->forcelang) ? $SESSION->forcelang : '';
     if ($language !== $sessionforcelang) {
-        // Setting forcelang to null or an empty string disables its effect.
+        // Seting forcelang to null or an empty string disables it's effect.
         if (empty($language) || get_string_manager()->translation_exists($language, false)) {
             $SESSION->forcelang = $language;
             moodle_setlocale();
@@ -7381,7 +7375,7 @@ function get_string($identifier, $component = '', $a = null, $lazyload = false) 
         debugging('extralocations parameter in get_string() is not supported any more, please use standard lang locations only.');
     }
 
-    if (strpos((string)$component, '/') !== false) {
+    if (strpos($component, '/') !== false) {
         debugging('The module name you passed to get_string is the deprecated format ' .
                 'like mod/mymod or block/myblock. The correct form looks like mymod, or block_myblock.' , DEBUG_DEVELOPER);
         $componentpath = explode('/', $component);
@@ -8386,7 +8380,7 @@ function count_words($string) {
                 </                              # Start of close tag.
                 (?!                             # Do not match any of these specific close tag names.
                     a> | b> | del> | em> | i> |
-                    ins> | s> | small> |
+                    ins> | s> | small> | span> |
                     strong> | sub> | sup> | u>
                 )
                 \w+                             # But, apart from those execptions, match any tag name.
@@ -8398,7 +8392,7 @@ function count_words($string) {
     // Now remove HTML tags.
     $string = strip_tags($string);
     // Decode HTML entities.
-    $string = html_entity_decode($string, ENT_COMPAT);
+    $string = html_entity_decode($string);
 
     // Now, the word count is the number of blocks of characters separated
     // by any sort of space. That seems to be the definition used by all other systems.
@@ -8420,7 +8414,7 @@ function count_words($string) {
  */
 function count_letters($string) {
     $string = strip_tags($string); // Tags are out now.
-    $string = html_entity_decode($string, ENT_COMPAT);
+    $string = html_entity_decode($string);
     $string = preg_replace('/[[:space:]]*/', '', $string); // Whitespace are out now.
 
     return core_text::strlen($string);
@@ -8850,7 +8844,7 @@ function format_float($float, $decimalpoints=1, $localized=true, $stripzeros=fal
  * @return mixed float|bool - false or the parsed float.
  */
 function unformat_float($localefloat, $strict = false) {
-    $localefloat = trim((string)$localefloat);
+    $localefloat = trim($localefloat);
 
     if ($localefloat == '') {
         return null;
@@ -9045,11 +9039,12 @@ function make_unique_id_code($extra = '') {
  *
  * @param string $addr    The address you are checking
  * @param string $subnetstr    The string of subnet addresses
+ * @param bool $checkallzeros    The state to whether check for 0.0.0.0
  * @return bool
  */
-function address_in_subnet($addr, $subnetstr) {
+function address_in_subnet($addr, $subnetstr, $checkallzeros = false) {
 
-    if ($addr == '0.0.0.0') {
+    if ($addr == '0.0.0.0' && !$checkallzeros) {
         return false;
     }
     $subnets = explode(',', $subnetstr);
@@ -9688,15 +9683,6 @@ function get_performance_info() {
         $info['txt'] .= $si['txt'];
     }
 
-    // Display time waiting for session if applicable.
-    if (!empty($PERF->sessionlock['wait'])) {
-        $sessionwait = number_format($PERF->sessionlock['wait'], 3) . ' secs';
-        $info['html'] .= html_writer::tag('li', 'Session wait: ' . $sessionwait, [
-            'class' => 'sessionwait col-sm-4'
-        ]);
-        $info['txt'] .= 'sessionwait: ' . $sessionwait . ' ';
-    }
-
     $info['html'] .= '</ul>';
     $html = '';
     if ($stats = cache_helper::get_stats()) {
@@ -9927,53 +9913,6 @@ function get_performance_info() {
         $info['cachesused'] = '0 / 0 / 0';
         $info['html'] .= '<div class="cachesused">Caches used (hits/misses/sets): 0/0/0</div>';
         $info['txt'] .= 'Caches used (hits/misses/sets): 0/0/0 ';
-    }
-
-    // Display lock information if any.
-    if (!empty($PERF->locks)) {
-        $table = new html_table();
-        $table->attributes['class'] = 'locktimings table table-dark table-sm w-auto table-bordered';
-        $table->head = ['Lock', 'Waited (s)', 'Obtained', 'Held for (s)'];
-        $table->align = ['left', 'right', 'center', 'right'];
-        $table->data = [];
-        $text = 'Locks (waited/obtained/held):';
-        foreach ($PERF->locks as $locktiming) {
-            $row = [];
-            $row[] = s($locktiming->type . '/' . $locktiming->resource);
-            $text .= ' ' . $locktiming->type . '/' . $locktiming->resource . ' (';
-
-            // The time we had to wait to get the lock.
-            $roundedtime = number_format($locktiming->wait, 1);
-            $cell = new html_table_cell($roundedtime);
-            if ($locktiming->wait > 0.5) {
-                $cell->attributes = ['class' => 'bg-warning text-dark'];
-            }
-            $row[] = $cell;
-            $text .= $roundedtime . '/';
-
-            // Show a tick or cross for success.
-            $row[] = $locktiming->success ? '&#x2713;' : '&#x274c;';
-            $text .= ($locktiming->success ? 'y' : 'n') . '/';
-
-            // If applicable, show how long we held the lock before releasing it.
-            if (property_exists($locktiming, 'held')) {
-                $roundedtime = number_format($locktiming->held, 1);
-                $cell = new html_table_cell($roundedtime);
-                if ($locktiming->held > 0.5) {
-                    $cell->attributes = ['class' => 'bg-warning text-dark'];
-                }
-                $row[] = $cell;
-                $text .= $roundedtime;
-            } else {
-                $row[] = '-';
-                $text .= '-';
-            }
-            $text .= ')';
-
-            $table->data[] = $row;
-        }
-        $info['html'] .= html_writer::table($table);
-        $info['txt'] .= $text . '. ';
     }
 
     $info['html'] = '<div class="performanceinfo siteinfo container-fluid px-md-0 overflow-auto pt-3">'.$info['html'].'</div>';
@@ -10225,23 +10164,12 @@ function is_proxybypass( $url ) {
     // Get the possible bypass hosts into an array.
     $matches = explode( ',', $CFG->proxybypass );
 
-    // Check for a match.
-    // (IPs need to match the left hand side and hosts the right of the url,
-    // but we can recklessly check both as there can't be a false +ve).
-    foreach ($matches as $match) {
-        $match = trim($match);
+    // Check for a exact match on the IP or in the domains.
+    $isdomaininallowedlist = \core\ip_utils::is_domain_in_allowed_list($host, $matches);
+    $isipinsubnetlist = \core\ip_utils::is_ip_in_subnet_list($host, $CFG->proxybypass, ',');
 
-        // Try for IP match (Left side).
-        $lhs = substr($host, 0, strlen($match));
-        if (strcasecmp($match, $lhs)==0) {
-            return true;
-        }
-
-        // Try for host match (Right side).
-        $rhs = substr($host, -strlen($match));
-        if (strcasecmp($match, $rhs)==0) {
-            return true;
-        }
+    if ($isdomaininallowedlist || $isipinsubnetlist) {
+        return true;
     }
 
     // Nothing matched.
@@ -10565,52 +10493,33 @@ function get_course_display_name_for_list($course) {
  * Safe analogue of unserialize() that can only parse arrays
  *
  * Arrays may contain only integers or strings as both keys and values. Nested arrays are allowed.
- * Note: If any string (key or value) has semicolon (;) as part of the string parsing will fail.
- * This is a simple method to substitute unnecessary unserialize() in code and not intended to cover all possible cases.
  *
  * @param string $expression
  * @return array|bool either parsed array or false if parsing was impossible.
  */
 function unserialize_array($expression) {
-    $subs = [];
-    // Find nested arrays, parse them and store in $subs , substitute with special string.
-    while (preg_match('/([\^;\}])(a:\d+:\{[^\{\}]*\})/', $expression, $matches) && strlen($matches[2]) < strlen($expression)) {
-        $key = '--SUB' . count($subs) . '--';
-        $subs[$key] = unserialize_array($matches[2]);
-        if ($subs[$key] === false) {
-            return false;
-        }
-        $expression = str_replace($matches[2], $key . ';', $expression);
-    }
 
     // Check the expression is an array.
-    if (!preg_match('/^a:(\d+):\{([^\}]*)\}$/', $expression, $matches1)) {
+    if (!preg_match('/^a:(\d+):/', $expression)) {
         return false;
     }
-    // Get the size and elements of an array (key;value;key;value;....).
-    $parts = explode(';', $matches1[2]);
-    $size = intval($matches1[1]);
-    if (count($parts) < $size * 2 + 1) {
-        return false;
-    }
-    // Analyze each part and make sure it is an integer or string or a substitute.
-    $value = [];
-    for ($i = 0; $i < $size * 2; $i++) {
-        if (preg_match('/^i:(\d+)$/', $parts[$i], $matches2)) {
-            $parts[$i] = (int)$matches2[1];
-        } else if (preg_match('/^s:(\d+):"(.*)"$/', $parts[$i], $matches3) && strlen($matches3[2]) == (int)$matches3[1]) {
-            $parts[$i] = $matches3[2];
-        } else if (preg_match('/^--SUB\d+--$/', $parts[$i])) {
-            $parts[$i] = $subs[$parts[$i]];
-        } else {
-            return false;
+
+    $values = (array) unserialize_object($expression);
+
+    // Callback that returns true if the given value is an unserialized object, executes recursively.
+    $invalidvaluecallback = static function($value) use (&$invalidvaluecallback): bool {
+        if (is_array($value)) {
+            return (bool) array_filter($value, $invalidvaluecallback);
         }
+        return ($value instanceof stdClass) || ($value instanceof __PHP_Incomplete_Class);
+    };
+
+    // Iterate over the result to ensure there are no stray objects.
+    if (array_filter($values, $invalidvaluecallback)) {
+        return false;
     }
-    // Combine keys and values.
-    for ($i = 0; $i < $size * 2; $i += 2) {
-        $value[$parts[$i]] = $parts[$i+1];
-    }
-    return $value;
+
+    return $values;
 }
 
 /**

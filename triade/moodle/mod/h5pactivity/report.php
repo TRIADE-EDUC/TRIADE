@@ -49,7 +49,7 @@ $manager = manager::create_from_coursemodule($cm);
 
 $report = $manager->get_report($userid, $attemptid, $currentgroup);
 if (!$report) {
-    throw new \moodle_exception('permissiondenied');
+    print_error('permissiondenied');
 }
 
 $user = $report->get_user();

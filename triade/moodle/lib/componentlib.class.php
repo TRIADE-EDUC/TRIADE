@@ -76,9 +76,9 @@
  *                     $a = new stdClass();
  *                     $a->url = 'https://download.moodle.org/langpack/2.0/es.zip';
  *                     $a->dest= $CFG->dataroot.'/lang';
- *                     throw new \moodle_exception($cd->get_error(), 'error', '', $a);
+ *                     print_error($cd->get_error(), 'error', '', $a);
  *                 } else {
- *                     throw new \moodle_exception($cd->get_error(), 'error');
+ *                     print_error($cd->get_error(), 'error');
  *                 }
  *                 break;
  *             case COMPONENT_UPTODATE:

@@ -43,7 +43,6 @@ $string['pm'] = 'pm';
 $string['pmcaps'] = 'PM';
 $string['strftimedate'] = '%d %B %Y';
 $string['strftimedatemonthabbr'] = '%d %b %Y';
-$string['strftimedatemonthtimeshort'] = '%d %b %Y, %I:%M';
 $string['strftimedatefullshort'] = '%d/%m/%y';
 $string['strftimedateshort'] = '%d %B';
 $string['strftimedateshortmonthabbr'] = '%d %b';

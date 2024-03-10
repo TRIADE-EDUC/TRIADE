@@ -20,7 +20,7 @@ namespace core_reportbuilder\external;
 
 use renderer_base;
 use core\external\exporter;
-use core_reportbuilder\datasource;
+use core_reportbuilder\local\report\base;
 use core_reportbuilder\local\models\filter;
 use core_reportbuilder\output\filter_heading_editable;
 
@@ -40,7 +40,7 @@ class custom_report_filters_exporter extends exporter {
      */
     protected static function define_related(): array {
         return [
-            'report' => datasource::class,
+            'report' => base::class,
         ];
     }
 
@@ -53,6 +53,7 @@ class custom_report_filters_exporter extends exporter {
         return [
             'hasavailablefilters' => [
                 'type' => PARAM_BOOL,
+                'optional' => true,
             ],
             'availablefilters' => [
                 'type' => [
@@ -70,9 +71,11 @@ class custom_report_filters_exporter extends exporter {
                     ],
                 ],
                 'multiple' => true,
+                'optional' => true
             ],
             'hasactivefilters' => [
                 'type' => PARAM_BOOL,
+                'optional' => true,
             ],
             'activefilters' => [
                 'type' => [
@@ -84,9 +87,11 @@ class custom_report_filters_exporter extends exporter {
                     'entityname' => ['type' => PARAM_TEXT],
                 ],
                 'multiple' => true,
+                'optional' => true
             ],
             'helpicon' => [
                 'type' => PARAM_RAW,
+                'optional' => true,
             ],
         ];
     }
@@ -98,7 +103,7 @@ class custom_report_filters_exporter extends exporter {
      * @return array
      */
     protected function get_other_values(renderer_base $output): array {
-        /** @var datasource $report */
+        /** @var base $report */
         $report = $this->related['report'];
 
         // Current filters added to the report.
@@ -141,7 +146,7 @@ class custom_report_filters_exporter extends exporter {
 
             $entityname = $filterinstance->get_entity_name();
             $displayvalue = $filterinstance->get_header();
-            $editable = new filter_heading_editable(0, $filter);
+            $editable = new filter_heading_editable($filter->get('id'));
 
             $activefilters[] = [
                 'id' => $filter->get('id'),

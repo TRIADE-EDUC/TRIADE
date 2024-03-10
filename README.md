@@ -33,8 +33,8 @@ Pour installer TRIADE pour votre établissement scolaire, **nous vous recommando
 
 ## Installer TRIADE
 ```
-    Le logiciel Triade s'installe via un navigateur web 
-    Une base MySql doit être installé.
+	Le logiciel Triade s'installe via un navigateur web 
+	Une base MySql doit être installé.
 
 	Pre-requis soft
 	---------------

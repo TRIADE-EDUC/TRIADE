@@ -24,18 +24,19 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$capabilities = [
-    'gradereport/user:view' => [
+$capabilities = array(
+
+    'gradereport/user:view' => array(
         'riskbitmask' => RISK_PERSONAL,
         'captype' => 'read',
         'contextlevel' => CONTEXT_COURSE,
-        'archetypes' => [
+        'archetypes' => array(
             'student' => CAP_ALLOW,
             'teacher' => CAP_ALLOW,
             'editingteacher' => CAP_ALLOW,
             'manager' => CAP_ALLOW
-        ]
-    ],
-];
+        )
+    ),
+);
 
 

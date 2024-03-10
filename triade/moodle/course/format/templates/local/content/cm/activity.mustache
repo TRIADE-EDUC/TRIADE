@@ -70,7 +70,7 @@
             {{/ core_courseformat/local/content/cm/cmname }}
         {{/cmname}}
         {{#afterlink}}
-            <div class="afterlink">
+            <div class="afterlink d-flex align-items-center ml-3">
                 {{{afterlink}}}
             </div>
         {{/afterlink}}
@@ -114,7 +114,7 @@
     {{/activityinfo}}
     {{#altcontent}}
         <div class="activity-altcontent {{#hasname}}course-description-item small{{/hasname}}{{^hasname}}contentwithoutlink{{/hasname}} d-flex">
-            <div class="flex-fill description-inner">
+            <div class="flex-fill description-inner text-break">
                 {{{altcontent}}}
             </div>
         </div>
