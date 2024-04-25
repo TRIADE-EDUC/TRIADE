@@ -9,7 +9,7 @@ La sécurité est l'une des priorités dans le développement de TRIADE, gardez 
 ## Vulnérabilités dans TRIADE
 Bien que nous faisons notre maximum pour fournir un environnement numérique de travail sécurisée, nous ne pouvons garantir que le logiciel TRIADE est exempt de failles de sécurité et que des vulnérabilités peuvent être découvertes à tout moment. 
 
-**Si jamais vous tombez sur une faille de sécurité dans le logiciel TRIADE, veuillez prévenir par voie privée (e-mail, ticket support, ticket GitHub, ticket Discord) le support TRIADE immédiatement (avec la description la plus explicite possible)**. Nous ferons le nécessaire pour corriger la faille au plus vite possible.
+**Si jamais vous tombez sur une faille de sécurité dans le logiciel TRIADE, veuillez prévenir par voie privée (e-mail, ticket support, ticket Discord) le support TRIADE immédiatement (avec la description la plus explicite possible)**. Nous ferons le nécessaire pour corriger la faille au plus vite possible.
 
 Aussi, veuillez restez informés des mises à jour de TRIADE par les moyens de notification mises à disposition (mail, RSS, Forum, Discord) afin de pouvoir corriger la faille de votre coté si jamais un tél évènement venait à se produire.
 
